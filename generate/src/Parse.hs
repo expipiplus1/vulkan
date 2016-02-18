@@ -5,6 +5,7 @@ module Parse
   ) where
 
 import Spec
+import Parse.Command
 import Parse.Enum
 import Parse.Bitmask
 import Parse.Utils
@@ -17,12 +18,16 @@ parseSpec s = liftIO $ let doc = readString [withWarnings yes] s
                        in runX (doc >>> oneRequired "spec" parseSpecXML)
 
 parseSpecXML :: IOStateArrow s XmlTree Spec
-parseSpecXML = extract
+parseSpecXML = isRoot /> hasName "registry" >>> extract
   where extract = proc registry -> do
           enums <- listA (deep parseEnum) -< registry
           bitmasks <- listA (deep parseBitmask) -< registry
+          -- traceShowA <<< getName <<< getChildren -< registry
+          commands <- listA (deep parseCommand) <<< 
+                      onlyChildWithName "commands" -< registry
           returnA -< Spec{ sEnums = enums
                          , sBitmasks = bitmasks
+                         , sCommands = commands
                          }
 
 
