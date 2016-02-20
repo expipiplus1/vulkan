@@ -83,8 +83,8 @@ cTypeToHsType cType = hsType
                Ptr _ t 
                  -> (simpleCon "Ptr" `TyApp`) <$>
                       cTypeToHsType t
-               Array _ t 
-                 -> (simpleCon "Vector" `TyApp`) <$> cTypeToHsType t
+               Array s t 
+                 -> (simpleCon "Vec" `TyApp` sizeToPeano s `TyApp`) <$> cTypeToHsType t
                _ -> error ("Failed to convert C type:\n" ++ show cType)
 
 cIdToHsType :: CIdentifier -> HS.Type
@@ -93,6 +93,19 @@ cIdToHsType i = let s = unCIdentifier i
 
 simpleCon :: String -> HS.Type
 simpleCon = TyCon . UnQual . Ident
+
+sizeToPeano :: ArrayType CIdentifier -> HS.Type
+sizeToPeano s = case s of
+                  VariablySized -> error "Variably sized arrays not handled"
+                  Unsized -> error "Unsized arrays not handled"
+                  SizedByInteger i -> 
+                    simpleCon "ToPeano" `TyApp` TyPromoted (PromotedInteger i)
+                  SizedByIdentifier i -> 
+                    let typeName = Ident (unCIdentifier i)
+                        typeNat = PromotedCon False (UnQual typeName)
+                    in simpleCon "ToPeano" `TyApp` TyPromoted typeNat
+
+
 
 makeFunctionType :: CType -> [ParameterDeclaration CIdentifier] 
                  -> TypeConvert HS.Type

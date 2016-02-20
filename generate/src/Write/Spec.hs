@@ -42,16 +42,18 @@ module Vulkan where
 |]
 
 allExtensions :: [Extension]
-allExtensions = [ Extension "PatternSynonyms"
-                , Extension "GeneralizedNewtypeDeriving"
+allExtensions = [ Extension "DataKinds"
                 , Extension "DuplicateRecordFields"
+                , Extension "GeneralizedNewtypeDeriving"
+                , Extension "PatternSynonyms"
                 , Extension "Strict"
                 ]
 
 allImports :: [Import]
 allImports = [ Import "Data.Bits" ["Bits", "FiniteBits"]
              , Import "Data.Int" ["Int32"]
-             , Import "Data.Vector.Storable" ["Vector"]
+             , Import "Data.Vector.Fixed.Storable" ["Vec"]
+             , Import "Data.Vector.Fixed.Cont" ["ToPeano"]
              , Import "Data.Void" ["Void"]
              , Import "Data.Word" ["Word8", "Word32", "Word64"]
              , Import "Foreign.C.Types" ["CChar", "CFloat", "CSize"]
