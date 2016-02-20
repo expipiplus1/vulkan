@@ -134,7 +134,7 @@ writeStructStorableInstance st
                                 writePeekMember <$> memberPacking))}
   poke ptr poked = {indent (-3) . vsep $ 
                     ((intercalatePrepend (fromString "*>") $ 
-                     writePokeMember <$> memberPacking))}
+                     writePokeMember st <$> memberPacking))}
 |]
 
 data MemberInfo = MemberInfo { miMember :: !StructMember
@@ -146,8 +146,9 @@ data MemberInfo = MemberInfo { miMember :: !StructMember
 writePeekMember :: MemberInfo -> Doc
 writePeekMember mi = [qc|peek (ptr `plusPtr` {miOffset mi})|]
 
-writePokeMember :: MemberInfo -> Doc
-writePokeMember mi = [qc|poke (ptr `plusPtr` {miOffset mi}) ({sanitizedName (miMember mi)} poked)|]
+writePokeMember :: StructType -> MemberInfo -> Doc
+writePokeMember st mi = 
+  [qc|poke (ptr `plusPtr` {miOffset mi}) ({sanitizedName (miMember mi)} (poked :: {stName st}))|]
 
 
 type TypeEnv = ()

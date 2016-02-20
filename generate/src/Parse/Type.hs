@@ -49,7 +49,7 @@ peekStructOrUnionName = hasName "type" >>>
                         getAttrValue0 "name"
 
 addTypeDeclToState :: ParseArrow TypeDecl TypeDecl
-addTypeDeclToState = perform (typeDeclTypeNames ^>> 
+addTypeDeclToState = perform (typeDeclTypeName ^>> 
                               traverseMaybeA addTypeName)
 
 parseType :: ParseArrow XmlTree TypeDecl

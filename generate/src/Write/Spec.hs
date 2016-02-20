@@ -55,7 +55,7 @@ allImports = [ Import "Data.Bits" ["Bits", "FiniteBits"]
              , Import "Data.Void" ["Void"]
              , Import "Data.Word" ["Word8", "Word32", "Word64"]
              , Import "Foreign.C.Types" ["CChar", "CFloat", "CSize"]
-             , Import "Foreign.Ptr" ["Ptr", "FunPtr"]
+             , Import "Foreign.Ptr" ["Ptr", "FunPtr", "plusPtr"]
              , Import "Foreign.Storable" ["Storable(..)"]
              ]
 

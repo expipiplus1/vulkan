@@ -14,52 +14,52 @@ data TypeDecl = AnInclude Include
               | AFuncPointerType FuncPointerType
               | AStructType StructType
               | AUnionType UnionType
-  deriving (Show)
+  deriving (Show, Eq)
 
 data Include = Include { iName :: String
                        , iFilename :: String
                        }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data Define = Define { dName :: String
                      , dText :: String
                      }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data BaseType = BaseType { btName :: String
                          , btTypeString :: String
                          , btCType :: CType
                          }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data PlatformType = PlatformType { ptName :: String
                                  , ptRequires :: String
                                  }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data BitmaskType = BitmaskType { bmtName :: String
                                , bmtTypeString :: String
                                , bmtRequires :: Maybe String
                                , bmtCType :: CType
                                }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data HandleType = HandleType { htName :: String
                              , htParents :: [String]
                              , htTypeString :: String
                              , htCType :: CType
                              }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data EnumType = EnumType { etName :: String
                          }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data FuncPointerType = FuncPointerType { fptName :: String
                                        , fptTypeString :: String
                                        , fptCType :: CType
                                        }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data StructType = StructType { stName :: String
                              , stComment :: Maybe String
@@ -67,7 +67,7 @@ data StructType = StructType { stName :: String
                              , stUsage :: [String]
                              , stIsReturnedOnly :: Bool
                              }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data StructMember = StructMember { smName :: String
                                  , smTypeString :: String
@@ -77,7 +77,7 @@ data StructMember = StructMember { smName :: String
                                  , smLengths :: Maybe [String]
                                  , smComment :: Maybe String
                                  }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data UnionType = UnionType { utName :: String
                            , utComment :: Maybe String
@@ -85,19 +85,19 @@ data UnionType = UnionType { utName :: String
                            , utUsage :: [String]
                            , utIsReturnedOnly :: Bool
                            }
-  deriving (Show)
+  deriving (Show, Eq)
 
-typeDeclTypeNames :: TypeDecl -> Maybe String
-typeDeclTypeNames (AnInclude _)          = Nothing
-typeDeclTypeNames (ADefine _)            = Nothing
-typeDeclTypeNames (ABaseType bt)         = Just $ btName bt
-typeDeclTypeNames (APlatformType pt)     = Just $ ptName pt
-typeDeclTypeNames (ABitmaskType bmt)     = Just $ bmtName bmt
-typeDeclTypeNames (AHandleType ht)       = Just $ htName ht
-typeDeclTypeNames (AnEnumType et)        = Just $ etName et
-typeDeclTypeNames (AFuncPointerType fpt) = Just $ fptName fpt
-typeDeclTypeNames (AStructType st)       = Just $ stName st
-typeDeclTypeNames (AUnionType ut)        = Just $ utName ut
+typeDeclTypeName :: TypeDecl -> Maybe String
+typeDeclTypeName (AnInclude _)          = Nothing
+typeDeclTypeName (ADefine _)            = Nothing
+typeDeclTypeName (ABaseType bt)         = Just $ btName bt
+typeDeclTypeName (APlatformType pt)     = Just $ ptName pt
+typeDeclTypeName (ABitmaskType bmt)     = Just $ bmtName bmt
+typeDeclTypeName (AHandleType ht)       = Just $ htName ht
+typeDeclTypeName (AnEnumType et)        = Just $ etName et
+typeDeclTypeName (AFuncPointerType fpt) = Just $ fptName fpt
+typeDeclTypeName (AStructType st)       = Just $ stName st
+typeDeclTypeName (AUnionType ut)        = Just $ utName ut
 
 typeDeclToInclude :: TypeDecl -> Maybe Include
 typeDeclToInclude (AnInclude x) = Just x

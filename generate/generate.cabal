@@ -21,6 +21,7 @@ executable generate
                      , Spec.Command
                      , Spec.Enum
                      , Spec.Type
+                     , Spec.StripExtensions
                      , Parse.Bitmask
                      , Parse.CType
                      , Parse.Command

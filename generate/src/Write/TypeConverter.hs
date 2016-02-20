@@ -5,6 +5,7 @@ module Write.TypeConverter
   , cTypeToHsTypeString
   , cTypeToHsType
   , cTypeToHsType'
+  , cTypeNames
   , pattern TypeDef
   ) where
 
@@ -122,3 +123,29 @@ succLexicographic lower upper (x:ys) =
 incrementNextVariable :: TypeConvertState -> TypeConvertState
 incrementNextVariable (TypeConvertState n) = 
   TypeConvertState (succLexicographic 'a' 'z' n)
+
+-- | cTypeNames returns the names of the C types this type depends on
+cTypeNames :: CType -> [String]
+cTypeNames cType = 
+  case cType of 
+    TypeSpecifier _ Void 
+      -> ["void"]
+    TypeSpecifier _ (C.Char Nothing) 
+      -> ["char"]
+    TypeSpecifier _ Float 
+      -> ["float"]
+    TypeSpecifier _ (TypeName t) 
+      -> [unCIdentifier t]
+    TypeDef (Struct t) 
+      -> [unCIdentifier t]
+    Ptr _ t
+      -> cTypeNames t
+    Array _ t 
+      -> cTypeNames t
+    Proto ret ps 
+      -> cTypeNames ret ++ concatMap parameterTypeNames ps
+    _ -> error ("Failed to get depended on names for C type:\n" ++ show cType)
+
+parameterTypeNames :: ParameterDeclaration CIdentifier -> [String]
+parameterTypeNames (ParameterDeclaration _ t) = cTypeNames t
+

@@ -2,6 +2,7 @@ module Main
   ( main
   ) where
 
+import Spec.StripExtensions
 import Parse.Spec
 import Write.Spec
 import System.IO(hPutStr, stderr)
@@ -13,5 +14,6 @@ main = do specString <- getContents
           case specMay of 
             Nothing -> do hPutStr stderr "Failed to parse spec"
                           exitFailure
-            Just spec -> putStrLn (haskellize spec)
+            Just spec -> let stripped = stripWSIExtensions spec
+                         in  putStrLn (haskellize stripped)
 
