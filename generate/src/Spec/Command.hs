@@ -1,9 +1,9 @@
 module Spec.Command where
 
-import Spec.CType
+import Spec.Type
 
 data Command = Command { cName :: String
-                       , cReturnType :: Type
+                       , cReturnType :: CType
                        , cParameters :: [Parameter]
                        , cImplicitExternSyncParams :: Maybe [String]
                        , cQueues :: Maybe [String]
@@ -16,7 +16,7 @@ data Command = Command { cName :: String
   deriving (Show)
 
 data Parameter = Parameter { pName :: String
-                           , pType :: Type
+                           , pType :: CType
                            , pIsOptional :: Maybe [Bool] 
                              -- ^ Values further into the list represent the
                              -- "optionality" of the types as it is

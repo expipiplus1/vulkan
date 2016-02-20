@@ -5,6 +5,7 @@ module Parse.Bitmask where
 import Spec.Bitmask
 import Parse.Utils
 import Text.XML.HXT.Core 
+import Prelude hiding(elem)
 
 parseBitmask :: IOStateArrow s XmlTree Spec.Bitmask.Bitmask
 parseBitmask = hasName "enums" >>> hasAttrValue "type" (== "bitmask") >>> 

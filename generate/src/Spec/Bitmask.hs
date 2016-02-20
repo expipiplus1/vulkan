@@ -17,7 +17,7 @@ data BitmaskValue = BitmaskValue { bmvName :: String
   deriving (Show)
 
 data BitmaskBitPosition = BitmaskBitPosition { bmbpName :: String
-                                             , bmbpBitPos :: !Word32
+                                             , bmbpBitPos :: !Int
                                              , bmbpComment :: Maybe String
                                              }
   deriving (Show)
