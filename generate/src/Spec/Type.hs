@@ -99,6 +99,18 @@ typeDeclTypeName (AFuncPointerType fpt) = Just $ fptName fpt
 typeDeclTypeName (AStructType st)       = Just $ stName st
 typeDeclTypeName (AUnionType ut)        = Just $ utName ut
 
+typeDeclCType :: TypeDecl -> Maybe CType
+typeDeclCType (AnInclude _)          = Nothing
+typeDeclCType (ADefine _)            = Nothing
+typeDeclCType (ABaseType bt)         = Just $ btCType bt
+typeDeclCType (APlatformType _)     = Nothing
+typeDeclCType (ABitmaskType bmt)     = Just $ bmtCType bmt
+typeDeclCType (AHandleType ht)       = Just $ htCType ht
+typeDeclCType (AnEnumType _)        = Nothing
+typeDeclCType (AFuncPointerType fpt) = Just $ fptCType fpt
+typeDeclCType (AStructType _)       = Nothing
+typeDeclCType (AUnionType _)        = Nothing 
+
 typeDeclToInclude :: TypeDecl -> Maybe Include
 typeDeclToInclude (AnInclude x) = Just x
 typeDeclToInclude _ = Nothing

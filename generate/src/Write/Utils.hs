@@ -3,10 +3,14 @@ module Write.Utils
   , predocComment
   , postdocComment
   , isEmpty
+  , showHex'
+  , upperFirst
   ) where
 
 import Data.List(intersperse)
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
+import Numeric
+import Data.Char(toUpper)
 
 comment :: String -> String
 comment "" = ""
@@ -31,3 +35,14 @@ removeTrailingNewlines = reverse . dropWhile (=='\n') . reverse
 
 isEmpty :: Doc -> Bool
 isEmpty = null . show
+
+showHex' :: (Show a, Integral a) => a -> String
+showHex' n = sign ++ "0x" ++ showHex n ""
+  where sign = if n < 0 
+                 then "-"
+                 else ""
+
+upperFirst :: String -> String
+upperFirst "" = ""
+upperFirst (x:xs) = toUpper x : xs
+

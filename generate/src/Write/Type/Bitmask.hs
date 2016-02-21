@@ -7,7 +7,6 @@ module Write.Type.Bitmask
 import Data.Word(Word32)
 import Control.Arrow((&&&))
 import Data.Maybe(fromMaybe)
-import Numeric(showHex)
 import Data.Bits(shiftL)
 import Spec.Bitmask
 import Spec.Type
@@ -54,14 +53,11 @@ pattern {bmvName v} = {bmName bm} {showHex' $ bmvValue v}|]
 writeBitPosition :: Bitmask -> BitmaskBitPosition -> Doc
 writeBitPosition bm bp = 
   [qc|{maybe "" predocComment (bmbpComment bp)}
-pattern {bmbpName bp} = {bmName bm} {showHex' $ (1 `shiftL` bmbpBitPos bp)}|] 
+pattern {bmbpName bp} = {bmName bm} {showHex' $ (1 `shiftL` bmbpBitPos bp :: Word32)}|] 
 
 ----------------------------------------
 -- * Helpers
 ----------------------------------------
-
-showHex' :: Word32 -> String
-showHex' n = "0x" ++ showHex n ""
 
 associateBitmasks :: [Bitmask] -> [BitmaskType] 
                   -> [(BitmaskType, Maybe Bitmask)]

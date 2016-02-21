@@ -8,6 +8,7 @@ import Data.Maybe(catMaybes)
 import Spec
 import Spec.Type
 import Text.InterpolatedString.Perl6
+import Write.Constant
 import Write.Enum
 import Write.Header
 import Write.Type.Base
@@ -18,12 +19,15 @@ import Write.Type.Struct
 import Write.TypeConverter
 
 haskellize :: Spec -> String
-haskellize spec = let typeConverter = cTypeToHsTypeString
+haskellize spec = let -- TODO: Remove
+                      typeConverter = cTypeToHsTypeString
+                      typeEnv = buildTypeEnvFromSpec spec
                   in [qc|{writeExtensions allExtensions }
 module Vulkan where
 
 {writeImports allImports}
 
+{writeConstants (sConstants spec)}
 {writeBaseTypes typeConverter 
                 (catMaybes . fmap typeDeclToBaseType . sTypes $ spec)}
 {writeHandleTypes typeConverter 
@@ -35,9 +39,9 @@ module Vulkan where
                    (sBitmasks spec) 
                    (catMaybes . fmap typeDeclToBitmaskType . sTypes $ spec)}
 {writeEnums (sEnums spec)}
-{writeStructTypes typeConverter 
+{writeStructTypes typeEnv 
                   (catMaybes . fmap typeDeclToStructType . sTypes $ spec)}
-{writeUnionTypes typeConverter 
+{writeUnionTypes typeEnv 
                   (catMaybes . fmap typeDeclToUnionType . sTypes $ spec)}
 |]
 
@@ -57,7 +61,7 @@ allImports = [ Import "Data.Bits" ["Bits", "FiniteBits"]
              , Import "Data.Void" ["Void"]
              , Import "Data.Word" ["Word8", "Word32", "Word64"]
              , Import "Foreign.C.Types" ["CChar", "CFloat", "CSize"]
-             , Import "Foreign.Ptr" ["Ptr", "FunPtr", "plusPtr"]
+             , Import "Foreign.Ptr" ["Ptr", "FunPtr", "plusPtr", "castPtr"]
              , Import "Foreign.Storable" ["Storable(..)"]
              ]
 

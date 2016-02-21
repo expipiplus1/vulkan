@@ -6,7 +6,7 @@ module Spec.StripExtensions
 
 import Spec
 import Spec.Type
-import Write.TypeConverter(cTypeNames)
+import Write.TypeConverter(cTypeDependencyNames)
 import Data.Maybe(catMaybes)
 
 -- | 'stripWSIExtensions' removes everything that depends upon any windowing
@@ -60,15 +60,15 @@ allowedTypes = [ "void"
 typeDeclDependees :: TypeDecl -> [String]
 typeDeclDependees (AnInclude _)          = []
 typeDeclDependees (ADefine _)            = []
-typeDeclDependees (ABaseType bt)         = []
-typeDeclDependees (APlatformType pt)     = []
-typeDeclDependees (ABitmaskType bmt)     = cTypeNames $ bmtCType bmt
-typeDeclDependees (AHandleType ht)       = cTypeNames $ htCType ht
-typeDeclDependees (AnEnumType et)        = []
-typeDeclDependees (AFuncPointerType fpt) = cTypeNames $ fptCType fpt
-typeDeclDependees (AStructType st)       = concatMap (cTypeNames . smCType) 
+typeDeclDependees (ABaseType _)         = []
+typeDeclDependees (APlatformType _)     = []
+typeDeclDependees (ABitmaskType bmt)     = cTypeDependencyNames $ bmtCType bmt
+typeDeclDependees (AHandleType ht)       = cTypeDependencyNames $ htCType ht
+typeDeclDependees (AnEnumType _)        = []
+typeDeclDependees (AFuncPointerType fpt) = cTypeDependencyNames $ fptCType fpt
+typeDeclDependees (AStructType st)       = concatMap (cTypeDependencyNames . smCType) 
                                            $ stMembers st
-typeDeclDependees (AUnionType ut)        = concatMap (cTypeNames . smCType) 
+typeDeclDependees (AUnionType ut)        = concatMap (cTypeDependencyNames . smCType) 
                                            $ utMembers ut
 
 

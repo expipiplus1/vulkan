@@ -8,6 +8,7 @@ module Parse.Spec
 import Spec
 import Parse.Bitmask
 import Parse.CType
+import Parse.Constant
 import Parse.Command
 import Parse.Enum
 import Parse.Type
@@ -26,6 +27,7 @@ parseSpecXML :: ParseArrow XmlTree Spec
 parseSpecXML = isRoot /> hasName "registry" >>> extract
   where extract = proc registry -> do
           sTypes <- parseTypes <<< getChildren -< registry
+          sConstants <- oneRequired "constants" (deep parseConstants) -< registry
           sEnums <- listA (deep parseEnum) -< registry
           sBitmasks <- listA (deep parseBitmask) -< registry
           sCommands <- listA (deep parseCommand) <<< 
