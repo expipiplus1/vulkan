@@ -31,6 +31,7 @@ executable generate
                      , Parse.State
                      , Parse.Type
                      , Parse.Utils
+                     , Write.Command
                      , Write.Constant
                      , Write.Enum
                      , Write.Type.Bitmask

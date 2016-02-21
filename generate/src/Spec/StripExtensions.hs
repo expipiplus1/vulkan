@@ -5,6 +5,7 @@ module Spec.StripExtensions
   ) where
 
 import Spec
+import Spec.Command
 import Spec.Type
 import Write.TypeConverter(cTypeDependencyNames)
 import Data.Maybe(catMaybes)
@@ -14,6 +15,7 @@ import Data.Maybe(catMaybes)
 stripWSIExtensions :: Spec -> Spec
 stripWSIExtensions spec = 
   let allTypes = sTypes spec
+      allCommands = sCommands spec
       platformTypes = catMaybes . fmap typeDeclToPlatformType $ sTypes spec
       disallowedPlatformTypes = filter (isDisallowedTypeName . ptName) $ 
                                    platformTypes
@@ -21,9 +23,20 @@ stripWSIExtensions spec =
                                           (==) 
                                           (APlatformType <$> 
                                              disallowedPlatformTypes)
+      disallowedTypeNames = catMaybes . fmap typeDeclTypeName $ disallowedTypes
       isInDisallowed  = flip elem disallowedTypes
       allowedTypeDecls = filter (not . isInDisallowed) allTypes
-  in spec{sTypes = allowedTypeDecls}
+      isInDisallowedNames = flip elem disallowedTypeNames
+      allowedCommands = filter 
+                         (not . any isInDisallowedNames . commandDependencies) 
+                         allCommands
+  in spec{ sTypes = allowedTypeDecls
+         , sCommands = allowedCommands
+         }
+
+commandDependencies :: Command -> [String]
+commandDependencies c = concatMap cTypeDependencyNames types
+  where types = cReturnType c : fmap pType (cParameters c)
 
 --
 -- Not exactly optimal in terms of complxity, but wins out in code simplicity 

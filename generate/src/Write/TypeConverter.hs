@@ -15,6 +15,7 @@ module Write.TypeConverter
   , getTypeInfo
   , MemberInfo(..)
   , calculateMemberPacking
+  , simpleCon
   , pattern TypeDef
   ) where
 

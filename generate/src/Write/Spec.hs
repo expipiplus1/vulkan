@@ -17,6 +17,7 @@ import Write.Type.FuncPointer
 import Write.Type.Handle
 import Write.Type.Struct
 import Write.TypeConverter
+import Write.Command
 
 haskellize :: Spec -> String
 haskellize spec = let -- TODO: Remove
@@ -43,11 +44,13 @@ module Vulkan where
                   (catMaybes . fmap typeDeclToStructType . sTypes $ spec)}
 {writeUnionTypes typeEnv 
                   (catMaybes . fmap typeDeclToUnionType . sTypes $ spec)}
+{writeCommands (sCommands spec)}
 |]
 
 allExtensions :: [Extension]
 allExtensions = [ Extension "DataKinds"
                 , Extension "DuplicateRecordFields"
+                , Extension "ForeignFunctionInterface"
                 , Extension "GeneralizedNewtypeDeriving"
                 , Extension "PatternSynonyms"
                 , Extension "Strict"
@@ -60,7 +63,7 @@ allImports = [ Import "Data.Bits" ["Bits", "FiniteBits"]
              , Import "Data.Vector.Fixed.Cont" ["ToPeano"]
              , Import "Data.Void" ["Void"]
              , Import "Data.Word" ["Word8", "Word32", "Word64"]
-             , Import "Foreign.C.Types" ["CChar", "CFloat", "CSize"]
+             , Import "Foreign.C.Types" ["CChar", "CFloat(..)", "CSize(..)"]
              , Import "Foreign.Ptr" ["Ptr", "FunPtr", "plusPtr", "castPtr"]
              , Import "Foreign.Storable" ["Storable(..)"]
              ]
