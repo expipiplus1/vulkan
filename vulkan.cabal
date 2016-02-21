@@ -1,7 +1,7 @@
 name:                vulkan
 version:             0.1.0.0
 synopsis:            Bindings to the Vulkan graphics API.
-description:         Please see README.md
+description:         Please see readme.md
 homepage:            http://github.com/expipiplus1/vulkan#readme
 license:             BSD3
 license-file:        LICENSE
@@ -10,7 +10,7 @@ maintainer:          live.long.and.prosper@monoid.al
 copyright:           2016 Joe Hermaszewski
 category:            Graphics
 build-type:          Simple
--- extra-source-files:
+extra-source-files:  readme.md
 cabal-version:       >=1.10
 
 library
