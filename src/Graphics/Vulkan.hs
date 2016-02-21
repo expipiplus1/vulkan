@@ -5,7 +5,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE Strict #-}
 
-module Vulkan where
+module Graphics.Vulkan where
 
 import Data.Bits (Bits, FiniteBits)
 import Data.Int (Int32)
