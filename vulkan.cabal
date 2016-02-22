@@ -1,5 +1,5 @@
 name:                vulkan
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            Bindings to the Vulkan graphics API.
 description:         Please see readme.md
 homepage:            http://github.com/expipiplus1/vulkan#readme
@@ -19,7 +19,7 @@ library
   build-depends:       base >= 4.9 && < 5
                      , fixed-vector >= 0.8 && < 0.9
   default-language:    Haskell2010
-  ghc-options:         -freduction-depth=0
+  ghc-options:         -freduction-depth=0 -O0
 
 source-repository head
   type:     git

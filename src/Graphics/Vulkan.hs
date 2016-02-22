@@ -2102,8 +2102,8 @@ data VkOffset2D =
   deriving (Eq)
 
 instance Storable VkOffset2D where
-  sizeOf _ = 8
-  alignment _ = 4
+  sizeOf ~_ = 8
+  alignment ~_ = 4
   peek ptr = VkOffset2D <$> peek (ptr `plusPtr` 0)
                         <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkOffset2D))
@@ -2119,8 +2119,8 @@ data VkOffset3D =
   deriving (Eq)
 
 instance Storable VkOffset3D where
-  sizeOf _ = 12
-  alignment _ = 4
+  sizeOf ~_ = 12
+  alignment ~_ = 4
   peek ptr = VkOffset3D <$> peek (ptr `plusPtr` 0)
                         <*> peek (ptr `plusPtr` 4)
                         <*> peek (ptr `plusPtr` 8)
@@ -2137,8 +2137,8 @@ data VkExtent2D =
   deriving (Eq)
 
 instance Storable VkExtent2D where
-  sizeOf _ = 8
-  alignment _ = 4
+  sizeOf ~_ = 8
+  alignment ~_ = 4
   peek ptr = VkExtent2D <$> peek (ptr `plusPtr` 0)
                         <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkWidth (poked :: VkExtent2D))
@@ -2154,8 +2154,8 @@ data VkExtent3D =
   deriving (Eq)
 
 instance Storable VkExtent3D where
-  sizeOf _ = 12
-  alignment _ = 4
+  sizeOf ~_ = 12
+  alignment ~_ = 4
   peek ptr = VkExtent3D <$> peek (ptr `plusPtr` 0)
                         <*> peek (ptr `plusPtr` 4)
                         <*> peek (ptr `plusPtr` 8)
@@ -2176,8 +2176,8 @@ data VkViewport =
   deriving (Eq)
 
 instance Storable VkViewport where
-  sizeOf _ = 24
-  alignment _ = 4
+  sizeOf ~_ = 24
+  alignment ~_ = 4
   peek ptr = VkViewport <$> peek (ptr `plusPtr` 0)
                         <*> peek (ptr `plusPtr` 4)
                         <*> peek (ptr `plusPtr` 8)
@@ -2200,8 +2200,8 @@ data VkRect2D =
   deriving (Eq)
 
 instance Storable VkRect2D where
-  sizeOf _ = 16
-  alignment _ = 4
+  sizeOf ~_ = 16
+  alignment ~_ = 4
   peek ptr = VkRect2D <$> peek (ptr `plusPtr` 0)
                       <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkOffset (poked :: VkRect2D))
@@ -2216,8 +2216,8 @@ data VkRect3D =
   deriving (Eq)
 
 instance Storable VkRect3D where
-  sizeOf _ = 24
-  alignment _ = 4
+  sizeOf ~_ = 24
+  alignment ~_ = 4
   peek ptr = VkRect3D <$> peek (ptr `plusPtr` 0)
                       <*> peek (ptr `plusPtr` 12)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkOffset (poked :: VkRect3D))
@@ -2233,8 +2233,8 @@ data VkClearRect =
   deriving (Eq)
 
 instance Storable VkClearRect where
-  sizeOf _ = 24
-  alignment _ = 4
+  sizeOf ~_ = 24
+  alignment ~_ = 4
   peek ptr = VkClearRect <$> peek (ptr `plusPtr` 0)
                          <*> peek (ptr `plusPtr` 16)
                          <*> peek (ptr `plusPtr` 20)
@@ -2253,8 +2253,8 @@ data VkComponentMapping =
   deriving (Eq)
 
 instance Storable VkComponentMapping where
-  sizeOf _ = 16
-  alignment _ = 4
+  sizeOf ~_ = 16
+  alignment ~_ = 4
   peek ptr = VkComponentMapping <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 4)
                                 <*> peek (ptr `plusPtr` 8)
@@ -2280,8 +2280,8 @@ data VkPhysicalDeviceProperties =
   deriving (Eq)
 
 instance Storable VkPhysicalDeviceProperties where
-  sizeOf _ = 824
-  alignment _ = 8
+  sizeOf ~_ = 824
+  alignment ~_ = 8
   peek ptr = VkPhysicalDeviceProperties <$> peek (ptr `plusPtr` 0)
                                         <*> peek (ptr `plusPtr` 4)
                                         <*> peek (ptr `plusPtr` 8)
@@ -2310,8 +2310,8 @@ data VkExtensionProperties =
   deriving (Eq)
 
 instance Storable VkExtensionProperties where
-  sizeOf _ = 260
-  alignment _ = 4
+  sizeOf ~_ = 260
+  alignment ~_ = 4
   peek ptr = VkExtensionProperties <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 256)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkExtensionName (poked :: VkExtensionProperties))
@@ -2328,8 +2328,8 @@ data VkLayerProperties =
   deriving (Eq)
 
 instance Storable VkLayerProperties where
-  sizeOf _ = 520
-  alignment _ = 4
+  sizeOf ~_ = 520
+  alignment ~_ = 4
   peek ptr = VkLayerProperties <$> peek (ptr `plusPtr` 0)
                                <*> peek (ptr `plusPtr` 256)
                                <*> peek (ptr `plusPtr` 260)
@@ -2353,8 +2353,8 @@ data VkApplicationInfo =
   deriving (Eq)
 
 instance Storable VkApplicationInfo where
-  sizeOf _ = 48
-  alignment _ = 8
+  sizeOf ~_ = 48
+  alignment ~_ = 8
   peek ptr = VkApplicationInfo <$> peek (ptr `plusPtr` 0)
                                <*> peek (ptr `plusPtr` 8)
                                <*> peek (ptr `plusPtr` 16)
@@ -2383,8 +2383,8 @@ data VkAllocationCallbacks =
   deriving (Eq)
 
 instance Storable VkAllocationCallbacks where
-  sizeOf _ = 48
-  alignment _ = 8
+  sizeOf ~_ = 48
+  alignment ~_ = 8
   peek ptr = VkAllocationCallbacks <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
@@ -2411,8 +2411,8 @@ data VkDeviceQueueCreateInfo =
   deriving (Eq)
 
 instance Storable VkDeviceQueueCreateInfo where
-  sizeOf _ = 40
-  alignment _ = 8
+  sizeOf ~_ = 40
+  alignment ~_ = 8
   peek ptr = VkDeviceQueueCreateInfo <$> peek (ptr `plusPtr` 0)
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 16)
@@ -2443,8 +2443,8 @@ data VkDeviceCreateInfo =
   deriving (Eq)
 
 instance Storable VkDeviceCreateInfo where
-  sizeOf _ = 72
-  alignment _ = 8
+  sizeOf ~_ = 72
+  alignment ~_ = 8
   peek ptr = VkDeviceCreateInfo <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 8)
                                 <*> peek (ptr `plusPtr` 16)
@@ -2481,8 +2481,8 @@ data VkInstanceCreateInfo =
   deriving (Eq)
 
 instance Storable VkInstanceCreateInfo where
-  sizeOf _ = 64
-  alignment _ = 8
+  sizeOf ~_ = 64
+  alignment ~_ = 8
   peek ptr = VkInstanceCreateInfo <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
@@ -2511,8 +2511,8 @@ data VkQueueFamilyProperties =
   deriving (Eq)
 
 instance Storable VkQueueFamilyProperties where
-  sizeOf _ = 24
-  alignment _ = 4
+  sizeOf ~_ = 24
+  alignment ~_ = 4
   peek ptr = VkQueueFamilyProperties <$> peek (ptr `plusPtr` 0)
                                      <*> peek (ptr `plusPtr` 4)
                                      <*> peek (ptr `plusPtr` 8)
@@ -2533,8 +2533,8 @@ data VkPhysicalDeviceMemoryProperties =
   deriving (Eq)
 
 instance Storable VkPhysicalDeviceMemoryProperties where
-  sizeOf _ = 520
-  alignment _ = 8
+  sizeOf ~_ = 520
+  alignment ~_ = 8
   peek ptr = VkPhysicalDeviceMemoryProperties <$> peek (ptr `plusPtr` 0)
                                               <*> peek (ptr `plusPtr` 4)
                                               <*> peek (ptr `plusPtr` 260)
@@ -2555,8 +2555,8 @@ data VkMemoryAllocateInfo =
   deriving (Eq)
 
 instance Storable VkMemoryAllocateInfo where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkMemoryAllocateInfo <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
@@ -2576,8 +2576,8 @@ data VkMemoryRequirements =
   deriving (Eq)
 
 instance Storable VkMemoryRequirements where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkMemoryRequirements <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
@@ -2595,8 +2595,8 @@ data VkSparseImageFormatProperties =
   deriving (Eq)
 
 instance Storable VkSparseImageFormatProperties where
-  sizeOf _ = 20
-  alignment _ = 4
+  sizeOf ~_ = 20
+  alignment ~_ = 4
   peek ptr = VkSparseImageFormatProperties <$> peek (ptr `plusPtr` 0)
                                            <*> peek (ptr `plusPtr` 4)
                                            <*> peek (ptr `plusPtr` 16)
@@ -2616,8 +2616,8 @@ data VkSparseImageMemoryRequirements =
   deriving (Eq)
 
 instance Storable VkSparseImageMemoryRequirements where
-  sizeOf _ = 48
-  alignment _ = 8
+  sizeOf ~_ = 48
+  alignment ~_ = 8
   peek ptr = VkSparseImageMemoryRequirements <$> peek (ptr `plusPtr` 0)
                                              <*> peek (ptr `plusPtr` 20)
                                              <*> peek (ptr `plusPtr` 24)
@@ -2638,8 +2638,8 @@ data VkMemoryType =
   deriving (Eq)
 
 instance Storable VkMemoryType where
-  sizeOf _ = 8
-  alignment _ = 4
+  sizeOf ~_ = 8
+  alignment ~_ = 4
   peek ptr = VkMemoryType <$> peek (ptr `plusPtr` 0)
                           <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkPropertyFlags (poked :: VkMemoryType))
@@ -2654,8 +2654,8 @@ data VkMemoryHeap =
   deriving (Eq)
 
 instance Storable VkMemoryHeap where
-  sizeOf _ = 16
-  alignment _ = 8
+  sizeOf ~_ = 16
+  alignment ~_ = 8
   peek ptr = VkMemoryHeap <$> peek (ptr `plusPtr` 0)
                           <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSize (poked :: VkMemoryHeap))
@@ -2673,8 +2673,8 @@ data VkMappedMemoryRange =
   deriving (Eq)
 
 instance Storable VkMappedMemoryRange where
-  sizeOf _ = 40
-  alignment _ = 8
+  sizeOf ~_ = 40
+  alignment ~_ = 8
   peek ptr = VkMappedMemoryRange <$> peek (ptr `plusPtr` 0)
                                  <*> peek (ptr `plusPtr` 8)
                                  <*> peek (ptr `plusPtr` 16)
@@ -2696,8 +2696,8 @@ data VkFormatProperties =
   deriving (Eq)
 
 instance Storable VkFormatProperties where
-  sizeOf _ = 12
-  alignment _ = 4
+  sizeOf ~_ = 12
+  alignment ~_ = 4
   peek ptr = VkFormatProperties <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 4)
                                 <*> peek (ptr `plusPtr` 8)
@@ -2717,8 +2717,8 @@ data VkImageFormatProperties =
   deriving (Eq)
 
 instance Storable VkImageFormatProperties where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkImageFormatProperties <$> peek (ptr `plusPtr` 0)
                                      <*> peek (ptr `plusPtr` 12)
                                      <*> peek (ptr `plusPtr` 16)
@@ -2740,8 +2740,8 @@ data VkDescriptorBufferInfo =
   deriving (Eq)
 
 instance Storable VkDescriptorBufferInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkDescriptorBufferInfo <$> peek (ptr `plusPtr` 0)
                                     <*> peek (ptr `plusPtr` 8)
                                     <*> peek (ptr `plusPtr` 16)
@@ -2759,8 +2759,8 @@ data VkDescriptorImageInfo =
   deriving (Eq)
 
 instance Storable VkDescriptorImageInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkDescriptorImageInfo <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
@@ -2785,8 +2785,8 @@ data VkWriteDescriptorSet =
   deriving (Eq)
 
 instance Storable VkWriteDescriptorSet where
-  sizeOf _ = 64
-  alignment _ = 8
+  sizeOf ~_ = 64
+  alignment ~_ = 8
   peek ptr = VkWriteDescriptorSet <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
@@ -2824,8 +2824,8 @@ data VkCopyDescriptorSet =
   deriving (Eq)
 
 instance Storable VkCopyDescriptorSet where
-  sizeOf _ = 56
-  alignment _ = 8
+  sizeOf ~_ = 56
+  alignment ~_ = 8
   peek ptr = VkCopyDescriptorSet <$> peek (ptr `plusPtr` 0)
                                  <*> peek (ptr `plusPtr` 8)
                                  <*> peek (ptr `plusPtr` 16)
@@ -2860,8 +2860,8 @@ data VkBufferCreateInfo =
   deriving (Eq)
 
 instance Storable VkBufferCreateInfo where
-  sizeOf _ = 56
-  alignment _ = 8
+  sizeOf ~_ = 56
+  alignment ~_ = 8
   peek ptr = VkBufferCreateInfo <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 8)
                                 <*> peek (ptr `plusPtr` 16)
@@ -2893,8 +2893,8 @@ data VkBufferViewCreateInfo =
   deriving (Eq)
 
 instance Storable VkBufferViewCreateInfo where
-  sizeOf _ = 56
-  alignment _ = 8
+  sizeOf ~_ = 56
+  alignment ~_ = 8
   peek ptr = VkBufferViewCreateInfo <$> peek (ptr `plusPtr` 0)
                                     <*> peek (ptr `plusPtr` 8)
                                     <*> peek (ptr `plusPtr` 16)
@@ -2920,8 +2920,8 @@ data VkImageSubresource =
   deriving (Eq)
 
 instance Storable VkImageSubresource where
-  sizeOf _ = 12
-  alignment _ = 4
+  sizeOf ~_ = 12
+  alignment ~_ = 4
   peek ptr = VkImageSubresource <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 4)
                                 <*> peek (ptr `plusPtr` 8)
@@ -2940,8 +2940,8 @@ data VkImageSubresourceLayers =
   deriving (Eq)
 
 instance Storable VkImageSubresourceLayers where
-  sizeOf _ = 16
-  alignment _ = 4
+  sizeOf ~_ = 16
+  alignment ~_ = 4
   peek ptr = VkImageSubresourceLayers <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 4)
                                       <*> peek (ptr `plusPtr` 8)
@@ -2963,8 +2963,8 @@ data VkImageSubresourceRange =
   deriving (Eq)
 
 instance Storable VkImageSubresourceRange where
-  sizeOf _ = 20
-  alignment _ = 4
+  sizeOf ~_ = 20
+  alignment ~_ = 4
   peek ptr = VkImageSubresourceRange <$> peek (ptr `plusPtr` 0)
                                      <*> peek (ptr `plusPtr` 4)
                                      <*> peek (ptr `plusPtr` 8)
@@ -2987,8 +2987,8 @@ data VkMemoryBarrier =
   deriving (Eq)
 
 instance Storable VkMemoryBarrier where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkMemoryBarrier <$> peek (ptr `plusPtr` 0)
                              <*> peek (ptr `plusPtr` 8)
                              <*> peek (ptr `plusPtr` 16)
@@ -3014,8 +3014,8 @@ data VkBufferMemoryBarrier =
   deriving (Eq)
 
 instance Storable VkBufferMemoryBarrier where
-  sizeOf _ = 56
-  alignment _ = 8
+  sizeOf ~_ = 56
+  alignment ~_ = 8
   peek ptr = VkBufferMemoryBarrier <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
@@ -3052,8 +3052,8 @@ data VkImageMemoryBarrier =
   deriving (Eq)
 
 instance Storable VkImageMemoryBarrier where
-  sizeOf _ = 72
-  alignment _ = 8
+  sizeOf ~_ = 72
+  alignment ~_ = 8
   peek ptr = VkImageMemoryBarrier <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
@@ -3097,8 +3097,8 @@ data VkImageCreateInfo =
   deriving (Eq)
 
 instance Storable VkImageCreateInfo where
-  sizeOf _ = 88
-  alignment _ = 8
+  sizeOf ~_ = 88
+  alignment ~_ = 8
   peek ptr = VkImageCreateInfo <$> peek (ptr `plusPtr` 0)
                                <*> peek (ptr `plusPtr` 8)
                                <*> peek (ptr `plusPtr` 16)
@@ -3142,8 +3142,8 @@ data VkSubresourceLayout =
   deriving (Eq)
 
 instance Storable VkSubresourceLayout where
-  sizeOf _ = 40
-  alignment _ = 8
+  sizeOf ~_ = 40
+  alignment ~_ = 8
   peek ptr = VkSubresourceLayout <$> peek (ptr `plusPtr` 0)
                                  <*> peek (ptr `plusPtr` 8)
                                  <*> peek (ptr `plusPtr` 16)
@@ -3170,8 +3170,8 @@ data VkImageViewCreateInfo =
   deriving (Eq)
 
 instance Storable VkImageViewCreateInfo where
-  sizeOf _ = 80
-  alignment _ = 8
+  sizeOf ~_ = 80
+  alignment ~_ = 8
   peek ptr = VkImageViewCreateInfo <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
@@ -3199,8 +3199,8 @@ data VkBufferCopy =
   deriving (Eq)
 
 instance Storable VkBufferCopy where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkBufferCopy <$> peek (ptr `plusPtr` 0)
                           <*> peek (ptr `plusPtr` 8)
                           <*> peek (ptr `plusPtr` 16)
@@ -3220,8 +3220,8 @@ data VkSparseMemoryBind =
   deriving (Eq)
 
 instance Storable VkSparseMemoryBind where
-  sizeOf _ = 40
-  alignment _ = 8
+  sizeOf ~_ = 40
+  alignment ~_ = 8
   peek ptr = VkSparseMemoryBind <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 8)
                                 <*> peek (ptr `plusPtr` 16)
@@ -3246,8 +3246,8 @@ data VkSparseImageMemoryBind =
   deriving (Eq)
 
 instance Storable VkSparseImageMemoryBind where
-  sizeOf _ = 64
-  alignment _ = 8
+  sizeOf ~_ = 64
+  alignment ~_ = 8
   peek ptr = VkSparseImageMemoryBind <$> peek (ptr `plusPtr` 0)
                                      <*> peek (ptr `plusPtr` 12)
                                      <*> peek (ptr `plusPtr` 24)
@@ -3271,8 +3271,8 @@ data VkSparseBufferMemoryBindInfo =
   deriving (Eq)
 
 instance Storable VkSparseBufferMemoryBindInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkSparseBufferMemoryBindInfo <$> peek (ptr `plusPtr` 0)
                                           <*> peek (ptr `plusPtr` 8)
                                           <*> peek (ptr `plusPtr` 16)
@@ -3290,8 +3290,8 @@ data VkSparseImageOpaqueMemoryBindInfo =
   deriving (Eq)
 
 instance Storable VkSparseImageOpaqueMemoryBindInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkSparseImageOpaqueMemoryBindInfo <$> peek (ptr `plusPtr` 0)
                                                <*> peek (ptr `plusPtr` 8)
                                                <*> peek (ptr `plusPtr` 16)
@@ -3309,8 +3309,8 @@ data VkSparseImageMemoryBindInfo =
   deriving (Eq)
 
 instance Storable VkSparseImageMemoryBindInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkSparseImageMemoryBindInfo <$> peek (ptr `plusPtr` 0)
                                          <*> peek (ptr `plusPtr` 8)
                                          <*> peek (ptr `plusPtr` 16)
@@ -3337,8 +3337,8 @@ data VkBindSparseInfo =
   deriving (Eq)
 
 instance Storable VkBindSparseInfo where
-  sizeOf _ = 96
-  alignment _ = 8
+  sizeOf ~_ = 96
+  alignment ~_ = 8
   peek ptr = VkBindSparseInfo <$> peek (ptr `plusPtr` 0)
                               <*> peek (ptr `plusPtr` 8)
                               <*> peek (ptr `plusPtr` 16)
@@ -3376,8 +3376,8 @@ data VkImageCopy =
   deriving (Eq)
 
 instance Storable VkImageCopy where
-  sizeOf _ = 68
-  alignment _ = 4
+  sizeOf ~_ = 68
+  alignment ~_ = 4
   peek ptr = VkImageCopy <$> peek (ptr `plusPtr` 0)
                          <*> peek (ptr `plusPtr` 16)
                          <*> peek (ptr `plusPtr` 28)
@@ -3400,8 +3400,8 @@ data VkImageBlit =
   deriving (Eq)
 
 instance Storable VkImageBlit where
-  sizeOf _ = 80
-  alignment _ = 4
+  sizeOf ~_ = 80
+  alignment ~_ = 4
   peek ptr = VkImageBlit <$> peek (ptr `plusPtr` 0)
                          <*> peek (ptr `plusPtr` 16)
                          <*> peek (ptr `plusPtr` 40)
@@ -3424,8 +3424,8 @@ data VkBufferImageCopy =
   deriving (Eq)
 
 instance Storable VkBufferImageCopy where
-  sizeOf _ = 56
-  alignment _ = 8
+  sizeOf ~_ = 56
+  alignment ~_ = 8
   peek ptr = VkBufferImageCopy <$> peek (ptr `plusPtr` 0)
                                <*> peek (ptr `plusPtr` 8)
                                <*> peek (ptr `plusPtr` 12)
@@ -3451,8 +3451,8 @@ data VkImageResolve =
   deriving (Eq)
 
 instance Storable VkImageResolve where
-  sizeOf _ = 68
-  alignment _ = 4
+  sizeOf ~_ = 68
+  alignment ~_ = 4
   peek ptr = VkImageResolve <$> peek (ptr `plusPtr` 0)
                             <*> peek (ptr `plusPtr` 16)
                             <*> peek (ptr `plusPtr` 28)
@@ -3476,8 +3476,8 @@ data VkShaderModuleCreateInfo =
   deriving (Eq)
 
 instance Storable VkShaderModuleCreateInfo where
-  sizeOf _ = 40
-  alignment _ = 8
+  sizeOf ~_ = 40
+  alignment ~_ = 8
   peek ptr = VkShaderModuleCreateInfo <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 8)
                                       <*> peek (ptr `plusPtr` 16)
@@ -3501,8 +3501,8 @@ data VkDescriptorSetLayoutBinding =
   deriving (Eq)
 
 instance Storable VkDescriptorSetLayoutBinding where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkDescriptorSetLayoutBinding <$> peek (ptr `plusPtr` 0)
                                           <*> peek (ptr `plusPtr` 4)
                                           <*> peek (ptr `plusPtr` 8)
@@ -3526,8 +3526,8 @@ data VkDescriptorSetLayoutCreateInfo =
   deriving (Eq)
 
 instance Storable VkDescriptorSetLayoutCreateInfo where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkDescriptorSetLayoutCreateInfo <$> peek (ptr `plusPtr` 0)
                                              <*> peek (ptr `plusPtr` 8)
                                              <*> peek (ptr `plusPtr` 16)
@@ -3548,8 +3548,8 @@ data VkDescriptorPoolSize =
   deriving (Eq)
 
 instance Storable VkDescriptorPoolSize where
-  sizeOf _ = 8
-  alignment _ = 4
+  sizeOf ~_ = 8
+  alignment ~_ = 4
   peek ptr = VkDescriptorPoolSize <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkDescriptorPoolSize))
@@ -3568,8 +3568,8 @@ data VkDescriptorPoolCreateInfo =
   deriving (Eq)
 
 instance Storable VkDescriptorPoolCreateInfo where
-  sizeOf _ = 40
-  alignment _ = 8
+  sizeOf ~_ = 40
+  alignment ~_ = 8
   peek ptr = VkDescriptorPoolCreateInfo <$> peek (ptr `plusPtr` 0)
                                         <*> peek (ptr `plusPtr` 8)
                                         <*> peek (ptr `plusPtr` 16)
@@ -3595,8 +3595,8 @@ data VkDescriptorSetAllocateInfo =
   deriving (Eq)
 
 instance Storable VkDescriptorSetAllocateInfo where
-  sizeOf _ = 40
-  alignment _ = 8
+  sizeOf ~_ = 40
+  alignment ~_ = 8
   peek ptr = VkDescriptorSetAllocateInfo <$> peek (ptr `plusPtr` 0)
                                          <*> peek (ptr `plusPtr` 8)
                                          <*> peek (ptr `plusPtr` 16)
@@ -3618,8 +3618,8 @@ data VkSpecializationMapEntry =
   deriving (Eq)
 
 instance Storable VkSpecializationMapEntry where
-  sizeOf _ = 16
-  alignment _ = 8
+  sizeOf ~_ = 16
+  alignment ~_ = 8
   peek ptr = VkSpecializationMapEntry <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 4)
                                       <*> peek (ptr `plusPtr` 8)
@@ -3638,8 +3638,8 @@ data VkSpecializationInfo =
   deriving (Eq)
 
 instance Storable VkSpecializationInfo where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkSpecializationInfo <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
@@ -3663,8 +3663,8 @@ data VkPipelineShaderStageCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineShaderStageCreateInfo where
-  sizeOf _ = 48
-  alignment _ = 8
+  sizeOf ~_ = 48
+  alignment ~_ = 8
   peek ptr = VkPipelineShaderStageCreateInfo <$> peek (ptr `plusPtr` 0)
                                              <*> peek (ptr `plusPtr` 8)
                                              <*> peek (ptr `plusPtr` 16)
@@ -3694,8 +3694,8 @@ data VkComputePipelineCreateInfo =
   deriving (Eq)
 
 instance Storable VkComputePipelineCreateInfo where
-  sizeOf _ = 96
-  alignment _ = 8
+  sizeOf ~_ = 96
+  alignment ~_ = 8
   peek ptr = VkComputePipelineCreateInfo <$> peek (ptr `plusPtr` 0)
                                          <*> peek (ptr `plusPtr` 8)
                                          <*> peek (ptr `plusPtr` 16)
@@ -3721,8 +3721,8 @@ data VkVertexInputBindingDescription =
   deriving (Eq)
 
 instance Storable VkVertexInputBindingDescription where
-  sizeOf _ = 12
-  alignment _ = 4
+  sizeOf ~_ = 12
+  alignment ~_ = 4
   peek ptr = VkVertexInputBindingDescription <$> peek (ptr `plusPtr` 0)
                                              <*> peek (ptr `plusPtr` 4)
                                              <*> peek (ptr `plusPtr` 8)
@@ -3741,8 +3741,8 @@ data VkVertexInputAttributeDescription =
   deriving (Eq)
 
 instance Storable VkVertexInputAttributeDescription where
-  sizeOf _ = 16
-  alignment _ = 4
+  sizeOf ~_ = 16
+  alignment ~_ = 4
   peek ptr = VkVertexInputAttributeDescription <$> peek (ptr `plusPtr` 0)
                                                <*> peek (ptr `plusPtr` 4)
                                                <*> peek (ptr `plusPtr` 8)
@@ -3766,8 +3766,8 @@ data VkPipelineVertexInputStateCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineVertexInputStateCreateInfo where
-  sizeOf _ = 48
-  alignment _ = 8
+  sizeOf ~_ = 48
+  alignment ~_ = 8
   peek ptr = VkPipelineVertexInputStateCreateInfo <$> peek (ptr `plusPtr` 0)
                                                   <*> peek (ptr `plusPtr` 8)
                                                   <*> peek (ptr `plusPtr` 16)
@@ -3795,8 +3795,8 @@ data VkPipelineInputAssemblyStateCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineInputAssemblyStateCreateInfo where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkPipelineInputAssemblyStateCreateInfo <$> peek (ptr `plusPtr` 0)
                                                     <*> peek (ptr `plusPtr` 8)
                                                     <*> peek (ptr `plusPtr` 16)
@@ -3819,8 +3819,8 @@ data VkPipelineTessellationStateCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineTessellationStateCreateInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkPipelineTessellationStateCreateInfo <$> peek (ptr `plusPtr` 0)
                                                    <*> peek (ptr `plusPtr` 8)
                                                    <*> peek (ptr `plusPtr` 16)
@@ -3844,8 +3844,8 @@ data VkPipelineViewportStateCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineViewportStateCreateInfo where
-  sizeOf _ = 48
-  alignment _ = 8
+  sizeOf ~_ = 48
+  alignment ~_ = 8
   peek ptr = VkPipelineViewportStateCreateInfo <$> peek (ptr `plusPtr` 0)
                                                <*> peek (ptr `plusPtr` 8)
                                                <*> peek (ptr `plusPtr` 16)
@@ -3881,8 +3881,8 @@ data VkPipelineRasterizationStateCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineRasterizationStateCreateInfo where
-  sizeOf _ = 64
-  alignment _ = 8
+  sizeOf ~_ = 64
+  alignment ~_ = 8
   peek ptr = VkPipelineRasterizationStateCreateInfo <$> peek (ptr `plusPtr` 0)
                                                     <*> peek (ptr `plusPtr` 8)
                                                     <*> peek (ptr `plusPtr` 16)
@@ -3926,8 +3926,8 @@ data VkPipelineMultisampleStateCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineMultisampleStateCreateInfo where
-  sizeOf _ = 48
-  alignment _ = 8
+  sizeOf ~_ = 48
+  alignment ~_ = 8
   peek ptr = VkPipelineMultisampleStateCreateInfo <$> peek (ptr `plusPtr` 0)
                                                   <*> peek (ptr `plusPtr` 8)
                                                   <*> peek (ptr `plusPtr` 16)
@@ -3962,8 +3962,8 @@ data VkPipelineColorBlendAttachmentState =
   deriving (Eq)
 
 instance Storable VkPipelineColorBlendAttachmentState where
-  sizeOf _ = 32
-  alignment _ = 4
+  sizeOf ~_ = 32
+  alignment ~_ = 4
   peek ptr = VkPipelineColorBlendAttachmentState <$> peek (ptr `plusPtr` 0)
                                                  <*> peek (ptr `plusPtr` 4)
                                                  <*> peek (ptr `plusPtr` 8)
@@ -3996,8 +3996,8 @@ data VkPipelineColorBlendStateCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineColorBlendStateCreateInfo where
-  sizeOf _ = 56
-  alignment _ = 8
+  sizeOf ~_ = 56
+  alignment ~_ = 8
   peek ptr = VkPipelineColorBlendStateCreateInfo <$> peek (ptr `plusPtr` 0)
                                                  <*> peek (ptr `plusPtr` 8)
                                                  <*> peek (ptr `plusPtr` 16)
@@ -4027,8 +4027,8 @@ data VkPipelineDynamicStateCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineDynamicStateCreateInfo where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkPipelineDynamicStateCreateInfo <$> peek (ptr `plusPtr` 0)
                                               <*> peek (ptr `plusPtr` 8)
                                               <*> peek (ptr `plusPtr` 16)
@@ -4054,8 +4054,8 @@ data VkStencilOpState =
   deriving (Eq)
 
 instance Storable VkStencilOpState where
-  sizeOf _ = 28
-  alignment _ = 4
+  sizeOf ~_ = 28
+  alignment ~_ = 4
   peek ptr = VkStencilOpState <$> peek (ptr `plusPtr` 0)
                               <*> peek (ptr `plusPtr` 4)
                               <*> peek (ptr `plusPtr` 8)
@@ -4090,8 +4090,8 @@ data VkPipelineDepthStencilStateCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineDepthStencilStateCreateInfo where
-  sizeOf _ = 104
-  alignment _ = 8
+  sizeOf ~_ = 104
+  alignment ~_ = 8
   peek ptr = VkPipelineDepthStencilStateCreateInfo <$> peek (ptr `plusPtr` 0)
                                                    <*> peek (ptr `plusPtr` 8)
                                                    <*> peek (ptr `plusPtr` 16)
@@ -4143,8 +4143,8 @@ data VkGraphicsPipelineCreateInfo =
   deriving (Eq)
 
 instance Storable VkGraphicsPipelineCreateInfo where
-  sizeOf _ = 144
-  alignment _ = 8
+  sizeOf ~_ = 144
+  alignment ~_ = 8
   peek ptr = VkGraphicsPipelineCreateInfo <$> peek (ptr `plusPtr` 0)
                                           <*> peek (ptr `plusPtr` 8)
                                           <*> peek (ptr `plusPtr` 16)
@@ -4196,8 +4196,8 @@ data VkPipelineCacheCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineCacheCreateInfo where
-  sizeOf _ = 40
-  alignment _ = 8
+  sizeOf ~_ = 40
+  alignment ~_ = 8
   peek ptr = VkPipelineCacheCreateInfo <$> peek (ptr `plusPtr` 0)
                                        <*> peek (ptr `plusPtr` 8)
                                        <*> peek (ptr `plusPtr` 16)
@@ -4219,8 +4219,8 @@ data VkPushConstantRange =
   deriving (Eq)
 
 instance Storable VkPushConstantRange where
-  sizeOf _ = 12
-  alignment _ = 4
+  sizeOf ~_ = 12
+  alignment ~_ = 4
   peek ptr = VkPushConstantRange <$> peek (ptr `plusPtr` 0)
                                  <*> peek (ptr `plusPtr` 4)
                                  <*> peek (ptr `plusPtr` 8)
@@ -4242,8 +4242,8 @@ data VkPipelineLayoutCreateInfo =
   deriving (Eq)
 
 instance Storable VkPipelineLayoutCreateInfo where
-  sizeOf _ = 48
-  alignment _ = 8
+  sizeOf ~_ = 48
+  alignment ~_ = 8
   peek ptr = VkPipelineLayoutCreateInfo <$> peek (ptr `plusPtr` 0)
                                         <*> peek (ptr `plusPtr` 8)
                                         <*> peek (ptr `plusPtr` 16)
@@ -4284,8 +4284,8 @@ data VkSamplerCreateInfo =
   deriving (Eq)
 
 instance Storable VkSamplerCreateInfo where
-  sizeOf _ = 80
-  alignment _ = 8
+  sizeOf ~_ = 80
+  alignment ~_ = 8
   peek ptr = VkSamplerCreateInfo <$> peek (ptr `plusPtr` 0)
                                  <*> peek (ptr `plusPtr` 8)
                                  <*> peek (ptr `plusPtr` 16)
@@ -4334,8 +4334,8 @@ data VkCommandPoolCreateInfo =
   deriving (Eq)
 
 instance Storable VkCommandPoolCreateInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkCommandPoolCreateInfo <$> peek (ptr `plusPtr` 0)
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 16)
@@ -4357,8 +4357,8 @@ data VkCommandBufferAllocateInfo =
   deriving (Eq)
 
 instance Storable VkCommandBufferAllocateInfo where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkCommandBufferAllocateInfo <$> peek (ptr `plusPtr` 0)
                                          <*> peek (ptr `plusPtr` 8)
                                          <*> peek (ptr `plusPtr` 16)
@@ -4385,8 +4385,8 @@ data VkCommandBufferInheritanceInfo =
   deriving (Eq)
 
 instance Storable VkCommandBufferInheritanceInfo where
-  sizeOf _ = 56
-  alignment _ = 8
+  sizeOf ~_ = 56
+  alignment ~_ = 8
   peek ptr = VkCommandBufferInheritanceInfo <$> peek (ptr `plusPtr` 0)
                                             <*> peek (ptr `plusPtr` 8)
                                             <*> peek (ptr `plusPtr` 16)
@@ -4415,8 +4415,8 @@ data VkCommandBufferBeginInfo =
   deriving (Eq)
 
 instance Storable VkCommandBufferBeginInfo where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkCommandBufferBeginInfo <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 8)
                                       <*> peek (ptr `plusPtr` 16)
@@ -4440,8 +4440,8 @@ data VkRenderPassBeginInfo =
   deriving (Eq)
 
 instance Storable VkRenderPassBeginInfo where
-  sizeOf _ = 64
-  alignment _ = 8
+  sizeOf ~_ = 64
+  alignment ~_ = 8
   peek ptr = VkRenderPassBeginInfo <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
@@ -4466,8 +4466,8 @@ data VkClearDepthStencilValue =
   deriving (Eq)
 
 instance Storable VkClearDepthStencilValue where
-  sizeOf _ = 8
-  alignment _ = 4
+  sizeOf ~_ = 8
+  alignment ~_ = 4
   peek ptr = VkClearDepthStencilValue <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkDepth (poked :: VkClearDepthStencilValue))
@@ -4483,8 +4483,8 @@ data VkClearAttachment =
   deriving (Eq)
 
 instance Storable VkClearAttachment where
-  sizeOf _ = 24
-  alignment _ = 4
+  sizeOf ~_ = 24
+  alignment ~_ = 4
   peek ptr = VkClearAttachment <$> peek (ptr `plusPtr` 0)
                                <*> peek (ptr `plusPtr` 4)
                                <*> peek (ptr `plusPtr` 8)
@@ -4508,8 +4508,8 @@ data VkAttachmentDescription =
   deriving (Eq)
 
 instance Storable VkAttachmentDescription where
-  sizeOf _ = 36
-  alignment _ = 4
+  sizeOf ~_ = 36
+  alignment ~_ = 4
   peek ptr = VkAttachmentDescription <$> peek (ptr `plusPtr` 0)
                                      <*> peek (ptr `plusPtr` 4)
                                      <*> peek (ptr `plusPtr` 8)
@@ -4538,8 +4538,8 @@ data VkAttachmentReference =
   deriving (Eq)
 
 instance Storable VkAttachmentReference where
-  sizeOf _ = 8
-  alignment _ = 4
+  sizeOf ~_ = 8
+  alignment ~_ = 4
   peek ptr = VkAttachmentReference <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkAttachment (poked :: VkAttachmentReference))
@@ -4562,8 +4562,8 @@ data VkSubpassDescription =
   deriving (Eq)
 
 instance Storable VkSubpassDescription where
-  sizeOf _ = 72
-  alignment _ = 8
+  sizeOf ~_ = 72
+  alignment ~_ = 8
   peek ptr = VkSubpassDescription <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 4)
                                   <*> peek (ptr `plusPtr` 8)
@@ -4599,8 +4599,8 @@ data VkSubpassDependency =
   deriving (Eq)
 
 instance Storable VkSubpassDependency where
-  sizeOf _ = 28
-  alignment _ = 4
+  sizeOf ~_ = 28
+  alignment ~_ = 4
   peek ptr = VkSubpassDependency <$> peek (ptr `plusPtr` 0)
                                  <*> peek (ptr `plusPtr` 4)
                                  <*> peek (ptr `plusPtr` 8)
@@ -4632,8 +4632,8 @@ data VkRenderPassCreateInfo =
   deriving (Eq)
 
 instance Storable VkRenderPassCreateInfo where
-  sizeOf _ = 64
-  alignment _ = 8
+  sizeOf ~_ = 64
+  alignment ~_ = 8
   peek ptr = VkRenderPassCreateInfo <$> peek (ptr `plusPtr` 0)
                                     <*> peek (ptr `plusPtr` 8)
                                     <*> peek (ptr `plusPtr` 16)
@@ -4663,8 +4663,8 @@ data VkEventCreateInfo =
   deriving (Eq)
 
 instance Storable VkEventCreateInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkEventCreateInfo <$> peek (ptr `plusPtr` 0)
                                <*> peek (ptr `plusPtr` 8)
                                <*> peek (ptr `plusPtr` 16)
@@ -4682,8 +4682,8 @@ data VkFenceCreateInfo =
   deriving (Eq)
 
 instance Storable VkFenceCreateInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkFenceCreateInfo <$> peek (ptr `plusPtr` 0)
                                <*> peek (ptr `plusPtr` 8)
                                <*> peek (ptr `plusPtr` 16)
@@ -4753,8 +4753,8 @@ data VkPhysicalDeviceFeatures =
   deriving (Eq)
 
 instance Storable VkPhysicalDeviceFeatures where
-  sizeOf _ = 220
-  alignment _ = 4
+  sizeOf ~_ = 220
+  alignment ~_ = 4
   peek ptr = VkPhysicalDeviceFeatures <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 4)
                                       <*> peek (ptr `plusPtr` 8)
@@ -4878,8 +4878,8 @@ data VkPhysicalDeviceSparseProperties =
   deriving (Eq)
 
 instance Storable VkPhysicalDeviceSparseProperties where
-  sizeOf _ = 20
-  alignment _ = 4
+  sizeOf ~_ = 20
+  alignment ~_ = 4
   peek ptr = VkPhysicalDeviceSparseProperties <$> peek (ptr `plusPtr` 0)
                                               <*> peek (ptr `plusPtr` 4)
                                               <*> peek (ptr `plusPtr` 8)
@@ -5004,8 +5004,8 @@ data VkPhysicalDeviceLimits =
   deriving (Eq)
 
 instance Storable VkPhysicalDeviceLimits where
-  sizeOf _ = 504
-  alignment _ = 8
+  sizeOf ~_ = 504
+  alignment ~_ = 8
   peek ptr = VkPhysicalDeviceLimits <$> peek (ptr `plusPtr` 0)
                                     <*> peek (ptr `plusPtr` 4)
                                     <*> peek (ptr `plusPtr` 8)
@@ -5229,8 +5229,8 @@ data VkSemaphoreCreateInfo =
   deriving (Eq)
 
 instance Storable VkSemaphoreCreateInfo where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkSemaphoreCreateInfo <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
@@ -5251,8 +5251,8 @@ data VkQueryPoolCreateInfo =
   deriving (Eq)
 
 instance Storable VkQueryPoolCreateInfo where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkQueryPoolCreateInfo <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
@@ -5282,8 +5282,8 @@ data VkFramebufferCreateInfo =
   deriving (Eq)
 
 instance Storable VkFramebufferCreateInfo where
-  sizeOf _ = 64
-  alignment _ = 8
+  sizeOf ~_ = 64
+  alignment ~_ = 8
   peek ptr = VkFramebufferCreateInfo <$> peek (ptr `plusPtr` 0)
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 16)
@@ -5314,8 +5314,8 @@ data VkDrawIndirectCommand =
   deriving (Eq)
 
 instance Storable VkDrawIndirectCommand where
-  sizeOf _ = 16
-  alignment _ = 4
+  sizeOf ~_ = 16
+  alignment ~_ = 4
   peek ptr = VkDrawIndirectCommand <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 4)
                                    <*> peek (ptr `plusPtr` 8)
@@ -5337,8 +5337,8 @@ data VkDrawIndexedIndirectCommand =
   deriving (Eq)
 
 instance Storable VkDrawIndexedIndirectCommand where
-  sizeOf _ = 20
-  alignment _ = 4
+  sizeOf ~_ = 20
+  alignment ~_ = 4
   peek ptr = VkDrawIndexedIndirectCommand <$> peek (ptr `plusPtr` 0)
                                           <*> peek (ptr `plusPtr` 4)
                                           <*> peek (ptr `plusPtr` 8)
@@ -5360,8 +5360,8 @@ data VkDispatchIndirectCommand =
   deriving (Eq)
 
 instance Storable VkDispatchIndirectCommand where
-  sizeOf _ = 12
-  alignment _ = 4
+  sizeOf ~_ = 12
+  alignment ~_ = 4
   peek ptr = VkDispatchIndirectCommand <$> peek (ptr `plusPtr` 0)
                                        <*> peek (ptr `plusPtr` 4)
                                        <*> peek (ptr `plusPtr` 8)
@@ -5385,8 +5385,8 @@ data VkSubmitInfo =
   deriving (Eq)
 
 instance Storable VkSubmitInfo where
-  sizeOf _ = 72
-  alignment _ = 8
+  sizeOf ~_ = 72
+  alignment ~_ = 8
   peek ptr = VkSubmitInfo <$> peek (ptr `plusPtr` 0)
                           <*> peek (ptr `plusPtr` 8)
                           <*> peek (ptr `plusPtr` 16)
@@ -5420,8 +5420,8 @@ data VkDisplayPropertiesKHR =
   deriving (Eq)
 
 instance Storable VkDisplayPropertiesKHR where
-  sizeOf _ = 48
-  alignment _ = 8
+  sizeOf ~_ = 48
+  alignment ~_ = 8
   peek ptr = VkDisplayPropertiesKHR <$> peek (ptr `plusPtr` 0)
                                     <*> peek (ptr `plusPtr` 8)
                                     <*> peek (ptr `plusPtr` 16)
@@ -5446,8 +5446,8 @@ data VkDisplayPlanePropertiesKHR =
   deriving (Eq)
 
 instance Storable VkDisplayPlanePropertiesKHR where
-  sizeOf _ = 16
-  alignment _ = 8
+  sizeOf ~_ = 16
+  alignment ~_ = 8
   peek ptr = VkDisplayPlanePropertiesKHR <$> peek (ptr `plusPtr` 0)
                                          <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkCurrentDisplay (poked :: VkDisplayPlanePropertiesKHR))
@@ -5462,8 +5462,8 @@ data VkDisplayModeParametersKHR =
   deriving (Eq)
 
 instance Storable VkDisplayModeParametersKHR where
-  sizeOf _ = 12
-  alignment _ = 4
+  sizeOf ~_ = 12
+  alignment ~_ = 4
   peek ptr = VkDisplayModeParametersKHR <$> peek (ptr `plusPtr` 0)
                                         <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkVisibleRegion (poked :: VkDisplayModeParametersKHR))
@@ -5478,8 +5478,8 @@ data VkDisplayModePropertiesKHR =
   deriving (Eq)
 
 instance Storable VkDisplayModePropertiesKHR where
-  sizeOf _ = 24
-  alignment _ = 8
+  sizeOf ~_ = 24
+  alignment ~_ = 8
   peek ptr = VkDisplayModePropertiesKHR <$> peek (ptr `plusPtr` 0)
                                         <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkDisplayMode (poked :: VkDisplayModePropertiesKHR))
@@ -5496,8 +5496,8 @@ data VkDisplayModeCreateInfoKHR =
   deriving (Eq)
 
 instance Storable VkDisplayModeCreateInfoKHR where
-  sizeOf _ = 32
-  alignment _ = 8
+  sizeOf ~_ = 32
+  alignment ~_ = 8
   peek ptr = VkDisplayModeCreateInfoKHR <$> peek (ptr `plusPtr` 0)
                                         <*> peek (ptr `plusPtr` 8)
                                         <*> peek (ptr `plusPtr` 16)
@@ -5523,8 +5523,8 @@ data VkDisplayPlaneCapabilitiesKHR =
   deriving (Eq)
 
 instance Storable VkDisplayPlaneCapabilitiesKHR where
-  sizeOf _ = 68
-  alignment _ = 4
+  sizeOf ~_ = 68
+  alignment ~_ = 4
   peek ptr = VkDisplayPlaneCapabilitiesKHR <$> peek (ptr `plusPtr` 0)
                                            <*> peek (ptr `plusPtr` 4)
                                            <*> peek (ptr `plusPtr` 12)
@@ -5561,8 +5561,8 @@ data VkDisplaySurfaceCreateInfoKHR =
   deriving (Eq)
 
 instance Storable VkDisplaySurfaceCreateInfoKHR where
-  sizeOf _ = 64
-  alignment _ = 8
+  sizeOf ~_ = 64
+  alignment ~_ = 8
   peek ptr = VkDisplaySurfaceCreateInfoKHR <$> peek (ptr `plusPtr` 0)
                                            <*> peek (ptr `plusPtr` 8)
                                            <*> peek (ptr `plusPtr` 16)
@@ -5596,8 +5596,8 @@ data VkDisplayPresentInfoKHR =
   deriving (Eq)
 
 instance Storable VkDisplayPresentInfoKHR where
-  sizeOf _ = 56
-  alignment _ = 8
+  sizeOf ~_ = 56
+  alignment ~_ = 8
   peek ptr = VkDisplayPresentInfoKHR <$> peek (ptr `plusPtr` 0)
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 16)
@@ -5626,8 +5626,8 @@ data VkSurfaceCapabilitiesKHR =
   deriving (Eq)
 
 instance Storable VkSurfaceCapabilitiesKHR where
-  sizeOf _ = 52
-  alignment _ = 4
+  sizeOf ~_ = 52
+  alignment ~_ = 4
   peek ptr = VkSurfaceCapabilitiesKHR <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 4)
                                       <*> peek (ptr `plusPtr` 8)
@@ -5658,8 +5658,8 @@ data VkSurfaceFormatKHR =
   deriving (Eq)
 
 instance Storable VkSurfaceFormatKHR where
-  sizeOf _ = 8
-  alignment _ = 4
+  sizeOf ~_ = 8
+  alignment ~_ = 4
   peek ptr = VkSurfaceFormatKHR <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkFormat (poked :: VkSurfaceFormatKHR))
@@ -5690,8 +5690,8 @@ data VkSwapchainCreateInfoKHR =
   deriving (Eq)
 
 instance Storable VkSwapchainCreateInfoKHR where
-  sizeOf _ = 104
-  alignment _ = 8
+  sizeOf ~_ = 104
+  alignment ~_ = 8
   peek ptr = VkSwapchainCreateInfoKHR <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 8)
                                       <*> peek (ptr `plusPtr` 16)
@@ -5744,8 +5744,8 @@ data VkPresentInfoKHR =
   deriving (Eq)
 
 instance Storable VkPresentInfoKHR where
-  sizeOf _ = 64
-  alignment _ = 8
+  sizeOf ~_ = 64
+  alignment ~_ = 8
   peek ptr = VkPresentInfoKHR <$> peek (ptr `plusPtr` 0)
                               <*> peek (ptr `plusPtr` 8)
                               <*> peek (ptr `plusPtr` 16)
@@ -5775,8 +5775,8 @@ data VkDebugReportCallbackCreateInfoEXT =
   deriving (Eq)
 
 instance Storable VkDebugReportCallbackCreateInfoEXT where
-  sizeOf _ = 40
-  alignment _ = 8
+  sizeOf ~_ = 40
+  alignment ~_ = 8
   peek ptr = VkDebugReportCallbackCreateInfoEXT <$> peek (ptr `plusPtr` 0)
                                                 <*> peek (ptr `plusPtr` 8)
                                                 <*> peek (ptr `plusPtr` 16)
@@ -5799,9 +5799,9 @@ data VkClearColorValue = VkFloat (Vec (ToPeano 4) CFloat)
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use
 instance Storable VkClearColorValue where
-  sizeOf _ = 16
-  alignment _ = 4
-  peek _ = error "peek@VkClearColorValue"
+  sizeOf ~_ = 16
+  alignment ~_ = 4
+  peek ~_ = error "peek@VkClearColorValue"
   poke ptr poked = case poked of
                      VkFloat e -> poke (castPtr ptr) e
                      VkInt e -> poke (castPtr ptr) e
@@ -5815,9 +5815,9 @@ data VkClearValue = VkColor VkClearColorValue
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use
 instance Storable VkClearValue where
-  sizeOf _ = 16
-  alignment _ = 4
-  peek _ = error "peek@VkClearValue"
+  sizeOf ~_ = 16
+  alignment ~_ = 4
+  peek ~_ = error "peek@VkClearValue"
   poke ptr poked = case poked of
                      VkColor e -> poke (castPtr ptr) e
                      VkDepthStencil e -> poke (castPtr ptr) e
