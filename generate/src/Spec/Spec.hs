@@ -1,4 +1,4 @@
-module Spec where
+module Spec.Spec where
 
 import Spec.Bitmask
 import Spec.Command
@@ -8,6 +8,7 @@ import Spec.Section
 import Spec.Type
 import Prelude hiding (Enum)
 
+-- | The Specification in a format which closely resembles the xml specification
 data Spec = Spec { sTypes :: [TypeDecl]
                  , sConstants :: [Constant]
                  , sEnums :: [Enum]
