@@ -21,6 +21,7 @@ executable generate
                      , Spec.Command
                      , Spec.Enum
                      , Spec.Type
+                     , Spec.Section
                      , Spec.StripExtensions
                      , Parse.Bitmask
                      , Parse.CType
@@ -29,17 +30,18 @@ executable generate
                      , Parse.Enum
                      , Parse.Spec
                      , Parse.State
+                     , Parse.Section
                      , Parse.Type
                      , Parse.Utils
                      , Write.Command
                      , Write.Constant
                      , Write.Enum
-                     , Write.Type.Bitmask
-                     , Write.Type.Base
-                     , Write.Type.Handle
-                     , Write.Type.FuncPointer
                      , Write.Header
                      , Write.Spec
+                     , Write.Type.Base
+                     , Write.Type.Bitmask
+                     , Write.Type.FuncPointer
+                     , Write.Type.Handle
                      , Write.TypeConverter
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:       base
