@@ -17,7 +17,7 @@ data Command = Command { cName :: String
 
 data Parameter = Parameter { pName :: String
                            , pType :: CType
-                           , pIsOptional :: Maybe [Bool] 
+                           , pIsOptional :: Maybe [Bool]
                              -- ^ Values further into the list represent the
                              -- "optionality" of the types as it is
                              -- dereferenced further. For example, for the
@@ -34,3 +34,5 @@ data Parameter = Parameter { pName :: String
 data ExternSync = ExternSyncTrue
                 | ExternSyncParams [String]
   deriving (Show)
+
+

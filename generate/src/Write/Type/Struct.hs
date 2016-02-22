@@ -73,9 +73,9 @@ writeUnionStorableInstance env ut
                 in [qc|{predocComment 
 "_Note_: peek is undefined as we wouldn't know which constructor to use"}
 instance Storable {utName ut} where
-  sizeOf _ = {unionSize}
-  alignment _ = {unionAlignment}
-  peek _ = error "peek@{utName ut}"
+  sizeOf ~_ = {unionSize}
+  alignment ~_ = {unionAlignment}
+  peek ~_ = error "peek@{utName ut}"
   poke ptr poked = case poked of
                      {indent 0 .vsep $ writeMatchAndPokeMember <$> memberPacking}
 |]
@@ -113,8 +113,8 @@ writeStructStorableInstance env st
   | otherwise = let memberPacking = calculateMemberPacking env (stMembers st)
                     TypeInfo structSize structAlignment = getTypeInfo env (stName st)
                 in [qc|instance Storable {stName st} where
-  sizeOf _ = {structSize}
-  alignment _ = {structAlignment}
+  sizeOf ~_ = {structSize}
+  alignment ~_ = {structAlignment}
   peek ptr = {stName st} <$> {indent (-4) . vsep $ 
                               ((intercalateInfixAp $ 
                                 writePeekMember <$> memberPacking))}
