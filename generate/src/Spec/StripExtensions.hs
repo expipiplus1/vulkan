@@ -4,7 +4,7 @@ module Spec.StripExtensions
   ( stripWSIExtensions
   ) where
 
-import Spec
+import Spec.Spec
 import Spec.Command
 import Spec.Type
 import Write.TypeConverter(cTypeDependencyNames)

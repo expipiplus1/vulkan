@@ -5,7 +5,7 @@ module Parse.Spec
   ( parseSpec
   ) where
 
-import Spec
+import Spec.Spec
 import Parse.Bitmask
 import Parse.CType
 import Parse.Constant

@@ -5,7 +5,7 @@ module Write.Spec
   ) where
 
 import Data.Maybe(catMaybes)
-import Spec
+import Spec.Spec
 import Spec.Type
 import Text.InterpolatedString.Perl6
 import Write.Constant

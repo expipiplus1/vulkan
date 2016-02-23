@@ -28,7 +28,7 @@ import Data.Maybe(fromMaybe, catMaybes)
 import Language.C.Types as C
 import Language.Haskell.Exts.Pretty(prettyPrint)
 import Language.Haskell.Exts.Syntax as HS
-import Spec
+import Spec.Spec
 import Spec.Constant
 import Spec.Type
 import qualified Data.HashMap.Lazy as Map
