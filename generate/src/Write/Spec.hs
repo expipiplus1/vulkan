@@ -19,6 +19,9 @@ import Write.Type.Struct
 import Write.TypeConverter
 import Write.Command
 
+import Spec.Graph
+import Spec.Partition
+
 haskellize :: Spec -> String
 haskellize spec = let -- TODO: Remove
                       typeConverter = cTypeToHsTypeString

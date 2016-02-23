@@ -15,6 +15,6 @@ data Spec = Spec { sTypes :: [TypeDecl]
                  , sBitmasks :: [Bitmask]
                  , sCommands :: [Command]
                  , sCopyright :: String
-                 , sSections :: Section
+                 , sSections :: [Section]
                  }
   deriving (Show)

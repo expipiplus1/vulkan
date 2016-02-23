@@ -20,6 +20,8 @@ executable generate
                      , Spec.Bitmask
                      , Spec.Command
                      , Spec.Enum
+                     , Spec.Graph
+                     , Spec.Partition
                      , Spec.Type
                      , Spec.Section
                      , Spec.StripExtensions

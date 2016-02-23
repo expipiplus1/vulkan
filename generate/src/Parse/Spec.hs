@@ -8,9 +8,10 @@ module Parse.Spec
 import Spec.Spec
 import Parse.Bitmask
 import Parse.CType
-import Parse.Constant
 import Parse.Command
+import Parse.Constant
 import Parse.Enum
+import Parse.Section
 import Parse.Type
 import Parse.Utils
 import Text.XML.HXT.Core
@@ -33,6 +34,7 @@ parseSpecXML = isRoot /> hasName "registry" >>> extract
           sCommands <- listA (deep parseCommand) <<< 
                       onlyChildWithName "commands" -< registry
           sCopyright <- getAllText <<< onlyChildWithName "comment" -< registry
+          sSections <- oneRequired "sections" (deep parseSections) -< registry
           returnA -< Spec{..}
 
 
