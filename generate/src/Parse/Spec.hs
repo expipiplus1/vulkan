@@ -9,6 +9,7 @@ import Spec.Spec
 import Parse.Bitmask
 import Parse.CType
 import Parse.Command
+import Parse.Extension
 import Parse.Constant
 import Parse.Enum
 import Parse.Section
@@ -35,6 +36,7 @@ parseSpecXML = isRoot /> hasName "registry" >>> extract
                       onlyChildWithName "commands" -< registry
           sCopyright <- getAllText <<< onlyChildWithName "comment" -< registry
           sSections <- oneRequired "sections" (deep parseSections) -< registry
+          sExtensions <- oneRequired "extensions" (deep parseExtensions) -< registry
           returnA -< Spec{..}
 
 

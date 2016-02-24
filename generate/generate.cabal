@@ -20,6 +20,7 @@ executable generate
                      , Spec.Bitmask
                      , Spec.Command
                      , Spec.Enum
+                     , Spec.Extension
                      , Spec.Graph
                      , Spec.Partition
                      , Spec.Type
@@ -30,6 +31,7 @@ executable generate
                      , Parse.Command
                      , Parse.Constant
                      , Parse.Enum
+                     , Parse.Extension
                      , Parse.Spec
                      , Parse.State
                      , Parse.Section
