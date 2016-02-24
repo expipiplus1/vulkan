@@ -53,7 +53,7 @@ getSpecModules spec =
   let graph = getSpecGraph spec
       partitions = partitionSpec (sSections spec) graph
       exclusiveModules = 
-        partitionExclusiveModule <$> M.toList (exclusiveSectionNames partitions)
+        partitionExclusiveModule <$> M.toList (sectionNames partitions)
       -- otherModule = (ModuleName "Graphics.Vulkan.Other", 
                      -- S.toList (otherNames partitions))
       modules = exclusiveModules

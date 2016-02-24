@@ -4,7 +4,7 @@ module Spec.Partition where
 
 --
 -- A module to partition the spec into smaller modules
--- 
+--
 
 import Data.Foldable as F
 import qualified Data.HashMap.Lazy as M
@@ -15,42 +15,55 @@ import Spec.Section
 import Write.Utils
 import Data.List(isPrefixOf, sortOn)
 
-import Debug.Trace
-
-data PartitionedSpec = 
-  PartitionedSpec{ exclusiveSectionNames :: M.HashMap String (S.HashSet String)
+data PartitionedSpec =
+  PartitionedSpec{ sectionNames :: M.HashMap String (S.HashSet String)
                  , otherNames :: S.HashSet String
                  }
   deriving(Show)
 
 partitionSpec :: [Section] -> SpecGraph -> PartitionedSpec
-partitionSpec sections graph = 
-  let lookupName name = 
+partitionSpec sections graph =
+  let -- A helper to find a named vertex in the graph
+      lookupName name =
         case M.lookup name (gNameVertexMap graph) of
           Nothing -> error ("Depended upon name not in spec: " ++ name)
           Just vertex -> vertex
-      sectionDependencies = (\section -> allReachable (lookupName <$> 
-                                                       allSectionNames section)) 
+
+      -- The set of all names reachable from each section
+      sectionDependencies = (\section -> allReachable (lookupName <$>
+                                                       allSectionNames section))
                             <$> sections
-      -- allNames = S.fromMap (gNameVertexMap graph) -- uncomment when we have uc >= 0.2.6
+
+      -- The names of every vertex
+      -- allNames = S.fromMap (gNameVertexMap graph) -- uncomment for uc >= 0.2.6
       allNames = S.fromList (vName <$> gVertices graph)
-      otherNames = allNames `S.difference` 
-                   (S.unions (M.elems exclusiveSectionExclusiveNames))
-      exclusiveSectionExclusiveNames = 
-        M.fromList $ zip (sectionNameToModuleBaseName . sComment <$> sections) 
+
+      -- The names depended on by exactly one section
+      sectionExclusiveNames =
+        M.fromList $ zip (sectionNameToModuleBaseName . sComment <$> sections)
                          (getExclusiveSectionNames sectionDependencies)
-      moduleBaseNames = (sectionNameToModuleBaseName . sComment) <$> sections 
-      exclusiveSectionBespokeNames = 
+
+      -- All names which are used by more than one section
+      otherNames = allNames `S.difference`
+                   (S.unions (M.elems sectionExclusiveNames))
+
+      -- The module base names
+      moduleBaseNames = (sectionNameToModuleBaseName . sComment) <$> sections
+
+      -- Names inserted into the section modules by 'partitionBespokeNames'
+      sectionBespokeNames =
         partitionBespokeNames moduleBaseNames (S.toList otherNames)
-      exclusiveSectionNames = traceShowId $ M.unionWith S.union
-        exclusiveSectionExclusiveNames 
-        exclusiveSectionBespokeNames
+
+      -- The complete section names
+      sectionNames = M.unionWith S.union
+                                 sectionExclusiveNames
+                                 sectionBespokeNames
   in PartitionedSpec{..}
 
-partitionBespokeNames :: [String] -> [String] 
+partitionBespokeNames :: [String] -> [String]
                       -> M.HashMap String (S.HashSet String)
-partitionBespokeNames moduleNames names = 
-  M.fromListWith S.union 
+partitionBespokeNames moduleNames names =
+  M.fromListWith S.union
     [(moduleName, S.singleton name) | (Just moduleName, name) <- zip nameModules names]
   where nameModules = assignNameToModule moduleNames <$> names
 
@@ -69,7 +82,7 @@ getCoreNames :: [S.HashSet String] -> S.HashSet String
 getCoreNames = intersections
 
 intersections :: [S.HashSet String] -> S.HashSet String
-intersections = F.foldl1 S.intersection 
+intersections = F.foldl1 S.intersection
 
 getExclusiveSectionNames :: [S.HashSet String] -> [S.HashSet String]
 getExclusiveSectionNames = reverse . go mempty []
