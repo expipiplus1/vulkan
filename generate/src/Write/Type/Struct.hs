@@ -94,10 +94,6 @@ intercalateRecordCommas = intercalatePrepend (fromString ",")
 intercalateInfixAp :: [Doc] -> [Doc]
 intercalateInfixAp = intercalatePrepend (fromString "<*>")
 
-intercalatePrepend :: Doc -> [Doc] -> [Doc]
-intercalatePrepend _ [] = []
-intercalatePrepend i (m:ms) = m : ((i <+>) <$> ms)
-
 writeStructMember :: TypeEnv -> StructMember -> Doc
 writeStructMember te sm = 
   let memberComment = postdocComment (fromMaybe "" (smComment sm))

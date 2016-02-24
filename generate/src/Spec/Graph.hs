@@ -170,6 +170,19 @@ constantToVertex _ constant =
         , vSourceEntity = AConstant constant
         }
 
+------------------------------------------------------------------------------
+-- predicates
+------------------------------------------------------------------------------
+
+isIncludeVertex :: Vertex -> Bool
+isIncludeVertex vertex 
+  | AnInclude _ <- vSourceEntity vertex = True
+  | otherwise = False
+
+------------------------------------------------------------------------------
+-- Dependency utils
+------------------------------------------------------------------------------
+
 cTypeDependencyNames :: CType -> [String]
 cTypeDependencyNames cType = 
   case cType of 
