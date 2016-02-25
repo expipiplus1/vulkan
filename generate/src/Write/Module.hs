@@ -1,38 +1,26 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternGuards #-}
 
-module Write.Module where
+module Write.Module
+  ( writeModule
+  )where
 
-import Control.Monad.Writer
 import Data.HashMap.Strict as M
 import Data.HashSet as S
-import Data.Hashable
 import Data.String
-import GHC.Generics(Generic)
 import Spec.Graph
 import Text.InterpolatedString.Perl6
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
 import Write.Quirks
 import Write.Utils
+import Write.WriteMonad
 
 import Data.Char(isUpper, isAlphaNum)
 
-data RequiredName = ExternalName ModuleName String
-                  | InternalName String
-  deriving(Eq, Generic)
-
-instance Hashable RequiredName
-
-type WriteMonad = Writer (HashSet RequiredName)
-
-type NameLocations = HashMap String ModuleName
-
 writeModule :: SpecGraph -> NameLocations -> ModuleName -> [String] -> String
 writeModule graph nameLocations (ModuleName n) names = moduleString
-  where (moduleString, extraRequiredNames) = runWriter moduleWriter
+  where (moduleString, extraRequiredNames) = runWrite moduleWriter
         extensions = []
         getEntity name = 
           case M.lookup name (gNameVertexMap graph) of
@@ -46,7 +34,7 @@ writeModule graph nameLocations (ModuleName n) names = moduleString
         definitions = (\name -> if isUpper (head name)
                                   then "data " ++ name
                                   else name ++ " = undefined") <$> Prelude.filter isValid names
-        moduleWriter = do
+        moduleWriter = 
           pure [qc|{unlines extensions}module {n} where
 {imports}
 {unlines definitions}
@@ -64,9 +52,6 @@ nameToRequiredName name =
     "size_t"   -> ExternalName (ModuleName "Foreign.C.Types") "CSize"
     "void"     -> ExternalName (ModuleName "Data.Void") "Void"
     _ -> InternalName name
-
-tellSingle :: (Eq a, Hashable a, Monad m) => a -> WriterT (HashSet a) m ()
-tellSingle = tell . S.singleton
 
 getImportDeclarations :: ModuleName -> NameLocations -> HashSet RequiredName -> [Doc]
 getImportDeclarations importingModule nameLocations names = 

@@ -10,10 +10,13 @@ import Numeric
 import System.Directory (createDirectoryIfMissing)
 import System.FilePath ((</>), (<.>), takeDirectory)
 import Text.PrettyPrint.Leijen.Text hiding ((<$>), (</>))
+import Data.HashMap.Strict(HashMap)
 
 -- | A newtype for module names
 newtype ModuleName = ModuleName{ unModuleName :: String }
   deriving(Eq, Show, Hashable)
+
+type NameLocations = HashMap String ModuleName
 
 comment :: String -> String
 comment "" = ""
