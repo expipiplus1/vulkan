@@ -18,7 +18,6 @@ import Data.Maybe(maybeToList, catMaybes)
 import Language.C.Types
 import Control.Arrow((&&&))
 import Prelude hiding (Enum)
-import Debug.Trace
 import Write.Utils
 
 -- | Info is a more useful representation of the specification
