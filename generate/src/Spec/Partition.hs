@@ -1,6 +1,9 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Spec.Partition where
+module Spec.Partition 
+  ( partitionSpec 
+  , PartitionedSpec(..)
+  ) where
 
 --
 -- A module to partition the spec into smaller modules
@@ -16,7 +19,7 @@ import Safe(assertNote)
 import Spec.Section
 import Spec.Extension
 import Write.Utils
-import Data.List(isPrefixOf, sortOn, isSuffixOf)
+import Data.List(isPrefixOf, isSuffixOf)
 
 data PartitionedSpec =
   PartitionedSpec{ moduleExports :: M.HashMap ModuleName (S.HashSet String)
@@ -28,8 +31,7 @@ data PartitionedSpec =
 -- entity ends up in a module iff it is reachable from an entity mentioned in
 -- that module's section or extension and it is not reachable from any other
 -- extension or module or it is placed into that module by
--- 'partitionBespokeNames'. 'partitionBespokeNames' may also create modules
--- that don't correspond to either an extension or section.
+-- 'bespokeModuleExports' or inferredModuleExports.
 partitionSpec :: Spec -> SpecGraph -> PartitionedSpec
 partitionSpec spec graph =
   let extensionModuleExports = M.fromList $
@@ -168,16 +170,13 @@ bespokeModuleExports = M.fromList
                  , "VkBool32"
                  , "VkStructureType"
                  , "VkSharingMode"
+                 , "VkViewport"
                  ]
     )
   , ( ModuleName "Graphics.Vulkan.Sampler"
     , S.fromList [ "VkFilter"
                  , "VkCompareOp"
                  , "VkSampleCountFlagBits"
-                 ]
-    )
-  , ( ModuleName "Graphics.Vulkan.CommandBufferBuilding"
-    , S.fromList [ "VkViewport"
                  ]
     )
   , ( ModuleName "Graphics.Vulkan.Image"
@@ -272,35 +271,4 @@ getExclusiveReachable = reverse . go mempty []
              go (c `S.union` leftCore, r `S.union` leftReachable) 
                 (a:acc) 
                 xs
-
-partitionBespokeNames :: [ModuleName] -> [String]
-                      -> M.HashMap ModuleName (S.HashSet String)
-partitionBespokeNames moduleNames names =
-  M.fromListWith S.union
-    [(moduleName, S.singleton name) | (Just moduleName, name) <- zip nameModules names]
-  where nameModules = assignNameToModule moduleBaseNames <$> names
-        moduleBaseNames = getModuleBaseName <$> moduleNames
-
-assignNameToModule :: [String] -> String -> Maybe ModuleName
-assignNameToModule moduleBaseNames name
-  | any (`isPrefixOf` dropVK name) moduleBaseNames =
-    Just . ModuleName $ longest . filter (`isPrefixOf` (dropVK name)) $ moduleBaseNames
-  | "vk_platform" == name = Nothing
-  | otherwise = error ("No rule to assign this name to module: " ++ name)
-
-longest :: [[a]] -> [a]
-longest = last . sortOn length
-
-getCoreNames :: [S.HashSet String] -> S.HashSet String
-getCoreNames = intersections
-
-intersections :: [S.HashSet String] -> S.HashSet String
-intersections = F.foldl1 S.intersection
-
-getExclusiveNames :: [S.HashSet String] -> [S.HashSet String]
-getExclusiveNames = reverse . go mempty []
-  where go _ acc [] = acc
-        go left acc (x:xs) = let others = S.unions (xs ++ [left])
-                                 a = x `S.difference` others
-                             in go (left `S.union` x) (a:acc) xs
 

@@ -4,10 +4,12 @@ module Write.Utils where
 
 import Data.Char(toUpper)
 import Data.Hashable
-import Data.List(intersperse, isPrefixOf, isSuffixOf, find)
+import Data.List(intersperse, isPrefixOf, isSuffixOf, find, foldl')
 import Data.List.Split(splitOn)
 import Numeric
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
+import System.Directory (createDirectoryIfMissing)
+import System.FilePath ((</>), (<.>), takeDirectory)
+import Text.PrettyPrint.Leijen.Text hiding ((<$>), (</>))
 
 -- | A newtype for module names
 newtype ModuleName = ModuleName{ unModuleName :: String }
@@ -130,3 +132,16 @@ transitiveClosure succ eq xs
    _ `is_in` []                 = False
    x `is_in` (y:ys) | eq x y    = True
                     | otherwise = x `is_in` ys
+
+-- | Create the directory that this module sits in under the given root
+createModuleDirectory :: FilePath -> ModuleName -> IO ()
+createModuleDirectory root moduleName =
+  let moduleDirectory = takeDirectory . moduleNameToFile root $ moduleName
+      createParents = True
+  in createDirectoryIfMissing createParents moduleDirectory
+
+-- | Returns the filename for the specified module under the given root
+moduleNameToFile :: FilePath -> ModuleName -> FilePath
+moduleNameToFile root (ModuleName moduleName) = 
+  let pathComponents = splitOn "." moduleName 
+  in foldl' (</>) root pathComponents <.> "hs"

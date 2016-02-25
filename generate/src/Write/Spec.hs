@@ -26,6 +26,7 @@ import Control.Arrow(second)
 import Spec.Partition
 import Write.Module
 import Write.Utils
+import Write.CycleBreak
 import qualified Data.HashSet as S
 import qualified Data.HashMap.Strict as M
 import System.Directory (createDirectoryIfMissing)
@@ -36,38 +37,19 @@ import Data.Foldable(traverse_)
 
 writeSpecModules :: FilePath -> Spec -> IO ()
 writeSpecModules root spec = do
-  let modules = getSpecModules spec
-  createModuleDirectories root modules
+  let graph = getSpecGraph spec
+      partitions = second S.toList <$> M.toList (moduleExports (partitionSpec spec graph))
+      locations = M.unions (uncurry exportMap <$> partitions)
+      moduleNames = fst <$> partitions
+      moduleStrings = uncurry (writeModule graph locations) <$> partitions
+      modules = zip moduleNames moduleStrings
+  traverse_ (createModuleDirectory root) (fst <$> modules)
   mapM_ (uncurry (writeModuleFile root)) modules
-
-createModuleDirectories :: FilePath 
-                        -> [(ModuleName, String)] 
-                        -> IO ()
-createModuleDirectories root modules =
-  let moduleNames = fst <$> modules
-      moduleDirectories = takeDirectory . moduleNameToFile <$> moduleNames
-      createParents = True
-  in traverse_ (createDirectoryIfMissing createParents) 
-               (fmap (root </>) moduleDirectories)
+  writeHsBootFiles root graph locations
 
 writeModuleFile :: FilePath -> ModuleName -> String -> IO ()
-writeModuleFile directory moduleName = 
-  writeFile (directory </> moduleNameToFile moduleName)
-
-moduleNameToFile :: ModuleName -> FilePath
-moduleNameToFile (ModuleName moduleName) = 
-  let pathComponents = splitOn "." moduleName 
-  in foldl1' (</>) pathComponents <.> "hs"
-
-getSpecModules :: Spec -> [(ModuleName, String)]
-getSpecModules spec =
-  let graph = getSpecGraph spec
-      partitions = partitionSpec spec graph
-      modules = partitionExclusiveModule <$> M.toList (moduleExports partitions)
-      locations = M.unions (uncurry exportMap <$> modules)
-      moduleNames = fst <$> modules
-      moduleStrings = uncurry (writeModule graph locations) <$> modules
-  in zip moduleNames moduleStrings
+writeModuleFile root moduleName = 
+  writeFile (moduleNameToFile root moduleName)
 
 exportMap :: ModuleName -> [String] -> M.HashMap String ModuleName
 exportMap moduleName exports = M.fromList ((,moduleName) <$> exports)

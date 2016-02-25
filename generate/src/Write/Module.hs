@@ -2,19 +2,23 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternGuards #-}
 
 module Write.Module where
 
-import Spec.Graph
 import Control.Monad.Writer
-import Data.HashSet as S
 import Data.HashMap.Strict as M
+import Data.HashSet as S
 import Data.Hashable
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-import Text.InterpolatedString.Perl6
-import GHC.Generics(Generic)
-import Write.Utils
 import Data.String
+import GHC.Generics(Generic)
+import Spec.Graph
+import Text.InterpolatedString.Perl6
+import Text.PrettyPrint.Leijen.Text hiding ((<$>))
+import Write.Quirks
+import Write.Utils
+
+import Data.Char(isUpper, isAlphaNum)
 
 data RequiredName = ExternalName ModuleName String
                   | InternalName String
@@ -38,13 +42,18 @@ writeModule graph nameLocations (ModuleName n) names = moduleString
         isIncludeName = isIncludeVertex . getEntity
         requiredNames = extraRequiredNames `S.union` 
                         S.map nameToRequiredName (S.filter (not . isIncludeName) (allReachable moduleEntities) `S.difference` (S.fromList names))
-        imports = vcat (getImportDeclarations nameLocations requiredNames)
-        definitions = names
+        imports = vcat (getImportDeclarations (ModuleName n) nameLocations requiredNames)
+        definitions = (\name -> if isUpper (head name)
+                                  then "data " ++ name
+                                  else name ++ " = undefined") <$> Prelude.filter isValid names
         moduleWriter = do
           pure [qc|{unlines extensions}module {n} where
 {imports}
 {unlines definitions}
 |]
+
+isValid :: String -> Bool
+isValid = all (\c -> isAlphaNum c || c == '_')
 
 nameToRequiredName :: String -> RequiredName
 nameToRequiredName name =
@@ -59,23 +68,41 @@ nameToRequiredName name =
 tellSingle :: (Eq a, Hashable a, Monad m) => a -> WriterT (HashSet a) m ()
 tellSingle = tell . S.singleton
 
-getImportDeclarations :: NameLocations -> HashSet RequiredName -> [Doc]
-getImportDeclarations nameLocations names = fmap writeImport . mergeImports $ imports
+getImportDeclarations :: ModuleName -> NameLocations -> HashSet RequiredName -> [Doc]
+getImportDeclarations importingModule nameLocations names = 
+    fmap (writeImport . (makeImportSourcy importingModule)) . 
+      mergeImports $ imports
   where imports = getImportDeclaration <$> S.toList names
         getImportDeclaration rn = 
           case rn of
-            ExternalName moduleName name -> Import moduleName [name]
+            ExternalName moduleName name -> Import NotSource moduleName [name]
             InternalName name -> 
               case M.lookup name nameLocations of
                 Nothing -> error ("Imported name not in any module: " ++ name)
-                Just moduleName -> Import moduleName [name]
+                Just moduleName -> Import NotSource moduleName [name]
             
-data Import = Import ModuleName [String]
+data Import = Import Source ModuleName [String]
+
+data Source = NotSource
+            | Source
 
 writeImport :: Import -> Doc
-writeImport (Import (ModuleName moduleName) imports) = 
-  let 
-  in [qc|import {moduleName}( {indent (-2) (vcat ((intercalatePrepend "," (fromString <$> imports) ++ [")"])))}|]
+writeImport (Import source (ModuleName moduleName) imports) = 
+  let sourceDoc :: Doc
+      sourceDoc = fromString $ case source of 
+                                 NotSource -> ""
+                                 Source -> "{-# SOURCE #-} "
+  in [qc|import {sourceDoc}{moduleName}( {indent (-2) (vcat ((intercalatePrepend "," (fromString <$> imports) ++ [")"])))}|]
 
 mergeImports :: [Import] -> [Import]
-mergeImports is = fmap (uncurry Import) . M.toList . M.fromListWith (++) $ [(name, imports) | Import name imports <- is]
+mergeImports is = fmap (uncurry (Import NotSource)) . 
+                  M.toList . M.fromListWith (++) $ 
+                  [(name, imports) | Import _ name imports <- is]
+
+makeImportSourcy :: ModuleName -> Import -> Import 
+makeImportSourcy importingModule (Import source moduleName names) 
+  | Just sourceImported <- M.lookup importingModule sourceImports
+  , elem moduleName sourceImported 
+  = Import Source moduleName names
+  | otherwise 
+  = Import source moduleName names
