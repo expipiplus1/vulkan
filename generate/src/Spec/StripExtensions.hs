@@ -31,8 +31,10 @@ stripWSIExtensions spec =
       allowedCommands = filter 
                          (not . any isInDisallowedNames . commandDependencies) 
                          allCommands
+      allowedExtensions = []
   in spec{ sTypes = allowedTypeDecls
          , sCommands = allowedCommands
+         , sExtensions = allowedExtensions
          }
 
 commandDependencies :: Command -> [String]

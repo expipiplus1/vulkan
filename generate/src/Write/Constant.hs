@@ -2,7 +2,7 @@
 {-# LANGUAGE PatternGuards #-}
 
 module Write.Constant
-  ( writeConstants
+  ( writeConstant
   ) where
 
 import Data.Maybe(fromMaybe)
@@ -10,36 +10,39 @@ import Spec.Constant
 import Text.InterpolatedString.Perl6
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
 import Write.Utils
+import Write.WriteMonad
 
-writeConstants :: [Constant] -> String
-writeConstants es = [qc|-- * Constants
+writeConstant :: Constant -> Write Doc
+writeConstant c = do
+  tellExtension "PatternSynonyms"
+  typeStringMay <- maybeWriteConstantType c
+  let typeString = case typeStringMay of
+                     Nothing -> mempty
+                     Just d -> d
+  patternString <- writeConstantPattern c
+  pure [qc|{predocComment $ fromMaybe "" (cComment c)}
+{patternString}{typeString}|]
 
-{vcat $ writeConstant <$> es}|] 
-
-writeConstant :: Constant -> Doc
-writeConstant c = [qc|{predocComment $ fromMaybe "" (cComment c)}
-{writeConstantPattern c}{case maybeWriteConstantType c of
-  Nothing -> mempty
-  Just d -> d}|]
-
-writeConstantPattern :: Constant -> Doc
+writeConstantPattern :: Constant -> Write Doc
 writeConstantPattern c 
   | IntegralValue i <- cValue c
-  = [qc|pattern {cName c} = {i}|]
+  = pure [qc|pattern {cName c} = {i}|]
   | FloatValue f <- cValue c
-  = [qc|pattern {cName c} = {f}|]
+  = pure [qc|pattern {cName c} = {f}|]
   | Word32Value i <- cValue c
-  = [qc|pattern {cName c} = {showHex' i} :: Word32|]
+  = do tellRequiredName (ExternalName (ModuleName "Data.Word") "Word32")
+       pure [qc|pattern {cName c} = {showHex' i} :: Word32|]
   | Word64Value i <- cValue c
-  = [qc|pattern {cName c} = {showHex' i} :: Word64|]
+  = do tellRequiredName (ExternalName (ModuleName "Data.Word") "Word64")
+       pure [qc|pattern {cName c} = {showHex' i} :: Word64|]
 
-maybeWriteConstantType :: Constant -> Maybe Doc
+maybeWriteConstantType :: Constant -> Write (Maybe Doc)
 maybeWriteConstantType c 
   | IntegralValue i <- cValue c
-  = if i >= 0 
-      then Just [qc|
+  , i >= 0
+  = do tellExtension "DataKinds"
+       pure $ Just [qc|
 type {cName c} = {i}|]
-      else Nothing
   | otherwise
-  = Nothing
+  = pure Nothing
 

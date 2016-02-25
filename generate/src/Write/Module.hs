@@ -8,20 +8,31 @@ module Write.Module
 
 import Data.HashMap.Strict as M
 import Data.HashSet as S
+import Data.Maybe(catMaybes)
 import Data.String
 import Spec.Graph
 import Text.InterpolatedString.Perl6
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
 import Write.Quirks
+import Write.TypeConverter(buildTypeEnvFromSpecGraph)
 import Write.Utils
+import Write.Vertex
 import Write.WriteMonad
+import Spec.Partition
 
 import Data.Char(isUpper, isAlphaNum)
 
-writeModule :: SpecGraph -> NameLocations -> ModuleName -> [String] -> String
-writeModule graph nameLocations (ModuleName n) names = moduleString
-  where (moduleString, extraRequiredNames) = runWrite moduleWriter
-        extensions = []
+writeModule :: SpecGraph 
+            -> NameLocations 
+            -> FileType 
+            -> ModuleName 
+            -> [String] 
+            -> String
+writeModule graph nameLocations boot (ModuleName n) names = moduleString
+  where typeEnv = buildTypeEnvFromSpecGraph graph
+        (moduleString, (extraRequiredNames, extensions)) = 
+          runWrite typeEnv boot moduleWriter
+        extensionDocs = getExtensionDoc <$> S.toList extensions 
         getEntity name = 
           case M.lookup name (gNameVertexMap graph) of
             Nothing -> error ("exported name missing from spec graph " ++ name)
@@ -29,42 +40,58 @@ writeModule graph nameLocations (ModuleName n) names = moduleString
         moduleEntities = getEntity <$> names
         isIncludeName = isIncludeVertex . getEntity
         requiredNames = extraRequiredNames `S.union` 
-                        S.map nameToRequiredName (S.filter (not . isIncludeName) (allReachable moduleEntities) `S.difference` (S.fromList names))
+                        S.map (nameToRequiredName graph)
+                              (S.filter (not . isIncludeName) 
+                                        (allReachable moduleEntities) 
+                                        `S.difference` (S.fromList names))
         imports = vcat (getImportDeclarations (ModuleName n) nameLocations requiredNames)
-        definitions = (\name -> if isUpper (head name)
-                                  then "data " ++ name
-                                  else name ++ " = undefined") <$> Prelude.filter isValid names
-        moduleWriter = 
-          pure [qc|{unlines extensions}module {n} where
+        moduleWriter = do
+          definitions <- writeVertices (requiredLookup graph <$> names)
+          pure [qc|{vcat extensionDocs}
+module {n} where
 {imports}
-{unlines definitions}
+{definitions}
 |]
 
-isValid :: String -> Bool
-isValid = all (\c -> isAlphaNum c || c == '_')
+getExtensionDoc :: String -> Doc
+getExtensionDoc e = let ed = fromString e :: Doc
+                       in [qc|\{-# LANGUAGE {ed} #-}|]
 
-nameToRequiredName :: String -> RequiredName
-nameToRequiredName name =
+nameToRequiredName :: SpecGraph -> String -> RequiredName
+nameToRequiredName graph name =
   case name of
     "int32_t"  -> ExternalName (ModuleName "Data.Int")  "Int32"
+    "uint8_t"  -> ExternalName (ModuleName "Data.Word") "Word8"
     "uint32_t" -> ExternalName (ModuleName "Data.Word") "Word32"
     "uint64_t" -> ExternalName (ModuleName "Data.Word") "Word64"
-    "size_t"   -> ExternalName (ModuleName "Foreign.C.Types") "CSize"
+    "size_t"   -> ExternalName (ModuleName "Foreign.C.Types") "CSize(..)"
     "void"     -> ExternalName (ModuleName "Data.Void") "Void"
-    _ -> InternalName name
+    "float"    -> ExternalName (ModuleName "Foreign.C.Types") "CFloat(..)"
+    _ -> if isTypeConstructor (requiredLookup graph name)
+           then InternalName WildCard name
+           else InternalName NoWildCard name
 
 getImportDeclarations :: ModuleName -> NameLocations -> HashSet RequiredName -> [Doc]
 getImportDeclarations importingModule nameLocations names = 
     fmap (writeImport . (makeImportSourcy importingModule)) . 
       mergeImports $ imports
-  where imports = getImportDeclaration <$> S.toList names
+  where imports = catMaybes (getImportDeclaration <$> S.toList names)
         getImportDeclaration rn = 
           case rn of
-            ExternalName moduleName name -> Import NotSource moduleName [name]
-            InternalName name -> 
-              case M.lookup name nameLocations of
-                Nothing -> error ("Imported name not in any module: " ++ name)
-                Just moduleName -> Import NotSource moduleName [name]
+            ExternalName moduleName name -> 
+              Just (Import NotSource moduleName [name])
+            InternalName wildCard name -> 
+              if S.member name ignoredNames
+                then Nothing
+                else case M.lookup name nameLocations of
+                       Nothing -> 
+                         error ("Imported name not in any module: " ++ name)
+                       Just moduleName -> 
+                         case wildCard of
+                           WildCard -> 
+                             Just $ Import NotSource moduleName [name ++ "(..)"]
+                           NoWildCard -> 
+                             Just $ Import NotSource moduleName [name]
             
 data Import = Import Source ModuleName [String]
 

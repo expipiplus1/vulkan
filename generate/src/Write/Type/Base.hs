@@ -1,33 +1,35 @@
 {-# LANGUAGE QuasiQuotes #-}
 
 module Write.Type.Base
-  ( writeBaseTypes
+  ( writeBaseType
   ) where
 
 import Spec.Type
 import Text.InterpolatedString.Perl6
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
 import Write.TypeConverter
+import Write.WriteMonad
+import Write.Utils
 
 isTransparentBaseType :: BaseType -> Bool
 isTransparentBaseType bt = btName bt `elem` ["VkFlags"]
 
-writeBaseTypes :: TypeConverter -> [BaseType] -> String
-writeBaseTypes tc bts = [qc|-- * Base Types
+writeBaseType :: BaseType -> Write Doc
+writeBaseType bt = if isTransparentBaseType bt
+                     then writeTransparentBaseType bt
+                     else writeNewBaseType bt
 
-{vcat $ writeBaseType tc <$> bts}|] 
-
-writeBaseType :: TypeConverter -> BaseType -> Doc
-writeBaseType tc bt = if isTransparentBaseType bt
-                        then writeTransparentBaseType tc bt
-                        else writeNewBaseType tc bt
-
-writeTransparentBaseType :: TypeConverter -> BaseType -> Doc
-writeTransparentBaseType tc bt = [qc|type {btName bt} = {tc (btCType bt)}
+writeTransparentBaseType :: BaseType -> Write Doc
+writeTransparentBaseType bt = do
+  hsType <- cTypeToHsTypeString (btCType bt)
+  pure [qc|type {btName bt} = {hsType}
 |]
 
-writeNewBaseType :: TypeConverter -> BaseType -> Doc
-writeNewBaseType tc bt = [qc|newtype {btName bt} = {btName bt} {tc (btCType bt)}
+writeNewBaseType :: BaseType -> Write Doc
+writeNewBaseType bt = do
+  doesDeriveStorable
+  hsType <- cTypeToHsTypeString (btCType bt)
+  pure [qc|newtype {btName bt} = {btName bt} {hsType}
   deriving (Eq, Storable)
 |]
 

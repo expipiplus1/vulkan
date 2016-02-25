@@ -8,10 +8,10 @@ module Write.TypeConverter
   , TypeInfo(..)
   , cTypeToHsTypeString
   , cTypeToHsType
-  , cTypeToHsType'
   , cTypeDependencyNames
   , cTypeInfo
   , buildTypeEnvFromSpec
+  , buildTypeEnvFromSpecGraph
   , getTypeInfo
   , MemberInfo(..)
   , calculateMemberPacking
@@ -21,114 +21,119 @@ module Write.TypeConverter
 
 -- This file is gross TODO: clean
 
-import Control.Arrow(second, (&&&))
+import Control.Arrow (second, (&&&))
 import Control.Monad.State
-import Data.List(foldl1')
-import Data.Maybe(fromMaybe, catMaybes)
+import Data.List (foldl1')
+import Data.Maybe (fromMaybe, catMaybes)
 import Language.C.Types as C
-import Language.Haskell.Exts.Pretty(prettyPrint)
-import Language.Haskell.Exts.Syntax as HS
+import Language.Haskell.Exts.Pretty (prettyPrint)
+import Language.Haskell.Exts.Syntax as HS hiding (ModuleName)
 import Spec.Spec
+import Spec.Graph
+       (SpecGraph, getGraphCTypes, getGraphEnumTypes, getGraphStructTypes,
+        getGraphUnionTypes, getGraphConstants)
 import Spec.Constant
 import Spec.Type
+import Spec.TypeEnv
+import Write.WriteMonad
+import Write.Utils
 import qualified Data.HashMap.Lazy as Map
-
-data TypeEnv = TypeEnv{ teTypeInfo :: Map.HashMap String TypeInfo
-                      , teIntegralConstants :: Map.HashMap String Integer
-                      }
-
-data TypeInfo = TypeInfo{ tiSize :: !Int
-                        , tiAlignment :: !Int
-                        }
 
 type TypeConverter = CType -> String
 
 pattern TypeDef t = TypeSpecifier (Specifiers [TYPEDEF] [] []) t
 
--- TODO: Make this take a CIdentifier instead
--- | Usually returns (Left CType) for further evaluation, but returns a
--- haskell type for 'platform types'
--- type TypeEnv = String -> HS.Type
-
--- buildTypeEnv :: [TypeDecl] -> TypeEnv
--- buildTypeEnv typeDecls =
---   where baseTypes = catMaybes . fmap typeDeclToBaseType $ typeDecls
---         baseTypeAssocs = (btName &&& Left . btCType) <$> baseTypes
---         platformTypes = catMaybes . fmap typeDeclToPlatformType $ typeDecls
---         platformTypeAssocs = 
---           (ptName &&& Right . platformTypeToHsType) <$> platformTypes
-
-platformType :: String -> Maybe HS.Type
+platformType :: String -> Write (Maybe HS.Type)
 platformType s = 
   case s of
-    "void"     -> Just $ TyCon (Special UnitCon)
-    "char"     -> Just $ simpleCon "CChar"
-    "float"    -> Just $ simpleCon "CFloat"
-    "uint8_t"  -> Just $ simpleCon "Word8"
-    "uint32_t" -> Just $ simpleCon "Word32"
-    "uint64_t" -> Just $ simpleCon "Word64"
-    "int32_t"  -> Just $ simpleCon "Int32"
-    "size_t"   -> Just $ simpleCon "CSize"
-    _          -> Nothing
+    "void"     -> Just <$> pure (TyCon (Special UnitCon))
+    "char"     -> Just <$> conFromModule "Foreign.C.Types" "CChar"
+    "float"    -> Just <$> conFromModule "Foreign.C.Types" "CFloat"
+    "uint8_t"  -> Just <$> conFromModule "Data.Word" "Word8"
+    "uint32_t" -> Just <$> conFromModule "Data.Word" "Word32"
+    "uint64_t" -> Just <$> conFromModule "Data.Word" "Word64"
+    "int32_t"  -> Just <$> conFromModule "Data.Int" "Int32"
+    "size_t"   -> Just <$> conFromModule "Foreign.C.Types" "CSize"
+    _          -> pure Nothing
 
-cTypeToHsTypeString :: TypeConverter
-cTypeToHsTypeString = prettyPrint . cTypeToHsType'
+cTypeToHsTypeString :: CType -> Write String
+cTypeToHsTypeString cType = prettyPrint <$> cTypeToHsType cType
 
-cTypeToHsType' :: CType -> HS.Type
-cTypeToHsType' t = evalState (cTypeToHsType t) initialTypeConvertState
+conFromModule :: String -> String -> Write HS.Type
+conFromModule moduleName constructor = do
+  tellRequiredName (ExternalName (ModuleName moduleName) constructor)
+  pure (simpleCon constructor)
 
-cTypeToHsType :: CType -> TypeConvert HS.Type
+cTypeToHsType :: CType -> Write HS.Type
 cTypeToHsType cType = hsType
   where 
     hsType = case cType of
                TypeSpecifier _ Void 
                  -> pure $ TyCon (Special UnitCon)
                TypeSpecifier _ (C.Char Nothing) 
-                 -> pure $ simpleCon "CChar"
+                 -> conFromModule "Foreign.C.Types" "CChar"
                TypeSpecifier _ (C.Char (Just Signed)) 
-                 -> pure $ simpleCon "CChar"
+                 -> conFromModule "Foreign.C.Types" "CChar"
                TypeSpecifier _ (C.Char (Just Unsigned)) 
-                 -> pure $ simpleCon "CUChar"
+                 -> conFromModule "Foreign.C.Types" "CUChar"
                TypeSpecifier _ Float 
-                 -> pure $ simpleCon "CFloat"
+                 -> conFromModule "Foreign.C.Types" "CFloat"
                TypeSpecifier _ (TypeName t) 
-                 -> pure $ cIdToHsType t
+                 -> cIdToHsType t
                TypeDef (TypeName t) 
-                 -> pure $ cIdToHsType t
+                 -> cIdToHsType t
                TypeDef (Struct t) 
-                 -> pure $ cIdToHsType t
+                 -> cIdToHsType t
                Ptr _ (TypeSpecifier _ Void)
-                 -> pure $ simpleCon "Ptr" `TyApp` simpleCon "Void"
+                 -> do ptrCon <- conFromModule "Foreign.Ptr" "Ptr" 
+                       voidCon <- conFromModule "Data.Void" "Void"
+                       pure $ ptrCon `TyApp` voidCon
                Ptr _ (Proto ret parameters) 
-                 -> (simpleCon "FunPtr" `TyApp`) <$> 
-                      makeFunctionType ret parameters
+                 -> do funPtrCon <- conFromModule "Foreign.Ptr" "FunPtr" 
+                       functionType <- makeFunctionType ret parameters
+                       pure $ funPtrCon `TyApp` functionType
                Ptr _ t 
-                 -> (simpleCon "Ptr" `TyApp`) <$>
-                      cTypeToHsType t
+                 -> do ptrCon <- conFromModule "Foreign.Ptr" "Ptr" 
+                       t <- cTypeToHsType t
+                       pure $ ptrCon `TyApp` t
                Array s t 
-                 -> (simpleCon "Vec" `TyApp` sizeToPeano s `TyApp`) <$> cTypeToHsType t
+                 -> do vecCon <- conFromModule "Data.Vector.Fixed.Storable" 
+                                               "Vec"
+                       sizeType <- sizeToPeano s
+                       t <- cTypeToHsType t
+                       pure $ vecCon `TyApp` sizeType `TyApp` t
                _ -> error ("Failed to convert C type:\n" ++ show cType)
 
-cIdToHsType :: CIdentifier -> HS.Type
-cIdToHsType i = let s = unCIdentifier i
-                in fromMaybe (simpleCon s) (platformType s)
+cIdToHsType :: CIdentifier -> Write HS.Type
+cIdToHsType i = do
+  let s = unCIdentifier i
+  platformTypeMay <- platformType s
+  case platformTypeMay of
+    Just pt -> pure pt
+    Nothing -> pure $ simpleCon s
 
 simpleCon :: String -> HS.Type
 simpleCon = TyCon . UnQual . Ident
 
-sizeToPeano :: ArrayType CIdentifier -> HS.Type
+sizeToPeano :: ArrayType CIdentifier -> Write HS.Type
 sizeToPeano s = case s of
                   VariablySized -> error "Variably sized arrays not handled"
                   Unsized -> error "Unsized arrays not handled"
-                  SizedByInteger i -> 
-                    simpleCon "ToPeano" `TyApp` TyPromoted (PromotedInteger i)
-                  SizedByIdentifier i -> 
+                  SizedByInteger i -> do
+                    tellExtension "DataKinds"
+                    toPeanoType <- conFromModule "Data.Vector.Fixed.Cont" 
+                                                 "ToPeano"
+                    pure $ toPeanoType `TyApp` TyPromoted (PromotedInteger i)
+                  SizedByIdentifier i -> do
+                    tellExtension "DataKinds"
+                    toPeanoType <- conFromModule "Data.Vector.Fixed.Cont" 
+                                                 "ToPeano"
                     let typeName = Ident (unCIdentifier i)
                         typeNat = PromotedCon False (UnQual typeName)
-                    in simpleCon "ToPeano" `TyApp` TyPromoted typeNat
+                    pure $ toPeanoType `TyApp` TyPromoted typeNat
 
 makeFunctionType :: CType -> [ParameterDeclaration CIdentifier] 
-                 -> TypeConvert HS.Type
+                 -> Write HS.Type
 makeFunctionType ret [ParameterDeclaration _ (TypeSpecifier _ Void)] = makeFunctionType ret []
 makeFunctionType ret parameters = 
   foldr TyFun <$>
@@ -188,6 +193,7 @@ getTypeInfo env s =
     Nothing -> error ("Type missing from environment: " ++ s)
     Just ti -> ti
  
+-- TODO: Remove
 buildTypeEnvFromSpec :: Spec -> TypeEnv
 buildTypeEnvFromSpec spec = 
   let constants = sConstants spec
@@ -199,6 +205,15 @@ buildTypeEnvFromSpec spec =
       unions = catMaybes . fmap typeDeclToUnionType $ sTypes spec
       structs = catMaybes . fmap typeDeclToStructType $ sTypes spec
       enums = catMaybes . fmap typeDeclToEnumType $ sTypes spec
+  in buildTypeEnv constants enums unions structs nameAndTypes
+
+buildTypeEnvFromSpecGraph :: SpecGraph -> TypeEnv
+buildTypeEnvFromSpecGraph graph = 
+  let constants = getGraphConstants graph
+      nameAndTypes = getGraphCTypes graph 
+      unions = getGraphUnionTypes graph 
+      structs = getGraphStructTypes graph 
+      enums = getGraphEnumTypes graph
   in buildTypeEnv constants enums unions structs nameAndTypes
 
 buildTypeEnv :: [Constant] -> [EnumType] -> [UnionType] -> [StructType] 

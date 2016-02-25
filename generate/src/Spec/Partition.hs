@@ -3,6 +3,7 @@
 module Spec.Partition 
   ( partitionSpec 
   , PartitionedSpec(..)
+  , ignoredNames
   ) where
 
 --
@@ -59,6 +60,7 @@ partitionSpec spec graph =
       moduleExports = calculateModuleExports graph coreModuleExports
 
       allEntityNames = S.fromList (M.keys (gNameVertexMap graph))
+                       `S.difference` ignoredNames
       allBespokeNames = S.unions (M.elems bespokeModuleExports)
       allExportedNames = S.unions (M.elems moduleExports)
       unexportedEntities = allEntityNames `S.difference` allExportedNames
@@ -68,11 +70,11 @@ partitionSpec spec graph =
        [ "Error, some bespoke names were not found in the spec"
        , "Bespoke exports not found:"
        ] ++ show missingBespokeNames) (S.null missingBespokeNames) $ 
-     assertNote (unlines 
-       [ "Error, some entites are not exported by any module."
-       , "Manually place them in a module by updating 'bespokeModuleExports'"
-       , "Unexported names:"
-       ] ++ show unexportedEntities) (S.null unexportedEntities) $
+     -- assertNote (unlines 
+     --   [ "Error, some entites are not exported by any module."
+     --   , "Manually place them in a module by updating 'bespokeModuleExports'"
+     --   , "Unexported names:"
+     --   ] ++ show unexportedEntities) (S.null unexportedEntities) $
      PartitionedSpec{..}
 
 inferModuleExports :: Spec
@@ -123,11 +125,7 @@ possibleModuleAssociations moduleName
 
 bespokeModuleExports :: M.HashMap ModuleName (S.HashSet String)
 bespokeModuleExports = M.fromList 
-  [ ( ModuleName "Graphics.Vulkan.Fence"
-    , S.fromList [ -- "VkFence"
-                 ]
-    )
-  , ( ModuleName "Graphics.Vulkan.Constants"
+  [ ( ModuleName "Graphics.Vulkan.Constants"
     , S.fromList [ "VK_MAX_PHYSICAL_DEVICE_NAME_SIZE"
                  , "VK_MAX_MEMORY_TYPES"
                  , "VK_MAX_MEMORY_HEAPS"
@@ -197,20 +195,6 @@ bespokeModuleExports = M.fromList
                  , "VkQueryResultFlags"
                  ]
     )
-  , ( ModuleName "Graphics.Vulkan.RemoveMe"
-    , S.fromList [ "uint64_t"
-                 , "vulkan.h"
-                 , "uint32_t"
-                 , "size_t"
-                 , "void"
-                 , "float"
-                 , "int32_t"
-                 , "char"
-                 , "VK_DEFINE_HANDLE"
-                 , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
-                 , "VK_MAKE_VERSION"
-                 ]
-    )
   , ( ModuleName "Graphics.Vulkan.Device"
     , S.fromList [ "VkPhysicalDeviceFeatures"
                  , "VkPhysicalDevice"
@@ -238,6 +222,20 @@ bespokeModuleExports = M.fromList
                  ]
     )
   ]
+
+ignoredNames :: S.HashSet String
+ignoredNames = S.fromList [ "uint64_t"
+                          , "vulkan.h"
+                          , "uint32_t"
+                          , "size_t"
+                          , "void"
+                          , "float"
+                          , "int32_t"
+                          , "char"
+                          , "VK_DEFINE_HANDLE"
+                          , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
+                          , "VK_MAKE_VERSION"
+                          ]
 
 calculateModuleExports :: SpecGraph
                           -- | The core module exports

@@ -14,6 +14,6 @@ main = do specString <- getContents
           case specMay of 
             Nothing -> do hPutStr stderr "Failed to parse spec"
                           exitFailure
-            Just spec -> let stripped = stripWSIExtensions spec
-                         in  putStrLn (haskellize stripped)
+            Just spec -> let strippedSpec = stripWSIExtensions spec
+                         in writeSpecModules "out" strippedSpec
 

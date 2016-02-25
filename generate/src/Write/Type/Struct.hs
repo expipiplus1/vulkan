@@ -1,8 +1,8 @@
 {-# LANGUAGE QuasiQuotes #-}
 
 module Write.Type.Struct
-  ( writeStructTypes
-  , writeUnionTypes
+  ( writeStructType
+  , writeUnionType
   ) where
 
 import Spec.Type
@@ -14,21 +14,23 @@ import Write.Utils
 import Write.TypeConverter
 import Data.Maybe(fromMaybe, maybeToList)
 import Data.String
+import Write.WriteMonad
 
-writeStructTypes :: TypeEnv -> [StructType] -> String
-writeStructTypes env sts = [qc|-- * Struct Types
-
-{vcat $ writeStructType env <$> sts}|] 
-
-writeStructType :: TypeEnv -> StructType -> Doc
-writeStructType env st = let structComment = unlines $ 
-                                         maybeToList (stComment st) 
-                                         -- Enable this when we can relink the
-                                         -- comments.
-                                         -- ++ stUsage st 
-                             structMemberDocs = writeStructMember env <$> 
-                                                  stMembers st
-                         in [qc|{predocComment structComment}
+writeStructType :: StructType -> Write Doc
+writeStructType st = do
+  let structComment = unlines $ 
+        maybeToList (stComment st) 
+        -- Enable this when we can relink the comments.
+        -- ++ stUsage st 
+  env <- askTypeEnv
+  tellRequiredName 
+    (ExternalName (ModuleName "Foreign.Storable") "Storable(..)")
+  tellRequiredName 
+    (ExternalName (ModuleName "Foreign.Ptr") "plusPtr")
+  tellExtension "Strict"
+  tellExtension "DuplicateRecordFields"
+  structMemberDocs <- traverse writeStructMember (stMembers st)
+  pure [qc|{predocComment structComment}
 data {stName st} =
   {stName st}\{ {indent (-2) .  vsep $ 
                  (intercalateRecordCommas structMemberDocs ++ 
@@ -38,19 +40,19 @@ data {stName st} =
 {writeStructStorableInstance env st}
 |]
 
-writeUnionTypes :: TypeEnv -> [UnionType] -> String
-writeUnionTypes env sts = [qc|-- * Union Types
-
-{vcat $ writeUnionType env <$> sts}|] 
-
-writeUnionType :: TypeEnv -> UnionType -> Doc
-writeUnionType env ut = let unionComment = unlines $ maybeToList (utComment ut) 
-                                               -- Enable this when we can relink
-                                               -- the comments.
-                                               -- ++ utUsage ut 
-                            unionMemberDocs = writeUnionMember <$> 
-                                                utMembers ut
-                        in [qc|{predocComment unionComment}
+writeUnionType :: UnionType -> Write Doc
+writeUnionType ut = do
+  let unionComment = unlines $ maybeToList (utComment ut) 
+                             -- Enable this when we can relink the comments.
+                             -- ++ utUsage ut 
+  unionMemberDocs <- traverse writeUnionMember (utMembers ut)
+  env <- askTypeEnv
+  tellRequiredName 
+    (ExternalName (ModuleName "Foreign.Storable") "Storable(..)")
+  tellRequiredName 
+    (ExternalName (ModuleName "Foreign.Ptr") "castPtr")
+  tellExtension "Strict"
+  pure [qc|{predocComment unionComment}
 data {utName ut} = {indent (-2) . vsep $
                     intercalatePrepend (fromString "|") unionMemberDocs}
   deriving (Eq)
@@ -58,12 +60,13 @@ data {utName ut} = {indent (-2) . vsep $
 {writeUnionStorableInstance env ut}
 |]
 
-writeUnionMember :: StructMember -> Doc
-writeUnionMember um = 
+writeUnionMember :: StructMember -> Write Doc
+writeUnionMember um = do
   let constructorName = unionConstructorName um
-      constructorTypes = [cTypeToHsType' (smCType um)]
       constructorComment = fromMaybe "" (smComment um)
-  in [qc|{prettyPrint $ ConDecl (Ident constructorName) constructorTypes} {postdocComment constructorComment}|]
+  -- Monkey face :)
+  constructorTypes <- (:[]) <$> cTypeToHsType (smCType um)
+  pure [qc|{prettyPrint $ ConDecl (Ident constructorName) constructorTypes} {postdocComment constructorComment}|]
 
 writeUnionStorableInstance :: TypeEnv -> UnionType -> Doc
 writeUnionStorableInstance env ut 
@@ -94,10 +97,11 @@ intercalateRecordCommas = intercalatePrepend (fromString ",")
 intercalateInfixAp :: [Doc] -> [Doc]
 intercalateInfixAp = intercalatePrepend (fromString "<*>")
 
-writeStructMember :: TypeEnv -> StructMember -> Doc
-writeStructMember te sm = 
+writeStructMember :: StructMember -> Write Doc
+writeStructMember sm = do
   let memberComment = postdocComment (fromMaybe "" (smComment sm))
-  in [qc|{sanitizedName sm} :: {cTypeToHsTypeString (smCType sm)} {memberComment}|]
+  hsType <- cTypeToHsTypeString (smCType sm)
+  pure [qc|{sanitizedName sm} :: {hsType} {memberComment}|]
 
 -- | The namespace gets super polluted without these "vk" prefixes
 sanitizedName :: StructMember -> String

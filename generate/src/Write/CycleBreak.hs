@@ -6,6 +6,7 @@ import Spec.Graph
 import Write.Module
 import Write.Quirks
 import Write.Utils
+import Write.WriteMonad
 
 writeHsBootFiles :: FilePath -> SpecGraph -> NameLocations -> IO ()
 writeHsBootFiles root graph nameLocations = 
@@ -20,6 +21,6 @@ writeHsBootFile :: FilePath      -- ^ The source root
                 -> IO ()
 writeHsBootFile root graph nameLocations moduleName exports = do
   createModuleDirectory root moduleName
-  let moduleString = writeModule graph nameLocations moduleName exports 
+  let moduleString = writeModule graph nameLocations Boot moduleName exports 
   writeFile (moduleNameToFile root moduleName ++ "-boot") moduleString
 

@@ -1,35 +1,46 @@
 {-# LANGUAGE QuasiQuotes #-}
 
 module Write.Type.Handle
-  ( writeHandleTypes
+  ( writeHandleType
   ) where
 
+import Data.String
 import Language.C.Types as C
 import Spec.Type
 import Text.InterpolatedString.Perl6
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
 import Write.TypeConverter
+import Write.Utils
+import Write.WriteMonad
 
-writeHandleTypes :: TypeConverter -> [HandleType] -> String
-writeHandleTypes tc hts = [qc|-- * Handle Types
-
-{vcat $ writeHandleType tc <$> hts}|] 
-
-writeHandleType :: TypeConverter -> HandleType -> Doc
-writeHandleType tc ht = 
+writeHandleType :: HandleType -> Write Doc
+writeHandleType ht = 
   let cType = htCType ht
   in case cType of
-       Ptr [] t@(TypeDef (Struct _)) -> writeDispatchableHandleType tc ht t
-       t@(TypeDef (TypeName _)) -> writeNonDispatchableHandleType tc ht t
+       Ptr [] t@(TypeDef (Struct _)) -> writeDispatchableHandleType ht t
+       t@(TypeDef (TypeName _)) -> writeNonDispatchableHandleType ht t
        t -> error ("Unhandled handle type " ++ show t ++
                    ", have more been added to the spec?")
 
-writeDispatchableHandleType :: TypeConverter -> HandleType -> CType -> Doc
-writeDispatchableHandleType tc ht t = [qc|data {tc t}
-type {htName ht} = Ptr {tc t}
+writeDispatchableHandleType :: HandleType -> CType -> Write Doc
+writeDispatchableHandleType ht t = do
+  tellRequiredName (ExternalName (ModuleName "Foreign.Ptr") "Ptr")
+  hsType <- cTypeToHsTypeString t
+  pure [qc|data {hsType}
+type {htName ht} = Ptr {hsType}
 |]
 
-writeNonDispatchableHandleType :: TypeConverter -> HandleType -> CType -> Doc
-writeNonDispatchableHandleType tc ht t = [qc|newtype {htName ht} = {htName ht} {tc t}
-  deriving (Eq, Storable)
+writeNonDispatchableHandleType :: HandleType -> CType -> Write Doc
+writeNonDispatchableHandleType ht t = do
+  doesDeriveStorable
+  hsType <- cTypeToHsTypeString t
+  boot <- isBoot
+  let derivingString :: Doc
+      derivingString = if boot
+                         then [qc|
+instance Eq {htName ht}
+instance Storable {htName ht}|]
+                         else fromString "deriving (Eq, Storable)"
+  pure [qc|newtype {htName ht} = {htName ht} {hsType}
+  {derivingString}
 |]

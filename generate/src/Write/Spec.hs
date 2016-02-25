@@ -2,8 +2,7 @@
 {-# LANGUAGE TupleSections #-}
 
 module Write.Spec
-  ( haskellize
-  , writeSpecModules
+  ( writeSpecModules
   ) where
 
 import Data.Maybe(catMaybes)
@@ -27,6 +26,7 @@ import Spec.Partition
 import Write.Module
 import Write.Utils
 import Write.CycleBreak
+import Write.WriteMonad
 import qualified Data.HashSet as S
 import qualified Data.HashMap.Strict as M
 import System.Directory (createDirectoryIfMissing)
@@ -41,7 +41,8 @@ writeSpecModules root spec = do
       partitions = second S.toList <$> M.toList (moduleExports (partitionSpec spec graph))
       locations = M.unions (uncurry exportMap <$> partitions)
       moduleNames = fst <$> partitions
-      moduleStrings = uncurry (writeModule graph locations) <$> partitions
+      moduleStrings = uncurry (writeModule graph locations Normal) <$> 
+                      partitions
       modules = zip moduleNames moduleStrings
   traverse_ (createModuleDirectory root) (fst <$> modules)
   mapM_ (uncurry (writeModuleFile root)) modules
@@ -57,33 +58,33 @@ exportMap moduleName exports = M.fromList ((,moduleName) <$> exports)
 partitionExclusiveModule :: (ModuleName, S.HashSet String) -> (ModuleName, [String])
 partitionExclusiveModule = second S.toList
 
-haskellize :: Spec -> String
-haskellize spec = let -- TODO: Remove
-                      typeConverter = cTypeToHsTypeString
-                      typeEnv = buildTypeEnvFromSpec spec
-                  in [qc|{writeExtensions allExtensions }
-module Vulkan where
+-- haskellize :: Spec -> String
+-- haskellize spec = let -- TODO: Remove
+--                       typeConverter = cTypeToHsTypeString
+--                       typeEnv = buildTypeEnvFromSpec spec
+--                   in [qc|{writeExtensions allExtensions }
+-- module Vulkan where
 
-{writeImports allImports}
+-- {writeImports allImports}
 
-{writeConstants (sConstants spec)}
-{writeBaseTypes typeConverter 
-                (catMaybes . fmap typeDeclToBaseType . sTypes $ spec)}
-{writeHandleTypes typeConverter 
-                  (catMaybes . fmap typeDeclToHandleType . sTypes $ spec)}
-{writeFuncPointerTypes typeConverter 
-                       (catMaybes . fmap typeDeclToFuncPointerType . sTypes $ 
-                         spec)}
-{writeBitmaskTypes typeConverter 
-                   (sBitmasks spec) 
-                   (catMaybes . fmap typeDeclToBitmaskType . sTypes $ spec)}
-{writeEnums (sEnums spec)}
-{writeStructTypes typeEnv 
-                  (catMaybes . fmap typeDeclToStructType . sTypes $ spec)}
-{writeUnionTypes typeEnv 
-                  (catMaybes . fmap typeDeclToUnionType . sTypes $ spec)}
-{writeCommands (sCommands spec)}
-|]
+-- {writeConstants (sConstants spec)}
+-- {writeBaseTypes typeConverter 
+--                 (catMaybes . fmap typeDeclToBaseType . sTypes $ spec)}
+-- {writeHandleTypes typeConverter 
+--                   (catMaybes . fmap typeDeclToHandleType . sTypes $ spec)}
+-- {writeFuncPointerTypes typeConverter 
+--                        (catMaybes . fmap typeDeclToFuncPointerType . sTypes $ 
+--                          spec)}
+-- {writeBitmaskTypes typeConverter 
+--                    (sBitmasks spec) 
+--                    (catMaybes . fmap typeDeclToBitmaskType . sTypes $ spec)}
+-- {writeEnums (sEnums spec)}
+-- {writeStructTypes typeEnv 
+--                   (catMaybes . fmap typeDeclToStructType . sTypes $ spec)}
+-- {writeUnionTypes typeEnv 
+--                   (catMaybes . fmap typeDeclToUnionType . sTypes $ spec)}
+-- {writeCommands (sCommands spec)}
+-- |]
 
 allExtensions :: [Extension]
 allExtensions = [ Extension "DataKinds"

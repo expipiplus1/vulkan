@@ -1,7 +1,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 
 module Write.Command
-  ( writeCommands
+  ( writeCommand
   ) where
 
 import Data.Maybe(fromMaybe)
@@ -11,26 +11,26 @@ import Spec.Command
 import Text.InterpolatedString.Perl6
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
 import Write.Utils
+import Write.WriteMonad
 import Write.TypeConverter
 import Spec.Type(CType)
 import Language.C.Types
 
-writeCommands :: [Command] -> String
-writeCommands cs = [qc|-- * Commands
-
-{vcat $ writeCommand <$> cs}|] 
-
-writeCommand :: Command -> Doc
-writeCommand c = [qc|-- ** {cName c}
+writeCommand :: Command -> Write Doc
+writeCommand c = do
+  commandType <- writeCommandType c
+  pure [qc|-- ** {cName c}
 foreign import ccall "{cName c}" {cName c} :: 
-  {writeCommandType c}
+  {commandType}
 |]
 
-writeCommandType :: Command -> String
-writeCommandType c = prettyPrint hsType
-  where hsType = foldr TyFun hsReturnType hsParameterTypes
-        hsReturnType = simpleCon "IO" `TyApp` cTypeToHsType' (cReturnType c)
-        hsParameterTypes = cTypeToHsType' . lowerArrayToPointer . pType <$> cParameters c
+writeCommandType :: Command -> Write String
+writeCommandType c = do
+  hsReturnType <- (simpleCon "IO" `TyApp`) <$> cTypeToHsType (cReturnType c)
+  hsParameterTypes <- traverse (cTypeToHsType . lowerArrayToPointer) 
+                              (pType <$> cParameters c)
+  let hsType = foldr TyFun hsReturnType hsParameterTypes
+  pure $ prettyPrint hsType
   
 lowerArrayToPointer :: CType -> CType
 lowerArrayToPointer cType = 

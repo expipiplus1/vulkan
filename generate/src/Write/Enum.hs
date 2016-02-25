@@ -1,7 +1,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 
 module Write.Enum
-  ( writeEnums
+  ( writeEnum
   ) where
 
 import Data.Maybe(fromMaybe)
@@ -10,14 +10,15 @@ import Spec.Enum
 import Text.InterpolatedString.Perl6
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
 import Write.Utils
+import Write.WriteMonad
 
-writeEnums :: [Enum] -> String
-writeEnums es = [qc|-- * Enumerations
-
-{vcat $ writeEnum <$> es}|] 
-
-writeEnum :: Enum -> Doc
-writeEnum e = [qc|-- ** {eName e}
+writeEnum :: Enum -> Write Doc
+writeEnum e = do
+  tellRequiredName (ExternalName (ModuleName "Data.Int") "Int32")  
+  tellRequiredName (ExternalName (ModuleName "Foreign.Storable") "Storable(..)")  
+  tellExtension "GeneralizedNewtypeDeriving"
+  tellExtension "PatternSynonyms"
+  pure [qc|-- ** {eName e}
 {predocComment $ fromMaybe "" (eComment e)}
 newtype {eName e} = {eName e} Int32
   deriving (Eq, Storable)
