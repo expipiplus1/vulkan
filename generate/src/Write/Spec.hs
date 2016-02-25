@@ -22,22 +22,33 @@ import Write.TypeConverter
 import Write.Command
 
 import Spec.Graph
+import Control.Arrow(second)
 import Spec.Partition
 import Write.Module
 import Write.Utils
 import qualified Data.HashSet as S
 import qualified Data.HashMap.Strict as M
 import System.Directory (createDirectoryIfMissing)
-import System.FilePath ((</>), (<.>))
+import System.FilePath ((</>), (<.>), takeDirectory)
 import Data.List.Split(splitOn)
 import Data.List(foldl1')
+import Data.Foldable(traverse_)
 
 writeSpecModules :: FilePath -> Spec -> IO ()
-writeSpecModules directory spec = do
+writeSpecModules root spec = do
   let modules = getSpecModules spec
+  createModuleDirectories root modules
+  mapM_ (uncurry (writeModuleFile root)) modules
+
+createModuleDirectories :: FilePath 
+                        -> [(ModuleName, String)] 
+                        -> IO ()
+createModuleDirectories root modules =
+  let moduleNames = fst <$> modules
+      moduleDirectories = takeDirectory . moduleNameToFile <$> moduleNames
       createParents = True
-  createDirectoryIfMissing createParents (directory </> "Graphics" </> "Vulkan")
-  mapM_ (uncurry (writeModuleFile directory)) modules
+  in traverse_ (createDirectoryIfMissing createParents) 
+               (fmap (root </>) moduleDirectories)
 
 writeModuleFile :: FilePath -> ModuleName -> String -> IO ()
 writeModuleFile directory moduleName = 
@@ -51,12 +62,8 @@ moduleNameToFile (ModuleName moduleName) =
 getSpecModules :: Spec -> [(ModuleName, String)]
 getSpecModules spec =
   let graph = getSpecGraph spec
-      partitions = partitionSpec (sSections spec) graph
-      exclusiveModules = 
-        partitionExclusiveModule <$> M.toList (sectionNames partitions)
-      -- otherModule = (ModuleName "Graphics.Vulkan.Other", 
-                     -- S.toList (otherNames partitions))
-      modules = exclusiveModules
+      partitions = partitionSpec spec graph
+      modules = partitionExclusiveModule <$> M.toList (moduleExports partitions)
       locations = M.unions (uncurry exportMap <$> modules)
       moduleNames = fst <$> modules
       moduleStrings = uncurry (writeModule graph locations) <$> modules
@@ -65,9 +72,8 @@ getSpecModules spec =
 exportMap :: ModuleName -> [String] -> M.HashMap String ModuleName
 exportMap moduleName exports = M.fromList ((,moduleName) <$> exports)
 
-partitionExclusiveModule :: (String, S.HashSet String) -> (ModuleName, [String])
-partitionExclusiveModule (sectionName, names) = 
-  (sectionNameToModuleName sectionName, S.toList names)
+partitionExclusiveModule :: (ModuleName, S.HashSet String) -> (ModuleName, [String])
+partitionExclusiveModule = second S.toList
 
 haskellize :: Spec -> String
 haskellize spec = let -- TODO: Remove

@@ -13,7 +13,9 @@ import Parse.Extension
 import Parse.Constant
 import Parse.Enum
 import Parse.Section
+import Parse.Tag
 import Parse.Type
+import Parse.VendorID
 import Parse.Utils
 import Text.XML.HXT.Core
 import Safe(headMay)
@@ -37,6 +39,8 @@ parseSpecXML = isRoot /> hasName "registry" >>> extract
           sCopyright <- getAllText <<< onlyChildWithName "comment" -< registry
           sSections <- oneRequired "sections" (deep parseSections) -< registry
           sExtensions <- oneRequired "extensions" (deep parseExtensions) -< registry
+          sTags <- oneRequired "tags" (deep parseTags) -< registry
+          sVendorIDs <- oneRequired "vendorids" (deep parseVendorIDs) -< registry
           returnA -< Spec{..}
 
 

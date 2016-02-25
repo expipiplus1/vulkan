@@ -6,7 +6,9 @@ import Spec.Constant
 import Spec.Enum
 import Spec.Extension
 import Spec.Section
+import Spec.Tag
 import Spec.Type
+import Spec.VendorID
 import Prelude hiding (Enum)
 
 -- | The Specification in a format which closely resembles the xml specification
@@ -18,5 +20,11 @@ data Spec = Spec { sTypes :: [TypeDecl]
                  , sCopyright :: String
                  , sSections :: [Section]
                  , sExtensions :: [Extension]
+                 , sTags :: [Tag]
+                 , sVendorIDs :: [VendorID]
                  }
   deriving (Show)
+
+getSpecExtensionTags :: Spec -> [String]
+getSpecExtensionTags spec = 
+  (tName <$> sTags spec) ++ (viName <$> sVendorIDs spec)

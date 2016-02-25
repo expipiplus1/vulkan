@@ -18,6 +18,7 @@ import Language.C.Types
 import Control.Arrow((&&&))
 import Prelude hiding (Enum)
 import Debug.Trace
+import Write.Utils
 
 -- | Info is a more useful representation of the specification
 data SpecGraph = SpecGraph{ gVertices :: [Vertex]
@@ -44,6 +45,16 @@ data SourceEntity = AnInclude Include
                   | ABitmask Bitmask
                   | AConstant Constant
   deriving (Show)
+
+allReachableFromNames :: SpecGraph -> [String] -> S.HashSet String
+allReachableFromNames graph names = allReachable vertices
+  where vertices = getVertex <$> names
+        getVertex name = 
+          case M.lookup name (gNameVertexMap graph) of
+            Nothing -> 
+              error ("allReachableFromNames given name not in graph: " ++ 
+                     name)
+            Just v -> v
 
 allReachable :: [Vertex] -> S.HashSet String
 allReachable vs = go (S.fromList (vName <$> vs)) (concatMap vDependencies vs)
@@ -101,9 +112,11 @@ typeDeclToVertex graph td =
                }
        T.ABitmaskType bmt ->
          Vertex{ vName = bmtName bmt
-               , vDependencies = fmap lookupName $
+               , vDependencies = (fmap lookupName $
                                    (cTypeDependencyNames (bmtCType bmt) ++ 
-                                    maybeToList (bmtRequires bmt))
+                                    maybeToList (bmtRequires bmt)))
+                                 ++ maybeToList 
+                    (lookupNameMay =<< swapSuffix "Flags" "FlagBits" (bmtName bmt))
                , vSourceEntity = ABitmaskType bmt
                }
        T.AHandleType ht ->
@@ -150,11 +163,12 @@ commandToVertex graph command =
            }
 
 enumToVertex :: SpecGraph -> Enum -> Vertex
-enumToVertex _ enum =
-  Vertex{ vName = eName enum
-        , vDependencies = []
-        , vSourceEntity = AnEnum enum
-        }
+enumToVertex graph enum =
+  let lookupNameMay name = M.lookup name (gNameVertexMap graph)
+  in Vertex{ vName = eName enum
+           , vDependencies = []
+           , vSourceEntity = AnEnum enum
+           }
 
 bitmaskToVertex :: SpecGraph -> Bitmask -> Vertex
 bitmaskToVertex _ bitmask = 

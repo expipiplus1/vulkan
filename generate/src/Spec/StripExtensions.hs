@@ -8,6 +8,7 @@ import Spec.Spec
 import Spec.Command
 import Spec.Type
 import Write.TypeConverter(cTypeDependencyNames)
+import Write.Utils
 import Data.Maybe(catMaybes)
 
 -- | 'stripWSIExtensions' removes everything that depends upon any windowing
@@ -84,20 +85,3 @@ typeDeclDependees (AStructType st)       = concatMap (cTypeDependencyNames . smC
 typeDeclDependees (AUnionType ut)        = concatMap (cTypeDependencyNames . smCType) 
                                            $ utMembers ut
 
-
--- | From ghc Util
-transitiveClosure :: (a -> [a])         -- Successor function
-                  -> (a -> a -> Bool)   -- Equality predicate
-                  -> [a]
-                  -> [a]                -- The transitive closure
-
-transitiveClosure succ eq xs
- = go [] xs
- where
-   go done []                      = done
-   go done (x:xs) | x `is_in` done = go done xs
-                  | otherwise      = go (x:done) (succ x ++ xs)
-
-   _ `is_in` []                 = False
-   x `is_in` (y:ys) | eq x y    = True
-                    | otherwise = x `is_in` ys

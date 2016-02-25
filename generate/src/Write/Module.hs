@@ -49,6 +49,7 @@ writeModule graph nameLocations (ModuleName n) names = moduleString
 nameToRequiredName :: String -> RequiredName
 nameToRequiredName name =
   case name of
+    "int32_t"  -> ExternalName (ModuleName "Data.Int")  "Int32"
     "uint32_t" -> ExternalName (ModuleName "Data.Word") "Word32"
     "uint64_t" -> ExternalName (ModuleName "Data.Word") "Word64"
     "size_t"   -> ExternalName (ModuleName "Foreign.C.Types") "CSize"
