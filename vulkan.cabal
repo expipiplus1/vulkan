@@ -10,7 +10,8 @@ maintainer:          live.long.and.prosper@monoid.al
 copyright:           2016 Joe Hermaszewski
 category:            Graphics
 build-type:          Simple
-extra-source-files:  readme.md
+extra-source-files:  readme.md,
+                     changelog.md
 cabal-version:       >=1.10
 
 library
