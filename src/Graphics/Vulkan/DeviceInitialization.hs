@@ -18,8 +18,6 @@ import Foreign.Ptr( Ptr
                   )
 import Data.Int( Int32
                )
-import Data.Vector.Fixed.Cont( ToPeano
-                             )
 import Data.Bits( Bits
                 , FiniteBits
                 )
@@ -51,8 +49,9 @@ import Graphics.Vulkan.Image( VkImageUsageFlags(..)
                             , VkImageTiling(..)
                             , VkImageCreateFlagBits(..)
                             )
-import Data.Vector.Fixed.Storable( Vec
-                                 )
+import qualified Data.Vector.Generic.Sized
+import qualified Data.Vector.Storable as VS
+
 import Graphics.Vulkan.Core( VkExtent3D(..)
                            , VkResult(..)
                            , VkDeviceSize(..)
@@ -67,6 +66,9 @@ import Foreign.C.Types( CSize
                       , CChar
                       , CSize(..)
                       )
+
+type Vec = Data.Vector.Generic.Sized.Vec VS.Vector
+
 -- ** VkPhysicalDeviceType
 
 newtype VkPhysicalDeviceType = VkPhysicalDeviceType Int32
@@ -212,9 +214,9 @@ data VkPhysicalDeviceLimits =
                         , vkMaxFragmentDualSrcAttachments :: Word32 
                         , vkMaxFragmentCombinedOutputResources :: Word32 
                         , vkMaxComputeSharedMemorySize :: Word32 
-                        , vkMaxComputeWorkGroupCount :: Vec (ToPeano 3) Word32 
+                        , vkMaxComputeWorkGroupCount :: Vec 3 Word32 
                         , vkMaxComputeWorkGroupInvocations :: Word32 
-                        , vkMaxComputeWorkGroupSize :: Vec (ToPeano 3) Word32 
+                        , vkMaxComputeWorkGroupSize :: Vec 3 Word32 
                         , vkSubPixelPrecisionBits :: Word32 
                         , vkSubTexelPrecisionBits :: Word32 
                         , vkMipmapPrecisionBits :: Word32 
@@ -223,8 +225,8 @@ data VkPhysicalDeviceLimits =
                         , vkMaxSamplerLodBias :: CFloat 
                         , vkMaxSamplerAnisotropy :: CFloat 
                         , vkMaxViewports :: Word32 
-                        , vkMaxViewportDimensions :: Vec (ToPeano 2) Word32 
-                        , vkViewportBoundsRange :: Vec (ToPeano 2) CFloat 
+                        , vkMaxViewportDimensions :: Vec 2 Word32 
+                        , vkViewportBoundsRange :: Vec 2 CFloat 
                         , vkViewportSubPixelBits :: Word32 
                         , vkMinMemoryMapAlignment :: CSize 
                         , vkMinTexelBufferOffsetAlignment :: VkDeviceSize 
@@ -257,8 +259,8 @@ data VkPhysicalDeviceLimits =
                         , vkMaxCullDistances :: Word32 
                         , vkMaxCombinedClipAndCullDistances :: Word32 
                         , vkDiscreteQueuePriorities :: Word32 
-                        , vkPointSizeRange :: Vec (ToPeano 2) CFloat 
-                        , vkLineWidthRange :: Vec (ToPeano 2) CFloat 
+                        , vkPointSizeRange :: Vec 2 CFloat 
+                        , vkLineWidthRange :: Vec 2 CFloat 
                         , vkPointSizeGranularity :: CFloat 
                         , vkLineWidthGranularity :: CFloat 
                         , vkStrictLines :: VkBool32 
@@ -552,9 +554,9 @@ pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = VkFormatFeatureFlagB
 
 data VkPhysicalDeviceMemoryProperties =
   VkPhysicalDeviceMemoryProperties{ vkMemoryTypeCount :: Word32 
-                                  , vkMemoryTypes :: Vec (ToPeano VK_MAX_MEMORY_TYPES) VkMemoryType 
+                                  , vkMemoryTypes :: Vec VK_MAX_MEMORY_TYPES VkMemoryType 
                                   , vkMemoryHeapCount :: Word32 
-                                  , vkMemoryHeaps :: Vec (ToPeano VK_MAX_MEMORY_HEAPS) VkMemoryHeap 
+                                  , vkMemoryHeaps :: Vec VK_MAX_MEMORY_HEAPS VkMemoryHeap 
                                   }
   deriving (Eq)
 
@@ -671,8 +673,8 @@ data VkPhysicalDeviceProperties =
                             , vkVendorID :: Word32 
                             , vkDeviceID :: Word32 
                             , vkDeviceType :: VkPhysicalDeviceType 
-                            , vkDeviceName :: Vec (ToPeano VK_MAX_PHYSICAL_DEVICE_NAME_SIZE) CChar 
-                            , vkPipelineCacheUUID :: Vec (ToPeano VK_UUID_SIZE) Word8 
+                            , vkDeviceName :: Vec VK_MAX_PHYSICAL_DEVICE_NAME_SIZE CChar 
+                            , vkPipelineCacheUUID :: Vec VK_UUID_SIZE Word8 
                             , vkLimits :: VkPhysicalDeviceLimits 
                             , vkSparseProperties :: VkPhysicalDeviceSparseProperties 
                             }
