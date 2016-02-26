@@ -69,6 +69,8 @@ import Foreign.C.Types( CSize
 
 type Vec = Data.Vector.Generic.Sized.Vec VS.Vector
 
+instance Storable (VS.Vector a)
+
 -- ** VkPhysicalDeviceType
 
 newtype VkPhysicalDeviceType = VkPhysicalDeviceType Int32
