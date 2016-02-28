@@ -4,6 +4,8 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.CommandBufferBuilding where
+import Data.Vector.Storable.Sized( Vector
+                                 )
 import Graphics.Vulkan.Buffer( VkBuffer(..)
                              )
 import Graphics.Vulkan.Pass( VkDependencyFlagBits(..)
@@ -33,8 +35,6 @@ import Graphics.Vulkan.CommandBuffer( VkCommandBuffer(..)
                                     )
 import Data.Int( Int32
                )
-import Data.Vector.Fixed.Cont( ToPeano
-                             )
 import Data.Bits( Bits
                 , FiniteBits
                 )
@@ -61,8 +61,6 @@ import Graphics.Vulkan.Query( VkQueryResultFlagBits(..)
                             , VkQueryPool(..)
                             , VkQueryResultFlags(..)
                             )
-import Data.Vector.Fixed.Storable( Vec
-                                 )
 import Graphics.Vulkan.OtherTypes( VkImageMemoryBarrier(..)
                                  , VkMemoryBarrier(..)
                                  , VkBufferMemoryBarrier(..)
@@ -434,9 +432,9 @@ foreign import ccall "vkCmdSetStencilCompareMask" vkCmdSetStencilCompareMask ::
 
 data VkImageBlit =
   VkImageBlit{ vkSrcSubresource :: VkImageSubresourceLayers 
-             , vkSrcOffsets :: Vec (ToPeano 2) VkOffset3D 
+             , vkSrcOffsets :: Vector 2 VkOffset3D 
              , vkDstSubresource :: VkImageSubresourceLayers 
-             , vkDstOffsets :: Vec (ToPeano 2) VkOffset3D 
+             , vkDstOffsets :: Vector 2 VkOffset3D 
              }
   deriving (Eq)
 
@@ -501,9 +499,9 @@ pattern VK_STENCIL_FACE_BACK_BIT = VkStencilFaceFlagBits 0x2
 pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlagBits 0x3
 
 -- | // Union allowing specification of floating point, integer, or unsigned integer color data. Actual value selected is based on image/attachment being cleared.
-data VkClearColorValue = VkFloat (Vec (ToPeano 4) CFloat) 
-                       | VkInt (Vec (ToPeano 4) Int32) 
-                       | VkUint (Vec (ToPeano 4) Word32) 
+data VkClearColorValue = VkFloat (Vector 4 CFloat) 
+                       | VkInt (Vector 4 Int32) 
+                       | VkUint (Vector 4 Word32) 
   deriving (Eq)
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use

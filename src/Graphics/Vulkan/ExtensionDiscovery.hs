@@ -2,6 +2,8 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.ExtensionDiscovery where
+import Data.Vector.Storable.Sized( Vector
+                                 )
 import Graphics.Vulkan.Device( VkPhysicalDevice(..)
                              )
 import Data.Word( Word32
@@ -9,21 +11,17 @@ import Data.Word( Word32
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Data.Vector.Fixed.Cont( ToPeano
-                             )
 import Foreign.Storable( Storable(..)
                        )
 import Graphics.Vulkan.Constants( VK_MAX_EXTENSION_NAME_SIZE
                                 )
-import Data.Vector.Fixed.Storable( Vec
-                                 )
 import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CChar
                       )
 
 data VkExtensionProperties =
-  VkExtensionProperties{ vkExtensionName :: Vec (ToPeano VK_MAX_EXTENSION_NAME_SIZE) CChar 
+  VkExtensionProperties{ vkExtensionName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 
                        , vkSpecVersion :: Word32 
                        }
   deriving (Eq)

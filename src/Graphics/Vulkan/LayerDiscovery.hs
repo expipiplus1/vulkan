@@ -2,6 +2,8 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.LayerDiscovery where
+import Data.Vector.Storable.Sized( Vector
+                                 )
 import Graphics.Vulkan.Device( VkPhysicalDevice(..)
                              )
 import Data.Word( Word32
@@ -9,25 +11,21 @@ import Data.Word( Word32
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Data.Vector.Fixed.Cont( ToPeano
-                             )
 import Foreign.Storable( Storable(..)
                        )
 import Graphics.Vulkan.Constants( VK_MAX_EXTENSION_NAME_SIZE
                                 , VK_MAX_DESCRIPTION_SIZE
                                 )
-import Data.Vector.Fixed.Storable( Vec
-                                 )
 import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CChar
                       )
 
 data VkLayerProperties =
-  VkLayerProperties{ vkLayerName :: Vec (ToPeano VK_MAX_EXTENSION_NAME_SIZE) CChar 
+  VkLayerProperties{ vkLayerName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 
                    , vkSpecVersion :: Word32 
                    , vkImplementationVersion :: Word32 
-                   , vkDescription :: Vec (ToPeano VK_MAX_DESCRIPTION_SIZE) CChar 
+                   , vkDescription :: Vector VK_MAX_DESCRIPTION_SIZE CChar 
                    }
   deriving (Eq)
 

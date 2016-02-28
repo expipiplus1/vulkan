@@ -4,6 +4,8 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Pipeline where
+import Data.Vector.Storable.Sized( Vector
+                                 )
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import {-# SOURCE #-} Graphics.Vulkan.Pass( VkRenderPass(..)
@@ -18,8 +20,6 @@ import Graphics.Vulkan.PipelineCache( VkPipelineCache(..)
                                     )
 import Data.Int( Int32
                )
-import Data.Vector.Fixed.Cont( ToPeano
-                             )
 import Data.Bits( Bits
                 , FiniteBits
                 )
@@ -44,8 +44,6 @@ import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
 import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
                               , VkCompareOp(..)
                               )
-import Data.Vector.Fixed.Storable( Vec
-                                 )
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkBool32(..)
                            , VkExtent2D(..)
@@ -654,7 +652,7 @@ data VkPipelineColorBlendStateCreateInfo =
                                      , vkLogicOp :: VkLogicOp 
                                      , vkAttachmentCount :: Word32 
                                      , vkPAttachments :: Ptr VkPipelineColorBlendAttachmentState 
-                                     , vkBlendConstants :: Vec (ToPeano 4) CFloat 
+                                     , vkBlendConstants :: Vector 4 CFloat 
                                      }
   deriving (Eq)
 

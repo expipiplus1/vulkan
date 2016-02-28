@@ -7,10 +7,6 @@ Haskell bindings to the Vulkan graphics API
 This package requires GHC 8.0 or higher due to the use of the
 `DuplicateRecordFields` and `Strict` language extensions.
 
-I highly recommend compiling with `-O0` at the moment as compiling with
-optimizations leads to huge compile times. 
-
-
 ## Current Status
 
 All the core Vulkan functionality is here.

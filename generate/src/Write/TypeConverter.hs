@@ -97,9 +97,9 @@ cTypeToHsType cType = hsType
                        t <- cTypeToHsType t
                        pure $ ptrCon `TyApp` t
                Array s t 
-                 -> do vecCon <- conFromModule "Data.Vector.Fixed.Storable" 
-                                               "Vec"
-                       sizeType <- sizeToPeano s
+                 -> do vecCon <- conFromModule "Data.Vector.Storable.Sized" 
+                                               "Vector"
+                       sizeType <- arraySizeToNat s
                        t <- cTypeToHsType t
                        pure $ vecCon `TyApp` sizeType `TyApp` t
                _ -> error ("Failed to convert C type:\n" ++ show cType)
@@ -115,22 +115,18 @@ cIdToHsType i = do
 simpleCon :: String -> HS.Type
 simpleCon = TyCon . UnQual . Ident
 
-sizeToPeano :: ArrayType CIdentifier -> Write HS.Type
-sizeToPeano s = case s of
-                  VariablySized -> error "Variably sized arrays not handled"
-                  Unsized -> error "Unsized arrays not handled"
-                  SizedByInteger i -> do
-                    tellExtension "DataKinds"
-                    toPeanoType <- conFromModule "Data.Vector.Fixed.Cont" 
-                                                 "ToPeano"
-                    pure $ toPeanoType `TyApp` TyPromoted (PromotedInteger i)
-                  SizedByIdentifier i -> do
-                    tellExtension "DataKinds"
-                    toPeanoType <- conFromModule "Data.Vector.Fixed.Cont" 
-                                                 "ToPeano"
-                    let typeName = Ident (unCIdentifier i)
-                        typeNat = PromotedCon False (UnQual typeName)
-                    pure $ toPeanoType `TyApp` TyPromoted typeNat
+arraySizeToNat :: ArrayType CIdentifier -> Write HS.Type
+arraySizeToNat s = case s of
+                     VariablySized -> error "Variably sized arrays not handled"
+                     Unsized -> error "Unsized arrays not handled"
+                     SizedByInteger i -> do
+                       tellExtension "DataKinds"
+                       pure $ TyPromoted (PromotedInteger i)
+                     SizedByIdentifier i -> do
+                       tellExtension "DataKinds"
+                       let typeName = Ident (unCIdentifier i)
+                           typeNat = PromotedCon False (UnQual typeName)
+                       pure $ TyPromoted typeNat
 
 makeFunctionType :: CType -> [ParameterDeclaration CIdentifier] 
                  -> Write HS.Type
