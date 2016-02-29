@@ -102,8 +102,25 @@ newtype VkFramebuffer = VkFramebuffer Word64
 
 newtype VkAttachmentDescriptionFlagBits = VkAttachmentDescriptionFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkAttachmentDescriptionFlagBits
 type VkAttachmentDescriptionFlags = VkAttachmentDescriptionFlagBits
+
+instance Show VkAttachmentDescriptionFlagBits where
+  showsPrec _ VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = showString "VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
+  
+  showsPrec p (VkAttachmentDescriptionFlagBits x) = showParen (p >= 11) (showString "VkAttachmentDescriptionFlagBits " . showsPrec 11 x)
+
+instance Read VkAttachmentDescriptionFlagBits where
+  readPrec = parens ( choose [ ("VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT", pure VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkAttachmentDescriptionFlagBits")
+                        v <- step readPrec
+                        pure (VkAttachmentDescriptionFlagBits v)
+                        )
+                    )
+
 -- | The attachment may alias physical memory of another attachment in the same render pass
 pattern VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = VkAttachmentDescriptionFlagBits 0x1
 
@@ -112,8 +129,25 @@ pattern VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = VkAttachmentDescriptionFlagBit
 
 newtype VkDependencyFlagBits = VkDependencyFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkDependencyFlagBits
 type VkDependencyFlags = VkDependencyFlagBits
+
+instance Show VkDependencyFlagBits where
+  showsPrec _ VK_DEPENDENCY_BY_REGION_BIT = showString "VK_DEPENDENCY_BY_REGION_BIT"
+  
+  showsPrec p (VkDependencyFlagBits x) = showParen (p >= 11) (showString "VkDependencyFlagBits " . showsPrec 11 x)
+
+instance Read VkDependencyFlagBits where
+  readPrec = parens ( choose [ ("VK_DEPENDENCY_BY_REGION_BIT", pure VK_DEPENDENCY_BY_REGION_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkDependencyFlagBits")
+                        v <- step readPrec
+                        pure (VkDependencyFlagBits v)
+                        )
+                    )
+
 -- | Dependency is per pixel region 
 pattern VK_DEPENDENCY_BY_REGION_BIT = VkDependencyFlagBits 0x1
 
@@ -229,8 +263,57 @@ pattern VK_ATTACHMENT_STORE_OP_DONT_CARE = VkAttachmentStoreOp 1
 
 newtype VkAccessFlagBits = VkAccessFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkAccessFlagBits
 type VkAccessFlags = VkAccessFlagBits
+
+instance Show VkAccessFlagBits where
+  showsPrec _ VK_ACCESS_INDIRECT_COMMAND_READ_BIT = showString "VK_ACCESS_INDIRECT_COMMAND_READ_BIT"
+  showsPrec _ VK_ACCESS_INDEX_READ_BIT = showString "VK_ACCESS_INDEX_READ_BIT"
+  showsPrec _ VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = showString "VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT"
+  showsPrec _ VK_ACCESS_UNIFORM_READ_BIT = showString "VK_ACCESS_UNIFORM_READ_BIT"
+  showsPrec _ VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = showString "VK_ACCESS_INPUT_ATTACHMENT_READ_BIT"
+  showsPrec _ VK_ACCESS_SHADER_READ_BIT = showString "VK_ACCESS_SHADER_READ_BIT"
+  showsPrec _ VK_ACCESS_SHADER_WRITE_BIT = showString "VK_ACCESS_SHADER_WRITE_BIT"
+  showsPrec _ VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = showString "VK_ACCESS_COLOR_ATTACHMENT_READ_BIT"
+  showsPrec _ VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = showString "VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT"
+  showsPrec _ VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = showString "VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT"
+  showsPrec _ VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = showString "VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"
+  showsPrec _ VK_ACCESS_TRANSFER_READ_BIT = showString "VK_ACCESS_TRANSFER_READ_BIT"
+  showsPrec _ VK_ACCESS_TRANSFER_WRITE_BIT = showString "VK_ACCESS_TRANSFER_WRITE_BIT"
+  showsPrec _ VK_ACCESS_HOST_READ_BIT = showString "VK_ACCESS_HOST_READ_BIT"
+  showsPrec _ VK_ACCESS_HOST_WRITE_BIT = showString "VK_ACCESS_HOST_WRITE_BIT"
+  showsPrec _ VK_ACCESS_MEMORY_READ_BIT = showString "VK_ACCESS_MEMORY_READ_BIT"
+  showsPrec _ VK_ACCESS_MEMORY_WRITE_BIT = showString "VK_ACCESS_MEMORY_WRITE_BIT"
+  
+  showsPrec p (VkAccessFlagBits x) = showParen (p >= 11) (showString "VkAccessFlagBits " . showsPrec 11 x)
+
+instance Read VkAccessFlagBits where
+  readPrec = parens ( choose [ ("VK_ACCESS_INDIRECT_COMMAND_READ_BIT", pure VK_ACCESS_INDIRECT_COMMAND_READ_BIT)
+                             , ("VK_ACCESS_INDEX_READ_BIT", pure VK_ACCESS_INDEX_READ_BIT)
+                             , ("VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT", pure VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT)
+                             , ("VK_ACCESS_UNIFORM_READ_BIT", pure VK_ACCESS_UNIFORM_READ_BIT)
+                             , ("VK_ACCESS_INPUT_ATTACHMENT_READ_BIT", pure VK_ACCESS_INPUT_ATTACHMENT_READ_BIT)
+                             , ("VK_ACCESS_SHADER_READ_BIT", pure VK_ACCESS_SHADER_READ_BIT)
+                             , ("VK_ACCESS_SHADER_WRITE_BIT", pure VK_ACCESS_SHADER_WRITE_BIT)
+                             , ("VK_ACCESS_COLOR_ATTACHMENT_READ_BIT", pure VK_ACCESS_COLOR_ATTACHMENT_READ_BIT)
+                             , ("VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT", pure VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
+                             , ("VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT", pure VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT)
+                             , ("VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT", pure VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)
+                             , ("VK_ACCESS_TRANSFER_READ_BIT", pure VK_ACCESS_TRANSFER_READ_BIT)
+                             , ("VK_ACCESS_TRANSFER_WRITE_BIT", pure VK_ACCESS_TRANSFER_WRITE_BIT)
+                             , ("VK_ACCESS_HOST_READ_BIT", pure VK_ACCESS_HOST_READ_BIT)
+                             , ("VK_ACCESS_HOST_WRITE_BIT", pure VK_ACCESS_HOST_WRITE_BIT)
+                             , ("VK_ACCESS_MEMORY_READ_BIT", pure VK_ACCESS_MEMORY_READ_BIT)
+                             , ("VK_ACCESS_MEMORY_WRITE_BIT", pure VK_ACCESS_MEMORY_WRITE_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkAccessFlagBits")
+                        v <- step readPrec
+                        pure (VkAccessFlagBits v)
+                        )
+                    )
+
 -- | Controls coherency of indirect command reads
 pattern VK_ACCESS_INDIRECT_COMMAND_READ_BIT = VkAccessFlagBits 0x1
 -- | Controls coherency of index reads

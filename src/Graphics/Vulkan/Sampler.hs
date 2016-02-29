@@ -314,8 +314,37 @@ foreign import ccall "vkCreateSampler" vkCreateSampler ::
 
 newtype VkSampleCountFlagBits = VkSampleCountFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkSampleCountFlagBits
 type VkSampleCountFlags = VkSampleCountFlagBits
+
+instance Show VkSampleCountFlagBits where
+  showsPrec _ VK_SAMPLE_COUNT_1_BIT = showString "VK_SAMPLE_COUNT_1_BIT"
+  showsPrec _ VK_SAMPLE_COUNT_2_BIT = showString "VK_SAMPLE_COUNT_2_BIT"
+  showsPrec _ VK_SAMPLE_COUNT_4_BIT = showString "VK_SAMPLE_COUNT_4_BIT"
+  showsPrec _ VK_SAMPLE_COUNT_8_BIT = showString "VK_SAMPLE_COUNT_8_BIT"
+  showsPrec _ VK_SAMPLE_COUNT_16_BIT = showString "VK_SAMPLE_COUNT_16_BIT"
+  showsPrec _ VK_SAMPLE_COUNT_32_BIT = showString "VK_SAMPLE_COUNT_32_BIT"
+  showsPrec _ VK_SAMPLE_COUNT_64_BIT = showString "VK_SAMPLE_COUNT_64_BIT"
+  
+  showsPrec p (VkSampleCountFlagBits x) = showParen (p >= 11) (showString "VkSampleCountFlagBits " . showsPrec 11 x)
+
+instance Read VkSampleCountFlagBits where
+  readPrec = parens ( choose [ ("VK_SAMPLE_COUNT_1_BIT", pure VK_SAMPLE_COUNT_1_BIT)
+                             , ("VK_SAMPLE_COUNT_2_BIT", pure VK_SAMPLE_COUNT_2_BIT)
+                             , ("VK_SAMPLE_COUNT_4_BIT", pure VK_SAMPLE_COUNT_4_BIT)
+                             , ("VK_SAMPLE_COUNT_8_BIT", pure VK_SAMPLE_COUNT_8_BIT)
+                             , ("VK_SAMPLE_COUNT_16_BIT", pure VK_SAMPLE_COUNT_16_BIT)
+                             , ("VK_SAMPLE_COUNT_32_BIT", pure VK_SAMPLE_COUNT_32_BIT)
+                             , ("VK_SAMPLE_COUNT_64_BIT", pure VK_SAMPLE_COUNT_64_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkSampleCountFlagBits")
+                        v <- step readPrec
+                        pure (VkSampleCountFlagBits v)
+                        )
+                    )
+
 -- | Sample count 1 supported
 pattern VK_SAMPLE_COUNT_1_BIT = VkSampleCountFlagBits 0x1
 -- | Sample count 2 supported

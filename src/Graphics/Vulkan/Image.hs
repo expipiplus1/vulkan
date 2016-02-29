@@ -63,8 +63,33 @@ foreign import ccall "vkCreateImage" vkCreateImage ::
 
 newtype VkImageCreateFlagBits = VkImageCreateFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkImageCreateFlagBits
 type VkImageCreateFlags = VkImageCreateFlagBits
+
+instance Show VkImageCreateFlagBits where
+  showsPrec _ VK_IMAGE_CREATE_SPARSE_BINDING_BIT = showString "VK_IMAGE_CREATE_SPARSE_BINDING_BIT"
+  showsPrec _ VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = showString "VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT"
+  showsPrec _ VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = showString "VK_IMAGE_CREATE_SPARSE_ALIASED_BIT"
+  showsPrec _ VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = showString "VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT"
+  showsPrec _ VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = showString "VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT"
+  
+  showsPrec p (VkImageCreateFlagBits x) = showParen (p >= 11) (showString "VkImageCreateFlagBits " . showsPrec 11 x)
+
+instance Read VkImageCreateFlagBits where
+  readPrec = parens ( choose [ ("VK_IMAGE_CREATE_SPARSE_BINDING_BIT", pure VK_IMAGE_CREATE_SPARSE_BINDING_BIT)
+                             , ("VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT", pure VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT)
+                             , ("VK_IMAGE_CREATE_SPARSE_ALIASED_BIT", pure VK_IMAGE_CREATE_SPARSE_ALIASED_BIT)
+                             , ("VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT", pure VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT)
+                             , ("VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT", pure VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkImageCreateFlagBits")
+                        v <- step readPrec
+                        pure (VkImageCreateFlagBits v)
+                        )
+                    )
+
 -- | Image should support sparse backing
 pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT = VkImageCreateFlagBits 0x1
 -- | Image should support sparse backing with partial residency
@@ -81,8 +106,39 @@ pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VkImageCreateFlagBits 0x10
 
 newtype VkImageUsageFlagBits = VkImageUsageFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkImageUsageFlagBits
 type VkImageUsageFlags = VkImageUsageFlagBits
+
+instance Show VkImageUsageFlagBits where
+  showsPrec _ VK_IMAGE_USAGE_TRANSFER_SRC_BIT = showString "VK_IMAGE_USAGE_TRANSFER_SRC_BIT"
+  showsPrec _ VK_IMAGE_USAGE_TRANSFER_DST_BIT = showString "VK_IMAGE_USAGE_TRANSFER_DST_BIT"
+  showsPrec _ VK_IMAGE_USAGE_SAMPLED_BIT = showString "VK_IMAGE_USAGE_SAMPLED_BIT"
+  showsPrec _ VK_IMAGE_USAGE_STORAGE_BIT = showString "VK_IMAGE_USAGE_STORAGE_BIT"
+  showsPrec _ VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT"
+  showsPrec _ VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"
+  showsPrec _ VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT"
+  showsPrec _ VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT"
+  
+  showsPrec p (VkImageUsageFlagBits x) = showParen (p >= 11) (showString "VkImageUsageFlagBits " . showsPrec 11 x)
+
+instance Read VkImageUsageFlagBits where
+  readPrec = parens ( choose [ ("VK_IMAGE_USAGE_TRANSFER_SRC_BIT", pure VK_IMAGE_USAGE_TRANSFER_SRC_BIT)
+                             , ("VK_IMAGE_USAGE_TRANSFER_DST_BIT", pure VK_IMAGE_USAGE_TRANSFER_DST_BIT)
+                             , ("VK_IMAGE_USAGE_SAMPLED_BIT", pure VK_IMAGE_USAGE_SAMPLED_BIT)
+                             , ("VK_IMAGE_USAGE_STORAGE_BIT", pure VK_IMAGE_USAGE_STORAGE_BIT)
+                             , ("VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+                             , ("VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+                             , ("VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT)
+                             , ("VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkImageUsageFlagBits")
+                        v <- step readPrec
+                        pure (VkImageUsageFlagBits v)
+                        )
+                    )
+
 -- | Can be used as a source of transfer operations
 pattern VK_IMAGE_USAGE_TRANSFER_SRC_BIT = VkImageUsageFlagBits 0x1
 -- | Can be used as a destination of transfer operations
@@ -108,8 +164,31 @@ newtype VkImage = VkImage Word64
 
 newtype VkImageAspectFlagBits = VkImageAspectFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkImageAspectFlagBits
 type VkImageAspectFlags = VkImageAspectFlagBits
+
+instance Show VkImageAspectFlagBits where
+  showsPrec _ VK_IMAGE_ASPECT_COLOR_BIT = showString "VK_IMAGE_ASPECT_COLOR_BIT"
+  showsPrec _ VK_IMAGE_ASPECT_DEPTH_BIT = showString "VK_IMAGE_ASPECT_DEPTH_BIT"
+  showsPrec _ VK_IMAGE_ASPECT_STENCIL_BIT = showString "VK_IMAGE_ASPECT_STENCIL_BIT"
+  showsPrec _ VK_IMAGE_ASPECT_METADATA_BIT = showString "VK_IMAGE_ASPECT_METADATA_BIT"
+  
+  showsPrec p (VkImageAspectFlagBits x) = showParen (p >= 11) (showString "VkImageAspectFlagBits " . showsPrec 11 x)
+
+instance Read VkImageAspectFlagBits where
+  readPrec = parens ( choose [ ("VK_IMAGE_ASPECT_COLOR_BIT", pure VK_IMAGE_ASPECT_COLOR_BIT)
+                             , ("VK_IMAGE_ASPECT_DEPTH_BIT", pure VK_IMAGE_ASPECT_DEPTH_BIT)
+                             , ("VK_IMAGE_ASPECT_STENCIL_BIT", pure VK_IMAGE_ASPECT_STENCIL_BIT)
+                             , ("VK_IMAGE_ASPECT_METADATA_BIT", pure VK_IMAGE_ASPECT_METADATA_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkImageAspectFlagBits")
+                        v <- step readPrec
+                        pure (VkImageAspectFlagBits v)
+                        )
+                    )
+
 
 pattern VK_IMAGE_ASPECT_COLOR_BIT = VkImageAspectFlagBits 0x1
 

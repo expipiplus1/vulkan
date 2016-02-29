@@ -5,6 +5,11 @@
 module Graphics.Vulkan.Fence where
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -27,6 +32,13 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkFreeFunction
                              , PFN_vkInternalFreeNotification
                              )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkBool32(..)
                            , VkFlags(..)
@@ -74,8 +86,25 @@ foreign import ccall "vkGetFenceStatus" vkGetFenceStatus ::
 
 newtype VkFenceCreateFlagBits = VkFenceCreateFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkFenceCreateFlagBits
 type VkFenceCreateFlags = VkFenceCreateFlagBits
+
+instance Show VkFenceCreateFlagBits where
+  showsPrec _ VK_FENCE_CREATE_SIGNALED_BIT = showString "VK_FENCE_CREATE_SIGNALED_BIT"
+  
+  showsPrec p (VkFenceCreateFlagBits x) = showParen (p >= 11) (showString "VkFenceCreateFlagBits " . showsPrec 11 x)
+
+instance Read VkFenceCreateFlagBits where
+  readPrec = parens ( choose [ ("VK_FENCE_CREATE_SIGNALED_BIT", pure VK_FENCE_CREATE_SIGNALED_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkFenceCreateFlagBits")
+                        v <- step readPrec
+                        pure (VkFenceCreateFlagBits v)
+                        )
+                    )
+
 
 pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlagBits 0x1
 
