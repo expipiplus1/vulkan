@@ -10,6 +10,11 @@ import Graphics.Vulkan.Device( VkPhysicalDeviceFeatures(..)
                              , VkPhysicalDevice(..)
                              , VkDevice(..)
                              )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word8
                 , Word64
                 , Word32
@@ -41,6 +46,13 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkFreeFunction
                              , PFN_vkInternalFreeNotification
                              )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
                               , VkSampleCountFlags(..)
                               )
@@ -69,6 +81,29 @@ import Foreign.C.Types( CSize
 
 newtype VkPhysicalDeviceType = VkPhysicalDeviceType Int32
   deriving (Eq, Storable)
+
+instance Show VkPhysicalDeviceType where
+  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_OTHER = showString "VK_PHYSICAL_DEVICE_TYPE_OTHER"
+  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = showString "VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU"
+  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = showString "VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU"
+  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = showString "VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU"
+  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_CPU = showString "VK_PHYSICAL_DEVICE_TYPE_CPU"
+  showsPrec p (VkPhysicalDeviceType x) = showParen (p >= 11) (showString "VkPhysicalDeviceType " . showsPrec 11 x)
+
+instance Read VkPhysicalDeviceType where
+  readPrec = parens ( choose [ ("VK_PHYSICAL_DEVICE_TYPE_OTHER", pure VK_PHYSICAL_DEVICE_TYPE_OTHER)
+                             , ("VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU", pure VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU)
+                             , ("VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU", pure VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
+                             , ("VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU", pure VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU)
+                             , ("VK_PHYSICAL_DEVICE_TYPE_CPU", pure VK_PHYSICAL_DEVICE_TYPE_CPU)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkPhysicalDeviceType")
+                        v <- step readPrec
+                        pure (VkPhysicalDeviceType v)
+                        )
+                    )
+
 
 pattern VK_PHYSICAL_DEVICE_TYPE_OTHER = VkPhysicalDeviceType 0
 

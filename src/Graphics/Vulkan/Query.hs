@@ -5,6 +5,11 @@
 module Graphics.Vulkan.Query where
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -29,6 +34,13 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkFreeFunction
                              , PFN_vkInternalFreeNotification
                              )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkDeviceSize(..)
                            , VkFlags(..)
@@ -98,6 +110,25 @@ pattern VK_QUERY_RESULT_PARTIAL_BIT = VkQueryResultFlagBits 0x8
 
 newtype VkQueryType = VkQueryType Int32
   deriving (Eq, Storable)
+
+instance Show VkQueryType where
+  showsPrec _ VK_QUERY_TYPE_OCCLUSION = showString "VK_QUERY_TYPE_OCCLUSION"
+  showsPrec _ VK_QUERY_TYPE_PIPELINE_STATISTICS = showString "VK_QUERY_TYPE_PIPELINE_STATISTICS"
+  showsPrec _ VK_QUERY_TYPE_TIMESTAMP = showString "VK_QUERY_TYPE_TIMESTAMP"
+  showsPrec p (VkQueryType x) = showParen (p >= 11) (showString "VkQueryType " . showsPrec 11 x)
+
+instance Read VkQueryType where
+  readPrec = parens ( choose [ ("VK_QUERY_TYPE_OCCLUSION", pure VK_QUERY_TYPE_OCCLUSION)
+                             , ("VK_QUERY_TYPE_PIPELINE_STATISTICS", pure VK_QUERY_TYPE_PIPELINE_STATISTICS)
+                             , ("VK_QUERY_TYPE_TIMESTAMP", pure VK_QUERY_TYPE_TIMESTAMP)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkQueryType")
+                        v <- step readPrec
+                        pure (VkQueryType v)
+                        )
+                    )
+
 
 pattern VK_QUERY_TYPE_OCCLUSION = VkQueryType 0
 -- | Optional

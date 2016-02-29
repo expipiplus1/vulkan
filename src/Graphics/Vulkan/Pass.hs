@@ -5,6 +5,11 @@
 module Graphics.Vulkan.Pass where
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Graphics.Vulkan.Pipeline( VkPipelineStageFlagBits(..)
                                , VkPipelineStageFlags(..)
                                , VkPipelineBindPoint(..)
@@ -33,6 +38,13 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkFreeFunction
                              , PFN_vkInternalFreeNotification
                              )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
                               )
 import Graphics.Vulkan.Image( VkImageLayout(..)
@@ -162,6 +174,25 @@ foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity ::
 newtype VkAttachmentLoadOp = VkAttachmentLoadOp Int32
   deriving (Eq, Storable)
 
+instance Show VkAttachmentLoadOp where
+  showsPrec _ VK_ATTACHMENT_LOAD_OP_LOAD = showString "VK_ATTACHMENT_LOAD_OP_LOAD"
+  showsPrec _ VK_ATTACHMENT_LOAD_OP_CLEAR = showString "VK_ATTACHMENT_LOAD_OP_CLEAR"
+  showsPrec _ VK_ATTACHMENT_LOAD_OP_DONT_CARE = showString "VK_ATTACHMENT_LOAD_OP_DONT_CARE"
+  showsPrec p (VkAttachmentLoadOp x) = showParen (p >= 11) (showString "VkAttachmentLoadOp " . showsPrec 11 x)
+
+instance Read VkAttachmentLoadOp where
+  readPrec = parens ( choose [ ("VK_ATTACHMENT_LOAD_OP_LOAD", pure VK_ATTACHMENT_LOAD_OP_LOAD)
+                             , ("VK_ATTACHMENT_LOAD_OP_CLEAR", pure VK_ATTACHMENT_LOAD_OP_CLEAR)
+                             , ("VK_ATTACHMENT_LOAD_OP_DONT_CARE", pure VK_ATTACHMENT_LOAD_OP_DONT_CARE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkAttachmentLoadOp")
+                        v <- step readPrec
+                        pure (VkAttachmentLoadOp v)
+                        )
+                    )
+
+
 pattern VK_ATTACHMENT_LOAD_OP_LOAD = VkAttachmentLoadOp 0
 
 pattern VK_ATTACHMENT_LOAD_OP_CLEAR = VkAttachmentLoadOp 1
@@ -172,6 +203,23 @@ pattern VK_ATTACHMENT_LOAD_OP_DONT_CARE = VkAttachmentLoadOp 2
 
 newtype VkAttachmentStoreOp = VkAttachmentStoreOp Int32
   deriving (Eq, Storable)
+
+instance Show VkAttachmentStoreOp where
+  showsPrec _ VK_ATTACHMENT_STORE_OP_STORE = showString "VK_ATTACHMENT_STORE_OP_STORE"
+  showsPrec _ VK_ATTACHMENT_STORE_OP_DONT_CARE = showString "VK_ATTACHMENT_STORE_OP_DONT_CARE"
+  showsPrec p (VkAttachmentStoreOp x) = showParen (p >= 11) (showString "VkAttachmentStoreOp " . showsPrec 11 x)
+
+instance Read VkAttachmentStoreOp where
+  readPrec = parens ( choose [ ("VK_ATTACHMENT_STORE_OP_STORE", pure VK_ATTACHMENT_STORE_OP_STORE)
+                             , ("VK_ATTACHMENT_STORE_OP_DONT_CARE", pure VK_ATTACHMENT_STORE_OP_DONT_CARE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkAttachmentStoreOp")
+                        v <- step readPrec
+                        pure (VkAttachmentStoreOp v)
+                        )
+                    )
+
 
 pattern VK_ATTACHMENT_STORE_OP_STORE = VkAttachmentStoreOp 0
 

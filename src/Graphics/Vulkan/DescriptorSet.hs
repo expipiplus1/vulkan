@@ -7,6 +7,11 @@ import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Graphics.Vulkan.Buffer( VkBuffer(..)
                              )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -31,6 +36,13 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkFreeFunction
                              , PFN_vkInternalFreeNotification
                              )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
                              , VkShaderStageFlags(..)
                              )
@@ -336,6 +348,41 @@ instance Storable VkDescriptorSetLayoutBinding where
 
 newtype VkDescriptorType = VkDescriptorType Int32
   deriving (Eq, Storable)
+
+instance Show VkDescriptorType where
+  showsPrec _ VK_DESCRIPTOR_TYPE_SAMPLER = showString "VK_DESCRIPTOR_TYPE_SAMPLER"
+  showsPrec _ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = showString "VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER"
+  showsPrec _ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE = showString "VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE"
+  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE = showString "VK_DESCRIPTOR_TYPE_STORAGE_IMAGE"
+  showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER = showString "VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER"
+  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER = showString "VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER"
+  showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER = showString "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER"
+  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER = showString "VK_DESCRIPTOR_TYPE_STORAGE_BUFFER"
+  showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = showString "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC"
+  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = showString "VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC"
+  showsPrec _ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = showString "VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT"
+  showsPrec p (VkDescriptorType x) = showParen (p >= 11) (showString "VkDescriptorType " . showsPrec 11 x)
+
+instance Read VkDescriptorType where
+  readPrec = parens ( choose [ ("VK_DESCRIPTOR_TYPE_SAMPLER", pure VK_DESCRIPTOR_TYPE_SAMPLER)
+                             , ("VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER", pure VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
+                             , ("VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE", pure VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE)
+                             , ("VK_DESCRIPTOR_TYPE_STORAGE_IMAGE", pure VK_DESCRIPTOR_TYPE_STORAGE_IMAGE)
+                             , ("VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER", pure VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER)
+                             , ("VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER", pure VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER)
+                             , ("VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER", pure VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+                             , ("VK_DESCRIPTOR_TYPE_STORAGE_BUFFER", pure VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
+                             , ("VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC", pure VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC)
+                             , ("VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC", pure VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC)
+                             , ("VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT", pure VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkDescriptorType")
+                        v <- step readPrec
+                        pure (VkDescriptorType v)
+                        )
+                    )
+
 
 pattern VK_DESCRIPTOR_TYPE_SAMPLER = VkDescriptorType 0
 

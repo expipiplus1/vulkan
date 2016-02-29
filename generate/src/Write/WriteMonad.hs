@@ -10,6 +10,7 @@ module Write.WriteMonad
   , askTypeEnv
   , isBoot
   , tellRequiredName
+  , tellRequiredNames
   , tellExtension
   , requireStorable
   , doesDeriveStorable
@@ -64,6 +65,9 @@ requireStorable = tellRequiredName (ExternalName (ModuleName "Foreign.Storable")
 
 tellRequiredName :: RequiredName -> Write ()
 tellRequiredName rn = tell (S.singleton rn, mempty)
+
+tellRequiredNames :: [RequiredName] -> Write ()
+tellRequiredNames rns = tell (S.fromList rns, mempty)
 
 tellExtension :: ExtensionName -> Write ()
 tellExtension en = tell (mempty, S.singleton en)

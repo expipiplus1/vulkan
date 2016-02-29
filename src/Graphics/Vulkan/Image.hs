@@ -5,6 +5,11 @@
 module Graphics.Vulkan.Image where
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -29,6 +34,13 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkFreeFunction
                              , PFN_vkInternalFreeNotification
                              )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
                               )
 import Graphics.Vulkan.Core( VkExtent3D(..)
@@ -138,6 +150,23 @@ instance Storable VkSubresourceLayout where
 newtype VkImageTiling = VkImageTiling Int32
   deriving (Eq, Storable)
 
+instance Show VkImageTiling where
+  showsPrec _ VK_IMAGE_TILING_OPTIMAL = showString "VK_IMAGE_TILING_OPTIMAL"
+  showsPrec _ VK_IMAGE_TILING_LINEAR = showString "VK_IMAGE_TILING_LINEAR"
+  showsPrec p (VkImageTiling x) = showParen (p >= 11) (showString "VkImageTiling " . showsPrec 11 x)
+
+instance Read VkImageTiling where
+  readPrec = parens ( choose [ ("VK_IMAGE_TILING_OPTIMAL", pure VK_IMAGE_TILING_OPTIMAL)
+                             , ("VK_IMAGE_TILING_LINEAR", pure VK_IMAGE_TILING_LINEAR)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkImageTiling")
+                        v <- step readPrec
+                        pure (VkImageTiling v)
+                        )
+                    )
+
+
 pattern VK_IMAGE_TILING_OPTIMAL = VkImageTiling 0
 
 pattern VK_IMAGE_TILING_LINEAR = VkImageTiling 1
@@ -146,6 +175,37 @@ pattern VK_IMAGE_TILING_LINEAR = VkImageTiling 1
 
 newtype VkImageLayout = VkImageLayout Int32
   deriving (Eq, Storable)
+
+instance Show VkImageLayout where
+  showsPrec _ VK_IMAGE_LAYOUT_UNDEFINED = showString "VK_IMAGE_LAYOUT_UNDEFINED"
+  showsPrec _ VK_IMAGE_LAYOUT_GENERAL = showString "VK_IMAGE_LAYOUT_GENERAL"
+  showsPrec _ VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = showString "VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL"
+  showsPrec _ VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = showString "VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL"
+  showsPrec _ VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL = showString "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL"
+  showsPrec _ VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = showString "VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL"
+  showsPrec _ VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = showString "VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL"
+  showsPrec _ VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = showString "VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL"
+  showsPrec _ VK_IMAGE_LAYOUT_PREINITIALIZED = showString "VK_IMAGE_LAYOUT_PREINITIALIZED"
+  showsPrec p (VkImageLayout x) = showParen (p >= 11) (showString "VkImageLayout " . showsPrec 11 x)
+
+instance Read VkImageLayout where
+  readPrec = parens ( choose [ ("VK_IMAGE_LAYOUT_UNDEFINED", pure VK_IMAGE_LAYOUT_UNDEFINED)
+                             , ("VK_IMAGE_LAYOUT_GENERAL", pure VK_IMAGE_LAYOUT_GENERAL)
+                             , ("VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL", pure VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
+                             , ("VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL", pure VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
+                             , ("VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL", pure VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL)
+                             , ("VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL", pure VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+                             , ("VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL", pure VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
+                             , ("VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL", pure VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+                             , ("VK_IMAGE_LAYOUT_PREINITIALIZED", pure VK_IMAGE_LAYOUT_PREINITIALIZED)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkImageLayout")
+                        v <- step readPrec
+                        pure (VkImageLayout v)
+                        )
+                    )
+
 -- | Implicit layout an image is when its contents are undefined due to various reasons (e.g. right after creation)
 pattern VK_IMAGE_LAYOUT_UNDEFINED = VkImageLayout 0
 -- | General layout when image can be used for any kind of access
@@ -169,6 +229,25 @@ pattern VK_IMAGE_LAYOUT_PREINITIALIZED = VkImageLayout 8
 
 newtype VkImageType = VkImageType Int32
   deriving (Eq, Storable)
+
+instance Show VkImageType where
+  showsPrec _ VK_IMAGE_TYPE_1D = showString "VK_IMAGE_TYPE_1D"
+  showsPrec _ VK_IMAGE_TYPE_2D = showString "VK_IMAGE_TYPE_2D"
+  showsPrec _ VK_IMAGE_TYPE_3D = showString "VK_IMAGE_TYPE_3D"
+  showsPrec p (VkImageType x) = showParen (p >= 11) (showString "VkImageType " . showsPrec 11 x)
+
+instance Read VkImageType where
+  readPrec = parens ( choose [ ("VK_IMAGE_TYPE_1D", pure VK_IMAGE_TYPE_1D)
+                             , ("VK_IMAGE_TYPE_2D", pure VK_IMAGE_TYPE_2D)
+                             , ("VK_IMAGE_TYPE_3D", pure VK_IMAGE_TYPE_3D)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkImageType")
+                        v <- step readPrec
+                        pure (VkImageType v)
+                        )
+                    )
+
 
 pattern VK_IMAGE_TYPE_1D = VkImageType 0
 

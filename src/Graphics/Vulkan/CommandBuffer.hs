@@ -8,6 +8,11 @@ import Graphics.Vulkan.Device( VkDevice(..)
 import Graphics.Vulkan.Pass( VkFramebuffer(..)
                            , VkRenderPass(..)
                            )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -25,6 +30,13 @@ import Graphics.Vulkan.CommandPool( VkCommandPool(..)
                                   )
 import Data.Void( Void
                 )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Query( VkQueryPipelineStatisticFlags(..)
                             , VkQueryControlFlagBits(..)
                             , VkQueryControlFlags(..)
@@ -39,6 +51,23 @@ import Graphics.Vulkan.Core( VkResult(..)
 
 newtype VkCommandBufferLevel = VkCommandBufferLevel Int32
   deriving (Eq, Storable)
+
+instance Show VkCommandBufferLevel where
+  showsPrec _ VK_COMMAND_BUFFER_LEVEL_PRIMARY = showString "VK_COMMAND_BUFFER_LEVEL_PRIMARY"
+  showsPrec _ VK_COMMAND_BUFFER_LEVEL_SECONDARY = showString "VK_COMMAND_BUFFER_LEVEL_SECONDARY"
+  showsPrec p (VkCommandBufferLevel x) = showParen (p >= 11) (showString "VkCommandBufferLevel " . showsPrec 11 x)
+
+instance Read VkCommandBufferLevel where
+  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_LEVEL_PRIMARY", pure VK_COMMAND_BUFFER_LEVEL_PRIMARY)
+                             , ("VK_COMMAND_BUFFER_LEVEL_SECONDARY", pure VK_COMMAND_BUFFER_LEVEL_SECONDARY)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkCommandBufferLevel")
+                        v <- step readPrec
+                        pure (VkCommandBufferLevel v)
+                        )
+                    )
+
 
 pattern VK_COMMAND_BUFFER_LEVEL_PRIMARY = VkCommandBufferLevel 0
 

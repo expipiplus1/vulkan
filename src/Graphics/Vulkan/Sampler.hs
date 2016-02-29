@@ -5,6 +5,11 @@
 module Graphics.Vulkan.Sampler where
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -29,6 +34,13 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkFreeFunction
                              , PFN_vkInternalFreeNotification
                              )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkBool32(..)
                            , VkFlags(..)
@@ -42,6 +54,29 @@ import Foreign.C.Types( CFloat
 
 newtype VkSamplerAddressMode = VkSamplerAddressMode Int32
   deriving (Eq, Storable)
+
+instance Show VkSamplerAddressMode where
+  showsPrec _ VK_SAMPLER_ADDRESS_MODE_REPEAT = showString "VK_SAMPLER_ADDRESS_MODE_REPEAT"
+  showsPrec _ VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = showString "VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT"
+  showsPrec _ VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = showString "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE"
+  showsPrec _ VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = showString "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER"
+  showsPrec _ VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = showString "VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE"
+  showsPrec p (VkSamplerAddressMode x) = showParen (p >= 11) (showString "VkSamplerAddressMode " . showsPrec 11 x)
+
+instance Read VkSamplerAddressMode where
+  readPrec = parens ( choose [ ("VK_SAMPLER_ADDRESS_MODE_REPEAT", pure VK_SAMPLER_ADDRESS_MODE_REPEAT)
+                             , ("VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT", pure VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT)
+                             , ("VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE", pure VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
+                             , ("VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER", pure VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER)
+                             , ("VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE", pure VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkSamplerAddressMode")
+                        v <- step readPrec
+                        pure (VkSamplerAddressMode v)
+                        )
+                    )
+
 
 pattern VK_SAMPLER_ADDRESS_MODE_REPEAT = VkSamplerAddressMode 0
 
@@ -58,6 +93,23 @@ pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = VkSamplerAddressMode 4
 newtype VkFilter = VkFilter Int32
   deriving (Eq, Storable)
 
+instance Show VkFilter where
+  showsPrec _ VK_FILTER_NEAREST = showString "VK_FILTER_NEAREST"
+  showsPrec _ VK_FILTER_LINEAR = showString "VK_FILTER_LINEAR"
+  showsPrec p (VkFilter x) = showParen (p >= 11) (showString "VkFilter " . showsPrec 11 x)
+
+instance Read VkFilter where
+  readPrec = parens ( choose [ ("VK_FILTER_NEAREST", pure VK_FILTER_NEAREST)
+                             , ("VK_FILTER_LINEAR", pure VK_FILTER_LINEAR)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkFilter")
+                        v <- step readPrec
+                        pure (VkFilter v)
+                        )
+                    )
+
+
 pattern VK_FILTER_NEAREST = VkFilter 0
 
 pattern VK_FILTER_LINEAR = VkFilter 1
@@ -66,6 +118,31 @@ pattern VK_FILTER_LINEAR = VkFilter 1
 
 newtype VkBorderColor = VkBorderColor Int32
   deriving (Eq, Storable)
+
+instance Show VkBorderColor where
+  showsPrec _ VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = showString "VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"
+  showsPrec _ VK_BORDER_COLOR_INT_TRANSPARENT_BLACK = showString "VK_BORDER_COLOR_INT_TRANSPARENT_BLACK"
+  showsPrec _ VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK = showString "VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK"
+  showsPrec _ VK_BORDER_COLOR_INT_OPAQUE_BLACK = showString "VK_BORDER_COLOR_INT_OPAQUE_BLACK"
+  showsPrec _ VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE = showString "VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE"
+  showsPrec _ VK_BORDER_COLOR_INT_OPAQUE_WHITE = showString "VK_BORDER_COLOR_INT_OPAQUE_WHITE"
+  showsPrec p (VkBorderColor x) = showParen (p >= 11) (showString "VkBorderColor " . showsPrec 11 x)
+
+instance Read VkBorderColor where
+  readPrec = parens ( choose [ ("VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK", pure VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK)
+                             , ("VK_BORDER_COLOR_INT_TRANSPARENT_BLACK", pure VK_BORDER_COLOR_INT_TRANSPARENT_BLACK)
+                             , ("VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK", pure VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK)
+                             , ("VK_BORDER_COLOR_INT_OPAQUE_BLACK", pure VK_BORDER_COLOR_INT_OPAQUE_BLACK)
+                             , ("VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE", pure VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE)
+                             , ("VK_BORDER_COLOR_INT_OPAQUE_WHITE", pure VK_BORDER_COLOR_INT_OPAQUE_WHITE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkBorderColor")
+                        v <- step readPrec
+                        pure (VkBorderColor v)
+                        )
+                    )
+
 
 pattern VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = VkBorderColor 0
 
@@ -83,6 +160,35 @@ pattern VK_BORDER_COLOR_INT_OPAQUE_WHITE = VkBorderColor 5
 
 newtype VkCompareOp = VkCompareOp Int32
   deriving (Eq, Storable)
+
+instance Show VkCompareOp where
+  showsPrec _ VK_COMPARE_OP_NEVER = showString "VK_COMPARE_OP_NEVER"
+  showsPrec _ VK_COMPARE_OP_LESS = showString "VK_COMPARE_OP_LESS"
+  showsPrec _ VK_COMPARE_OP_EQUAL = showString "VK_COMPARE_OP_EQUAL"
+  showsPrec _ VK_COMPARE_OP_LESS_OR_EQUAL = showString "VK_COMPARE_OP_LESS_OR_EQUAL"
+  showsPrec _ VK_COMPARE_OP_GREATER = showString "VK_COMPARE_OP_GREATER"
+  showsPrec _ VK_COMPARE_OP_NOT_EQUAL = showString "VK_COMPARE_OP_NOT_EQUAL"
+  showsPrec _ VK_COMPARE_OP_GREATER_OR_EQUAL = showString "VK_COMPARE_OP_GREATER_OR_EQUAL"
+  showsPrec _ VK_COMPARE_OP_ALWAYS = showString "VK_COMPARE_OP_ALWAYS"
+  showsPrec p (VkCompareOp x) = showParen (p >= 11) (showString "VkCompareOp " . showsPrec 11 x)
+
+instance Read VkCompareOp where
+  readPrec = parens ( choose [ ("VK_COMPARE_OP_NEVER", pure VK_COMPARE_OP_NEVER)
+                             , ("VK_COMPARE_OP_LESS", pure VK_COMPARE_OP_LESS)
+                             , ("VK_COMPARE_OP_EQUAL", pure VK_COMPARE_OP_EQUAL)
+                             , ("VK_COMPARE_OP_LESS_OR_EQUAL", pure VK_COMPARE_OP_LESS_OR_EQUAL)
+                             , ("VK_COMPARE_OP_GREATER", pure VK_COMPARE_OP_GREATER)
+                             , ("VK_COMPARE_OP_NOT_EQUAL", pure VK_COMPARE_OP_NOT_EQUAL)
+                             , ("VK_COMPARE_OP_GREATER_OR_EQUAL", pure VK_COMPARE_OP_GREATER_OR_EQUAL)
+                             , ("VK_COMPARE_OP_ALWAYS", pure VK_COMPARE_OP_ALWAYS)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkCompareOp")
+                        v <- step readPrec
+                        pure (VkCompareOp v)
+                        )
+                    )
+
 
 pattern VK_COMPARE_OP_NEVER = VkCompareOp 0
 
@@ -176,6 +282,23 @@ newtype VkSamplerCreateFlags = VkSamplerCreateFlags VkFlags
 
 newtype VkSamplerMipmapMode = VkSamplerMipmapMode Int32
   deriving (Eq, Storable)
+
+instance Show VkSamplerMipmapMode where
+  showsPrec _ VK_SAMPLER_MIPMAP_MODE_NEAREST = showString "VK_SAMPLER_MIPMAP_MODE_NEAREST"
+  showsPrec _ VK_SAMPLER_MIPMAP_MODE_LINEAR = showString "VK_SAMPLER_MIPMAP_MODE_LINEAR"
+  showsPrec p (VkSamplerMipmapMode x) = showParen (p >= 11) (showString "VkSamplerMipmapMode " . showsPrec 11 x)
+
+instance Read VkSamplerMipmapMode where
+  readPrec = parens ( choose [ ("VK_SAMPLER_MIPMAP_MODE_NEAREST", pure VK_SAMPLER_MIPMAP_MODE_NEAREST)
+                             , ("VK_SAMPLER_MIPMAP_MODE_LINEAR", pure VK_SAMPLER_MIPMAP_MODE_LINEAR)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkSamplerMipmapMode")
+                        v <- step readPrec
+                        pure (VkSamplerMipmapMode v)
+                        )
+                    )
+
 -- | Choose nearest mip level
 pattern VK_SAMPLER_MIPMAP_MODE_NEAREST = VkSamplerMipmapMode 0
 -- | Linear filter between mip levels

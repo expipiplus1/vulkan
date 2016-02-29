@@ -15,8 +15,13 @@ import Graphics.Vulkan.Pass( VkDependencyFlagBits(..)
                            , VkDependencyFlags(..)
                            , VkAccessFlagBits(..)
                            )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
 import Graphics.Vulkan.Event( VkEvent(..)
                             )
+import GHC.Read( expectP
+               , choose
+               )
 import Graphics.Vulkan.Pipeline( VkPipelineStageFlagBits(..)
                                , VkPipelineStageFlags(..)
                                , VkPipeline(..)
@@ -44,6 +49,13 @@ import Data.Void( Void
                 )
 import Graphics.Vulkan.PipelineLayout( VkPipelineLayout(..)
                                      )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
                              , VkShaderStageFlags(..)
                              )
@@ -226,6 +238,23 @@ foreign import ccall "vkCmdClearColorImage" vkCmdClearColorImage ::
 
 newtype VkIndexType = VkIndexType Int32
   deriving (Eq, Storable)
+
+instance Show VkIndexType where
+  showsPrec _ VK_INDEX_TYPE_UINT16 = showString "VK_INDEX_TYPE_UINT16"
+  showsPrec _ VK_INDEX_TYPE_UINT32 = showString "VK_INDEX_TYPE_UINT32"
+  showsPrec p (VkIndexType x) = showParen (p >= 11) (showString "VkIndexType " . showsPrec 11 x)
+
+instance Read VkIndexType where
+  readPrec = parens ( choose [ ("VK_INDEX_TYPE_UINT16", pure VK_INDEX_TYPE_UINT16)
+                             , ("VK_INDEX_TYPE_UINT32", pure VK_INDEX_TYPE_UINT32)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkIndexType")
+                        v <- step readPrec
+                        pure (VkIndexType v)
+                        )
+                    )
+
 
 pattern VK_INDEX_TYPE_UINT16 = VkIndexType 0
 
@@ -519,6 +548,23 @@ instance Storable VkClearColorValue where
 
 newtype VkSubpassContents = VkSubpassContents Int32
   deriving (Eq, Storable)
+
+instance Show VkSubpassContents where
+  showsPrec _ VK_SUBPASS_CONTENTS_INLINE = showString "VK_SUBPASS_CONTENTS_INLINE"
+  showsPrec _ VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = showString "VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"
+  showsPrec p (VkSubpassContents x) = showParen (p >= 11) (showString "VkSubpassContents " . showsPrec 11 x)
+
+instance Read VkSubpassContents where
+  readPrec = parens ( choose [ ("VK_SUBPASS_CONTENTS_INLINE", pure VK_SUBPASS_CONTENTS_INLINE)
+                             , ("VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS", pure VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkSubpassContents")
+                        v <- step readPrec
+                        pure (VkSubpassContents v)
+                        )
+                    )
+
 
 pattern VK_SUBPASS_CONTENTS_INLINE = VkSubpassContents 0
 

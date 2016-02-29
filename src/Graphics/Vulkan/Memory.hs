@@ -5,6 +5,11 @@
 module Graphics.Vulkan.Memory where
 import {-# SOURCE #-} Graphics.Vulkan.Device( VkDevice(..)
                                             )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -18,6 +23,13 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkDeviceSize(..)
                            , VkFlags(..)
@@ -78,6 +90,29 @@ foreign import ccall "vkInvalidateMappedMemoryRanges" vkInvalidateMappedMemoryRa
 newtype VkSystemAllocationScope = VkSystemAllocationScope Int32
   deriving (Eq, Storable)
 
+instance Show VkSystemAllocationScope where
+  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = showString "VK_SYSTEM_ALLOCATION_SCOPE_COMMAND"
+  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_OBJECT = showString "VK_SYSTEM_ALLOCATION_SCOPE_OBJECT"
+  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_CACHE = showString "VK_SYSTEM_ALLOCATION_SCOPE_CACHE"
+  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = showString "VK_SYSTEM_ALLOCATION_SCOPE_DEVICE"
+  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = showString "VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE"
+  showsPrec p (VkSystemAllocationScope x) = showParen (p >= 11) (showString "VkSystemAllocationScope " . showsPrec 11 x)
+
+instance Read VkSystemAllocationScope where
+  readPrec = parens ( choose [ ("VK_SYSTEM_ALLOCATION_SCOPE_COMMAND", pure VK_SYSTEM_ALLOCATION_SCOPE_COMMAND)
+                             , ("VK_SYSTEM_ALLOCATION_SCOPE_OBJECT", pure VK_SYSTEM_ALLOCATION_SCOPE_OBJECT)
+                             , ("VK_SYSTEM_ALLOCATION_SCOPE_CACHE", pure VK_SYSTEM_ALLOCATION_SCOPE_CACHE)
+                             , ("VK_SYSTEM_ALLOCATION_SCOPE_DEVICE", pure VK_SYSTEM_ALLOCATION_SCOPE_DEVICE)
+                             , ("VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE", pure VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkSystemAllocationScope")
+                        v <- step readPrec
+                        pure (VkSystemAllocationScope v)
+                        )
+                    )
+
+
 pattern VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = VkSystemAllocationScope 0
 
 pattern VK_SYSTEM_ALLOCATION_SCOPE_OBJECT = VkSystemAllocationScope 1
@@ -123,6 +158,21 @@ type PFN_vkAllocationFunction = FunPtr
 
 newtype VkInternalAllocationType = VkInternalAllocationType Int32
   deriving (Eq, Storable)
+
+instance Show VkInternalAllocationType where
+  showsPrec _ VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = showString "VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
+  showsPrec p (VkInternalAllocationType x) = showParen (p >= 11) (showString "VkInternalAllocationType " . showsPrec 11 x)
+
+instance Read VkInternalAllocationType where
+  readPrec = parens ( choose [ ("VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE", pure VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkInternalAllocationType")
+                        v <- step readPrec
+                        pure (VkInternalAllocationType v)
+                        )
+                    )
+
 
 pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = VkInternalAllocationType 0
 

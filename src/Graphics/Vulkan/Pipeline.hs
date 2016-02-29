@@ -10,6 +10,11 @@ import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import {-# SOURCE #-} Graphics.Vulkan.Pass( VkRenderPass(..)
                                           )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -38,6 +43,13 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              )
 import Graphics.Vulkan.PipelineLayout( VkPipelineLayout(..)
                                      )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
                              , VkShaderModule(..)
                              )
@@ -274,6 +286,35 @@ instance Storable VkComputePipelineCreateInfo where
 newtype VkStencilOp = VkStencilOp Int32
   deriving (Eq, Storable)
 
+instance Show VkStencilOp where
+  showsPrec _ VK_STENCIL_OP_KEEP = showString "VK_STENCIL_OP_KEEP"
+  showsPrec _ VK_STENCIL_OP_ZERO = showString "VK_STENCIL_OP_ZERO"
+  showsPrec _ VK_STENCIL_OP_REPLACE = showString "VK_STENCIL_OP_REPLACE"
+  showsPrec _ VK_STENCIL_OP_INCREMENT_AND_CLAMP = showString "VK_STENCIL_OP_INCREMENT_AND_CLAMP"
+  showsPrec _ VK_STENCIL_OP_DECREMENT_AND_CLAMP = showString "VK_STENCIL_OP_DECREMENT_AND_CLAMP"
+  showsPrec _ VK_STENCIL_OP_INVERT = showString "VK_STENCIL_OP_INVERT"
+  showsPrec _ VK_STENCIL_OP_INCREMENT_AND_WRAP = showString "VK_STENCIL_OP_INCREMENT_AND_WRAP"
+  showsPrec _ VK_STENCIL_OP_DECREMENT_AND_WRAP = showString "VK_STENCIL_OP_DECREMENT_AND_WRAP"
+  showsPrec p (VkStencilOp x) = showParen (p >= 11) (showString "VkStencilOp " . showsPrec 11 x)
+
+instance Read VkStencilOp where
+  readPrec = parens ( choose [ ("VK_STENCIL_OP_KEEP", pure VK_STENCIL_OP_KEEP)
+                             , ("VK_STENCIL_OP_ZERO", pure VK_STENCIL_OP_ZERO)
+                             , ("VK_STENCIL_OP_REPLACE", pure VK_STENCIL_OP_REPLACE)
+                             , ("VK_STENCIL_OP_INCREMENT_AND_CLAMP", pure VK_STENCIL_OP_INCREMENT_AND_CLAMP)
+                             , ("VK_STENCIL_OP_DECREMENT_AND_CLAMP", pure VK_STENCIL_OP_DECREMENT_AND_CLAMP)
+                             , ("VK_STENCIL_OP_INVERT", pure VK_STENCIL_OP_INVERT)
+                             , ("VK_STENCIL_OP_INCREMENT_AND_WRAP", pure VK_STENCIL_OP_INCREMENT_AND_WRAP)
+                             , ("VK_STENCIL_OP_DECREMENT_AND_WRAP", pure VK_STENCIL_OP_DECREMENT_AND_WRAP)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkStencilOp")
+                        v <- step readPrec
+                        pure (VkStencilOp v)
+                        )
+                    )
+
+
 pattern VK_STENCIL_OP_KEEP = VkStencilOp 0
 
 pattern VK_STENCIL_OP_ZERO = VkStencilOp 1
@@ -338,6 +379,23 @@ foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines ::
 newtype VkFrontFace = VkFrontFace Int32
   deriving (Eq, Storable)
 
+instance Show VkFrontFace where
+  showsPrec _ VK_FRONT_FACE_COUNTER_CLOCKWISE = showString "VK_FRONT_FACE_COUNTER_CLOCKWISE"
+  showsPrec _ VK_FRONT_FACE_CLOCKWISE = showString "VK_FRONT_FACE_CLOCKWISE"
+  showsPrec p (VkFrontFace x) = showParen (p >= 11) (showString "VkFrontFace " . showsPrec 11 x)
+
+instance Read VkFrontFace where
+  readPrec = parens ( choose [ ("VK_FRONT_FACE_COUNTER_CLOCKWISE", pure VK_FRONT_FACE_COUNTER_CLOCKWISE)
+                             , ("VK_FRONT_FACE_CLOCKWISE", pure VK_FRONT_FACE_CLOCKWISE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkFrontFace")
+                        v <- step readPrec
+                        pure (VkFrontFace v)
+                        )
+                    )
+
+
 pattern VK_FRONT_FACE_COUNTER_CLOCKWISE = VkFrontFace 0
 
 pattern VK_FRONT_FACE_CLOCKWISE = VkFrontFace 1
@@ -346,6 +404,25 @@ pattern VK_FRONT_FACE_CLOCKWISE = VkFrontFace 1
 
 newtype VkPolygonMode = VkPolygonMode Int32
   deriving (Eq, Storable)
+
+instance Show VkPolygonMode where
+  showsPrec _ VK_POLYGON_MODE_FILL = showString "VK_POLYGON_MODE_FILL"
+  showsPrec _ VK_POLYGON_MODE_LINE = showString "VK_POLYGON_MODE_LINE"
+  showsPrec _ VK_POLYGON_MODE_POINT = showString "VK_POLYGON_MODE_POINT"
+  showsPrec p (VkPolygonMode x) = showParen (p >= 11) (showString "VkPolygonMode " . showsPrec 11 x)
+
+instance Read VkPolygonMode where
+  readPrec = parens ( choose [ ("VK_POLYGON_MODE_FILL", pure VK_POLYGON_MODE_FILL)
+                             , ("VK_POLYGON_MODE_LINE", pure VK_POLYGON_MODE_LINE)
+                             , ("VK_POLYGON_MODE_POINT", pure VK_POLYGON_MODE_POINT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkPolygonMode")
+                        v <- step readPrec
+                        pure (VkPolygonMode v)
+                        )
+                    )
+
 
 pattern VK_POLYGON_MODE_FILL = VkPolygonMode 0
 
@@ -362,6 +439,51 @@ newtype VkPipelineViewportStateCreateFlags = VkPipelineViewportStateCreateFlags 
 
 newtype VkLogicOp = VkLogicOp Int32
   deriving (Eq, Storable)
+
+instance Show VkLogicOp where
+  showsPrec _ VK_LOGIC_OP_CLEAR = showString "VK_LOGIC_OP_CLEAR"
+  showsPrec _ VK_LOGIC_OP_AND = showString "VK_LOGIC_OP_AND"
+  showsPrec _ VK_LOGIC_OP_AND_REVERSE = showString "VK_LOGIC_OP_AND_REVERSE"
+  showsPrec _ VK_LOGIC_OP_COPY = showString "VK_LOGIC_OP_COPY"
+  showsPrec _ VK_LOGIC_OP_AND_INVERTED = showString "VK_LOGIC_OP_AND_INVERTED"
+  showsPrec _ VK_LOGIC_OP_NO_OP = showString "VK_LOGIC_OP_NO_OP"
+  showsPrec _ VK_LOGIC_OP_XOR = showString "VK_LOGIC_OP_XOR"
+  showsPrec _ VK_LOGIC_OP_OR = showString "VK_LOGIC_OP_OR"
+  showsPrec _ VK_LOGIC_OP_NOR = showString "VK_LOGIC_OP_NOR"
+  showsPrec _ VK_LOGIC_OP_EQUIVALENT = showString "VK_LOGIC_OP_EQUIVALENT"
+  showsPrec _ VK_LOGIC_OP_INVERT = showString "VK_LOGIC_OP_INVERT"
+  showsPrec _ VK_LOGIC_OP_OR_REVERSE = showString "VK_LOGIC_OP_OR_REVERSE"
+  showsPrec _ VK_LOGIC_OP_COPY_INVERTED = showString "VK_LOGIC_OP_COPY_INVERTED"
+  showsPrec _ VK_LOGIC_OP_OR_INVERTED = showString "VK_LOGIC_OP_OR_INVERTED"
+  showsPrec _ VK_LOGIC_OP_NAND = showString "VK_LOGIC_OP_NAND"
+  showsPrec _ VK_LOGIC_OP_SET = showString "VK_LOGIC_OP_SET"
+  showsPrec p (VkLogicOp x) = showParen (p >= 11) (showString "VkLogicOp " . showsPrec 11 x)
+
+instance Read VkLogicOp where
+  readPrec = parens ( choose [ ("VK_LOGIC_OP_CLEAR", pure VK_LOGIC_OP_CLEAR)
+                             , ("VK_LOGIC_OP_AND", pure VK_LOGIC_OP_AND)
+                             , ("VK_LOGIC_OP_AND_REVERSE", pure VK_LOGIC_OP_AND_REVERSE)
+                             , ("VK_LOGIC_OP_COPY", pure VK_LOGIC_OP_COPY)
+                             , ("VK_LOGIC_OP_AND_INVERTED", pure VK_LOGIC_OP_AND_INVERTED)
+                             , ("VK_LOGIC_OP_NO_OP", pure VK_LOGIC_OP_NO_OP)
+                             , ("VK_LOGIC_OP_XOR", pure VK_LOGIC_OP_XOR)
+                             , ("VK_LOGIC_OP_OR", pure VK_LOGIC_OP_OR)
+                             , ("VK_LOGIC_OP_NOR", pure VK_LOGIC_OP_NOR)
+                             , ("VK_LOGIC_OP_EQUIVALENT", pure VK_LOGIC_OP_EQUIVALENT)
+                             , ("VK_LOGIC_OP_INVERT", pure VK_LOGIC_OP_INVERT)
+                             , ("VK_LOGIC_OP_OR_REVERSE", pure VK_LOGIC_OP_OR_REVERSE)
+                             , ("VK_LOGIC_OP_COPY_INVERTED", pure VK_LOGIC_OP_COPY_INVERTED)
+                             , ("VK_LOGIC_OP_OR_INVERTED", pure VK_LOGIC_OP_OR_INVERTED)
+                             , ("VK_LOGIC_OP_NAND", pure VK_LOGIC_OP_NAND)
+                             , ("VK_LOGIC_OP_SET", pure VK_LOGIC_OP_SET)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkLogicOp")
+                        v <- step readPrec
+                        pure (VkLogicOp v)
+                        )
+                    )
+
 
 pattern VK_LOGIC_OP_CLEAR = VkLogicOp 0
 
@@ -419,6 +541,37 @@ newtype VkPipelineRasterizationStateCreateFlags = VkPipelineRasterizationStateCr
 newtype VkDynamicState = VkDynamicState Int32
   deriving (Eq, Storable)
 
+instance Show VkDynamicState where
+  showsPrec _ VK_DYNAMIC_STATE_VIEWPORT = showString "VK_DYNAMIC_STATE_VIEWPORT"
+  showsPrec _ VK_DYNAMIC_STATE_SCISSOR = showString "VK_DYNAMIC_STATE_SCISSOR"
+  showsPrec _ VK_DYNAMIC_STATE_LINE_WIDTH = showString "VK_DYNAMIC_STATE_LINE_WIDTH"
+  showsPrec _ VK_DYNAMIC_STATE_DEPTH_BIAS = showString "VK_DYNAMIC_STATE_DEPTH_BIAS"
+  showsPrec _ VK_DYNAMIC_STATE_BLEND_CONSTANTS = showString "VK_DYNAMIC_STATE_BLEND_CONSTANTS"
+  showsPrec _ VK_DYNAMIC_STATE_DEPTH_BOUNDS = showString "VK_DYNAMIC_STATE_DEPTH_BOUNDS"
+  showsPrec _ VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK = showString "VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK"
+  showsPrec _ VK_DYNAMIC_STATE_STENCIL_WRITE_MASK = showString "VK_DYNAMIC_STATE_STENCIL_WRITE_MASK"
+  showsPrec _ VK_DYNAMIC_STATE_STENCIL_REFERENCE = showString "VK_DYNAMIC_STATE_STENCIL_REFERENCE"
+  showsPrec p (VkDynamicState x) = showParen (p >= 11) (showString "VkDynamicState " . showsPrec 11 x)
+
+instance Read VkDynamicState where
+  readPrec = parens ( choose [ ("VK_DYNAMIC_STATE_VIEWPORT", pure VK_DYNAMIC_STATE_VIEWPORT)
+                             , ("VK_DYNAMIC_STATE_SCISSOR", pure VK_DYNAMIC_STATE_SCISSOR)
+                             , ("VK_DYNAMIC_STATE_LINE_WIDTH", pure VK_DYNAMIC_STATE_LINE_WIDTH)
+                             , ("VK_DYNAMIC_STATE_DEPTH_BIAS", pure VK_DYNAMIC_STATE_DEPTH_BIAS)
+                             , ("VK_DYNAMIC_STATE_BLEND_CONSTANTS", pure VK_DYNAMIC_STATE_BLEND_CONSTANTS)
+                             , ("VK_DYNAMIC_STATE_DEPTH_BOUNDS", pure VK_DYNAMIC_STATE_DEPTH_BOUNDS)
+                             , ("VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK", pure VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK)
+                             , ("VK_DYNAMIC_STATE_STENCIL_WRITE_MASK", pure VK_DYNAMIC_STATE_STENCIL_WRITE_MASK)
+                             , ("VK_DYNAMIC_STATE_STENCIL_REFERENCE", pure VK_DYNAMIC_STATE_STENCIL_REFERENCE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkDynamicState")
+                        v <- step readPrec
+                        pure (VkDynamicState v)
+                        )
+                    )
+
+
 pattern VK_DYNAMIC_STATE_VIEWPORT = VkDynamicState 0
 
 pattern VK_DYNAMIC_STATE_SCISSOR = VkDynamicState 1
@@ -441,6 +594,23 @@ pattern VK_DYNAMIC_STATE_STENCIL_REFERENCE = VkDynamicState 8
 
 newtype VkPipelineBindPoint = VkPipelineBindPoint Int32
   deriving (Eq, Storable)
+
+instance Show VkPipelineBindPoint where
+  showsPrec _ VK_PIPELINE_BIND_POINT_GRAPHICS = showString "VK_PIPELINE_BIND_POINT_GRAPHICS"
+  showsPrec _ VK_PIPELINE_BIND_POINT_COMPUTE = showString "VK_PIPELINE_BIND_POINT_COMPUTE"
+  showsPrec p (VkPipelineBindPoint x) = showParen (p >= 11) (showString "VkPipelineBindPoint " . showsPrec 11 x)
+
+instance Read VkPipelineBindPoint where
+  readPrec = parens ( choose [ ("VK_PIPELINE_BIND_POINT_GRAPHICS", pure VK_PIPELINE_BIND_POINT_GRAPHICS)
+                             , ("VK_PIPELINE_BIND_POINT_COMPUTE", pure VK_PIPELINE_BIND_POINT_COMPUTE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkPipelineBindPoint")
+                        v <- step readPrec
+                        pure (VkPipelineBindPoint v)
+                        )
+                    )
+
 
 pattern VK_PIPELINE_BIND_POINT_GRAPHICS = VkPipelineBindPoint 0
 
@@ -504,6 +674,29 @@ instance Storable VkPipelineRasterizationStateCreateInfo where
 
 newtype VkBlendOp = VkBlendOp Int32
   deriving (Eq, Storable)
+
+instance Show VkBlendOp where
+  showsPrec _ VK_BLEND_OP_ADD = showString "VK_BLEND_OP_ADD"
+  showsPrec _ VK_BLEND_OP_SUBTRACT = showString "VK_BLEND_OP_SUBTRACT"
+  showsPrec _ VK_BLEND_OP_REVERSE_SUBTRACT = showString "VK_BLEND_OP_REVERSE_SUBTRACT"
+  showsPrec _ VK_BLEND_OP_MIN = showString "VK_BLEND_OP_MIN"
+  showsPrec _ VK_BLEND_OP_MAX = showString "VK_BLEND_OP_MAX"
+  showsPrec p (VkBlendOp x) = showParen (p >= 11) (showString "VkBlendOp " . showsPrec 11 x)
+
+instance Read VkBlendOp where
+  readPrec = parens ( choose [ ("VK_BLEND_OP_ADD", pure VK_BLEND_OP_ADD)
+                             , ("VK_BLEND_OP_SUBTRACT", pure VK_BLEND_OP_SUBTRACT)
+                             , ("VK_BLEND_OP_REVERSE_SUBTRACT", pure VK_BLEND_OP_REVERSE_SUBTRACT)
+                             , ("VK_BLEND_OP_MIN", pure VK_BLEND_OP_MIN)
+                             , ("VK_BLEND_OP_MAX", pure VK_BLEND_OP_MAX)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkBlendOp")
+                        v <- step readPrec
+                        pure (VkBlendOp v)
+                        )
+                    )
+
 
 pattern VK_BLEND_OP_ADD = VkBlendOp 0
 
@@ -595,6 +788,41 @@ instance Storable VkPipelineVertexInputStateCreateInfo where
 
 newtype VkPrimitiveTopology = VkPrimitiveTopology Int32
   deriving (Eq, Storable)
+
+instance Show VkPrimitiveTopology where
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_POINT_LIST = showString "VK_PRIMITIVE_TOPOLOGY_POINT_LIST"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_LIST = showString "VK_PRIMITIVE_TOPOLOGY_LINE_LIST"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_STRIP = showString "VK_PRIMITIVE_TOPOLOGY_LINE_STRIP"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY"
+  showsPrec _ VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = showString "VK_PRIMITIVE_TOPOLOGY_PATCH_LIST"
+  showsPrec p (VkPrimitiveTopology x) = showParen (p >= 11) (showString "VkPrimitiveTopology " . showsPrec 11 x)
+
+instance Read VkPrimitiveTopology where
+  readPrec = parens ( choose [ ("VK_PRIMITIVE_TOPOLOGY_POINT_LIST", pure VK_PRIMITIVE_TOPOLOGY_POINT_LIST)
+                             , ("VK_PRIMITIVE_TOPOLOGY_LINE_LIST", pure VK_PRIMITIVE_TOPOLOGY_LINE_LIST)
+                             , ("VK_PRIMITIVE_TOPOLOGY_LINE_STRIP", pure VK_PRIMITIVE_TOPOLOGY_LINE_STRIP)
+                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST)
+                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP)
+                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN)
+                             , ("VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY", pure VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY)
+                             , ("VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY", pure VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY)
+                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY)
+                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY)
+                             , ("VK_PRIMITIVE_TOPOLOGY_PATCH_LIST", pure VK_PRIMITIVE_TOPOLOGY_PATCH_LIST)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkPrimitiveTopology")
+                        v <- step readPrec
+                        pure (VkPrimitiveTopology v)
+                        )
+                    )
+
 
 pattern VK_PRIMITIVE_TOPOLOGY_POINT_LIST = VkPrimitiveTopology 0
 
@@ -731,6 +959,23 @@ newtype VkPipelineVertexInputStateCreateFlags = VkPipelineVertexInputStateCreate
 newtype VkVertexInputRate = VkVertexInputRate Int32
   deriving (Eq, Storable)
 
+instance Show VkVertexInputRate where
+  showsPrec _ VK_VERTEX_INPUT_RATE_VERTEX = showString "VK_VERTEX_INPUT_RATE_VERTEX"
+  showsPrec _ VK_VERTEX_INPUT_RATE_INSTANCE = showString "VK_VERTEX_INPUT_RATE_INSTANCE"
+  showsPrec p (VkVertexInputRate x) = showParen (p >= 11) (showString "VkVertexInputRate " . showsPrec 11 x)
+
+instance Read VkVertexInputRate where
+  readPrec = parens ( choose [ ("VK_VERTEX_INPUT_RATE_VERTEX", pure VK_VERTEX_INPUT_RATE_VERTEX)
+                             , ("VK_VERTEX_INPUT_RATE_INSTANCE", pure VK_VERTEX_INPUT_RATE_INSTANCE)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkVertexInputRate")
+                        v <- step readPrec
+                        pure (VkVertexInputRate v)
+                        )
+                    )
+
+
 pattern VK_VERTEX_INPUT_RATE_VERTEX = VkVertexInputRate 0
 
 pattern VK_VERTEX_INPUT_RATE_INSTANCE = VkVertexInputRate 1
@@ -815,6 +1060,57 @@ instance Storable VkPipelineColorBlendAttachmentState where
 
 newtype VkBlendFactor = VkBlendFactor Int32
   deriving (Eq, Storable)
+
+instance Show VkBlendFactor where
+  showsPrec _ VK_BLEND_FACTOR_ZERO = showString "VK_BLEND_FACTOR_ZERO"
+  showsPrec _ VK_BLEND_FACTOR_ONE = showString "VK_BLEND_FACTOR_ONE"
+  showsPrec _ VK_BLEND_FACTOR_SRC_COLOR = showString "VK_BLEND_FACTOR_SRC_COLOR"
+  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR"
+  showsPrec _ VK_BLEND_FACTOR_DST_COLOR = showString "VK_BLEND_FACTOR_DST_COLOR"
+  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR = showString "VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR"
+  showsPrec _ VK_BLEND_FACTOR_SRC_ALPHA = showString "VK_BLEND_FACTOR_SRC_ALPHA"
+  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA"
+  showsPrec _ VK_BLEND_FACTOR_DST_ALPHA = showString "VK_BLEND_FACTOR_DST_ALPHA"
+  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA = showString "VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA"
+  showsPrec _ VK_BLEND_FACTOR_CONSTANT_COLOR = showString "VK_BLEND_FACTOR_CONSTANT_COLOR"
+  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR = showString "VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR"
+  showsPrec _ VK_BLEND_FACTOR_CONSTANT_ALPHA = showString "VK_BLEND_FACTOR_CONSTANT_ALPHA"
+  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA = showString "VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA"
+  showsPrec _ VK_BLEND_FACTOR_SRC_ALPHA_SATURATE = showString "VK_BLEND_FACTOR_SRC_ALPHA_SATURATE"
+  showsPrec _ VK_BLEND_FACTOR_SRC1_COLOR = showString "VK_BLEND_FACTOR_SRC1_COLOR"
+  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR"
+  showsPrec _ VK_BLEND_FACTOR_SRC1_ALPHA = showString "VK_BLEND_FACTOR_SRC1_ALPHA"
+  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA"
+  showsPrec p (VkBlendFactor x) = showParen (p >= 11) (showString "VkBlendFactor " . showsPrec 11 x)
+
+instance Read VkBlendFactor where
+  readPrec = parens ( choose [ ("VK_BLEND_FACTOR_ZERO", pure VK_BLEND_FACTOR_ZERO)
+                             , ("VK_BLEND_FACTOR_ONE", pure VK_BLEND_FACTOR_ONE)
+                             , ("VK_BLEND_FACTOR_SRC_COLOR", pure VK_BLEND_FACTOR_SRC_COLOR)
+                             , ("VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR", pure VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR)
+                             , ("VK_BLEND_FACTOR_DST_COLOR", pure VK_BLEND_FACTOR_DST_COLOR)
+                             , ("VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR", pure VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR)
+                             , ("VK_BLEND_FACTOR_SRC_ALPHA", pure VK_BLEND_FACTOR_SRC_ALPHA)
+                             , ("VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA", pure VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
+                             , ("VK_BLEND_FACTOR_DST_ALPHA", pure VK_BLEND_FACTOR_DST_ALPHA)
+                             , ("VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA", pure VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA)
+                             , ("VK_BLEND_FACTOR_CONSTANT_COLOR", pure VK_BLEND_FACTOR_CONSTANT_COLOR)
+                             , ("VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR", pure VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR)
+                             , ("VK_BLEND_FACTOR_CONSTANT_ALPHA", pure VK_BLEND_FACTOR_CONSTANT_ALPHA)
+                             , ("VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA", pure VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA)
+                             , ("VK_BLEND_FACTOR_SRC_ALPHA_SATURATE", pure VK_BLEND_FACTOR_SRC_ALPHA_SATURATE)
+                             , ("VK_BLEND_FACTOR_SRC1_COLOR", pure VK_BLEND_FACTOR_SRC1_COLOR)
+                             , ("VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR", pure VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR)
+                             , ("VK_BLEND_FACTOR_SRC1_ALPHA", pure VK_BLEND_FACTOR_SRC1_ALPHA)
+                             , ("VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA", pure VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkBlendFactor")
+                        v <- step readPrec
+                        pure (VkBlendFactor v)
+                        )
+                    )
+
 
 pattern VK_BLEND_FACTOR_ZERO = VkBlendFactor 0
 
