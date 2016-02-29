@@ -187,8 +187,30 @@ instance Storable VkGraphicsPipelineCreateInfo where
 
 newtype VkCullModeFlagBits = VkCullModeFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkCullModeFlagBits
 type VkCullModeFlags = VkCullModeFlagBits
+
+instance Show VkCullModeFlagBits where
+  showsPrec _ VK_CULL_MODE_FRONT_BIT = showString "VK_CULL_MODE_FRONT_BIT"
+  showsPrec _ VK_CULL_MODE_BACK_BIT = showString "VK_CULL_MODE_BACK_BIT"
+  showsPrec _ VK_CULL_MODE_NONE = showString "VK_CULL_MODE_NONE"
+  showsPrec _ VK_CULL_MODE_FRONT_AND_BACK = showString "VK_CULL_MODE_FRONT_AND_BACK"
+  showsPrec p (VkCullModeFlagBits x) = showParen (p >= 11) (showString "VkCullModeFlagBits " . showsPrec 11 x)
+
+instance Read VkCullModeFlagBits where
+  readPrec = parens ( choose [ ("VK_CULL_MODE_FRONT_BIT", pure VK_CULL_MODE_FRONT_BIT)
+                             , ("VK_CULL_MODE_BACK_BIT", pure VK_CULL_MODE_BACK_BIT)
+                             , ("VK_CULL_MODE_NONE", pure VK_CULL_MODE_NONE)
+                             , ("VK_CULL_MODE_FRONT_AND_BACK", pure VK_CULL_MODE_FRONT_AND_BACK)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkCullModeFlagBits")
+                        v <- step readPrec
+                        pure (VkCullModeFlagBits v)
+                        )
+                    )
+
 
 pattern VK_CULL_MODE_FRONT_BIT = VkCullModeFlagBits 0x1
 
@@ -238,8 +260,31 @@ instance Storable VkPipelineShaderStageCreateInfo where
 
 newtype VkColorComponentFlagBits = VkColorComponentFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkColorComponentFlagBits
 type VkColorComponentFlags = VkColorComponentFlagBits
+
+instance Show VkColorComponentFlagBits where
+  showsPrec _ VK_COLOR_COMPONENT_R_BIT = showString "VK_COLOR_COMPONENT_R_BIT"
+  showsPrec _ VK_COLOR_COMPONENT_G_BIT = showString "VK_COLOR_COMPONENT_G_BIT"
+  showsPrec _ VK_COLOR_COMPONENT_B_BIT = showString "VK_COLOR_COMPONENT_B_BIT"
+  showsPrec _ VK_COLOR_COMPONENT_A_BIT = showString "VK_COLOR_COMPONENT_A_BIT"
+  
+  showsPrec p (VkColorComponentFlagBits x) = showParen (p >= 11) (showString "VkColorComponentFlagBits " . showsPrec 11 x)
+
+instance Read VkColorComponentFlagBits where
+  readPrec = parens ( choose [ ("VK_COLOR_COMPONENT_R_BIT", pure VK_COLOR_COMPONENT_R_BIT)
+                             , ("VK_COLOR_COMPONENT_G_BIT", pure VK_COLOR_COMPONENT_G_BIT)
+                             , ("VK_COLOR_COMPONENT_B_BIT", pure VK_COLOR_COMPONENT_B_BIT)
+                             , ("VK_COLOR_COMPONENT_A_BIT", pure VK_COLOR_COMPONENT_A_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkColorComponentFlagBits")
+                        v <- step readPrec
+                        pure (VkColorComponentFlagBits v)
+                        )
+                    )
+
 
 pattern VK_COLOR_COMPONENT_R_BIT = VkColorComponentFlagBits 0x1
 
@@ -521,8 +566,29 @@ pattern VK_LOGIC_OP_SET = VkLogicOp 15
 
 newtype VkPipelineCreateFlagBits = VkPipelineCreateFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkPipelineCreateFlagBits
 type VkPipelineCreateFlags = VkPipelineCreateFlagBits
+
+instance Show VkPipelineCreateFlagBits where
+  showsPrec _ VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = showString "VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT"
+  showsPrec _ VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = showString "VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT"
+  showsPrec _ VK_PIPELINE_CREATE_DERIVATIVE_BIT = showString "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
+  
+  showsPrec p (VkPipelineCreateFlagBits x) = showParen (p >= 11) (showString "VkPipelineCreateFlagBits " . showsPrec 11 x)
+
+instance Read VkPipelineCreateFlagBits where
+  readPrec = parens ( choose [ ("VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT", pure VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT)
+                             , ("VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT", pure VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT)
+                             , ("VK_PIPELINE_CREATE_DERIVATIVE_BIT", pure VK_PIPELINE_CREATE_DERIVATIVE_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkPipelineCreateFlagBits")
+                        v <- step readPrec
+                        pure (VkPipelineCreateFlagBits v)
+                        )
+                    )
+
 
 pattern VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = VkPipelineCreateFlagBits 0x1
 
@@ -984,8 +1050,57 @@ pattern VK_VERTEX_INPUT_RATE_INSTANCE = VkVertexInputRate 1
 
 newtype VkPipelineStageFlagBits = VkPipelineStageFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkPipelineStageFlagBits
 type VkPipelineStageFlags = VkPipelineStageFlagBits
+
+instance Show VkPipelineStageFlagBits where
+  showsPrec _ VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = showString "VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT = showString "VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_VERTEX_INPUT_BIT = showString "VK_PIPELINE_STAGE_VERTEX_INPUT_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_VERTEX_SHADER_BIT = showString "VK_PIPELINE_STAGE_VERTEX_SHADER_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT = showString "VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT = showString "VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT = showString "VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT = showString "VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT = showString "VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT = showString "VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT = showString "VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT = showString "VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_TRANSFER_BIT = showString "VK_PIPELINE_STAGE_TRANSFER_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT = showString "VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_HOST_BIT = showString "VK_PIPELINE_STAGE_HOST_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = showString "VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT"
+  showsPrec _ VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = showString "VK_PIPELINE_STAGE_ALL_COMMANDS_BIT"
+  
+  showsPrec p (VkPipelineStageFlagBits x) = showParen (p >= 11) (showString "VkPipelineStageFlagBits " . showsPrec 11 x)
+
+instance Read VkPipelineStageFlagBits where
+  readPrec = parens ( choose [ ("VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT", pure VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
+                             , ("VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT", pure VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT)
+                             , ("VK_PIPELINE_STAGE_VERTEX_INPUT_BIT", pure VK_PIPELINE_STAGE_VERTEX_INPUT_BIT)
+                             , ("VK_PIPELINE_STAGE_VERTEX_SHADER_BIT", pure VK_PIPELINE_STAGE_VERTEX_SHADER_BIT)
+                             , ("VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT", pure VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT)
+                             , ("VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT", pure VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT)
+                             , ("VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT", pure VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT)
+                             , ("VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT", pure VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)
+                             , ("VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT", pure VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT)
+                             , ("VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT", pure VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT)
+                             , ("VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT", pure VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT)
+                             , ("VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT", pure VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT)
+                             , ("VK_PIPELINE_STAGE_TRANSFER_BIT", pure VK_PIPELINE_STAGE_TRANSFER_BIT)
+                             , ("VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT", pure VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)
+                             , ("VK_PIPELINE_STAGE_HOST_BIT", pure VK_PIPELINE_STAGE_HOST_BIT)
+                             , ("VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT", pure VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT)
+                             , ("VK_PIPELINE_STAGE_ALL_COMMANDS_BIT", pure VK_PIPELINE_STAGE_ALL_COMMANDS_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkPipelineStageFlagBits")
+                        v <- step readPrec
+                        pure (VkPipelineStageFlagBits v)
+                        )
+                    )
+
 -- | Before subsequent commands are processed
 pattern VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = VkPipelineStageFlagBits 0x1
 -- | Draw/DispatchIndirect command fetch

@@ -518,8 +518,28 @@ instance Storable VkClearValue where
 
 newtype VkStencilFaceFlagBits = VkStencilFaceFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkStencilFaceFlagBits
 type VkStencilFaceFlags = VkStencilFaceFlagBits
+
+instance Show VkStencilFaceFlagBits where
+  showsPrec _ VK_STENCIL_FACE_FRONT_BIT = showString "VK_STENCIL_FACE_FRONT_BIT"
+  showsPrec _ VK_STENCIL_FACE_BACK_BIT = showString "VK_STENCIL_FACE_BACK_BIT"
+  showsPrec _ VK_STENCIL_FRONT_AND_BACK = showString "VK_STENCIL_FRONT_AND_BACK"
+  showsPrec p (VkStencilFaceFlagBits x) = showParen (p >= 11) (showString "VkStencilFaceFlagBits " . showsPrec 11 x)
+
+instance Read VkStencilFaceFlagBits where
+  readPrec = parens ( choose [ ("VK_STENCIL_FACE_FRONT_BIT", pure VK_STENCIL_FACE_FRONT_BIT)
+                             , ("VK_STENCIL_FACE_BACK_BIT", pure VK_STENCIL_FACE_BACK_BIT)
+                             , ("VK_STENCIL_FRONT_AND_BACK", pure VK_STENCIL_FRONT_AND_BACK)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkStencilFaceFlagBits")
+                        v <- step readPrec
+                        pure (VkStencilFaceFlagBits v)
+                        )
+                    )
+
 -- | Front face
 pattern VK_STENCIL_FACE_FRONT_BIT = VkStencilFaceFlagBits 0x1
 -- | Back face

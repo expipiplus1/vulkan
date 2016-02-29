@@ -1,6 +1,5 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE OverloadedLists #-}
 
 module Write.Enum
   ( writeEnum
@@ -67,5 +66,4 @@ writeElementShowsPrec el =
   [qc|showsPrec _ {eeName el} = showString "{eeName el}"|]
 
 writeReadTuple :: EnumElement -> Doc
-writeReadTuple el =
-  [qc|("{eeName el}", pure {eeName el})|]
+writeReadTuple el = [qc|("{eeName el}", pure {eeName el})|]

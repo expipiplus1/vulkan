@@ -8,6 +8,11 @@ import Graphics.Vulkan.Device( VkPhysicalDevice(..)
                              )
 import Graphics.Vulkan.Buffer( VkBuffer(..)
                              )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -29,6 +34,13 @@ import Data.Void( Void
                 )
 import Graphics.Vulkan.Memory( VkDeviceMemory(..)
                              )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
                               )
 import Graphics.Vulkan.Image( VkImageUsageFlags(..)
@@ -226,8 +238,29 @@ instance Storable VkSparseBufferMemoryBindInfo where
 
 newtype VkSparseImageFormatFlagBits = VkSparseImageFormatFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkSparseImageFormatFlagBits
 type VkSparseImageFormatFlags = VkSparseImageFormatFlagBits
+
+instance Show VkSparseImageFormatFlagBits where
+  showsPrec _ VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = showString "VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"
+  showsPrec _ VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = showString "VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"
+  showsPrec _ VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = showString "VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"
+  
+  showsPrec p (VkSparseImageFormatFlagBits x) = showParen (p >= 11) (showString "VkSparseImageFormatFlagBits " . showsPrec 11 x)
+
+instance Read VkSparseImageFormatFlagBits where
+  readPrec = parens ( choose [ ("VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT", pure VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT)
+                             , ("VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT", pure VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT)
+                             , ("VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT", pure VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkSparseImageFormatFlagBits")
+                        v <- step readPrec
+                        pure (VkSparseImageFormatFlagBits v)
+                        )
+                    )
+
 -- | Image uses a single miptail region for all array layers
 pattern VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = VkSparseImageFormatFlagBits 0x1
 -- | Image requires mip levels to be an exact multiple of the sparse image block size for non-miptail levels.
@@ -250,8 +283,25 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
 
 newtype VkSparseMemoryBindFlagBits = VkSparseMemoryBindFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkSparseMemoryBindFlagBits
 type VkSparseMemoryBindFlags = VkSparseMemoryBindFlagBits
+
+instance Show VkSparseMemoryBindFlagBits where
+  showsPrec _ VK_SPARSE_MEMORY_BIND_METADATA_BIT = showString "VK_SPARSE_MEMORY_BIND_METADATA_BIT"
+  
+  showsPrec p (VkSparseMemoryBindFlagBits x) = showParen (p >= 11) (showString "VkSparseMemoryBindFlagBits " . showsPrec 11 x)
+
+instance Read VkSparseMemoryBindFlagBits where
+  readPrec = parens ( choose [ ("VK_SPARSE_MEMORY_BIND_METADATA_BIT", pure VK_SPARSE_MEMORY_BIND_METADATA_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkSparseMemoryBindFlagBits")
+                        v <- step readPrec
+                        pure (VkSparseMemoryBindFlagBits v)
+                        )
+                    )
+
 -- | Operation binds resource metadata to memory
 pattern VK_SPARSE_MEMORY_BIND_METADATA_BIT = VkSparseMemoryBindFlagBits 0x1
 

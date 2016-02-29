@@ -1,7 +1,10 @@
 # Change Log
 
+## [1.3.0.0] - 2016-02-29
+Add Read and Show instances for bitmasks
+
 ## [1.2.0.0] - 2016-02-29
-Add read and show instances for enumerations
+Add Read and Show instances for enumerations
 
 ## [1.0.0.0] - 2016-02-25
 Split the interface up into many modules.

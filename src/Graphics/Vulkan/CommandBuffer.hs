@@ -91,8 +91,29 @@ foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers ::
 
 newtype VkCommandBufferUsageFlagBits = VkCommandBufferUsageFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkCommandBufferUsageFlagBits
 type VkCommandBufferUsageFlags = VkCommandBufferUsageFlagBits
+
+instance Show VkCommandBufferUsageFlagBits where
+  showsPrec _ VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = showString "VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT"
+  showsPrec _ VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = showString "VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT"
+  showsPrec _ VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = showString "VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT"
+  
+  showsPrec p (VkCommandBufferUsageFlagBits x) = showParen (p >= 11) (showString "VkCommandBufferUsageFlagBits " . showsPrec 11 x)
+
+instance Read VkCommandBufferUsageFlagBits where
+  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT", pure VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT)
+                             , ("VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT", pure VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT)
+                             , ("VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT", pure VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkCommandBufferUsageFlagBits")
+                        v <- step readPrec
+                        pure (VkCommandBufferUsageFlagBits v)
+                        )
+                    )
+
 
 pattern VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = VkCommandBufferUsageFlagBits 0x1
 
@@ -164,8 +185,25 @@ type VkCommandBuffer = Ptr VkCommandBuffer_T
 
 newtype VkCommandBufferResetFlagBits = VkCommandBufferResetFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkCommandBufferResetFlagBits
 type VkCommandBufferResetFlags = VkCommandBufferResetFlagBits
+
+instance Show VkCommandBufferResetFlagBits where
+  showsPrec _ VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
+  
+  showsPrec p (VkCommandBufferResetFlagBits x) = showParen (p >= 11) (showString "VkCommandBufferResetFlagBits " . showsPrec 11 x)
+
+instance Read VkCommandBufferResetFlagBits where
+  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT", pure VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkCommandBufferResetFlagBits")
+                        v <- step readPrec
+                        pure (VkCommandBufferResetFlagBits v)
+                        )
+                    )
+
 -- | Release resources owned by the buffer
 pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = VkCommandBufferResetFlagBits 0x1
 

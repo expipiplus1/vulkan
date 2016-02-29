@@ -243,8 +243,25 @@ instance Storable VkDescriptorSetLayoutCreateInfo where
 
 newtype VkDescriptorPoolCreateFlagBits = VkDescriptorPoolCreateFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkDescriptorPoolCreateFlagBits
 type VkDescriptorPoolCreateFlags = VkDescriptorPoolCreateFlagBits
+
+instance Show VkDescriptorPoolCreateFlagBits where
+  showsPrec _ VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = showString "VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT"
+  
+  showsPrec p (VkDescriptorPoolCreateFlagBits x) = showParen (p >= 11) (showString "VkDescriptorPoolCreateFlagBits " . showsPrec 11 x)
+
+instance Read VkDescriptorPoolCreateFlagBits where
+  readPrec = parens ( choose [ ("VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT", pure VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkDescriptorPoolCreateFlagBits")
+                        v <- step readPrec
+                        pure (VkDescriptorPoolCreateFlagBits v)
+                        )
+                    )
+
 -- | Descriptor sets may be freed individually
 pattern VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = VkDescriptorPoolCreateFlagBits 0x1
 

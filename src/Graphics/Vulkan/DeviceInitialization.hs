@@ -552,8 +552,49 @@ foreign import ccall "vkCreateInstance" vkCreateInstance ::
 
 newtype VkFormatFeatureFlagBits = VkFormatFeatureFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkFormatFeatureFlagBits
 type VkFormatFeatureFlags = VkFormatFeatureFlagBits
+
+instance Show VkFormatFeatureFlagBits where
+  showsPrec _ VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = showString "VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = showString "VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = showString "VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = showString "VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = showString "VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = showString "VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = showString "VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = showString "VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = showString "VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_BLIT_SRC_BIT = showString "VK_FORMAT_FEATURE_BLIT_SRC_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_BLIT_DST_BIT = showString "VK_FORMAT_FEATURE_BLIT_DST_BIT"
+  showsPrec _ VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT"
+  
+  showsPrec p (VkFormatFeatureFlagBits x) = showParen (p >= 11) (showString "VkFormatFeatureFlagBits " . showsPrec 11 x)
+
+instance Read VkFormatFeatureFlagBits where
+  readPrec = parens ( choose [ ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT", pure VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)
+                             , ("VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT", pure VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT)
+                             , ("VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT", pure VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT)
+                             , ("VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT", pure VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT)
+                             , ("VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT", pure VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT)
+                             , ("VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT", pure VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT)
+                             , ("VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT", pure VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT)
+                             , ("VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT", pure VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT)
+                             , ("VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT", pure VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT)
+                             , ("VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT", pure VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
+                             , ("VK_FORMAT_FEATURE_BLIT_SRC_BIT", pure VK_FORMAT_FEATURE_BLIT_SRC_BIT)
+                             , ("VK_FORMAT_FEATURE_BLIT_DST_BIT", pure VK_FORMAT_FEATURE_BLIT_DST_BIT)
+                             , ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT", pure VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkFormatFeatureFlagBits")
+                        v <- step readPrec
+                        pure (VkFormatFeatureFlagBits v)
+                        )
+                    )
+
 -- | Format can be used for sampled images (SAMPLED_IMAGE and COMBINED_IMAGE_SAMPLER descriptor types)
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = VkFormatFeatureFlagBits 0x1
 -- | Format can be used for storage images (STORAGE_IMAGE descriptor type)
@@ -611,8 +652,25 @@ type VkInstance = Ptr VkInstance_T
 
 newtype VkMemoryHeapFlagBits = VkMemoryHeapFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkMemoryHeapFlagBits
 type VkMemoryHeapFlags = VkMemoryHeapFlagBits
+
+instance Show VkMemoryHeapFlagBits where
+  showsPrec _ VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = showString "VK_MEMORY_HEAP_DEVICE_LOCAL_BIT"
+  
+  showsPrec p (VkMemoryHeapFlagBits x) = showParen (p >= 11) (showString "VkMemoryHeapFlagBits " . showsPrec 11 x)
+
+instance Read VkMemoryHeapFlagBits where
+  readPrec = parens ( choose [ ("VK_MEMORY_HEAP_DEVICE_LOCAL_BIT", pure VK_MEMORY_HEAP_DEVICE_LOCAL_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkMemoryHeapFlagBits")
+                        v <- step readPrec
+                        pure (VkMemoryHeapFlagBits v)
+                        )
+                    )
+
 -- | If set, heap represents device memory
 pattern VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = VkMemoryHeapFlagBits 0x1
 
@@ -763,8 +821,33 @@ foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr ::
 
 newtype VkMemoryPropertyFlagBits = VkMemoryPropertyFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkMemoryPropertyFlagBits
 type VkMemoryPropertyFlags = VkMemoryPropertyFlagBits
+
+instance Show VkMemoryPropertyFlagBits where
+  showsPrec _ VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = showString "VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT"
+  showsPrec _ VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = showString "VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT"
+  showsPrec _ VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = showString "VK_MEMORY_PROPERTY_HOST_COHERENT_BIT"
+  showsPrec _ VK_MEMORY_PROPERTY_HOST_CACHED_BIT = showString "VK_MEMORY_PROPERTY_HOST_CACHED_BIT"
+  showsPrec _ VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = showString "VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT"
+  
+  showsPrec p (VkMemoryPropertyFlagBits x) = showParen (p >= 11) (showString "VkMemoryPropertyFlagBits " . showsPrec 11 x)
+
+instance Read VkMemoryPropertyFlagBits where
+  readPrec = parens ( choose [ ("VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT", pure VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+                             , ("VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT", pure VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
+                             , ("VK_MEMORY_PROPERTY_HOST_COHERENT_BIT", pure VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
+                             , ("VK_MEMORY_PROPERTY_HOST_CACHED_BIT", pure VK_MEMORY_PROPERTY_HOST_CACHED_BIT)
+                             , ("VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT", pure VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkMemoryPropertyFlagBits")
+                        v <- step readPrec
+                        pure (VkMemoryPropertyFlagBits v)
+                        )
+                    )
+
 -- | If otherwise stated, then allocate memory on device
 pattern VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = VkMemoryPropertyFlagBits 0x1
 -- | Memory is mappable by host
@@ -785,8 +868,31 @@ foreign import ccall "vkDestroyInstance" vkDestroyInstance ::
 
 newtype VkQueueFlagBits = VkQueueFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkQueueFlagBits
 type VkQueueFlags = VkQueueFlagBits
+
+instance Show VkQueueFlagBits where
+  showsPrec _ VK_QUEUE_GRAPHICS_BIT = showString "VK_QUEUE_GRAPHICS_BIT"
+  showsPrec _ VK_QUEUE_COMPUTE_BIT = showString "VK_QUEUE_COMPUTE_BIT"
+  showsPrec _ VK_QUEUE_TRANSFER_BIT = showString "VK_QUEUE_TRANSFER_BIT"
+  showsPrec _ VK_QUEUE_SPARSE_BINDING_BIT = showString "VK_QUEUE_SPARSE_BINDING_BIT"
+  
+  showsPrec p (VkQueueFlagBits x) = showParen (p >= 11) (showString "VkQueueFlagBits " . showsPrec 11 x)
+
+instance Read VkQueueFlagBits where
+  readPrec = parens ( choose [ ("VK_QUEUE_GRAPHICS_BIT", pure VK_QUEUE_GRAPHICS_BIT)
+                             , ("VK_QUEUE_COMPUTE_BIT", pure VK_QUEUE_COMPUTE_BIT)
+                             , ("VK_QUEUE_TRANSFER_BIT", pure VK_QUEUE_TRANSFER_BIT)
+                             , ("VK_QUEUE_SPARSE_BINDING_BIT", pure VK_QUEUE_SPARSE_BINDING_BIT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkQueueFlagBits")
+                        v <- step readPrec
+                        pure (VkQueueFlagBits v)
+                        )
+                    )
+
 -- | Queue supports graphics operations
 pattern VK_QUEUE_GRAPHICS_BIT = VkQueueFlagBits 0x1
 -- | Queue supports compute operations

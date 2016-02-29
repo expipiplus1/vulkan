@@ -5,6 +5,11 @@
 module Graphics.Vulkan.Shader where
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
+import Text.Read.Lex( Lexeme(Ident)
+                    )
+import GHC.Read( expectP
+               , choose
+               )
 import Data.Word( Word64
                 , Word32
                 )
@@ -27,6 +32,13 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkFreeFunction
                              , PFN_vkInternalFreeNotification
                              )
+import Text.Read( Read(..)
+                , parens
+                )
+import Text.ParserCombinators.ReadPrec( prec
+                                      , (+++)
+                                      , step
+                                      )
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkFlags(..)
                            , VkStructureType(..)
@@ -72,8 +84,38 @@ newtype VkShaderModuleCreateFlags = VkShaderModuleCreateFlags VkFlags
 
 newtype VkShaderStageFlagBits = VkShaderStageFlagBits VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
+
 -- | Alias for VkShaderStageFlagBits
 type VkShaderStageFlags = VkShaderStageFlagBits
+
+instance Show VkShaderStageFlagBits where
+  showsPrec _ VK_SHADER_STAGE_VERTEX_BIT = showString "VK_SHADER_STAGE_VERTEX_BIT"
+  showsPrec _ VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = showString "VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT"
+  showsPrec _ VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = showString "VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT"
+  showsPrec _ VK_SHADER_STAGE_GEOMETRY_BIT = showString "VK_SHADER_STAGE_GEOMETRY_BIT"
+  showsPrec _ VK_SHADER_STAGE_FRAGMENT_BIT = showString "VK_SHADER_STAGE_FRAGMENT_BIT"
+  showsPrec _ VK_SHADER_STAGE_COMPUTE_BIT = showString "VK_SHADER_STAGE_COMPUTE_BIT"
+  showsPrec _ VK_SHADER_STAGE_ALL_GRAPHICS = showString "VK_SHADER_STAGE_ALL_GRAPHICS"
+  showsPrec _ VK_SHADER_STAGE_ALL = showString "VK_SHADER_STAGE_ALL"
+  showsPrec p (VkShaderStageFlagBits x) = showParen (p >= 11) (showString "VkShaderStageFlagBits " . showsPrec 11 x)
+
+instance Read VkShaderStageFlagBits where
+  readPrec = parens ( choose [ ("VK_SHADER_STAGE_VERTEX_BIT", pure VK_SHADER_STAGE_VERTEX_BIT)
+                             , ("VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT", pure VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT)
+                             , ("VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT", pure VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT)
+                             , ("VK_SHADER_STAGE_GEOMETRY_BIT", pure VK_SHADER_STAGE_GEOMETRY_BIT)
+                             , ("VK_SHADER_STAGE_FRAGMENT_BIT", pure VK_SHADER_STAGE_FRAGMENT_BIT)
+                             , ("VK_SHADER_STAGE_COMPUTE_BIT", pure VK_SHADER_STAGE_COMPUTE_BIT)
+                             , ("VK_SHADER_STAGE_ALL_GRAPHICS", pure VK_SHADER_STAGE_ALL_GRAPHICS)
+                             , ("VK_SHADER_STAGE_ALL", pure VK_SHADER_STAGE_ALL)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkShaderStageFlagBits")
+                        v <- step readPrec
+                        pure (VkShaderStageFlagBits v)
+                        )
+                    )
+
 
 pattern VK_SHADER_STAGE_VERTEX_BIT = VkShaderStageFlagBits 0x1
 
