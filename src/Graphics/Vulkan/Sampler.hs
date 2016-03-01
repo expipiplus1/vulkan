@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Sampler where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
@@ -50,6 +51,7 @@ import Foreign.C.Types( CFloat
                       , CFloat(..)
                       , CSize(..)
                       )
+
 -- ** VkSamplerAddressMode
 
 newtype VkSamplerAddressMode = VkSamplerAddressMode Int32

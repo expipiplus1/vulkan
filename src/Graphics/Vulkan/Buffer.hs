@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Buffer where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
@@ -47,6 +48,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
+
 -- ** vkCreateBuffer
 foreign import ccall "vkCreateBuffer" vkCreateBuffer :: 
   VkDevice ->

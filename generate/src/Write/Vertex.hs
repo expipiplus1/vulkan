@@ -9,6 +9,7 @@ import Write.Enum
 import Write.Constant
 import Write.Type.Base
 import Write.Type.Bitmask
+import Write.Type.Define
 import Write.Type.Handle
 import Write.Type.Struct
 import Write.Type.FuncPointer
@@ -22,7 +23,7 @@ writeVertex :: Vertex -> Write Doc
 writeVertex v = 
   case vSourceEntity v of
     AnInclude include -> pure empty
-    ADefine define -> pure empty
+    ADefine define -> writeDefine define
     ABaseType baseType -> writeBaseType baseType
     APlatformType platformType -> pure empty
     ABitmaskType bitmaskType -> 
@@ -41,4 +42,4 @@ writeVertex v =
     AnEnum enum -> writeEnum enum
     ABitmask bitmask -> pure empty -- Handled by bitmasktype
     AConstant constant -> writeConstant constant
-    _ -> pure (fromString "NOT DONE")
+    _ -> error "unhandled vertex type"

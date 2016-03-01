@@ -1,6 +1,7 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.MemoryManagement where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Graphics.Vulkan.Buffer( VkBuffer(..)
@@ -22,6 +23,7 @@ import Graphics.Vulkan.Image( VkImage(..)
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkDeviceSize(..)
                            )
+
 -- ** vkGetImageMemoryRequirements
 foreign import ccall "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements :: 
   VkDevice -> VkImage -> Ptr VkMemoryRequirements -> IO ()

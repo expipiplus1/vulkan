@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Core where
+
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -27,6 +28,7 @@ import Text.ParserCombinators.ReadPrec( prec
 import Foreign.C.Types( CFloat
                       , CFloat(..)
                       )
+
 newtype VkDeviceSize = VkDeviceSize Word64
   deriving (Eq, Storable)
 

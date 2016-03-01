@@ -4,6 +4,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.CommandBufferBuilding where
+
 import Data.Vector.Storable.Sized( Vector
                                  )
 import Graphics.Vulkan.Buffer( VkBuffer(..)
@@ -90,6 +91,7 @@ import Graphics.Vulkan.Core( VkExtent3D(..)
 import Foreign.C.Types( CFloat
                       , CFloat(..)
                       )
+
 -- ** vkCmdPushConstants
 foreign import ccall "vkCmdPushConstants" vkCmdPushConstants :: 
   VkCommandBuffer ->

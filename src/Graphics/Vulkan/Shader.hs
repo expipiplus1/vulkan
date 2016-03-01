@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Shader where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
@@ -46,6 +47,7 @@ import Graphics.Vulkan.Core( VkResult(..)
 import Foreign.C.Types( CSize
                       , CSize(..)
                       )
+
 
 data VkShaderModuleCreateInfo =
   VkShaderModuleCreateInfo{ vkSType :: VkStructureType 

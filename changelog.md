@@ -1,5 +1,11 @@
 # Change Log
 
+## [1.3.2.0] - 2016-02-29
+Add type signatures to version functions
+
+## [1.3.1.0] - 2016-02-29
+Add version information and generator to Graphics.Vulkan.Version
+
 ## [1.3.0.0] - 2016-02-29
 Add Read and Show instances for bitmasks
 

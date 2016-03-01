@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Memory where
+
 import {-# SOURCE #-} Graphics.Vulkan.Device( VkDevice(..)
                                             )
 import Text.Read.Lex( Lexeme(Ident)
@@ -38,6 +39,7 @@ import Graphics.Vulkan.Core( VkResult(..)
 import Foreign.C.Types( CSize
                       , CSize(..)
                       )
+
 newtype VkDeviceMemory = VkDeviceMemory Word64
   deriving (Eq, Storable)
 

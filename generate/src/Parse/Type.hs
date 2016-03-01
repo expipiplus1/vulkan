@@ -92,7 +92,12 @@ parseDefine = extractFields "define"
   where extract = proc define -> do
           dName <- getNameAttrOrChildText -< define
           dText <- getAllText -< define
+          dSymTab <- arrIO getSymbolTableFromDefineText <<^ 
+                     addTrailingNewline -< dText
           returnA -< Define{..}
+
+addTrailingNewline :: String -> String
+addTrailingNewline = (++ "\n")
 
 parseBaseType :: ParseArrow XmlTree BaseType
 parseBaseType = extractFields "base type"

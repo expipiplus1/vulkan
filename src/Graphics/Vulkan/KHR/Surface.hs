@@ -1,6 +1,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Surface where
+
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -22,6 +23,7 @@ import Text.ParserCombinators.ReadPrec( prec
                                       )
 import Graphics.Vulkan.Core( VkFlags(..)
                            )
+
 -- ** VkCompositeAlphaFlagsKHR
 -- | Opaque flag
 newtype VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagsKHR VkFlags

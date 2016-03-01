@@ -2,6 +2,7 @@
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.PipelineLayout where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Data.Word( Word64
@@ -34,6 +35,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
+
 -- ** VkPipelineLayoutCreateFlags
 -- | Opaque flag
 newtype VkPipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags VkFlags

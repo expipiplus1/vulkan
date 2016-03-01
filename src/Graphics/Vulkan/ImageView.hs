@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.ImageView where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
@@ -50,6 +51,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
+
 
 data VkImageViewCreateInfo =
   VkImageViewCreateInfo{ vkSType :: VkStructureType 

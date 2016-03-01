@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.CommandBuffer where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Graphics.Vulkan.Pass( VkFramebuffer(..)
@@ -47,6 +48,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            , VkFlags(..)
                            , VkStructureType(..)
                            )
+
 -- ** VkCommandBufferLevel
 
 newtype VkCommandBufferLevel = VkCommandBufferLevel Int32

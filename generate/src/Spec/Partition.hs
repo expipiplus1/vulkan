@@ -218,7 +218,10 @@ bespokeModuleExports = M.fromList
                  , "VkCompositeAlphaFlagBitsKHR"
                  , "VkPresentModeKHR"
                  , "VkSurfaceKHR"
-
+                 ]
+    )
+  , ( ModuleName "Graphics.Vulkan.Version"
+    , S.fromList [ "VK_MAKE_VERSION"
                  ]
     )
   ]
@@ -234,7 +237,6 @@ ignoredNames = S.fromList [ "uint64_t"
                           , "char"
                           , "VK_DEFINE_HANDLE"
                           , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
-                          , "VK_MAKE_VERSION"
                           ]
 
 calculateModuleExports :: SpecGraph

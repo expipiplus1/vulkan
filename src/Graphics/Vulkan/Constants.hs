@@ -2,6 +2,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Constants where
+
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -21,6 +22,7 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+
 
 pattern VK_SUBPASS_EXTERNAL = 0xffffffff :: Word32
 
@@ -78,6 +80,7 @@ type VK_MAX_EXTENSION_NAME_SIZE = 256
 
 pattern VK_MAX_DESCRIPTION_SIZE = 256
 type VK_MAX_DESCRIPTION_SIZE = 256
+vkNullHandle  = 0
 
 pattern VK_TRUE = 1
 type VK_TRUE = 1

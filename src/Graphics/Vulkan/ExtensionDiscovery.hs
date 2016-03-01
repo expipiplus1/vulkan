@@ -2,6 +2,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.ExtensionDiscovery where
+
 import Data.Vector.Storable.Sized( Vector
                                  )
 import Graphics.Vulkan.Device( VkPhysicalDevice(..)
@@ -19,6 +20,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CChar
                       )
+
 
 data VkExtensionProperties =
   VkExtensionProperties{ vkExtensionName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 

@@ -2,7 +2,7 @@
 
 module Write.Utils where
 
-import Data.Char(toUpper)
+import Data.Char(toUpper, toLower)
 import Data.Hashable
 import Data.List(intersperse, isPrefixOf, isSuffixOf, find, foldl')
 import Data.List.Split(splitOn)
@@ -90,9 +90,21 @@ breakNameTag tags name =
     Just tag -> (take (length name - length tag) name, tag)
 
 -- | Concatenate words in the string and make the first letter of each one
--- uppercase
+-- uppercase.
 pascalCase :: String -> String
 pascalCase = concatMap upperFirst . words
+
+-- | Concatenate words separated by underscores in the string and make the
+-- first letter of each one uppercase.
+pascalCase_ :: String -> String
+pascalCase_ = concatMap upperFirst . splitOn "_"
+
+-- | Concatenate words separated by underscores in the string and make the
+-- first letter of each one but the first uppercase.
+camelCase_ :: String -> String
+camelCase_ "" = ""
+camelCase_ s = let w:ws = splitOn "_" . fmap toLower $ s
+               in w ++ concatMap upperFirst ws
 
 getModuleBaseName :: ModuleName -> String 
 getModuleBaseName (ModuleName moduleName) =

@@ -2,6 +2,7 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.LayerDiscovery where
+
 import Data.Vector.Storable.Sized( Vector
                                  )
 import Graphics.Vulkan.Device( VkPhysicalDevice(..)
@@ -20,6 +21,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CChar
                       )
+
 
 data VkLayerProperties =
   VkLayerProperties{ vkLayerName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 

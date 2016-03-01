@@ -2,6 +2,7 @@
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.BufferView where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Graphics.Vulkan.Buffer( VkBuffer(..)
@@ -33,6 +34,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
+
 -- ** vkCreateBufferView
 foreign import ccall "vkCreateBufferView" vkCreateBufferView :: 
   VkDevice ->

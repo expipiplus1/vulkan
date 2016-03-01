@@ -3,6 +3,8 @@
 
 module Write.WriteMonad
   ( Write
+  , WriteOutput
+  , ReadInput
   , RequiredName(..)
   , WildCard(..)
   , FileType(..)
@@ -42,9 +44,11 @@ data FileType = Normal
 
 type ExtensionName = String
 
-type Write = ReaderT (TypeEnv, FileType) (Writer ( HashSet RequiredName
-                                         , HashSet ExtensionName
-                                         ))
+type WriteOutput = (HashSet RequiredName, HashSet ExtensionName)
+
+type ReadInput = (TypeEnv, FileType)
+
+type Write = ReaderT ReadInput (Writer WriteOutput)
 
 runWrite :: TypeEnv -> FileType -> Write a 
          -> (a, (HashSet RequiredName, HashSet ExtensionName))
@@ -63,7 +67,7 @@ doesDeriveStorable =
 requireStorable :: Write ()
 requireStorable = tellRequiredName (ExternalName (ModuleName "Foreign.Storable") "Storable(..)")
 
-tellRequiredName :: RequiredName -> Write ()
+tellRequiredName :: MonadWriter WriteOutput m  => RequiredName -> m ()
 tellRequiredName rn = tell (S.singleton rn, mempty)
 
 tellRequiredNames :: [RequiredName] -> Write ()

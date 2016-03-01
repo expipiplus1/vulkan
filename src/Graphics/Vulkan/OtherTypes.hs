@@ -1,6 +1,7 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.OtherTypes where
+
 import Graphics.Vulkan.Buffer( VkBuffer(..)
                              )
 import Graphics.Vulkan.Pass( VkAccessFlags(..)
@@ -28,6 +29,7 @@ import Graphics.Vulkan.Core( VkDeviceSize(..)
                            , VkFlags(..)
                            , VkStructureType(..)
                            )
+
 
 data VkBufferMemoryBarrier =
   VkBufferMemoryBarrier{ vkSType :: VkStructureType 

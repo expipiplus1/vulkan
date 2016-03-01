@@ -2,6 +2,7 @@
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Event where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Data.Word( Word64
@@ -29,6 +30,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
+
 -- ** vkDestroyEvent
 foreign import ccall "vkDestroyEvent" vkDestroyEvent :: 
   VkDevice -> VkEvent -> Ptr VkAllocationCallbacks -> IO ()

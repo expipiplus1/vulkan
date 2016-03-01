@@ -5,6 +5,7 @@ module Parse.State
   , initialSpecParseState
   , getTypeNames
   , getSymbolTable
+  , getSymbolTableFromDefineText
   , SpecParseState
   , addTypeName
   , addDefines
@@ -80,15 +81,18 @@ preProcessorBoolOptions s = defaultBoolOptions{ macros = True
                                               }
 
 addDefines :: ParseArrow [Define] [Define]
-addDefines = let options = defaultCpphsOptions{
-                   boolopts = preProcessorBoolOptions AddingDefines}
-                 genSymbolTable = 
-                   fmap snd . runCpphsReturningSymTab options "defines"
-             in proc defineDecls -> do
+addDefines = proc defineDecls -> do
   allDefines <- arr (stripLines . unlines . fmap dText) -< defineDecls
-  symbolTable <- arrIO genSymbolTable -< allDefines
+  symbolTable <- arrIO getSymbolTableFromDefineText -< allDefines
   addSymbolTable -< symbolTable
   returnA -< defineDecls
+
+getSymbolTableFromDefineText :: String -> IO [(String, String)]
+getSymbolTableFromDefineText = fmap snd . 
+                                 runCpphsReturningSymTab options "define text"
+  where options = defaultCpphsOptions{ boolopts = 
+                                         preProcessorBoolOptions AddingDefines
+                                     }
 
 addTypeName :: ParseArrow String CIdentifier
 addTypeName = (not . isReservedIdentifier) `guardsP` 
@@ -96,7 +100,7 @@ addTypeName = (not . isReservedIdentifier) `guardsP`
                changeUserState insertTypeName)
 
 isReservedIdentifier :: String -> Bool
-isReservedIdentifier i = elem i reservedIdentifiers
+isReservedIdentifier i = i `elem` reservedIdentifiers
   where reservedIdentifiers = [ "void"
                               , "char"
                               , "float"

@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Pass where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
@@ -59,6 +60,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
+
 
 data VkSubpassDependency =
   VkSubpassDependency{ vkSrcSubpass :: Word32 

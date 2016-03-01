@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Image where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
@@ -53,6 +54,7 @@ import Graphics.Vulkan.Core( VkExtent3D(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
+
 -- ** vkCreateImage
 foreign import ccall "vkCreateImage" vkCreateImage :: 
   VkDevice ->

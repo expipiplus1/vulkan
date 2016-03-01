@@ -1,6 +1,7 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.Queue where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Graphics.Vulkan.Pipeline( VkPipelineStageFlagBits(..)
@@ -26,6 +27,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            , VkFlags(..)
                            , VkStructureType(..)
                            )
+
 data VkQueue_T
 type VkQueue = Ptr VkQueue_T
 

@@ -4,6 +4,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Pipeline where
+
 import Data.Vector.Storable.Sized( Vector
                                  )
 import Graphics.Vulkan.Device( VkDevice(..)
@@ -72,6 +73,7 @@ import Foreign.C.Types( CSize
                       , CChar
                       , CSize(..)
                       )
+
 
 data VkPipelineTessellationStateCreateInfo =
   VkPipelineTessellationStateCreateInfo{ vkSType :: VkStructureType 

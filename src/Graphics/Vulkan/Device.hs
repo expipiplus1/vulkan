@@ -2,6 +2,7 @@
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Device where
+
 import Data.Word( Word32
                 )
 import Foreign.Ptr( Ptr
@@ -30,6 +31,7 @@ import Foreign.C.Types( CFloat
                       , CChar
                       , CSize(..)
                       )
+
 -- ** vkCreateDevice
 foreign import ccall "vkCreateDevice" vkCreateDevice :: 
   VkPhysicalDevice ->

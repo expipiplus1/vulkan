@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Query where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
@@ -49,6 +50,7 @@ import Graphics.Vulkan.Core( VkResult(..)
 import Foreign.C.Types( CSize
                       , CSize(..)
                       )
+
 -- ** vkGetQueryPoolResults
 foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults :: 
   VkDevice ->

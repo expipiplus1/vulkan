@@ -23,6 +23,7 @@ data Include = Include { iName :: String
 
 data Define = Define { dName :: String
                      , dText :: String
+                     , dSymTab :: [(String, String)]
                      }
   deriving (Show, Eq)
 

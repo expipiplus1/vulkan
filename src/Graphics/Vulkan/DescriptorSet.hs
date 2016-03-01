@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.DescriptorSet where
+
 import Graphics.Vulkan.Device( VkDevice(..)
                              )
 import Graphics.Vulkan.Buffer( VkBuffer(..)
@@ -61,6 +62,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
+
 -- ** vkUpdateDescriptorSets
 foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets :: 
   VkDevice ->

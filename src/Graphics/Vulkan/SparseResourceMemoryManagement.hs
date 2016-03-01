@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.SparseResourceMemoryManagement where
+
 import Graphics.Vulkan.Device( VkPhysicalDevice(..)
                              , VkDevice(..)
                              )
@@ -62,6 +63,7 @@ import Graphics.Vulkan.Core( VkExtent3D(..)
                            , VkOffset3D(..)
                            , VkStructureType(..)
                            )
+
 
 data VkSparseImageMemoryRequirements =
   VkSparseImageMemoryRequirements{ vkFormatProperties :: VkSparseImageFormatProperties 

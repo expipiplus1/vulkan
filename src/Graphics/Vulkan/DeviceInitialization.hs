@@ -4,6 +4,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.DeviceInitialization where
+
 import Data.Vector.Storable.Sized( Vector
                                  )
 import Graphics.Vulkan.Device( VkPhysicalDeviceFeatures(..)
@@ -77,6 +78,7 @@ import Foreign.C.Types( CSize
                       , CChar
                       , CSize(..)
                       )
+
 -- ** VkPhysicalDeviceType
 
 newtype VkPhysicalDeviceType = VkPhysicalDeviceType Int32

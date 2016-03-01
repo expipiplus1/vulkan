@@ -49,7 +49,9 @@ writeModule graph nameLocations boot (ModuleName n) names = moduleString
           definitions <- writeVertices (requiredLookup graph <$> names)
           pure [qc|{vcat extensionDocs}
 module {n} where
+
 {imports}
+
 {definitions}
 |]
 
