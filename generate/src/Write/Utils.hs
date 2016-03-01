@@ -117,8 +117,8 @@ sectionNameToModuleName sectionName =
   where baseName = sectionNameToModuleBaseName sectionName
 
 sectionNameToModuleBaseName :: String -> String
-sectionNameToModuleBaseName "Types not directly used by the API"
-  = "OtherTypes"
+sectionNameToModuleBaseName "Types not directly used by the API" = "OtherTypes"
+sectionNameToModuleBaseName "Header boilerplate" = "OtherTypes"
 sectionNameToModuleBaseName sectionName = pascalCase moduleNameSpaces
   where moduleNameSpaces = unwords . filter isAllowed . words $ sectionName
         isAllowed n = notElem n forbiddenWords

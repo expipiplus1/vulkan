@@ -12,7 +12,6 @@ module Graphics.Vulkan
   , module Graphics.Vulkan.Event
   , module Graphics.Vulkan.ExtensionDiscovery
   , module Graphics.Vulkan.Fence
-  , module Graphics.Vulkan.HeaderBoilerplate
   , module Graphics.Vulkan.Image
   , module Graphics.Vulkan.ImageView
   , module Graphics.Vulkan.KHR.Surface
@@ -46,7 +45,6 @@ import Graphics.Vulkan.DeviceInitialization
 import Graphics.Vulkan.Event
 import Graphics.Vulkan.ExtensionDiscovery
 import Graphics.Vulkan.Fence
-import Graphics.Vulkan.HeaderBoilerplate
 import Graphics.Vulkan.Image
 import Graphics.Vulkan.ImageView
 import Graphics.Vulkan.KHR.Surface
