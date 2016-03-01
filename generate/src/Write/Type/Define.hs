@@ -5,24 +5,26 @@ module Write.Type.Define
   ( writeDefine
   ) where
 
-import Control.Applicative((<|>))
+import Control.Applicative ((<|>))
 import Control.Monad.Writer
-import Data.HashSet as S
 import Data.String
-import Language.Haskell.Exts.Syntax hiding (Assoc(..), ModuleName)
 import Language.Haskell.Exts.Pretty (prettyPrint)
-import Prelude hiding(exp)
+import Language.Haskell.Exts.Syntax hiding (Assoc(..), ModuleName)
+import Prelude hiding (exp)
 import Spec.Type
 import Text.InterpolatedString.Perl6
 import Text.Parser.Combinators
-import Text.Parser.Token
-import Text.Parser.Token.Style(emptyOps)
 import Text.Parser.Expression
+import Text.Parser.Token
 import Text.Parser.Token.Highlight
+import Text.Parser.Token.Style (emptyOps)
 import Text.PrettyPrint.Leijen.Text hiding ((<$>), parens, char)
 import Text.Trifecta
+import Write.TypeConverter
 import Write.Utils
 import Write.WriteMonad
+import qualified Data.HashSet as S
+import qualified Language.C.Types as C
 
 writeDefine :: Define -> Write Doc
 writeDefine d =
@@ -30,8 +32,16 @@ writeDefine d =
       boundNames = boundVariablesFromDefine header
       (expression, requiredNames) = 
         parseCExpressionToHsExpression value
+      hsName = camelCase_ $ dName d
+      -- TODO: This assumes the defines are of type uint32_t
+      Right uint32_t = C.cIdentifierFromString "uint32_t"
   in do tellRequiredNames (S.toList requiredNames)
-        pure [qc|{camelCase_ $ dName d} {hsep (fromString <$> boundNames)} = {prettyPrint expression}|]
+        hsElemType <- cTypeToHsType (C.TypeSpecifier (C.Specifiers [] [] []) 
+                                    (C.TypeName uint32_t))
+        let hsType = foldr TyFun hsElemType (hsElemType <$ boundNames)
+        pure [qc|{hsName} :: {prettyPrint hsType}
+{hsName} {hsep (fromString <$> boundNames)} = {prettyPrint expression}
+|]
        
 boundVariablesFromDefine :: String -> [String]
 boundVariablesFromDefine d = 
@@ -52,9 +62,9 @@ identifierStyle = IdentifierStyle{ _styleName = "ident"
                                  , _styleReservedHighlight = ReservedIdentifier
                                  }
 
-type ExpressionParser = WriterT (HashSet RequiredName) Parser
+type ExpressionParser = WriterT (S.HashSet RequiredName) Parser
 
-parseCExpressionToHsExpression :: String -> (Exp, HashSet RequiredName)
+parseCExpressionToHsExpression :: String -> (Exp, S.HashSet RequiredName)
 parseCExpressionToHsExpression s = 
   case parseString (runWriterT (exp <* eof)) mempty s of
     Failure e -> error ("Failed to parse C expression\n" ++ show e)

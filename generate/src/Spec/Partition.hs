@@ -65,11 +65,16 @@ partitionSpec spec graph =
       allExportedNames = S.unions (M.elems moduleExports)
       unexportedEntities = allEntityNames `S.difference` allExportedNames
       missingBespokeNames = allBespokeNames `S.difference` allEntityNames
+      exportedIgnoredNames = ignoredNames `S.intersection` allExportedNames
   in -- TODO: put this is a better error handling scheme
      assertNote (unlines
        [ "Error, some bespoke names were not found in the spec"
        , "Bespoke exports not found:"
        ] ++ show missingBespokeNames) (S.null missingBespokeNames) $ 
+     assertNote (unlines 
+       [ "Error, some ignored names are being exported"
+       , "Ignored names exported:"
+       ] ++ show exportedIgnoredNames) (S.null exportedIgnoredNames) $
      -- assertNote (unlines 
      --   [ "Error, some entites are not exported by any module."
      --   , "Manually place them in a module by updating 'bespokeModuleExports'"
@@ -237,6 +242,7 @@ ignoredNames = S.fromList [ "uint64_t"
                           , "char"
                           , "VK_DEFINE_HANDLE"
                           , "VK_DEFINE_NON_DISPATCHABLE_HANDLE"
+                          , "VK_NULL_HANDLE"
                           ]
 
 calculateModuleExports :: SpecGraph
@@ -250,9 +256,10 @@ calculateModuleExports graph coreModuleExports =
                  allReachableFromNames graph (S.toList coreExports)))
               coreModuleExports
       coreAndReachableList = M.toList coreAndReachableModuleExports
+      removeIgnored ns = ns `S.difference` ignoredNames
   in M.fromListWith (error "Overlapping module names")
        (zip (fst <$> coreAndReachableList)
-            (getExclusiveReachable $ snd <$> coreAndReachableList))
+            (fmap removeIgnored . getExclusiveReachable $ snd <$> coreAndReachableList))
 
 -- | Given a list of (Core Exports, Reachable Names) return a list of
 -- (Reachable names which are not in any other core names).

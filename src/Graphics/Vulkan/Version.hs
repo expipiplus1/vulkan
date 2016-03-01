@@ -1,12 +1,12 @@
 
 module Graphics.Vulkan.Version where
 
+import Data.Word( Word32
+                )
 import Data.Bits( shiftR
                 , shiftL
                 , (.|.)
                 , (.&.)
-                )
-import Data.Word( Word32
                 )
 
 vkApiVersion :: Word32
@@ -23,3 +23,4 @@ vkMakeVersion major minor patch = (.|.) ((.|.) (shiftL major 22) (shiftL minor 1
 
 vkVersionMajor :: Word32 -> Word32
 vkVersionMajor version = shiftR version 22
+

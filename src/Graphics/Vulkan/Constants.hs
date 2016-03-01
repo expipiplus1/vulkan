@@ -80,7 +80,6 @@ type VK_MAX_EXTENSION_NAME_SIZE = 256
 
 pattern VK_MAX_DESCRIPTION_SIZE = 256
 type VK_MAX_DESCRIPTION_SIZE = 256
-vkNullHandle  = 0
 
 pattern VK_TRUE = 1
 type VK_TRUE = 1
