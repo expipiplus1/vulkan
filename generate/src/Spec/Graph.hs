@@ -23,6 +23,7 @@ import Write.Utils
 -- | Info is a more useful representation of the specification
 data SpecGraph = SpecGraph{ gVertices :: [Vertex]
                           , gNameVertexMap :: M.HashMap String Vertex
+                          , gExtensionTags :: [String]
                           }
 
 data Vertex = Vertex{ vName :: String
@@ -82,6 +83,7 @@ getSpecGraph spec = graph
                     (bitmaskToVertex graph <$> sBitmasks spec) ++
                     (commandToVertex graph <$> sCommands spec)
         gNameVertexMap = M.fromList ((vName &&& id) <$> gVertices)
+        gExtensionTags = getSpecExtensionTags spec
         graph = SpecGraph{..}
 
 --------------------------------------------------------------------------------
@@ -124,9 +126,10 @@ typeDeclToVertex graph td =
                                    (cTypeDependencyNames (bmtCType bmt) ++ 
                                     maybeToList (bmtRequires bmt)))
                                  ++ maybeToList 
-                    (lookupNameMay =<< swapSuffix "Flags" "FlagBits" (bmtName bmt))
+                    (lookupNameMay =<< ((++ tag) <$> swapSuffix "Flags" "FlagBits" baseName))
                , vSourceEntity = ABitmaskType bmt
                }
+         where (baseName, tag) = breakNameTag (gExtensionTags graph) (bmtName bmt)
        T.AHandleType ht ->
          Vertex{ vName = htName ht
                , vDependencies = catMaybes . fmap lookupNameMay $

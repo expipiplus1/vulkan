@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.5.1.0] - 2016-03-07
+ - Add enumeration values for VkCompositeAlphaFlagsKHR and VkSurfaceTransformFlagsKHR
+
 ## [1.5.0.0] - 2016-03-01
  - Remove VK_NULL_HANDLE
  - Remove Vulkan.Graphics.HeaderBoilerplate
