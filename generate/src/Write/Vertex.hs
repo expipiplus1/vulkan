@@ -16,22 +16,22 @@ import Write.Type.FuncPointer
 import Write.Utils
 import Write.WriteMonad
 
-writeVertices :: [Vertex] -> Write Doc
-writeVertices = fmap vcat . traverse writeVertex
+writeVertices :: SpecGraph -> [Vertex] -> Write Doc
+writeVertices graph = fmap vcat . traverse (writeVertex graph)
 
-writeVertex :: Vertex -> Write Doc
-writeVertex v = 
+writeVertex :: SpecGraph -> Vertex -> Write Doc
+writeVertex graph v =
   case vSourceEntity v of
     AnInclude include -> pure empty
     ADefine define -> writeDefine define
     ABaseType baseType -> writeBaseType baseType
     APlatformType platformType -> pure empty
     ABitmaskType bitmaskType -> 
-      let bitmaskMay = do bitmaskName <- swapSuffix "Flags" "FlagBits" 
-                                                    (vName v)
+      let bitmaskMay = do bitmaskName <- (++ tag) <$> swapSuffix "Flags" "FlagBits" baseName
                           bitmaskVertex <- find ((== bitmaskName) . vName) 
                                                 (vDependencies v)
                           vertexToBitmask bitmaskVertex
+          (baseName, tag) = breakNameTag (gExtensionTags graph) (vName v)
       in writeBitmaskType bitmaskType bitmaskMay
     AHandleType handleType -> writeHandleType handleType
     AnEnumType enumType -> pure empty -- handled by enum

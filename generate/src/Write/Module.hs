@@ -46,7 +46,7 @@ writeModule graph nameLocations boot (ModuleName n) names = moduleString
                                         `S.difference` (S.fromList names))
         imports = vcat (getImportDeclarations (ModuleName n) nameLocations requiredNames)
         moduleWriter = do
-          definitions <- writeVertices (requiredLookup graph <$> names)
+          definitions <- writeVertices graph (requiredLookup graph <$> names)
           pure [qc|{vcat extensionDocs}
 module {n} where
 
