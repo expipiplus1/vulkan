@@ -45,11 +45,11 @@ instance Storable VkLayerProperties where
 
 
 -- ** vkEnumerateInstanceLayerProperties
-foreign import ccall "vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLayerProperties :: 
+foreign import ccall "vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLayerProperties ::
   Ptr Word32 -> Ptr VkLayerProperties -> IO VkResult
 
 -- ** vkEnumerateDeviceLayerProperties
-foreign import ccall "vkEnumerateDeviceLayerProperties" vkEnumerateDeviceLayerProperties :: 
+foreign import ccall "vkEnumerateDeviceLayerProperties" vkEnumerateDeviceLayerProperties ::
   VkPhysicalDevice ->
   Ptr Word32 -> Ptr VkLayerProperties -> IO VkResult
 

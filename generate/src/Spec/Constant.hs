@@ -1,11 +1,11 @@
 module Spec.Constant where
 
-import Data.Word(Word32, Word64)
+import           Data.Word (Word32, Word64)
 
-data Constant = Constant { cName :: String
+data Constant = Constant { cName        :: String
                          , cValueString :: String
-                         , cValue :: ConstantValue
-                         , cComment :: Maybe String
+                         , cValue       :: ConstantValue
+                         , cComment     :: Maybe String
                          }
   deriving (Show)
 

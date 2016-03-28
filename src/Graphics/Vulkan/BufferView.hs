@@ -36,7 +36,7 @@ import Foreign.C.Types( CSize(..)
                       )
 
 -- ** vkCreateBufferView
-foreign import ccall "vkCreateBufferView" vkCreateBufferView :: 
+foreign import ccall "vkCreateBufferView" vkCreateBufferView ::
   VkDevice ->
   Ptr VkBufferViewCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkBufferView -> IO VkResult
@@ -81,6 +81,6 @@ newtype VkBufferViewCreateFlags = VkBufferViewCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkDestroyBufferView
-foreign import ccall "vkDestroyBufferView" vkDestroyBufferView :: 
+foreign import ccall "vkDestroyBufferView" vkDestroyBufferView ::
   VkDevice -> VkBufferView -> Ptr VkAllocationCallbacks -> IO ()
 

@@ -38,11 +38,11 @@ instance Storable VkExtensionProperties where
 
 
 -- ** vkEnumerateInstanceExtensionProperties
-foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanceExtensionProperties :: 
+foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanceExtensionProperties ::
   Ptr CChar -> Ptr Word32 -> Ptr VkExtensionProperties -> IO VkResult
 
 -- ** vkEnumerateDeviceExtensionProperties
-foreign import ccall "vkEnumerateDeviceExtensionProperties" vkEnumerateDeviceExtensionProperties :: 
+foreign import ccall "vkEnumerateDeviceExtensionProperties" vkEnumerateDeviceExtensionProperties ::
   VkPhysicalDevice ->
   Ptr CChar -> Ptr Word32 -> Ptr VkExtensionProperties -> IO VkResult
 

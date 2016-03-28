@@ -1,13 +1,13 @@
-module Write.CycleBreak 
+module Write.CycleBreak
   ( writeHsBootFiles
   ) where
 
-import Data.HashMap.Strict as M
+import           Data.HashMap.Strict as M
 
-import Spec.Graph
-import Write.Module
-import Write.Utils
-import Control.Monad(void)
+import           Control.Monad       (void)
+import           Spec.Graph
+import           Write.Module
+import           Write.Utils
 
 cycleBreakers :: HashMap ModuleName [String]
 cycleBreakers = M.fromList [ (ModuleName "Graphics.Vulkan.Device", ["VkDevice"])
@@ -15,8 +15,8 @@ cycleBreakers = M.fromList [ (ModuleName "Graphics.Vulkan.Device", ["VkDevice"])
                            ]
 
 writeHsBootFiles :: FilePath -> SpecGraph -> NameLocations -> IO ()
-writeHsBootFiles root graph nameLocations = 
-  void $ M.traverseWithKey (writeHsBootFile root graph nameLocations) 
+writeHsBootFiles root graph nameLocations =
+  void $ M.traverseWithKey (writeHsBootFile root graph nameLocations)
                            cycleBreakers
 
 writeHsBootFile :: FilePath      -- ^ The source root
@@ -27,6 +27,6 @@ writeHsBootFile :: FilePath      -- ^ The source root
                 -> IO ()
 writeHsBootFile root graph nameLocations moduleName exports = do
   createModuleDirectory root moduleName
-  let moduleString = writeModule graph nameLocations moduleName exports 
+  let moduleString = writeModule graph nameLocations moduleName exports
   writeFile (moduleNameToFile root moduleName) moduleString
 

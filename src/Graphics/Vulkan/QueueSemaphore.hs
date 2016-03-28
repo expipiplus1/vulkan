@@ -37,7 +37,7 @@ newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkDestroySemaphore
-foreign import ccall "vkDestroySemaphore" vkDestroySemaphore :: 
+foreign import ccall "vkDestroySemaphore" vkDestroySemaphore ::
   VkDevice -> VkSemaphore -> Ptr VkAllocationCallbacks -> IO ()
 
 newtype VkSemaphore = VkSemaphore Word64
@@ -63,7 +63,7 @@ instance Storable VkSemaphoreCreateInfo where
 
 
 -- ** vkCreateSemaphore
-foreign import ccall "vkCreateSemaphore" vkCreateSemaphore :: 
+foreign import ccall "vkCreateSemaphore" vkCreateSemaphore ::
   VkDevice ->
   Ptr VkSemaphoreCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkSemaphore -> IO VkResult

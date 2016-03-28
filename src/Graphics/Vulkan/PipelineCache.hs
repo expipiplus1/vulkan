@@ -33,13 +33,13 @@ import Foreign.C.Types( CSize
                       )
 
 -- ** vkCreatePipelineCache
-foreign import ccall "vkCreatePipelineCache" vkCreatePipelineCache :: 
+foreign import ccall "vkCreatePipelineCache" vkCreatePipelineCache ::
   VkDevice ->
   Ptr VkPipelineCacheCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkPipelineCache -> IO VkResult
 
 -- ** vkGetPipelineCacheData
-foreign import ccall "vkGetPipelineCacheData" vkGetPipelineCacheData :: 
+foreign import ccall "vkGetPipelineCacheData" vkGetPipelineCacheData ::
   VkDevice -> VkPipelineCache -> Ptr CSize -> Ptr Void -> IO VkResult
 
 newtype VkPipelineCache = VkPipelineCache Word64
@@ -71,7 +71,7 @@ instance Storable VkPipelineCacheCreateInfo where
 
 
 -- ** vkMergePipelineCaches
-foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches :: 
+foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches ::
   VkDevice ->
   VkPipelineCache -> Word32 -> Ptr VkPipelineCache -> IO VkResult
 
@@ -81,6 +81,6 @@ newtype VkPipelineCacheCreateFlags = VkPipelineCacheCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkDestroyPipelineCache
-foreign import ccall "vkDestroyPipelineCache" vkDestroyPipelineCache :: 
+foreign import ccall "vkDestroyPipelineCache" vkDestroyPipelineCache ::
   VkDevice -> VkPipelineCache -> Ptr VkAllocationCallbacks -> IO ()
 

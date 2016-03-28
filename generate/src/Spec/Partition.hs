@@ -1,7 +1,7 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Spec.Partition 
-  ( partitionSpec 
+module Spec.Partition
+  ( partitionSpec
   , PartitionedSpec(..)
   , ignoredNames
   ) where
@@ -10,17 +10,17 @@ module Spec.Partition
 -- A module to partition the spec into smaller modules
 --
 
-import Data.Foldable as F
+import           Control.Exception (assert)
+import           Data.Foldable     as F
 import qualified Data.HashMap.Lazy as M
-import qualified Data.HashSet as S
-import Control.Exception(assert)
-import Spec.Graph
-import Spec.Spec
-import Safe(assertNote)
-import Spec.Section
-import Spec.Extension
-import Write.Utils
-import Data.List(isPrefixOf, isSuffixOf)
+import qualified Data.HashSet      as S
+import           Data.List         (isPrefixOf, isSuffixOf)
+import           Safe              (assertNote)
+import           Spec.Extension
+import           Spec.Graph
+import           Spec.Section
+import           Spec.Spec
+import           Write.Utils
 
 data PartitionedSpec =
   PartitionedSpec{ moduleExports :: M.HashMap ModuleName (S.HashSet String)
@@ -45,37 +45,37 @@ partitionSpec spec graph =
                      , S.fromList (allSectionNames section)
                      )) <$> sSections spec
 
-      explicitCoreModuleExports = foldr' (M.unionWith S.union) mempty 
-                                    [ extensionModuleExports 
+      explicitCoreModuleExports = foldr' (M.unionWith S.union) mempty
+                                    [ extensionModuleExports
                                     , sectionModuleExports
                                     , bespokeModuleExports
                                     ]
 
-      inferredCoreModuleExports = 
+      inferredCoreModuleExports =
         inferModuleExports spec allEntityNames explicitCoreModuleExports
 
       coreModuleExports = M.unionWith S.union explicitCoreModuleExports
                                               inferredCoreModuleExports
-      
+
       moduleExports = calculateModuleExports graph coreModuleExports
 
       allEntityNames = S.fromList (M.keys (gNameVertexMap graph))
                        `S.difference` ignoredNames
       allBespokeNames = S.unions (M.elems bespokeModuleExports)
       allExportedNames = S.unions (M.elems moduleExports)
-      unexportedEntities = allEntityNames `S.difference` allExportedNames
+      -- unexportedEntities = allEntityNames `S.difference` allExportedNames
       missingBespokeNames = allBespokeNames `S.difference` allEntityNames
       exportedIgnoredNames = ignoredNames `S.intersection` allExportedNames
   in -- TODO: put this is a better error handling scheme
      assertNote (unlines
        [ "Error, some bespoke names were not found in the spec"
        , "Bespoke exports not found:"
-       ] ++ show missingBespokeNames) (S.null missingBespokeNames) $ 
-     assertNote (unlines 
+       ] ++ show missingBespokeNames) (S.null missingBespokeNames) $
+     assertNote (unlines
        [ "Error, some ignored names are being exported"
        , "Ignored names exported:"
-       ] ++ show exportedIgnoredNames) (S.null exportedIgnoredNames) $
-     -- assertNote (unlines 
+       ] ++ show exportedIgnoredNames) (S.null exportedIgnoredNames)
+     -- assertNote (unlines
      --   [ "Error, some entites are not exported by any module."
      --   , "Manually place them in a module by updating 'bespokeModuleExports'"
      --   , "Unexported names:"
@@ -83,24 +83,24 @@ partitionSpec spec graph =
      PartitionedSpec{..}
 
 inferModuleExports :: Spec
-                   -> S.HashSet String 
+                   -> S.HashSet String
                       -- ^ Every name in the spec
                    -> M.HashMap ModuleName (S.HashSet String)
                       -- ^ The core names for modules
                    -> M.HashMap ModuleName (S.HashSet String)
-inferModuleExports spec allExports explicitExports = 
+inferModuleExports spec allExports explicitExports =
   M.filter (not . S.null) (M.mapWithKey updateModule explicitExports)
-  where updateModule moduleName exports = 
-          let exportList = S.toList exports 
+  where updateModule moduleName exports =
+          let exportList = S.toList exports
               moduleAssociations = possibleModuleAssociations moduleName
           in allExports `S.intersection`
-             S.fromList (transitiveClosure (possibleEntityAssociations spec) 
-                                           (==) 
-                                           (exportList ++ 
+             S.fromList (transitiveClosure (possibleEntityAssociations spec)
+                                           (==)
+                                           (exportList ++
                                             moduleAssociations))
 
 possibleEntityAssociations :: Spec -> String -> [String]
-possibleEntityAssociations spec name 
+possibleEntityAssociations spec name
   | "vkCreate" `isPrefixOf` name
   = let Just baseObjectName = swapPrefix "vkCreate" "Vk" baseName
         objectName = baseObjectName ++ tag
@@ -120,7 +120,7 @@ possibleEntityAssociations spec name
   | "FlagBits" `isSuffixOf` baseName
   = let Just newBaseName = swapSuffix "FlagBits" "Flags" baseName
     in [newBaseName ++ tag]
-  | otherwise 
+  | otherwise
   = []
   where (baseName, tag) = breakNameTag (getSpecExtensionTags spec) name
 
@@ -129,7 +129,7 @@ possibleModuleAssociations moduleName
   = ["Vk" ++ getModuleBaseName moduleName]
 
 bespokeModuleExports :: M.HashMap ModuleName (S.HashSet String)
-bespokeModuleExports = M.fromList 
+bespokeModuleExports = M.fromList
   [ ( ModuleName "Graphics.Vulkan.Constants"
     , S.fromList [ "VK_MAX_PHYSICAL_DEVICE_NAME_SIZE"
                  , "VK_MAX_MEMORY_TYPES"
@@ -249,10 +249,10 @@ calculateModuleExports :: SpecGraph
                           -- | The core module exports
                        -> M.HashMap ModuleName (S.HashSet String)
                        -> M.HashMap ModuleName (S.HashSet String)
-calculateModuleExports graph coreModuleExports = 
-  let coreAndReachableModuleExports = 
-        M.map (\coreExports -> 
-                (coreExports, 
+calculateModuleExports graph coreModuleExports =
+  let coreAndReachableModuleExports =
+        M.map (\coreExports ->
+                (coreExports,
                  allReachableFromNames graph (S.toList coreExports)))
               coreModuleExports
       coreAndReachableList = M.toList coreAndReachableModuleExports
@@ -263,19 +263,19 @@ calculateModuleExports graph coreModuleExports =
 
 -- | Given a list of (Core Exports, Reachable Names) return a list of
 -- (Reachable names which are not in any other core names).
-getExclusiveReachable :: [(S.HashSet String, S.HashSet String)] 
+getExclusiveReachable :: [(S.HashSet String, S.HashSet String)]
                       -> [S.HashSet String]
 getExclusiveReachable = reverse . go mempty []
   where go _ acc [] = acc
-        go (leftCore, leftReachable) acc ((c,r):xs) = 
+        go (leftCore, leftReachable) acc ((c,r):xs) =
           let otherCoreExports = S.unions (leftCore : (fst <$> xs))
               otherReachable = S.unions (leftReachable : (snd <$> xs))
               otherReachableSubThisCore = otherReachable `S.difference` c
-              a = r `S.difference` otherCoreExports 
+              a = r `S.difference` otherCoreExports
                     `S.difference` otherReachableSubThisCore
           in -- Check that none of the cores overlap
              assert (S.null (c `S.intersection` otherCoreExports)) $
-             go (c `S.union` leftCore, r `S.union` leftReachable) 
-                (a:acc) 
+             go (c `S.union` leftCore, r `S.union` leftReachable)
+                (a:acc)
                 xs
 

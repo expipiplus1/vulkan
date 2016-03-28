@@ -25,7 +25,7 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 
 -- ** vkGetImageMemoryRequirements
-foreign import ccall "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements :: 
+foreign import ccall "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements ::
   VkDevice -> VkImage -> Ptr VkMemoryRequirements -> IO ()
 
 
@@ -48,16 +48,16 @@ instance Storable VkMemoryRequirements where
 
 
 -- ** vkGetBufferMemoryRequirements
-foreign import ccall "vkGetBufferMemoryRequirements" vkGetBufferMemoryRequirements :: 
+foreign import ccall "vkGetBufferMemoryRequirements" vkGetBufferMemoryRequirements ::
   VkDevice -> VkBuffer -> Ptr VkMemoryRequirements -> IO ()
 
 -- ** vkBindBufferMemory
-foreign import ccall "vkBindBufferMemory" vkBindBufferMemory :: 
+foreign import ccall "vkBindBufferMemory" vkBindBufferMemory ::
   VkDevice ->
   VkBuffer -> VkDeviceMemory -> VkDeviceSize -> IO VkResult
 
 -- ** vkBindImageMemory
-foreign import ccall "vkBindImageMemory" vkBindImageMemory :: 
+foreign import ccall "vkBindImageMemory" vkBindImageMemory ::
   VkDevice ->
   VkImage -> VkDeviceMemory -> VkDeviceSize -> IO VkResult
 

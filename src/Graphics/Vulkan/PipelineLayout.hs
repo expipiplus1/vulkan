@@ -45,7 +45,7 @@ newtype VkPipelineLayout = VkPipelineLayout Word64
   deriving (Eq, Storable)
 
 -- ** vkDestroyPipelineLayout
-foreign import ccall "vkDestroyPipelineLayout" vkDestroyPipelineLayout :: 
+foreign import ccall "vkDestroyPipelineLayout" vkDestroyPipelineLayout ::
   VkDevice -> VkPipelineLayout -> Ptr VkAllocationCallbacks -> IO ()
 
 
@@ -99,7 +99,7 @@ instance Storable VkPipelineLayoutCreateInfo where
 
 
 -- ** vkCreatePipelineLayout
-foreign import ccall "vkCreatePipelineLayout" vkCreatePipelineLayout :: 
+foreign import ccall "vkCreatePipelineLayout" vkCreatePipelineLayout ::
   VkDevice ->
   Ptr VkPipelineLayoutCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkPipelineLayout -> IO VkResult

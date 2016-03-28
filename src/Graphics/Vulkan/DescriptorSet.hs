@@ -64,7 +64,7 @@ import Foreign.C.Types( CSize(..)
                       )
 
 -- ** vkUpdateDescriptorSets
-foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets :: 
+foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets ::
   VkDevice ->
   Word32 ->
     Ptr VkWriteDescriptorSet ->
@@ -76,7 +76,7 @@ newtype VkDescriptorPoolResetFlags = VkDescriptorPoolResetFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkAllocateDescriptorSets
-foreign import ccall "vkAllocateDescriptorSets" vkAllocateDescriptorSets :: 
+foreign import ccall "vkAllocateDescriptorSets" vkAllocateDescriptorSets ::
   VkDevice ->
   Ptr VkDescriptorSetAllocateInfo ->
     Ptr VkDescriptorSet -> IO VkResult
@@ -157,11 +157,11 @@ instance Storable VkCopyDescriptorSet where
 
 
 -- ** vkDestroyDescriptorPool
-foreign import ccall "vkDestroyDescriptorPool" vkDestroyDescriptorPool :: 
+foreign import ccall "vkDestroyDescriptorPool" vkDestroyDescriptorPool ::
   VkDevice -> VkDescriptorPool -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** vkCreateDescriptorSetLayout
-foreign import ccall "vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout :: 
+foreign import ccall "vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout ::
   VkDevice ->
   Ptr VkDescriptorSetLayoutCreateInfo ->
     Ptr VkAllocationCallbacks ->
@@ -171,7 +171,7 @@ newtype VkDescriptorPool = VkDescriptorPool Word64
   deriving (Eq, Storable)
 
 -- ** vkResetDescriptorPool
-foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool :: 
+foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool ::
   VkDevice ->
   VkDescriptorPool -> VkDescriptorPoolResetFlags -> IO VkResult
 
@@ -179,7 +179,7 @@ newtype VkDescriptorSetLayout = VkDescriptorSetLayout Word64
   deriving (Eq, Storable)
 
 -- ** vkFreeDescriptorSets
-foreign import ccall "vkFreeDescriptorSets" vkFreeDescriptorSets :: 
+foreign import ccall "vkFreeDescriptorSets" vkFreeDescriptorSets ::
   VkDevice ->
   VkDescriptorPool -> Word32 -> Ptr VkDescriptorSet -> IO VkResult
 
@@ -328,13 +328,13 @@ instance Storable VkWriteDescriptorSet where
 
 
 -- ** vkCreateDescriptorPool
-foreign import ccall "vkCreateDescriptorPool" vkCreateDescriptorPool :: 
+foreign import ccall "vkCreateDescriptorPool" vkCreateDescriptorPool ::
   VkDevice ->
   Ptr VkDescriptorPoolCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkDescriptorPool -> IO VkResult
 
 -- ** vkDestroyDescriptorSetLayout
-foreign import ccall "vkDestroyDescriptorSetLayout" vkDestroyDescriptorSetLayout :: 
+foreign import ccall "vkDestroyDescriptorSetLayout" vkDestroyDescriptorSetLayout ::
   VkDevice ->
   VkDescriptorSetLayout -> Ptr VkAllocationCallbacks -> IO ()
 

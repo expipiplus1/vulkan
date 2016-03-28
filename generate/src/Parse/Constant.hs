@@ -1,46 +1,46 @@
-{-# LANGUAGE Arrows #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE Arrows            #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
-module Parse.Constant 
+module Parse.Constant
   ( parseConstants
   ) where
 
-import Control.Applicative((<|>))
-import Data.Bits(complement)
-import Parse.Utils
-import Prelude hiding (elem)
-import Spec.Constant
-import Text.Parser.Combinators
-import Text.Parser.Token
-import Text.Trifecta
-import Text.XML.HXT.Core 
+import           Control.Applicative     ((<|>))
+import           Data.Bits               (complement)
+import           Parse.Utils
+import           Prelude                 hiding (elem)
+import           Spec.Constant
+import           Text.Parser.Combinators
+import           Text.Parser.Token
+import           Text.Trifecta
+import           Text.XML.HXT.Core
 
 parseConstants :: IOStateArrow s XmlTree [Constant]
 parseConstants = extractFields "API Constants"
                               (hasAttrValue "name" (=="API Constants"))
                               extract
-  where extract = listA (parseConstant <<< getChildren) 
+  where extract = listA (parseConstant <<< getChildren)
 
 parseConstant :: IOStateArrow s XmlTree Constant
 parseConstant = extractFields "Constant"
-                              (hasName "enum") 
+                              (hasName "enum")
                               extract
-  where extract = proc constant -> do 
+  where extract = proc constant -> do
           cName    <- requiredAttrValue "name" -< constant
           cValueString <- requiredAttrValue "value" -< constant
-          cValue   <- (arrF parseConstantValue) `orElse` 
+          cValue   <- (arrF parseConstantValue) `orElse`
                       failA "Failed to read constant value" -< cValueString
           cComment <- constA Nothing -< constant -- TODO
           returnA -< Constant{..}
 
 parseConstantValue :: String -> Result ConstantValue
-parseConstantValue = parseString (atom <* eof) mempty 
+parseConstantValue = parseString (atom <* eof) mempty
 
 atom :: Parser ConstantValue
-atom = literal 
+atom = literal
    <|> (string "~" *> (bitWiseNot <$> atom))
-   <|> parens atom 
+   <|> parens atom
 
 literal :: Parser ConstantValue
 literal = try (FloatValue  . realToFrac   <$> double  <* string "f")

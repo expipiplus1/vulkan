@@ -76,17 +76,17 @@ pattern VK_COMMAND_BUFFER_LEVEL_PRIMARY = VkCommandBufferLevel 0
 pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY = VkCommandBufferLevel 1
 
 -- ** vkAllocateCommandBuffers
-foreign import ccall "vkAllocateCommandBuffers" vkAllocateCommandBuffers :: 
+foreign import ccall "vkAllocateCommandBuffers" vkAllocateCommandBuffers ::
   VkDevice ->
   Ptr VkCommandBufferAllocateInfo ->
     Ptr VkCommandBuffer -> IO VkResult
 
 -- ** vkResetCommandBuffer
-foreign import ccall "vkResetCommandBuffer" vkResetCommandBuffer :: 
+foreign import ccall "vkResetCommandBuffer" vkResetCommandBuffer ::
   VkCommandBuffer -> VkCommandBufferResetFlags -> IO VkResult
 
 -- ** vkFreeCommandBuffers
-foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers :: 
+foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers ::
   VkDevice -> VkCommandPool -> Word32 -> Ptr VkCommandBuffer -> IO ()
 
 -- ** VkCommandBufferUsageFlags
@@ -211,11 +211,11 @@ pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = VkCommandBufferResetFlag
 
 
 -- ** vkEndCommandBuffer
-foreign import ccall "vkEndCommandBuffer" vkEndCommandBuffer :: 
+foreign import ccall "vkEndCommandBuffer" vkEndCommandBuffer ::
   VkCommandBuffer -> IO VkResult
 
 -- ** vkBeginCommandBuffer
-foreign import ccall "vkBeginCommandBuffer" vkBeginCommandBuffer :: 
+foreign import ccall "vkBeginCommandBuffer" vkBeginCommandBuffer ::
   VkCommandBuffer -> Ptr VkCommandBufferBeginInfo -> IO VkResult
 
 

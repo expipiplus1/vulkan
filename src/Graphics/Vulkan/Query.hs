@@ -52,7 +52,7 @@ import Foreign.C.Types( CSize
                       )
 
 -- ** vkGetQueryPoolResults
-foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults :: 
+foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults ::
   VkDevice ->
   VkQueryPool ->
     Word32 ->
@@ -61,7 +61,7 @@ foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults ::
           Ptr Void -> VkDeviceSize -> VkQueryResultFlags -> IO VkResult
 
 -- ** vkDestroyQueryPool
-foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool :: 
+foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool ::
   VkDevice -> VkQueryPool -> Ptr VkAllocationCallbacks -> IO ()
 
 
@@ -165,7 +165,7 @@ newtype VkQueryPool = VkQueryPool Word64
   deriving (Eq, Storable)
 
 -- ** vkCreateQueryPool
-foreign import ccall "vkCreateQueryPool" vkCreateQueryPool :: 
+foreign import ccall "vkCreateQueryPool" vkCreateQueryPool ::
   VkDevice ->
   Ptr VkQueryPoolCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkQueryPool -> IO VkResult

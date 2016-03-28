@@ -1,32 +1,33 @@
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections   #-}
 
-module Spec.Graph where 
+module Spec.Graph where
 
-import Spec.Spec
-import Spec.Bitmask
-import Spec.Command as Command
-import Spec.Constant as Constant
-import Spec.Enum
-import Spec.Type hiding ( AnInclude, ADefine, ABaseType, APlatformType
-                        , ABitmaskType, AHandleType, AnEnumType
-                        , AFuncPointerType, AStructType, AUnionType )
-import qualified Spec.Type as T
-import Data.HashMap.Lazy as M
-import Data.HashSet as S
-import Data.Maybe(maybeToList, catMaybes)
-import Language.C.Types
-import Control.Arrow((&&&))
-import Prelude hiding (Enum)
-import Write.Utils
+import           Control.Arrow     ((&&&))
+import           Data.HashMap.Lazy as M
+import           Data.HashSet      as S
+import           Data.Maybe        (catMaybes, fromMaybe, maybeToList)
+import           Language.C.Types
+import           Prelude           hiding (Enum)
+import           Spec.Bitmask
+import           Spec.Command      as Command
+import           Spec.Constant     as Constant
+import           Spec.Enum
+import           Spec.Spec
+import           Spec.Type         hiding (ABaseType, ABitmaskType, ADefine,
+                                    AFuncPointerType, AHandleType,
+                                    APlatformType, AStructType, AUnionType,
+                                    AnEnumType, AnInclude)
+import qualified Spec.Type         as T
+import           Write.Utils
 
 -- | Info is a more useful representation of the specification
-data SpecGraph = SpecGraph{ gVertices :: [Vertex]
+data SpecGraph = SpecGraph{ gVertices      :: [Vertex]
                           , gNameVertexMap :: M.HashMap String Vertex
                           , gExtensionTags :: [String]
                           }
 
-data Vertex = Vertex{ vName :: String
+data Vertex = Vertex{ vName         :: String
                     , vDependencies :: [Vertex]
                     , vSourceEntity :: SourceEntity
                     }
@@ -49,20 +50,14 @@ data SourceEntity = AnInclude Include
 
 -- | Look up the name in the graph, error if it's not there
 requiredLookup :: SpecGraph -> String -> Vertex
-requiredLookup graph name = 
-  case M.lookup name (gNameVertexMap graph) of
-    Nothing -> error ("Failed to find required name in graph: " ++ name)
-    Just v -> v
+requiredLookup graph name = M.lookupDefault err name (gNameVertexMap graph)
+  where err = error ("Failed to find required name in graph: " ++ name)
 
 allReachableFromNames :: SpecGraph -> [String] -> S.HashSet String
 allReachableFromNames graph names = allReachable vertices
   where vertices = getVertex <$> names
-        getVertex name = 
-          case M.lookup name (gNameVertexMap graph) of
-            Nothing -> 
-              error ("allReachableFromNames given name not in graph: " ++ 
-                     name)
-            Just v -> v
+        getVertex name = let err = error ("allReachableFromNames given name not in graph: " ++ name)
+                         in M.lookupDefault err name (gNameVertexMap graph)
 
 allReachable :: [Vertex] -> S.HashSet String
 allReachable vs = go (S.fromList (vName <$> vs)) (concatMap vDependencies vs)
@@ -79,7 +74,7 @@ getSpecGraph :: Spec -> SpecGraph
 getSpecGraph spec = graph
   where gVertices = (typeDeclToVertex graph <$> sTypes spec) ++
                     (constantToVertex graph <$> sConstants spec) ++
-                    (enumToVertex graph <$> sEnums spec) ++
+                    (enumToVertex <$> sEnums spec) ++
                     (bitmaskToVertex graph <$> sBitmasks spec) ++
                     (commandToVertex graph <$> sCommands spec)
         gNameVertexMap = M.fromList ((vName &&& id) <$> gVertices)
@@ -93,39 +88,36 @@ getSpecGraph spec = graph
 typeDeclToVertex :: SpecGraph -> TypeDecl -> Vertex
 typeDeclToVertex graph td =
   let lookupNameMay name = M.lookup name (gNameVertexMap graph)
-      lookupName name = 
-        case lookupNameMay name of
-          Nothing -> error ("Depended upon name not in spec: " ++ name)
-          Just v -> v
+      lookupName name = fromMaybe (error ("Depended upon name not in spec: " ++ name)) (lookupNameMay name)
   in case td of
        T.AnInclude i ->
          Vertex{ vName = iName i
                , vDependencies = []
                , vSourceEntity = AnInclude i
-               } 
+               }
        T.ADefine d ->
          Vertex{ vName = dName d
                , vDependencies = []
                , vSourceEntity = ADefine d
-               } 
+               }
        T.ABaseType bt ->
          Vertex{ vName = btName bt
-               , vDependencies = lookupName <$> 
+               , vDependencies = lookupName <$>
                                  cTypeDependencyNames (btCType bt)
                , vSourceEntity = ABaseType bt
                }
        T.APlatformType pt ->
          Vertex{ vName = ptName pt
                , vDependencies = [lookupName (ptRequires pt)]
-                                              
+
                , vSourceEntity = APlatformType pt
                }
        T.ABitmaskType bmt ->
          Vertex{ vName = bmtName bmt
-               , vDependencies = (fmap lookupName $
-                                   (cTypeDependencyNames (bmtCType bmt) ++ 
+               , vDependencies = (lookupName <$>
+                                   (cTypeDependencyNames (bmtCType bmt) ++
                                     maybeToList (bmtRequires bmt)))
-                                 ++ maybeToList 
+                                 ++ maybeToList
                     (lookupNameMay =<< ((++ tag) <$> swapSuffix "Flags" "FlagBits" baseName))
                , vSourceEntity = ABitmaskType bmt
                }
@@ -148,7 +140,7 @@ typeDeclToVertex graph td =
                }
        T.AStructType st ->
          Vertex{ vName = stName st
-               , vDependencies = lookupName <$> 
+               , vDependencies = lookupName <$>
                                  concatMap memberDependencyNames (stMembers st)
                , vSourceEntity = AStructType st
                }
@@ -160,36 +152,34 @@ typeDeclToVertex graph td =
                }
 
 commandToVertex :: SpecGraph -> Command -> Vertex
-commandToVertex graph command = 
-  let lookupName name =
-        case M.lookup name (gNameVertexMap graph) of
-          Nothing -> error ("Depended upon name not in spec: " ++ name)
-          Just v -> v
+commandToVertex graph command =
+  let lookupName name = fromMaybe
+                          (error ("Depended upon name not in spec: " ++ name))
+                          (M.lookup name (gNameVertexMap graph))
   in Vertex{ vName = Command.cName command
            , vDependencies = let parameterTypes = pType <$> cParameters command
                                  allTypes = cReturnType command : parameterTypes
-                             in lookupName <$> 
+                             in lookupName <$>
                                 concatMap cTypeDependencyNames allTypes
            , vSourceEntity = ACommand command
            }
 
-enumToVertex :: SpecGraph -> Enum -> Vertex
-enumToVertex graph enum =
-  let lookupNameMay name = M.lookup name (gNameVertexMap graph)
-  in Vertex{ vName = eName enum
-           , vDependencies = []
-           , vSourceEntity = AnEnum enum
-           }
+enumToVertex :: Enum -> Vertex
+enumToVertex enum =
+  Vertex{ vName = eName enum
+        , vDependencies = []
+        , vSourceEntity = AnEnum enum
+        }
 
 bitmaskToVertex :: SpecGraph -> Bitmask -> Vertex
-bitmaskToVertex _ bitmask = 
+bitmaskToVertex _ bitmask =
   Vertex{ vName = bmName bitmask
         , vDependencies = []
         , vSourceEntity = ABitmask bitmask
         }
 
 constantToVertex :: SpecGraph -> Constant -> Vertex
-constantToVertex _ constant = 
+constantToVertex _ constant =
   Vertex{ vName = Constant.cName constant
         , vDependencies = []
         , vSourceEntity = AConstant constant
@@ -212,7 +202,7 @@ vertexToConstant v = case vSourceEntity v of
 getGraphConstants :: SpecGraph -> [Constant]
 getGraphConstants graph = catMaybes (vertexToConstant <$> gVertices graph)
 
-vertexCType :: Vertex -> Maybe CType 
+vertexCType :: Vertex -> Maybe CType
 vertexCType v = case vSourceEntity v of
                   ABaseType bt -> Just $ btCType bt
                   ABitmaskType bmt -> Just $ bmtCType bmt
@@ -221,7 +211,7 @@ vertexCType v = case vSourceEntity v of
                   _ -> Nothing
 
 getGraphCTypes :: SpecGraph -> [(String, CType)]
-getGraphCTypes graph = 
+getGraphCTypes graph =
   catMaybes $ (\v -> (vName v,) <$> vertexCType v) <$> gVertices graph
 
 vertexToUnionType :: Vertex -> Maybe UnionType
@@ -254,7 +244,7 @@ getGraphEnumTypes graph = catMaybes (vertexToEnumType <$> gVertices graph)
 ------------------------------------------------------------------------------
 
 isIncludeVertex :: Vertex -> Bool
-isIncludeVertex vertex 
+isIncludeVertex vertex
   | AnInclude _ <- vSourceEntity vertex = True
   | otherwise = False
 
@@ -281,32 +271,32 @@ isTypeConstructor v =
 ------------------------------------------------------------------------------
 
 cTypeDependencyNames :: CType -> [String]
-cTypeDependencyNames cType = 
-  case cType of 
-    TypeSpecifier _ Void 
+cTypeDependencyNames cType =
+  case cType of
+    TypeSpecifier _ Void
       -> ["void"]
-    TypeSpecifier _ (Char Nothing) 
+    TypeSpecifier _ (Char Nothing)
       -> ["char"]
-    TypeSpecifier _ Float 
+    TypeSpecifier _ Float
       -> ["float"]
-    TypeSpecifier _ (TypeName t) 
+    TypeSpecifier _ (TypeName t)
       -> [unCIdentifier t]
-    TypeSpecifier _ (Struct t) 
+    TypeSpecifier _ (Struct t)
       -> [unCIdentifier t]
     Ptr _ t
       -> cTypeDependencyNames t
-    Array s t 
+    Array s t
       -> arraySizeDependencyNames s ++ cTypeDependencyNames t
-    Proto ret ps 
+    Proto ret ps
       -> cTypeDependencyNames ret ++ concatMap parameterTypeNames ps
     _ -> error ("Failed to get depended on names for C type:\n" ++ show cType)
 
 arraySizeDependencyNames :: ArrayType CIdentifier -> [String]
-arraySizeDependencyNames arraySize = 
+arraySizeDependencyNames arraySize =
   case arraySize of
     VariablySized -> []
     Unsized -> []
-    SizedByInteger i -> []
+    SizedByInteger _ -> []
     SizedByIdentifier i -> [unCIdentifier i]
 
 parameterTypeNames :: ParameterDeclaration CIdentifier -> [String]

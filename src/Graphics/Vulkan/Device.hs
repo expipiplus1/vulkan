@@ -33,7 +33,7 @@ import Foreign.C.Types( CFloat
                       )
 
 -- ** vkCreateDevice
-foreign import ccall "vkCreateDevice" vkCreateDevice :: 
+foreign import ccall "vkCreateDevice" vkCreateDevice ::
   VkPhysicalDevice ->
   Ptr VkDeviceCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkDevice -> IO VkResult
@@ -252,7 +252,7 @@ newtype VkDeviceQueueCreateFlags = VkDeviceQueueCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkDestroyDevice
-foreign import ccall "vkDestroyDevice" vkDestroyDevice :: 
+foreign import ccall "vkDestroyDevice" vkDestroyDevice ::
   VkDevice -> Ptr VkAllocationCallbacks -> IO ()
 
 data VkPhysicalDevice_T

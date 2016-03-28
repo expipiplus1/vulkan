@@ -44,7 +44,7 @@ newtype VkDeviceMemory = VkDeviceMemory Word64
   deriving (Eq, Storable)
 
 -- ** vkMapMemory
-foreign import ccall "vkMapMemory" vkMapMemory :: 
+foreign import ccall "vkMapMemory" vkMapMemory ::
   VkDevice ->
   VkDeviceMemory ->
     VkDeviceSize ->
@@ -84,7 +84,7 @@ instance Storable VkAllocationCallbacks where
 
 
 -- ** vkInvalidateMappedMemoryRanges
-foreign import ccall "vkInvalidateMappedMemoryRanges" vkInvalidateMappedMemoryRanges :: 
+foreign import ccall "vkInvalidateMappedMemoryRanges" vkInvalidateMappedMemoryRanges ::
   VkDevice -> Word32 -> Ptr VkMappedMemoryRange -> IO VkResult
 
 -- ** VkSystemAllocationScope
@@ -126,7 +126,7 @@ pattern VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = VkSystemAllocationScope 3
 pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = VkSystemAllocationScope 4
 
 -- ** vkFlushMappedMemoryRanges
-foreign import ccall "vkFlushMappedMemoryRanges" vkFlushMappedMemoryRanges :: 
+foreign import ccall "vkFlushMappedMemoryRanges" vkFlushMappedMemoryRanges ::
   VkDevice -> Word32 -> Ptr VkMappedMemoryRange -> IO VkResult
 
 -- ** VkMemoryMapFlags
@@ -140,7 +140,7 @@ type PFN_vkInternalAllocationNotification = FunPtr
        VkInternalAllocationType -> VkSystemAllocationScope -> IO ())
 
 -- ** vkFreeMemory
-foreign import ccall "vkFreeMemory" vkFreeMemory :: 
+foreign import ccall "vkFreeMemory" vkFreeMemory ::
   VkDevice -> VkDeviceMemory -> Ptr VkAllocationCallbacks -> IO ()
 
 type PFN_vkReallocationFunction = FunPtr
@@ -149,7 +149,7 @@ type PFN_vkReallocationFunction = FunPtr
        CSize -> CSize -> VkSystemAllocationScope -> IO (Ptr Void))
 
 -- ** vkUnmapMemory
-foreign import ccall "vkUnmapMemory" vkUnmapMemory :: 
+foreign import ccall "vkUnmapMemory" vkUnmapMemory ::
   VkDevice -> VkDeviceMemory -> IO ()
 
 type PFN_vkAllocationFunction = FunPtr
@@ -181,11 +181,11 @@ pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = VkInternalAllocationType 0
 type PFN_vkFreeFunction = FunPtr (Ptr Void -> Ptr Void -> IO ())
 
 -- ** vkGetDeviceMemoryCommitment
-foreign import ccall "vkGetDeviceMemoryCommitment" vkGetDeviceMemoryCommitment :: 
+foreign import ccall "vkGetDeviceMemoryCommitment" vkGetDeviceMemoryCommitment ::
   VkDevice -> VkDeviceMemory -> Ptr VkDeviceSize -> IO ()
 
 -- ** vkAllocateMemory
-foreign import ccall "vkAllocateMemory" vkAllocateMemory :: 
+foreign import ccall "vkAllocateMemory" vkAllocateMemory ::
   VkDevice ->
   Ptr VkMemoryAllocateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkDeviceMemory -> IO VkResult

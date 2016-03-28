@@ -87,7 +87,7 @@ instance Storable VkImageViewCreateInfo where
 
 
 -- ** vkCreateImageView
-foreign import ccall "vkCreateImageView" vkCreateImageView :: 
+foreign import ccall "vkCreateImageView" vkCreateImageView ::
   VkDevice ->
   Ptr VkImageViewCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkImageView -> IO VkResult
@@ -215,6 +215,6 @@ pattern VK_COMPONENT_SWIZZLE_B = VkComponentSwizzle 5
 pattern VK_COMPONENT_SWIZZLE_A = VkComponentSwizzle 6
 
 -- ** vkDestroyImageView
-foreign import ccall "vkDestroyImageView" vkDestroyImageView :: 
+foreign import ccall "vkDestroyImageView" vkDestroyImageView ::
   VkDevice -> VkImageView -> Ptr VkAllocationCallbacks -> IO ()
 

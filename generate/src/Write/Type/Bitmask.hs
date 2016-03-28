@@ -1,20 +1,20 @@
-{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes       #-}
 
 module Write.Type.Bitmask
   ( writeBitmaskType
   ) where
 
-import Data.Word(Word32)
-import Data.Maybe(fromMaybe)
-import Data.Bits(shiftL)
-import Spec.Bitmask
-import Spec.Type
-import Text.InterpolatedString.Perl6
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-import Write.Utils
-import Write.TypeConverter
-import Write.WriteMonad
+import           Data.Bits                     (shiftL)
+import           Data.Maybe                    (fromMaybe)
+import           Data.Word                     (Word32)
+import           Spec.Bitmask
+import           Spec.Type
+import           Text.InterpolatedString.Perl6
+import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
+import           Write.TypeConverter
+import           Write.Utils
+import           Write.WriteMonad
 
 -- | This writes the bitmasks, and adds patterns for them if they require an
 -- enumeration in 'bitmasks'.

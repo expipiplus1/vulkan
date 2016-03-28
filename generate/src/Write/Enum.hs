@@ -1,17 +1,17 @@
-{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes       #-}
 
 module Write.Enum
   ( writeEnum
   ) where
 
-import Data.Maybe(fromMaybe)
-import Prelude hiding (Enum)
-import Spec.Enum
-import Text.InterpolatedString.Perl6
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-import Write.Utils
-import Write.WriteMonad
+import           Data.Maybe                    (fromMaybe)
+import           Prelude                       hiding (Enum)
+import           Spec.Enum
+import           Text.InterpolatedString.Perl6
+import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
+import           Write.Utils
+import           Write.WriteMonad
 
 writeEnum :: Enum -> Write Doc
 writeEnum e = do

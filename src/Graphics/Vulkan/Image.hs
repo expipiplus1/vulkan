@@ -56,7 +56,7 @@ import Foreign.C.Types( CSize(..)
                       )
 
 -- ** vkCreateImage
-foreign import ccall "vkCreateImage" vkCreateImage :: 
+foreign import ccall "vkCreateImage" vkCreateImage ::
   VkDevice ->
   Ptr VkImageCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkImage -> IO VkResult
@@ -337,7 +337,7 @@ pattern VK_IMAGE_TYPE_2D = VkImageType 1
 pattern VK_IMAGE_TYPE_3D = VkImageType 2
 
 -- ** vkDestroyImage
-foreign import ccall "vkDestroyImage" vkDestroyImage :: 
+foreign import ccall "vkDestroyImage" vkDestroyImage ::
   VkDevice -> VkImage -> Ptr VkAllocationCallbacks -> IO ()
 
 
@@ -385,7 +385,7 @@ instance Storable VkImageSubresourceRange where
 
 
 -- ** vkGetImageSubresourceLayout
-foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :: 
+foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout ::
   VkDevice ->
   VkImage ->
     Ptr VkImageSubresource -> Ptr VkSubresourceLayout -> IO ()

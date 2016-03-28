@@ -1,17 +1,17 @@
-module Main 
+module Main
   ( main
   ) where
 
-import Spec.StripExtensions
-import Parse.Spec
-import Write.Spec
-import System.IO(hPutStr, stderr)
-import System.Exit
+import           Parse.Spec
+import           Spec.StripExtensions
+import           System.Exit
+import           System.IO            (hPutStr, stderr)
+import           Write.Spec
 
 main :: IO ()
 main = do specString <- getContents
           specMay <- parseSpec specString
-          case specMay of 
+          case specMay of
             Nothing -> do hPutStr stderr "Failed to parse spec"
                           exitFailure
             Just spec -> let strippedSpec = stripWSIExtensions spec

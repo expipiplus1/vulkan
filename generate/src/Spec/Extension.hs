@@ -1,6 +1,6 @@
 module Spec.Extension where
 
-import Data.Int(Int32)
+import           Data.Int (Int32)
 
 data Extension = Extension{ eName           :: String
                           , eNumber         :: Int

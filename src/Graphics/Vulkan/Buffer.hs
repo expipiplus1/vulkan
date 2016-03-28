@@ -50,7 +50,7 @@ import Foreign.C.Types( CSize(..)
                       )
 
 -- ** vkCreateBuffer
-foreign import ccall "vkCreateBuffer" vkCreateBuffer :: 
+foreign import ccall "vkCreateBuffer" vkCreateBuffer ::
   VkDevice ->
   Ptr VkBufferCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkBuffer -> IO VkResult
@@ -150,7 +150,7 @@ pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlagBits 0x100
 
 
 -- ** vkDestroyBuffer
-foreign import ccall "vkDestroyBuffer" vkDestroyBuffer :: 
+foreign import ccall "vkDestroyBuffer" vkDestroyBuffer ::
   VkDevice -> VkBuffer -> Ptr VkAllocationCallbacks -> IO ()
 
 newtype VkBuffer = VkBuffer Word64

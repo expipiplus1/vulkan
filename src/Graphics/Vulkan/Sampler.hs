@@ -307,7 +307,7 @@ pattern VK_SAMPLER_MIPMAP_MODE_NEAREST = VkSamplerMipmapMode 0
 pattern VK_SAMPLER_MIPMAP_MODE_LINEAR = VkSamplerMipmapMode 1
 
 -- ** vkCreateSampler
-foreign import ccall "vkCreateSampler" vkCreateSampler :: 
+foreign import ccall "vkCreateSampler" vkCreateSampler ::
   VkDevice ->
   Ptr VkSamplerCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkSampler -> IO VkResult
@@ -364,6 +364,6 @@ pattern VK_SAMPLE_COUNT_64_BIT = VkSampleCountFlagBits 0x40
 
 
 -- ** vkDestroySampler
-foreign import ccall "vkDestroySampler" vkDestroySampler :: 
+foreign import ccall "vkDestroySampler" vkDestroySampler ::
   VkDevice -> VkSampler -> Ptr VkAllocationCallbacks -> IO ()
 

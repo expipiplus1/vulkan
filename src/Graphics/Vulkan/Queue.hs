@@ -32,19 +32,19 @@ data VkQueue_T
 type VkQueue = Ptr VkQueue_T
 
 -- ** vkDeviceWaitIdle
-foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle :: 
+foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle ::
   VkDevice -> IO VkResult
 
 -- ** vkQueueSubmit
-foreign import ccall "vkQueueSubmit" vkQueueSubmit :: 
+foreign import ccall "vkQueueSubmit" vkQueueSubmit ::
   VkQueue -> Word32 -> Ptr VkSubmitInfo -> VkFence -> IO VkResult
 
 -- ** vkQueueWaitIdle
-foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle :: 
+foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle ::
   VkQueue -> IO VkResult
 
 -- ** vkGetDeviceQueue
-foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: 
+foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue ::
   VkDevice -> Word32 -> Word32 -> Ptr VkQueue -> IO ()
 
 

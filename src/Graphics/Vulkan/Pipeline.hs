@@ -414,7 +414,7 @@ newtype VkPipelineInputAssemblyStateCreateFlags = VkPipelineInputAssemblyStateCr
   deriving (Eq, Storable)
 
 -- ** vkCreateGraphicsPipelines
-foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines :: 
+foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines ::
   VkDevice ->
   VkPipelineCache ->
     Word32 ->
@@ -777,7 +777,7 @@ pattern VK_BLEND_OP_MIN = VkBlendOp 3
 pattern VK_BLEND_OP_MAX = VkBlendOp 4
 
 -- ** vkDestroyPipeline
-foreign import ccall "vkDestroyPipeline" vkDestroyPipeline :: 
+foreign import ccall "vkDestroyPipeline" vkDestroyPipeline ::
   VkDevice -> VkPipeline -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** VkPipelineShaderStageCreateFlags
@@ -1378,7 +1378,7 @@ instance Storable VkPipelineDepthStencilStateCreateInfo where
 
 
 -- ** vkCreateComputePipelines
-foreign import ccall "vkCreateComputePipelines" vkCreateComputePipelines :: 
+foreign import ccall "vkCreateComputePipelines" vkCreateComputePipelines ::
   VkDevice ->
   VkPipelineCache ->
     Word32 ->

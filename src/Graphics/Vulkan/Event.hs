@@ -32,7 +32,7 @@ import Foreign.C.Types( CSize(..)
                       )
 
 -- ** vkDestroyEvent
-foreign import ccall "vkDestroyEvent" vkDestroyEvent :: 
+foreign import ccall "vkDestroyEvent" vkDestroyEvent ::
   VkDevice -> VkEvent -> Ptr VkAllocationCallbacks -> IO ()
 
 
@@ -55,19 +55,19 @@ instance Storable VkEventCreateInfo where
 
 
 -- ** vkSetEvent
-foreign import ccall "vkSetEvent" vkSetEvent :: 
+foreign import ccall "vkSetEvent" vkSetEvent ::
   VkDevice -> VkEvent -> IO VkResult
 
 -- ** vkGetEventStatus
-foreign import ccall "vkGetEventStatus" vkGetEventStatus :: 
+foreign import ccall "vkGetEventStatus" vkGetEventStatus ::
   VkDevice -> VkEvent -> IO VkResult
 
 -- ** vkResetEvent
-foreign import ccall "vkResetEvent" vkResetEvent :: 
+foreign import ccall "vkResetEvent" vkResetEvent ::
   VkDevice -> VkEvent -> IO VkResult
 
 -- ** vkCreateEvent
-foreign import ccall "vkCreateEvent" vkCreateEvent :: 
+foreign import ccall "vkCreateEvent" vkCreateEvent ::
   VkDevice ->
   Ptr VkEventCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkEvent -> IO VkResult

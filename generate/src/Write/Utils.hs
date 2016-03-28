@@ -2,15 +2,16 @@
 
 module Write.Utils where
 
-import Data.Char(toUpper, toLower)
-import Data.Hashable
-import Data.List(intersperse, isPrefixOf, isSuffixOf, find, foldl')
-import Data.List.Split(splitOn)
-import Numeric
-import System.Directory (createDirectoryIfMissing)
-import System.FilePath ((</>), (<.>), takeDirectory)
-import Text.PrettyPrint.Leijen.Text hiding ((<$>), (</>))
-import Data.HashMap.Strict(HashMap)
+import           Data.Char                    (toLower, toUpper)
+import           Data.Hashable
+import           Data.HashMap.Strict          (HashMap)
+import           Data.List                    (find, foldl', intersperse,
+                                               isPrefixOf, isSuffixOf)
+import           Data.List.Split              (splitOn)
+import           Numeric
+import           System.Directory             (createDirectoryIfMissing)
+import           System.FilePath              (takeDirectory, (<.>), (</>))
+import           Text.PrettyPrint.Leijen.Text hiding (string, (<$>), (</>))
 
 -- | A newtype for module names
 newtype ModuleName = ModuleName{ unModuleName :: String }
@@ -44,7 +45,7 @@ isEmpty = null . show
 
 showHex' :: (Show a, Integral a) => a -> String
 showHex' n = sign ++ "0x" ++ showHex n ""
-  where sign = if n < 0 
+  where sign = if n < 0
                  then "-"
                  else ""
 
@@ -53,15 +54,15 @@ upperFirst :: String -> String
 upperFirst "" = ""
 upperFirst (x:xs) = toUpper x : xs
 
--- | 'intercalatePrepend d (x:xs)' will prepend with a space d to xs 
+-- | 'intercalatePrepend d (x:xs)' will prepend with a space d to xs
 intercalatePrepend :: Doc -> [Doc] -> [Doc]
 intercalatePrepend _ [] = []
 intercalatePrepend i (m:ms) = m : ((i <+>) <$> ms)
 
 -- | Remove any 'vk' prefix (if any)
 dropVK :: String -> String
-dropVK name = 
-  if "VK" `isPrefixOf` (toUpper <$> name) 
+dropVK name =
+  if "VK" `isPrefixOf` (toUpper <$> name)
     then drop 2 name
     else name
 
@@ -71,7 +72,7 @@ dropVK name =
 swapPrefix :: String -> String -> String -> Maybe String
 swapPrefix prefix replacement string =
   if prefix `isPrefixOf` string
-    then Just $ replacement ++ drop (length prefix) string 
+    then Just $ replacement ++ drop (length prefix) string
     else Nothing
 
 -- | 'swapSuffix suffix replacement string' will return 'string' with 'suffix'
@@ -84,7 +85,7 @@ swapSuffix suffix replacement string =
     else Nothing
 
 breakNameTag :: [String] -> String -> (String, String)
-breakNameTag tags name = 
+breakNameTag tags name =
   case find (`isSuffixOf` name) tags of
     Nothing -> (name, "")
     Just tag -> (take (length name - length tag) name, tag)
@@ -106,13 +107,13 @@ camelCase_ "" = ""
 camelCase_ s = let w:ws = splitOn "_" . fmap toLower $ s
                in w ++ concatMap upperFirst ws
 
-getModuleBaseName :: ModuleName -> String 
+getModuleBaseName :: ModuleName -> String
 getModuleBaseName (ModuleName moduleName) =
   last . splitOn "." $ moduleName
 
 -- | Create a module name from a section name
 sectionNameToModuleName :: String -> ModuleName
-sectionNameToModuleName sectionName = 
+sectionNameToModuleName sectionName =
     ModuleName ("Graphics.Vulkan." ++ baseName)
   where baseName = sectionNameToModuleBaseName sectionName
 
@@ -121,13 +122,13 @@ sectionNameToModuleBaseName "Types not directly used by the API" = "OtherTypes"
 sectionNameToModuleBaseName "Header boilerplate" = "OtherTypes"
 sectionNameToModuleBaseName sectionName = pascalCase moduleNameSpaces
   where moduleNameSpaces = unwords . filter isAllowed . words $ sectionName
-        isAllowed n = notElem n forbiddenWords
+        isAllowed n = n `notElem` forbiddenWords
         forbiddenWords = ["commands", "API"]
 
 extensionNameToModuleName :: String -> ModuleName
-extensionNameToModuleName extensionName 
+extensionNameToModuleName extensionName
   | "VK":category:n:ns <- splitOn "_" extensionName
-  = ModuleName $ "Graphics.Vulkan." ++ 
+  = ModuleName $ "Graphics.Vulkan." ++
                  pascalCase category ++ "." ++
                  pascalCase (unwords (n:ns))
   | otherwise
@@ -138,13 +139,11 @@ transitiveClosure :: (a -> [a])         -- Successor function
                   -> (a -> a -> Bool)   -- Equality predicate
                   -> [a]
                   -> [a]                -- The transitive closure
-
-transitiveClosure succ eq xs
- = go [] xs
+transitiveClosure successor eq = go []
  where
    go done []                      = done
    go done (x:xs) | x `is_in` done = go done xs
-                  | otherwise      = go (x:done) (succ x ++ xs)
+                  | otherwise      = go (x:done) (successor x ++ xs)
 
    _ `is_in` []                 = False
    x `is_in` (y:ys) | eq x y    = True
@@ -159,6 +158,6 @@ createModuleDirectory root moduleName =
 
 -- | Returns the filename for the specified module under the given root
 moduleNameToFile :: FilePath -> ModuleName -> FilePath
-moduleNameToFile root (ModuleName moduleName) = 
-  let pathComponents = splitOn "." moduleName 
+moduleNameToFile root (ModuleName moduleName) =
+  let pathComponents = splitOn "." moduleName
   in foldl' (</>) root pathComponents <.> "hs"

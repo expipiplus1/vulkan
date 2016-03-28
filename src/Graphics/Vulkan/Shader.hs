@@ -74,7 +74,7 @@ instance Storable VkShaderModuleCreateInfo where
 
 
 -- ** vkDestroyShaderModule
-foreign import ccall "vkDestroyShaderModule" vkDestroyShaderModule :: 
+foreign import ccall "vkDestroyShaderModule" vkDestroyShaderModule ::
   VkDevice -> VkShaderModule -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** VkShaderModuleCreateFlags
@@ -139,7 +139,7 @@ newtype VkShaderModule = VkShaderModule Word64
   deriving (Eq, Storable)
 
 -- ** vkCreateShaderModule
-foreign import ccall "vkCreateShaderModule" vkCreateShaderModule :: 
+foreign import ccall "vkCreateShaderModule" vkCreateShaderModule ::
   VkDevice ->
   Ptr VkShaderModuleCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkShaderModule -> IO VkResult

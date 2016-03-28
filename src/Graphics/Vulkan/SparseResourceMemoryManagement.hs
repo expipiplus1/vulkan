@@ -162,13 +162,13 @@ instance Storable VkSparseImageMemoryBindInfo where
 
 
 -- ** vkGetImageSparseMemoryRequirements
-foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemoryRequirements :: 
+foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemoryRequirements ::
   VkDevice ->
   VkImage ->
     Ptr Word32 -> Ptr VkSparseImageMemoryRequirements -> IO ()
 
 -- ** vkQueueBindSparse
-foreign import ccall "vkQueueBindSparse" vkQueueBindSparse :: 
+foreign import ccall "vkQueueBindSparse" vkQueueBindSparse ::
   VkQueue -> Word32 -> Ptr VkBindSparseInfo -> VkFence -> IO VkResult
 
 
@@ -272,7 +272,7 @@ pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = VkSparseImageFormatF
 
 
 -- ** vkGetPhysicalDeviceSparseImageFormatProperties
-foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysicalDeviceSparseImageFormatProperties :: 
+foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysicalDeviceSparseImageFormatProperties ::
   VkPhysicalDevice ->
   VkFormat ->
     VkImageType ->

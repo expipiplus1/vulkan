@@ -1,6 +1,6 @@
 module Spec.Type where
-  
-import Language.C.Types (Type, CIdentifier)
+
+import           Language.C.Types (CIdentifier, Type)
 
 type CType = Type CIdentifier
 
@@ -16,39 +16,39 @@ data TypeDecl = AnInclude Include
               | AUnionType UnionType
   deriving (Show, Eq)
 
-data Include = Include { iName :: String
+data Include = Include { iName     :: String
                        , iFilename :: String
                        }
   deriving (Show, Eq)
 
-data Define = Define { dName :: String
-                     , dText :: String
+data Define = Define { dName   :: String
+                     , dText   :: String
                      , dSymTab :: [(String, String)]
                      }
   deriving (Show, Eq)
 
-data BaseType = BaseType { btName :: String
+data BaseType = BaseType { btName       :: String
                          , btTypeString :: String
-                         , btCType :: CType
+                         , btCType      :: CType
                          }
   deriving (Show, Eq)
 
-data PlatformType = PlatformType { ptName :: String
+data PlatformType = PlatformType { ptName     :: String
                                  , ptRequires :: String
                                  }
   deriving (Show, Eq)
 
-data BitmaskType = BitmaskType { bmtName :: String
+data BitmaskType = BitmaskType { bmtName       :: String
                                , bmtTypeString :: String
-                               , bmtRequires :: Maybe String
-                               , bmtCType :: CType
+                               , bmtRequires   :: Maybe String
+                               , bmtCType      :: CType
                                }
   deriving (Show, Eq)
 
-data HandleType = HandleType { htName :: String
-                             , htParents :: [String]
+data HandleType = HandleType { htName       :: String
+                             , htParents    :: [String]
                              , htTypeString :: String
-                             , htCType :: CType
+                             , htCType      :: CType
                              }
   deriving (Show, Eq)
 
@@ -56,34 +56,34 @@ data EnumType = EnumType { etName :: String
                          }
   deriving (Show, Eq)
 
-data FuncPointerType = FuncPointerType { fptName :: String
+data FuncPointerType = FuncPointerType { fptName       :: String
                                        , fptTypeString :: String
-                                       , fptCType :: CType
+                                       , fptCType      :: CType
                                        }
   deriving (Show, Eq)
 
-data StructType = StructType { stName :: String
-                             , stComment :: Maybe String
-                             , stMembers :: [StructMember]
-                             , stUsage :: [String]
+data StructType = StructType { stName           :: String
+                             , stComment        :: Maybe String
+                             , stMembers        :: [StructMember]
+                             , stUsage          :: [String]
                              , stIsReturnedOnly :: Bool
                              }
   deriving (Show, Eq)
 
-data StructMember = StructMember { smName :: String
-                                 , smTypeString :: String
-                                 , smCType :: CType
+data StructMember = StructMember { smName           :: String
+                                 , smTypeString     :: String
+                                 , smCType          :: CType
                                  , smNoAutoValidity :: Bool
-                                 , smIsOptional :: Maybe [Bool]
-                                 , smLengths :: Maybe [String]
-                                 , smComment :: Maybe String
+                                 , smIsOptional     :: Maybe [Bool]
+                                 , smLengths        :: Maybe [String]
+                                 , smComment        :: Maybe String
                                  }
   deriving (Show, Eq)
 
-data UnionType = UnionType { utName :: String
-                           , utComment :: Maybe String
-                           , utMembers :: [StructMember]
-                           , utUsage :: [String]
+data UnionType = UnionType { utName           :: String
+                           , utComment        :: Maybe String
+                           , utMembers        :: [StructMember]
+                           , utUsage          :: [String]
                            , utIsReturnedOnly :: Bool
                            }
   deriving (Show, Eq)
@@ -110,7 +110,7 @@ typeDeclCType (AHandleType ht)       = Just $ htCType ht
 typeDeclCType (AnEnumType _)        = Nothing
 typeDeclCType (AFuncPointerType fpt) = Just $ fptCType fpt
 typeDeclCType (AStructType _)       = Nothing
-typeDeclCType (AUnionType _)        = Nothing 
+typeDeclCType (AUnionType _)        = Nothing
 
 typeDeclToInclude :: TypeDecl -> Maybe Include
 typeDeclToInclude (AnInclude x) = Just x

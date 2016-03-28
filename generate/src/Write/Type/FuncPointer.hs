@@ -4,11 +4,11 @@ module Write.Type.FuncPointer
   ( writeFuncPointerType
   ) where
 
-import Spec.Type
-import Text.InterpolatedString.Perl6
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-import Write.TypeConverter
-import Write.WriteMonad
+import           Spec.Type
+import           Text.InterpolatedString.Perl6
+import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
+import           Write.TypeConverter
+import           Write.WriteMonad
 
 writeFuncPointerType :: FuncPointerType -> Write Doc
 writeFuncPointerType fpt = do

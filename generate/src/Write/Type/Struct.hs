@@ -5,35 +5,35 @@ module Write.Type.Struct
   , writeUnionType
   ) where
 
-import Spec.Type
-import Text.InterpolatedString.Perl6
-import Language.Haskell.Exts.Syntax (ConDecl(..), Name(..))
-import Language.Haskell.Exts.Pretty
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-import Write.Utils
-import Write.TypeConverter
-import Data.Maybe(fromMaybe, maybeToList)
-import Data.String
-import Write.WriteMonad
+import           Data.Maybe                    (fromMaybe, maybeToList)
+import           Data.String
+import           Language.Haskell.Exts.Pretty
+import           Language.Haskell.Exts.Syntax  (ConDecl (..), Name (..))
+import           Spec.Type
+import           Text.InterpolatedString.Perl6
+import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
+import           Write.TypeConverter
+import           Write.Utils
+import           Write.WriteMonad
 
 writeStructType :: StructType -> Write Doc
 writeStructType st = do
-  let structComment = unlines $ 
-        maybeToList (stComment st) 
+  let structComment = unlines $
+        maybeToList (stComment st)
         -- Enable this when we can relink the comments.
-        -- ++ stUsage st 
+        -- ++ stUsage st
   env <- askTypeEnv
-  tellRequiredName 
+  tellRequiredName
     (ExternalName (ModuleName "Foreign.Storable") "Storable(..)")
-  tellRequiredName 
+  tellRequiredName
     (ExternalName (ModuleName "Foreign.Ptr") "plusPtr")
   tellExtension "Strict"
   tellExtension "DuplicateRecordFields"
   structMemberDocs <- traverse writeStructMember (stMembers st)
   pure [qc|{predocComment structComment}
 data {stName st} =
-  {stName st}\{ {indent (-2) .  vsep $ 
-                 (intercalateRecordCommas structMemberDocs ++ 
+  {stName st}\{ {indent (-2) .  vsep $
+                 (intercalateRecordCommas structMemberDocs ++
                   [fromString "\}"])}
   deriving (Eq)
 
@@ -42,14 +42,14 @@ data {stName st} =
 
 writeUnionType :: UnionType -> Write Doc
 writeUnionType ut = do
-  let unionComment = unlines $ maybeToList (utComment ut) 
+  let unionComment = unlines $ maybeToList (utComment ut)
                              -- Enable this when we can relink the comments.
-                             -- ++ utUsage ut 
+                             -- ++ utUsage ut
   unionMemberDocs <- traverse writeUnionMember (utMembers ut)
   env <- askTypeEnv
-  tellRequiredName 
+  tellRequiredName
     (ExternalName (ModuleName "Foreign.Storable") "Storable(..)")
-  tellRequiredName 
+  tellRequiredName
     (ExternalName (ModuleName "Foreign.Ptr") "castPtr")
   tellExtension "Strict"
   pure [qc|{predocComment unionComment}
@@ -69,11 +69,11 @@ writeUnionMember um = do
   pure [qc|{prettyPrint $ ConDecl (Ident constructorName) constructorTypes} {postdocComment constructorComment}|]
 
 writeUnionStorableInstance :: TypeEnv -> UnionType -> Doc
-writeUnionStorableInstance env ut 
+writeUnionStorableInstance env ut
   | null (utMembers ut) = error "zero member union...?"
   | otherwise = let memberPacking = calculateMemberPacking env (utMembers ut)
                     TypeInfo unionSize unionAlignment = getTypeInfo env (utName ut)
-                in [qc|{predocComment 
+                in [qc|{predocComment
 "_Note_: peek is undefined as we wouldn't know which constructor to use"}
 instance Storable {utName ut} where
   sizeOf ~_ = {unionSize}
@@ -84,12 +84,12 @@ instance Storable {utName ut} where
 |]
 
 writeMatchAndPokeMember :: MemberInfo -> Doc
-writeMatchAndPokeMember mi = 
+writeMatchAndPokeMember mi =
   let constructorName = unionConstructorName (miMember mi)
   in [qc|{constructorName} e -> poke (castPtr ptr) e|]
 
 unionConstructorName :: StructMember -> String
-unionConstructorName = upperFirst . sanitizedName 
+unionConstructorName = upperFirst . sanitizedName
 
 intercalateRecordCommas :: [Doc] -> [Doc]
 intercalateRecordCommas = intercalatePrepend (fromString ",")
@@ -108,18 +108,18 @@ sanitizedName :: StructMember -> String
 sanitizedName sm = "vk" ++ upperFirst (smName sm)
 
 writeStructStorableInstance :: TypeEnv -> StructType -> Doc
-writeStructStorableInstance env st 
+writeStructStorableInstance env st
   | null (stMembers st) = error "zero member struct...?"
   | otherwise = let memberPacking = calculateMemberPacking env (stMembers st)
                     TypeInfo structSize structAlignment = getTypeInfo env (stName st)
                 in [qc|instance Storable {stName st} where
   sizeOf ~_ = {structSize}
   alignment ~_ = {structAlignment}
-  peek ptr = {stName st} <$> {indent (-4) . vsep $ 
-                              ((intercalateInfixAp $ 
+  peek ptr = {stName st} <$> {indent (-4) . vsep $
+                              ((intercalateInfixAp $
                                 writePeekMember <$> memberPacking))}
-  poke ptr poked = {indent (-3) . vsep $ 
-                    ((intercalatePrepend (fromString "*>") $ 
+  poke ptr poked = {indent (-3) . vsep $
+                    ((intercalatePrepend (fromString "*>") $
                      writePokeMember st <$> memberPacking))}
 |]
 
@@ -127,6 +127,6 @@ writePeekMember :: MemberInfo -> Doc
 writePeekMember mi = [qc|peek (ptr `plusPtr` {miOffset mi})|]
 
 writePokeMember :: StructType -> MemberInfo -> Doc
-writePokeMember st mi = 
+writePokeMember st mi =
   [qc|poke (ptr `plusPtr` {miOffset mi}) ({sanitizedName (miMember mi)} (poked :: {stName st}))|]
 

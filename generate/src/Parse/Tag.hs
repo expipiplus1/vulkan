@@ -1,25 +1,25 @@
-{-# LANGUAGE Arrows #-}
+{-# LANGUAGE Arrows          #-}
 {-# LANGUAGE RecordWildCards #-}
 
-module Parse.Tag 
+module Parse.Tag
   ( parseTags
   ) where
 
-import Parse.Utils
-import Spec.Tag
-import Text.XML.HXT.Core 
+import           Parse.Utils
+import           Spec.Tag
+import           Text.XML.HXT.Core
 
 parseTags :: IOStateArrow s XmlTree [Tag]
 parseTags = extractFields "Tags"
                           (hasName "tags")
                           extract
-  where extract = listA (parseTag <<< getChildren) 
+  where extract = listA (parseTag <<< getChildren)
 
 parseTag :: IOStateArrow s XmlTree Tag
 parseTag = extractFields "Tag"
-                         (hasName "tag") 
+                         (hasName "tag")
                          extract
-  where extract = proc tag -> do 
+  where extract = proc tag -> do
           tName <- requiredAttrValue "name" -< tag
           tAuthor <- requiredAttrValue "author" -< tag
           tContact <- requiredAttrValue "contact" -< tag

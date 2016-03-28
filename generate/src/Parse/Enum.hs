@@ -2,13 +2,13 @@
 
 module Parse.Enum where
 
-import Spec.Enum
-import Parse.Utils
-import Prelude hiding (Enum, elem)
-import Text.XML.HXT.Core 
+import           Parse.Utils
+import           Prelude           hiding (Enum, elem)
+import           Spec.Enum
+import           Text.XML.HXT.Core
 
 parseEnum :: IOStateArrow s XmlTree Spec.Enum.Enum
-parseEnum = hasName "enums" >>> hasAttrValue "type" (== "enum") >>> 
+parseEnum = hasName "enums" >>> hasAttrValue "type" (== "enum") >>>
             (extract `orElse` failA "Failed to extract enum fields")
   where extract = proc enum -> do
           name      <- requiredAttrValue "name" -< enum
@@ -24,10 +24,10 @@ parseEnum = hasName "enums" >>> hasAttrValue "type" (== "enum") >>>
                          }
 
 parseEnumElement :: IOStateArrow s XmlTree EnumElement
-parseEnumElement = hasName "enum" >>>  
-                   (extract `orElse` 
+parseEnumElement = hasName "enum" >>>
+                   (extract `orElse`
                     failA "Failed to extract enumerant fields")
-  where extract = proc elem -> do 
+  where extract = proc elem -> do
           name    <- requiredAttrValue "name" -< elem
           value   <- requiredRead <<< requiredAttrValue "value" -< elem
           comment <- optionalAttrValue "comment" -< elem

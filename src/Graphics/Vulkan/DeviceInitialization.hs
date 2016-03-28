@@ -152,7 +152,7 @@ instance Storable VkInstanceCreateInfo where
 
 
 -- ** vkGetPhysicalDeviceImageFormatProperties
-foreign import ccall "vkGetPhysicalDeviceImageFormatProperties" vkGetPhysicalDeviceImageFormatProperties :: 
+foreign import ccall "vkGetPhysicalDeviceImageFormatProperties" vkGetPhysicalDeviceImageFormatProperties ::
   VkPhysicalDevice ->
   VkFormat ->
     VkImageType ->
@@ -538,15 +538,15 @@ instance Storable VkMemoryHeap where
 
 
 -- ** vkEnumeratePhysicalDevices
-foreign import ccall "vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices :: 
+foreign import ccall "vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices ::
   VkInstance -> Ptr Word32 -> Ptr VkPhysicalDevice -> IO VkResult
 
 -- ** vkGetDeviceProcAddr
-foreign import ccall "vkGetDeviceProcAddr" vkGetDeviceProcAddr :: 
+foreign import ccall "vkGetDeviceProcAddr" vkGetDeviceProcAddr ::
   VkDevice -> Ptr CChar -> IO PFN_vkVoidFunction
 
 -- ** vkCreateInstance
-foreign import ccall "vkCreateInstance" vkCreateInstance :: 
+foreign import ccall "vkCreateInstance" vkCreateInstance ::
   Ptr VkInstanceCreateInfo ->
   Ptr VkAllocationCallbacks -> Ptr VkInstance -> IO VkResult
 
@@ -750,11 +750,11 @@ instance Storable VkPhysicalDeviceSparseProperties where
 
 
 -- ** vkGetPhysicalDeviceFeatures
-foreign import ccall "vkGetPhysicalDeviceFeatures" vkGetPhysicalDeviceFeatures :: 
+foreign import ccall "vkGetPhysicalDeviceFeatures" vkGetPhysicalDeviceFeatures ::
   VkPhysicalDevice -> Ptr VkPhysicalDeviceFeatures -> IO ()
 
 -- ** vkGetPhysicalDeviceMemoryProperties
-foreign import ccall "vkGetPhysicalDeviceMemoryProperties" vkGetPhysicalDeviceMemoryProperties :: 
+foreign import ccall "vkGetPhysicalDeviceMemoryProperties" vkGetPhysicalDeviceMemoryProperties ::
   VkPhysicalDevice -> Ptr VkPhysicalDeviceMemoryProperties -> IO ()
 
 
@@ -795,7 +795,7 @@ instance Storable VkPhysicalDeviceProperties where
 
 
 -- ** vkGetPhysicalDeviceQueueFamilyProperties
-foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties" vkGetPhysicalDeviceQueueFamilyProperties :: 
+foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties" vkGetPhysicalDeviceQueueFamilyProperties ::
   VkPhysicalDevice ->
   Ptr Word32 -> Ptr VkQueueFamilyProperties -> IO ()
 
@@ -816,7 +816,7 @@ instance Storable VkMemoryType where
 
 
 -- ** vkGetInstanceProcAddr
-foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr :: 
+foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr ::
   VkInstance -> Ptr CChar -> IO PFN_vkVoidFunction
 
 -- ** VkMemoryPropertyFlags
@@ -863,7 +863,7 @@ pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = VkMemoryPropertyFlagBits 0x10
 
 
 -- ** vkDestroyInstance
-foreign import ccall "vkDestroyInstance" vkDestroyInstance :: 
+foreign import ccall "vkDestroyInstance" vkDestroyInstance ::
   VkInstance -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** VkQueueFlags
@@ -906,7 +906,7 @@ pattern VK_QUEUE_SPARSE_BINDING_BIT = VkQueueFlagBits 0x8
 
 
 -- ** vkGetPhysicalDeviceProperties
-foreign import ccall "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperties :: 
+foreign import ccall "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperties ::
   VkPhysicalDevice -> Ptr VkPhysicalDeviceProperties -> IO ()
 
 -- ** VkInstanceCreateFlags
@@ -915,7 +915,7 @@ newtype VkInstanceCreateFlags = VkInstanceCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkGetPhysicalDeviceFormatProperties
-foreign import ccall "vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties :: 
+foreign import ccall "vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties ::
   VkPhysicalDevice -> VkFormat -> Ptr VkFormatProperties -> IO ()
 
 

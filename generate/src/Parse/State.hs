@@ -13,19 +13,19 @@ module Parse.State
   , Stage(..)
   ) where
 
-import qualified Data.HashSet as HashSet
-import Language.C.Types
-import Language.Preprocessor.Cpphs
-import Parse.Utils
-import Spec.Type
-import Text.XML.HXT.Core 
+import qualified Data.HashSet                as HashSet
+import           Language.C.Types
+import           Language.Preprocessor.Cpphs
+import           Parse.Utils
+import           Spec.Type
+import           Text.XML.HXT.Core
 
 type ParseArrow a b = IOStateArrow SpecParseState a b
 
 type SymbolTable = [(String, String)]
 
 data SpecParseState = SpecParseState { -- | A set of all type names we've seen
-                                       spsTypeNames :: TypeNames
+                                       spsTypeNames   :: TypeNames
                                      , -- | The macro symbol table generated
                                        -- from all the "define" typedecls
                                        spsSymbolTable :: SymbolTable
@@ -51,7 +51,7 @@ insertSymbolTable t s = s{ spsSymbolTable = spsSymbolTable s ++ t
                          }
 
 addSymbolTable :: ParseArrow SymbolTable SymbolTable
-addSymbolTable = changeUserState insertSymbolTable 
+addSymbolTable = changeUserState insertSymbolTable
 
 data Stage = AddingDefines
            | PreprocessingTypes
@@ -66,12 +66,12 @@ preProcessorBoolOptions s = defaultBoolOptions{ macros = True
                                                 -- How's that for boolean
                                                 -- blindness! (False means the
                                                 -- language isn't Haskell)
-                                              , lang = False 
+                                              , lang = False
                                                 -- This is particularly
                                                 -- horrible... Done to
                                                 -- avoid execiting the (##)
                                                 -- operator too early.
-                                              , ansi = 
+                                              , ansi =
                                                   case s of
                                                     AddingDefines -> False
                                                     PreprocessingTypes -> True
@@ -88,15 +88,15 @@ addDefines = proc defineDecls -> do
   returnA -< defineDecls
 
 getSymbolTableFromDefineText :: String -> IO [(String, String)]
-getSymbolTableFromDefineText = fmap snd . 
+getSymbolTableFromDefineText = fmap snd .
                                  runCpphsReturningSymTab options "define text"
-  where options = defaultCpphsOptions{ boolopts = 
+  where options = defaultCpphsOptions{ boolopts =
                                          preProcessorBoolOptions AddingDefines
                                      }
 
 addTypeName :: ParseArrow String CIdentifier
-addTypeName = (not . isReservedIdentifier) `guardsP` 
-              (cIdentifierFromString ^>> fromRightA >>> 
+addTypeName = (not . isReservedIdentifier) `guardsP`
+              (cIdentifierFromString ^>> fromRightA >>>
                changeUserState insertTypeName)
 
 isReservedIdentifier :: String -> Bool

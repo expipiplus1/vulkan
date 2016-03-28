@@ -1,49 +1,45 @@
-{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternGuards #-}
+{-# LANGUAGE PatternGuards     #-}
+{-# LANGUAGE QuasiQuotes       #-}
 
 module Write.Module
   ( writeModule
   )where
 
-import Data.HashMap.Strict as M
-import Data.HashSet as S
-import Data.Maybe(catMaybes)
-import Data.String
-import Spec.Graph
-import Text.InterpolatedString.Perl6
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-import Write.Quirks
-import Write.TypeConverter(buildTypeEnvFromSpecGraph)
-import Write.Utils
-import Write.Vertex
-import Write.WriteMonad
-import Spec.Partition
+import           Data.HashMap.Strict           as M
+import           Data.HashSet                  as S
+import           Data.Maybe                    (catMaybes)
+import           Data.String
+import           Spec.Graph
+import           Spec.Partition
+import           Text.InterpolatedString.Perl6
+import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
+import           Write.Quirks
+import           Write.TypeConverter           (buildTypeEnvFromSpecGraph)
+import           Write.Utils
+import           Write.Vertex
+import           Write.WriteMonad
 
-import Data.Char(isUpper, isAlphaNum)
-
-writeModule :: SpecGraph 
-            -> NameLocations 
-            -> FileType 
-            -> ModuleName 
-            -> [String] 
+writeModule :: SpecGraph
+            -> NameLocations
+            -> FileType
+            -> ModuleName
+            -> [String]
             -> String
 writeModule graph nameLocations boot (ModuleName n) names = moduleString
   where typeEnv = buildTypeEnvFromSpecGraph graph
-        (moduleString, (extraRequiredNames, extensions)) = 
+        (moduleString, (extraRequiredNames, extensions)) =
           runWrite typeEnv boot moduleWriter
-        extensionDocs = getExtensionDoc <$> S.toList extensions 
-        getEntity name = 
-          case M.lookup name (gNameVertexMap graph) of
-            Nothing -> error ("exported name missing from spec graph " ++ name)
-            Just e -> e
+        extensionDocs = getExtensionDoc <$> S.toList extensions
+        getEntity name = let err = error ("exported name missing from spec graph " ++ name)
+                         in M.lookupDefault err name (gNameVertexMap graph)
         moduleEntities = getEntity <$> names
         isIncludeName = isIncludeVertex . getEntity
-        requiredNames = extraRequiredNames `S.union` 
+        requiredNames = extraRequiredNames `S.union`
                         S.map (nameToRequiredName graph)
-                              (S.filter (not . isIncludeName) 
-                                        (allReachable moduleEntities) 
-                                        `S.difference` (S.fromList names))
+                              (S.filter (not . isIncludeName)
+                                        (allReachable moduleEntities)
+                                        `S.difference` S.fromList names)
         imports = vcat (getImportDeclarations (ModuleName n) nameLocations requiredNames)
         moduleWriter = do
           definitions <- writeVertices graph (requiredLookup graph <$> names)
@@ -74,49 +70,49 @@ nameToRequiredName graph name =
            else InternalName NoWildCard name
 
 getImportDeclarations :: ModuleName -> NameLocations -> HashSet RequiredName -> [Doc]
-getImportDeclarations importingModule nameLocations names = 
-    fmap (writeImport . (makeImportSourcy importingModule)) . 
+getImportDeclarations importingModule nameLocations names =
+    fmap (writeImport . makeImportSourcy importingModule) .
       mergeImports $ imports
   where imports = catMaybes (getImportDeclaration <$> S.toList names)
-        getImportDeclaration rn = 
+        getImportDeclaration rn =
           case rn of
-            ExternalName moduleName name -> 
+            ExternalName moduleName name ->
               Just (Import NotSource moduleName [name])
-            InternalName wildCard name -> 
+            InternalName wildCard name ->
               if S.member name ignoredNames
                 then Nothing
                 else case M.lookup name nameLocations of
-                       Nothing -> 
+                       Nothing ->
                          error ("Imported name not in any module: " ++ name)
-                       Just moduleName -> 
+                       Just moduleName ->
                          case wildCard of
-                           WildCard -> 
+                           WildCard ->
                              Just $ Import NotSource moduleName [name ++ "(..)"]
-                           NoWildCard -> 
+                           NoWildCard ->
                              Just $ Import NotSource moduleName [name]
-            
+
 data Import = Import Source ModuleName [String]
 
 data Source = NotSource
             | Source
 
 writeImport :: Import -> Doc
-writeImport (Import source (ModuleName moduleName) imports) = 
+writeImport (Import source (ModuleName moduleName) imports) =
   let sourceDoc :: Doc
-      sourceDoc = fromString $ case source of 
+      sourceDoc = fromString $ case source of
                                  NotSource -> ""
                                  Source -> "{-# SOURCE #-} "
   in [qc|import {sourceDoc}{moduleName}( {indent (-2) (vcat ((intercalatePrepend "," (fromString <$> imports) ++ [")"])))}|]
 
 mergeImports :: [Import] -> [Import]
-mergeImports is = fmap (uncurry (Import NotSource)) . 
-                  M.toList . M.fromListWith (++) $ 
+mergeImports is = fmap (uncurry (Import NotSource)) .
+                  M.toList . M.fromListWith (++) $
                   [(name, imports) | Import _ name imports <- is]
 
-makeImportSourcy :: ModuleName -> Import -> Import 
-makeImportSourcy importingModule (Import source moduleName names) 
+makeImportSourcy :: ModuleName -> Import -> Import
+makeImportSourcy importingModule (Import source moduleName names)
   | Just sourceImported <- M.lookup importingModule sourceImports
-  , elem moduleName sourceImported 
+  , moduleName `elem` sourceImported
   = Import Source moduleName names
-  | otherwise 
+  | otherwise
   = Import source moduleName names

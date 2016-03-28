@@ -155,11 +155,11 @@ pattern VK_DEPENDENCY_BY_REGION_BIT = VkDependencyFlagBits 0x1
 
 
 -- ** vkDestroyRenderPass
-foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass :: 
+foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass ::
   VkDevice -> VkRenderPass -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** vkCreateFramebuffer
-foreign import ccall "vkCreateFramebuffer" vkCreateFramebuffer :: 
+foreign import ccall "vkCreateFramebuffer" vkCreateFramebuffer ::
   VkDevice ->
   Ptr VkFramebufferCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkFramebuffer -> IO VkResult
@@ -202,7 +202,7 @@ instance Storable VkFramebufferCreateInfo where
 
 
 -- ** vkGetRenderAreaGranularity
-foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity :: 
+foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity ::
   VkDevice -> VkRenderPass -> Ptr VkExtent2D -> IO ()
 
 -- ** VkAttachmentLoadOp
@@ -356,7 +356,7 @@ newtype VkRenderPass = VkRenderPass Word64
   deriving (Eq, Storable)
 
 -- ** vkDestroyFramebuffer
-foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer :: 
+foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer ::
   VkDevice -> VkFramebuffer -> Ptr VkAllocationCallbacks -> IO ()
 
 
@@ -458,7 +458,7 @@ instance Storable VkSubpassDescription where
 
 
 -- ** vkCreateRenderPass
-foreign import ccall "vkCreateRenderPass" vkCreateRenderPass :: 
+foreign import ccall "vkCreateRenderPass" vkCreateRenderPass ::
   VkDevice ->
   Ptr VkRenderPassCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkRenderPass -> IO VkResult

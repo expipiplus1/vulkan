@@ -4,17 +4,17 @@ module Write.Type.Handle
   ( writeHandleType
   ) where
 
-import Data.String
-import Language.C.Types as C
-import Spec.Type
-import Text.InterpolatedString.Perl6
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-import Write.TypeConverter
-import Write.Utils
-import Write.WriteMonad
+import           Data.String
+import           Language.C.Types              as C
+import           Spec.Type
+import           Text.InterpolatedString.Perl6
+import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
+import           Write.TypeConverter
+import           Write.Utils
+import           Write.WriteMonad
 
 writeHandleType :: HandleType -> Write Doc
-writeHandleType ht = 
+writeHandleType ht =
   let cType = htCType ht
   in case cType of
        Ptr [] t@(TypeDef (Struct _)) -> writeDispatchableHandleType ht t

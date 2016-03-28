@@ -1,5 +1,6 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE DeriveGeneric         #-}
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 module Write.WriteMonad
   ( Write
@@ -18,13 +19,13 @@ module Write.WriteMonad
   , doesDeriveStorable
   ) where
 
-import Control.Monad.Writer
-import Control.Monad.Reader
-import Data.HashSet as S
-import Data.Hashable
-import GHC.Generics(Generic)
-import Write.Utils
-import Spec.TypeEnv
+import           Control.Monad.Reader
+import           Control.Monad.Writer
+import           Data.Hashable
+import           Data.HashSet         as S
+import           GHC.Generics         (Generic)
+import           Spec.TypeEnv
+import           Write.Utils
 
 data RequiredName = ExternalName ModuleName String
                   | InternalName WildCard String
@@ -50,7 +51,7 @@ type ReadInput = (TypeEnv, FileType)
 
 type Write = ReaderT ReadInput (Writer WriteOutput)
 
-runWrite :: TypeEnv -> FileType -> Write a 
+runWrite :: TypeEnv -> FileType -> Write a
          -> (a, (HashSet RequiredName, HashSet ExtensionName))
 runWrite env boot m = runWriter (runReaderT m (env, boot))
 
@@ -61,7 +62,7 @@ isBoot :: Write Bool
 isBoot = asks ((== Boot) . snd)
 
 doesDeriveStorable :: Write ()
-doesDeriveStorable = 
+doesDeriveStorable =
   requireStorable >> tellExtension "GeneralizedNewtypeDeriving"
 
 requireStorable :: Write ()

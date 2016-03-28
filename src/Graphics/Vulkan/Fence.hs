@@ -68,20 +68,20 @@ instance Storable VkFenceCreateInfo where
 
 
 -- ** vkResetFences
-foreign import ccall "vkResetFences" vkResetFences :: 
+foreign import ccall "vkResetFences" vkResetFences ::
   VkDevice -> Word32 -> Ptr VkFence -> IO VkResult
 
 -- ** vkDestroyFence
-foreign import ccall "vkDestroyFence" vkDestroyFence :: 
+foreign import ccall "vkDestroyFence" vkDestroyFence ::
   VkDevice -> VkFence -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** vkWaitForFences
-foreign import ccall "vkWaitForFences" vkWaitForFences :: 
+foreign import ccall "vkWaitForFences" vkWaitForFences ::
   VkDevice ->
   Word32 -> Ptr VkFence -> VkBool32 -> Word64 -> IO VkResult
 
 -- ** vkGetFenceStatus
-foreign import ccall "vkGetFenceStatus" vkGetFenceStatus :: 
+foreign import ccall "vkGetFenceStatus" vkGetFenceStatus ::
   VkDevice -> VkFence -> IO VkResult
 
 -- ** VkFenceCreateFlags
@@ -112,7 +112,7 @@ pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlagBits 0x1
 
 
 -- ** vkCreateFence
-foreign import ccall "vkCreateFence" vkCreateFence :: 
+foreign import ccall "vkCreateFence" vkCreateFence ::
   VkDevice ->
   Ptr VkFenceCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkFence -> IO VkResult

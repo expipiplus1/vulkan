@@ -1,18 +1,18 @@
-{-# LANGUAGE Arrows #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE Arrows           #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE RecordWildCards  #-}
 
 module Parse.Type
   ( parseTypes
   ) where
 
-import Data.Char(isAlpha)
-import Parse.CType
-import Parse.State
-import Parse.Utils
-import Spec.Type
-import Text.Regex.TDFA((=~))
-import Text.XML.HXT.Core
+import           Data.Char         (isAlpha)
+import           Parse.CType
+import           Parse.State
+import           Parse.Utils
+import           Spec.Type
+import           Text.Regex.TDFA   ((=~))
+import           Text.XML.HXT.Core
 
 parseTypes :: ParseArrow XmlTree [TypeDecl]
 parseTypes = extractFields "type decls" (hasName "types") extract
@@ -24,32 +24,32 @@ parseTypes = extractFields "type decls" (hasName "types") extract
           typeDecls <- listA getChildren -< typeDeclBlock
           (defineDeclTrees, nonDefineTypeDeclTrees) <-
             partitionA (inCategory "define") -< typeDecls
-          (platformTypeDeclTrees, ordinaryTypeDeclTrees) <- 
-            partitionA isPlatformTypeDecl 
+          (platformTypeDeclTrees, ordinaryTypeDeclTrees) <-
+            partitionA isPlatformTypeDecl
             -< nonDefineTypeDeclTrees
 
-          defineDecls <- 
-            fmap ADefine ^<< addDefines <<< mapA parseDefine 
+          defineDecls <-
+            fmap ADefine ^<< addDefines <<< mapA parseDefine
             -< defineDeclTrees
-          
-          platformTypeDecls <- 
+
+          platformTypeDecls <-
             mapA (addTypeDeclToState <<< parseType) -< platformTypeDeclTrees
 
           mapA (addTypeName <<< peekStructOrUnionName) -< ordinaryTypeDeclTrees
 
-          ordinaryTypeDecls <- 
+          ordinaryTypeDecls <-
             mapA (addTypeDeclToState <<< parseType) -< ordinaryTypeDeclTrees
 
           returnA -< platformTypeDecls ++ defineDecls ++ ordinaryTypeDecls
 
 peekStructOrUnionName :: ArrowXml a => a XmlTree String
-peekStructOrUnionName = hasName "type" >>> 
-                        hasAttrValue "category" 
-                                     (flip elem ["struct", "union"]) >>> 
+peekStructOrUnionName = hasName "type" >>>
+                        hasAttrValue "category"
+                                     (flip elem ["struct", "union"]) >>>
                         getAttrValue0 "name"
 
 addTypeDeclToState :: ParseArrow TypeDecl TypeDecl
-addTypeDeclToState = perform (typeDeclTypeName ^>> 
+addTypeDeclToState = perform (typeDeclTypeName ^>>
                               traverseMaybeA addTypeName)
 
 parseType :: ParseArrow XmlTree TypeDecl
@@ -70,7 +70,7 @@ parseType = hasName "type" >>>
                         ]
 
 parseInclude :: ParseArrow XmlTree Include
-parseInclude = extractFields "include" 
+parseInclude = extractFields "include"
                              (inCategory "include")
                              extract
   where extract = proc include -> do
@@ -92,7 +92,7 @@ parseDefine = extractFields "define"
   where extract = proc define -> do
           dName <- getNameAttrOrChildText -< define
           dText <- getAllText -< define
-          dSymTab <- arrIO getSymbolTableFromDefineText <<^ 
+          dSymTab <- arrIO getSymbolTableFromDefineText <<^
                      addTrailingNewline -< dText
           returnA -< Define{..}
 
@@ -141,7 +141,7 @@ parseHandleType = extractFields "handle type"
           htParents <- commaSepListAttr "parent" -< handleType
           htTypeString <- preprocessTypeString <<< getAllText -< handleType
           -- TODO: need to do defines here
-          htCType <- parseCType -< htTypeString 
+          htCType <- parseCType -< htTypeString
           returnA -< HandleType{..}
 
 parseEnumType :: ParseArrow XmlTree EnumType
@@ -170,9 +170,9 @@ parseStructType = extractFields "struct type"
           stName <- getAttrValue0 "name" -< structType
           stComment <- optionalAttrValue "comment" -< structType
           stMembers <- listA (parseMember <<< getChildren) -< structType
-          stUsage <- ((parseValidityBlock <<< getChildren) `orElse` 
+          stUsage <- ((parseValidityBlock <<< getChildren) `orElse`
                       constA []) -< structType
-          stIsReturnedOnly <- 
+          stIsReturnedOnly <-
             boolAttrDefault "returnedonly" False -< structType
           returnA -< StructType{..}
 
@@ -184,9 +184,9 @@ parseUnionType = extractFields "union type"
           utName <- getAttrValue0 "name" -< unionType
           utComment <- optionalAttrValue "comment" -< unionType
           utMembers <- listA (parseMember <<< getChildren) -< unionType
-          utUsage <- ((parseValidityBlock <<< getChildren) `orElse` 
+          utUsage <- ((parseValidityBlock <<< getChildren) `orElse`
                       constA []) -< unionType
-          utIsReturnedOnly <- 
+          utIsReturnedOnly <-
             boolAttrDefault "returnedonly" False -< unionType
           returnA -< UnionType{..}
 
@@ -198,9 +198,9 @@ parseMember = extractFields "struct member"
           smName <- memberNameWorkarounds ^<< getNameChildText -< member
           smTypeString <- preprocessTypeString <<< getAllText -< member
           smCType <- parseCType -< smTypeString
-          smNoAutoValidity <- 
+          smNoAutoValidity <-
             boolAttrDefault "noautovalidity" False -< member
-          smIsOptional <- traverseMaybeA (mapA parseBool) <<< 
+          smIsOptional <- traverseMaybeA (mapA parseBool) <<<
                           optionalCommaSepListAttr "optional" -< member
           smLengths <- optionalCommaSepListAttr "len" -< member
           -- TODO: comments

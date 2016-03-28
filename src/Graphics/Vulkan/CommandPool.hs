@@ -70,11 +70,11 @@ instance Storable VkCommandPoolCreateInfo where
 
 
 -- ** vkDestroyCommandPool
-foreign import ccall "vkDestroyCommandPool" vkDestroyCommandPool :: 
+foreign import ccall "vkDestroyCommandPool" vkDestroyCommandPool ::
   VkDevice -> VkCommandPool -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** vkResetCommandPool
-foreign import ccall "vkResetCommandPool" vkResetCommandPool :: 
+foreign import ccall "vkResetCommandPool" vkResetCommandPool ::
   VkDevice -> VkCommandPool -> VkCommandPoolResetFlags -> IO VkResult
 
 -- ** VkCommandPoolCreateFlags
@@ -109,7 +109,7 @@ pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = VkCommandPoolCreateFla
 
 
 -- ** vkCreateCommandPool
-foreign import ccall "vkCreateCommandPool" vkCreateCommandPool :: 
+foreign import ccall "vkCreateCommandPool" vkCreateCommandPool ::
   VkDevice ->
   Ptr VkCommandPoolCreateInfo ->
     Ptr VkAllocationCallbacks -> Ptr VkCommandPool -> IO VkResult

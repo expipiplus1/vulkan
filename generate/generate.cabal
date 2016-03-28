@@ -1,5 +1,5 @@
 name:                generate
-version:             0.2.0.0
+version:             0.2.1.0
 synopsis:            A program to generate the vulkan package from the vulkan docs.
 description:         Please see README.md
 homepage:            http://github.com/expipiplus1/vulkan#readme

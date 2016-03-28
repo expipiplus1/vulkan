@@ -1,42 +1,42 @@
-{-# LANGUAGE Arrows #-}
+{-# LANGUAGE Arrows          #-}
 {-# LANGUAGE RecordWildCards #-}
 
-module Parse.Extension 
+module Parse.Extension
   ( parseExtensions
   ) where
 
-import Safe(readMay)
-import Data.Maybe(fromMaybe)
-import Parse.Utils
-import Spec.Extension
-import Text.XML.HXT.Core 
+import           Data.Maybe        (fromMaybe)
+import           Parse.Utils
+import           Safe              (readMay)
+import           Spec.Extension
+import           Text.XML.HXT.Core
 
 parseExtensions :: IOStateArrow s XmlTree [Extension]
 parseExtensions = extractFields "Extensions"
                                 (hasName "extensions")
                                 extract
-  where extract = listA (parseExtension <<< getChildren) 
+  where extract = listA (parseExtension <<< getChildren)
 
 parseExtension :: IOStateArrow s XmlTree Extension
 parseExtension = extractFields "Extension"
-                               (hasName "extension") 
+                               (hasName "extension")
                                extract
-  where extract = proc extension -> do 
+  where extract = proc extension -> do
           eName <- requiredAttrValue "name" -< extension
           eNumber <- requiredRead <<< requiredAttrValue "number" -< extension
           eSupported <- requiredAttrValue "supported" -< extension
           eProtect <- optionalAttrValue "protect" -< extension
           eAuthor <- optionalAttrValue "author" -< extension
           eContact <- optionalAttrValue "contact" -< extension
-          require <- oneRequired "require" 
+          require <- oneRequired "require"
                        (hasName "require" <<< getChildren) -< extension
-          eEnumExtensions <- 
+          eEnumExtensions <-
             listA (parseEnumExtension <<< getChildren) -< require
-          eConstants <- 
+          eConstants <-
             listA (parseExtensionConstant <<< getChildren) -< require
-          eCommandNames <- 
+          eCommandNames <-
             listA (parseCommandName <<< getChildren) -< require
-          eTypeNames <- 
+          eTypeNames <-
             listA (parseTypeName <<< getChildren) -< require
           returnA -< Extension{..}
 
@@ -47,15 +47,15 @@ parseEnumExtension = extractFields "enum extension"
   where extract = proc enumExtension -> do
           eeName <- requiredAttrValue "name" -< enumExtension
           eeExtends <- requiredAttrValue "extends" -< enumExtension
-          eeOffset <- requiredRead <<< 
+          eeOffset <- requiredRead <<<
                       requiredAttrValue "offset" -< enumExtension
-          eeDirection <- fromMaybe Positive ^<< 
-                         traverseMaybeA parseDirection <<< 
+          eeDirection <- fromMaybe Positive ^<<
+                         traverseMaybeA parseDirection <<<
                          optionalAttrValue "dir" -< enumExtension
           returnA -< EnumExtension{..}
 
 parseDirection :: IOStateArrow s String Direction
-parseDirection = arrF p `orElse` 
+parseDirection = arrF p `orElse`
                  (("Failed to parse direction: " ++) ^>> failString)
     where p "-" = Just Negative
           p _ = Nothing
@@ -68,8 +68,8 @@ parseExtensionConstant = extractFields "extension constant"
           ecName <- requiredAttrValue "name" -< extensionConstant
           ecValue <- ((Right ^<< arrF readMay) `orElse`
                       (Left  ^<< arrF readMay) `orElse`
-                      (failString <<^ 
-                        ("Failed to read extension constant value: " ++))) <<< 
+                      (failString <<^
+                        ("Failed to read extension constant value: " ++))) <<<
                       requiredAttrValue "value" -< extensionConstant
           returnA -< ExtensionConstant{..}
 

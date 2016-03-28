@@ -1,5 +1,5 @@
+{-# LANGUAGE PatternGuards   #-}
 {-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE PatternGuards #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module Write.TypeConverter
@@ -21,30 +21,31 @@ module Write.TypeConverter
 
 -- This file is gross TODO: clean
 
-import Control.Arrow (second, (&&&))
-import Control.Monad.State
-import Data.List (foldl1')
-import Data.Maybe (fromMaybe, catMaybes)
-import Language.C.Types as C
-import Language.Haskell.Exts.Pretty (prettyPrint)
-import Language.Haskell.Exts.Syntax as HS hiding (ModuleName)
-import Spec.Spec
-import Spec.Graph
-       (SpecGraph, getGraphCTypes, getGraphEnumTypes, getGraphStructTypes,
-        getGraphUnionTypes, getGraphConstants)
-import Spec.Constant
-import Spec.Type
-import Spec.TypeEnv
-import Write.WriteMonad
-import Write.Utils
-import qualified Data.HashMap.Lazy as Map
+import           Control.Arrow                (second, (&&&))
+import qualified Data.HashMap.Lazy            as Map
+import           Data.List                    (foldl1')
+import           Data.Maybe                   (catMaybes, fromMaybe)
+import           Language.C.Types             as C
+import           Language.Haskell.Exts.Pretty (prettyPrint)
+import           Language.Haskell.Exts.Syntax as HS hiding (ModuleName)
+import           Spec.Constant
+import           Spec.Graph                   (SpecGraph, getGraphCTypes,
+                                               getGraphConstants,
+                                               getGraphEnumTypes,
+                                               getGraphStructTypes,
+                                               getGraphUnionTypes)
+import           Spec.Spec
+import           Spec.Type
+import           Spec.TypeEnv
+import           Write.Utils
+import           Write.WriteMonad
 
 type TypeConverter = CType -> String
 
 pattern TypeDef t = TypeSpecifier (Specifiers [TYPEDEF] [] []) t
 
 platformType :: String -> Write (Maybe HS.Type)
-platformType s = 
+platformType s =
   case s of
     "void"     -> Just <$> pure (TyCon (Special UnitCon))
     "char"     -> Just <$> conFromModule "Foreign.C.Types" "CChar"
@@ -66,42 +67,42 @@ conFromModule moduleName constructor = do
 
 cTypeToHsType :: CType -> Write HS.Type
 cTypeToHsType cType = hsType
-  where 
+  where
     hsType = case cType of
-               TypeSpecifier _ Void 
+               TypeSpecifier _ Void
                  -> pure $ TyCon (Special UnitCon)
-               TypeSpecifier _ (C.Char Nothing) 
+               TypeSpecifier _ (C.Char Nothing)
                  -> conFromModule "Foreign.C.Types" "CChar"
-               TypeSpecifier _ (C.Char (Just Signed)) 
+               TypeSpecifier _ (C.Char (Just Signed))
                  -> conFromModule "Foreign.C.Types" "CChar"
-               TypeSpecifier _ (C.Char (Just Unsigned)) 
+               TypeSpecifier _ (C.Char (Just Unsigned))
                  -> conFromModule "Foreign.C.Types" "CUChar"
-               TypeSpecifier _ Float 
+               TypeSpecifier _ Float
                  -> conFromModule "Foreign.C.Types" "CFloat"
-               TypeSpecifier _ (TypeName t) 
+               TypeSpecifier _ (TypeName t)
                  -> cIdToHsType t
-               TypeDef (TypeName t) 
+               TypeDef (TypeName t)
                  -> cIdToHsType t
-               TypeDef (Struct t) 
+               TypeDef (Struct t)
                  -> cIdToHsType t
                Ptr _ (TypeSpecifier _ Void)
-                 -> do ptrCon <- conFromModule "Foreign.Ptr" "Ptr" 
+                 -> do ptrCon <- conFromModule "Foreign.Ptr" "Ptr"
                        voidCon <- conFromModule "Data.Void" "Void"
                        pure $ ptrCon `TyApp` voidCon
-               Ptr _ (Proto ret parameters) 
-                 -> do funPtrCon <- conFromModule "Foreign.Ptr" "FunPtr" 
+               Ptr _ (Proto ret parameters)
+                 -> do funPtrCon <- conFromModule "Foreign.Ptr" "FunPtr"
                        functionType <- makeFunctionType ret parameters
                        pure $ funPtrCon `TyApp` functionType
-               Ptr _ t 
-                 -> do ptrCon <- conFromModule "Foreign.Ptr" "Ptr" 
-                       t <- cTypeToHsType t
-                       pure $ ptrCon `TyApp` t
-               Array s t 
-                 -> do vecCon <- conFromModule "Data.Vector.Storable.Sized" 
+               Ptr _ t
+                 -> do ptrCon <- conFromModule "Foreign.Ptr" "Ptr"
+                       tHs <- cTypeToHsType t
+                       pure $ ptrCon `TyApp` tHs
+               Array s t
+                 -> do vecCon <- conFromModule "Data.Vector.Storable.Sized"
                                                "Vector"
                        sizeType <- arraySizeToNat s
-                       t <- cTypeToHsType t
-                       pure $ vecCon `TyApp` sizeType `TyApp` t
+                       tHs <- cTypeToHsType t
+                       pure $ vecCon `TyApp` sizeType `TyApp` tHs
                _ -> error ("Failed to convert C type:\n" ++ show cType)
 
 cIdToHsType :: CIdentifier -> Write HS.Type
@@ -128,55 +129,33 @@ arraySizeToNat s = case s of
                            typeNat = PromotedCon False (UnQual typeName)
                        pure $ TyPromoted typeNat
 
-makeFunctionType :: CType -> [ParameterDeclaration CIdentifier] 
+makeFunctionType :: CType -> [ParameterDeclaration CIdentifier]
                  -> Write HS.Type
 makeFunctionType ret [ParameterDeclaration _ (TypeSpecifier _ Void)] = makeFunctionType ret []
-makeFunctionType ret parameters = 
+makeFunctionType ret parameters =
   foldr TyFun <$>
         ((simpleCon "IO" `TyApp`) <$> cTypeToHsType ret) <*>
-        (traverse (cTypeToHsType . parameterDeclarationType) parameters)
-
-type TypeConvert = State TypeConvertState
-
-data TypeConvertState = TypeConvertState{ nextVariable :: String
-                                        }
-
-initialTypeConvertState = TypeConvertState{ nextVariable = "a"
-                                          }
-
-getTypeVariable :: TypeConvert String
-getTypeVariable = gets nextVariable <* modify incrementNextVariable
-
-succLexicographic :: (Enum a, Ord a) => a -> a -> [a] -> [a]
-succLexicographic lower _ [] = [lower]
-succLexicographic lower upper (x:ys) = 
-  if x >= upper 
-    then lower : succLexicographic lower upper ys
-    else succ x : ys
-
-incrementNextVariable :: TypeConvertState -> TypeConvertState
-incrementNextVariable (TypeConvertState n) = 
-  TypeConvertState (succLexicographic 'a' 'z' n)
+        traverse (cTypeToHsType . parameterDeclarationType) parameters
 
 -- | cTypeNames returns the names of the C types this type depends on
 cTypeDependencyNames :: CType -> [String]
-cTypeDependencyNames cType = 
-  case cType of 
-    TypeSpecifier _ Void 
+cTypeDependencyNames cType =
+  case cType of
+    TypeSpecifier _ Void
       -> ["void"]
-    TypeSpecifier _ (C.Char Nothing) 
+    TypeSpecifier _ (C.Char Nothing)
       -> ["char"]
-    TypeSpecifier _ Float 
+    TypeSpecifier _ Float
       -> ["float"]
-    TypeSpecifier _ (TypeName t) 
+    TypeSpecifier _ (TypeName t)
       -> [unCIdentifier t]
-    TypeDef (Struct t) 
+    TypeDef (Struct t)
       -> [unCIdentifier t]
     Ptr _ t
       -> cTypeDependencyNames t
-    Array _ t 
+    Array _ t
       -> cTypeDependencyNames t
-    Proto ret ps 
+    Proto ret ps
       -> cTypeDependencyNames ret ++ concatMap parameterTypeNames ps
     _ -> error ("Failed to get depended on names for C type:\n" ++ show cType)
 
@@ -184,17 +163,15 @@ parameterTypeNames :: ParameterDeclaration CIdentifier -> [String]
 parameterTypeNames (ParameterDeclaration _ t) = cTypeDependencyNames t
 
 getTypeInfo :: TypeEnv -> String -> TypeInfo
-getTypeInfo env s = 
-  case Map.lookup s (teTypeInfo env) of
-    Nothing -> error ("Type missing from environment: " ++ s)
-    Just ti -> ti
- 
+getTypeInfo env s = Map.lookupDefault err s (teTypeInfo env)
+  where err = error ("Type missing from environment: " ++ s)
+
 -- TODO: Remove
 buildTypeEnvFromSpec :: Spec -> TypeEnv
-buildTypeEnvFromSpec spec = 
+buildTypeEnvFromSpec spec =
   let constants = sConstants spec
       nameAndTypes = catMaybes . fmap getNameAndType $ sTypes spec
-      getNameAndType typeDecl = 
+      getNameAndType typeDecl =
         do name <- typeDeclTypeName typeDecl
            cType <- typeDeclCType typeDecl
            pure (name, cType)
@@ -204,42 +181,40 @@ buildTypeEnvFromSpec spec =
   in buildTypeEnv constants enums unions structs nameAndTypes
 
 buildTypeEnvFromSpecGraph :: SpecGraph -> TypeEnv
-buildTypeEnvFromSpecGraph graph = 
+buildTypeEnvFromSpecGraph graph =
   let constants = getGraphConstants graph
-      nameAndTypes = getGraphCTypes graph 
-      unions = getGraphUnionTypes graph 
-      structs = getGraphStructTypes graph 
+      nameAndTypes = getGraphCTypes graph
+      unions = getGraphUnionTypes graph
+      structs = getGraphStructTypes graph
       enums = getGraphEnumTypes graph
   in buildTypeEnv constants enums unions structs nameAndTypes
 
-buildTypeEnv :: [Constant] -> [EnumType] -> [UnionType] -> [StructType] 
-             -> [(String, CType)] 
+buildTypeEnv :: [Constant] -> [EnumType] -> [UnionType] -> [StructType]
+             -> [(String, CType)]
              -> TypeEnv
 buildTypeEnv constants enums unions structs typeDecls = env
   where -- Notice the recursive definition of env
-        env = TypeEnv{..} 
+        env = TypeEnv{..}
         teIntegralConstants = Map.fromList . catMaybes . fmap getIntConstant $ constants
         teTypeInfo = Map.fromList ((second (cTypeInfo env) <$> typeDecls) ++
-                                   structTypeInfos ++ unionTypeInfos ++ 
+                                   structTypeInfos ++ unionTypeInfos ++
                                    enumTypeInfos)
         structTypeInfos = (stName &&& getStructTypeInfo env) <$> structs
         unionTypeInfos = (utName &&& getUnionTypeInfo env) <$> unions
-        enumTypeInfos = zip (etName <$> enums) (repeat TypeInfo{ tiSize = 4 
+        enumTypeInfos = zip (etName <$> enums) (repeat TypeInfo{ tiSize = 4
                                                                , tiAlignment = 4
                                                                })
 
 arrayTypeToSize :: Map.HashMap String Integer -> ArrayType CIdentifier -> Integer
-arrayTypeToSize cs at = 
+arrayTypeToSize cs at =
   case at of
     VariablySized -> error "Trying to get size of variably sized array"
     Unsized -> error "Trying to get size of unsized array"
     SizedByInteger i -> i
-    SizedByIdentifier n -> 
+    SizedByIdentifier n ->
       let string = unCIdentifier n
-          value = Map.lookup string cs
-      in case value of
-           Nothing -> error ("Unknown identifier: " ++ string)
-           Just v -> v
+          err = error ("Unknown identifier: " ++ string)
+      in Map.lookupDefault err string cs
 
 getIntConstant :: Constant -> Maybe (String, Integer)
 getIntConstant c
@@ -249,9 +224,9 @@ getIntConstant c
   = Nothing
 
 cTypeInfo :: TypeEnv -> CType -> TypeInfo
-cTypeInfo env t = 
+cTypeInfo env t =
   case t of
-    TypeSpecifier _ Void 
+    TypeSpecifier _ Void
       -> error "Void doesn't have a size or alignment"
     TypeSpecifier _ (C.Char Nothing) -> TypeInfo{ tiSize = 1
                                                 , tiAlignment = 1
@@ -259,7 +234,7 @@ cTypeInfo env t =
     TypeSpecifier _ Float -> TypeInfo{ tiSize = 4
                                      , tiAlignment = 4
                                      }
-    TypeSpecifier _ (TypeName tn) -> 
+    TypeSpecifier _ (TypeName tn) ->
       case unCIdentifier tn of
         "uint8_t"  -> TypeInfo{ tiSize = 1
                               , tiAlignment = 1
@@ -276,18 +251,15 @@ cTypeInfo env t =
         "size_t"   -> TypeInfo{ tiSize = 8 -- TODO: 32 bit support
                               , tiAlignment = 8
                               }
-        name ->  
-          case Map.lookup name (teTypeInfo env) of
-            Nothing -> error ("type name not found in environment: " ++ name)
-            Just ti -> ti
-    Ptr _ _ 
+        name -> fromMaybe (error ("type name not found in environment: " ++ name)) (Map.lookup name (teTypeInfo env))
+    Ptr _ _
       -> TypeInfo{ tiSize = 8, tiAlignment = 8 } -- TODO: 32 bit support
-    Array arrayType elementType 
-      -> let length = arrayTypeToSize (teIntegralConstants env) arrayType
+    Array arrayType elementType
+      -> let len = arrayTypeToSize (teIntegralConstants env) arrayType
              typeInfo = cTypeInfo env elementType
              elementSize = tiSize typeInfo
              elementAlignment = tiAlignment typeInfo
-         in TypeInfo{ tiSize = fromIntegral length * elementSize
+         in TypeInfo{ tiSize = fromIntegral len * elementSize
                     , tiAlignment = elementAlignment
                     }
     _ -> error ("Failed to get typeinfo for C type:\n" ++ show t)
@@ -296,10 +268,10 @@ cTypeInfo env t =
 -- Calculating member packing
 --------------------------------------------------------------------------------
 
-data MemberInfo = MemberInfo { miMember :: !StructMember
-                             , miSize :: !Int
+data MemberInfo = MemberInfo { miMember    :: !StructMember
+                             , miSize      :: !Int
                              , miAlignment :: !Int
-                             , miOffset :: !Int
+                             , miOffset    :: !Int
                              }
 
 getStructTypeInfo :: TypeEnv -> StructType -> TypeInfo
@@ -320,13 +292,13 @@ getUnionTypeInfo env ut = TypeInfo{..}
         unalignedSize = maximum (miSize <$> memberPacking)
         tiSize = alignTo tiAlignment unalignedSize
 
--- | Takes a list of members and calculates their packing 
+-- | Takes a list of members and calculates their packing
 calculateMemberPacking :: TypeEnv -> [StructMember] -> [MemberInfo]
 calculateMemberPacking env = comb go 0
   where go offset m = let cType = smCType m
                           TypeInfo size alignment = cTypeInfo env cType
                           alignedOffset = alignTo alignment offset
-                      in (alignedOffset + size, 
+                      in (alignedOffset + size,
                           MemberInfo m size alignment alignedOffset)
 
 comb :: (s -> a -> (s, b)) -> s -> [a] -> [b]

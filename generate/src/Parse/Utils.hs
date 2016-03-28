@@ -1,6 +1,6 @@
 {-# LANGUAGE NoMonomorphismRestriction #-}
 
-module Parse.Utils 
+module Parse.Utils
   ( optional
   , optionalAttrValue
   , requiredAttrValue
@@ -32,12 +32,11 @@ module Parse.Utils
   , stripLines
   ) where
 
-import Text.XML.HXT.Core
-import Data.Foldable (toList, foldr')
-import Safe(readMay)
-import Data.List.Split(splitOn)
-import Data.Char(isSpace)
-import Data.List(dropWhile)
+import           Data.Char         (isSpace)
+import           Data.Foldable     (foldr', toList)
+import           Data.List.Split   (splitOn)
+import           Safe              (readMay)
+import           Text.XML.HXT.Core
 
 optionalAttrValue :: ArrowXml a => String -> a XmlTree (Maybe String)
 optionalAttrValue s = optional (getAttrValue0 s)
@@ -46,7 +45,7 @@ optional :: ArrowIf a => a b a1 -> a b (Maybe a1)
 optional x = (x >>^ Just) `orElse` constA Nothing
 
 requiredAttrValue :: String -> IOStateArrow s XmlTree String
-requiredAttrValue s = getAttrValue0 s `orElse` 
+requiredAttrValue s = getAttrValue0 s `orElse`
                       failA ("Missing required attribute: " ++ s)
 
 requiredRead :: Read a => IOStateArrow s String a
@@ -61,12 +60,12 @@ failA s = issueErr s >>> none
 failString :: IOStateArrow s String c
 failString = applyA (arr issueErr) >>> none
 
-traceShowA :: Show a => IOStateArrow s a a 
+traceShowA :: Show a => IOStateArrow s a a
 traceShowA = traceValue 0 show
 
 oneRequired :: String -> IOStateArrow s a c -> IOStateArrow s a c
-oneRequired e a = listA a 
-                  >>> 
+oneRequired e a = listA a
+                  >>>
                   (isA (not . null) `orElse`
                     failA ("Arrow returned no results (expected one): " ++ e))
                   >>>
@@ -88,27 +87,27 @@ commaSepListAttr n = commaSepList ^<< getAttrValue n
 optionalCommaSepListAttr :: ArrowXml a => String -> a XmlTree (Maybe [String])
 optionalCommaSepListAttr n = fmap commaSepList ^<< optionalAttrValue n
 
-getAllText :: ArrowXml a => a XmlTree [Char]
+getAllText :: ArrowXml a => a XmlTree String
 getAllText = deep getText >. concat
 
 -- | Try each option in turn until one of them succeeds. State altering arrows
 -- should be handled with care.
 oneOf :: (Show b, Foldable f) => f (IOStateArrow s b c) -> IOStateArrow s b c
-oneOf = foldr' orElse 
+oneOf = foldr' orElse
         ((failA "None of the choices matched" &&& traceShowA) >>> arr fst)
-          
+
 -- | 'extractFields name predicate extract' runs extract if the predicate
 -- holds and fails if extract doesn't return exactly one value
 extractFields :: String -> IOStateArrow s a b -> IOStateArrow s b c -> IOStateArrow s a c
-extractFields name predicate extract = 
+extractFields name predicate extract =
   predicate >>>
-  oneRequired name 
+  oneRequired name
     (extract `orElse` failA ("Failed to extract fields for " ++ name))
 
 -- | Get either the attribute called "name" or the text between the "name"
 -- tags.
 getNameAttrOrChildText :: IOStateArrow s XmlTree String
-getNameAttrOrChildText = 
+getNameAttrOrChildText =
   oneOf [ getAttrValue0 "name"
         , getNameChildText
         ]
@@ -118,7 +117,7 @@ getNameChildText :: IOStateArrow s XmlTree String
 getNameChildText = getAllText <<< hasName "name" <<< getChildren
 
 parseValidityBlock :: ArrowXml a => a XmlTree [String]
-parseValidityBlock = hasName "validity" >>> 
+parseValidityBlock = hasName "validity" >>>
                      listA (getChildren >>> parseUsageString)
   where parseUsageString = hasName "usage" >>> getAllText
 
@@ -135,22 +134,22 @@ parseBool = arrF go `orElse` failA "Failed to parse bool"
         go _       = Nothing
 
 boolAttrDefault :: String -> Bool -> IOStateArrow s XmlTree Bool
-boolAttrDefault attrName def = 
-  (parseBool <<< getAttrValue0 attrName) `orElse` 
-  constA def 
+boolAttrDefault attrName def =
+  (parseBool <<< getAttrValue0 attrName) `orElse`
+  constA def
 
 -- | Take the right element of either or failA with the error on the Left
 fromRightA :: IOStateArrow s (Either String a) a
-fromRightA = ifP isRight 
-                 (arr $ \(Right x) -> x) 
+fromRightA = ifP isRight
+                 (arr $ \(Right x) -> x)
                  (applyA (arr $ \(Left e) -> failA e))
   where isRight (Right _) = True
         isRight (Left _)  = False
 
 -- | Take the right element of either or failA with the error on the Left
 fromRightShowA :: Show e => IOStateArrow s (Either e a) a
-fromRightShowA = ifP isRight 
-                 (arr $ \(Right x) -> x) 
+fromRightShowA = ifP isRight
+                 (arr $ \(Right x) -> x)
                  (arr (\(Left e) -> show e) ^>> failString)
   where isRight (Right _) = True
         isRight (Left _)  = False

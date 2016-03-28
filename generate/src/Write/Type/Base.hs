@@ -4,12 +4,11 @@ module Write.Type.Base
   ( writeBaseType
   ) where
 
-import Spec.Type
-import Text.InterpolatedString.Perl6
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-import Write.TypeConverter
-import Write.WriteMonad
-import Write.Utils
+import           Spec.Type
+import           Text.InterpolatedString.Perl6
+import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
+import           Write.TypeConverter
+import           Write.WriteMonad
 
 isTransparentBaseType :: BaseType -> Bool
 isTransparentBaseType bt = btName bt `elem` ["VkFlags"]
