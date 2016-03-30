@@ -1,22 +1,25 @@
 {-# LANGUAGE PatternGuards #-}
 
 module Spec.StripExtensions
-  ( stripWSIExtensions
+  ( stripExtensions
   ) where
 
+import           Data.List           (partition)
 import           Data.Maybe          (catMaybes)
 import           Spec.Command
+import           Spec.Extension
 import           Spec.Spec
 import           Spec.Type
 import           Write.TypeConverter (cTypeDependencyNames)
 import           Write.Utils
 
--- | 'stripWSIExtensions' removes everything that depends upon any windowing
--- system headers
-stripWSIExtensions :: Spec -> Spec
-stripWSIExtensions spec =
+-- | 'stripExtensions' removes everything that depends upon any unsupported types
+-- and extensions that aren't in the "vulkan" profile
+stripExtensions :: Spec -> Spec
+stripExtensions spec =
   let allTypes = sTypes spec
       allCommands = sCommands spec
+      allExtensions = sExtensions spec
       platformTypes = catMaybes . fmap typeDeclToPlatformType $ sTypes spec
       disallowedPlatformTypes = filter (isDisallowedTypeName . ptName) $
                                    platformTypes
@@ -28,10 +31,17 @@ stripWSIExtensions spec =
       isInDisallowed  = flip elem disallowedTypes
       allowedTypeDecls = filter (not . isInDisallowed) allTypes
       isInDisallowedNames = flip elem disallowedTypeNames
-      allowedCommands = filter
-                         (not . any isInDisallowedNames . commandDependencies)
-                         allCommands
-      allowedExtensions = []
+      (disallowedCommands, allowedCommands) = partition
+                                                (any isInDisallowedNames . commandDependencies)
+                                                allCommands
+      disallowedCommandNames = fmap cName disallowedCommands
+      isInDisallowedCommands = flip elem disallowedCommandNames
+      profileExtensions = filter ((== "vulkan") . eSupported) allExtensions
+      allowedExtensions = filter
+                            ((&&)
+                              <$> not . any isInDisallowedNames . eTypeNames
+                              <*> not . any isInDisallowedCommands . eCommandNames)
+                            profileExtensions
   in spec{ sTypes = allowedTypeDecls
          , sCommands = allowedCommands
          , sExtensions = allowedExtensions

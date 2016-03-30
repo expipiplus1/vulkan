@@ -9,12 +9,16 @@ module Graphics.Vulkan
   , module Graphics.Vulkan.DescriptorSet
   , module Graphics.Vulkan.Device
   , module Graphics.Vulkan.DeviceInitialization
+  , module Graphics.Vulkan.EXT.DebugReport
   , module Graphics.Vulkan.Event
   , module Graphics.Vulkan.ExtensionDiscovery
   , module Graphics.Vulkan.Fence
   , module Graphics.Vulkan.Image
   , module Graphics.Vulkan.ImageView
+  , module Graphics.Vulkan.KHR.Display
+  , module Graphics.Vulkan.KHR.DisplaySwapchain
   , module Graphics.Vulkan.KHR.Surface
+  , module Graphics.Vulkan.KHR.Swapchain
   , module Graphics.Vulkan.LayerDiscovery
   , module Graphics.Vulkan.Memory
   , module Graphics.Vulkan.MemoryManagement
@@ -42,12 +46,16 @@ import Graphics.Vulkan.Core
 import Graphics.Vulkan.DescriptorSet
 import Graphics.Vulkan.Device
 import Graphics.Vulkan.DeviceInitialization
+import Graphics.Vulkan.EXT.DebugReport
 import Graphics.Vulkan.Event
 import Graphics.Vulkan.ExtensionDiscovery
 import Graphics.Vulkan.Fence
 import Graphics.Vulkan.Image
 import Graphics.Vulkan.ImageView
+import Graphics.Vulkan.KHR.Display
+import Graphics.Vulkan.KHR.DisplaySwapchain
 import Graphics.Vulkan.KHR.Surface
+import Graphics.Vulkan.KHR.Swapchain
 import Graphics.Vulkan.LayerDiscovery
 import Graphics.Vulkan.Memory
 import Graphics.Vulkan.MemoryManagement
