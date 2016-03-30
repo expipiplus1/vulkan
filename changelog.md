@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.6.0.0] - 2016-03-30
+  - Add DebugReport, Display, DisplaySwapchain and Swapchain extension modules
+
 ## [1.5.1.0] - 2016-03-07
  - Add enumeration values for VkCompositeAlphaFlagsKHR and VkSurfaceTransformFlagsKHR
 
