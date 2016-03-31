@@ -1,3 +1,9 @@
+setup-info:
+  ghc:
+    linux64:
+      8.0.0.20160204:
+        url: "https://downloads.haskell.org/~ghc/8.0.1-rc2/ghc-8.0.0.20160204-x86_64-deb8-linux.tar.xz"
+        sha1: 2e67c6f4680304848ca9d44f2e888b1754da4abe
 flags: {}
 packages:
     - .

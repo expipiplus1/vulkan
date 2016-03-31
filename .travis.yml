@@ -1,0 +1,49 @@
+sudo: false
+
+sudo: required
+dist: trusty
+
+addons:
+  apt:
+    packages:
+      - libgmp-dev
+      - graphviz
+
+cache:
+  apt: true
+  directories:
+    - ~/.stack
+    - ~/.stack-bin
+
+env:
+  - STACK_VER=1.0.4
+
+install:
+  - mkdir -p ~/.vulkan
+  - pushd ~/.vulkan
+  - curl https://vulkan.lunarg.com/pub/sdks/linux/latest -L -o vulkan.run
+  - chmod +x vulkan.run
+  - sudo ./vulkan.run
+  - popd
+  - export STACK_NAME=stack-$STACK_VER-linux-x86_64
+  - mkdir -p ~/.stack-bin
+  - pushd ~/.stack-bin
+  # disabling -N because I get 403 errors from aws on travis
+  # - wget -N https://github.com/commercialhaskell/stack/releases/download/v$STACK_VER/$STACK_NAME.tar.gz
+  - wget https://github.com/commercialhaskell/stack/releases/download/v$STACK_VER/$STACK_NAME.tar.gz
+  - if [ $STACK_NAME.tar.gz -nt $STACK_NAME ]; then tar -xzf $STACK_NAME.tar.gz; fi
+  - export PATH=$(pwd)/$STACK_NAME:$PATH
+  - popd
+  - stack --version
+  - pushd generate && stack setup && popd
+  - stack setup
+
+script:
+  - pushd generate
+  - stack build
+  - cat ./Vulkan-Docs/src/spec/vk.xml | stack exec generate
+  - rm -r ../src
+  - mv out ../src
+  - popd
+  - stack build
+  - 'if [ -n "$(git status --porcelain)" ]; then echo Error: status not clean; git status; exit 1; fi'
