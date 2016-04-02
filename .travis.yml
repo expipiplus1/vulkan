@@ -39,11 +39,5 @@ install:
   - stack setup
 
 script:
-  - pushd generate
-  - stack build
-  - cat ./Vulkan-Docs/src/spec/vk.xml | stack exec generate
-  - rm -r ../src
-  - mv out ../src
-  - popd
-  - stack build
-  - 'if [ -n "$(git status --porcelain)" ]; then echo Error: status not clean; git status; exit 1; fi'
+  - ./build.sh
+  - 'if [ -n "$(git status --porcelain)" ]; then echo Error: changes found after generate; git status; exit 1; fi'
