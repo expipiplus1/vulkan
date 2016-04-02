@@ -48,9 +48,9 @@ type ExtensionName = String
 
 type WriteOutput = (HashSet RequiredName, HashSet ExtensionName)
 
-data ReadInput = ReadInput { readTypeEnv :: TypeEnv
+data ReadInput = ReadInput { readTypeEnv  :: TypeEnv
                            , readFileType :: FileType
-                           , readTags :: [String]
+                           , readTags     :: [String]
                            }
 
 type Write = ReaderT ReadInput (Writer WriteOutput)
