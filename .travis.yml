@@ -37,7 +37,10 @@ install:
   - stack --version
   - pushd generate && stack setup && popd
   - stack setup
+  - pushd ~ && stack install stylish-haskell && popd
 
 script:
+  - find generate/src -name "*.hs" | xargs stylish-haskell -i
+  - 'if [ -n "$(git status --porcelain)" ]; then echo Error: changes found after stylish-haskell; git status; exit 1; fi'
   - ./build.sh
   - 'if [ -n "$(git status --porcelain)" ]; then echo Error: changes found after generate; git status; exit 1; fi'
