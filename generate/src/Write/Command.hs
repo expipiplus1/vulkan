@@ -18,7 +18,7 @@ writeCommand :: Command -> Write Doc
 writeCommand c = do
   commandType <- writeCommandType c
   pure [qc|-- ** {cName c}
-foreign import ccall "{cName c}" {cName c} ::
+foreign import ccall "{unCIdentifier $ cSymbol c}" {cName c} ::
   {commandType}
 |]
 

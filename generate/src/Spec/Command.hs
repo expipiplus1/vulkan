@@ -1,8 +1,10 @@
 module Spec.Command where
 
+import           Language.C.Types (CIdentifier)
 import           Spec.Type
 
 data Command = Command { cName                     :: String
+                       , cSymbol                   :: CIdentifier
                        , cReturnType               :: CType
                        , cParameters               :: [Parameter]
                        , cImplicitExternSyncParams :: Maybe [String]

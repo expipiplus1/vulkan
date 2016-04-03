@@ -15,6 +15,7 @@ parseCommand = hasName "command" >>>
           proto <- onlyChildWithName "proto" -< command
 
           cName <- getAllText <<< onlyChildWithName "name" -< proto
+          cSymbol <- parseIdentifier -< cName
 
           cReturnType <- parseCType <<<
             getAllText <<< processChildren (neg (hasName "name")) -< proto
