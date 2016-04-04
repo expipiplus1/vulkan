@@ -8,7 +8,9 @@ import           Data.HashMap.Strict          (HashMap)
 import           Data.List                    (find, foldl', intersperse,
                                                isPrefixOf, isSuffixOf)
 import           Data.List.Split              (splitOn)
+import           Data.Maybe                   (fromMaybe)
 import           Numeric
+import           Spec.ExtensionTag
 import           System.Directory             (createDirectoryIfMissing)
 import           System.FilePath              (takeDirectory, (<.>), (</>))
 import           Text.PrettyPrint.Leijen.Text hiding (string, (<$>), (</>))
@@ -84,11 +86,22 @@ swapSuffix suffix replacement string =
     then Just $ take (length string - length suffix) string ++ replacement
     else Nothing
 
-breakNameTag :: [String] -> String -> (String, String)
+swapSuffixUnderTag :: [ExtensionTag] -- ^ All the known extension tags
+                   -> String -- ^ suffix
+                   -> String -- ^ replacement
+                   -> String -- ^ string
+                   -> Maybe String
+swapSuffixUnderTag tags suffix replacement string = (++ tagOrEmpty) <$> swappedBase
+  where (baseName, tag) = breakNameTag tags string
+        tagOrEmpty = fromMaybe "" (unExtensionTag <$> tag)
+        swappedBase = swapSuffix suffix replacement baseName
+
+breakNameTag :: [ExtensionTag] -> String -> (String, Maybe ExtensionTag)
 breakNameTag tags name =
-  case find (`isSuffixOf` name) tags of
-    Nothing -> (name, "")
-    Just tag -> (take (length name - length tag) name, tag)
+  case find ((`isSuffixOf` name) . unExtensionTag) tags of
+    Nothing -> (name, Nothing)
+    Just tag -> ( take (length name - length (unExtensionTag tag)) name
+                , Just tag)
 
 -- | Concatenate words in the string and make the first letter of each one
 -- uppercase.

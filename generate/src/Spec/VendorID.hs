@@ -1,6 +1,8 @@
 module Spec.VendorID where
 
-data VendorID = VendorID{ viName    :: String
+import           Spec.ExtensionTag
+
+data VendorID = VendorID{ viName    :: ExtensionTag
                         , viID      :: Integer
                         , viComment :: String
                         }

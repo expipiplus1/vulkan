@@ -6,6 +6,7 @@ module Parse.Tag
   ) where
 
 import           Parse.Utils
+import           Spec.ExtensionTag
 import           Spec.Tag
 import           Text.XML.HXT.Core
 
@@ -20,7 +21,7 @@ parseTag = extractFields "Tag"
                          (hasName "tag")
                          extract
   where extract = proc tag -> do
-          tName <- requiredAttrValue "name" -< tag
+          tName <- arrF stringToExtensionTag <<< requiredAttrValue "name" -< tag
           tAuthor <- requiredAttrValue "author" -< tag
           tContact <- requiredAttrValue "contact" -< tag
           returnA -< Tag{..}

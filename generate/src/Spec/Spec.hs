@@ -1,11 +1,12 @@
 module Spec.Spec where
 
-import           Prelude        hiding (Enum)
+import           Prelude           hiding (Enum)
 import           Spec.Bitmask
 import           Spec.Command
 import           Spec.Constant
 import           Spec.Enum
 import           Spec.Extension
+import           Spec.ExtensionTag
 import           Spec.Section
 import           Spec.Tag
 import           Spec.Type
@@ -25,6 +26,6 @@ data Spec = Spec { sTypes      :: [TypeDecl]
                  }
   deriving (Show)
 
-getSpecExtensionTags :: Spec -> [String]
+getSpecExtensionTags :: Spec -> [ExtensionTag]
 getSpecExtensionTags spec =
   (tName <$> sTags spec) ++ (viName <$> sVendorIDs spec)

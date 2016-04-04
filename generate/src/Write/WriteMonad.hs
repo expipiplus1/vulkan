@@ -25,6 +25,7 @@ import           Control.Monad.Writer
 import           Data.Hashable
 import           Data.HashSet         as S
 import           GHC.Generics         (Generic)
+import           Spec.ExtensionTag
 import           Spec.TypeEnv
 import           Write.Utils
 
@@ -50,12 +51,12 @@ type WriteOutput = (HashSet RequiredName, HashSet ExtensionName)
 
 data ReadInput = ReadInput { readTypeEnv  :: TypeEnv
                            , readFileType :: FileType
-                           , readTags     :: [String]
+                           , readTags     :: [ExtensionTag]
                            }
 
 type Write = ReaderT ReadInput (Writer WriteOutput)
 
-runWrite :: TypeEnv -> FileType -> [String] -> Write a
+runWrite :: TypeEnv -> FileType -> [ExtensionTag] -> Write a
          -> (a, (HashSet RequiredName, HashSet ExtensionName))
 runWrite env boot tags m = runWriter (runReaderT m (ReadInput env boot tags))
 
@@ -65,7 +66,7 @@ askTypeEnv = asks readTypeEnv
 isBoot :: Write Bool
 isBoot = asks ((== Boot) . readFileType)
 
-askTags :: Write [String]
+askTags :: Write [ExtensionTag]
 askTags = asks readTags
 
 doesDeriveStorable :: Write ()

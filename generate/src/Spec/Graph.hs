@@ -13,6 +13,7 @@ import           Spec.Bitmask
 import           Spec.Command      as Command
 import           Spec.Constant     as Constant
 import           Spec.Enum
+import           Spec.ExtensionTag
 import           Spec.Spec
 import           Spec.Type         hiding (ABaseType, ABitmaskType, ADefine,
                                     AFuncPointerType, AHandleType,
@@ -24,7 +25,7 @@ import           Write.Utils
 -- | Info is a more useful representation of the specification
 data SpecGraph = SpecGraph{ gVertices      :: [Vertex]
                           , gNameVertexMap :: M.HashMap String Vertex
-                          , gExtensionTags :: [String]
+                          , gExtensionTags :: [ExtensionTag]
                           }
 
 data Vertex = Vertex{ vName         :: String
@@ -118,10 +119,9 @@ typeDeclToVertex graph td =
                                    (cTypeDependencyNames (bmtCType bmt) ++
                                     maybeToList (bmtRequires bmt)))
                                  ++ maybeToList
-                    (lookupNameMay =<< ((++ tag) <$> swapSuffix "Flags" "FlagBits" baseName))
+                    (lookupNameMay =<< swapSuffixUnderTag (gExtensionTags graph) "Flags" "FlagBits" (bmtName bmt))
                , vSourceEntity = ABitmaskType bmt
                }
-         where (baseName, tag) = breakNameTag (gExtensionTags graph) (bmtName bmt)
        T.AHandleType ht ->
          Vertex{ vName = htName ht
                , vDependencies = catMaybes . fmap lookupNameMay $

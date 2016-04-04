@@ -6,6 +6,7 @@ module Parse.VendorID
   ) where
 
 import           Parse.Utils
+import           Spec.ExtensionTag
 import           Spec.VendorID
 import           Text.XML.HXT.Core
 
@@ -20,7 +21,8 @@ parseVendorID = extractFields "VendorID"
                               (hasName "vendorid")
                               extract
   where extract = proc vendorid -> do
-          viName <- requiredAttrValue "name" -< vendorid
+          viName <- arrF stringToExtensionTag <<<
+                    requiredAttrValue "name" -< vendorid
           viID <- requiredRead <<< requiredAttrValue "id" -< vendorid
           viComment <- requiredAttrValue "comment" -< vendorid
           returnA -< VendorID{..}

@@ -21,6 +21,7 @@ executable generate
                      , Spec.Command
                      , Spec.Enum
                      , Spec.Extension
+                     , Spec.ExtensionTag
                      , Spec.Graph
                      , Spec.Partition
                      , Spec.Type

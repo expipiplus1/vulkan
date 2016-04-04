@@ -1,6 +1,8 @@
 module Spec.Tag where
 
-data Tag = Tag{ tName    :: String
+import           Spec.ExtensionTag
+
+data Tag = Tag{ tName    :: ExtensionTag
               , tAuthor  :: String
               , tContact :: String
               }

@@ -15,8 +15,10 @@ import           Data.Foldable     as F
 import qualified Data.HashMap.Lazy as M
 import qualified Data.HashSet      as S
 import           Data.List         (isPrefixOf, isSuffixOf)
+import           Data.Maybe        (fromMaybe)
 import           Safe              (assertNote)
 import           Spec.Extension
+import           Spec.ExtensionTag
 import           Spec.Graph
 import           Spec.Section
 import           Spec.Spec
@@ -103,11 +105,11 @@ possibleEntityAssociations :: Spec -> String -> [String]
 possibleEntityAssociations spec name
   | "vkCreate" `isPrefixOf` name
   = let Just baseObjectName = swapPrefix "vkCreate" "Vk" baseName
-        objectName = baseObjectName ++ tag
-        createInfoStructName = baseObjectName ++ "CreateInfo" ++ tag
-        createFlagsName = baseObjectName ++ "CreateFlags" ++ tag
-        usageFlagsName = baseObjectName ++ "UsageFlags" ++ tag
-        typeEnumName = baseObjectName ++ "Type" ++ tag
+        objectName = baseObjectName ++ tagString
+        createInfoStructName = baseObjectName ++ "CreateInfo" ++ tagString
+        createFlagsName = baseObjectName ++ "CreateFlags" ++ tagString
+        usageFlagsName = baseObjectName ++ "UsageFlags" ++ tagString
+        typeEnumName = baseObjectName ++ "Type" ++ tagString
     in [ objectName
        , createInfoStructName
        , createFlagsName
@@ -116,13 +118,14 @@ possibleEntityAssociations spec name
        ]
   | "Flags" `isSuffixOf` baseName
   = let Just newBaseName = swapSuffix "Flags" "FlagBits" baseName
-    in [newBaseName ++ tag]
+    in [newBaseName ++ tagString]
   | "FlagBits" `isSuffixOf` baseName
   = let Just newBaseName = swapSuffix "FlagBits" "Flags" baseName
-    in [newBaseName ++ tag]
+    in [newBaseName ++ tagString]
   | otherwise
   = []
   where (baseName, tag) = breakNameTag (getSpecExtensionTags spec) name
+        tagString = fromMaybe "" (unExtensionTag <$> tag)
 
 possibleModuleAssociations :: ModuleName -> [String]
 possibleModuleAssociations moduleName

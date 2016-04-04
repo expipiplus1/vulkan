@@ -27,11 +27,10 @@ writeVertex v =
     APlatformType _ -> pure empty
     ABitmaskType bitmaskType -> do
       tags <- askTags
-      let bitmaskMay = do bitmaskName <- (++ tag) <$> swapSuffix "Flags" "FlagBits" baseName
+      let bitmaskMay = do bitmaskName <- swapSuffixUnderTag tags "Flags" "FlagBits" (vName v)
                           bitmaskVertex <- find ((== bitmaskName) . vName)
                                                 (vDependencies v)
                           vertexToBitmask bitmaskVertex
-          (baseName, tag) = breakNameTag tags (vName v)
       writeBitmaskType bitmaskType bitmaskMay
     AHandleType handleType -> writeHandleType handleType
     AnEnumType _ -> pure empty -- handled by enum
