@@ -25,7 +25,6 @@ import           Write.Utils
 -- | Info is a more useful representation of the specification
 data SpecGraph = SpecGraph{ gVertices      :: [Vertex]
                           , gNameVertexMap :: M.HashMap String Vertex
-                          , gExtensionTags :: [ExtensionTag]
                           }
 
 data Vertex = Vertex{ vName         :: String
@@ -37,7 +36,7 @@ data SourceEntity = AnInclude Include
                   | ADefine Define
                   | ABaseType BaseType
                   | APlatformType PlatformType
-                  | ABitmaskType BitmaskType
+                  | ABitmaskType BitmaskType (Maybe Bitmask)
                   | AHandleType HandleType
                   | AnEnumType EnumType
                   | AFuncPointerType FuncPointerType
@@ -73,21 +72,21 @@ allReachable vs = go (S.fromList (vName <$> vs)) (concatMap vDependencies vs)
 
 getSpecGraph :: Spec -> SpecGraph
 getSpecGraph spec = graph
-  where gVertices = (typeDeclToVertex graph <$> sTypes spec) ++
+  where gVertices = (typeDeclToVertex graph tags <$> sTypes spec) ++
                     (constantToVertex graph <$> sConstants spec) ++
                     (enumToVertex <$> sEnums spec) ++
                     (bitmaskToVertex graph <$> sBitmasks spec) ++
                     (commandToVertex graph <$> sCommands spec)
         gNameVertexMap = M.fromList ((vName &&& id) <$> gVertices)
-        gExtensionTags = getSpecExtensionTags spec
+        tags = getSpecExtensionTags spec
         graph = SpecGraph{..}
 
 --------------------------------------------------------------------------------
 -- Boring boilerplate conversions
 --------------------------------------------------------------------------------
 
-typeDeclToVertex :: SpecGraph -> TypeDecl -> Vertex
-typeDeclToVertex graph td =
+typeDeclToVertex :: SpecGraph -> [ExtensionTag] -> TypeDecl -> Vertex
+typeDeclToVertex graph tags td =
   let lookupNameMay name = M.lookup name (gNameVertexMap graph)
       lookupName name = fromMaybe (error ("Depended upon name not in spec: " ++ name)) (lookupNameMay name)
   in case td of
@@ -114,14 +113,14 @@ typeDeclToVertex graph td =
                , vSourceEntity = APlatformType pt
                }
        T.ABitmaskType bmt ->
-         Vertex{ vName = bmtName bmt
-               , vDependencies = (lookupName <$>
-                                   (cTypeDependencyNames (bmtCType bmt) ++
-                                    maybeToList (bmtRequires bmt)))
-                                 ++ maybeToList
-                    (lookupNameMay =<< swapSuffixUnderTag (gExtensionTags graph) "Flags" "FlagBits" (bmtName bmt))
-               , vSourceEntity = ABitmaskType bmt
-               }
+         let bm = (lookupNameMay =<< swapSuffixUnderTag tags "Flags" "FlagBits" (bmtName bmt))
+         in Vertex{ vName = bmtName bmt
+                  , vDependencies = (lookupName <$>
+                                     (cTypeDependencyNames (bmtCType bmt) ++
+                                      maybeToList (bmtRequires bmt)))
+                                   ++ maybeToList bm
+                  , vSourceEntity = ABitmaskType bmt (bm >>= vertexToBitmask)
+                  }
        T.AHandleType ht ->
          Vertex{ vName = htName ht
                , vDependencies = catMaybes . fmap lookupNameMay $
@@ -205,7 +204,7 @@ getGraphConstants graph = catMaybes (vertexToConstant <$> gVertices graph)
 vertexCType :: Vertex -> Maybe CType
 vertexCType v = case vSourceEntity v of
                   ABaseType bt -> Just $ btCType bt
-                  ABitmaskType bmt -> Just $ bmtCType bmt
+                  ABitmaskType bmt _ -> Just $ bmtCType bmt
                   AHandleType ht -> Just $ htCType ht
                   AFuncPointerType fpt -> Just $ fptCType fpt
                   _ -> Nothing
@@ -255,7 +254,7 @@ isTypeConstructor v =
     ADefine _ -> False
     ABaseType _ -> True
     APlatformType _ -> False
-    ABitmaskType _ -> True
+    ABitmaskType _ _ -> True
     AHandleType _ -> True
     AnEnumType _ -> True
     AFuncPointerType _ -> False

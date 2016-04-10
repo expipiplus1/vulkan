@@ -1,6 +1,5 @@
 module Write.Vertex where
 
-import           Data.List                    (find)
 import           Spec.Graph
 import           Text.PrettyPrint.Leijen.Text hiding ((<$>))
 import           Write.Command
@@ -12,7 +11,6 @@ import           Write.Type.Define
 import           Write.Type.FuncPointer
 import           Write.Type.Handle
 import           Write.Type.Struct
-import           Write.Utils
 import           Write.WriteMonad
 
 writeVertices :: [Vertex] -> Write Doc
@@ -25,13 +23,7 @@ writeVertex v =
     ADefine define -> writeDefine define
     ABaseType baseType -> writeBaseType baseType
     APlatformType _ -> pure empty
-    ABitmaskType bitmaskType -> do
-      tags <- askTags
-      let bitmaskMay = do bitmaskName <- swapSuffixUnderTag tags "Flags" "FlagBits" (vName v)
-                          bitmaskVertex <- find ((== bitmaskName) . vName)
-                                                (vDependencies v)
-                          vertexToBitmask bitmaskVertex
-      writeBitmaskType bitmaskType bitmaskMay
+    ABitmaskType bitmaskType bitmaskMay -> writeBitmaskType bitmaskType bitmaskMay
     AHandleType handleType -> writeHandleType handleType
     AnEnumType _ -> pure empty -- handled by enum
     AFuncPointerType funcPointerType -> writeFuncPointerType funcPointerType

@@ -29,7 +29,7 @@ writeModule :: SpecGraph
 writeModule graph nameLocations boot (ModuleName n) names = moduleString
   where typeEnv = buildTypeEnvFromSpecGraph graph
         (moduleString, (extraRequiredNames, extensions)) =
-          runWrite typeEnv boot (gExtensionTags graph) moduleWriter
+          runWrite typeEnv boot moduleWriter
         extensionDocs = getExtensionDoc <$> S.toList extensions
         getEntity name = let err = error ("exported name missing from spec graph " ++ name)
                          in M.lookupDefault err name (gNameVertexMap graph)
