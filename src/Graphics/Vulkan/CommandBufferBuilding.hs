@@ -7,17 +7,34 @@ module Graphics.Vulkan.CommandBufferBuilding where
 
 import Data.Vector.Storable.Sized( Vector
                                  )
+import Graphics.Vulkan.Buffer( Buffer
+                             )
+import Graphics.Vulkan.Pass( Framebuffer
+                           , VkDependencyFlags
+                           , RenderPass
+                           )
 import Text.Read.Lex( Lexeme(Ident)
                     )
+import Graphics.Vulkan.Event( Event
+                            )
 import GHC.Read( expectP
                , choose
                )
+import Graphics.Vulkan.Pipeline( VkPipelineStageFlagBits
+                               , VkPipelineStageFlags
+                               , VkPipelineBindPoint
+                               , Pipeline
+                               )
 import Data.Word( Word32
                 )
 import Foreign.Ptr( Ptr
                   , castPtr
                   , plusPtr
                   )
+import Graphics.Vulkan.DescriptorSet( DescriptorSet
+                                    )
+import Graphics.Vulkan.CommandBuffer( CommandBuffer
+                                    )
 import Data.Int( Int32
                )
 import Data.Bits( Bits
@@ -27,6 +44,24 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.CommandBufferBuilding( VkRenderPassBeginInfo
+                                            , VkClearValue
+                                            , VkStencilFaceFlags
+                                            , VkImageSubresourceLayers
+                                            , VkImageResolve
+                                            , VkClearRect
+                                            , VkClearColorValue
+                                            , VkSubpassContents
+                                            , VkImageBlit
+                                            , VkIndexType
+                                            , VkClearDepthStencilValue
+                                            , VkClearAttachment
+                                            , VkBufferCopy
+                                            , VkImageCopy
+                                            , VkBufferImageCopy
+                                            )
+import Graphics.Vulkan.PipelineLayout( PipelineLayout
+                                     )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -34,6 +69,31 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Shader( VkShaderStageFlags
+                             )
+import Graphics.Vulkan.Sampler( VkFilter
+                              )
+import Graphics.Vulkan.Image( VkImageAspectFlags
+                            , VkImageSubresourceRange
+                            , VkImageLayout
+                            , Image
+                            )
+import Graphics.Vulkan.Query( VkQueryResultFlags
+                            , QueryPool
+                            , VkQueryControlFlags
+                            )
+import Graphics.Vulkan.OtherTypes( VkMemoryBarrier
+                                 , VkBufferMemoryBarrier
+                                 , VkImageMemoryBarrier
+                                 )
+import Graphics.Vulkan.Core( VkExtent3D
+                           , VkDeviceSize
+                           , VkFlags
+                           , VkOffset3D
+                           , VkViewport
+                           , VkRect2D
+                           , VkStructureType
+                           )
 import Foreign.C.Types( CFloat
                       )
 

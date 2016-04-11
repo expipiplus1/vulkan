@@ -1,8 +1,7 @@
 module Spec.Type where
 
-import           Control.Arrow                ((&&&))
-import           Language.C.Types             (CIdentifier, Type)
-import qualified Language.Haskell.Exts.Syntax as HS
+import           Control.Arrow    ((&&&))
+import           Language.C.Types (CIdentifier, Type)
 
 type CType = Type CIdentifier
 
@@ -83,7 +82,6 @@ data StructMember = StructMember { smName           :: String
                                  , smHsName         :: String
                                  , smTypeString     :: String
                                  , smCType          :: CType
-                                 , smHsType         :: HS.Type
                                  , smNoAutoValidity :: Bool
                                  , smIsOptional     :: Maybe [Bool]
                                  , smLengths        :: Maybe [String]

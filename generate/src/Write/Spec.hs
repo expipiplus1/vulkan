@@ -24,14 +24,15 @@ import           Write.WriteMonad
 writeSpecModules :: FilePath -> Spec -> IO ()
 writeSpecModules root spec = do
   let graph = getSpecGraph spec
-      partitions = M.toList $ moduleExports (partitionSpec spec)
+      part = partitionSpec spec
+      partitions = M.toList $ moduleExports part
       moduleNames = fst <$> partitions
-      moduleStrings = uncurry (writeModule graph Normal) <$>
+      moduleStrings = uncurry (writeModule graph part Normal) <$>
                       partitions
       modules = zip moduleNames moduleStrings
   traverse_ (createModuleDirectory root) (fst <$> modules)
   mapM_ (uncurry (writeModuleFile root)) modules
-  writeHsBootFiles root graph
+  writeHsBootFiles root graph part
   writeModuleFile root (ModuleName "Graphics.Vulkan")
                        (writeParentModule moduleNames)
 

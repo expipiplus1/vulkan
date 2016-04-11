@@ -4,6 +4,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Sampler where
 
+import Graphics.Vulkan.Device( Device
+                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -23,6 +25,8 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -30,6 +34,20 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Sampler( VkCompareOp
+                              , VkFilter
+                              , Sampler
+                              , VkSamplerMipmapMode
+                              , VkBorderColor
+                              , VkSamplerAddressMode
+                              , VkSamplerCreateFlags
+                              , VkSamplerCreateInfo
+                              )
+import Graphics.Vulkan.Core( VkResult
+                           , VkBool32
+                           , VkFlags
+                           , VkStructureType
+                           )
 import Foreign.C.Types( CFloat
                       )
 

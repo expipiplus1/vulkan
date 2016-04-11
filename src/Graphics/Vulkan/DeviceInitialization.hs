@@ -7,6 +7,10 @@ module Graphics.Vulkan.DeviceInitialization where
 
 import Data.Vector.Storable.Sized( Vector
                                  )
+import Graphics.Vulkan.Device( VkPhysicalDeviceFeatures
+                             , Device
+                             , PhysicalDevice
+                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -28,6 +32,8 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -35,6 +41,41 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Sampler( VkSampleCountFlags
+                              )
+import Graphics.Vulkan.Image( VkImageType
+                            , VkImageCreateFlags
+                            , VkImageTiling
+                            , VkImageUsageFlags
+                            )
+import Graphics.Vulkan.DeviceInitialization( VkQueueFlags
+                                           , VkMemoryPropertyFlags
+                                           , VkPhysicalDeviceProperties
+                                           , VkApplicationInfo
+                                           , VkPhysicalDeviceMemoryProperties
+                                           , VkInstanceCreateFlags
+                                           , VkPhysicalDeviceSparseProperties
+                                           , VkFormatFeatureFlags
+                                           , VkMemoryType
+                                           , VkInstanceCreateInfo
+                                           , VkMemoryHeap
+                                           , VkImageFormatProperties
+                                           , VkMemoryHeapFlags
+                                           , VkPhysicalDeviceType
+                                           , Instance
+                                           , VkFormatProperties
+                                           , PFN_vkVoidFunction
+                                           , VkQueueFamilyProperties
+                                           , VkPhysicalDeviceLimits
+                                           )
+import Graphics.Vulkan.Core( VkResult
+                           , VkExtent3D
+                           , VkDeviceSize
+                           , VkBool32
+                           , VkFlags
+                           , VkFormat
+                           , VkStructureType
+                           )
 import Foreign.C.Types( CSize
                       , CFloat
                       , CChar

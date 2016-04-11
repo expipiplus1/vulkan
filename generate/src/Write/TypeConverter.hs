@@ -8,10 +8,8 @@ module Write.TypeConverter
   , TypeInfo(..)
   , cTypeToHsTypeString
   , cTypeToHsType
-  , cTypeToHsTypeMap
   , cTypeDependencyNames
   , cTypeInfo
-  , buildTypeEnvFromSpec
   , buildTypeEnvFromSpecGraph
   , getTypeInfo
   , MemberInfo(..)
@@ -34,9 +32,8 @@ import           Spec.Graph                   (SpecGraph, getGraphCTypes,
                                                getGraphConstants,
                                                getGraphEnumTypes,
                                                getGraphStructTypes,
-                                               getGraphTypeMap,
                                                getGraphUnionTypes)
-import           Spec.Spec
+import           Spec.Partition
 import           Spec.Type
 import           Spec.TypeEnv
 import           Write.Utils
@@ -68,12 +65,7 @@ conFromModule moduleName constructor = do
   pure (simpleCon constructor)
 
 cTypeToHsType :: CType -> Write HS.Type
-cTypeToHsType t = do
-  tm <- teTypeMap <$> askTypeEnv
-  cTypeToHsTypeMap tm t
-
-cTypeToHsTypeMap :: Map.HashMap String String -> CType -> Write HS.Type
-cTypeToHsTypeMap typeMap cType = hsType
+cTypeToHsType cType = hsType
   where
     hsType = case cType of
                TypeSpecifier _ Void
@@ -87,38 +79,45 @@ cTypeToHsTypeMap typeMap cType = hsType
                TypeSpecifier _ Float
                  -> conFromModule "Foreign.C.Types" "CFloat"
                TypeSpecifier _ (TypeName t)
-                 -> cIdToHsType typeMap t
+                 -> cIdToHsType t
                TypeDef (TypeName t)
-                 -> cIdToHsType typeMap t
+                 -> cIdToHsType t
                TypeDef (Struct t)
-                 -> cIdToHsType typeMap t
+                 -> cIdToHsType t
                Ptr _ (TypeSpecifier _ Void)
                  -> do ptrCon <- conFromModule "Foreign.Ptr" "Ptr"
                        voidCon <- conFromModule "Data.Void" "Void"
                        pure $ ptrCon `TyApp` voidCon
                Ptr _ (Proto ret parameters)
                  -> do funPtrCon <- conFromModule "Foreign.Ptr" "FunPtr"
-                       functionType <- makeFunctionType typeMap ret parameters
+                       functionType <- makeFunctionType ret parameters
                        pure $ funPtrCon `TyApp` functionType
                Ptr _ t
                  -> do ptrCon <- conFromModule "Foreign.Ptr" "Ptr"
-                       tHs <- cTypeToHsTypeMap typeMap t
+                       tHs <- cTypeToHsType t
                        pure $ ptrCon `TyApp` tHs
                Array s t
                  -> do vecCon <- conFromModule "Data.Vector.Storable.Sized"
                                                "Vector"
                        sizeType <- arraySizeToNat s
-                       tHs <- cTypeToHsTypeMap typeMap t
+                       tHs <- cTypeToHsType t
                        pure $ vecCon `TyApp` sizeType `TyApp` tHs
                _ -> error ("Failed to convert C type:\n" ++ show cType)
 
-cIdToHsType :: Map.HashMap String String -> CIdentifier -> Write HS.Type
-cIdToHsType typeMap i = do
+cIdToHsType :: CIdentifier -> Write HS.Type
+cIdToHsType i = do
   let s = unCIdentifier i
   platformTypeMay <- platformType s
   case platformTypeMay of
     Just pt -> pure pt
-    Nothing -> pure $ simpleCon (Map.lookupDefault s s typeMap)
+    Nothing -> do
+      typeMap <- teNameLocations <$> askTypeEnv
+      case Map.lookup s typeMap of
+        Just (m, n) -> do
+          tellRequiredName (ExternalName m n)
+          pure $ simpleCon n
+        Nothing ->
+          pure $ simpleCon s
 
 simpleCon :: String -> HS.Type
 simpleCon = TyCon . UnQual . Ident
@@ -136,13 +135,13 @@ arraySizeToNat s = case s of
                            typeNat = PromotedCon False (UnQual typeName)
                        pure $ TyPromoted typeNat
 
-makeFunctionType :: Map.HashMap String String -> CType -> [ParameterDeclaration CIdentifier]
+makeFunctionType :: CType -> [ParameterDeclaration CIdentifier]
                  -> Write HS.Type
-makeFunctionType typeMap ret [ParameterDeclaration _ (TypeSpecifier _ Void)] = makeFunctionType typeMap ret []
-makeFunctionType typeMap ret parameters =
+makeFunctionType ret [ParameterDeclaration _ (TypeSpecifier _ Void)] = makeFunctionType ret []
+makeFunctionType ret parameters =
   foldr TyFun <$>
-        ((simpleCon "IO" `TyApp`) <$> cTypeToHsTypeMap typeMap ret) <*>
-        traverse (cTypeToHsTypeMap typeMap . parameterDeclarationType) parameters
+        ((simpleCon "IO" `TyApp`) <$> cTypeToHsType ret) <*>
+        traverse (cTypeToHsType . parameterDeclarationType) parameters
 
 -- | cTypeNames returns the names of the C types this type depends on
 cTypeDependencyNames :: CType -> [String]
@@ -173,38 +172,23 @@ getTypeInfo :: TypeEnv -> String -> TypeInfo
 getTypeInfo env s = Map.lookupDefault err s (teTypeInfo env)
   where err = error ("Type missing from environment: " ++ s)
 
--- TODO: Remove
-buildTypeEnvFromSpec :: Spec -> TypeEnv
-buildTypeEnvFromSpec spec =
-  let constants = sConstants spec
-      nameAndTypes = catMaybes . fmap getNameAndType $ sTypes spec
-      getNameAndType typeDecl =
-        do name <- typeDeclTypeName typeDecl
-           cType <- typeDeclCType typeDecl
-           pure (name, cType)
-      unions = catMaybes . fmap typeDeclToUnionType $ sTypes spec
-      structs = catMaybes . fmap typeDeclToStructType $ sTypes spec
-      enums = catMaybes . fmap typeDeclToEnumType $ sTypes spec
-      typeMap = catMaybes . fmap typeDeclTypeNameMap $ sTypes spec
-  in buildTypeEnv constants enums unions structs nameAndTypes typeMap
-
-buildTypeEnvFromSpecGraph :: SpecGraph -> TypeEnv
-buildTypeEnvFromSpecGraph graph =
+buildTypeEnvFromSpecGraph :: SpecGraph -> PartitionedSpec -> TypeEnv
+buildTypeEnvFromSpecGraph graph part =
   let constants = getGraphConstants graph
       nameAndTypes = getGraphCTypes graph
-      typeMap = getGraphTypeMap graph
+      typeMap = Map.toList $ nameLocations part
       unions = getGraphUnionTypes graph
       structs = getGraphStructTypes graph
       enums = getGraphEnumTypes graph
   in buildTypeEnv constants enums unions structs nameAndTypes typeMap
 
 buildTypeEnv :: [Constant] -> [EnumType] -> [UnionType] -> [StructType]
-             -> [(String, CType)] -> [(String, String)]
+             -> [(String, CType)] -> [(String, (ModuleName, String))]
              -> TypeEnv
 buildTypeEnv constants enums unions structs typeDecls typeMap = env
   where -- Notice the recursive definition of env
         env = TypeEnv{..}
-        teTypeMap = Map.fromList typeMap
+        teNameLocations = Map.fromList typeMap
         teIntegralConstants = Map.fromList . catMaybes . fmap getIntConstant $ constants
         teTypeInfo = Map.fromList ((second (cTypeInfo env) <$> typeDecls) ++
                                    structTypeInfos ++ unionTypeInfos ++

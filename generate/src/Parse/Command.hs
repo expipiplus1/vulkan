@@ -60,7 +60,6 @@ parseParam = hasName "param" >>>
           pType <- parseCType <<<
                    getAllText <<< processChildren (neg (hasName "name"))
                    -< param
-          let pHsType = undefined
           pIsOptional <- traverseMaybeA (mapA parseBool) <<<
                          optionalCommaSepListAttr "optional" -< param
           pIsExternSync <-

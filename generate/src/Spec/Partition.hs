@@ -15,7 +15,7 @@ import           Data.Foldable     as F
 import qualified Data.HashMap.Lazy as M
 import qualified Data.HashSet      as S
 import           Data.List         (isPrefixOf, isSuffixOf)
-import           Data.Maybe        (fromMaybe)
+import           Data.Maybe        (catMaybes, fromMaybe)
 import           Safe              (assertNote)
 import           Spec.Extension
 import           Spec.ExtensionTag
@@ -26,6 +26,7 @@ import           Write.Utils
 
 data PartitionedSpec =
   PartitionedSpec{ moduleExports :: M.HashMap ModuleName [SourceEntity]
+                 , nameLocations :: NameLocations
                  }
   deriving(Show)
 
@@ -63,6 +64,18 @@ partitionSpec spec =
       moduleExportNames = calculateModuleExports graph coreModuleExports
       moduleExports = (fmap (vSourceEntity . requiredLookup graph) . toList) <$>
         moduleExportNames
+
+      nameLocation :: (ModuleName, [SourceEntity]) -> [(String, (ModuleName, String))]
+      nameLocation (m, names) = catMaybes
+        (blarf m <$> names)
+
+      blarf :: ModuleName -> SourceEntity -> Maybe (String, (ModuleName, String))
+      blarf m e = do
+        name <- entityName e
+        export <- entityExportName e
+        return (name, (m, export))
+
+      nameLocations = M.fromList $ concat (nameLocation <$> M.toList moduleExports)
 
       allEntityNames = S.fromList (M.keys (gNameVertexMap graph))
                        `S.difference` ignoredNames

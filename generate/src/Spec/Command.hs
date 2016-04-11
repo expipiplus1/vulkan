@@ -23,7 +23,6 @@ data Command = Command { cName                     :: String
 data Parameter = Parameter { pName           :: String
                            , pHsName         :: String
                            , pType           :: CType
-                           , pHsType         :: HS.Type
                            , pIsOptional     :: Maybe [Bool]
                              -- ^ Values further into the list represent the
                              -- "optionality" of the types as it is

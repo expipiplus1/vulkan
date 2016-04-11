@@ -4,6 +4,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Memory where
 
+import {-# SOURCE #-} Graphics.Vulkan.Device( Device
+                                            )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -22,6 +24,19 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( PFN_vkAllocationFunction
+                             , VkMemoryMapFlags
+                             , VkSystemAllocationScope
+                             , PFN_vkFreeFunction
+                             , PFN_vkReallocationFunction
+                             , VkInternalAllocationType
+                             , VkAllocationCallbacks
+                             , DeviceMemory
+                             , VkMappedMemoryRange
+                             , VkMemoryAllocateInfo
+                             , PFN_vkInternalFreeNotification
+                             , PFN_vkInternalAllocationNotification
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -29,6 +44,11 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Core( VkResult
+                           , VkDeviceSize
+                           , VkFlags
+                           , VkStructureType
+                           )
 import Foreign.C.Types( CSize
                       )
 

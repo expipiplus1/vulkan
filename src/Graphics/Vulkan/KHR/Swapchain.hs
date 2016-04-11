@@ -3,16 +3,48 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Swapchain where
 
+import Graphics.Vulkan.Device( Device
+                             )
+import Graphics.Vulkan.KHR.Swapchain( SwapchainKHR
+                                    , VkSwapchainCreateInfoKHR
+                                    , VkSwapchainCreateFlagsKHR
+                                    , VkPresentInfoKHR
+                                    )
 import Data.Word( Word64
                 , Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Graphics.Vulkan.KHR.Surface( VkSurfaceTransformFlagBitsKHR
+                                  , SurfaceKHR
+                                  , VkPresentModeKHR
+                                  , VkCompositeAlphaFlagBitsKHR
+                                  , VkColorSpaceKHR
+                                  )
+import Graphics.Vulkan.Queue( Queue
+                            )
 import Foreign.Storable( Storable(..)
                        )
+import Graphics.Vulkan.Fence( Fence
+                            )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
+import Graphics.Vulkan.Image( Image
+                            , VkImageUsageFlags
+                            )
+import Graphics.Vulkan.QueueSemaphore( Semaphore
+                                     )
+import Graphics.Vulkan.Core( VkResult
+                           , VkBool32
+                           , VkExtent2D
+                           , VkFlags
+                           , VkFormat
+                           , VkStructureType
+                           , VkSharingMode
+                           )
 
 
 data VkSwapchainCreateInfoKHR =

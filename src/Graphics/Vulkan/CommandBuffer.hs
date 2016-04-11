@@ -4,6 +4,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.CommandBuffer where
 
+import Graphics.Vulkan.Device( Device
+                             )
+import Graphics.Vulkan.Pass( Framebuffer
+                           , RenderPass
+                           )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -14,6 +19,14 @@ import Data.Word( Word32
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Graphics.Vulkan.CommandBuffer( VkCommandBufferLevel
+                                    , VkCommandBufferUsageFlags
+                                    , VkCommandBufferInheritanceInfo
+                                    , CommandBuffer
+                                    , VkCommandBufferAllocateInfo
+                                    , VkCommandBufferResetFlags
+                                    , VkCommandBufferBeginInfo
+                                    )
 import Data.Int( Int32
                )
 import Data.Bits( Bits
@@ -21,6 +34,8 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
+import Graphics.Vulkan.CommandPool( CommandPool
+                                  )
 import Data.Void( Void
                 )
 import Text.Read( Read(..)
@@ -30,6 +45,14 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Query( VkQueryControlFlags
+                            , VkQueryPipelineStatisticFlags
+                            )
+import Graphics.Vulkan.Core( VkResult
+                           , VkBool32
+                           , VkFlags
+                           , VkStructureType
+                           )
 
 -- ** VkCommandBufferLevel
 

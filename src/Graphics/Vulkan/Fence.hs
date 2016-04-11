@@ -4,6 +4,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Fence where
 
+import Graphics.Vulkan.Device( Device
+                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -20,8 +22,14 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
+import Graphics.Vulkan.Fence( VkFenceCreateInfo
+                            , Fence
+                            , VkFenceCreateFlags
+                            )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -29,6 +37,11 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Core( VkResult
+                           , VkBool32
+                           , VkFlags
+                           , VkStructureType
+                           )
 
 
 data VkFenceCreateInfo =

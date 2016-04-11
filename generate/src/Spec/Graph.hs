@@ -201,13 +201,16 @@ vertexToConstant v = case vSourceEntity v of
 getGraphConstants :: SpecGraph -> [Constant]
 getGraphConstants graph = catMaybes (vertexToConstant <$> gVertices graph)
 
-vertexCType :: Vertex -> Maybe CType
-vertexCType v = case vSourceEntity v of
+entityCType :: SourceEntity -> Maybe CType
+entityCType e = case e of
                   ABaseType bt -> Just $ btCType bt
                   ABitmaskType bmt _ -> Just $ bmtCType bmt
                   AHandleType ht -> Just $ htCType ht
                   AFuncPointerType fpt -> Just $ fptCType fpt
                   _ -> Nothing
+
+vertexCType :: Vertex -> Maybe CType
+vertexCType = entityCType . vSourceEntity
 
 getGraphCTypes :: SpecGraph -> [(String, CType)]
 getGraphCTypes graph =
@@ -237,9 +240,25 @@ vertexToEnumType v = case vSourceEntity v of
 getGraphEnumTypes :: SpecGraph -> [EnumType]
 getGraphEnumTypes graph = catMaybes (vertexToEnumType <$> gVertices graph)
 
-vertexExportName :: Vertex -> Maybe String
-vertexExportName v =
-  case vSourceEntity v of
+entityName :: SourceEntity -> Maybe String
+entityName e =
+  case e of
+    ABaseType bt -> Just $ btName bt
+    ABitmaskType bmt _ -> Just $ bmtName bmt
+    AHandleType ht -> Just $ htName ht
+    AnEnumType et -> Just $ etName et
+    AFuncPointerType fpt -> Just $ fptName fpt
+    AStructType st -> Just $ stName st
+    AUnionType ut -> Just $ utName ut
+    ACommand co -> Just $ Command.cName co
+    AnEnum en -> Just $ eName en
+    ABitmask bm -> Just $ bmName bm
+    AConstant c -> Just $ Constant.cName c
+    _ -> Nothing
+
+entityExportName :: SourceEntity -> Maybe String
+entityExportName e =
+  case e of
     ABaseType bt -> Just $ btHsName bt
     ABitmaskType bmt _ -> Just $ bmtHsName bmt
     AHandleType ht -> Just $ htHsName ht
@@ -248,10 +267,13 @@ vertexExportName v =
     AStructType st -> Just $ stHsName st
     AUnionType ut -> Just $ utHsName ut
     ACommand co -> Just $ Command.cHsName co
-    AnEnum e -> Just $ eHsName e
+    AnEnum en -> Just $ eHsName en
     ABitmask bm -> Just $ bmHsName bm
     AConstant c -> Just $ Constant.cHsName c
     _ -> Nothing
+
+vertexExportName :: Vertex -> Maybe String
+vertexExportName = entityExportName . vSourceEntity
 
 getGraphTypeMap :: SpecGraph -> [(String, String)]
 getGraphTypeMap graph =

@@ -5,6 +5,8 @@ module Graphics.Vulkan.LayerDiscovery where
 
 import Data.Vector.Storable.Sized( Vector
                                  )
+import Graphics.Vulkan.Device( PhysicalDevice
+                             )
 import Data.Word( Word32
                 )
 import Foreign.Ptr( Ptr
@@ -12,6 +14,10 @@ import Foreign.Ptr( Ptr
                   )
 import Foreign.Storable( Storable(..)
                        )
+import Graphics.Vulkan.Core( VkResult
+                           )
+import Graphics.Vulkan.LayerDiscovery( VkLayerProperties
+                                     )
 import Foreign.C.Types( CChar
                       )
 

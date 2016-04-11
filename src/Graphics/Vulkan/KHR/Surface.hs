@@ -4,6 +4,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Surface where
 
+import Graphics.Vulkan.Device( PhysicalDevice
+                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -15,6 +17,15 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Graphics.Vulkan.KHR.Surface( VkCompositeAlphaFlagsKHR
+                                  , VkSurfaceFormatKHR
+                                  , VkSurfaceTransformFlagBitsKHR
+                                  , SurfaceKHR
+                                  , VkSurfaceCapabilitiesKHR
+                                  , VkPresentModeKHR
+                                  , VkSurfaceTransformFlagsKHR
+                                  , VkColorSpaceKHR
+                                  )
 import Data.Int( Int32
                )
 import Data.Bits( Bits
@@ -22,6 +33,8 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -29,6 +42,16 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Image( VkImageUsageFlags
+                            )
+import Graphics.Vulkan.DeviceInitialization( Instance
+                                           )
+import Graphics.Vulkan.Core( VkResult
+                           , VkBool32
+                           , VkExtent2D
+                           , VkFlags
+                           , VkFormat
+                           )
 
 -- ** vkGetPhysicalDeviceSurfaceFormatsKHR
 foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceSurfaceFormatsKHR ::

@@ -7,17 +7,66 @@ module Graphics.Vulkan.Pipeline where
 
 import Data.Vector.Storable.Sized( Vector
                                  )
+import Graphics.Vulkan.Device( Device
+                             )
+import {-# SOURCE #-} Graphics.Vulkan.Pass( RenderPass
+                                          )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
+import Graphics.Vulkan.Pipeline( VkVertexInputBindingDescription
+                               , VkColorComponentFlags
+                               , VkPolygonMode
+                               , VkPipelineTessellationStateCreateFlags
+                               , VkPipelineInputAssemblyStateCreateInfo
+                               , VkPipelineDepthStencilStateCreateInfo
+                               , VkPrimitiveTopology
+                               , VkPipelineShaderStageCreateFlags
+                               , VkPipelineCreateFlags
+                               , VkSampleMask
+                               , VkPipelineMultisampleStateCreateFlags
+                               , VkPipelineShaderStageCreateInfo
+                               , VkSpecializationMapEntry
+                               , VkPipelineVertexInputStateCreateFlags
+                               , VkPipelineInputAssemblyStateCreateFlags
+                               , VkPipelineRasterizationStateCreateInfo
+                               , VkDynamicState
+                               , VkPipelineColorBlendStateCreateFlags
+                               , VkPipelineDynamicStateCreateFlags
+                               , VkPipelineColorBlendStateCreateInfo
+                               , VkPipelineMultisampleStateCreateInfo
+                               , VkPipelineViewportStateCreateFlags
+                               , VkPipelineColorBlendAttachmentState
+                               , VkFrontFace
+                               , VkCullModeFlags
+                               , VkPipelineDepthStencilStateCreateFlags
+                               , VkVertexInputAttributeDescription
+                               , VkPipelineRasterizationStateCreateFlags
+                               , VkStencilOpState
+                               , VkPipelineVertexInputStateCreateInfo
+                               , VkSpecializationInfo
+                               , VkLogicOp
+                               , VkStencilOp
+                               , VkComputePipelineCreateInfo
+                               , VkPipelineViewportStateCreateInfo
+                               , VkPipelineTessellationStateCreateInfo
+                               , VkVertexInputRate
+                               , VkBlendFactor
+                               , VkGraphicsPipelineCreateInfo
+                               , VkBlendOp
+                               , VkPipelineDynamicStateCreateInfo
+                               , Pipeline
+                               )
 import Data.Word( Word64
                 , Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Graphics.Vulkan.PipelineCache( PipelineCache
+                                    )
 import Data.Int( Int32
                )
 import Data.Bits( Bits
@@ -27,6 +76,10 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
+import Graphics.Vulkan.PipelineLayout( PipelineLayout
+                                     )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -34,6 +87,20 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Shader( ShaderModule
+                             , VkShaderStageFlagBits
+                             )
+import Graphics.Vulkan.Sampler( VkCompareOp
+                              , VkSampleCountFlagBits
+                              )
+import Graphics.Vulkan.Core( VkResult
+                           , VkBool32
+                           , VkFlags
+                           , VkFormat
+                           , VkViewport
+                           , VkRect2D
+                           , VkStructureType
+                           )
 import Foreign.C.Types( CSize
                       , CFloat
                       , CChar

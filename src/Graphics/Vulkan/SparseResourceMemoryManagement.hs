@@ -4,6 +4,11 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.SparseResourceMemoryManagement where
 
+import Graphics.Vulkan.Device( Device
+                             , PhysicalDevice
+                             )
+import Graphics.Vulkan.Buffer( Buffer
+                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -14,13 +19,19 @@ import Data.Word( Word32
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Graphics.Vulkan.Queue( Queue
+                            )
 import Data.Bits( Bits
                 , FiniteBits
                 )
 import Foreign.Storable( Storable(..)
                        )
+import Graphics.Vulkan.Fence( Fence
+                            )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( DeviceMemory
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -28,6 +39,36 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Sampler( VkSampleCountFlagBits
+                              )
+import Graphics.Vulkan.Image( VkImageType
+                            , VkImageAspectFlags
+                            , VkImageTiling
+                            , VkImageSubresource
+                            , Image
+                            , VkImageUsageFlags
+                            )
+import Graphics.Vulkan.QueueSemaphore( Semaphore
+                                     )
+import Graphics.Vulkan.SparseResourceMemoryManagement( VkSparseImageFormatProperties
+                                                     , VkSparseMemoryBindFlags
+                                                     , VkBindSparseInfo
+                                                     , VkSparseImageFormatFlags
+                                                     , VkSparseMemoryBind
+                                                     , VkSparseImageMemoryRequirements
+                                                     , VkSparseImageMemoryBindInfo
+                                                     , VkSparseBufferMemoryBindInfo
+                                                     , VkSparseImageMemoryBind
+                                                     , VkSparseImageOpaqueMemoryBindInfo
+                                                     )
+import Graphics.Vulkan.Core( VkResult
+                           , VkExtent3D
+                           , VkDeviceSize
+                           , VkFlags
+                           , VkFormat
+                           , VkOffset3D
+                           , VkStructureType
+                           )
 
 
 data VkSparseImageMemoryRequirements =

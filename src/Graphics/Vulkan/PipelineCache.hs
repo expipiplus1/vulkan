@@ -3,16 +3,28 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.PipelineCache where
 
+import Graphics.Vulkan.Device( Device
+                             )
 import Data.Word( Word64
                 , Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Graphics.Vulkan.PipelineCache( VkPipelineCacheCreateInfo
+                                    , PipelineCache
+                                    , VkPipelineCacheCreateFlags
+                                    )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
+import Graphics.Vulkan.Core( VkResult
+                           , VkFlags
+                           , VkStructureType
+                           )
 import Foreign.C.Types( CSize
                       )
 

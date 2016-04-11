@@ -25,6 +25,11 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Core( VkExtent3D
+                           , VkExtent2D
+                           , VkOffset2D
+                           , VkOffset3D
+                           )
 import Foreign.C.Types( CFloat
                       )
 

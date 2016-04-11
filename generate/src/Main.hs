@@ -18,4 +18,3 @@ main = do specString <- readFile "Vulkan-Docs/src/spec/vk.xml"
             Just spec -> let strippedSpec = stripExtensions spec
                              prettySpec = prettifySpec strippedSpec
                          in writeSpecModules "out" prettySpec
-

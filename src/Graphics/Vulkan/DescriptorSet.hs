@@ -4,6 +4,10 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.DescriptorSet where
 
+import Graphics.Vulkan.Device( Device
+                             )
+import Graphics.Vulkan.Buffer( Buffer
+                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -15,6 +19,23 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Graphics.Vulkan.DescriptorSet( VkDescriptorSetLayoutCreateInfo
+                                    , VkDescriptorBufferInfo
+                                    , DescriptorSetLayout
+                                    , DescriptorPool
+                                    , VkDescriptorPoolResetFlags
+                                    , VkDescriptorType
+                                    , VkDescriptorImageInfo
+                                    , DescriptorSet
+                                    , VkWriteDescriptorSet
+                                    , VkDescriptorSetLayoutBinding
+                                    , VkDescriptorPoolCreateFlags
+                                    , VkDescriptorSetLayoutCreateFlags
+                                    , VkDescriptorPoolSize
+                                    , VkCopyDescriptorSet
+                                    , VkDescriptorSetAllocateInfo
+                                    , VkDescriptorPoolCreateInfo
+                                    )
 import Data.Int( Int32
                )
 import Data.Bits( Bits
@@ -24,6 +45,8 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -31,6 +54,21 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Shader( VkShaderStageFlags
+                             )
+import Graphics.Vulkan.Sampler( Sampler
+                              )
+import Graphics.Vulkan.Image( VkImageLayout
+                            )
+import Graphics.Vulkan.ImageView( ImageView
+                                )
+import Graphics.Vulkan.BufferView( BufferView
+                                 )
+import Graphics.Vulkan.Core( VkResult
+                           , VkDeviceSize
+                           , VkFlags
+                           , VkStructureType
+                           )
 
 -- ** vkUpdateDescriptorSets
 foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets ::

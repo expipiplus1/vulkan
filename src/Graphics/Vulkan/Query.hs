@@ -4,6 +4,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Query where
 
+import Graphics.Vulkan.Device( Device
+                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -24,6 +26,8 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -31,6 +35,18 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Query( VkQueryPoolCreateFlags
+                            , VkQueryType
+                            , VkQueryResultFlags
+                            , VkQueryPoolCreateInfo
+                            , QueryPool
+                            , VkQueryPipelineStatisticFlags
+                            )
+import Graphics.Vulkan.Core( VkResult
+                           , VkDeviceSize
+                           , VkFlags
+                           , VkStructureType
+                           )
 import Foreign.C.Types( CSize
                       )
 

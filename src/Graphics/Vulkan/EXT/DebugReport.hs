@@ -17,10 +17,18 @@ import Foreign.Ptr( Ptr
                   )
 import Data.Int( Int32
                )
+import Graphics.Vulkan.EXT.DebugReport( VkDebugReportObjectTypeEXT
+                                      , DebugReportCallbackEXT
+                                      , PFN_vkDebugReportCallbackEXT
+                                      , VkDebugReportCallbackCreateInfoEXT
+                                      , VkDebugReportFlagsEXT
+                                      )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -28,6 +36,13 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.DeviceInitialization( Instance
+                                           )
+import Graphics.Vulkan.Core( VkResult
+                           , VkBool32
+                           , VkFlags
+                           , VkStructureType
+                           )
 import Foreign.C.Types( CSize
                       , CChar
                       )

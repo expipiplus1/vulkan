@@ -3,6 +3,12 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Event where
 
+import Graphics.Vulkan.Device( Device
+                             )
+import Graphics.Vulkan.Event( VkEventCreateInfo
+                            , Event
+                            , VkEventCreateFlags
+                            )
 import Data.Word( Word64
                 )
 import Foreign.Ptr( Ptr
@@ -12,6 +18,12 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
+import Graphics.Vulkan.Core( VkResult
+                           , VkFlags
+                           , VkStructureType
+                           )
 
 -- ** vkDestroyEvent
 foreign import ccall "vkDestroyEvent" vkDestroyEvent ::

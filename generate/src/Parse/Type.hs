@@ -6,14 +6,13 @@ module Parse.Type
   ( parseTypes
   ) where
 
-import           Control.Bool                 ((<||>))
-import           Data.Char                    (isAlpha, isDigit)
-import qualified Language.Haskell.Exts.Syntax as HS
+import           Control.Bool      ((<||>))
+import           Data.Char         (isAlpha, isDigit)
 import           Parse.CType
 import           Parse.State
 import           Parse.Utils
 import           Spec.Type
-import           Text.Regex.TDFA              ((=~))
+import           Text.Regex.TDFA   ((=~))
 import           Text.XML.HXT.Core
 
 parseTypes :: ParseArrow XmlTree [TypeDecl]
@@ -209,7 +208,6 @@ parseMember = extractFields "struct member"
           let smHsName = smName
           smTypeString <- preprocessTypeString <<< getAllText -< member
           smCType <- parseCType -< smTypeString
-          let smHsType = HS.TyCon $ HS.UnQual $ HS.Ident "FOO"
           smNoAutoValidity <-
             boolAttrDefault "noautovalidity" False -< member
           smIsOptional <- traverseMaybeA (mapA parseBool) <<<

@@ -3,6 +3,10 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.BufferView where
 
+import Graphics.Vulkan.Device( Device
+                             )
+import Graphics.Vulkan.Buffer( Buffer
+                             )
 import Data.Word( Word64
                 )
 import Foreign.Ptr( Ptr
@@ -12,6 +16,18 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
+import Graphics.Vulkan.BufferView( VkBufferViewCreateFlags
+                                 , BufferView
+                                 , VkBufferViewCreateInfo
+                                 )
+import Graphics.Vulkan.Core( VkResult
+                           , VkDeviceSize
+                           , VkFlags
+                           , VkFormat
+                           , VkStructureType
+                           )
 
 -- ** vkCreateBufferView
 foreign import ccall "vkCreateBufferView" vkCreateBufferView ::

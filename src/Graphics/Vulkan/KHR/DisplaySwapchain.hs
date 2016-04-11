@@ -2,6 +2,11 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.KHR.DisplaySwapchain where
 
+import Graphics.Vulkan.Device( Device
+                             )
+import Graphics.Vulkan.KHR.Swapchain( SwapchainKHR
+                                    , VkSwapchainCreateInfoKHR
+                                    )
 import Data.Word( Word32
                 )
 import Foreign.Ptr( Ptr
@@ -11,6 +16,13 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
+import Graphics.Vulkan.Core( VkResult
+                           , VkBool32
+                           , VkRect2D
+                           , VkStructureType
+                           )
 
 
 data VkDisplayPresentInfoKHR =

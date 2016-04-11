@@ -4,6 +4,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.CommandPool where
 
+import Graphics.Vulkan.Device( Device
+                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -20,8 +22,15 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
+import Graphics.Vulkan.CommandPool( VkCommandPoolResetFlags
+                                  , VkCommandPoolCreateFlags
+                                  , CommandPool
+                                  , VkCommandPoolCreateInfo
+                                  )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -29,6 +38,10 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.Core( VkResult
+                           , VkFlags
+                           , VkStructureType
+                           )
 
 
 data VkCommandPoolCreateInfo =

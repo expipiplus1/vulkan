@@ -2,21 +2,10 @@ module Spec.Pretty
   ( prettifySpec
   ) where
 
-import           Data.HashMap.Lazy   as M
-import           Data.Maybe          (catMaybes)
-import           Language.C.Types
 import           Spec.Command
 import           Spec.Spec
 import           Spec.Type
-import           Write.TypeConverter
 import           Write.Utils
-import           Write.WriteMonad
-
-lowerArrayToPointer :: CType -> CType
-lowerArrayToPointer cType =
-  case cType of
-    Array _ t -> Ptr [] t
-    t -> t
 
 prettifySpec :: Spec -> Spec
 prettifySpec spec = spec { sTypes = types
@@ -30,7 +19,6 @@ prettifySpec spec = spec { sTypes = types
     nameType (AHandleType h) = AHandleType h { htHsName = dropVK $ htHsName h }
     nameType t = t
     nameStructMember sm = sm { smHsName = recordName $ smHsName sm
-                             , smHsType = mapType $ smCType sm
                              }
 
     recordName "type" = "_type"
@@ -38,12 +26,7 @@ prettifySpec spec = spec { sTypes = types
     recordName "alignment" = "_alignment"
     recordName n = n
 
-    typeNameMap = M.fromList $ catMaybes $ typeDeclTypeNameMap <$> types
-    mapType t = fst $ runWrite undefined undefined (cTypeToHsTypeMap typeNameMap t)
-
     commands = nameCommand <$> sCommands spec
-    nameCommand c = c { cHsReturnType = mapType $ cReturnType c
-                      , cParameters = nameParameter <$> cParameters c
+    nameCommand c = c { cParameters = nameParameter <$> cParameters c
                       }
-    nameParameter p = p { pHsType = mapType $ lowerArrayToPointer $ pType p
-                        }
+    nameParameter p = p

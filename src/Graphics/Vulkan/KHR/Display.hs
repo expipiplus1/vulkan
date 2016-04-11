@@ -4,6 +4,8 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Display where
 
+import Graphics.Vulkan.Device( PhysicalDevice
+                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -15,13 +17,33 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Graphics.Vulkan.KHR.Surface( VkSurfaceTransformFlagBitsKHR
+                                  , SurfaceKHR
+                                  , VkSurfaceTransformFlagsKHR
+                                  )
 import Data.Bits( Bits
                 , FiniteBits
                 )
+import Graphics.Vulkan.KHR.Display( VkDisplayPropertiesKHR
+                                  , VkDisplayPlaneCapabilitiesKHR
+                                  , VkDisplaySurfaceCreateInfoKHR
+                                  , VkDisplayModePropertiesKHR
+                                  , VkDisplayPlanePropertiesKHR
+                                  , DisplayModeKHR
+                                  , VkDisplayPlaneAlphaFlagBitsKHR
+                                  , DisplayKHR
+                                  , VkDisplayModeCreateFlagsKHR
+                                  , VkDisplayModeCreateInfoKHR
+                                  , VkDisplayPlaneAlphaFlagsKHR
+                                  , VkDisplaySurfaceCreateFlagsKHR
+                                  , VkDisplayModeParametersKHR
+                                  )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
+import Graphics.Vulkan.Memory( VkAllocationCallbacks
+                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -29,6 +51,15 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
+import Graphics.Vulkan.DeviceInitialization( Instance
+                                           )
+import Graphics.Vulkan.Core( VkResult
+                           , VkBool32
+                           , VkExtent2D
+                           , VkFlags
+                           , VkOffset2D
+                           , VkStructureType
+                           )
 import Foreign.C.Types( CFloat
                       , CChar
                       )
