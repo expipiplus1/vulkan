@@ -14,9 +14,11 @@ import           Data.Foldable                 (traverse_)
 import qualified Data.HashMap.Strict           as M
 import qualified Data.HashSet                  as S
 import           Data.List                     (sort)
+import           Data.Maybe
 import           Data.String
 import           Spec.Graph
 import           Spec.Partition
+
 import           Write.CycleBreak
 import           Write.Module
 import           Write.Utils
@@ -27,13 +29,15 @@ writeSpecModules root spec = do
   let graph = getSpecGraph spec
       partitions = second S.toList <$> M.toList (moduleExports (partitionSpec spec graph))
       locations = M.unions (uncurry exportMap <$> partitions)
+      nameLocations = M.mapWithKey withHsName locations
+      withHsName k v = (v, fromJust $ vertexExportName $ requiredLookup graph k)
       moduleNames = fst <$> partitions
-      moduleStrings = uncurry (writeModule graph locations Normal) <$>
+      moduleStrings = uncurry (writeModule graph nameLocations Normal) <$>
                       partitions
       modules = zip moduleNames moduleStrings
   traverse_ (createModuleDirectory root) (fst <$> modules)
   mapM_ (uncurry (writeModuleFile root)) modules
-  writeHsBootFiles root graph locations
+  writeHsBootFiles root graph nameLocations
   writeModuleFile root (ModuleName "Graphics.Vulkan")
                        (writeParentModule moduleNames)
 

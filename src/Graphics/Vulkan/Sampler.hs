@@ -4,7 +4,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Sampler where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
@@ -208,29 +208,29 @@ pattern VK_COMPARE_OP_GREATER_OR_EQUAL = VkCompareOp 6
 
 pattern VK_COMPARE_OP_ALWAYS = VkCompareOp 7
 
-newtype VkSampler = VkSampler Word64
+newtype Sampler = Sampler Word64
   deriving (Eq, Storable)
 
 
 data VkSamplerCreateInfo =
-  VkSamplerCreateInfo{ vkSType :: VkStructureType 
-                     , vkPNext :: Ptr Void 
-                     , vkFlags :: VkSamplerCreateFlags 
-                     , vkMagFilter :: VkFilter 
-                     , vkMinFilter :: VkFilter 
-                     , vkMipmapMode :: VkSamplerMipmapMode 
-                     , vkAddressModeU :: VkSamplerAddressMode 
-                     , vkAddressModeV :: VkSamplerAddressMode 
-                     , vkAddressModeW :: VkSamplerAddressMode 
-                     , vkMipLodBias :: CFloat 
-                     , vkAnisotropyEnable :: VkBool32 
-                     , vkMaxAnisotropy :: CFloat 
-                     , vkCompareEnable :: VkBool32 
-                     , vkCompareOp :: VkCompareOp 
-                     , vkMinLod :: CFloat 
-                     , vkMaxLod :: CFloat 
-                     , vkBorderColor :: VkBorderColor 
-                     , vkUnnormalizedCoordinates :: VkBool32 
+  VkSamplerCreateInfo{ sType :: VkStructureType 
+                     , pNext :: Ptr Void 
+                     , flags :: VkSamplerCreateFlags 
+                     , magFilter :: VkFilter 
+                     , minFilter :: VkFilter 
+                     , mipmapMode :: VkSamplerMipmapMode 
+                     , addressModeU :: VkSamplerAddressMode 
+                     , addressModeV :: VkSamplerAddressMode 
+                     , addressModeW :: VkSamplerAddressMode 
+                     , mipLodBias :: CFloat 
+                     , anisotropyEnable :: VkBool32 
+                     , maxAnisotropy :: CFloat 
+                     , compareEnable :: VkBool32 
+                     , compareOp :: VkCompareOp 
+                     , minLod :: CFloat 
+                     , maxLod :: CFloat 
+                     , borderColor :: VkBorderColor 
+                     , unnormalizedCoordinates :: VkBool32 
                      }
   deriving (Eq)
 
@@ -255,24 +255,24 @@ instance Storable VkSamplerCreateInfo where
                                  <*> peek (ptr `plusPtr` 68)
                                  <*> peek (ptr `plusPtr` 72)
                                  <*> peek (ptr `plusPtr` 76)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkMagFilter (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkMinFilter (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 28) (vkMipmapMode (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkAddressModeU (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 36) (vkAddressModeV (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkAddressModeW (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 44) (vkMipLodBias (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkAnisotropyEnable (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 52) (vkMaxAnisotropy (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkCompareEnable (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 60) (vkCompareOp (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 64) (vkMinLod (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 68) (vkMaxLod (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 72) (vkBorderColor (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 76) (vkUnnormalizedCoordinates (poked :: VkSamplerCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 20) (magFilter (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 24) (minFilter (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 28) (mipmapMode (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 32) (addressModeU (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 36) (addressModeV (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 40) (addressModeW (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 44) (mipLodBias (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 48) (anisotropyEnable (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 52) (maxAnisotropy (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 56) (compareEnable (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 60) (compareOp (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 64) (minLod (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 68) (maxLod (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 72) (borderColor (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 76) (unnormalizedCoordinates (poked :: VkSamplerCreateInfo))
 
 
 -- ** VkSamplerCreateFlags
@@ -308,9 +308,9 @@ pattern VK_SAMPLER_MIPMAP_MODE_LINEAR = VkSamplerMipmapMode 1
 
 -- ** vkCreateSampler
 foreign import ccall "vkCreateSampler" vkCreateSampler ::
-  VkDevice ->
+  Device ->
   Ptr VkSamplerCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkSampler -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr Sampler -> IO VkResult
 
 -- ** VkSampleCountFlags
 
@@ -365,5 +365,5 @@ pattern VK_SAMPLE_COUNT_64_BIT = VkSampleCountFlagBits 0x40
 
 -- ** vkDestroySampler
 foreign import ccall "vkDestroySampler" vkDestroySampler ::
-  VkDevice -> VkSampler -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Sampler -> Ptr VkAllocationCallbacks -> IO ()
 

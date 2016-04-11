@@ -7,9 +7,9 @@ module Graphics.Vulkan.Pipeline where
 
 import Data.Vector.Storable.Sized( Vector
                                  )
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
-import {-# SOURCE #-} Graphics.Vulkan.Pass( VkRenderPass(..)
+import {-# SOURCE #-} Graphics.Vulkan.Pass( RenderPass(..)
                                           )
 import Text.Read.Lex( Lexeme(Ident)
                     )
@@ -22,7 +22,7 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Graphics.Vulkan.PipelineCache( VkPipelineCache(..)
+import Graphics.Vulkan.PipelineCache( PipelineCache(..)
                                     )
 import Data.Int( Int32
                )
@@ -42,7 +42,7 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkFreeFunction
                              , PFN_vkInternalFreeNotification
                              )
-import Graphics.Vulkan.PipelineLayout( VkPipelineLayout(..)
+import Graphics.Vulkan.PipelineLayout( PipelineLayout(..)
                                      )
 import Text.Read( Read(..)
                 , parens
@@ -52,7 +52,7 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , step
                                       )
 import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
-                             , VkShaderModule(..)
+                             , ShaderModule(..)
                              )
 import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
                               , VkCompareOp(..)
@@ -76,10 +76,10 @@ import Foreign.C.Types( CSize
 
 
 data VkPipelineTessellationStateCreateInfo =
-  VkPipelineTessellationStateCreateInfo{ vkSType :: VkStructureType 
-                                       , vkPNext :: Ptr Void 
-                                       , vkFlags :: VkPipelineTessellationStateCreateFlags 
-                                       , vkPatchControlPoints :: Word32 
+  VkPipelineTessellationStateCreateInfo{ sType :: VkStructureType 
+                                       , pNext :: Ptr Void 
+                                       , flags :: VkPipelineTessellationStateCreateFlags 
+                                       , patchControlPoints :: Word32 
                                        }
   deriving (Eq)
 
@@ -90,18 +90,18 @@ instance Storable VkPipelineTessellationStateCreateInfo where
                                                    <*> peek (ptr `plusPtr` 8)
                                                    <*> peek (ptr `plusPtr` 16)
                                                    <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineTessellationStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineTessellationStateCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineTessellationStateCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkPatchControlPoints (poked :: VkPipelineTessellationStateCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineTessellationStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineTessellationStateCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineTessellationStateCreateInfo))
+                *> poke (ptr `plusPtr` 20) (patchControlPoints (poked :: VkPipelineTessellationStateCreateInfo))
 
 
 
 data VkVertexInputAttributeDescription =
-  VkVertexInputAttributeDescription{ vkLocation :: Word32 
-                                   , vkBinding :: Word32 
-                                   , vkFormat :: VkFormat 
-                                   , vkOffset :: Word32 
+  VkVertexInputAttributeDescription{ location :: Word32 
+                                   , binding :: Word32 
+                                   , format :: VkFormat 
+                                   , offset :: Word32 
                                    }
   deriving (Eq)
 
@@ -112,33 +112,33 @@ instance Storable VkVertexInputAttributeDescription where
                                                <*> peek (ptr `plusPtr` 4)
                                                <*> peek (ptr `plusPtr` 8)
                                                <*> peek (ptr `plusPtr` 12)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkLocation (poked :: VkVertexInputAttributeDescription))
-                *> poke (ptr `plusPtr` 4) (vkBinding (poked :: VkVertexInputAttributeDescription))
-                *> poke (ptr `plusPtr` 8) (vkFormat (poked :: VkVertexInputAttributeDescription))
-                *> poke (ptr `plusPtr` 12) (vkOffset (poked :: VkVertexInputAttributeDescription))
+  poke ptr poked = poke (ptr `plusPtr` 0) (location (poked :: VkVertexInputAttributeDescription))
+                *> poke (ptr `plusPtr` 4) (binding (poked :: VkVertexInputAttributeDescription))
+                *> poke (ptr `plusPtr` 8) (format (poked :: VkVertexInputAttributeDescription))
+                *> poke (ptr `plusPtr` 12) (offset (poked :: VkVertexInputAttributeDescription))
 
 
 
 data VkGraphicsPipelineCreateInfo =
-  VkGraphicsPipelineCreateInfo{ vkSType :: VkStructureType 
-                              , vkPNext :: Ptr Void 
-                              , vkFlags :: VkPipelineCreateFlags 
-                              , vkStageCount :: Word32 
-                              , vkPStages :: Ptr VkPipelineShaderStageCreateInfo 
-                              , vkPVertexInputState :: Ptr VkPipelineVertexInputStateCreateInfo 
-                              , vkPInputAssemblyState :: Ptr VkPipelineInputAssemblyStateCreateInfo 
-                              , vkPTessellationState :: Ptr VkPipelineTessellationStateCreateInfo 
-                              , vkPViewportState :: Ptr VkPipelineViewportStateCreateInfo 
-                              , vkPRasterizationState :: Ptr VkPipelineRasterizationStateCreateInfo 
-                              , vkPMultisampleState :: Ptr VkPipelineMultisampleStateCreateInfo 
-                              , vkPDepthStencilState :: Ptr VkPipelineDepthStencilStateCreateInfo 
-                              , vkPColorBlendState :: Ptr VkPipelineColorBlendStateCreateInfo 
-                              , vkPDynamicState :: Ptr VkPipelineDynamicStateCreateInfo 
-                              , vkLayout :: VkPipelineLayout 
-                              , vkRenderPass :: VkRenderPass 
-                              , vkSubpass :: Word32 
-                              , vkBasePipelineHandle :: VkPipeline 
-                              , vkBasePipelineIndex :: Int32 
+  VkGraphicsPipelineCreateInfo{ sType :: VkStructureType 
+                              , pNext :: Ptr Void 
+                              , flags :: VkPipelineCreateFlags 
+                              , stageCount :: Word32 
+                              , pStages :: Ptr VkPipelineShaderStageCreateInfo 
+                              , pVertexInputState :: Ptr VkPipelineVertexInputStateCreateInfo 
+                              , pInputAssemblyState :: Ptr VkPipelineInputAssemblyStateCreateInfo 
+                              , pTessellationState :: Ptr VkPipelineTessellationStateCreateInfo 
+                              , pViewportState :: Ptr VkPipelineViewportStateCreateInfo 
+                              , pRasterizationState :: Ptr VkPipelineRasterizationStateCreateInfo 
+                              , pMultisampleState :: Ptr VkPipelineMultisampleStateCreateInfo 
+                              , pDepthStencilState :: Ptr VkPipelineDepthStencilStateCreateInfo 
+                              , pColorBlendState :: Ptr VkPipelineColorBlendStateCreateInfo 
+                              , pDynamicState :: Ptr VkPipelineDynamicStateCreateInfo 
+                              , layout :: PipelineLayout 
+                              , renderPass :: RenderPass 
+                              , subpass :: Word32 
+                              , basePipelineHandle :: Pipeline 
+                              , basePipelineIndex :: Int32 
                               }
   deriving (Eq)
 
@@ -164,25 +164,25 @@ instance Storable VkGraphicsPipelineCreateInfo where
                                           <*> peek (ptr `plusPtr` 120)
                                           <*> peek (ptr `plusPtr` 128)
                                           <*> peek (ptr `plusPtr` 136)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkStageCount (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPStages (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPVertexInputState (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPInputAssemblyState (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkPTessellationState (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkPViewportState (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 64) (vkPRasterizationState (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 72) (vkPMultisampleState (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 80) (vkPDepthStencilState (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 88) (vkPColorBlendState (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 96) (vkPDynamicState (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 104) (vkLayout (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 112) (vkRenderPass (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 120) (vkSubpass (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 128) (vkBasePipelineHandle (poked :: VkGraphicsPipelineCreateInfo))
-                *> poke (ptr `plusPtr` 136) (vkBasePipelineIndex (poked :: VkGraphicsPipelineCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 20) (stageCount (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pStages (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pVertexInputState (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 40) (pInputAssemblyState (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 48) (pTessellationState (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 56) (pViewportState (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 64) (pRasterizationState (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 72) (pMultisampleState (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 80) (pDepthStencilState (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 88) (pColorBlendState (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 96) (pDynamicState (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 104) (layout (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 112) (renderPass (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 120) (subpass (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 128) (basePipelineHandle (poked :: VkGraphicsPipelineCreateInfo))
+                *> poke (ptr `plusPtr` 136) (basePipelineIndex (poked :: VkGraphicsPipelineCreateInfo))
 
 
 -- ** VkCullModeFlags
@@ -229,13 +229,13 @@ newtype VkPipelineDepthStencilStateCreateFlags = VkPipelineDepthStencilStateCrea
 
 
 data VkPipelineShaderStageCreateInfo =
-  VkPipelineShaderStageCreateInfo{ vkSType :: VkStructureType 
-                                 , vkPNext :: Ptr Void 
-                                 , vkFlags :: VkPipelineShaderStageCreateFlags 
-                                 , vkStage :: VkShaderStageFlagBits 
-                                 , vkModule :: VkShaderModule 
-                                 , vkPName :: Ptr CChar 
-                                 , vkPSpecializationInfo :: Ptr VkSpecializationInfo 
+  VkPipelineShaderStageCreateInfo{ sType :: VkStructureType 
+                                 , pNext :: Ptr Void 
+                                 , flags :: VkPipelineShaderStageCreateFlags 
+                                 , stage :: VkShaderStageFlagBits 
+                                 , _module :: ShaderModule 
+                                 , pName :: Ptr CChar 
+                                 , pSpecializationInfo :: Ptr VkSpecializationInfo 
                                  }
   deriving (Eq)
 
@@ -249,13 +249,13 @@ instance Storable VkPipelineShaderStageCreateInfo where
                                              <*> peek (ptr `plusPtr` 24)
                                              <*> peek (ptr `plusPtr` 32)
                                              <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineShaderStageCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineShaderStageCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineShaderStageCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkStage (poked :: VkPipelineShaderStageCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkModule (poked :: VkPipelineShaderStageCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPName (poked :: VkPipelineShaderStageCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPSpecializationInfo (poked :: VkPipelineShaderStageCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineShaderStageCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineShaderStageCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineShaderStageCreateInfo))
+                *> poke (ptr `plusPtr` 20) (stage (poked :: VkPipelineShaderStageCreateInfo))
+                *> poke (ptr `plusPtr` 24) (_module (poked :: VkPipelineShaderStageCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pName (poked :: VkPipelineShaderStageCreateInfo))
+                *> poke (ptr `plusPtr` 40) (pSpecializationInfo (poked :: VkPipelineShaderStageCreateInfo))
 
 
 -- ** VkColorComponentFlags
@@ -299,13 +299,13 @@ pattern VK_COLOR_COMPONENT_A_BIT = VkColorComponentFlagBits 0x8
 
 
 data VkComputePipelineCreateInfo =
-  VkComputePipelineCreateInfo{ vkSType :: VkStructureType 
-                             , vkPNext :: Ptr Void 
-                             , vkFlags :: VkPipelineCreateFlags 
-                             , vkStage :: VkPipelineShaderStageCreateInfo 
-                             , vkLayout :: VkPipelineLayout 
-                             , vkBasePipelineHandle :: VkPipeline 
-                             , vkBasePipelineIndex :: Int32 
+  VkComputePipelineCreateInfo{ sType :: VkStructureType 
+                             , pNext :: Ptr Void 
+                             , flags :: VkPipelineCreateFlags 
+                             , stage :: VkPipelineShaderStageCreateInfo 
+                             , layout :: PipelineLayout 
+                             , basePipelineHandle :: Pipeline 
+                             , basePipelineIndex :: Int32 
                              }
   deriving (Eq)
 
@@ -319,13 +319,13 @@ instance Storable VkComputePipelineCreateInfo where
                                          <*> peek (ptr `plusPtr` 72)
                                          <*> peek (ptr `plusPtr` 80)
                                          <*> peek (ptr `plusPtr` 88)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkComputePipelineCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkComputePipelineCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkComputePipelineCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkStage (poked :: VkComputePipelineCreateInfo))
-                *> poke (ptr `plusPtr` 72) (vkLayout (poked :: VkComputePipelineCreateInfo))
-                *> poke (ptr `plusPtr` 80) (vkBasePipelineHandle (poked :: VkComputePipelineCreateInfo))
-                *> poke (ptr `plusPtr` 88) (vkBasePipelineIndex (poked :: VkComputePipelineCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkComputePipelineCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkComputePipelineCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkComputePipelineCreateInfo))
+                *> poke (ptr `plusPtr` 24) (stage (poked :: VkComputePipelineCreateInfo))
+                *> poke (ptr `plusPtr` 72) (layout (poked :: VkComputePipelineCreateInfo))
+                *> poke (ptr `plusPtr` 80) (basePipelineHandle (poked :: VkComputePipelineCreateInfo))
+                *> poke (ptr `plusPtr` 88) (basePipelineIndex (poked :: VkComputePipelineCreateInfo))
 
 
 -- ** VkStencilOp
@@ -380,10 +380,10 @@ pattern VK_STENCIL_OP_DECREMENT_AND_WRAP = VkStencilOp 7
 
 
 data VkSpecializationInfo =
-  VkSpecializationInfo{ vkMapEntryCount :: Word32 
-                      , vkPMapEntries :: Ptr VkSpecializationMapEntry 
-                      , vkDataSize :: CSize 
-                      , vkPData :: Ptr Void 
+  VkSpecializationInfo{ mapEntryCount :: Word32 
+                      , pMapEntries :: Ptr VkSpecializationMapEntry 
+                      , dataSize :: CSize 
+                      , pData :: Ptr Void 
                       }
   deriving (Eq)
 
@@ -394,10 +394,10 @@ instance Storable VkSpecializationInfo where
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
                                   <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkMapEntryCount (poked :: VkSpecializationInfo))
-                *> poke (ptr `plusPtr` 8) (vkPMapEntries (poked :: VkSpecializationInfo))
-                *> poke (ptr `plusPtr` 16) (vkDataSize (poked :: VkSpecializationInfo))
-                *> poke (ptr `plusPtr` 24) (vkPData (poked :: VkSpecializationInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (mapEntryCount (poked :: VkSpecializationInfo))
+                *> poke (ptr `plusPtr` 8) (pMapEntries (poked :: VkSpecializationInfo))
+                *> poke (ptr `plusPtr` 16) (dataSize (poked :: VkSpecializationInfo))
+                *> poke (ptr `plusPtr` 24) (pData (poked :: VkSpecializationInfo))
 
 
 -- ** VkPipelineColorBlendStateCreateFlags
@@ -405,7 +405,7 @@ instance Storable VkSpecializationInfo where
 newtype VkPipelineColorBlendStateCreateFlags = VkPipelineColorBlendStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
-newtype VkPipeline = VkPipeline Word64
+newtype Pipeline = Pipeline Word64
   deriving (Eq, Storable)
 
 -- ** VkPipelineInputAssemblyStateCreateFlags
@@ -415,11 +415,11 @@ newtype VkPipelineInputAssemblyStateCreateFlags = VkPipelineInputAssemblyStateCr
 
 -- ** vkCreateGraphicsPipelines
 foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines ::
-  VkDevice ->
-  VkPipelineCache ->
+  Device ->
+  PipelineCache ->
     Word32 ->
       Ptr VkGraphicsPipelineCreateInfo ->
-        Ptr VkAllocationCallbacks -> Ptr VkPipeline -> IO VkResult
+        Ptr VkAllocationCallbacks -> Ptr Pipeline -> IO VkResult
 
 -- ** VkFrontFace
 
@@ -691,19 +691,19 @@ newtype VkPipelineDynamicStateCreateFlags = VkPipelineDynamicStateCreateFlags Vk
 
 
 data VkPipelineRasterizationStateCreateInfo =
-  VkPipelineRasterizationStateCreateInfo{ vkSType :: VkStructureType 
-                                        , vkPNext :: Ptr Void 
-                                        , vkFlags :: VkPipelineRasterizationStateCreateFlags 
-                                        , vkDepthClampEnable :: VkBool32 
-                                        , vkRasterizerDiscardEnable :: VkBool32 
-                                        , vkPolygonMode :: VkPolygonMode 
-                                        , vkCullMode :: VkCullModeFlags 
-                                        , vkFrontFace :: VkFrontFace 
-                                        , vkDepthBiasEnable :: VkBool32 
-                                        , vkDepthBiasConstantFactor :: CFloat 
-                                        , vkDepthBiasClamp :: CFloat 
-                                        , vkDepthBiasSlopeFactor :: CFloat 
-                                        , vkLineWidth :: CFloat 
+  VkPipelineRasterizationStateCreateInfo{ sType :: VkStructureType 
+                                        , pNext :: Ptr Void 
+                                        , flags :: VkPipelineRasterizationStateCreateFlags 
+                                        , depthClampEnable :: VkBool32 
+                                        , rasterizerDiscardEnable :: VkBool32 
+                                        , polygonMode :: VkPolygonMode 
+                                        , cullMode :: VkCullModeFlags 
+                                        , frontFace :: VkFrontFace 
+                                        , depthBiasEnable :: VkBool32 
+                                        , depthBiasConstantFactor :: CFloat 
+                                        , depthBiasClamp :: CFloat 
+                                        , depthBiasSlopeFactor :: CFloat 
+                                        , lineWidth :: CFloat 
                                         }
   deriving (Eq)
 
@@ -723,19 +723,19 @@ instance Storable VkPipelineRasterizationStateCreateInfo where
                                                     <*> peek (ptr `plusPtr` 48)
                                                     <*> peek (ptr `plusPtr` 52)
                                                     <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkDepthClampEnable (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkRasterizerDiscardEnable (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 28) (vkPolygonMode (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkCullMode (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 36) (vkFrontFace (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkDepthBiasEnable (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 44) (vkDepthBiasConstantFactor (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkDepthBiasClamp (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 52) (vkDepthBiasSlopeFactor (poked :: VkPipelineRasterizationStateCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkLineWidth (poked :: VkPipelineRasterizationStateCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 20) (depthClampEnable (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 24) (rasterizerDiscardEnable (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 28) (polygonMode (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 32) (cullMode (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 36) (frontFace (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 40) (depthBiasEnable (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 44) (depthBiasConstantFactor (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 48) (depthBiasClamp (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 52) (depthBiasSlopeFactor (poked :: VkPipelineRasterizationStateCreateInfo))
+                *> poke (ptr `plusPtr` 56) (lineWidth (poked :: VkPipelineRasterizationStateCreateInfo))
 
 
 -- ** VkBlendOp
@@ -778,7 +778,7 @@ pattern VK_BLEND_OP_MAX = VkBlendOp 4
 
 -- ** vkDestroyPipeline
 foreign import ccall "vkDestroyPipeline" vkDestroyPipeline ::
-  VkDevice -> VkPipeline -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Pipeline -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** VkPipelineShaderStageCreateFlags
 -- | Opaque flag
@@ -787,13 +787,13 @@ newtype VkPipelineShaderStageCreateFlags = VkPipelineShaderStageCreateFlags VkFl
 
 
 data VkPipelineViewportStateCreateInfo =
-  VkPipelineViewportStateCreateInfo{ vkSType :: VkStructureType 
-                                   , vkPNext :: Ptr Void 
-                                   , vkFlags :: VkPipelineViewportStateCreateFlags 
-                                   , vkViewportCount :: Word32 
-                                   , vkPViewports :: Ptr VkViewport 
-                                   , vkScissorCount :: Word32 
-                                   , vkPScissors :: Ptr VkRect2D 
+  VkPipelineViewportStateCreateInfo{ sType :: VkStructureType 
+                                   , pNext :: Ptr Void 
+                                   , flags :: VkPipelineViewportStateCreateFlags 
+                                   , viewportCount :: Word32 
+                                   , pViewports :: Ptr VkViewport 
+                                   , scissorCount :: Word32 
+                                   , pScissors :: Ptr VkRect2D 
                                    }
   deriving (Eq)
 
@@ -807,13 +807,13 @@ instance Storable VkPipelineViewportStateCreateInfo where
                                                <*> peek (ptr `plusPtr` 24)
                                                <*> peek (ptr `plusPtr` 32)
                                                <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineViewportStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineViewportStateCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineViewportStateCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkViewportCount (poked :: VkPipelineViewportStateCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPViewports (poked :: VkPipelineViewportStateCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkScissorCount (poked :: VkPipelineViewportStateCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPScissors (poked :: VkPipelineViewportStateCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineViewportStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineViewportStateCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineViewportStateCreateInfo))
+                *> poke (ptr `plusPtr` 20) (viewportCount (poked :: VkPipelineViewportStateCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pViewports (poked :: VkPipelineViewportStateCreateInfo))
+                *> poke (ptr `plusPtr` 32) (scissorCount (poked :: VkPipelineViewportStateCreateInfo))
+                *> poke (ptr `plusPtr` 40) (pScissors (poked :: VkPipelineViewportStateCreateInfo))
 
 
 -- ** VkPipelineTessellationStateCreateFlags
@@ -823,13 +823,13 @@ newtype VkPipelineTessellationStateCreateFlags = VkPipelineTessellationStateCrea
 
 
 data VkPipelineVertexInputStateCreateInfo =
-  VkPipelineVertexInputStateCreateInfo{ vkSType :: VkStructureType 
-                                      , vkPNext :: Ptr Void 
-                                      , vkFlags :: VkPipelineVertexInputStateCreateFlags 
-                                      , vkVertexBindingDescriptionCount :: Word32 
-                                      , vkPVertexBindingDescriptions :: Ptr VkVertexInputBindingDescription 
-                                      , vkVertexAttributeDescriptionCount :: Word32 
-                                      , vkPVertexAttributeDescriptions :: Ptr VkVertexInputAttributeDescription 
+  VkPipelineVertexInputStateCreateInfo{ sType :: VkStructureType 
+                                      , pNext :: Ptr Void 
+                                      , flags :: VkPipelineVertexInputStateCreateFlags 
+                                      , vertexBindingDescriptionCount :: Word32 
+                                      , pVertexBindingDescriptions :: Ptr VkVertexInputBindingDescription 
+                                      , vertexAttributeDescriptionCount :: Word32 
+                                      , pVertexAttributeDescriptions :: Ptr VkVertexInputAttributeDescription 
                                       }
   deriving (Eq)
 
@@ -843,13 +843,13 @@ instance Storable VkPipelineVertexInputStateCreateInfo where
                                                   <*> peek (ptr `plusPtr` 24)
                                                   <*> peek (ptr `plusPtr` 32)
                                                   <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineVertexInputStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineVertexInputStateCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineVertexInputStateCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkVertexBindingDescriptionCount (poked :: VkPipelineVertexInputStateCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPVertexBindingDescriptions (poked :: VkPipelineVertexInputStateCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkVertexAttributeDescriptionCount (poked :: VkPipelineVertexInputStateCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPVertexAttributeDescriptions (poked :: VkPipelineVertexInputStateCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineVertexInputStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineVertexInputStateCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineVertexInputStateCreateInfo))
+                *> poke (ptr `plusPtr` 20) (vertexBindingDescriptionCount (poked :: VkPipelineVertexInputStateCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pVertexBindingDescriptions (poked :: VkPipelineVertexInputStateCreateInfo))
+                *> poke (ptr `plusPtr` 32) (vertexAttributeDescriptionCount (poked :: VkPipelineVertexInputStateCreateInfo))
+                *> poke (ptr `plusPtr` 40) (pVertexAttributeDescriptions (poked :: VkPipelineVertexInputStateCreateInfo))
 
 
 -- ** VkPrimitiveTopology
@@ -916,11 +916,11 @@ pattern VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = VkPrimitiveTopology 10
 
 
 data VkPipelineInputAssemblyStateCreateInfo =
-  VkPipelineInputAssemblyStateCreateInfo{ vkSType :: VkStructureType 
-                                        , vkPNext :: Ptr Void 
-                                        , vkFlags :: VkPipelineInputAssemblyStateCreateFlags 
-                                        , vkTopology :: VkPrimitiveTopology 
-                                        , vkPrimitiveRestartEnable :: VkBool32 
+  VkPipelineInputAssemblyStateCreateInfo{ sType :: VkStructureType 
+                                        , pNext :: Ptr Void 
+                                        , flags :: VkPipelineInputAssemblyStateCreateFlags 
+                                        , topology :: VkPrimitiveTopology 
+                                        , primitiveRestartEnable :: VkBool32 
                                         }
   deriving (Eq)
 
@@ -932,23 +932,23 @@ instance Storable VkPipelineInputAssemblyStateCreateInfo where
                                                     <*> peek (ptr `plusPtr` 16)
                                                     <*> peek (ptr `plusPtr` 20)
                                                     <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineInputAssemblyStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineInputAssemblyStateCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineInputAssemblyStateCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkTopology (poked :: VkPipelineInputAssemblyStateCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPrimitiveRestartEnable (poked :: VkPipelineInputAssemblyStateCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineInputAssemblyStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineInputAssemblyStateCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineInputAssemblyStateCreateInfo))
+                *> poke (ptr `plusPtr` 20) (topology (poked :: VkPipelineInputAssemblyStateCreateInfo))
+                *> poke (ptr `plusPtr` 24) (primitiveRestartEnable (poked :: VkPipelineInputAssemblyStateCreateInfo))
 
 
 
 data VkPipelineColorBlendStateCreateInfo =
-  VkPipelineColorBlendStateCreateInfo{ vkSType :: VkStructureType 
-                                     , vkPNext :: Ptr Void 
-                                     , vkFlags :: VkPipelineColorBlendStateCreateFlags 
-                                     , vkLogicOpEnable :: VkBool32 
-                                     , vkLogicOp :: VkLogicOp 
-                                     , vkAttachmentCount :: Word32 
-                                     , vkPAttachments :: Ptr VkPipelineColorBlendAttachmentState 
-                                     , vkBlendConstants :: Vector 4 CFloat 
+  VkPipelineColorBlendStateCreateInfo{ sType :: VkStructureType 
+                                     , pNext :: Ptr Void 
+                                     , flags :: VkPipelineColorBlendStateCreateFlags 
+                                     , logicOpEnable :: VkBool32 
+                                     , logicOp :: VkLogicOp 
+                                     , attachmentCount :: Word32 
+                                     , pAttachments :: Ptr VkPipelineColorBlendAttachmentState 
+                                     , blendConstants :: Vector 4 CFloat 
                                      }
   deriving (Eq)
 
@@ -963,23 +963,23 @@ instance Storable VkPipelineColorBlendStateCreateInfo where
                                                  <*> peek (ptr `plusPtr` 28)
                                                  <*> peek (ptr `plusPtr` 32)
                                                  <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineColorBlendStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineColorBlendStateCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineColorBlendStateCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkLogicOpEnable (poked :: VkPipelineColorBlendStateCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkLogicOp (poked :: VkPipelineColorBlendStateCreateInfo))
-                *> poke (ptr `plusPtr` 28) (vkAttachmentCount (poked :: VkPipelineColorBlendStateCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPAttachments (poked :: VkPipelineColorBlendStateCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkBlendConstants (poked :: VkPipelineColorBlendStateCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineColorBlendStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineColorBlendStateCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineColorBlendStateCreateInfo))
+                *> poke (ptr `plusPtr` 20) (logicOpEnable (poked :: VkPipelineColorBlendStateCreateInfo))
+                *> poke (ptr `plusPtr` 24) (logicOp (poked :: VkPipelineColorBlendStateCreateInfo))
+                *> poke (ptr `plusPtr` 28) (attachmentCount (poked :: VkPipelineColorBlendStateCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pAttachments (poked :: VkPipelineColorBlendStateCreateInfo))
+                *> poke (ptr `plusPtr` 40) (blendConstants (poked :: VkPipelineColorBlendStateCreateInfo))
 
 
 
 data VkPipelineDynamicStateCreateInfo =
-  VkPipelineDynamicStateCreateInfo{ vkSType :: VkStructureType 
-                                  , vkPNext :: Ptr Void 
-                                  , vkFlags :: VkPipelineDynamicStateCreateFlags 
-                                  , vkDynamicStateCount :: Word32 
-                                  , vkPDynamicStates :: Ptr VkDynamicState 
+  VkPipelineDynamicStateCreateInfo{ sType :: VkStructureType 
+                                  , pNext :: Ptr Void 
+                                  , flags :: VkPipelineDynamicStateCreateFlags 
+                                  , dynamicStateCount :: Word32 
+                                  , pDynamicStates :: Ptr VkDynamicState 
                                   }
   deriving (Eq)
 
@@ -991,18 +991,18 @@ instance Storable VkPipelineDynamicStateCreateInfo where
                                               <*> peek (ptr `plusPtr` 16)
                                               <*> peek (ptr `plusPtr` 20)
                                               <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineDynamicStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineDynamicStateCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineDynamicStateCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkDynamicStateCount (poked :: VkPipelineDynamicStateCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPDynamicStates (poked :: VkPipelineDynamicStateCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineDynamicStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineDynamicStateCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineDynamicStateCreateInfo))
+                *> poke (ptr `plusPtr` 20) (dynamicStateCount (poked :: VkPipelineDynamicStateCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pDynamicStates (poked :: VkPipelineDynamicStateCreateInfo))
 
 
 
 data VkSpecializationMapEntry =
-  VkSpecializationMapEntry{ vkConstantID :: Word32 
-                          , vkOffset :: Word32 
-                          , vkSize :: CSize 
+  VkSpecializationMapEntry{ constantID :: Word32 
+                          , offset :: Word32 
+                          , size :: CSize 
                           }
   deriving (Eq)
 
@@ -1012,9 +1012,9 @@ instance Storable VkSpecializationMapEntry where
   peek ptr = VkSpecializationMapEntry <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 4)
                                       <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkConstantID (poked :: VkSpecializationMapEntry))
-                *> poke (ptr `plusPtr` 4) (vkOffset (poked :: VkSpecializationMapEntry))
-                *> poke (ptr `plusPtr` 8) (vkSize (poked :: VkSpecializationMapEntry))
+  poke ptr poked = poke (ptr `plusPtr` 0) (constantID (poked :: VkSpecializationMapEntry))
+                *> poke (ptr `plusPtr` 4) (offset (poked :: VkSpecializationMapEntry))
+                *> poke (ptr `plusPtr` 8) (size (poked :: VkSpecializationMapEntry))
 
 
 -- ** VkPipelineVertexInputStateCreateFlags
@@ -1141,14 +1141,14 @@ pattern VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = VkPipelineStageFlagBits 0x10000
 
 
 data VkPipelineColorBlendAttachmentState =
-  VkPipelineColorBlendAttachmentState{ vkBlendEnable :: VkBool32 
-                                     , vkSrcColorBlendFactor :: VkBlendFactor 
-                                     , vkDstColorBlendFactor :: VkBlendFactor 
-                                     , vkColorBlendOp :: VkBlendOp 
-                                     , vkSrcAlphaBlendFactor :: VkBlendFactor 
-                                     , vkDstAlphaBlendFactor :: VkBlendFactor 
-                                     , vkAlphaBlendOp :: VkBlendOp 
-                                     , vkColorWriteMask :: VkColorComponentFlags 
+  VkPipelineColorBlendAttachmentState{ blendEnable :: VkBool32 
+                                     , srcColorBlendFactor :: VkBlendFactor 
+                                     , dstColorBlendFactor :: VkBlendFactor 
+                                     , colorBlendOp :: VkBlendOp 
+                                     , srcAlphaBlendFactor :: VkBlendFactor 
+                                     , dstAlphaBlendFactor :: VkBlendFactor 
+                                     , alphaBlendOp :: VkBlendOp 
+                                     , colorWriteMask :: VkColorComponentFlags 
                                      }
   deriving (Eq)
 
@@ -1163,14 +1163,14 @@ instance Storable VkPipelineColorBlendAttachmentState where
                                                  <*> peek (ptr `plusPtr` 20)
                                                  <*> peek (ptr `plusPtr` 24)
                                                  <*> peek (ptr `plusPtr` 28)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkBlendEnable (poked :: VkPipelineColorBlendAttachmentState))
-                *> poke (ptr `plusPtr` 4) (vkSrcColorBlendFactor (poked :: VkPipelineColorBlendAttachmentState))
-                *> poke (ptr `plusPtr` 8) (vkDstColorBlendFactor (poked :: VkPipelineColorBlendAttachmentState))
-                *> poke (ptr `plusPtr` 12) (vkColorBlendOp (poked :: VkPipelineColorBlendAttachmentState))
-                *> poke (ptr `plusPtr` 16) (vkSrcAlphaBlendFactor (poked :: VkPipelineColorBlendAttachmentState))
-                *> poke (ptr `plusPtr` 20) (vkDstAlphaBlendFactor (poked :: VkPipelineColorBlendAttachmentState))
-                *> poke (ptr `plusPtr` 24) (vkAlphaBlendOp (poked :: VkPipelineColorBlendAttachmentState))
-                *> poke (ptr `plusPtr` 28) (vkColorWriteMask (poked :: VkPipelineColorBlendAttachmentState))
+  poke ptr poked = poke (ptr `plusPtr` 0) (blendEnable (poked :: VkPipelineColorBlendAttachmentState))
+                *> poke (ptr `plusPtr` 4) (srcColorBlendFactor (poked :: VkPipelineColorBlendAttachmentState))
+                *> poke (ptr `plusPtr` 8) (dstColorBlendFactor (poked :: VkPipelineColorBlendAttachmentState))
+                *> poke (ptr `plusPtr` 12) (colorBlendOp (poked :: VkPipelineColorBlendAttachmentState))
+                *> poke (ptr `plusPtr` 16) (srcAlphaBlendFactor (poked :: VkPipelineColorBlendAttachmentState))
+                *> poke (ptr `plusPtr` 20) (dstAlphaBlendFactor (poked :: VkPipelineColorBlendAttachmentState))
+                *> poke (ptr `plusPtr` 24) (alphaBlendOp (poked :: VkPipelineColorBlendAttachmentState))
+                *> poke (ptr `plusPtr` 28) (colorWriteMask (poked :: VkPipelineColorBlendAttachmentState))
 
 
 -- ** VkBlendFactor
@@ -1277,15 +1277,15 @@ newtype VkPipelineMultisampleStateCreateFlags = VkPipelineMultisampleStateCreate
 
 
 data VkPipelineMultisampleStateCreateInfo =
-  VkPipelineMultisampleStateCreateInfo{ vkSType :: VkStructureType 
-                                      , vkPNext :: Ptr Void 
-                                      , vkFlags :: VkPipelineMultisampleStateCreateFlags 
-                                      , vkRasterizationSamples :: VkSampleCountFlagBits 
-                                      , vkSampleShadingEnable :: VkBool32 
-                                      , vkMinSampleShading :: CFloat 
-                                      , vkPSampleMask :: Ptr VkSampleMask 
-                                      , vkAlphaToCoverageEnable :: VkBool32 
-                                      , vkAlphaToOneEnable :: VkBool32 
+  VkPipelineMultisampleStateCreateInfo{ sType :: VkStructureType 
+                                      , pNext :: Ptr Void 
+                                      , flags :: VkPipelineMultisampleStateCreateFlags 
+                                      , rasterizationSamples :: VkSampleCountFlagBits 
+                                      , sampleShadingEnable :: VkBool32 
+                                      , minSampleShading :: CFloat 
+                                      , pSampleMask :: Ptr VkSampleMask 
+                                      , alphaToCoverageEnable :: VkBool32 
+                                      , alphaToOneEnable :: VkBool32 
                                       }
   deriving (Eq)
 
@@ -1301,22 +1301,22 @@ instance Storable VkPipelineMultisampleStateCreateInfo where
                                                   <*> peek (ptr `plusPtr` 32)
                                                   <*> peek (ptr `plusPtr` 40)
                                                   <*> peek (ptr `plusPtr` 44)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineMultisampleStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineMultisampleStateCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineMultisampleStateCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkRasterizationSamples (poked :: VkPipelineMultisampleStateCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkSampleShadingEnable (poked :: VkPipelineMultisampleStateCreateInfo))
-                *> poke (ptr `plusPtr` 28) (vkMinSampleShading (poked :: VkPipelineMultisampleStateCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPSampleMask (poked :: VkPipelineMultisampleStateCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkAlphaToCoverageEnable (poked :: VkPipelineMultisampleStateCreateInfo))
-                *> poke (ptr `plusPtr` 44) (vkAlphaToOneEnable (poked :: VkPipelineMultisampleStateCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineMultisampleStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineMultisampleStateCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineMultisampleStateCreateInfo))
+                *> poke (ptr `plusPtr` 20) (rasterizationSamples (poked :: VkPipelineMultisampleStateCreateInfo))
+                *> poke (ptr `plusPtr` 24) (sampleShadingEnable (poked :: VkPipelineMultisampleStateCreateInfo))
+                *> poke (ptr `plusPtr` 28) (minSampleShading (poked :: VkPipelineMultisampleStateCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pSampleMask (poked :: VkPipelineMultisampleStateCreateInfo))
+                *> poke (ptr `plusPtr` 40) (alphaToCoverageEnable (poked :: VkPipelineMultisampleStateCreateInfo))
+                *> poke (ptr `plusPtr` 44) (alphaToOneEnable (poked :: VkPipelineMultisampleStateCreateInfo))
 
 
 
 data VkVertexInputBindingDescription =
-  VkVertexInputBindingDescription{ vkBinding :: Word32 
-                                 , vkStride :: Word32 
-                                 , vkInputRate :: VkVertexInputRate 
+  VkVertexInputBindingDescription{ binding :: Word32 
+                                 , stride :: Word32 
+                                 , inputRate :: VkVertexInputRate 
                                  }
   deriving (Eq)
 
@@ -1326,25 +1326,25 @@ instance Storable VkVertexInputBindingDescription where
   peek ptr = VkVertexInputBindingDescription <$> peek (ptr `plusPtr` 0)
                                              <*> peek (ptr `plusPtr` 4)
                                              <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkBinding (poked :: VkVertexInputBindingDescription))
-                *> poke (ptr `plusPtr` 4) (vkStride (poked :: VkVertexInputBindingDescription))
-                *> poke (ptr `plusPtr` 8) (vkInputRate (poked :: VkVertexInputBindingDescription))
+  poke ptr poked = poke (ptr `plusPtr` 0) (binding (poked :: VkVertexInputBindingDescription))
+                *> poke (ptr `plusPtr` 4) (stride (poked :: VkVertexInputBindingDescription))
+                *> poke (ptr `plusPtr` 8) (inputRate (poked :: VkVertexInputBindingDescription))
 
 
 
 data VkPipelineDepthStencilStateCreateInfo =
-  VkPipelineDepthStencilStateCreateInfo{ vkSType :: VkStructureType 
-                                       , vkPNext :: Ptr Void 
-                                       , vkFlags :: VkPipelineDepthStencilStateCreateFlags 
-                                       , vkDepthTestEnable :: VkBool32 
-                                       , vkDepthWriteEnable :: VkBool32 
-                                       , vkDepthCompareOp :: VkCompareOp 
-                                       , vkDepthBoundsTestEnable :: VkBool32 
-                                       , vkStencilTestEnable :: VkBool32 
-                                       , vkFront :: VkStencilOpState 
-                                       , vkBack :: VkStencilOpState 
-                                       , vkMinDepthBounds :: CFloat 
-                                       , vkMaxDepthBounds :: CFloat 
+  VkPipelineDepthStencilStateCreateInfo{ sType :: VkStructureType 
+                                       , pNext :: Ptr Void 
+                                       , flags :: VkPipelineDepthStencilStateCreateFlags 
+                                       , depthTestEnable :: VkBool32 
+                                       , depthWriteEnable :: VkBool32 
+                                       , depthCompareOp :: VkCompareOp 
+                                       , depthBoundsTestEnable :: VkBool32 
+                                       , stencilTestEnable :: VkBool32 
+                                       , front :: VkStencilOpState 
+                                       , back :: VkStencilOpState 
+                                       , minDepthBounds :: CFloat 
+                                       , maxDepthBounds :: CFloat 
                                        }
   deriving (Eq)
 
@@ -1363,37 +1363,37 @@ instance Storable VkPipelineDepthStencilStateCreateInfo where
                                                    <*> peek (ptr `plusPtr` 68)
                                                    <*> peek (ptr `plusPtr` 96)
                                                    <*> peek (ptr `plusPtr` 100)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkDepthTestEnable (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkDepthWriteEnable (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 28) (vkDepthCompareOp (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkDepthBoundsTestEnable (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 36) (vkStencilTestEnable (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkFront (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 68) (vkBack (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 96) (vkMinDepthBounds (poked :: VkPipelineDepthStencilStateCreateInfo))
-                *> poke (ptr `plusPtr` 100) (vkMaxDepthBounds (poked :: VkPipelineDepthStencilStateCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 20) (depthTestEnable (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 24) (depthWriteEnable (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 28) (depthCompareOp (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 32) (depthBoundsTestEnable (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 36) (stencilTestEnable (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 40) (front (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 68) (back (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 96) (minDepthBounds (poked :: VkPipelineDepthStencilStateCreateInfo))
+                *> poke (ptr `plusPtr` 100) (maxDepthBounds (poked :: VkPipelineDepthStencilStateCreateInfo))
 
 
 -- ** vkCreateComputePipelines
 foreign import ccall "vkCreateComputePipelines" vkCreateComputePipelines ::
-  VkDevice ->
-  VkPipelineCache ->
+  Device ->
+  PipelineCache ->
     Word32 ->
       Ptr VkComputePipelineCreateInfo ->
-        Ptr VkAllocationCallbacks -> Ptr VkPipeline -> IO VkResult
+        Ptr VkAllocationCallbacks -> Ptr Pipeline -> IO VkResult
 
 
 data VkStencilOpState =
-  VkStencilOpState{ vkFailOp :: VkStencilOp 
-                  , vkPassOp :: VkStencilOp 
-                  , vkDepthFailOp :: VkStencilOp 
-                  , vkCompareOp :: VkCompareOp 
-                  , vkCompareMask :: Word32 
-                  , vkWriteMask :: Word32 
-                  , vkReference :: Word32 
+  VkStencilOpState{ failOp :: VkStencilOp 
+                  , passOp :: VkStencilOp 
+                  , depthFailOp :: VkStencilOp 
+                  , compareOp :: VkCompareOp 
+                  , compareMask :: Word32 
+                  , writeMask :: Word32 
+                  , reference :: Word32 
                   }
   deriving (Eq)
 
@@ -1407,12 +1407,12 @@ instance Storable VkStencilOpState where
                               <*> peek (ptr `plusPtr` 16)
                               <*> peek (ptr `plusPtr` 20)
                               <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkFailOp (poked :: VkStencilOpState))
-                *> poke (ptr `plusPtr` 4) (vkPassOp (poked :: VkStencilOpState))
-                *> poke (ptr `plusPtr` 8) (vkDepthFailOp (poked :: VkStencilOpState))
-                *> poke (ptr `plusPtr` 12) (vkCompareOp (poked :: VkStencilOpState))
-                *> poke (ptr `plusPtr` 16) (vkCompareMask (poked :: VkStencilOpState))
-                *> poke (ptr `plusPtr` 20) (vkWriteMask (poked :: VkStencilOpState))
-                *> poke (ptr `plusPtr` 24) (vkReference (poked :: VkStencilOpState))
+  poke ptr poked = poke (ptr `plusPtr` 0) (failOp (poked :: VkStencilOpState))
+                *> poke (ptr `plusPtr` 4) (passOp (poked :: VkStencilOpState))
+                *> poke (ptr `plusPtr` 8) (depthFailOp (poked :: VkStencilOpState))
+                *> poke (ptr `plusPtr` 12) (compareOp (poked :: VkStencilOpState))
+                *> poke (ptr `plusPtr` 16) (compareMask (poked :: VkStencilOpState))
+                *> poke (ptr `plusPtr` 20) (writeMask (poked :: VkStencilOpState))
+                *> poke (ptr `plusPtr` 24) (reference (poked :: VkStencilOpState))
 
 

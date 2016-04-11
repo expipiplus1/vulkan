@@ -32,7 +32,7 @@ writeDefine d =
       boundNames = boundVariablesFromDefine header
       (expression, requiredNames) =
         parseCExpressionToHsExpression value
-      hsName = camelCase_ $ dName d
+      hsName = dHsName d
       -- TODO: This assumes the defines are of type uint32_t
       Right uint32_t = C.cIdentifierFromString "uint32_t"
   in do tellRequiredNames (S.toList requiredNames)

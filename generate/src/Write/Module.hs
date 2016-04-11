@@ -84,12 +84,12 @@ getImportDeclarations importingModule nameLocations names =
                 else case M.lookup name nameLocations of
                        Nothing ->
                          error ("Imported name not in any module: " ++ name)
-                       Just moduleName ->
+                       Just (moduleName, hsName) ->
                          case wildCard of
                            WildCard ->
-                             Just $ Import NotSource moduleName [name ++ "(..)"]
+                             Just $ Import NotSource moduleName [hsName ++ "(..)"]
                            NoWildCard ->
-                             Just $ Import NotSource moduleName [name]
+                             Just $ Import NotSource moduleName [hsName]
 
 data Import = Import Source ModuleName [String]
 

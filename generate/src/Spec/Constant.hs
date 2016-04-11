@@ -3,6 +3,7 @@ module Spec.Constant where
 import           Data.Word (Word32, Word64)
 
 data Constant = Constant { cName        :: String
+                         , cHsName      :: String
                          , cValueString :: String
                          , cValue       :: ConstantValue
                          , cComment     :: Maybe String

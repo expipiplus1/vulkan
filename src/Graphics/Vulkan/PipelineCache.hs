@@ -3,7 +3,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.PipelineCache where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Data.Word( Word64
                 , Word32
@@ -34,24 +34,24 @@ import Foreign.C.Types( CSize
 
 -- ** vkCreatePipelineCache
 foreign import ccall "vkCreatePipelineCache" vkCreatePipelineCache ::
-  VkDevice ->
+  Device ->
   Ptr VkPipelineCacheCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkPipelineCache -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr PipelineCache -> IO VkResult
 
 -- ** vkGetPipelineCacheData
 foreign import ccall "vkGetPipelineCacheData" vkGetPipelineCacheData ::
-  VkDevice -> VkPipelineCache -> Ptr CSize -> Ptr Void -> IO VkResult
+  Device -> PipelineCache -> Ptr CSize -> Ptr Void -> IO VkResult
 
-newtype VkPipelineCache = VkPipelineCache Word64
+newtype PipelineCache = PipelineCache Word64
   deriving (Eq, Storable)
 
 
 data VkPipelineCacheCreateInfo =
-  VkPipelineCacheCreateInfo{ vkSType :: VkStructureType 
-                           , vkPNext :: Ptr Void 
-                           , vkFlags :: VkPipelineCacheCreateFlags 
-                           , vkInitialDataSize :: CSize 
-                           , vkPInitialData :: Ptr Void 
+  VkPipelineCacheCreateInfo{ sType :: VkStructureType 
+                           , pNext :: Ptr Void 
+                           , flags :: VkPipelineCacheCreateFlags 
+                           , initialDataSize :: CSize 
+                           , pInitialData :: Ptr Void 
                            }
   deriving (Eq)
 
@@ -63,17 +63,17 @@ instance Storable VkPipelineCacheCreateInfo where
                                        <*> peek (ptr `plusPtr` 16)
                                        <*> peek (ptr `plusPtr` 24)
                                        <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineCacheCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineCacheCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineCacheCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkInitialDataSize (poked :: VkPipelineCacheCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPInitialData (poked :: VkPipelineCacheCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineCacheCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineCacheCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineCacheCreateInfo))
+                *> poke (ptr `plusPtr` 24) (initialDataSize (poked :: VkPipelineCacheCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pInitialData (poked :: VkPipelineCacheCreateInfo))
 
 
 -- ** vkMergePipelineCaches
 foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches ::
-  VkDevice ->
-  VkPipelineCache -> Word32 -> Ptr VkPipelineCache -> IO VkResult
+  Device ->
+  PipelineCache -> Word32 -> Ptr PipelineCache -> IO VkResult
 
 -- ** VkPipelineCacheCreateFlags
 -- | Opaque flag
@@ -82,5 +82,5 @@ newtype VkPipelineCacheCreateFlags = VkPipelineCacheCreateFlags VkFlags
 
 -- ** vkDestroyPipelineCache
 foreign import ccall "vkDestroyPipelineCache" vkDestroyPipelineCache ::
-  VkDevice -> VkPipelineCache -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> PipelineCache -> Ptr VkAllocationCallbacks -> IO ()
 

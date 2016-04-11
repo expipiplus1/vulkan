@@ -2,7 +2,7 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.OtherTypes where
 
-import Graphics.Vulkan.Buffer( VkBuffer(..)
+import Graphics.Vulkan.Buffer( Buffer(..)
                              )
 import Graphics.Vulkan.Pass( VkAccessFlags(..)
                            , VkAccessFlagBits(..)
@@ -19,7 +19,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Image( VkImage(..)
+import Graphics.Vulkan.Image( Image(..)
                             , VkImageLayout(..)
                             , VkImageAspectFlagBits(..)
                             , VkImageSubresourceRange(..)
@@ -32,15 +32,15 @@ import Graphics.Vulkan.Core( VkDeviceSize(..)
 
 
 data VkBufferMemoryBarrier =
-  VkBufferMemoryBarrier{ vkSType :: VkStructureType 
-                       , vkPNext :: Ptr Void 
-                       , vkSrcAccessMask :: VkAccessFlags 
-                       , vkDstAccessMask :: VkAccessFlags 
-                       , vkSrcQueueFamilyIndex :: Word32 
-                       , vkDstQueueFamilyIndex :: Word32 
-                       , vkBuffer :: VkBuffer 
-                       , vkOffset :: VkDeviceSize 
-                       , vkSize :: VkDeviceSize 
+  VkBufferMemoryBarrier{ sType :: VkStructureType 
+                       , pNext :: Ptr Void 
+                       , srcAccessMask :: VkAccessFlags 
+                       , dstAccessMask :: VkAccessFlags 
+                       , srcQueueFamilyIndex :: Word32 
+                       , dstQueueFamilyIndex :: Word32 
+                       , buffer :: Buffer 
+                       , offset :: VkDeviceSize 
+                       , size :: VkDeviceSize 
                        }
   deriving (Eq)
 
@@ -56,24 +56,24 @@ instance Storable VkBufferMemoryBarrier where
                                    <*> peek (ptr `plusPtr` 32)
                                    <*> peek (ptr `plusPtr` 40)
                                    <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferMemoryBarrier))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferMemoryBarrier))
-                *> poke (ptr `plusPtr` 16) (vkSrcAccessMask (poked :: VkBufferMemoryBarrier))
-                *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkBufferMemoryBarrier))
-                *> poke (ptr `plusPtr` 24) (vkSrcQueueFamilyIndex (poked :: VkBufferMemoryBarrier))
-                *> poke (ptr `plusPtr` 28) (vkDstQueueFamilyIndex (poked :: VkBufferMemoryBarrier))
-                *> poke (ptr `plusPtr` 32) (vkBuffer (poked :: VkBufferMemoryBarrier))
-                *> poke (ptr `plusPtr` 40) (vkOffset (poked :: VkBufferMemoryBarrier))
-                *> poke (ptr `plusPtr` 48) (vkSize (poked :: VkBufferMemoryBarrier))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkBufferMemoryBarrier))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkBufferMemoryBarrier))
+                *> poke (ptr `plusPtr` 16) (srcAccessMask (poked :: VkBufferMemoryBarrier))
+                *> poke (ptr `plusPtr` 20) (dstAccessMask (poked :: VkBufferMemoryBarrier))
+                *> poke (ptr `plusPtr` 24) (srcQueueFamilyIndex (poked :: VkBufferMemoryBarrier))
+                *> poke (ptr `plusPtr` 28) (dstQueueFamilyIndex (poked :: VkBufferMemoryBarrier))
+                *> poke (ptr `plusPtr` 32) (buffer (poked :: VkBufferMemoryBarrier))
+                *> poke (ptr `plusPtr` 40) (offset (poked :: VkBufferMemoryBarrier))
+                *> poke (ptr `plusPtr` 48) (size (poked :: VkBufferMemoryBarrier))
 
 
 
 data VkDrawIndexedIndirectCommand =
-  VkDrawIndexedIndirectCommand{ vkIndexCount :: Word32 
-                              , vkInstanceCount :: Word32 
-                              , vkFirstIndex :: Word32 
-                              , vkVertexOffset :: Int32 
-                              , vkFirstInstance :: Word32 
+  VkDrawIndexedIndirectCommand{ indexCount :: Word32 
+                              , instanceCount :: Word32 
+                              , firstIndex :: Word32 
+                              , vertexOffset :: Int32 
+                              , firstInstance :: Word32 
                               }
   deriving (Eq)
 
@@ -85,25 +85,25 @@ instance Storable VkDrawIndexedIndirectCommand where
                                           <*> peek (ptr `plusPtr` 8)
                                           <*> peek (ptr `plusPtr` 12)
                                           <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkIndexCount (poked :: VkDrawIndexedIndirectCommand))
-                *> poke (ptr `plusPtr` 4) (vkInstanceCount (poked :: VkDrawIndexedIndirectCommand))
-                *> poke (ptr `plusPtr` 8) (vkFirstIndex (poked :: VkDrawIndexedIndirectCommand))
-                *> poke (ptr `plusPtr` 12) (vkVertexOffset (poked :: VkDrawIndexedIndirectCommand))
-                *> poke (ptr `plusPtr` 16) (vkFirstInstance (poked :: VkDrawIndexedIndirectCommand))
+  poke ptr poked = poke (ptr `plusPtr` 0) (indexCount (poked :: VkDrawIndexedIndirectCommand))
+                *> poke (ptr `plusPtr` 4) (instanceCount (poked :: VkDrawIndexedIndirectCommand))
+                *> poke (ptr `plusPtr` 8) (firstIndex (poked :: VkDrawIndexedIndirectCommand))
+                *> poke (ptr `plusPtr` 12) (vertexOffset (poked :: VkDrawIndexedIndirectCommand))
+                *> poke (ptr `plusPtr` 16) (firstInstance (poked :: VkDrawIndexedIndirectCommand))
 
 
 
 data VkImageMemoryBarrier =
-  VkImageMemoryBarrier{ vkSType :: VkStructureType 
-                      , vkPNext :: Ptr Void 
-                      , vkSrcAccessMask :: VkAccessFlags 
-                      , vkDstAccessMask :: VkAccessFlags 
-                      , vkOldLayout :: VkImageLayout 
-                      , vkNewLayout :: VkImageLayout 
-                      , vkSrcQueueFamilyIndex :: Word32 
-                      , vkDstQueueFamilyIndex :: Word32 
-                      , vkImage :: VkImage 
-                      , vkSubresourceRange :: VkImageSubresourceRange 
+  VkImageMemoryBarrier{ sType :: VkStructureType 
+                      , pNext :: Ptr Void 
+                      , srcAccessMask :: VkAccessFlags 
+                      , dstAccessMask :: VkAccessFlags 
+                      , oldLayout :: VkImageLayout 
+                      , newLayout :: VkImageLayout 
+                      , srcQueueFamilyIndex :: Word32 
+                      , dstQueueFamilyIndex :: Word32 
+                      , image :: Image 
+                      , subresourceRange :: VkImageSubresourceRange 
                       }
   deriving (Eq)
 
@@ -120,24 +120,24 @@ instance Storable VkImageMemoryBarrier where
                                   <*> peek (ptr `plusPtr` 36)
                                   <*> peek (ptr `plusPtr` 40)
                                   <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 16) (vkSrcAccessMask (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 24) (vkOldLayout (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 28) (vkNewLayout (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 32) (vkSrcQueueFamilyIndex (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 36) (vkDstQueueFamilyIndex (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 40) (vkImage (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 48) (vkSubresourceRange (poked :: VkImageMemoryBarrier))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 16) (srcAccessMask (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 20) (dstAccessMask (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 24) (oldLayout (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 28) (newLayout (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 32) (srcQueueFamilyIndex (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 36) (dstQueueFamilyIndex (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 40) (image (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 48) (subresourceRange (poked :: VkImageMemoryBarrier))
 
 
 
 data VkMemoryBarrier =
-  VkMemoryBarrier{ vkSType :: VkStructureType 
-                 , vkPNext :: Ptr Void 
-                 , vkSrcAccessMask :: VkAccessFlags 
-                 , vkDstAccessMask :: VkAccessFlags 
+  VkMemoryBarrier{ sType :: VkStructureType 
+                 , pNext :: Ptr Void 
+                 , srcAccessMask :: VkAccessFlags 
+                 , dstAccessMask :: VkAccessFlags 
                  }
   deriving (Eq)
 
@@ -148,18 +148,18 @@ instance Storable VkMemoryBarrier where
                              <*> peek (ptr `plusPtr` 8)
                              <*> peek (ptr `plusPtr` 16)
                              <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryBarrier))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryBarrier))
-                *> poke (ptr `plusPtr` 16) (vkSrcAccessMask (poked :: VkMemoryBarrier))
-                *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkMemoryBarrier))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkMemoryBarrier))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkMemoryBarrier))
+                *> poke (ptr `plusPtr` 16) (srcAccessMask (poked :: VkMemoryBarrier))
+                *> poke (ptr `plusPtr` 20) (dstAccessMask (poked :: VkMemoryBarrier))
 
 
 
 data VkDrawIndirectCommand =
-  VkDrawIndirectCommand{ vkVertexCount :: Word32 
-                       , vkInstanceCount :: Word32 
-                       , vkFirstVertex :: Word32 
-                       , vkFirstInstance :: Word32 
+  VkDrawIndirectCommand{ vertexCount :: Word32 
+                       , instanceCount :: Word32 
+                       , firstVertex :: Word32 
+                       , firstInstance :: Word32 
                        }
   deriving (Eq)
 
@@ -170,17 +170,17 @@ instance Storable VkDrawIndirectCommand where
                                    <*> peek (ptr `plusPtr` 4)
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 12)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkVertexCount (poked :: VkDrawIndirectCommand))
-                *> poke (ptr `plusPtr` 4) (vkInstanceCount (poked :: VkDrawIndirectCommand))
-                *> poke (ptr `plusPtr` 8) (vkFirstVertex (poked :: VkDrawIndirectCommand))
-                *> poke (ptr `plusPtr` 12) (vkFirstInstance (poked :: VkDrawIndirectCommand))
+  poke ptr poked = poke (ptr `plusPtr` 0) (vertexCount (poked :: VkDrawIndirectCommand))
+                *> poke (ptr `plusPtr` 4) (instanceCount (poked :: VkDrawIndirectCommand))
+                *> poke (ptr `plusPtr` 8) (firstVertex (poked :: VkDrawIndirectCommand))
+                *> poke (ptr `plusPtr` 12) (firstInstance (poked :: VkDrawIndirectCommand))
 
 
 
 data VkDispatchIndirectCommand =
-  VkDispatchIndirectCommand{ vkX :: Word32 
-                           , vkY :: Word32 
-                           , vkZ :: Word32 
+  VkDispatchIndirectCommand{ x :: Word32 
+                           , y :: Word32 
+                           , z :: Word32 
                            }
   deriving (Eq)
 
@@ -190,8 +190,8 @@ instance Storable VkDispatchIndirectCommand where
   peek ptr = VkDispatchIndirectCommand <$> peek (ptr `plusPtr` 0)
                                        <*> peek (ptr `plusPtr` 4)
                                        <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkDispatchIndirectCommand))
-                *> poke (ptr `plusPtr` 4) (vkY (poked :: VkDispatchIndirectCommand))
-                *> poke (ptr `plusPtr` 8) (vkZ (poked :: VkDispatchIndirectCommand))
+  poke ptr poked = poke (ptr `plusPtr` 0) (x (poked :: VkDispatchIndirectCommand))
+                *> poke (ptr `plusPtr` 4) (y (poked :: VkDispatchIndirectCommand))
+                *> poke (ptr `plusPtr` 8) (z (poked :: VkDispatchIndirectCommand))
 
 

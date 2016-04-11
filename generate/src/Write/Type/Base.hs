@@ -21,14 +21,14 @@ writeBaseType bt = if isTransparentBaseType bt
 writeTransparentBaseType :: BaseType -> Write Doc
 writeTransparentBaseType bt = do
   hsType <- cTypeToHsTypeString (btCType bt)
-  pure [qc|type {btName bt} = {hsType}
+  pure [qc|type {btHsName bt} = {hsType}
 |]
 
 writeNewBaseType :: BaseType -> Write Doc
 writeNewBaseType bt = do
   doesDeriveStorable
   hsType <- cTypeToHsTypeString (btCType bt)
-  pure [qc|newtype {btName bt} = {btName bt} {hsType}
+  pure [qc|newtype {btHsName bt} = {btHsName bt} {hsType}
   deriving (Eq, Storable)
 |]
 

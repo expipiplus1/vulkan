@@ -4,7 +4,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Buffer where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
@@ -51,9 +51,9 @@ import Foreign.C.Types( CSize(..)
 
 -- ** vkCreateBuffer
 foreign import ccall "vkCreateBuffer" vkCreateBuffer ::
-  VkDevice ->
+  Device ->
   Ptr VkBufferCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkBuffer -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr Buffer -> IO VkResult
 
 -- ** VkBufferCreateFlags
 
@@ -151,21 +151,21 @@ pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlagBits 0x100
 
 -- ** vkDestroyBuffer
 foreign import ccall "vkDestroyBuffer" vkDestroyBuffer ::
-  VkDevice -> VkBuffer -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Buffer -> Ptr VkAllocationCallbacks -> IO ()
 
-newtype VkBuffer = VkBuffer Word64
+newtype Buffer = Buffer Word64
   deriving (Eq, Storable)
 
 
 data VkBufferCreateInfo =
-  VkBufferCreateInfo{ vkSType :: VkStructureType 
-                    , vkPNext :: Ptr Void 
-                    , vkFlags :: VkBufferCreateFlags 
-                    , vkSize :: VkDeviceSize 
-                    , vkUsage :: VkBufferUsageFlags 
-                    , vkSharingMode :: VkSharingMode 
-                    , vkQueueFamilyIndexCount :: Word32 
-                    , vkPQueueFamilyIndices :: Ptr Word32 
+  VkBufferCreateInfo{ sType :: VkStructureType 
+                    , pNext :: Ptr Void 
+                    , flags :: VkBufferCreateFlags 
+                    , size :: VkDeviceSize 
+                    , usage :: VkBufferUsageFlags 
+                    , sharingMode :: VkSharingMode 
+                    , queueFamilyIndexCount :: Word32 
+                    , pQueueFamilyIndices :: Ptr Word32 
                     }
   deriving (Eq)
 
@@ -180,13 +180,13 @@ instance Storable VkBufferCreateInfo where
                                 <*> peek (ptr `plusPtr` 36)
                                 <*> peek (ptr `plusPtr` 40)
                                 <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkSize (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkUsage (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 36) (vkSharingMode (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkQueueFamilyIndexCount (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkPQueueFamilyIndices (poked :: VkBufferCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkBufferCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkBufferCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkBufferCreateInfo))
+                *> poke (ptr `plusPtr` 24) (size (poked :: VkBufferCreateInfo))
+                *> poke (ptr `plusPtr` 32) (usage (poked :: VkBufferCreateInfo))
+                *> poke (ptr `plusPtr` 36) (sharingMode (poked :: VkBufferCreateInfo))
+                *> poke (ptr `plusPtr` 40) (queueFamilyIndexCount (poked :: VkBufferCreateInfo))
+                *> poke (ptr `plusPtr` 48) (pQueueFamilyIndices (poked :: VkBufferCreateInfo))
 
 

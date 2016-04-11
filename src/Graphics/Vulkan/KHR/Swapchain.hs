@@ -3,7 +3,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Swapchain where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Data.Word( Word64
                 , Word32
@@ -15,13 +15,13 @@ import Graphics.Vulkan.KHR.Surface( VkColorSpaceKHR(..)
                                   , VkSurfaceTransformFlagBitsKHR(..)
                                   , VkPresentModeKHR(..)
                                   , VkCompositeAlphaFlagBitsKHR(..)
-                                  , VkSurfaceKHR(..)
+                                  , SurfaceKHR(..)
                                   )
-import Graphics.Vulkan.Queue( VkQueue(..)
+import Graphics.Vulkan.Queue( Queue(..)
                             )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Fence( VkFence(..)
+import Graphics.Vulkan.Fence( Fence(..)
                             )
 import Data.Void( Void
                 )
@@ -35,10 +35,10 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              , PFN_vkInternalFreeNotification
                              )
 import Graphics.Vulkan.Image( VkImageUsageFlags(..)
-                            , VkImage(..)
+                            , Image(..)
                             , VkImageUsageFlagBits(..)
                             )
-import Graphics.Vulkan.QueueSemaphore( VkSemaphore(..)
+import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
                                      )
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkBool32(..)
@@ -53,24 +53,24 @@ import Foreign.C.Types( CSize(..)
 
 
 data VkSwapchainCreateInfoKHR =
-  VkSwapchainCreateInfoKHR{ vkSType :: VkStructureType 
-                          , vkPNext :: Ptr Void 
-                          , vkFlags :: VkSwapchainCreateFlagsKHR 
-                          , vkSurface :: VkSurfaceKHR 
-                          , vkMinImageCount :: Word32 
-                          , vkImageFormat :: VkFormat 
-                          , vkImageColorSpace :: VkColorSpaceKHR 
-                          , vkImageExtent :: VkExtent2D 
-                          , vkImageArrayLayers :: Word32 
-                          , vkImageUsage :: VkImageUsageFlags 
-                          , vkImageSharingMode :: VkSharingMode 
-                          , vkQueueFamilyIndexCount :: Word32 
-                          , vkPQueueFamilyIndices :: Ptr Word32 
-                          , vkPreTransform :: VkSurfaceTransformFlagBitsKHR 
-                          , vkCompositeAlpha :: VkCompositeAlphaFlagBitsKHR 
-                          , vkPresentMode :: VkPresentModeKHR 
-                          , vkClipped :: VkBool32 
-                          , vkOldSwapchain :: VkSwapchainKHR 
+  VkSwapchainCreateInfoKHR{ sType :: VkStructureType 
+                          , pNext :: Ptr Void 
+                          , flags :: VkSwapchainCreateFlagsKHR 
+                          , surface :: SurfaceKHR 
+                          , minImageCount :: Word32 
+                          , imageFormat :: VkFormat 
+                          , imageColorSpace :: VkColorSpaceKHR 
+                          , imageExtent :: VkExtent2D 
+                          , imageArrayLayers :: Word32 
+                          , imageUsage :: VkImageUsageFlags 
+                          , imageSharingMode :: VkSharingMode 
+                          , queueFamilyIndexCount :: Word32 
+                          , pQueueFamilyIndices :: Ptr Word32 
+                          , preTransform :: VkSurfaceTransformFlagBitsKHR 
+                          , compositeAlpha :: VkCompositeAlphaFlagBitsKHR 
+                          , presentMode :: VkPresentModeKHR 
+                          , clipped :: VkBool32 
+                          , oldSwapchain :: SwapchainKHR 
                           }
   deriving (Eq)
 
@@ -95,38 +95,37 @@ instance Storable VkSwapchainCreateInfoKHR where
                                       <*> peek (ptr `plusPtr` 88)
                                       <*> peek (ptr `plusPtr` 92)
                                       <*> peek (ptr `plusPtr` 96)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 24) (vkSurface (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 32) (vkMinImageCount (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 36) (vkImageFormat (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 40) (vkImageColorSpace (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 44) (vkImageExtent (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 52) (vkImageArrayLayers (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 56) (vkImageUsage (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 60) (vkImageSharingMode (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 64) (vkQueueFamilyIndexCount (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 72) (vkPQueueFamilyIndices (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 80) (vkPreTransform (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 84) (vkCompositeAlpha (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 88) (vkPresentMode (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 92) (vkClipped (poked :: VkSwapchainCreateInfoKHR))
-                *> poke (ptr `plusPtr` 96) (vkOldSwapchain (poked :: VkSwapchainCreateInfoKHR))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 24) (surface (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 32) (minImageCount (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 36) (imageFormat (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 40) (imageColorSpace (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 44) (imageExtent (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 52) (imageArrayLayers (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 56) (imageUsage (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 60) (imageSharingMode (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 64) (queueFamilyIndexCount (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 72) (pQueueFamilyIndices (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 80) (preTransform (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 84) (compositeAlpha (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 88) (presentMode (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 92) (clipped (poked :: VkSwapchainCreateInfoKHR))
+                *> poke (ptr `plusPtr` 96) (oldSwapchain (poked :: VkSwapchainCreateInfoKHR))
 
 
 -- ** vkGetSwapchainImagesKHR
 foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR ::
-  VkDevice ->
-  VkSwapchainKHR -> Ptr Word32 -> Ptr VkImage -> IO VkResult
+  Device -> SwapchainKHR -> Ptr Word32 -> Ptr Image -> IO VkResult
 
 -- ** vkDestroySwapchainKHR
 foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR ::
-  VkDevice -> VkSwapchainKHR -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> SwapchainKHR -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** vkQueuePresentKHR
 foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR ::
-  VkQueue -> Ptr VkPresentInfoKHR -> IO VkResult
+  Queue -> Ptr VkPresentInfoKHR -> IO VkResult
 
 -- ** VkSwapchainCreateFlagsKHR
 -- | Opaque flag
@@ -135,26 +134,26 @@ newtype VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagsKHR VkFlags
 
 -- ** vkCreateSwapchainKHR
 foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR ::
-  VkDevice ->
+  Device ->
   Ptr VkSwapchainCreateInfoKHR ->
-    Ptr VkAllocationCallbacks -> Ptr VkSwapchainKHR -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr SwapchainKHR -> IO VkResult
 
 -- ** vkAcquireNextImageKHR
 foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR ::
-  VkDevice ->
-  VkSwapchainKHR ->
-    Word64 -> VkSemaphore -> VkFence -> Ptr Word32 -> IO VkResult
+  Device ->
+  SwapchainKHR ->
+    Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO VkResult
 
 
 data VkPresentInfoKHR =
-  VkPresentInfoKHR{ vkSType :: VkStructureType 
-                  , vkPNext :: Ptr Void 
-                  , vkWaitSemaphoreCount :: Word32 
-                  , vkPWaitSemaphores :: Ptr VkSemaphore 
-                  , vkSwapchainCount :: Word32 
-                  , vkPSwapchains :: Ptr VkSwapchainKHR 
-                  , vkPImageIndices :: Ptr Word32 
-                  , vkPResults :: Ptr VkResult 
+  VkPresentInfoKHR{ sType :: VkStructureType 
+                  , pNext :: Ptr Void 
+                  , waitSemaphoreCount :: Word32 
+                  , pWaitSemaphores :: Ptr Semaphore 
+                  , swapchainCount :: Word32 
+                  , pSwapchains :: Ptr SwapchainKHR 
+                  , pImageIndices :: Ptr Word32 
+                  , pResults :: Ptr VkResult 
                   }
   deriving (Eq)
 
@@ -169,16 +168,16 @@ instance Storable VkPresentInfoKHR where
                               <*> peek (ptr `plusPtr` 40)
                               <*> peek (ptr `plusPtr` 48)
                               <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPresentInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPresentInfoKHR))
-                *> poke (ptr `plusPtr` 16) (vkWaitSemaphoreCount (poked :: VkPresentInfoKHR))
-                *> poke (ptr `plusPtr` 24) (vkPWaitSemaphores (poked :: VkPresentInfoKHR))
-                *> poke (ptr `plusPtr` 32) (vkSwapchainCount (poked :: VkPresentInfoKHR))
-                *> poke (ptr `plusPtr` 40) (vkPSwapchains (poked :: VkPresentInfoKHR))
-                *> poke (ptr `plusPtr` 48) (vkPImageIndices (poked :: VkPresentInfoKHR))
-                *> poke (ptr `plusPtr` 56) (vkPResults (poked :: VkPresentInfoKHR))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPresentInfoKHR))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPresentInfoKHR))
+                *> poke (ptr `plusPtr` 16) (waitSemaphoreCount (poked :: VkPresentInfoKHR))
+                *> poke (ptr `plusPtr` 24) (pWaitSemaphores (poked :: VkPresentInfoKHR))
+                *> poke (ptr `plusPtr` 32) (swapchainCount (poked :: VkPresentInfoKHR))
+                *> poke (ptr `plusPtr` 40) (pSwapchains (poked :: VkPresentInfoKHR))
+                *> poke (ptr `plusPtr` 48) (pImageIndices (poked :: VkPresentInfoKHR))
+                *> poke (ptr `plusPtr` 56) (pResults (poked :: VkPresentInfoKHR))
 
 
-newtype VkSwapchainKHR = VkSwapchainKHR Word64
+newtype SwapchainKHR = SwapchainKHR Word64
   deriving (Eq, Storable)
 

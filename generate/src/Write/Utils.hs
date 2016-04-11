@@ -19,7 +19,7 @@ import           Text.PrettyPrint.Leijen.Text hiding (string, (<$>), (</>))
 newtype ModuleName = ModuleName{ unModuleName :: String }
   deriving(Eq, Show, Hashable)
 
-type NameLocations = HashMap String ModuleName
+type NameLocations = HashMap String (ModuleName, String)
 
 comment :: String -> String
 comment "" = ""

@@ -3,7 +3,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Event where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Data.Word( Word64
                 , Word32
@@ -33,13 +33,13 @@ import Foreign.C.Types( CSize(..)
 
 -- ** vkDestroyEvent
 foreign import ccall "vkDestroyEvent" vkDestroyEvent ::
-  VkDevice -> VkEvent -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Event -> Ptr VkAllocationCallbacks -> IO ()
 
 
 data VkEventCreateInfo =
-  VkEventCreateInfo{ vkSType :: VkStructureType 
-                   , vkPNext :: Ptr Void 
-                   , vkFlags :: VkEventCreateFlags 
+  VkEventCreateInfo{ sType :: VkStructureType 
+                   , pNext :: Ptr Void 
+                   , flags :: VkEventCreateFlags 
                    }
   deriving (Eq)
 
@@ -49,30 +49,30 @@ instance Storable VkEventCreateInfo where
   peek ptr = VkEventCreateInfo <$> peek (ptr `plusPtr` 0)
                                <*> peek (ptr `plusPtr` 8)
                                <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkEventCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkEventCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkEventCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkEventCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkEventCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkEventCreateInfo))
 
 
 -- ** vkSetEvent
 foreign import ccall "vkSetEvent" vkSetEvent ::
-  VkDevice -> VkEvent -> IO VkResult
+  Device -> Event -> IO VkResult
 
 -- ** vkGetEventStatus
 foreign import ccall "vkGetEventStatus" vkGetEventStatus ::
-  VkDevice -> VkEvent -> IO VkResult
+  Device -> Event -> IO VkResult
 
 -- ** vkResetEvent
 foreign import ccall "vkResetEvent" vkResetEvent ::
-  VkDevice -> VkEvent -> IO VkResult
+  Device -> Event -> IO VkResult
 
 -- ** vkCreateEvent
 foreign import ccall "vkCreateEvent" vkCreateEvent ::
-  VkDevice ->
+  Device ->
   Ptr VkEventCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkEvent -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr Event -> IO VkResult
 
-newtype VkEvent = VkEvent Word64
+newtype Event = Event Word64
   deriving (Eq, Storable)
 
 -- ** VkEventCreateFlags

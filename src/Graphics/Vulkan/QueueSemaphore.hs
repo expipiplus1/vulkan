@@ -3,7 +3,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.QueueSemaphore where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Data.Word( Word64
                 , Word32
@@ -38,16 +38,16 @@ newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
 
 -- ** vkDestroySemaphore
 foreign import ccall "vkDestroySemaphore" vkDestroySemaphore ::
-  VkDevice -> VkSemaphore -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Semaphore -> Ptr VkAllocationCallbacks -> IO ()
 
-newtype VkSemaphore = VkSemaphore Word64
+newtype Semaphore = Semaphore Word64
   deriving (Eq, Storable)
 
 
 data VkSemaphoreCreateInfo =
-  VkSemaphoreCreateInfo{ vkSType :: VkStructureType 
-                       , vkPNext :: Ptr Void 
-                       , vkFlags :: VkSemaphoreCreateFlags 
+  VkSemaphoreCreateInfo{ sType :: VkStructureType 
+                       , pNext :: Ptr Void 
+                       , flags :: VkSemaphoreCreateFlags 
                        }
   deriving (Eq)
 
@@ -57,14 +57,14 @@ instance Storable VkSemaphoreCreateInfo where
   peek ptr = VkSemaphoreCreateInfo <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSemaphoreCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkSemaphoreCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkSemaphoreCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkSemaphoreCreateInfo))
 
 
 -- ** vkCreateSemaphore
 foreign import ccall "vkCreateSemaphore" vkCreateSemaphore ::
-  VkDevice ->
+  Device ->
   Ptr VkSemaphoreCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkSemaphore -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr Semaphore -> IO VkResult
 

@@ -5,7 +5,7 @@ module Graphics.Vulkan.ExtensionDiscovery where
 
 import Data.Vector.Storable.Sized( Vector
                                  )
-import Graphics.Vulkan.Device( VkPhysicalDevice(..)
+import Graphics.Vulkan.Device( PhysicalDevice(..)
                              )
 import Data.Word( Word32
                 )
@@ -23,8 +23,8 @@ import Foreign.C.Types( CChar
 
 
 data VkExtensionProperties =
-  VkExtensionProperties{ vkExtensionName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 
-                       , vkSpecVersion :: Word32 
+  VkExtensionProperties{ extensionName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 
+                       , specVersion :: Word32 
                        }
   deriving (Eq)
 
@@ -33,8 +33,8 @@ instance Storable VkExtensionProperties where
   alignment ~_ = 4
   peek ptr = VkExtensionProperties <$> peek (ptr `plusPtr` 0)
                                    <*> peek (ptr `plusPtr` 256)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkExtensionName (poked :: VkExtensionProperties))
-                *> poke (ptr `plusPtr` 256) (vkSpecVersion (poked :: VkExtensionProperties))
+  poke ptr poked = poke (ptr `plusPtr` 0) (extensionName (poked :: VkExtensionProperties))
+                *> poke (ptr `plusPtr` 256) (specVersion (poked :: VkExtensionProperties))
 
 
 -- ** vkEnumerateInstanceExtensionProperties
@@ -43,6 +43,6 @@ foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanc
 
 -- ** vkEnumerateDeviceExtensionProperties
 foreign import ccall "vkEnumerateDeviceExtensionProperties" vkEnumerateDeviceExtensionProperties ::
-  VkPhysicalDevice ->
+  PhysicalDevice ->
   Ptr CChar -> Ptr Word32 -> Ptr VkExtensionProperties -> IO VkResult
 

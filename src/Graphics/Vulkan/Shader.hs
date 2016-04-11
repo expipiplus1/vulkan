@@ -4,7 +4,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Shader where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
@@ -50,11 +50,11 @@ import Foreign.C.Types( CSize
 
 
 data VkShaderModuleCreateInfo =
-  VkShaderModuleCreateInfo{ vkSType :: VkStructureType 
-                          , vkPNext :: Ptr Void 
-                          , vkFlags :: VkShaderModuleCreateFlags 
-                          , vkCodeSize :: CSize 
-                          , vkPCode :: Ptr Word32 
+  VkShaderModuleCreateInfo{ sType :: VkStructureType 
+                          , pNext :: Ptr Void 
+                          , flags :: VkShaderModuleCreateFlags 
+                          , codeSize :: CSize 
+                          , pCode :: Ptr Word32 
                           }
   deriving (Eq)
 
@@ -66,16 +66,16 @@ instance Storable VkShaderModuleCreateInfo where
                                       <*> peek (ptr `plusPtr` 16)
                                       <*> peek (ptr `plusPtr` 24)
                                       <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkCodeSize (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPCode (poked :: VkShaderModuleCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 24) (codeSize (poked :: VkShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pCode (poked :: VkShaderModuleCreateInfo))
 
 
 -- ** vkDestroyShaderModule
 foreign import ccall "vkDestroyShaderModule" vkDestroyShaderModule ::
-  VkDevice -> VkShaderModule -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> ShaderModule -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** VkShaderModuleCreateFlags
 -- | Opaque flag
@@ -135,12 +135,12 @@ pattern VK_SHADER_STAGE_ALL_GRAPHICS = VkShaderStageFlagBits 0x1f
 
 pattern VK_SHADER_STAGE_ALL = VkShaderStageFlagBits 0x7fffffff
 
-newtype VkShaderModule = VkShaderModule Word64
+newtype ShaderModule = ShaderModule Word64
   deriving (Eq, Storable)
 
 -- ** vkCreateShaderModule
 foreign import ccall "vkCreateShaderModule" vkCreateShaderModule ::
-  VkDevice ->
+  Device ->
   Ptr VkShaderModuleCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkShaderModule -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr ShaderModule -> IO VkResult
 

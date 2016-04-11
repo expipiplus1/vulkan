@@ -3,9 +3,9 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.BufferView where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
-import Graphics.Vulkan.Buffer( VkBuffer(..)
+import Graphics.Vulkan.Buffer( Buffer(..)
                              )
 import Data.Word( Word64
                 , Word32
@@ -37,22 +37,22 @@ import Foreign.C.Types( CSize(..)
 
 -- ** vkCreateBufferView
 foreign import ccall "vkCreateBufferView" vkCreateBufferView ::
-  VkDevice ->
+  Device ->
   Ptr VkBufferViewCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkBufferView -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr BufferView -> IO VkResult
 
-newtype VkBufferView = VkBufferView Word64
+newtype BufferView = BufferView Word64
   deriving (Eq, Storable)
 
 
 data VkBufferViewCreateInfo =
-  VkBufferViewCreateInfo{ vkSType :: VkStructureType 
-                        , vkPNext :: Ptr Void 
-                        , vkFlags :: VkBufferViewCreateFlags 
-                        , vkBuffer :: VkBuffer 
-                        , vkFormat :: VkFormat 
-                        , vkOffset :: VkDeviceSize 
-                        , vkRange :: VkDeviceSize 
+  VkBufferViewCreateInfo{ sType :: VkStructureType 
+                        , pNext :: Ptr Void 
+                        , flags :: VkBufferViewCreateFlags 
+                        , buffer :: Buffer 
+                        , format :: VkFormat 
+                        , offset :: VkDeviceSize 
+                        , range :: VkDeviceSize 
                         }
   deriving (Eq)
 
@@ -66,13 +66,13 @@ instance Storable VkBufferViewCreateInfo where
                                     <*> peek (ptr `plusPtr` 32)
                                     <*> peek (ptr `plusPtr` 40)
                                     <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkBuffer (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkFormat (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkOffset (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkRange (poked :: VkBufferViewCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkBufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkBufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkBufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 24) (buffer (poked :: VkBufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 32) (format (poked :: VkBufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 40) (offset (poked :: VkBufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 48) (range (poked :: VkBufferViewCreateInfo))
 
 
 -- ** VkBufferViewCreateFlags
@@ -82,5 +82,5 @@ newtype VkBufferViewCreateFlags = VkBufferViewCreateFlags VkFlags
 
 -- ** vkDestroyBufferView
 foreign import ccall "vkDestroyBufferView" vkDestroyBufferView ::
-  VkDevice -> VkBufferView -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> BufferView -> Ptr VkAllocationCallbacks -> IO ()
 

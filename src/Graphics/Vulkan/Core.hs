@@ -794,8 +794,8 @@ type VkFlags = Word32
 
 
 data VkExtent2D =
-  VkExtent2D{ vkWidth :: Word32 
-            , vkHeight :: Word32 
+  VkExtent2D{ width :: Word32 
+            , height :: Word32 
             }
   deriving (Eq)
 
@@ -804,8 +804,8 @@ instance Storable VkExtent2D where
   alignment ~_ = 4
   peek ptr = VkExtent2D <$> peek (ptr `plusPtr` 0)
                         <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkWidth (poked :: VkExtent2D))
-                *> poke (ptr `plusPtr` 4) (vkHeight (poked :: VkExtent2D))
+  poke ptr poked = poke (ptr `plusPtr` 0) (width (poked :: VkExtent2D))
+                *> poke (ptr `plusPtr` 4) (height (poked :: VkExtent2D))
 
 
 -- ** VkSharingMode
@@ -1053,8 +1053,8 @@ newtype VkBool32 = VkBool32 Word32
 
 
 data VkOffset2D =
-  VkOffset2D{ vkX :: Int32 
-            , vkY :: Int32 
+  VkOffset2D{ x :: Int32 
+            , y :: Int32 
             }
   deriving (Eq)
 
@@ -1063,15 +1063,15 @@ instance Storable VkOffset2D where
   alignment ~_ = 4
   peek ptr = VkOffset2D <$> peek (ptr `plusPtr` 0)
                         <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkOffset2D))
-                *> poke (ptr `plusPtr` 4) (vkY (poked :: VkOffset2D))
+  poke ptr poked = poke (ptr `plusPtr` 0) (x (poked :: VkOffset2D))
+                *> poke (ptr `plusPtr` 4) (y (poked :: VkOffset2D))
 
 
 
 data VkOffset3D =
-  VkOffset3D{ vkX :: Int32 
-            , vkY :: Int32 
-            , vkZ :: Int32 
+  VkOffset3D{ x :: Int32 
+            , y :: Int32 
+            , z :: Int32 
             }
   deriving (Eq)
 
@@ -1081,16 +1081,16 @@ instance Storable VkOffset3D where
   peek ptr = VkOffset3D <$> peek (ptr `plusPtr` 0)
                         <*> peek (ptr `plusPtr` 4)
                         <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkOffset3D))
-                *> poke (ptr `plusPtr` 4) (vkY (poked :: VkOffset3D))
-                *> poke (ptr `plusPtr` 8) (vkZ (poked :: VkOffset3D))
+  poke ptr poked = poke (ptr `plusPtr` 0) (x (poked :: VkOffset3D))
+                *> poke (ptr `plusPtr` 4) (y (poked :: VkOffset3D))
+                *> poke (ptr `plusPtr` 8) (z (poked :: VkOffset3D))
 
 
 
 data VkExtent3D =
-  VkExtent3D{ vkWidth :: Word32 
-            , vkHeight :: Word32 
-            , vkDepth :: Word32 
+  VkExtent3D{ width :: Word32 
+            , height :: Word32 
+            , depth :: Word32 
             }
   deriving (Eq)
 
@@ -1100,15 +1100,15 @@ instance Storable VkExtent3D where
   peek ptr = VkExtent3D <$> peek (ptr `plusPtr` 0)
                         <*> peek (ptr `plusPtr` 4)
                         <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkWidth (poked :: VkExtent3D))
-                *> poke (ptr `plusPtr` 4) (vkHeight (poked :: VkExtent3D))
-                *> poke (ptr `plusPtr` 8) (vkDepth (poked :: VkExtent3D))
+  poke ptr poked = poke (ptr `plusPtr` 0) (width (poked :: VkExtent3D))
+                *> poke (ptr `plusPtr` 4) (height (poked :: VkExtent3D))
+                *> poke (ptr `plusPtr` 8) (depth (poked :: VkExtent3D))
 
 
 
 data VkRect3D =
-  VkRect3D{ vkOffset :: VkOffset3D 
-          , vkExtent :: VkExtent3D 
+  VkRect3D{ offset :: VkOffset3D 
+          , extent :: VkExtent3D 
           }
   deriving (Eq)
 
@@ -1117,8 +1117,8 @@ instance Storable VkRect3D where
   alignment ~_ = 4
   peek ptr = VkRect3D <$> peek (ptr `plusPtr` 0)
                       <*> peek (ptr `plusPtr` 12)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkOffset (poked :: VkRect3D))
-                *> poke (ptr `plusPtr` 12) (vkExtent (poked :: VkRect3D))
+  poke ptr poked = poke (ptr `plusPtr` 0) (offset (poked :: VkRect3D))
+                *> poke (ptr `plusPtr` 12) (extent (poked :: VkRect3D))
 
 
 -- ** VkResult
@@ -1209,12 +1209,12 @@ pattern VK_ERROR_FORMAT_NOT_SUPPORTED = VkResult (-11)
 
 
 data VkViewport =
-  VkViewport{ vkX :: CFloat 
-            , vkY :: CFloat 
-            , vkWidth :: CFloat 
-            , vkHeight :: CFloat 
-            , vkMinDepth :: CFloat 
-            , vkMaxDepth :: CFloat 
+  VkViewport{ x :: CFloat 
+            , y :: CFloat 
+            , width :: CFloat 
+            , height :: CFloat 
+            , minDepth :: CFloat 
+            , maxDepth :: CFloat 
             }
   deriving (Eq)
 
@@ -1227,18 +1227,18 @@ instance Storable VkViewport where
                         <*> peek (ptr `plusPtr` 12)
                         <*> peek (ptr `plusPtr` 16)
                         <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkViewport))
-                *> poke (ptr `plusPtr` 4) (vkY (poked :: VkViewport))
-                *> poke (ptr `plusPtr` 8) (vkWidth (poked :: VkViewport))
-                *> poke (ptr `plusPtr` 12) (vkHeight (poked :: VkViewport))
-                *> poke (ptr `plusPtr` 16) (vkMinDepth (poked :: VkViewport))
-                *> poke (ptr `plusPtr` 20) (vkMaxDepth (poked :: VkViewport))
+  poke ptr poked = poke (ptr `plusPtr` 0) (x (poked :: VkViewport))
+                *> poke (ptr `plusPtr` 4) (y (poked :: VkViewport))
+                *> poke (ptr `plusPtr` 8) (width (poked :: VkViewport))
+                *> poke (ptr `plusPtr` 12) (height (poked :: VkViewport))
+                *> poke (ptr `plusPtr` 16) (minDepth (poked :: VkViewport))
+                *> poke (ptr `plusPtr` 20) (maxDepth (poked :: VkViewport))
 
 
 
 data VkRect2D =
-  VkRect2D{ vkOffset :: VkOffset2D 
-          , vkExtent :: VkExtent2D 
+  VkRect2D{ offset :: VkOffset2D 
+          , extent :: VkExtent2D 
           }
   deriving (Eq)
 
@@ -1247,7 +1247,7 @@ instance Storable VkRect2D where
   alignment ~_ = 4
   peek ptr = VkRect2D <$> peek (ptr `plusPtr` 0)
                       <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkOffset (poked :: VkRect2D))
-                *> poke (ptr `plusPtr` 8) (vkExtent (poked :: VkRect2D))
+  poke ptr poked = poke (ptr `plusPtr` 0) (offset (poked :: VkRect2D))
+                *> poke (ptr `plusPtr` 8) (extent (poked :: VkRect2D))
 
 

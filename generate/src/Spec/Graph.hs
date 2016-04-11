@@ -237,6 +237,26 @@ vertexToEnumType v = case vSourceEntity v of
 getGraphEnumTypes :: SpecGraph -> [EnumType]
 getGraphEnumTypes graph = catMaybes (vertexToEnumType <$> gVertices graph)
 
+vertexExportName :: Vertex -> Maybe String
+vertexExportName v =
+  case vSourceEntity v of
+    ABaseType bt -> Just $ btHsName bt
+    ABitmaskType bmt _ -> Just $ bmtHsName bmt
+    AHandleType ht -> Just $ htHsName ht
+    AnEnumType et -> Just $ etHsName et
+    AFuncPointerType fpt -> Just $ fptHsName fpt
+    AStructType st -> Just $ stHsName st
+    AUnionType ut -> Just $ utHsName ut
+    ACommand co -> Just $ Command.cHsName co
+    AnEnum e -> Just $ eHsName e
+    ABitmask bm -> Just $ bmHsName bm
+    AConstant c -> Just $ Constant.cHsName c
+    _ -> Nothing
+
+getGraphTypeMap :: SpecGraph -> [(String, String)]
+getGraphTypeMap graph =
+  catMaybes $ (\v -> (vName v,) <$> vertexExportName v) <$> gVertices graph
+
 
 ------------------------------------------------------------------------------
 -- predicates

@@ -17,6 +17,7 @@ parseEnum = hasName "enums" >>> hasAttrValue "type" (== "enum") >>>
           comment   <- optionalAttrValue "comment" -< enum
           elements  <- listA (parseEnumElement <<< getChildren) -< enum
           returnA -< Enum{ eName = name
+                         , eHsName = name
                          , eNamespace = namespace
                          , eExpand = expand
                          , eComment = comment
@@ -32,6 +33,7 @@ parseEnumElement = hasName "enum" >>>
           value   <- requiredRead <<< requiredAttrValue "value" -< elem
           comment <- optionalAttrValue "comment" -< elem
           returnA -< EnumElement{ eeName = name
+                                , eeHsName = name
                                 , eeValue = value
                                 , eeComment = comment
                                 }

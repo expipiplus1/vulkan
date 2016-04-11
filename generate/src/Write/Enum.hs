@@ -34,22 +34,22 @@ writeEnum e = do
                                               ])
   tellExtension "GeneralizedNewtypeDeriving"
   tellExtension "PatternSynonyms"
-  pure [qc|-- ** {eName e}
+  pure [qc|-- ** {eHsName e}
 {predocComment $ fromMaybe "" (eComment e)}
-newtype {eName e} = {eName e} Int32
+newtype {eHsName e} = {eHsName e} Int32
   deriving (Eq, Storable)
 
-instance Show {eName e} where
+instance Show {eHsName e} where
   {indent 0 $ vcat (writeElementShowsPrec <$> eElements e)}
-  showsPrec p ({eName e} x) = showParen (p >= 11) (showString "{eName e} " . showsPrec 11 x)
+  showsPrec p ({eHsName e} x) = showParen (p >= 11) (showString "{eHsName e} " . showsPrec 11 x)
 
-instance Read {eName e} where
+instance Read {eHsName e} where
   readPrec = parens ( choose [ {indent (-2) . vcat $ intercalatePrepend "," (writeReadTuple <$> eElements e)}
                              ] +++
                       prec 10 (do
-                        expectP (Ident "{eName e}")
+                        expectP (Ident "{eHsName e}")
                         v <- step readPrec
-                        pure ({eName e} v)
+                        pure ({eHsName e} v)
                         )
                     )
 
@@ -59,11 +59,11 @@ instance Read {eName e} where
 writeElement :: Enum -> EnumElement -> Doc
 writeElement e el =
   [qc|{maybe "" predocComment (eeComment el)}
-pattern {eeName el} = {eName e} {showsPrec 10 (eeValue el) ""}|]
+pattern {eeHsName el} = {eHsName e} {showsPrec 10 (eeValue el) ""}|]
 
 writeElementShowsPrec :: EnumElement -> Doc
 writeElementShowsPrec el =
-  [qc|showsPrec _ {eeName el} = showString "{eeName el}"|]
+  [qc|showsPrec _ {eeHsName el} = showString "{eeHsName el}"|]
 
 writeReadTuple :: EnumElement -> Doc
-writeReadTuple el = [qc|("{eeName el}", pure {eeName el})|]
+writeReadTuple el = [qc|("{eeHsName el}", pure {eeHsName el})|]

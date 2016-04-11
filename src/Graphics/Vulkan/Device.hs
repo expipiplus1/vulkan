@@ -34,67 +34,67 @@ import Foreign.C.Types( CFloat
 
 -- ** vkCreateDevice
 foreign import ccall "vkCreateDevice" vkCreateDevice ::
-  VkPhysicalDevice ->
+  PhysicalDevice ->
   Ptr VkDeviceCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkDevice -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr Device -> IO VkResult
 
 
 data VkPhysicalDeviceFeatures =
-  VkPhysicalDeviceFeatures{ vkRobustBufferAccess :: VkBool32 
-                          , vkFullDrawIndexUint32 :: VkBool32 
-                          , vkImageCubeArray :: VkBool32 
-                          , vkIndependentBlend :: VkBool32 
-                          , vkGeometryShader :: VkBool32 
-                          , vkTessellationShader :: VkBool32 
-                          , vkSampleRateShading :: VkBool32 
-                          , vkDualSrcBlend :: VkBool32 
-                          , vkLogicOp :: VkBool32 
-                          , vkMultiDrawIndirect :: VkBool32 
-                          , vkDrawIndirectFirstInstance :: VkBool32 
-                          , vkDepthClamp :: VkBool32 
-                          , vkDepthBiasClamp :: VkBool32 
-                          , vkFillModeNonSolid :: VkBool32 
-                          , vkDepthBounds :: VkBool32 
-                          , vkWideLines :: VkBool32 
-                          , vkLargePoints :: VkBool32 
-                          , vkAlphaToOne :: VkBool32 
-                          , vkMultiViewport :: VkBool32 
-                          , vkSamplerAnisotropy :: VkBool32 
-                          , vkTextureCompressionETC2 :: VkBool32 
-                          , vkTextureCompressionASTC_LDR :: VkBool32 
-                          , vkTextureCompressionBC :: VkBool32 
-                          , vkOcclusionQueryPrecise :: VkBool32 
-                          , vkPipelineStatisticsQuery :: VkBool32 
-                          , vkVertexPipelineStoresAndAtomics :: VkBool32 
-                          , vkFragmentStoresAndAtomics :: VkBool32 
-                          , vkShaderTessellationAndGeometryPointSize :: VkBool32 
-                          , vkShaderImageGatherExtended :: VkBool32 
-                          , vkShaderStorageImageExtendedFormats :: VkBool32 
-                          , vkShaderStorageImageMultisample :: VkBool32 
-                          , vkShaderStorageImageReadWithoutFormat :: VkBool32 
-                          , vkShaderStorageImageWriteWithoutFormat :: VkBool32 
-                          , vkShaderUniformBufferArrayDynamicIndexing :: VkBool32 
-                          , vkShaderSampledImageArrayDynamicIndexing :: VkBool32 
-                          , vkShaderStorageBufferArrayDynamicIndexing :: VkBool32 
-                          , vkShaderStorageImageArrayDynamicIndexing :: VkBool32 
-                          , vkShaderClipDistance :: VkBool32 
-                          , vkShaderCullDistance :: VkBool32 
-                          , vkShaderFloat64 :: VkBool32 
-                          , vkShaderInt64 :: VkBool32 
-                          , vkShaderInt16 :: VkBool32 
-                          , vkShaderResourceResidency :: VkBool32 
-                          , vkShaderResourceMinLod :: VkBool32 
-                          , vkSparseBinding :: VkBool32 
-                          , vkSparseResidencyBuffer :: VkBool32 
-                          , vkSparseResidencyImage2D :: VkBool32 
-                          , vkSparseResidencyImage3D :: VkBool32 
-                          , vkSparseResidency2Samples :: VkBool32 
-                          , vkSparseResidency4Samples :: VkBool32 
-                          , vkSparseResidency8Samples :: VkBool32 
-                          , vkSparseResidency16Samples :: VkBool32 
-                          , vkSparseResidencyAliased :: VkBool32 
-                          , vkVariableMultisampleRate :: VkBool32 
-                          , vkInheritedQueries :: VkBool32 
+  VkPhysicalDeviceFeatures{ robustBufferAccess :: VkBool32 
+                          , fullDrawIndexUint32 :: VkBool32 
+                          , imageCubeArray :: VkBool32 
+                          , independentBlend :: VkBool32 
+                          , geometryShader :: VkBool32 
+                          , tessellationShader :: VkBool32 
+                          , sampleRateShading :: VkBool32 
+                          , dualSrcBlend :: VkBool32 
+                          , logicOp :: VkBool32 
+                          , multiDrawIndirect :: VkBool32 
+                          , drawIndirectFirstInstance :: VkBool32 
+                          , depthClamp :: VkBool32 
+                          , depthBiasClamp :: VkBool32 
+                          , fillModeNonSolid :: VkBool32 
+                          , depthBounds :: VkBool32 
+                          , wideLines :: VkBool32 
+                          , largePoints :: VkBool32 
+                          , alphaToOne :: VkBool32 
+                          , multiViewport :: VkBool32 
+                          , samplerAnisotropy :: VkBool32 
+                          , textureCompressionETC2 :: VkBool32 
+                          , textureCompressionASTC_LDR :: VkBool32 
+                          , textureCompressionBC :: VkBool32 
+                          , occlusionQueryPrecise :: VkBool32 
+                          , pipelineStatisticsQuery :: VkBool32 
+                          , vertexPipelineStoresAndAtomics :: VkBool32 
+                          , fragmentStoresAndAtomics :: VkBool32 
+                          , shaderTessellationAndGeometryPointSize :: VkBool32 
+                          , shaderImageGatherExtended :: VkBool32 
+                          , shaderStorageImageExtendedFormats :: VkBool32 
+                          , shaderStorageImageMultisample :: VkBool32 
+                          , shaderStorageImageReadWithoutFormat :: VkBool32 
+                          , shaderStorageImageWriteWithoutFormat :: VkBool32 
+                          , shaderUniformBufferArrayDynamicIndexing :: VkBool32 
+                          , shaderSampledImageArrayDynamicIndexing :: VkBool32 
+                          , shaderStorageBufferArrayDynamicIndexing :: VkBool32 
+                          , shaderStorageImageArrayDynamicIndexing :: VkBool32 
+                          , shaderClipDistance :: VkBool32 
+                          , shaderCullDistance :: VkBool32 
+                          , shaderFloat64 :: VkBool32 
+                          , shaderInt64 :: VkBool32 
+                          , shaderInt16 :: VkBool32 
+                          , shaderResourceResidency :: VkBool32 
+                          , shaderResourceMinLod :: VkBool32 
+                          , sparseBinding :: VkBool32 
+                          , sparseResidencyBuffer :: VkBool32 
+                          , sparseResidencyImage2D :: VkBool32 
+                          , sparseResidencyImage3D :: VkBool32 
+                          , sparseResidency2Samples :: VkBool32 
+                          , sparseResidency4Samples :: VkBool32 
+                          , sparseResidency8Samples :: VkBool32 
+                          , sparseResidency16Samples :: VkBool32 
+                          , sparseResidencyAliased :: VkBool32 
+                          , variableMultisampleRate :: VkBool32 
+                          , inheritedQueries :: VkBool32 
                           }
   deriving (Eq)
 
@@ -156,61 +156,61 @@ instance Storable VkPhysicalDeviceFeatures where
                                       <*> peek (ptr `plusPtr` 208)
                                       <*> peek (ptr `plusPtr` 212)
                                       <*> peek (ptr `plusPtr` 216)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkRobustBufferAccess (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 4) (vkFullDrawIndexUint32 (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 8) (vkImageCubeArray (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 12) (vkIndependentBlend (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 16) (vkGeometryShader (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 20) (vkTessellationShader (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 24) (vkSampleRateShading (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 28) (vkDualSrcBlend (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 32) (vkLogicOp (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 36) (vkMultiDrawIndirect (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 40) (vkDrawIndirectFirstInstance (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 44) (vkDepthClamp (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 48) (vkDepthBiasClamp (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 52) (vkFillModeNonSolid (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 56) (vkDepthBounds (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 60) (vkWideLines (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 64) (vkLargePoints (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 68) (vkAlphaToOne (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 72) (vkMultiViewport (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 76) (vkSamplerAnisotropy (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 80) (vkTextureCompressionETC2 (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 84) (vkTextureCompressionASTC_LDR (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 88) (vkTextureCompressionBC (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 92) (vkOcclusionQueryPrecise (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 96) (vkPipelineStatisticsQuery (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 100) (vkVertexPipelineStoresAndAtomics (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 104) (vkFragmentStoresAndAtomics (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 108) (vkShaderTessellationAndGeometryPointSize (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 112) (vkShaderImageGatherExtended (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 116) (vkShaderStorageImageExtendedFormats (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 120) (vkShaderStorageImageMultisample (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 124) (vkShaderStorageImageReadWithoutFormat (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 128) (vkShaderStorageImageWriteWithoutFormat (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 132) (vkShaderUniformBufferArrayDynamicIndexing (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 136) (vkShaderSampledImageArrayDynamicIndexing (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 140) (vkShaderStorageBufferArrayDynamicIndexing (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 144) (vkShaderStorageImageArrayDynamicIndexing (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 148) (vkShaderClipDistance (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 152) (vkShaderCullDistance (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 156) (vkShaderFloat64 (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 160) (vkShaderInt64 (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 164) (vkShaderInt16 (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 168) (vkShaderResourceResidency (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 172) (vkShaderResourceMinLod (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 176) (vkSparseBinding (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 180) (vkSparseResidencyBuffer (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 184) (vkSparseResidencyImage2D (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 188) (vkSparseResidencyImage3D (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 192) (vkSparseResidency2Samples (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 196) (vkSparseResidency4Samples (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 200) (vkSparseResidency8Samples (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 204) (vkSparseResidency16Samples (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 208) (vkSparseResidencyAliased (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 212) (vkVariableMultisampleRate (poked :: VkPhysicalDeviceFeatures))
-                *> poke (ptr `plusPtr` 216) (vkInheritedQueries (poked :: VkPhysicalDeviceFeatures))
+  poke ptr poked = poke (ptr `plusPtr` 0) (robustBufferAccess (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 4) (fullDrawIndexUint32 (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 8) (imageCubeArray (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 12) (independentBlend (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 16) (geometryShader (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 20) (tessellationShader (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 24) (sampleRateShading (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 28) (dualSrcBlend (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 32) (logicOp (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 36) (multiDrawIndirect (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 40) (drawIndirectFirstInstance (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 44) (depthClamp (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 48) (depthBiasClamp (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 52) (fillModeNonSolid (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 56) (depthBounds (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 60) (wideLines (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 64) (largePoints (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 68) (alphaToOne (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 72) (multiViewport (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 76) (samplerAnisotropy (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 80) (textureCompressionETC2 (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 84) (textureCompressionASTC_LDR (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 88) (textureCompressionBC (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 92) (occlusionQueryPrecise (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 96) (pipelineStatisticsQuery (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 100) (vertexPipelineStoresAndAtomics (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 104) (fragmentStoresAndAtomics (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 108) (shaderTessellationAndGeometryPointSize (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 112) (shaderImageGatherExtended (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 116) (shaderStorageImageExtendedFormats (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 120) (shaderStorageImageMultisample (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 124) (shaderStorageImageReadWithoutFormat (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 128) (shaderStorageImageWriteWithoutFormat (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 132) (shaderUniformBufferArrayDynamicIndexing (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 136) (shaderSampledImageArrayDynamicIndexing (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 140) (shaderStorageBufferArrayDynamicIndexing (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 144) (shaderStorageImageArrayDynamicIndexing (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 148) (shaderClipDistance (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 152) (shaderCullDistance (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 156) (shaderFloat64 (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 160) (shaderInt64 (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 164) (shaderInt16 (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 168) (shaderResourceResidency (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 172) (shaderResourceMinLod (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 176) (sparseBinding (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 180) (sparseResidencyBuffer (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 184) (sparseResidencyImage2D (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 188) (sparseResidencyImage3D (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 192) (sparseResidency2Samples (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 196) (sparseResidency4Samples (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 200) (sparseResidency8Samples (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 204) (sparseResidency16Samples (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 208) (sparseResidencyAliased (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 212) (variableMultisampleRate (poked :: VkPhysicalDeviceFeatures))
+                *> poke (ptr `plusPtr` 216) (inheritedQueries (poked :: VkPhysicalDeviceFeatures))
 
 
 -- ** VkDeviceCreateFlags
@@ -220,12 +220,12 @@ newtype VkDeviceCreateFlags = VkDeviceCreateFlags VkFlags
 
 
 data VkDeviceQueueCreateInfo =
-  VkDeviceQueueCreateInfo{ vkSType :: VkStructureType 
-                         , vkPNext :: Ptr Void 
-                         , vkFlags :: VkDeviceQueueCreateFlags 
-                         , vkQueueFamilyIndex :: Word32 
-                         , vkQueueCount :: Word32 
-                         , vkPQueuePriorities :: Ptr CFloat 
+  VkDeviceQueueCreateInfo{ sType :: VkStructureType 
+                         , pNext :: Ptr Void 
+                         , flags :: VkDeviceQueueCreateFlags 
+                         , queueFamilyIndex :: Word32 
+                         , queueCount :: Word32 
+                         , pQueuePriorities :: Ptr CFloat 
                          }
   deriving (Eq)
 
@@ -238,12 +238,12 @@ instance Storable VkDeviceQueueCreateInfo where
                                      <*> peek (ptr `plusPtr` 20)
                                      <*> peek (ptr `plusPtr` 24)
                                      <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceQueueCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceQueueCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDeviceQueueCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkQueueFamilyIndex (poked :: VkDeviceQueueCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkQueueCount (poked :: VkDeviceQueueCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPQueuePriorities (poked :: VkDeviceQueueCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkDeviceQueueCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkDeviceQueueCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkDeviceQueueCreateInfo))
+                *> poke (ptr `plusPtr` 20) (queueFamilyIndex (poked :: VkDeviceQueueCreateInfo))
+                *> poke (ptr `plusPtr` 24) (queueCount (poked :: VkDeviceQueueCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pQueuePriorities (poked :: VkDeviceQueueCreateInfo))
 
 
 -- ** VkDeviceQueueCreateFlags
@@ -253,26 +253,26 @@ newtype VkDeviceQueueCreateFlags = VkDeviceQueueCreateFlags VkFlags
 
 -- ** vkDestroyDevice
 foreign import ccall "vkDestroyDevice" vkDestroyDevice ::
-  VkDevice -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Ptr VkAllocationCallbacks -> IO ()
 
 data VkPhysicalDevice_T
-type VkPhysicalDevice = Ptr VkPhysicalDevice_T
+type PhysicalDevice = Ptr VkPhysicalDevice_T
 
 data VkDevice_T
-type VkDevice = Ptr VkDevice_T
+type Device = Ptr VkDevice_T
 
 
 data VkDeviceCreateInfo =
-  VkDeviceCreateInfo{ vkSType :: VkStructureType 
-                    , vkPNext :: Ptr Void 
-                    , vkFlags :: VkDeviceCreateFlags 
-                    , vkQueueCreateInfoCount :: Word32 
-                    , vkPQueueCreateInfos :: Ptr VkDeviceQueueCreateInfo 
-                    , vkEnabledLayerCount :: Word32 
-                    , vkPpEnabledLayerNames :: Ptr (Ptr CChar) 
-                    , vkEnabledExtensionCount :: Word32 
-                    , vkPpEnabledExtensionNames :: Ptr (Ptr CChar) 
-                    , vkPEnabledFeatures :: Ptr VkPhysicalDeviceFeatures 
+  VkDeviceCreateInfo{ sType :: VkStructureType 
+                    , pNext :: Ptr Void 
+                    , flags :: VkDeviceCreateFlags 
+                    , queueCreateInfoCount :: Word32 
+                    , pQueueCreateInfos :: Ptr VkDeviceQueueCreateInfo 
+                    , enabledLayerCount :: Word32 
+                    , ppEnabledLayerNames :: Ptr (Ptr CChar) 
+                    , enabledExtensionCount :: Word32 
+                    , ppEnabledExtensionNames :: Ptr (Ptr CChar) 
+                    , pEnabledFeatures :: Ptr VkPhysicalDeviceFeatures 
                     }
   deriving (Eq)
 
@@ -289,15 +289,15 @@ instance Storable VkDeviceCreateInfo where
                                 <*> peek (ptr `plusPtr` 48)
                                 <*> peek (ptr `plusPtr` 56)
                                 <*> peek (ptr `plusPtr` 64)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkQueueCreateInfoCount (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPQueueCreateInfos (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkEnabledLayerCount (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPpEnabledLayerNames (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkEnabledExtensionCount (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkPpEnabledExtensionNames (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 64) (vkPEnabledFeatures (poked :: VkDeviceCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 20) (queueCreateInfoCount (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pQueueCreateInfos (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 32) (enabledLayerCount (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 40) (ppEnabledLayerNames (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 48) (enabledExtensionCount (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 56) (ppEnabledExtensionNames (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 64) (pEnabledFeatures (poked :: VkDeviceCreateInfo))
 
 

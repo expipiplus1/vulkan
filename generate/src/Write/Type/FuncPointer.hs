@@ -13,6 +13,6 @@ import           Write.WriteMonad
 writeFuncPointerType :: FuncPointerType -> Write Doc
 writeFuncPointerType fpt = do
   hsType <- cTypeToHsTypeString (fptCType fpt)
-  pure [qc|type {fptName fpt} = {hsType}
+  pure [qc|type {fptHsName fpt} = {hsType}
 |]
 

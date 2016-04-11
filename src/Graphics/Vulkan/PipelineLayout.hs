@@ -3,7 +3,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.PipelineLayout where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Data.Word( Word64
                 , Word32
@@ -11,7 +11,7 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Graphics.Vulkan.DescriptorSet( VkDescriptorSetLayout(..)
+import Graphics.Vulkan.DescriptorSet( DescriptorSetLayout(..)
                                     )
 import Foreign.Storable( Storable(..)
                        )
@@ -41,18 +41,18 @@ import Foreign.C.Types( CSize(..)
 newtype VkPipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags VkFlags
   deriving (Eq, Storable)
 
-newtype VkPipelineLayout = VkPipelineLayout Word64
+newtype PipelineLayout = PipelineLayout Word64
   deriving (Eq, Storable)
 
 -- ** vkDestroyPipelineLayout
 foreign import ccall "vkDestroyPipelineLayout" vkDestroyPipelineLayout ::
-  VkDevice -> VkPipelineLayout -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> PipelineLayout -> Ptr VkAllocationCallbacks -> IO ()
 
 
 data VkPushConstantRange =
-  VkPushConstantRange{ vkStageFlags :: VkShaderStageFlags 
-                     , vkOffset :: Word32 
-                     , vkSize :: Word32 
+  VkPushConstantRange{ stageFlags :: VkShaderStageFlags 
+                     , offset :: Word32 
+                     , size :: Word32 
                      }
   deriving (Eq)
 
@@ -62,20 +62,20 @@ instance Storable VkPushConstantRange where
   peek ptr = VkPushConstantRange <$> peek (ptr `plusPtr` 0)
                                  <*> peek (ptr `plusPtr` 4)
                                  <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkStageFlags (poked :: VkPushConstantRange))
-                *> poke (ptr `plusPtr` 4) (vkOffset (poked :: VkPushConstantRange))
-                *> poke (ptr `plusPtr` 8) (vkSize (poked :: VkPushConstantRange))
+  poke ptr poked = poke (ptr `plusPtr` 0) (stageFlags (poked :: VkPushConstantRange))
+                *> poke (ptr `plusPtr` 4) (offset (poked :: VkPushConstantRange))
+                *> poke (ptr `plusPtr` 8) (size (poked :: VkPushConstantRange))
 
 
 
 data VkPipelineLayoutCreateInfo =
-  VkPipelineLayoutCreateInfo{ vkSType :: VkStructureType 
-                            , vkPNext :: Ptr Void 
-                            , vkFlags :: VkPipelineLayoutCreateFlags 
-                            , vkSetLayoutCount :: Word32 
-                            , vkPSetLayouts :: Ptr VkDescriptorSetLayout 
-                            , vkPushConstantRangeCount :: Word32 
-                            , vkPPushConstantRanges :: Ptr VkPushConstantRange 
+  VkPipelineLayoutCreateInfo{ sType :: VkStructureType 
+                            , pNext :: Ptr Void 
+                            , flags :: VkPipelineLayoutCreateFlags 
+                            , setLayoutCount :: Word32 
+                            , pSetLayouts :: Ptr DescriptorSetLayout 
+                            , pushConstantRangeCount :: Word32 
+                            , pPushConstantRanges :: Ptr VkPushConstantRange 
                             }
   deriving (Eq)
 
@@ -89,18 +89,18 @@ instance Storable VkPipelineLayoutCreateInfo where
                                         <*> peek (ptr `plusPtr` 24)
                                         <*> peek (ptr `plusPtr` 32)
                                         <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkSetLayoutCount (poked :: VkPipelineLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPSetLayouts (poked :: VkPipelineLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPushConstantRangeCount (poked :: VkPipelineLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPPushConstantRanges (poked :: VkPipelineLayoutCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkPipelineLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkPipelineLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkPipelineLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 20) (setLayoutCount (poked :: VkPipelineLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pSetLayouts (poked :: VkPipelineLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pushConstantRangeCount (poked :: VkPipelineLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 40) (pPushConstantRanges (poked :: VkPipelineLayoutCreateInfo))
 
 
 -- ** vkCreatePipelineLayout
 foreign import ccall "vkCreatePipelineLayout" vkCreatePipelineLayout ::
-  VkDevice ->
+  Device ->
   Ptr VkPipelineLayoutCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkPipelineLayout -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr PipelineLayout -> IO VkResult
 

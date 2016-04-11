@@ -4,7 +4,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.CommandPool where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
@@ -49,10 +49,10 @@ import Foreign.C.Types( CSize(..)
 
 
 data VkCommandPoolCreateInfo =
-  VkCommandPoolCreateInfo{ vkSType :: VkStructureType 
-                         , vkPNext :: Ptr Void 
-                         , vkFlags :: VkCommandPoolCreateFlags 
-                         , vkQueueFamilyIndex :: Word32 
+  VkCommandPoolCreateInfo{ sType :: VkStructureType 
+                         , pNext :: Ptr Void 
+                         , flags :: VkCommandPoolCreateFlags 
+                         , queueFamilyIndex :: Word32 
                          }
   deriving (Eq)
 
@@ -63,19 +63,19 @@ instance Storable VkCommandPoolCreateInfo where
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 16)
                                      <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkQueueFamilyIndex (poked :: VkCommandPoolCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkCommandPoolCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkCommandPoolCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkCommandPoolCreateInfo))
+                *> poke (ptr `plusPtr` 20) (queueFamilyIndex (poked :: VkCommandPoolCreateInfo))
 
 
 -- ** vkDestroyCommandPool
 foreign import ccall "vkDestroyCommandPool" vkDestroyCommandPool ::
-  VkDevice -> VkCommandPool -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> CommandPool -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** vkResetCommandPool
 foreign import ccall "vkResetCommandPool" vkResetCommandPool ::
-  VkDevice -> VkCommandPool -> VkCommandPoolResetFlags -> IO VkResult
+  Device -> CommandPool -> VkCommandPoolResetFlags -> IO VkResult
 
 -- ** VkCommandPoolCreateFlags
 
@@ -110,9 +110,9 @@ pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = VkCommandPoolCreateFla
 
 -- ** vkCreateCommandPool
 foreign import ccall "vkCreateCommandPool" vkCreateCommandPool ::
-  VkDevice ->
+  Device ->
   Ptr VkCommandPoolCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkCommandPool -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr CommandPool -> IO VkResult
 
 -- ** VkCommandPoolResetFlags
 
@@ -141,6 +141,6 @@ instance Read VkCommandPoolResetFlagBits where
 pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = VkCommandPoolResetFlagBits 0x1
 
 
-newtype VkCommandPool = VkCommandPool Word64
+newtype CommandPool = CommandPool Word64
   deriving (Eq, Storable)
 

@@ -1,11 +1,14 @@
 module Spec.Command where
 
-import           Language.C.Types (CIdentifier)
+import           Language.C.Types             (CIdentifier)
+import           Language.Haskell.Exts.Syntax as HS
 import           Spec.Type
 
 data Command = Command { cName                     :: String
                        , cSymbol                   :: CIdentifier
+                       , cHsName                   :: String
                        , cReturnType               :: CType
+                       , cHsReturnType             :: HS.Type
                        , cParameters               :: [Parameter]
                        , cImplicitExternSyncParams :: Maybe [String]
                        , cQueues                   :: Maybe [String]
@@ -18,7 +21,9 @@ data Command = Command { cName                     :: String
   deriving (Show)
 
 data Parameter = Parameter { pName           :: String
+                           , pHsName         :: String
                            , pType           :: CType
+                           , pHsType         :: HS.Type
                            , pIsOptional     :: Maybe [Bool]
                              -- ^ Values further into the list represent the
                              -- "optionality" of the types as it is

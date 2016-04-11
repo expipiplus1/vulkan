@@ -24,15 +24,15 @@ writeConstant c = do
 writeConstantPattern :: Constant -> Write Doc
 writeConstantPattern c = case cValue c of
   IntegralValue i
-    -> pure [qc|pattern {cName c} = {i}|]
+    -> pure [qc|pattern {cHsName c} = {i}|]
   FloatValue f
-    -> pure [qc|pattern {cName c} = {f}|]
+    -> pure [qc|pattern {cHsName c} = {f}|]
   Word32Value i
     -> do tellRequiredName (ExternalName (ModuleName "Data.Word") "Word32")
-          pure [qc|pattern {cName c} = {showHex' i} :: Word32|]
+          pure [qc|pattern {cHsName c} = {showHex' i} :: Word32|]
   Word64Value i
     -> do tellRequiredName (ExternalName (ModuleName "Data.Word") "Word64")
-          pure [qc|pattern {cName c} = {showHex' i} :: Word64|]
+          pure [qc|pattern {cHsName c} = {showHex' i} :: Word64|]
 
 maybeWriteConstantType :: Constant -> Write (Maybe Doc)
 maybeWriteConstantType c
@@ -40,7 +40,7 @@ maybeWriteConstantType c
   , i >= 0
   = do tellExtension "DataKinds"
        pure $ Just [qc|
-type {cName c} = {i}|]
+type {cHsName c} = {i}|]
   | otherwise
   = pure Nothing
 

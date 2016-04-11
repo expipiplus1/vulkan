@@ -4,7 +4,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Image where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
@@ -57,9 +57,9 @@ import Foreign.C.Types( CSize(..)
 
 -- ** vkCreateImage
 foreign import ccall "vkCreateImage" vkCreateImage ::
-  VkDevice ->
+  Device ->
   Ptr VkImageCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkImage -> IO VkResult
+    Ptr VkAllocationCallbacks -> Ptr Image -> IO VkResult
 
 -- ** VkImageCreateFlags
 
@@ -159,7 +159,7 @@ pattern VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x40
 pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x80
 
 
-newtype VkImage = VkImage Word64
+newtype Image = Image Word64
   deriving (Eq, Storable)
 
 -- ** VkImageAspectFlags
@@ -203,11 +203,11 @@ pattern VK_IMAGE_ASPECT_METADATA_BIT = VkImageAspectFlagBits 0x8
 
 
 data VkSubresourceLayout =
-  VkSubresourceLayout{ vkOffset :: VkDeviceSize 
-                     , vkSize :: VkDeviceSize 
-                     , vkRowPitch :: VkDeviceSize 
-                     , vkArrayPitch :: VkDeviceSize 
-                     , vkDepthPitch :: VkDeviceSize 
+  VkSubresourceLayout{ offset :: VkDeviceSize 
+                     , size :: VkDeviceSize 
+                     , rowPitch :: VkDeviceSize 
+                     , arrayPitch :: VkDeviceSize 
+                     , depthPitch :: VkDeviceSize 
                      }
   deriving (Eq)
 
@@ -219,11 +219,11 @@ instance Storable VkSubresourceLayout where
                                  <*> peek (ptr `plusPtr` 16)
                                  <*> peek (ptr `plusPtr` 24)
                                  <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkOffset (poked :: VkSubresourceLayout))
-                *> poke (ptr `plusPtr` 8) (vkSize (poked :: VkSubresourceLayout))
-                *> poke (ptr `plusPtr` 16) (vkRowPitch (poked :: VkSubresourceLayout))
-                *> poke (ptr `plusPtr` 24) (vkArrayPitch (poked :: VkSubresourceLayout))
-                *> poke (ptr `plusPtr` 32) (vkDepthPitch (poked :: VkSubresourceLayout))
+  poke ptr poked = poke (ptr `plusPtr` 0) (offset (poked :: VkSubresourceLayout))
+                *> poke (ptr `plusPtr` 8) (size (poked :: VkSubresourceLayout))
+                *> poke (ptr `plusPtr` 16) (rowPitch (poked :: VkSubresourceLayout))
+                *> poke (ptr `plusPtr` 24) (arrayPitch (poked :: VkSubresourceLayout))
+                *> poke (ptr `plusPtr` 32) (depthPitch (poked :: VkSubresourceLayout))
 
 
 -- ** VkImageTiling
@@ -338,13 +338,13 @@ pattern VK_IMAGE_TYPE_3D = VkImageType 2
 
 -- ** vkDestroyImage
 foreign import ccall "vkDestroyImage" vkDestroyImage ::
-  VkDevice -> VkImage -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Image -> Ptr VkAllocationCallbacks -> IO ()
 
 
 data VkImageSubresource =
-  VkImageSubresource{ vkAspectMask :: VkImageAspectFlags 
-                    , vkMipLevel :: Word32 
-                    , vkArrayLayer :: Word32 
+  VkImageSubresource{ aspectMask :: VkImageAspectFlags 
+                    , mipLevel :: Word32 
+                    , arrayLayer :: Word32 
                     }
   deriving (Eq)
 
@@ -354,18 +354,18 @@ instance Storable VkImageSubresource where
   peek ptr = VkImageSubresource <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 4)
                                 <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkAspectMask (poked :: VkImageSubresource))
-                *> poke (ptr `plusPtr` 4) (vkMipLevel (poked :: VkImageSubresource))
-                *> poke (ptr `plusPtr` 8) (vkArrayLayer (poked :: VkImageSubresource))
+  poke ptr poked = poke (ptr `plusPtr` 0) (aspectMask (poked :: VkImageSubresource))
+                *> poke (ptr `plusPtr` 4) (mipLevel (poked :: VkImageSubresource))
+                *> poke (ptr `plusPtr` 8) (arrayLayer (poked :: VkImageSubresource))
 
 
 
 data VkImageSubresourceRange =
-  VkImageSubresourceRange{ vkAspectMask :: VkImageAspectFlags 
-                         , vkBaseMipLevel :: Word32 
-                         , vkLevelCount :: Word32 
-                         , vkBaseArrayLayer :: Word32 
-                         , vkLayerCount :: Word32 
+  VkImageSubresourceRange{ aspectMask :: VkImageAspectFlags 
+                         , baseMipLevel :: Word32 
+                         , levelCount :: Word32 
+                         , baseArrayLayer :: Word32 
+                         , layerCount :: Word32 
                          }
   deriving (Eq)
 
@@ -377,36 +377,35 @@ instance Storable VkImageSubresourceRange where
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 12)
                                      <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkAspectMask (poked :: VkImageSubresourceRange))
-                *> poke (ptr `plusPtr` 4) (vkBaseMipLevel (poked :: VkImageSubresourceRange))
-                *> poke (ptr `plusPtr` 8) (vkLevelCount (poked :: VkImageSubresourceRange))
-                *> poke (ptr `plusPtr` 12) (vkBaseArrayLayer (poked :: VkImageSubresourceRange))
-                *> poke (ptr `plusPtr` 16) (vkLayerCount (poked :: VkImageSubresourceRange))
+  poke ptr poked = poke (ptr `plusPtr` 0) (aspectMask (poked :: VkImageSubresourceRange))
+                *> poke (ptr `plusPtr` 4) (baseMipLevel (poked :: VkImageSubresourceRange))
+                *> poke (ptr `plusPtr` 8) (levelCount (poked :: VkImageSubresourceRange))
+                *> poke (ptr `plusPtr` 12) (baseArrayLayer (poked :: VkImageSubresourceRange))
+                *> poke (ptr `plusPtr` 16) (layerCount (poked :: VkImageSubresourceRange))
 
 
 -- ** vkGetImageSubresourceLayout
 foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout ::
-  VkDevice ->
-  VkImage ->
-    Ptr VkImageSubresource -> Ptr VkSubresourceLayout -> IO ()
+  Device ->
+  Image -> Ptr VkImageSubresource -> Ptr VkSubresourceLayout -> IO ()
 
 
 data VkImageCreateInfo =
-  VkImageCreateInfo{ vkSType :: VkStructureType 
-                   , vkPNext :: Ptr Void 
-                   , vkFlags :: VkImageCreateFlags 
-                   , vkImageType :: VkImageType 
-                   , vkFormat :: VkFormat 
-                   , vkExtent :: VkExtent3D 
-                   , vkMipLevels :: Word32 
-                   , vkArrayLayers :: Word32 
-                   , vkSamples :: VkSampleCountFlagBits 
-                   , vkTiling :: VkImageTiling 
-                   , vkUsage :: VkImageUsageFlags 
-                   , vkSharingMode :: VkSharingMode 
-                   , vkQueueFamilyIndexCount :: Word32 
-                   , vkPQueueFamilyIndices :: Ptr Word32 
-                   , vkInitialLayout :: VkImageLayout 
+  VkImageCreateInfo{ sType :: VkStructureType 
+                   , pNext :: Ptr Void 
+                   , flags :: VkImageCreateFlags 
+                   , imageType :: VkImageType 
+                   , format :: VkFormat 
+                   , extent :: VkExtent3D 
+                   , mipLevels :: Word32 
+                   , arrayLayers :: Word32 
+                   , samples :: VkSampleCountFlagBits 
+                   , tiling :: VkImageTiling 
+                   , usage :: VkImageUsageFlags 
+                   , sharingMode :: VkSharingMode 
+                   , queueFamilyIndexCount :: Word32 
+                   , pQueueFamilyIndices :: Ptr Word32 
+                   , initialLayout :: VkImageLayout 
                    }
   deriving (Eq)
 
@@ -428,20 +427,20 @@ instance Storable VkImageCreateInfo where
                                <*> peek (ptr `plusPtr` 64)
                                <*> peek (ptr `plusPtr` 72)
                                <*> peek (ptr `plusPtr` 80)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkImageType (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkFormat (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 28) (vkExtent (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkMipLevels (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 44) (vkArrayLayers (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkSamples (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 52) (vkTiling (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkUsage (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 60) (vkSharingMode (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 64) (vkQueueFamilyIndexCount (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 72) (vkPQueueFamilyIndices (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 80) (vkInitialLayout (poked :: VkImageCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 20) (imageType (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 24) (format (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 28) (extent (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 40) (mipLevels (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 44) (arrayLayers (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 48) (samples (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 52) (tiling (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 56) (usage (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 60) (sharingMode (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 64) (queueFamilyIndexCount (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 72) (pQueueFamilyIndices (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 80) (initialLayout (poked :: VkImageCreateInfo))
 
 

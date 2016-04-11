@@ -7,25 +7,25 @@ module Graphics.Vulkan.CommandBufferBuilding where
 
 import Data.Vector.Storable.Sized( Vector
                                  )
-import Graphics.Vulkan.Buffer( VkBuffer(..)
+import Graphics.Vulkan.Buffer( Buffer(..)
                              )
 import Graphics.Vulkan.Pass( VkDependencyFlagBits(..)
-                           , VkFramebuffer(..)
-                           , VkRenderPass(..)
+                           , Framebuffer(..)
+                           , RenderPass(..)
                            , VkAccessFlags(..)
                            , VkDependencyFlags(..)
                            , VkAccessFlagBits(..)
                            )
 import Text.Read.Lex( Lexeme(Ident)
                     )
-import Graphics.Vulkan.Event( VkEvent(..)
+import Graphics.Vulkan.Event( Event(..)
                             )
 import GHC.Read( expectP
                , choose
                )
 import Graphics.Vulkan.Pipeline( VkPipelineStageFlagBits(..)
                                , VkPipelineStageFlags(..)
-                               , VkPipeline(..)
+                               , Pipeline(..)
                                , VkPipelineBindPoint(..)
                                )
 import Data.Word( Word64
@@ -35,9 +35,9 @@ import Foreign.Ptr( Ptr
                   , castPtr
                   , plusPtr
                   )
-import Graphics.Vulkan.DescriptorSet( VkDescriptorSet(..)
+import Graphics.Vulkan.DescriptorSet( DescriptorSet(..)
                                     )
-import Graphics.Vulkan.CommandBuffer( VkCommandBuffer(..)
+import Graphics.Vulkan.CommandBuffer( CommandBuffer(..)
                                     )
 import Data.Int( Int32
                )
@@ -48,7 +48,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.PipelineLayout( VkPipelineLayout(..)
+import Graphics.Vulkan.PipelineLayout( PipelineLayout(..)
                                      )
 import Text.Read( Read(..)
                 , parens
@@ -62,7 +62,7 @@ import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
                              )
 import Graphics.Vulkan.Sampler( VkFilter(..)
                               )
-import Graphics.Vulkan.Image( VkImage(..)
+import Graphics.Vulkan.Image( Image(..)
                             , VkImageLayout(..)
                             , VkImageAspectFlagBits(..)
                             , VkImageSubresourceRange(..)
@@ -71,7 +71,7 @@ import Graphics.Vulkan.Image( VkImage(..)
 import Graphics.Vulkan.Query( VkQueryResultFlagBits(..)
                             , VkQueryControlFlagBits(..)
                             , VkQueryControlFlags(..)
-                            , VkQueryPool(..)
+                            , QueryPool(..)
                             , VkQueryResultFlags(..)
                             )
 import Graphics.Vulkan.OtherTypes( VkImageMemoryBarrier(..)
@@ -94,49 +94,49 @@ import Foreign.C.Types( CFloat
 
 -- ** vkCmdPushConstants
 foreign import ccall "vkCmdPushConstants" vkCmdPushConstants ::
-  VkCommandBuffer ->
-  VkPipelineLayout ->
+  CommandBuffer ->
+  PipelineLayout ->
     VkShaderStageFlags -> Word32 -> Word32 -> Ptr Void -> IO ()
 
 -- ** vkCmdSetStencilWriteMask
 foreign import ccall "vkCmdSetStencilWriteMask" vkCmdSetStencilWriteMask ::
-  VkCommandBuffer -> VkStencilFaceFlags -> Word32 -> IO ()
+  CommandBuffer -> VkStencilFaceFlags -> Word32 -> IO ()
 
 -- ** vkCmdBindIndexBuffer
 foreign import ccall "vkCmdBindIndexBuffer" vkCmdBindIndexBuffer ::
-  VkCommandBuffer -> VkBuffer -> VkDeviceSize -> VkIndexType -> IO ()
+  CommandBuffer -> Buffer -> VkDeviceSize -> VkIndexType -> IO ()
 
 -- ** vkCmdResetQueryPool
 foreign import ccall "vkCmdResetQueryPool" vkCmdResetQueryPool ::
-  VkCommandBuffer -> VkQueryPool -> Word32 -> Word32 -> IO ()
+  CommandBuffer -> QueryPool -> Word32 -> Word32 -> IO ()
 
 -- ** vkCmdResolveImage
 foreign import ccall "vkCmdResolveImage" vkCmdResolveImage ::
-  VkCommandBuffer ->
-  VkImage ->
+  CommandBuffer ->
+  Image ->
     VkImageLayout ->
-      VkImage -> VkImageLayout -> Word32 -> Ptr VkImageResolve -> IO ()
+      Image -> VkImageLayout -> Word32 -> Ptr VkImageResolve -> IO ()
 
 -- ** vkCmdBindPipeline
 foreign import ccall "vkCmdBindPipeline" vkCmdBindPipeline ::
-  VkCommandBuffer -> VkPipelineBindPoint -> VkPipeline -> IO ()
+  CommandBuffer -> VkPipelineBindPoint -> Pipeline -> IO ()
 
 -- ** vkCmdBindVertexBuffers
 foreign import ccall "vkCmdBindVertexBuffers" vkCmdBindVertexBuffers ::
-  VkCommandBuffer ->
-  Word32 -> Word32 -> Ptr VkBuffer -> Ptr VkDeviceSize -> IO ()
+  CommandBuffer ->
+  Word32 -> Word32 -> Ptr Buffer -> Ptr VkDeviceSize -> IO ()
 
 -- ** vkCmdDraw
 foreign import ccall "vkCmdDraw" vkCmdDraw ::
-  VkCommandBuffer -> Word32 -> Word32 -> Word32 -> Word32 -> IO ()
+  CommandBuffer -> Word32 -> Word32 -> Word32 -> Word32 -> IO ()
 
 
 data VkImageCopy =
-  VkImageCopy{ vkSrcSubresource :: VkImageSubresourceLayers 
-             , vkSrcOffset :: VkOffset3D 
-             , vkDstSubresource :: VkImageSubresourceLayers 
-             , vkDstOffset :: VkOffset3D 
-             , vkExtent :: VkExtent3D 
+  VkImageCopy{ srcSubresource :: VkImageSubresourceLayers 
+             , srcOffset :: VkOffset3D 
+             , dstSubresource :: VkImageSubresourceLayers 
+             , dstOffset :: VkOffset3D 
+             , extent :: VkExtent3D 
              }
   deriving (Eq)
 
@@ -148,59 +148,58 @@ instance Storable VkImageCopy where
                          <*> peek (ptr `plusPtr` 28)
                          <*> peek (ptr `plusPtr` 44)
                          <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSrcSubresource (poked :: VkImageCopy))
-                *> poke (ptr `plusPtr` 16) (vkSrcOffset (poked :: VkImageCopy))
-                *> poke (ptr `plusPtr` 28) (vkDstSubresource (poked :: VkImageCopy))
-                *> poke (ptr `plusPtr` 44) (vkDstOffset (poked :: VkImageCopy))
-                *> poke (ptr `plusPtr` 56) (vkExtent (poked :: VkImageCopy))
+  poke ptr poked = poke (ptr `plusPtr` 0) (srcSubresource (poked :: VkImageCopy))
+                *> poke (ptr `plusPtr` 16) (srcOffset (poked :: VkImageCopy))
+                *> poke (ptr `plusPtr` 28) (dstSubresource (poked :: VkImageCopy))
+                *> poke (ptr `plusPtr` 44) (dstOffset (poked :: VkImageCopy))
+                *> poke (ptr `plusPtr` 56) (extent (poked :: VkImageCopy))
 
 
 -- ** vkCmdNextSubpass
 foreign import ccall "vkCmdNextSubpass" vkCmdNextSubpass ::
-  VkCommandBuffer -> VkSubpassContents -> IO ()
+  CommandBuffer -> VkSubpassContents -> IO ()
 
 -- ** vkCmdEndQuery
 foreign import ccall "vkCmdEndQuery" vkCmdEndQuery ::
-  VkCommandBuffer -> VkQueryPool -> Word32 -> IO ()
+  CommandBuffer -> QueryPool -> Word32 -> IO ()
 
 -- ** vkCmdSetScissor
 foreign import ccall "vkCmdSetScissor" vkCmdSetScissor ::
-  VkCommandBuffer -> Word32 -> Word32 -> Ptr VkRect2D -> IO ()
+  CommandBuffer -> Word32 -> Word32 -> Ptr VkRect2D -> IO ()
 
 -- ** vkCmdSetEvent
 foreign import ccall "vkCmdSetEvent" vkCmdSetEvent ::
-  VkCommandBuffer -> VkEvent -> VkPipelineStageFlags -> IO ()
+  CommandBuffer -> Event -> VkPipelineStageFlags -> IO ()
 
 -- ** vkCmdCopyImageToBuffer
 foreign import ccall "vkCmdCopyImageToBuffer" vkCmdCopyImageToBuffer ::
-  VkCommandBuffer ->
-  VkImage ->
-    VkImageLayout ->
-      VkBuffer -> Word32 -> Ptr VkBufferImageCopy -> IO ()
+  CommandBuffer ->
+  Image ->
+    VkImageLayout -> Buffer -> Word32 -> Ptr VkBufferImageCopy -> IO ()
 
 -- ** vkCmdDispatchIndirect
 foreign import ccall "vkCmdDispatchIndirect" vkCmdDispatchIndirect ::
-  VkCommandBuffer -> VkBuffer -> VkDeviceSize -> IO ()
+  CommandBuffer -> Buffer -> VkDeviceSize -> IO ()
 
 -- ** vkCmdBeginQuery
 foreign import ccall "vkCmdBeginQuery" vkCmdBeginQuery ::
-  VkCommandBuffer ->
-  VkQueryPool -> Word32 -> VkQueryControlFlags -> IO ()
+  CommandBuffer ->
+  QueryPool -> Word32 -> VkQueryControlFlags -> IO ()
 
 -- ** vkCmdEndRenderPass
 foreign import ccall "vkCmdEndRenderPass" vkCmdEndRenderPass ::
-  VkCommandBuffer -> IO ()
+  CommandBuffer -> IO ()
 
 -- ** vkCmdFillBuffer
 foreign import ccall "vkCmdFillBuffer" vkCmdFillBuffer ::
-  VkCommandBuffer ->
-  VkBuffer -> VkDeviceSize -> VkDeviceSize -> Word32 -> IO ()
+  CommandBuffer ->
+  Buffer -> VkDeviceSize -> VkDeviceSize -> Word32 -> IO ()
 
 
 data VkClearRect =
-  VkClearRect{ vkRect :: VkRect2D 
-             , vkBaseArrayLayer :: Word32 
-             , vkLayerCount :: Word32 
+  VkClearRect{ rect :: VkRect2D 
+             , baseArrayLayer :: Word32 
+             , layerCount :: Word32 
              }
   deriving (Eq)
 
@@ -210,16 +209,16 @@ instance Storable VkClearRect where
   peek ptr = VkClearRect <$> peek (ptr `plusPtr` 0)
                          <*> peek (ptr `plusPtr` 16)
                          <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkRect (poked :: VkClearRect))
-                *> poke (ptr `plusPtr` 16) (vkBaseArrayLayer (poked :: VkClearRect))
-                *> poke (ptr `plusPtr` 20) (vkLayerCount (poked :: VkClearRect))
+  poke ptr poked = poke (ptr `plusPtr` 0) (rect (poked :: VkClearRect))
+                *> poke (ptr `plusPtr` 16) (baseArrayLayer (poked :: VkClearRect))
+                *> poke (ptr `plusPtr` 20) (layerCount (poked :: VkClearRect))
 
 
 -- ** vkCmdWaitEvents
 foreign import ccall "vkCmdWaitEvents" vkCmdWaitEvents ::
-  VkCommandBuffer ->
+  CommandBuffer ->
   Word32 ->
-    Ptr VkEvent ->
+    Ptr Event ->
       VkPipelineStageFlags ->
         VkPipelineStageFlags ->
           Word32 ->
@@ -230,8 +229,8 @@ foreign import ccall "vkCmdWaitEvents" vkCmdWaitEvents ::
 
 -- ** vkCmdClearColorImage
 foreign import ccall "vkCmdClearColorImage" vkCmdClearColorImage ::
-  VkCommandBuffer ->
-  VkImage ->
+  CommandBuffer ->
+  Image ->
     VkImageLayout ->
       Ptr VkClearColorValue ->
         Word32 -> Ptr VkImageSubresourceRange -> IO ()
@@ -264,12 +263,12 @@ pattern VK_INDEX_TYPE_UINT32 = VkIndexType 1
 
 
 data VkBufferImageCopy =
-  VkBufferImageCopy{ vkBufferOffset :: VkDeviceSize 
-                   , vkBufferRowLength :: Word32 
-                   , vkBufferImageHeight :: Word32 
-                   , vkImageSubresource :: VkImageSubresourceLayers 
-                   , vkImageOffset :: VkOffset3D 
-                   , vkImageExtent :: VkExtent3D 
+  VkBufferImageCopy{ bufferOffset :: VkDeviceSize 
+                   , bufferRowLength :: Word32 
+                   , bufferImageHeight :: Word32 
+                   , imageSubresource :: VkImageSubresourceLayers 
+                   , imageOffset :: VkOffset3D 
+                   , imageExtent :: VkExtent3D 
                    }
   deriving (Eq)
 
@@ -282,53 +281,52 @@ instance Storable VkBufferImageCopy where
                                <*> peek (ptr `plusPtr` 16)
                                <*> peek (ptr `plusPtr` 32)
                                <*> peek (ptr `plusPtr` 44)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkBufferOffset (poked :: VkBufferImageCopy))
-                *> poke (ptr `plusPtr` 8) (vkBufferRowLength (poked :: VkBufferImageCopy))
-                *> poke (ptr `plusPtr` 12) (vkBufferImageHeight (poked :: VkBufferImageCopy))
-                *> poke (ptr `plusPtr` 16) (vkImageSubresource (poked :: VkBufferImageCopy))
-                *> poke (ptr `plusPtr` 32) (vkImageOffset (poked :: VkBufferImageCopy))
-                *> poke (ptr `plusPtr` 44) (vkImageExtent (poked :: VkBufferImageCopy))
+  poke ptr poked = poke (ptr `plusPtr` 0) (bufferOffset (poked :: VkBufferImageCopy))
+                *> poke (ptr `plusPtr` 8) (bufferRowLength (poked :: VkBufferImageCopy))
+                *> poke (ptr `plusPtr` 12) (bufferImageHeight (poked :: VkBufferImageCopy))
+                *> poke (ptr `plusPtr` 16) (imageSubresource (poked :: VkBufferImageCopy))
+                *> poke (ptr `plusPtr` 32) (imageOffset (poked :: VkBufferImageCopy))
+                *> poke (ptr `plusPtr` 44) (imageExtent (poked :: VkBufferImageCopy))
 
 
 -- ** vkCmdSetDepthBounds
 foreign import ccall "vkCmdSetDepthBounds" vkCmdSetDepthBounds ::
-  VkCommandBuffer -> CFloat -> CFloat -> IO ()
+  CommandBuffer -> CFloat -> CFloat -> IO ()
 
 -- ** vkCmdCopyBufferToImage
 foreign import ccall "vkCmdCopyBufferToImage" vkCmdCopyBufferToImage ::
-  VkCommandBuffer ->
-  VkBuffer ->
-    VkImage ->
-      VkImageLayout -> Word32 -> Ptr VkBufferImageCopy -> IO ()
+  CommandBuffer ->
+  Buffer ->
+    Image -> VkImageLayout -> Word32 -> Ptr VkBufferImageCopy -> IO ()
 
 -- ** vkCmdDrawIndexedIndirect
 foreign import ccall "vkCmdDrawIndexedIndirect" vkCmdDrawIndexedIndirect ::
-  VkCommandBuffer ->
-  VkBuffer -> VkDeviceSize -> Word32 -> Word32 -> IO ()
+  CommandBuffer ->
+  Buffer -> VkDeviceSize -> Word32 -> Word32 -> IO ()
 
 -- ** vkCmdUpdateBuffer
 foreign import ccall "vkCmdUpdateBuffer" vkCmdUpdateBuffer ::
-  VkCommandBuffer ->
-  VkBuffer -> VkDeviceSize -> VkDeviceSize -> Ptr Word32 -> IO ()
+  CommandBuffer ->
+  Buffer -> VkDeviceSize -> VkDeviceSize -> Ptr Word32 -> IO ()
 
 -- ** vkCmdCopyImage
 foreign import ccall "vkCmdCopyImage" vkCmdCopyImage ::
-  VkCommandBuffer ->
-  VkImage ->
+  CommandBuffer ->
+  Image ->
     VkImageLayout ->
-      VkImage -> VkImageLayout -> Word32 -> Ptr VkImageCopy -> IO ()
+      Image -> VkImageLayout -> Word32 -> Ptr VkImageCopy -> IO ()
 
 -- ** vkCmdWriteTimestamp
 foreign import ccall "vkCmdWriteTimestamp" vkCmdWriteTimestamp ::
-  VkCommandBuffer ->
-  VkPipelineStageFlagBits -> VkQueryPool -> Word32 -> IO ()
+  CommandBuffer ->
+  VkPipelineStageFlagBits -> QueryPool -> Word32 -> IO ()
 
 
 data VkImageSubresourceLayers =
-  VkImageSubresourceLayers{ vkAspectMask :: VkImageAspectFlags 
-                          , vkMipLevel :: Word32 
-                          , vkBaseArrayLayer :: Word32 
-                          , vkLayerCount :: Word32 
+  VkImageSubresourceLayers{ aspectMask :: VkImageAspectFlags 
+                          , mipLevel :: Word32 
+                          , baseArrayLayer :: Word32 
+                          , layerCount :: Word32 
                           }
   deriving (Eq)
 
@@ -339,30 +337,30 @@ instance Storable VkImageSubresourceLayers where
                                       <*> peek (ptr `plusPtr` 4)
                                       <*> peek (ptr `plusPtr` 8)
                                       <*> peek (ptr `plusPtr` 12)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkAspectMask (poked :: VkImageSubresourceLayers))
-                *> poke (ptr `plusPtr` 4) (vkMipLevel (poked :: VkImageSubresourceLayers))
-                *> poke (ptr `plusPtr` 8) (vkBaseArrayLayer (poked :: VkImageSubresourceLayers))
-                *> poke (ptr `plusPtr` 12) (vkLayerCount (poked :: VkImageSubresourceLayers))
+  poke ptr poked = poke (ptr `plusPtr` 0) (aspectMask (poked :: VkImageSubresourceLayers))
+                *> poke (ptr `plusPtr` 4) (mipLevel (poked :: VkImageSubresourceLayers))
+                *> poke (ptr `plusPtr` 8) (baseArrayLayer (poked :: VkImageSubresourceLayers))
+                *> poke (ptr `plusPtr` 12) (layerCount (poked :: VkImageSubresourceLayers))
 
 
 -- ** vkCmdDrawIndexed
 foreign import ccall "vkCmdDrawIndexed" vkCmdDrawIndexed ::
-  VkCommandBuffer ->
+  CommandBuffer ->
   Word32 -> Word32 -> Word32 -> Int32 -> Word32 -> IO ()
 
 -- ** vkCmdSetDepthBias
 foreign import ccall "vkCmdSetDepthBias" vkCmdSetDepthBias ::
-  VkCommandBuffer -> CFloat -> CFloat -> CFloat -> IO ()
+  CommandBuffer -> CFloat -> CFloat -> CFloat -> IO ()
 
 -- ** vkCmdDrawIndirect
 foreign import ccall "vkCmdDrawIndirect" vkCmdDrawIndirect ::
-  VkCommandBuffer ->
-  VkBuffer -> VkDeviceSize -> Word32 -> Word32 -> IO ()
+  CommandBuffer ->
+  Buffer -> VkDeviceSize -> Word32 -> Word32 -> IO ()
 
 
 data VkClearDepthStencilValue =
-  VkClearDepthStencilValue{ vkDepth :: CFloat 
-                          , vkStencil :: Word32 
+  VkClearDepthStencilValue{ depth :: CFloat 
+                          , stencil :: Word32 
                           }
   deriving (Eq)
 
@@ -371,15 +369,15 @@ instance Storable VkClearDepthStencilValue where
   alignment ~_ = 4
   peek ptr = VkClearDepthStencilValue <$> peek (ptr `plusPtr` 0)
                                       <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkDepth (poked :: VkClearDepthStencilValue))
-                *> poke (ptr `plusPtr` 4) (vkStencil (poked :: VkClearDepthStencilValue))
+  poke ptr poked = poke (ptr `plusPtr` 0) (depth (poked :: VkClearDepthStencilValue))
+                *> poke (ptr `plusPtr` 4) (stencil (poked :: VkClearDepthStencilValue))
 
 
 
 data VkBufferCopy =
-  VkBufferCopy{ vkSrcOffset :: VkDeviceSize 
-              , vkDstOffset :: VkDeviceSize 
-              , vkSize :: VkDeviceSize 
+  VkBufferCopy{ srcOffset :: VkDeviceSize 
+              , dstOffset :: VkDeviceSize 
+              , size :: VkDeviceSize 
               }
   deriving (Eq)
 
@@ -389,51 +387,51 @@ instance Storable VkBufferCopy where
   peek ptr = VkBufferCopy <$> peek (ptr `plusPtr` 0)
                           <*> peek (ptr `plusPtr` 8)
                           <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSrcOffset (poked :: VkBufferCopy))
-                *> poke (ptr `plusPtr` 8) (vkDstOffset (poked :: VkBufferCopy))
-                *> poke (ptr `plusPtr` 16) (vkSize (poked :: VkBufferCopy))
+  poke ptr poked = poke (ptr `plusPtr` 0) (srcOffset (poked :: VkBufferCopy))
+                *> poke (ptr `plusPtr` 8) (dstOffset (poked :: VkBufferCopy))
+                *> poke (ptr `plusPtr` 16) (size (poked :: VkBufferCopy))
 
 
 -- ** vkCmdClearAttachments
 foreign import ccall "vkCmdClearAttachments" vkCmdClearAttachments ::
-  VkCommandBuffer ->
+  CommandBuffer ->
   Word32 ->
     Ptr VkClearAttachment -> Word32 -> Ptr VkClearRect -> IO ()
 
 -- ** vkCmdSetViewport
 foreign import ccall "vkCmdSetViewport" vkCmdSetViewport ::
-  VkCommandBuffer -> Word32 -> Word32 -> Ptr VkViewport -> IO ()
+  CommandBuffer -> Word32 -> Word32 -> Ptr VkViewport -> IO ()
 
 -- ** vkCmdCopyBuffer
 foreign import ccall "vkCmdCopyBuffer" vkCmdCopyBuffer ::
-  VkCommandBuffer ->
-  VkBuffer -> VkBuffer -> Word32 -> Ptr VkBufferCopy -> IO ()
+  CommandBuffer ->
+  Buffer -> Buffer -> Word32 -> Ptr VkBufferCopy -> IO ()
 
 -- ** vkCmdBindDescriptorSets
 foreign import ccall "vkCmdBindDescriptorSets" vkCmdBindDescriptorSets ::
-  VkCommandBuffer ->
+  CommandBuffer ->
   VkPipelineBindPoint ->
-    VkPipelineLayout ->
+    PipelineLayout ->
       Word32 ->
-        Word32 -> Ptr VkDescriptorSet -> Word32 -> Ptr Word32 -> IO ()
+        Word32 -> Ptr DescriptorSet -> Word32 -> Ptr Word32 -> IO ()
 
 -- ** vkCmdSetLineWidth
 foreign import ccall "vkCmdSetLineWidth" vkCmdSetLineWidth ::
-  VkCommandBuffer -> CFloat -> IO ()
+  CommandBuffer -> CFloat -> IO ()
 
 -- ** vkCmdExecuteCommands
 foreign import ccall "vkCmdExecuteCommands" vkCmdExecuteCommands ::
-  VkCommandBuffer -> Word32 -> Ptr VkCommandBuffer -> IO ()
+  CommandBuffer -> Word32 -> Ptr CommandBuffer -> IO ()
 
 
 data VkRenderPassBeginInfo =
-  VkRenderPassBeginInfo{ vkSType :: VkStructureType 
-                       , vkPNext :: Ptr Void 
-                       , vkRenderPass :: VkRenderPass 
-                       , vkFramebuffer :: VkFramebuffer 
-                       , vkRenderArea :: VkRect2D 
-                       , vkClearValueCount :: Word32 
-                       , vkPClearValues :: Ptr VkClearValue 
+  VkRenderPassBeginInfo{ sType :: VkStructureType 
+                       , pNext :: Ptr Void 
+                       , renderPass :: RenderPass 
+                       , framebuffer :: Framebuffer 
+                       , renderArea :: VkRect2D 
+                       , clearValueCount :: Word32 
+                       , pClearValues :: Ptr VkClearValue 
                        }
   deriving (Eq)
 
@@ -447,25 +445,25 @@ instance Storable VkRenderPassBeginInfo where
                                    <*> peek (ptr `plusPtr` 32)
                                    <*> peek (ptr `plusPtr` 48)
                                    <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 16) (vkRenderPass (poked :: VkRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 24) (vkFramebuffer (poked :: VkRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 32) (vkRenderArea (poked :: VkRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 48) (vkClearValueCount (poked :: VkRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 56) (vkPClearValues (poked :: VkRenderPassBeginInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 16) (renderPass (poked :: VkRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 24) (framebuffer (poked :: VkRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 32) (renderArea (poked :: VkRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 48) (clearValueCount (poked :: VkRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 56) (pClearValues (poked :: VkRenderPassBeginInfo))
 
 
 -- ** vkCmdSetStencilCompareMask
 foreign import ccall "vkCmdSetStencilCompareMask" vkCmdSetStencilCompareMask ::
-  VkCommandBuffer -> VkStencilFaceFlags -> Word32 -> IO ()
+  CommandBuffer -> VkStencilFaceFlags -> Word32 -> IO ()
 
 
 data VkImageBlit =
-  VkImageBlit{ vkSrcSubresource :: VkImageSubresourceLayers 
-             , vkSrcOffsets :: Vector 2 VkOffset3D 
-             , vkDstSubresource :: VkImageSubresourceLayers 
-             , vkDstOffsets :: Vector 2 VkOffset3D 
+  VkImageBlit{ srcSubresource :: VkImageSubresourceLayers 
+             , srcOffsets :: Vector 2 VkOffset3D 
+             , dstSubresource :: VkImageSubresourceLayers 
+             , dstOffsets :: Vector 2 VkOffset3D 
              }
   deriving (Eq)
 
@@ -476,17 +474,17 @@ instance Storable VkImageBlit where
                          <*> peek (ptr `plusPtr` 16)
                          <*> peek (ptr `plusPtr` 40)
                          <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSrcSubresource (poked :: VkImageBlit))
-                *> poke (ptr `plusPtr` 16) (vkSrcOffsets (poked :: VkImageBlit))
-                *> poke (ptr `plusPtr` 40) (vkDstSubresource (poked :: VkImageBlit))
-                *> poke (ptr `plusPtr` 56) (vkDstOffsets (poked :: VkImageBlit))
+  poke ptr poked = poke (ptr `plusPtr` 0) (srcSubresource (poked :: VkImageBlit))
+                *> poke (ptr `plusPtr` 16) (srcOffsets (poked :: VkImageBlit))
+                *> poke (ptr `plusPtr` 40) (dstSubresource (poked :: VkImageBlit))
+                *> poke (ptr `plusPtr` 56) (dstOffsets (poked :: VkImageBlit))
 
 
 
 data VkClearAttachment =
-  VkClearAttachment{ vkAspectMask :: VkImageAspectFlags 
-                   , vkColorAttachment :: Word32 
-                   , vkClearValue :: VkClearValue 
+  VkClearAttachment{ aspectMask :: VkImageAspectFlags 
+                   , colorAttachment :: Word32 
+                   , clearValue :: VkClearValue 
                    }
   deriving (Eq)
 
@@ -496,14 +494,14 @@ instance Storable VkClearAttachment where
   peek ptr = VkClearAttachment <$> peek (ptr `plusPtr` 0)
                                <*> peek (ptr `plusPtr` 4)
                                <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkAspectMask (poked :: VkClearAttachment))
-                *> poke (ptr `plusPtr` 4) (vkColorAttachment (poked :: VkClearAttachment))
-                *> poke (ptr `plusPtr` 8) (vkClearValue (poked :: VkClearAttachment))
+  poke ptr poked = poke (ptr `plusPtr` 0) (aspectMask (poked :: VkClearAttachment))
+                *> poke (ptr `plusPtr` 4) (colorAttachment (poked :: VkClearAttachment))
+                *> poke (ptr `plusPtr` 8) (clearValue (poked :: VkClearAttachment))
 
 
 -- | // Union allowing specification of color or depth and stencil values. Actual value selected is based on attachment being cleared.
-data VkClearValue = VkColor VkClearColorValue 
-                  | VkDepthStencil VkClearDepthStencilValue 
+data VkClearValue = Color VkClearColorValue 
+                  | DepthStencil VkClearDepthStencilValue 
   deriving (Eq)
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use
@@ -512,8 +510,8 @@ instance Storable VkClearValue where
   alignment ~_ = 4
   peek ~_ = error "peek@VkClearValue"
   poke ptr poked = case poked of
-                     VkColor e -> poke (castPtr ptr) e
-                     VkDepthStencil e -> poke (castPtr ptr) e
+                     Color e -> poke (castPtr ptr) e
+                     DepthStencil e -> poke (castPtr ptr) e
 
 
 -- ** VkStencilFaceFlags
@@ -550,9 +548,9 @@ pattern VK_STENCIL_FACE_BACK_BIT = VkStencilFaceFlagBits 0x2
 pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlagBits 0x3
 
 -- | // Union allowing specification of floating point, integer, or unsigned integer color data. Actual value selected is based on image/attachment being cleared.
-data VkClearColorValue = VkFloat32 (Vector 4 CFloat) 
-                       | VkInt32 (Vector 4 Int32) 
-                       | VkUint32 (Vector 4 Word32) 
+data VkClearColorValue = Float32 (Vector 4 CFloat) 
+                       | Int32 (Vector 4 Int32) 
+                       | Uint32 (Vector 4 Word32) 
   deriving (Eq)
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use
@@ -561,9 +559,9 @@ instance Storable VkClearColorValue where
   alignment ~_ = 4
   peek ~_ = error "peek@VkClearColorValue"
   poke ptr poked = case poked of
-                     VkFloat32 e -> poke (castPtr ptr) e
-                     VkInt32 e -> poke (castPtr ptr) e
-                     VkUint32 e -> poke (castPtr ptr) e
+                     Float32 e -> poke (castPtr ptr) e
+                     Int32 e -> poke (castPtr ptr) e
+                     Uint32 e -> poke (castPtr ptr) e
 
 
 -- ** VkSubpassContents
@@ -594,40 +592,40 @@ pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = VkSubpassContents 1
 
 -- ** vkCmdCopyQueryPoolResults
 foreign import ccall "vkCmdCopyQueryPoolResults" vkCmdCopyQueryPoolResults ::
-  VkCommandBuffer ->
-  VkQueryPool ->
+  CommandBuffer ->
+  QueryPool ->
     Word32 ->
       Word32 ->
-        VkBuffer ->
+        Buffer ->
           VkDeviceSize -> VkDeviceSize -> VkQueryResultFlags -> IO ()
 
 -- ** vkCmdBlitImage
 foreign import ccall "vkCmdBlitImage" vkCmdBlitImage ::
-  VkCommandBuffer ->
-  VkImage ->
+  CommandBuffer ->
+  Image ->
     VkImageLayout ->
-      VkImage ->
+      Image ->
         VkImageLayout -> Word32 -> Ptr VkImageBlit -> VkFilter -> IO ()
 
 -- ** vkCmdSetBlendConstants
 foreign import ccall "vkCmdSetBlendConstants" vkCmdSetBlendConstants ::
-  VkCommandBuffer -> Ptr CFloat -> IO ()
+  CommandBuffer -> Ptr CFloat -> IO ()
 
 -- ** vkCmdClearDepthStencilImage
 foreign import ccall "vkCmdClearDepthStencilImage" vkCmdClearDepthStencilImage ::
-  VkCommandBuffer ->
-  VkImage ->
+  CommandBuffer ->
+  Image ->
     VkImageLayout ->
       Ptr VkClearDepthStencilValue ->
         Word32 -> Ptr VkImageSubresourceRange -> IO ()
 
 
 data VkImageResolve =
-  VkImageResolve{ vkSrcSubresource :: VkImageSubresourceLayers 
-                , vkSrcOffset :: VkOffset3D 
-                , vkDstSubresource :: VkImageSubresourceLayers 
-                , vkDstOffset :: VkOffset3D 
-                , vkExtent :: VkExtent3D 
+  VkImageResolve{ srcSubresource :: VkImageSubresourceLayers 
+                , srcOffset :: VkOffset3D 
+                , dstSubresource :: VkImageSubresourceLayers 
+                , dstOffset :: VkOffset3D 
+                , extent :: VkExtent3D 
                 }
   deriving (Eq)
 
@@ -639,24 +637,24 @@ instance Storable VkImageResolve where
                             <*> peek (ptr `plusPtr` 28)
                             <*> peek (ptr `plusPtr` 44)
                             <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSrcSubresource (poked :: VkImageResolve))
-                *> poke (ptr `plusPtr` 16) (vkSrcOffset (poked :: VkImageResolve))
-                *> poke (ptr `plusPtr` 28) (vkDstSubresource (poked :: VkImageResolve))
-                *> poke (ptr `plusPtr` 44) (vkDstOffset (poked :: VkImageResolve))
-                *> poke (ptr `plusPtr` 56) (vkExtent (poked :: VkImageResolve))
+  poke ptr poked = poke (ptr `plusPtr` 0) (srcSubresource (poked :: VkImageResolve))
+                *> poke (ptr `plusPtr` 16) (srcOffset (poked :: VkImageResolve))
+                *> poke (ptr `plusPtr` 28) (dstSubresource (poked :: VkImageResolve))
+                *> poke (ptr `plusPtr` 44) (dstOffset (poked :: VkImageResolve))
+                *> poke (ptr `plusPtr` 56) (extent (poked :: VkImageResolve))
 
 
 -- ** vkCmdDispatch
 foreign import ccall "vkCmdDispatch" vkCmdDispatch ::
-  VkCommandBuffer -> Word32 -> Word32 -> Word32 -> IO ()
+  CommandBuffer -> Word32 -> Word32 -> Word32 -> IO ()
 
 -- ** vkCmdSetStencilReference
 foreign import ccall "vkCmdSetStencilReference" vkCmdSetStencilReference ::
-  VkCommandBuffer -> VkStencilFaceFlags -> Word32 -> IO ()
+  CommandBuffer -> VkStencilFaceFlags -> Word32 -> IO ()
 
 -- ** vkCmdPipelineBarrier
 foreign import ccall "vkCmdPipelineBarrier" vkCmdPipelineBarrier ::
-  VkCommandBuffer ->
+  CommandBuffer ->
   VkPipelineStageFlags ->
     VkPipelineStageFlags ->
       VkDependencyFlags ->
@@ -668,10 +666,10 @@ foreign import ccall "vkCmdPipelineBarrier" vkCmdPipelineBarrier ::
 
 -- ** vkCmdBeginRenderPass
 foreign import ccall "vkCmdBeginRenderPass" vkCmdBeginRenderPass ::
-  VkCommandBuffer ->
+  CommandBuffer ->
   Ptr VkRenderPassBeginInfo -> VkSubpassContents -> IO ()
 
 -- ** vkCmdResetEvent
 foreign import ccall "vkCmdResetEvent" vkCmdResetEvent ::
-  VkCommandBuffer -> VkEvent -> VkPipelineStageFlags -> IO ()
+  CommandBuffer -> Event -> VkPipelineStageFlags -> IO ()
 

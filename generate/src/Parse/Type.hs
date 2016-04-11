@@ -6,13 +6,14 @@ module Parse.Type
   ( parseTypes
   ) where
 
-import           Control.Bool      ((<||>))
-import           Data.Char         (isAlpha, isDigit)
+import           Control.Bool                 ((<||>))
+import           Data.Char                    (isAlpha, isDigit)
+import qualified Language.Haskell.Exts.Syntax as HS
 import           Parse.CType
 import           Parse.State
 import           Parse.Utils
 import           Spec.Type
-import           Text.Regex.TDFA   ((=~))
+import           Text.Regex.TDFA              ((=~))
 import           Text.XML.HXT.Core
 
 parseTypes :: ParseArrow XmlTree [TypeDecl]
@@ -92,6 +93,7 @@ parseDefine = extractFields "define"
                             extract
   where extract = proc define -> do
           dName <- getNameAttrOrChildText -< define
+          let dHsName = dName
           dText <- getAllText -< define
           dSymTab <- arrIO getSymbolTableFromDefineText <<^
                      addTrailingNewline -< dText
@@ -106,6 +108,7 @@ parseBaseType = extractFields "base type"
                               extract
   where extract = proc baseType -> do
           btName <- getAllText <<< hasName "name" <<< getChildren -< baseType
+          let btHsName = btName
           btTypeString <- preprocessTypeString <<< getAllText -< baseType
           btCType <- parseCType -< btTypeString
           returnA -< BaseType{..}
@@ -128,6 +131,7 @@ parseBitmaskType = extractFields "bitmask type"
                                  extract
   where extract = proc bitmaskType -> do
           bmtName <- getNameChildText -< bitmaskType
+          let bmtHsName = bmtName
           bmtTypeString <- preprocessTypeString <<< getAllText -< bitmaskType
           bmtRequires <- optionalAttrValue "requires" -< bitmaskType
           bmtCType <- parseCType -< bmtTypeString
@@ -139,6 +143,7 @@ parseHandleType = extractFields "handle type"
                                 extract
   where extract = proc handleType -> do
           htName <- getNameChildText -< handleType
+          let htHsName = htName
           htParents <- commaSepListAttr "parent" -< handleType
           htTypeString <- preprocessTypeString <<< getAllText -< handleType
           -- TODO: need to do defines here
@@ -151,6 +156,7 @@ parseEnumType = extractFields "enum type"
                               extract
   where extract = proc enumType -> do
           etName <- getAttrValue0 "name" -< enumType
+          let etHsName = etName
           returnA -< EnumType{..}
 
 parseFuncPointerType :: ParseArrow XmlTree FuncPointerType
@@ -159,6 +165,7 @@ parseFuncPointerType = extractFields "funcpointer type"
                                      extract
   where extract = proc funcPointerType -> do
           fptName <- getNameChildText -< funcPointerType
+          let fptHsName = fptName
           fptTypeString <- preprocessTypeString <<< getAllText -< funcPointerType
           fptCType <- parseCType -< fptTypeString
           returnA -< FuncPointerType{..}
@@ -169,6 +176,7 @@ parseStructType = extractFields "struct type"
                                 extract
   where extract = proc structType -> do
           stName <- getAttrValue0 "name" -< structType
+          let stHsName = stName
           stComment <- optionalAttrValue "comment" -< structType
           stMembers <- listA (parseMember <<< getChildren) -< structType
           stUsage <- ((parseValidityBlock <<< getChildren) `orElse`
@@ -183,6 +191,7 @@ parseUnionType = extractFields "union type"
                                extract
   where extract = proc unionType -> do
           utName <- getAttrValue0 "name" -< unionType
+          let utHsName = utName
           utComment <- optionalAttrValue "comment" -< unionType
           utMembers <- listA (parseMember <<< getChildren) -< unionType
           utUsage <- ((parseValidityBlock <<< getChildren) `orElse`
@@ -197,8 +206,10 @@ parseMember = extractFields "struct member"
                             extract
   where extract = proc member -> do
           smName <- memberNameWorkarounds ^<< getNameChildText -< member
+          let smHsName = smName
           smTypeString <- preprocessTypeString <<< getAllText -< member
           smCType <- parseCType -< smTypeString
+          let smHsType = HS.TyCon $ HS.UnQual $ HS.Ident "FOO"
           smNoAutoValidity <-
             boolAttrDefault "noautovalidity" False -< member
           smIsOptional <- traverseMaybeA (mapA parseBool) <<<

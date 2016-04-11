@@ -2,7 +2,7 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.Queue where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Graphics.Vulkan.Pipeline( VkPipelineStageFlagBits(..)
                                , VkPipelineStageFlags(..)
@@ -13,15 +13,15 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Graphics.Vulkan.CommandBuffer( VkCommandBuffer(..)
+import Graphics.Vulkan.CommandBuffer( CommandBuffer(..)
                                     )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Fence( VkFence(..)
+import Graphics.Vulkan.Fence( Fence(..)
                             )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.QueueSemaphore( VkSemaphore(..)
+import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
                                      )
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkFlags(..)
@@ -29,35 +29,35 @@ import Graphics.Vulkan.Core( VkResult(..)
                            )
 
 data VkQueue_T
-type VkQueue = Ptr VkQueue_T
+type Queue = Ptr VkQueue_T
 
 -- ** vkDeviceWaitIdle
 foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle ::
-  VkDevice -> IO VkResult
+  Device -> IO VkResult
 
 -- ** vkQueueSubmit
 foreign import ccall "vkQueueSubmit" vkQueueSubmit ::
-  VkQueue -> Word32 -> Ptr VkSubmitInfo -> VkFence -> IO VkResult
+  Queue -> Word32 -> Ptr VkSubmitInfo -> Fence -> IO VkResult
 
 -- ** vkQueueWaitIdle
 foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle ::
-  VkQueue -> IO VkResult
+  Queue -> IO VkResult
 
 -- ** vkGetDeviceQueue
 foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue ::
-  VkDevice -> Word32 -> Word32 -> Ptr VkQueue -> IO ()
+  Device -> Word32 -> Word32 -> Ptr Queue -> IO ()
 
 
 data VkSubmitInfo =
-  VkSubmitInfo{ vkSType :: VkStructureType 
-              , vkPNext :: Ptr Void 
-              , vkWaitSemaphoreCount :: Word32 
-              , vkPWaitSemaphores :: Ptr VkSemaphore 
-              , vkPWaitDstStageMask :: Ptr VkPipelineStageFlags 
-              , vkCommandBufferCount :: Word32 
-              , vkPCommandBuffers :: Ptr VkCommandBuffer 
-              , vkSignalSemaphoreCount :: Word32 
-              , vkPSignalSemaphores :: Ptr VkSemaphore 
+  VkSubmitInfo{ sType :: VkStructureType 
+              , pNext :: Ptr Void 
+              , waitSemaphoreCount :: Word32 
+              , pWaitSemaphores :: Ptr Semaphore 
+              , pWaitDstStageMask :: Ptr VkPipelineStageFlags 
+              , commandBufferCount :: Word32 
+              , pCommandBuffers :: Ptr CommandBuffer 
+              , signalSemaphoreCount :: Word32 
+              , pSignalSemaphores :: Ptr Semaphore 
               }
   deriving (Eq)
 
@@ -73,14 +73,14 @@ instance Storable VkSubmitInfo where
                           <*> peek (ptr `plusPtr` 48)
                           <*> peek (ptr `plusPtr` 56)
                           <*> peek (ptr `plusPtr` 64)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 16) (vkWaitSemaphoreCount (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 24) (vkPWaitSemaphores (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 32) (vkPWaitDstStageMask (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 40) (vkCommandBufferCount (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 48) (vkPCommandBuffers (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 56) (vkSignalSemaphoreCount (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 64) (vkPSignalSemaphores (poked :: VkSubmitInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 16) (waitSemaphoreCount (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 24) (pWaitSemaphores (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 32) (pWaitDstStageMask (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 40) (commandBufferCount (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 48) (pCommandBuffers (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 56) (signalSemaphoreCount (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 64) (pSignalSemaphores (poked :: VkSubmitInfo))
 
 

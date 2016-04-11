@@ -8,8 +8,8 @@ module Graphics.Vulkan.DeviceInitialization where
 import Data.Vector.Storable.Sized( Vector
                                  )
 import Graphics.Vulkan.Device( VkPhysicalDeviceFeatures(..)
-                             , VkPhysicalDevice(..)
-                             , VkDevice(..)
+                             , PhysicalDevice(..)
+                             , Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
@@ -119,14 +119,14 @@ pattern VK_PHYSICAL_DEVICE_TYPE_CPU = VkPhysicalDeviceType 4
 
 
 data VkInstanceCreateInfo =
-  VkInstanceCreateInfo{ vkSType :: VkStructureType 
-                      , vkPNext :: Ptr Void 
-                      , vkFlags :: VkInstanceCreateFlags 
-                      , vkPApplicationInfo :: Ptr VkApplicationInfo 
-                      , vkEnabledLayerCount :: Word32 
-                      , vkPpEnabledLayerNames :: Ptr (Ptr CChar) 
-                      , vkEnabledExtensionCount :: Word32 
-                      , vkPpEnabledExtensionNames :: Ptr (Ptr CChar) 
+  VkInstanceCreateInfo{ sType :: VkStructureType 
+                      , pNext :: Ptr Void 
+                      , flags :: VkInstanceCreateFlags 
+                      , pApplicationInfo :: Ptr VkApplicationInfo 
+                      , enabledLayerCount :: Word32 
+                      , ppEnabledLayerNames :: Ptr (Ptr CChar) 
+                      , enabledExtensionCount :: Word32 
+                      , ppEnabledExtensionNames :: Ptr (Ptr CChar) 
                       }
   deriving (Eq)
 
@@ -141,19 +141,19 @@ instance Storable VkInstanceCreateInfo where
                                   <*> peek (ptr `plusPtr` 40)
                                   <*> peek (ptr `plusPtr` 48)
                                   <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPApplicationInfo (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkEnabledLayerCount (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPpEnabledLayerNames (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkEnabledExtensionCount (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkPpEnabledExtensionNames (poked :: VkInstanceCreateInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pApplicationInfo (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 32) (enabledLayerCount (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 40) (ppEnabledLayerNames (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 48) (enabledExtensionCount (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 56) (ppEnabledExtensionNames (poked :: VkInstanceCreateInfo))
 
 
 -- ** vkGetPhysicalDeviceImageFormatProperties
 foreign import ccall "vkGetPhysicalDeviceImageFormatProperties" vkGetPhysicalDeviceImageFormatProperties ::
-  VkPhysicalDevice ->
+  PhysicalDevice ->
   VkFormat ->
     VkImageType ->
       VkImageTiling ->
@@ -164,13 +164,13 @@ type PFN_vkVoidFunction = FunPtr (IO ())
 
 
 data VkApplicationInfo =
-  VkApplicationInfo{ vkSType :: VkStructureType 
-                   , vkPNext :: Ptr Void 
-                   , vkPApplicationName :: Ptr CChar 
-                   , vkApplicationVersion :: Word32 
-                   , vkPEngineName :: Ptr CChar 
-                   , vkEngineVersion :: Word32 
-                   , vkApiVersion :: Word32 
+  VkApplicationInfo{ sType :: VkStructureType 
+                   , pNext :: Ptr Void 
+                   , pApplicationName :: Ptr CChar 
+                   , applicationVersion :: Word32 
+                   , pEngineName :: Ptr CChar 
+                   , engineVersion :: Word32 
+                   , apiVersion :: Word32 
                    }
   deriving (Eq)
 
@@ -184,123 +184,123 @@ instance Storable VkApplicationInfo where
                                <*> peek (ptr `plusPtr` 32)
                                <*> peek (ptr `plusPtr` 40)
                                <*> peek (ptr `plusPtr` 44)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkApplicationInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkApplicationInfo))
-                *> poke (ptr `plusPtr` 16) (vkPApplicationName (poked :: VkApplicationInfo))
-                *> poke (ptr `plusPtr` 24) (vkApplicationVersion (poked :: VkApplicationInfo))
-                *> poke (ptr `plusPtr` 32) (vkPEngineName (poked :: VkApplicationInfo))
-                *> poke (ptr `plusPtr` 40) (vkEngineVersion (poked :: VkApplicationInfo))
-                *> poke (ptr `plusPtr` 44) (vkApiVersion (poked :: VkApplicationInfo))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkApplicationInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkApplicationInfo))
+                *> poke (ptr `plusPtr` 16) (pApplicationName (poked :: VkApplicationInfo))
+                *> poke (ptr `plusPtr` 24) (applicationVersion (poked :: VkApplicationInfo))
+                *> poke (ptr `plusPtr` 32) (pEngineName (poked :: VkApplicationInfo))
+                *> poke (ptr `plusPtr` 40) (engineVersion (poked :: VkApplicationInfo))
+                *> poke (ptr `plusPtr` 44) (apiVersion (poked :: VkApplicationInfo))
 
 
 
 data VkPhysicalDeviceLimits =
-  VkPhysicalDeviceLimits{ vkMaxImageDimension1D :: Word32 
-                        , vkMaxImageDimension2D :: Word32 
-                        , vkMaxImageDimension3D :: Word32 
-                        , vkMaxImageDimensionCube :: Word32 
-                        , vkMaxImageArrayLayers :: Word32 
-                        , vkMaxTexelBufferElements :: Word32 
-                        , vkMaxUniformBufferRange :: Word32 
-                        , vkMaxStorageBufferRange :: Word32 
-                        , vkMaxPushConstantsSize :: Word32 
-                        , vkMaxMemoryAllocationCount :: Word32 
-                        , vkMaxSamplerAllocationCount :: Word32 
-                        , vkBufferImageGranularity :: VkDeviceSize 
-                        , vkSparseAddressSpaceSize :: VkDeviceSize 
-                        , vkMaxBoundDescriptorSets :: Word32 
-                        , vkMaxPerStageDescriptorSamplers :: Word32 
-                        , vkMaxPerStageDescriptorUniformBuffers :: Word32 
-                        , vkMaxPerStageDescriptorStorageBuffers :: Word32 
-                        , vkMaxPerStageDescriptorSampledImages :: Word32 
-                        , vkMaxPerStageDescriptorStorageImages :: Word32 
-                        , vkMaxPerStageDescriptorInputAttachments :: Word32 
-                        , vkMaxPerStageResources :: Word32 
-                        , vkMaxDescriptorSetSamplers :: Word32 
-                        , vkMaxDescriptorSetUniformBuffers :: Word32 
-                        , vkMaxDescriptorSetUniformBuffersDynamic :: Word32 
-                        , vkMaxDescriptorSetStorageBuffers :: Word32 
-                        , vkMaxDescriptorSetStorageBuffersDynamic :: Word32 
-                        , vkMaxDescriptorSetSampledImages :: Word32 
-                        , vkMaxDescriptorSetStorageImages :: Word32 
-                        , vkMaxDescriptorSetInputAttachments :: Word32 
-                        , vkMaxVertexInputAttributes :: Word32 
-                        , vkMaxVertexInputBindings :: Word32 
-                        , vkMaxVertexInputAttributeOffset :: Word32 
-                        , vkMaxVertexInputBindingStride :: Word32 
-                        , vkMaxVertexOutputComponents :: Word32 
-                        , vkMaxTessellationGenerationLevel :: Word32 
-                        , vkMaxTessellationPatchSize :: Word32 
-                        , vkMaxTessellationControlPerVertexInputComponents :: Word32 
-                        , vkMaxTessellationControlPerVertexOutputComponents :: Word32 
-                        , vkMaxTessellationControlPerPatchOutputComponents :: Word32 
-                        , vkMaxTessellationControlTotalOutputComponents :: Word32 
-                        , vkMaxTessellationEvaluationInputComponents :: Word32 
-                        , vkMaxTessellationEvaluationOutputComponents :: Word32 
-                        , vkMaxGeometryShaderInvocations :: Word32 
-                        , vkMaxGeometryInputComponents :: Word32 
-                        , vkMaxGeometryOutputComponents :: Word32 
-                        , vkMaxGeometryOutputVertices :: Word32 
-                        , vkMaxGeometryTotalOutputComponents :: Word32 
-                        , vkMaxFragmentInputComponents :: Word32 
-                        , vkMaxFragmentOutputAttachments :: Word32 
-                        , vkMaxFragmentDualSrcAttachments :: Word32 
-                        , vkMaxFragmentCombinedOutputResources :: Word32 
-                        , vkMaxComputeSharedMemorySize :: Word32 
-                        , vkMaxComputeWorkGroupCount :: Vector 3 Word32 
-                        , vkMaxComputeWorkGroupInvocations :: Word32 
-                        , vkMaxComputeWorkGroupSize :: Vector 3 Word32 
-                        , vkSubPixelPrecisionBits :: Word32 
-                        , vkSubTexelPrecisionBits :: Word32 
-                        , vkMipmapPrecisionBits :: Word32 
-                        , vkMaxDrawIndexedIndexValue :: Word32 
-                        , vkMaxDrawIndirectCount :: Word32 
-                        , vkMaxSamplerLodBias :: CFloat 
-                        , vkMaxSamplerAnisotropy :: CFloat 
-                        , vkMaxViewports :: Word32 
-                        , vkMaxViewportDimensions :: Vector 2 Word32 
-                        , vkViewportBoundsRange :: Vector 2 CFloat 
-                        , vkViewportSubPixelBits :: Word32 
-                        , vkMinMemoryMapAlignment :: CSize 
-                        , vkMinTexelBufferOffsetAlignment :: VkDeviceSize 
-                        , vkMinUniformBufferOffsetAlignment :: VkDeviceSize 
-                        , vkMinStorageBufferOffsetAlignment :: VkDeviceSize 
-                        , vkMinTexelOffset :: Int32 
-                        , vkMaxTexelOffset :: Word32 
-                        , vkMinTexelGatherOffset :: Int32 
-                        , vkMaxTexelGatherOffset :: Word32 
-                        , vkMinInterpolationOffset :: CFloat 
-                        , vkMaxInterpolationOffset :: CFloat 
-                        , vkSubPixelInterpolationOffsetBits :: Word32 
-                        , vkMaxFramebufferWidth :: Word32 
-                        , vkMaxFramebufferHeight :: Word32 
-                        , vkMaxFramebufferLayers :: Word32 
-                        , vkFramebufferColorSampleCounts :: VkSampleCountFlags 
-                        , vkFramebufferDepthSampleCounts :: VkSampleCountFlags 
-                        , vkFramebufferStencilSampleCounts :: VkSampleCountFlags 
-                        , vkFramebufferNoAttachmentsSampleCounts :: VkSampleCountFlags 
-                        , vkMaxColorAttachments :: Word32 
-                        , vkSampledImageColorSampleCounts :: VkSampleCountFlags 
-                        , vkSampledImageIntegerSampleCounts :: VkSampleCountFlags 
-                        , vkSampledImageDepthSampleCounts :: VkSampleCountFlags 
-                        , vkSampledImageStencilSampleCounts :: VkSampleCountFlags 
-                        , vkStorageImageSampleCounts :: VkSampleCountFlags 
-                        , vkMaxSampleMaskWords :: Word32 
-                        , vkTimestampComputeAndGraphics :: VkBool32 
-                        , vkTimestampPeriod :: CFloat 
-                        , vkMaxClipDistances :: Word32 
-                        , vkMaxCullDistances :: Word32 
-                        , vkMaxCombinedClipAndCullDistances :: Word32 
-                        , vkDiscreteQueuePriorities :: Word32 
-                        , vkPointSizeRange :: Vector 2 CFloat 
-                        , vkLineWidthRange :: Vector 2 CFloat 
-                        , vkPointSizeGranularity :: CFloat 
-                        , vkLineWidthGranularity :: CFloat 
-                        , vkStrictLines :: VkBool32 
-                        , vkStandardSampleLocations :: VkBool32 
-                        , vkOptimalBufferCopyOffsetAlignment :: VkDeviceSize 
-                        , vkOptimalBufferCopyRowPitchAlignment :: VkDeviceSize 
-                        , vkNonCoherentAtomSize :: VkDeviceSize 
+  VkPhysicalDeviceLimits{ maxImageDimension1D :: Word32 
+                        , maxImageDimension2D :: Word32 
+                        , maxImageDimension3D :: Word32 
+                        , maxImageDimensionCube :: Word32 
+                        , maxImageArrayLayers :: Word32 
+                        , maxTexelBufferElements :: Word32 
+                        , maxUniformBufferRange :: Word32 
+                        , maxStorageBufferRange :: Word32 
+                        , maxPushConstantsSize :: Word32 
+                        , maxMemoryAllocationCount :: Word32 
+                        , maxSamplerAllocationCount :: Word32 
+                        , bufferImageGranularity :: VkDeviceSize 
+                        , sparseAddressSpaceSize :: VkDeviceSize 
+                        , maxBoundDescriptorSets :: Word32 
+                        , maxPerStageDescriptorSamplers :: Word32 
+                        , maxPerStageDescriptorUniformBuffers :: Word32 
+                        , maxPerStageDescriptorStorageBuffers :: Word32 
+                        , maxPerStageDescriptorSampledImages :: Word32 
+                        , maxPerStageDescriptorStorageImages :: Word32 
+                        , maxPerStageDescriptorInputAttachments :: Word32 
+                        , maxPerStageResources :: Word32 
+                        , maxDescriptorSetSamplers :: Word32 
+                        , maxDescriptorSetUniformBuffers :: Word32 
+                        , maxDescriptorSetUniformBuffersDynamic :: Word32 
+                        , maxDescriptorSetStorageBuffers :: Word32 
+                        , maxDescriptorSetStorageBuffersDynamic :: Word32 
+                        , maxDescriptorSetSampledImages :: Word32 
+                        , maxDescriptorSetStorageImages :: Word32 
+                        , maxDescriptorSetInputAttachments :: Word32 
+                        , maxVertexInputAttributes :: Word32 
+                        , maxVertexInputBindings :: Word32 
+                        , maxVertexInputAttributeOffset :: Word32 
+                        , maxVertexInputBindingStride :: Word32 
+                        , maxVertexOutputComponents :: Word32 
+                        , maxTessellationGenerationLevel :: Word32 
+                        , maxTessellationPatchSize :: Word32 
+                        , maxTessellationControlPerVertexInputComponents :: Word32 
+                        , maxTessellationControlPerVertexOutputComponents :: Word32 
+                        , maxTessellationControlPerPatchOutputComponents :: Word32 
+                        , maxTessellationControlTotalOutputComponents :: Word32 
+                        , maxTessellationEvaluationInputComponents :: Word32 
+                        , maxTessellationEvaluationOutputComponents :: Word32 
+                        , maxGeometryShaderInvocations :: Word32 
+                        , maxGeometryInputComponents :: Word32 
+                        , maxGeometryOutputComponents :: Word32 
+                        , maxGeometryOutputVertices :: Word32 
+                        , maxGeometryTotalOutputComponents :: Word32 
+                        , maxFragmentInputComponents :: Word32 
+                        , maxFragmentOutputAttachments :: Word32 
+                        , maxFragmentDualSrcAttachments :: Word32 
+                        , maxFragmentCombinedOutputResources :: Word32 
+                        , maxComputeSharedMemorySize :: Word32 
+                        , maxComputeWorkGroupCount :: Vector 3 Word32 
+                        , maxComputeWorkGroupInvocations :: Word32 
+                        , maxComputeWorkGroupSize :: Vector 3 Word32 
+                        , subPixelPrecisionBits :: Word32 
+                        , subTexelPrecisionBits :: Word32 
+                        , mipmapPrecisionBits :: Word32 
+                        , maxDrawIndexedIndexValue :: Word32 
+                        , maxDrawIndirectCount :: Word32 
+                        , maxSamplerLodBias :: CFloat 
+                        , maxSamplerAnisotropy :: CFloat 
+                        , maxViewports :: Word32 
+                        , maxViewportDimensions :: Vector 2 Word32 
+                        , viewportBoundsRange :: Vector 2 CFloat 
+                        , viewportSubPixelBits :: Word32 
+                        , minMemoryMapAlignment :: CSize 
+                        , minTexelBufferOffsetAlignment :: VkDeviceSize 
+                        , minUniformBufferOffsetAlignment :: VkDeviceSize 
+                        , minStorageBufferOffsetAlignment :: VkDeviceSize 
+                        , minTexelOffset :: Int32 
+                        , maxTexelOffset :: Word32 
+                        , minTexelGatherOffset :: Int32 
+                        , maxTexelGatherOffset :: Word32 
+                        , minInterpolationOffset :: CFloat 
+                        , maxInterpolationOffset :: CFloat 
+                        , subPixelInterpolationOffsetBits :: Word32 
+                        , maxFramebufferWidth :: Word32 
+                        , maxFramebufferHeight :: Word32 
+                        , maxFramebufferLayers :: Word32 
+                        , framebufferColorSampleCounts :: VkSampleCountFlags 
+                        , framebufferDepthSampleCounts :: VkSampleCountFlags 
+                        , framebufferStencilSampleCounts :: VkSampleCountFlags 
+                        , framebufferNoAttachmentsSampleCounts :: VkSampleCountFlags 
+                        , maxColorAttachments :: Word32 
+                        , sampledImageColorSampleCounts :: VkSampleCountFlags 
+                        , sampledImageIntegerSampleCounts :: VkSampleCountFlags 
+                        , sampledImageDepthSampleCounts :: VkSampleCountFlags 
+                        , sampledImageStencilSampleCounts :: VkSampleCountFlags 
+                        , storageImageSampleCounts :: VkSampleCountFlags 
+                        , maxSampleMaskWords :: Word32 
+                        , timestampComputeAndGraphics :: VkBool32 
+                        , timestampPeriod :: CFloat 
+                        , maxClipDistances :: Word32 
+                        , maxCullDistances :: Word32 
+                        , maxCombinedClipAndCullDistances :: Word32 
+                        , discreteQueuePriorities :: Word32 
+                        , pointSizeRange :: Vector 2 CFloat 
+                        , lineWidthRange :: Vector 2 CFloat 
+                        , pointSizeGranularity :: CFloat 
+                        , lineWidthGranularity :: CFloat 
+                        , strictLines :: VkBool32 
+                        , standardSampleLocations :: VkBool32 
+                        , optimalBufferCopyOffsetAlignment :: VkDeviceSize 
+                        , optimalBufferCopyRowPitchAlignment :: VkDeviceSize 
+                        , nonCoherentAtomSize :: VkDeviceSize 
                         }
   deriving (Eq)
 
@@ -413,118 +413,118 @@ instance Storable VkPhysicalDeviceLimits where
                                     <*> peek (ptr `plusPtr` 480)
                                     <*> peek (ptr `plusPtr` 488)
                                     <*> peek (ptr `plusPtr` 496)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkMaxImageDimension1D (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 4) (vkMaxImageDimension2D (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 8) (vkMaxImageDimension3D (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 12) (vkMaxImageDimensionCube (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 16) (vkMaxImageArrayLayers (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 20) (vkMaxTexelBufferElements (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 24) (vkMaxUniformBufferRange (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 28) (vkMaxStorageBufferRange (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 32) (vkMaxPushConstantsSize (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 36) (vkMaxMemoryAllocationCount (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 40) (vkMaxSamplerAllocationCount (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 48) (vkBufferImageGranularity (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 56) (vkSparseAddressSpaceSize (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 64) (vkMaxBoundDescriptorSets (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 68) (vkMaxPerStageDescriptorSamplers (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 72) (vkMaxPerStageDescriptorUniformBuffers (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 76) (vkMaxPerStageDescriptorStorageBuffers (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 80) (vkMaxPerStageDescriptorSampledImages (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 84) (vkMaxPerStageDescriptorStorageImages (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 88) (vkMaxPerStageDescriptorInputAttachments (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 92) (vkMaxPerStageResources (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 96) (vkMaxDescriptorSetSamplers (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 100) (vkMaxDescriptorSetUniformBuffers (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 104) (vkMaxDescriptorSetUniformBuffersDynamic (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 108) (vkMaxDescriptorSetStorageBuffers (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 112) (vkMaxDescriptorSetStorageBuffersDynamic (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 116) (vkMaxDescriptorSetSampledImages (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 120) (vkMaxDescriptorSetStorageImages (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 124) (vkMaxDescriptorSetInputAttachments (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 128) (vkMaxVertexInputAttributes (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 132) (vkMaxVertexInputBindings (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 136) (vkMaxVertexInputAttributeOffset (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 140) (vkMaxVertexInputBindingStride (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 144) (vkMaxVertexOutputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 148) (vkMaxTessellationGenerationLevel (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 152) (vkMaxTessellationPatchSize (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 156) (vkMaxTessellationControlPerVertexInputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 160) (vkMaxTessellationControlPerVertexOutputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 164) (vkMaxTessellationControlPerPatchOutputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 168) (vkMaxTessellationControlTotalOutputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 172) (vkMaxTessellationEvaluationInputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 176) (vkMaxTessellationEvaluationOutputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 180) (vkMaxGeometryShaderInvocations (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 184) (vkMaxGeometryInputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 188) (vkMaxGeometryOutputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 192) (vkMaxGeometryOutputVertices (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 196) (vkMaxGeometryTotalOutputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 200) (vkMaxFragmentInputComponents (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 204) (vkMaxFragmentOutputAttachments (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 208) (vkMaxFragmentDualSrcAttachments (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 212) (vkMaxFragmentCombinedOutputResources (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 216) (vkMaxComputeSharedMemorySize (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 220) (vkMaxComputeWorkGroupCount (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 232) (vkMaxComputeWorkGroupInvocations (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 236) (vkMaxComputeWorkGroupSize (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 248) (vkSubPixelPrecisionBits (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 252) (vkSubTexelPrecisionBits (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 256) (vkMipmapPrecisionBits (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 260) (vkMaxDrawIndexedIndexValue (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 264) (vkMaxDrawIndirectCount (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 268) (vkMaxSamplerLodBias (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 272) (vkMaxSamplerAnisotropy (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 276) (vkMaxViewports (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 280) (vkMaxViewportDimensions (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 288) (vkViewportBoundsRange (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 296) (vkViewportSubPixelBits (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 304) (vkMinMemoryMapAlignment (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 312) (vkMinTexelBufferOffsetAlignment (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 320) (vkMinUniformBufferOffsetAlignment (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 328) (vkMinStorageBufferOffsetAlignment (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 336) (vkMinTexelOffset (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 340) (vkMaxTexelOffset (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 344) (vkMinTexelGatherOffset (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 348) (vkMaxTexelGatherOffset (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 352) (vkMinInterpolationOffset (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 356) (vkMaxInterpolationOffset (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 360) (vkSubPixelInterpolationOffsetBits (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 364) (vkMaxFramebufferWidth (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 368) (vkMaxFramebufferHeight (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 372) (vkMaxFramebufferLayers (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 376) (vkFramebufferColorSampleCounts (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 380) (vkFramebufferDepthSampleCounts (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 384) (vkFramebufferStencilSampleCounts (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 388) (vkFramebufferNoAttachmentsSampleCounts (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 392) (vkMaxColorAttachments (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 396) (vkSampledImageColorSampleCounts (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 400) (vkSampledImageIntegerSampleCounts (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 404) (vkSampledImageDepthSampleCounts (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 408) (vkSampledImageStencilSampleCounts (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 412) (vkStorageImageSampleCounts (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 416) (vkMaxSampleMaskWords (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 420) (vkTimestampComputeAndGraphics (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 424) (vkTimestampPeriod (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 428) (vkMaxClipDistances (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 432) (vkMaxCullDistances (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 436) (vkMaxCombinedClipAndCullDistances (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 440) (vkDiscreteQueuePriorities (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 444) (vkPointSizeRange (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 452) (vkLineWidthRange (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 460) (vkPointSizeGranularity (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 464) (vkLineWidthGranularity (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 468) (vkStrictLines (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 472) (vkStandardSampleLocations (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 480) (vkOptimalBufferCopyOffsetAlignment (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 488) (vkOptimalBufferCopyRowPitchAlignment (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 496) (vkNonCoherentAtomSize (poked :: VkPhysicalDeviceLimits))
+  poke ptr poked = poke (ptr `plusPtr` 0) (maxImageDimension1D (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 4) (maxImageDimension2D (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 8) (maxImageDimension3D (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 12) (maxImageDimensionCube (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 16) (maxImageArrayLayers (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 20) (maxTexelBufferElements (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 24) (maxUniformBufferRange (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 28) (maxStorageBufferRange (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 32) (maxPushConstantsSize (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 36) (maxMemoryAllocationCount (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 40) (maxSamplerAllocationCount (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 48) (bufferImageGranularity (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 56) (sparseAddressSpaceSize (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 64) (maxBoundDescriptorSets (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 68) (maxPerStageDescriptorSamplers (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 72) (maxPerStageDescriptorUniformBuffers (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 76) (maxPerStageDescriptorStorageBuffers (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 80) (maxPerStageDescriptorSampledImages (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 84) (maxPerStageDescriptorStorageImages (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 88) (maxPerStageDescriptorInputAttachments (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 92) (maxPerStageResources (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 96) (maxDescriptorSetSamplers (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 100) (maxDescriptorSetUniformBuffers (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 104) (maxDescriptorSetUniformBuffersDynamic (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 108) (maxDescriptorSetStorageBuffers (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 112) (maxDescriptorSetStorageBuffersDynamic (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 116) (maxDescriptorSetSampledImages (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 120) (maxDescriptorSetStorageImages (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 124) (maxDescriptorSetInputAttachments (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 128) (maxVertexInputAttributes (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 132) (maxVertexInputBindings (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 136) (maxVertexInputAttributeOffset (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 140) (maxVertexInputBindingStride (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 144) (maxVertexOutputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 148) (maxTessellationGenerationLevel (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 152) (maxTessellationPatchSize (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 156) (maxTessellationControlPerVertexInputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 160) (maxTessellationControlPerVertexOutputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 164) (maxTessellationControlPerPatchOutputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 168) (maxTessellationControlTotalOutputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 172) (maxTessellationEvaluationInputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 176) (maxTessellationEvaluationOutputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 180) (maxGeometryShaderInvocations (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 184) (maxGeometryInputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 188) (maxGeometryOutputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 192) (maxGeometryOutputVertices (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 196) (maxGeometryTotalOutputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 200) (maxFragmentInputComponents (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 204) (maxFragmentOutputAttachments (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 208) (maxFragmentDualSrcAttachments (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 212) (maxFragmentCombinedOutputResources (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 216) (maxComputeSharedMemorySize (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 220) (maxComputeWorkGroupCount (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 232) (maxComputeWorkGroupInvocations (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 236) (maxComputeWorkGroupSize (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 248) (subPixelPrecisionBits (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 252) (subTexelPrecisionBits (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 256) (mipmapPrecisionBits (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 260) (maxDrawIndexedIndexValue (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 264) (maxDrawIndirectCount (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 268) (maxSamplerLodBias (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 272) (maxSamplerAnisotropy (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 276) (maxViewports (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 280) (maxViewportDimensions (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 288) (viewportBoundsRange (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 296) (viewportSubPixelBits (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 304) (minMemoryMapAlignment (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 312) (minTexelBufferOffsetAlignment (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 320) (minUniformBufferOffsetAlignment (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 328) (minStorageBufferOffsetAlignment (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 336) (minTexelOffset (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 340) (maxTexelOffset (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 344) (minTexelGatherOffset (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 348) (maxTexelGatherOffset (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 352) (minInterpolationOffset (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 356) (maxInterpolationOffset (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 360) (subPixelInterpolationOffsetBits (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 364) (maxFramebufferWidth (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 368) (maxFramebufferHeight (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 372) (maxFramebufferLayers (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 376) (framebufferColorSampleCounts (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 380) (framebufferDepthSampleCounts (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 384) (framebufferStencilSampleCounts (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 388) (framebufferNoAttachmentsSampleCounts (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 392) (maxColorAttachments (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 396) (sampledImageColorSampleCounts (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 400) (sampledImageIntegerSampleCounts (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 404) (sampledImageDepthSampleCounts (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 408) (sampledImageStencilSampleCounts (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 412) (storageImageSampleCounts (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 416) (maxSampleMaskWords (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 420) (timestampComputeAndGraphics (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 424) (timestampPeriod (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 428) (maxClipDistances (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 432) (maxCullDistances (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 436) (maxCombinedClipAndCullDistances (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 440) (discreteQueuePriorities (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 444) (pointSizeRange (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 452) (lineWidthRange (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 460) (pointSizeGranularity (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 464) (lineWidthGranularity (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 468) (strictLines (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 472) (standardSampleLocations (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 480) (optimalBufferCopyOffsetAlignment (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 488) (optimalBufferCopyRowPitchAlignment (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 496) (nonCoherentAtomSize (poked :: VkPhysicalDeviceLimits))
 
 
 
 data VkMemoryHeap =
-  VkMemoryHeap{ vkSize :: VkDeviceSize 
-              , vkFlags :: VkMemoryHeapFlags 
+  VkMemoryHeap{ size :: VkDeviceSize 
+              , flags :: VkMemoryHeapFlags 
               }
   deriving (Eq)
 
@@ -533,22 +533,22 @@ instance Storable VkMemoryHeap where
   alignment ~_ = 8
   peek ptr = VkMemoryHeap <$> peek (ptr `plusPtr` 0)
                           <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSize (poked :: VkMemoryHeap))
-                *> poke (ptr `plusPtr` 8) (vkFlags (poked :: VkMemoryHeap))
+  poke ptr poked = poke (ptr `plusPtr` 0) (size (poked :: VkMemoryHeap))
+                *> poke (ptr `plusPtr` 8) (flags (poked :: VkMemoryHeap))
 
 
 -- ** vkEnumeratePhysicalDevices
 foreign import ccall "vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices ::
-  VkInstance -> Ptr Word32 -> Ptr VkPhysicalDevice -> IO VkResult
+  Instance -> Ptr Word32 -> Ptr PhysicalDevice -> IO VkResult
 
 -- ** vkGetDeviceProcAddr
 foreign import ccall "vkGetDeviceProcAddr" vkGetDeviceProcAddr ::
-  VkDevice -> Ptr CChar -> IO PFN_vkVoidFunction
+  Device -> Ptr CChar -> IO PFN_vkVoidFunction
 
 -- ** vkCreateInstance
 foreign import ccall "vkCreateInstance" vkCreateInstance ::
   Ptr VkInstanceCreateInfo ->
-  Ptr VkAllocationCallbacks -> Ptr VkInstance -> IO VkResult
+  Ptr VkAllocationCallbacks -> Ptr Instance -> IO VkResult
 
 -- ** VkFormatFeatureFlags
 
@@ -627,10 +627,10 @@ pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = VkFormatFeatureFlagB
 
 
 data VkPhysicalDeviceMemoryProperties =
-  VkPhysicalDeviceMemoryProperties{ vkMemoryTypeCount :: Word32 
-                                  , vkMemoryTypes :: Vector VK_MAX_MEMORY_TYPES VkMemoryType 
-                                  , vkMemoryHeapCount :: Word32 
-                                  , vkMemoryHeaps :: Vector VK_MAX_MEMORY_HEAPS VkMemoryHeap 
+  VkPhysicalDeviceMemoryProperties{ memoryTypeCount :: Word32 
+                                  , memoryTypes :: Vector VK_MAX_MEMORY_TYPES VkMemoryType 
+                                  , memoryHeapCount :: Word32 
+                                  , memoryHeaps :: Vector VK_MAX_MEMORY_HEAPS VkMemoryHeap 
                                   }
   deriving (Eq)
 
@@ -641,14 +641,14 @@ instance Storable VkPhysicalDeviceMemoryProperties where
                                               <*> peek (ptr `plusPtr` 4)
                                               <*> peek (ptr `plusPtr` 260)
                                               <*> peek (ptr `plusPtr` 264)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkMemoryTypeCount (poked :: VkPhysicalDeviceMemoryProperties))
-                *> poke (ptr `plusPtr` 4) (vkMemoryTypes (poked :: VkPhysicalDeviceMemoryProperties))
-                *> poke (ptr `plusPtr` 260) (vkMemoryHeapCount (poked :: VkPhysicalDeviceMemoryProperties))
-                *> poke (ptr `plusPtr` 264) (vkMemoryHeaps (poked :: VkPhysicalDeviceMemoryProperties))
+  poke ptr poked = poke (ptr `plusPtr` 0) (memoryTypeCount (poked :: VkPhysicalDeviceMemoryProperties))
+                *> poke (ptr `plusPtr` 4) (memoryTypes (poked :: VkPhysicalDeviceMemoryProperties))
+                *> poke (ptr `plusPtr` 260) (memoryHeapCount (poked :: VkPhysicalDeviceMemoryProperties))
+                *> poke (ptr `plusPtr` 264) (memoryHeaps (poked :: VkPhysicalDeviceMemoryProperties))
 
 
 data VkInstance_T
-type VkInstance = Ptr VkInstance_T
+type Instance = Ptr VkInstance_T
 
 -- ** VkMemoryHeapFlags
 
@@ -679,10 +679,10 @@ pattern VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = VkMemoryHeapFlagBits 0x1
 
 
 data VkQueueFamilyProperties =
-  VkQueueFamilyProperties{ vkQueueFlags :: VkQueueFlags 
-                         , vkQueueCount :: Word32 
-                         , vkTimestampValidBits :: Word32 
-                         , vkMinImageTransferGranularity :: VkExtent3D 
+  VkQueueFamilyProperties{ queueFlags :: VkQueueFlags 
+                         , queueCount :: Word32 
+                         , timestampValidBits :: Word32 
+                         , minImageTransferGranularity :: VkExtent3D 
                          }
   deriving (Eq)
 
@@ -693,19 +693,19 @@ instance Storable VkQueueFamilyProperties where
                                      <*> peek (ptr `plusPtr` 4)
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 12)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkQueueFlags (poked :: VkQueueFamilyProperties))
-                *> poke (ptr `plusPtr` 4) (vkQueueCount (poked :: VkQueueFamilyProperties))
-                *> poke (ptr `plusPtr` 8) (vkTimestampValidBits (poked :: VkQueueFamilyProperties))
-                *> poke (ptr `plusPtr` 12) (vkMinImageTransferGranularity (poked :: VkQueueFamilyProperties))
+  poke ptr poked = poke (ptr `plusPtr` 0) (queueFlags (poked :: VkQueueFamilyProperties))
+                *> poke (ptr `plusPtr` 4) (queueCount (poked :: VkQueueFamilyProperties))
+                *> poke (ptr `plusPtr` 8) (timestampValidBits (poked :: VkQueueFamilyProperties))
+                *> poke (ptr `plusPtr` 12) (minImageTransferGranularity (poked :: VkQueueFamilyProperties))
 
 
 
 data VkImageFormatProperties =
-  VkImageFormatProperties{ vkMaxExtent :: VkExtent3D 
-                         , vkMaxMipLevels :: Word32 
-                         , vkMaxArrayLayers :: Word32 
-                         , vkSampleCounts :: VkSampleCountFlags 
-                         , vkMaxResourceSize :: VkDeviceSize 
+  VkImageFormatProperties{ maxExtent :: VkExtent3D 
+                         , maxMipLevels :: Word32 
+                         , maxArrayLayers :: Word32 
+                         , sampleCounts :: VkSampleCountFlags 
+                         , maxResourceSize :: VkDeviceSize 
                          }
   deriving (Eq)
 
@@ -717,20 +717,20 @@ instance Storable VkImageFormatProperties where
                                      <*> peek (ptr `plusPtr` 16)
                                      <*> peek (ptr `plusPtr` 20)
                                      <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkMaxExtent (poked :: VkImageFormatProperties))
-                *> poke (ptr `plusPtr` 12) (vkMaxMipLevels (poked :: VkImageFormatProperties))
-                *> poke (ptr `plusPtr` 16) (vkMaxArrayLayers (poked :: VkImageFormatProperties))
-                *> poke (ptr `plusPtr` 20) (vkSampleCounts (poked :: VkImageFormatProperties))
-                *> poke (ptr `plusPtr` 24) (vkMaxResourceSize (poked :: VkImageFormatProperties))
+  poke ptr poked = poke (ptr `plusPtr` 0) (maxExtent (poked :: VkImageFormatProperties))
+                *> poke (ptr `plusPtr` 12) (maxMipLevels (poked :: VkImageFormatProperties))
+                *> poke (ptr `plusPtr` 16) (maxArrayLayers (poked :: VkImageFormatProperties))
+                *> poke (ptr `plusPtr` 20) (sampleCounts (poked :: VkImageFormatProperties))
+                *> poke (ptr `plusPtr` 24) (maxResourceSize (poked :: VkImageFormatProperties))
 
 
 
 data VkPhysicalDeviceSparseProperties =
-  VkPhysicalDeviceSparseProperties{ vkResidencyStandard2DBlockShape :: VkBool32 
-                                  , vkResidencyStandard2DMultisampleBlockShape :: VkBool32 
-                                  , vkResidencyStandard3DBlockShape :: VkBool32 
-                                  , vkResidencyAlignedMipSize :: VkBool32 
-                                  , vkResidencyNonResidentStrict :: VkBool32 
+  VkPhysicalDeviceSparseProperties{ residencyStandard2DBlockShape :: VkBool32 
+                                  , residencyStandard2DMultisampleBlockShape :: VkBool32 
+                                  , residencyStandard3DBlockShape :: VkBool32 
+                                  , residencyAlignedMipSize :: VkBool32 
+                                  , residencyNonResidentStrict :: VkBool32 
                                   }
   deriving (Eq)
 
@@ -742,32 +742,32 @@ instance Storable VkPhysicalDeviceSparseProperties where
                                               <*> peek (ptr `plusPtr` 8)
                                               <*> peek (ptr `plusPtr` 12)
                                               <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkResidencyStandard2DBlockShape (poked :: VkPhysicalDeviceSparseProperties))
-                *> poke (ptr `plusPtr` 4) (vkResidencyStandard2DMultisampleBlockShape (poked :: VkPhysicalDeviceSparseProperties))
-                *> poke (ptr `plusPtr` 8) (vkResidencyStandard3DBlockShape (poked :: VkPhysicalDeviceSparseProperties))
-                *> poke (ptr `plusPtr` 12) (vkResidencyAlignedMipSize (poked :: VkPhysicalDeviceSparseProperties))
-                *> poke (ptr `plusPtr` 16) (vkResidencyNonResidentStrict (poked :: VkPhysicalDeviceSparseProperties))
+  poke ptr poked = poke (ptr `plusPtr` 0) (residencyStandard2DBlockShape (poked :: VkPhysicalDeviceSparseProperties))
+                *> poke (ptr `plusPtr` 4) (residencyStandard2DMultisampleBlockShape (poked :: VkPhysicalDeviceSparseProperties))
+                *> poke (ptr `plusPtr` 8) (residencyStandard3DBlockShape (poked :: VkPhysicalDeviceSparseProperties))
+                *> poke (ptr `plusPtr` 12) (residencyAlignedMipSize (poked :: VkPhysicalDeviceSparseProperties))
+                *> poke (ptr `plusPtr` 16) (residencyNonResidentStrict (poked :: VkPhysicalDeviceSparseProperties))
 
 
 -- ** vkGetPhysicalDeviceFeatures
 foreign import ccall "vkGetPhysicalDeviceFeatures" vkGetPhysicalDeviceFeatures ::
-  VkPhysicalDevice -> Ptr VkPhysicalDeviceFeatures -> IO ()
+  PhysicalDevice -> Ptr VkPhysicalDeviceFeatures -> IO ()
 
 -- ** vkGetPhysicalDeviceMemoryProperties
 foreign import ccall "vkGetPhysicalDeviceMemoryProperties" vkGetPhysicalDeviceMemoryProperties ::
-  VkPhysicalDevice -> Ptr VkPhysicalDeviceMemoryProperties -> IO ()
+  PhysicalDevice -> Ptr VkPhysicalDeviceMemoryProperties -> IO ()
 
 
 data VkPhysicalDeviceProperties =
-  VkPhysicalDeviceProperties{ vkApiVersion :: Word32 
-                            , vkDriverVersion :: Word32 
-                            , vkVendorID :: Word32 
-                            , vkDeviceID :: Word32 
-                            , vkDeviceType :: VkPhysicalDeviceType 
-                            , vkDeviceName :: Vector VK_MAX_PHYSICAL_DEVICE_NAME_SIZE CChar 
-                            , vkPipelineCacheUUID :: Vector VK_UUID_SIZE Word8 
-                            , vkLimits :: VkPhysicalDeviceLimits 
-                            , vkSparseProperties :: VkPhysicalDeviceSparseProperties 
+  VkPhysicalDeviceProperties{ apiVersion :: Word32 
+                            , driverVersion :: Word32 
+                            , vendorID :: Word32 
+                            , deviceID :: Word32 
+                            , deviceType :: VkPhysicalDeviceType 
+                            , deviceName :: Vector VK_MAX_PHYSICAL_DEVICE_NAME_SIZE CChar 
+                            , pipelineCacheUUID :: Vector VK_UUID_SIZE Word8 
+                            , limits :: VkPhysicalDeviceLimits 
+                            , sparseProperties :: VkPhysicalDeviceSparseProperties 
                             }
   deriving (Eq)
 
@@ -783,26 +783,26 @@ instance Storable VkPhysicalDeviceProperties where
                                         <*> peek (ptr `plusPtr` 276)
                                         <*> peek (ptr `plusPtr` 296)
                                         <*> peek (ptr `plusPtr` 800)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkApiVersion (poked :: VkPhysicalDeviceProperties))
-                *> poke (ptr `plusPtr` 4) (vkDriverVersion (poked :: VkPhysicalDeviceProperties))
-                *> poke (ptr `plusPtr` 8) (vkVendorID (poked :: VkPhysicalDeviceProperties))
-                *> poke (ptr `plusPtr` 12) (vkDeviceID (poked :: VkPhysicalDeviceProperties))
-                *> poke (ptr `plusPtr` 16) (vkDeviceType (poked :: VkPhysicalDeviceProperties))
-                *> poke (ptr `plusPtr` 20) (vkDeviceName (poked :: VkPhysicalDeviceProperties))
-                *> poke (ptr `plusPtr` 276) (vkPipelineCacheUUID (poked :: VkPhysicalDeviceProperties))
-                *> poke (ptr `plusPtr` 296) (vkLimits (poked :: VkPhysicalDeviceProperties))
-                *> poke (ptr `plusPtr` 800) (vkSparseProperties (poked :: VkPhysicalDeviceProperties))
+  poke ptr poked = poke (ptr `plusPtr` 0) (apiVersion (poked :: VkPhysicalDeviceProperties))
+                *> poke (ptr `plusPtr` 4) (driverVersion (poked :: VkPhysicalDeviceProperties))
+                *> poke (ptr `plusPtr` 8) (vendorID (poked :: VkPhysicalDeviceProperties))
+                *> poke (ptr `plusPtr` 12) (deviceID (poked :: VkPhysicalDeviceProperties))
+                *> poke (ptr `plusPtr` 16) (deviceType (poked :: VkPhysicalDeviceProperties))
+                *> poke (ptr `plusPtr` 20) (deviceName (poked :: VkPhysicalDeviceProperties))
+                *> poke (ptr `plusPtr` 276) (pipelineCacheUUID (poked :: VkPhysicalDeviceProperties))
+                *> poke (ptr `plusPtr` 296) (limits (poked :: VkPhysicalDeviceProperties))
+                *> poke (ptr `plusPtr` 800) (sparseProperties (poked :: VkPhysicalDeviceProperties))
 
 
 -- ** vkGetPhysicalDeviceQueueFamilyProperties
 foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties" vkGetPhysicalDeviceQueueFamilyProperties ::
-  VkPhysicalDevice ->
+  PhysicalDevice ->
   Ptr Word32 -> Ptr VkQueueFamilyProperties -> IO ()
 
 
 data VkMemoryType =
-  VkMemoryType{ vkPropertyFlags :: VkMemoryPropertyFlags 
-              , vkHeapIndex :: Word32 
+  VkMemoryType{ propertyFlags :: VkMemoryPropertyFlags 
+              , heapIndex :: Word32 
               }
   deriving (Eq)
 
@@ -811,13 +811,13 @@ instance Storable VkMemoryType where
   alignment ~_ = 4
   peek ptr = VkMemoryType <$> peek (ptr `plusPtr` 0)
                           <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkPropertyFlags (poked :: VkMemoryType))
-                *> poke (ptr `plusPtr` 4) (vkHeapIndex (poked :: VkMemoryType))
+  poke ptr poked = poke (ptr `plusPtr` 0) (propertyFlags (poked :: VkMemoryType))
+                *> poke (ptr `plusPtr` 4) (heapIndex (poked :: VkMemoryType))
 
 
 -- ** vkGetInstanceProcAddr
 foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr ::
-  VkInstance -> Ptr CChar -> IO PFN_vkVoidFunction
+  Instance -> Ptr CChar -> IO PFN_vkVoidFunction
 
 -- ** VkMemoryPropertyFlags
 
@@ -864,7 +864,7 @@ pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = VkMemoryPropertyFlagBits 0x10
 
 -- ** vkDestroyInstance
 foreign import ccall "vkDestroyInstance" vkDestroyInstance ::
-  VkInstance -> Ptr VkAllocationCallbacks -> IO ()
+  Instance -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** VkQueueFlags
 
@@ -907,7 +907,7 @@ pattern VK_QUEUE_SPARSE_BINDING_BIT = VkQueueFlagBits 0x8
 
 -- ** vkGetPhysicalDeviceProperties
 foreign import ccall "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperties ::
-  VkPhysicalDevice -> Ptr VkPhysicalDeviceProperties -> IO ()
+  PhysicalDevice -> Ptr VkPhysicalDeviceProperties -> IO ()
 
 -- ** VkInstanceCreateFlags
 -- | Opaque flag
@@ -916,13 +916,13 @@ newtype VkInstanceCreateFlags = VkInstanceCreateFlags VkFlags
 
 -- ** vkGetPhysicalDeviceFormatProperties
 foreign import ccall "vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties ::
-  VkPhysicalDevice -> VkFormat -> Ptr VkFormatProperties -> IO ()
+  PhysicalDevice -> VkFormat -> Ptr VkFormatProperties -> IO ()
 
 
 data VkFormatProperties =
-  VkFormatProperties{ vkLinearTilingFeatures :: VkFormatFeatureFlags 
-                    , vkOptimalTilingFeatures :: VkFormatFeatureFlags 
-                    , vkBufferFeatures :: VkFormatFeatureFlags 
+  VkFormatProperties{ linearTilingFeatures :: VkFormatFeatureFlags 
+                    , optimalTilingFeatures :: VkFormatFeatureFlags 
+                    , bufferFeatures :: VkFormatFeatureFlags 
                     }
   deriving (Eq)
 
@@ -932,8 +932,8 @@ instance Storable VkFormatProperties where
   peek ptr = VkFormatProperties <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 4)
                                 <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkLinearTilingFeatures (poked :: VkFormatProperties))
-                *> poke (ptr `plusPtr` 4) (vkOptimalTilingFeatures (poked :: VkFormatProperties))
-                *> poke (ptr `plusPtr` 8) (vkBufferFeatures (poked :: VkFormatProperties))
+  poke ptr poked = poke (ptr `plusPtr` 0) (linearTilingFeatures (poked :: VkFormatProperties))
+                *> poke (ptr `plusPtr` 4) (optimalTilingFeatures (poked :: VkFormatProperties))
+                *> poke (ptr `plusPtr` 8) (bufferFeatures (poked :: VkFormatProperties))
 
 

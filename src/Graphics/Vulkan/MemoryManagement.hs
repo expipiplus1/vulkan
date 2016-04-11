@@ -2,9 +2,9 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.MemoryManagement where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
-import Graphics.Vulkan.Buffer( VkBuffer(..)
+import Graphics.Vulkan.Buffer( Buffer(..)
                              )
 import Data.Word( Word64
                 , Word32
@@ -16,9 +16,9 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkDeviceMemory(..)
+import Graphics.Vulkan.Memory( DeviceMemory(..)
                              )
-import Graphics.Vulkan.Image( VkImage(..)
+import Graphics.Vulkan.Image( Image(..)
                             )
 import Graphics.Vulkan.Core( VkResult(..)
                            , VkDeviceSize(..)
@@ -26,13 +26,13 @@ import Graphics.Vulkan.Core( VkResult(..)
 
 -- ** vkGetImageMemoryRequirements
 foreign import ccall "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements ::
-  VkDevice -> VkImage -> Ptr VkMemoryRequirements -> IO ()
+  Device -> Image -> Ptr VkMemoryRequirements -> IO ()
 
 
 data VkMemoryRequirements =
-  VkMemoryRequirements{ vkSize :: VkDeviceSize 
-                      , vkAlignment :: VkDeviceSize 
-                      , vkMemoryTypeBits :: Word32 
+  VkMemoryRequirements{ size :: VkDeviceSize 
+                      , _alignment :: VkDeviceSize 
+                      , memoryTypeBits :: Word32 
                       }
   deriving (Eq)
 
@@ -42,22 +42,20 @@ instance Storable VkMemoryRequirements where
   peek ptr = VkMemoryRequirements <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSize (poked :: VkMemoryRequirements))
-                *> poke (ptr `plusPtr` 8) (vkAlignment (poked :: VkMemoryRequirements))
-                *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryRequirements))
+  poke ptr poked = poke (ptr `plusPtr` 0) (size (poked :: VkMemoryRequirements))
+                *> poke (ptr `plusPtr` 8) (_alignment (poked :: VkMemoryRequirements))
+                *> poke (ptr `plusPtr` 16) (memoryTypeBits (poked :: VkMemoryRequirements))
 
 
 -- ** vkGetBufferMemoryRequirements
 foreign import ccall "vkGetBufferMemoryRequirements" vkGetBufferMemoryRequirements ::
-  VkDevice -> VkBuffer -> Ptr VkMemoryRequirements -> IO ()
+  Device -> Buffer -> Ptr VkMemoryRequirements -> IO ()
 
 -- ** vkBindBufferMemory
 foreign import ccall "vkBindBufferMemory" vkBindBufferMemory ::
-  VkDevice ->
-  VkBuffer -> VkDeviceMemory -> VkDeviceSize -> IO VkResult
+  Device -> Buffer -> DeviceMemory -> VkDeviceSize -> IO VkResult
 
 -- ** vkBindImageMemory
 foreign import ccall "vkBindImageMemory" vkBindImageMemory ::
-  VkDevice ->
-  VkImage -> VkDeviceMemory -> VkDeviceSize -> IO VkResult
+  Device -> Image -> DeviceMemory -> VkDeviceSize -> IO VkResult
 

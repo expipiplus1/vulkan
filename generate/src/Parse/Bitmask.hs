@@ -18,6 +18,7 @@ parseBitmask = hasName "enums" >>> hasAttrValue "type" (== "bitmask") >>>
           bitPositions <-
                        listA (parseBitmaskBitPos <<< getChildren) -< bitmask
           returnA -< Bitmask{ bmName = name
+                            , bmHsName = name
                             , bmNamespace = namespace
                             , bmComment = comment
                             , bmValues = values
@@ -33,6 +34,7 @@ parseBitmaskValue = hasName "enum" >>> hasAttr "value" >>>
           value   <- requiredRead <<< requiredAttrValue "value" -< elem
           comment <- optionalAttrValue "comment" -< elem
           returnA -< BitmaskValue{ bmvName = name
+                                 , bmvHsName = name
                                  , bmvValue = value
                                  , bmvComment = comment
                                  }
@@ -46,6 +48,7 @@ parseBitmaskBitPos = hasName "enum" >>> hasAttr "bitpos" >>>
           bitpos  <- requiredRead <<< requiredAttrValue "bitpos" -< elem
           comment <- optionalAttrValue "comment" -< elem
           returnA -< BitmaskBitPosition{ bmbpName = name
+                                       , bmbpHsName = name
                                        , bmbpBitPos = bitpos
                                        , bmbpComment = comment
                                        }

@@ -26,9 +26,9 @@ writeOpaqueBitmaskType :: BitmaskType -> Write Doc
 writeOpaqueBitmaskType bmt = do
   doesDeriveStorable
   bmtHsType <- cTypeToHsTypeString (bmtCType bmt)
-  pure $ [qc|-- ** {bmtName bmt}
+  pure $ [qc|-- ** {bmtHsName bmt}
 {predocComment "Opaque flag"}
-newtype {bmtName bmt} = {bmtName bmt} {bmtHsType}
+newtype {bmtHsName bmt} = {bmtHsName bmt} {bmtHsType}
   deriving (Eq, Storable)
 |]
 
@@ -57,24 +57,24 @@ writeBitmaskTypeWithBits bmt bm = do
                                               ])
   pure [qc|-- ** {bmtName bmt}
 {predocComment $ fromMaybe "" (bmComment bm)}
-newtype {bmName bm} = {bmName bm} {bmtHsType}
+newtype {bmHsName bm} = {bmHsName bm} {bmtHsType}
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for {bmName bm}
-type {bmtName bmt} = {bmName bm}
+-- | Alias for {bmHsName bm}
+type {bmtHsName bmt} = {bmHsName bm}
 
-instance Show {bmName bm} where
+instance Show {bmHsName bm} where
   {indent 0 $ vcat (writeBitPositionShowsPrec <$> bmBitPositions bm)}
   {indent 0 $ vcat (writeValueShowsPrec <$> bmValues bm)}
-  showsPrec p ({bmName bm} x) = showParen (p >= 11) (showString "{bmName bm} " . showsPrec 11 x)
+  showsPrec p ({bmHsName bm} x) = showParen (p >= 11) (showString "{bmHsName bm} " . showsPrec 11 x)
 
-instance Read {bmName bm} where
+instance Read {bmHsName bm} where
   readPrec = parens ( choose [ {indent (-2) . vcat $ intercalatePrepend "," ((writeBitPositionReadTuple <$> bmBitPositions bm) ++ (writeValueReadTuple <$> bmValues bm))}
                              ] +++
                       prec 10 (do
-                        expectP (Ident "{bmName bm}")
+                        expectP (Ident "{bmHsName bm}")
                         v <- step readPrec
-                        pure ({bmName bm} v)
+                        pure ({bmHsName bm} v)
                         )
                     )
 
@@ -85,23 +85,23 @@ instance Read {bmName bm} where
 writeValue :: Bitmask -> BitmaskValue -> Doc
 writeValue bm v =
   [qc|{maybe "" predocComment (bmvComment v)}
-pattern {bmvName v} = {bmName bm} {showHex' $ bmvValue v}|]
+pattern {bmvHsName v} = {bmHsName bm} {showHex' $ bmvValue v}|]
 
 writeBitPosition :: Bitmask -> BitmaskBitPosition -> Doc
 writeBitPosition bm bp =
   [qc|{maybe "" predocComment (bmbpComment bp)}
-pattern {bmbpName bp} = {bmName bm} {showHex' $ (1 `shiftL` bmbpBitPos bp :: Word32)}|]
+pattern {bmbpHsName bp} = {bmHsName bm} {showHex' $ (1 `shiftL` bmbpBitPos bp :: Word32)}|]
 
 writeBitPositionShowsPrec :: BitmaskBitPosition -> Doc
 writeBitPositionShowsPrec bp =
-  [qc|showsPrec _ {bmbpName bp} = showString "{bmbpName bp}"|]
+  [qc|showsPrec _ {bmbpHsName bp} = showString "{bmbpHsName bp}"|]
 
 writeValueShowsPrec :: BitmaskValue -> Doc
 writeValueShowsPrec v =
-  [qc|showsPrec _ {bmvName v} = showString "{bmvName v}"|]
+  [qc|showsPrec _ {bmvHsName v} = showString "{bmvHsName v}"|]
 
 writeBitPositionReadTuple :: BitmaskBitPosition -> Doc
-writeBitPositionReadTuple bp = [qc|("{bmbpName bp}", pure {bmbpName bp})|]
+writeBitPositionReadTuple bp = [qc|("{bmbpHsName bp}", pure {bmbpHsName bp})|]
 
 writeValueReadTuple :: BitmaskValue -> Doc
-writeValueReadTuple v = [qc|("{bmvName v}", pure {bmvName v})|]
+writeValueReadTuple v = [qc|("{bmvHsName v}", pure {bmvHsName v})|]
