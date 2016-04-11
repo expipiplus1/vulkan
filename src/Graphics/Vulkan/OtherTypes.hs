@@ -2,13 +2,7 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.OtherTypes where
 
-import Graphics.Vulkan.Buffer( Buffer(..)
-                             )
-import Graphics.Vulkan.Pass( VkAccessFlags(..)
-                           , VkAccessFlagBits(..)
-                           )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
@@ -19,16 +13,6 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Image( Image(..)
-                            , VkImageLayout(..)
-                            , VkImageAspectFlagBits(..)
-                            , VkImageSubresourceRange(..)
-                            , VkImageAspectFlags(..)
-                            )
-import Graphics.Vulkan.Core( VkDeviceSize(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
-                           )
 
 
 data VkBufferMemoryBarrier =

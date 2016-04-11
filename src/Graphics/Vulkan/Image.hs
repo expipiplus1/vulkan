@@ -4,8 +4,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Image where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -26,15 +24,6 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -42,18 +31,6 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
-                              )
-import Graphics.Vulkan.Core( VkExtent3D(..)
-                           , VkResult(..)
-                           , VkDeviceSize(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkStructureType(..)
-                           , VkSharingMode(..)
-                           )
-import Foreign.C.Types( CSize(..)
-                      )
 
 -- ** vkCreateImage
 foreign import ccall "vkCreateImage" vkCreateImage ::

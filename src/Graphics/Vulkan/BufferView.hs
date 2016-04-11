@@ -3,12 +3,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.BufferView where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
-import Graphics.Vulkan.Buffer( Buffer(..)
-                             )
 import Data.Word( Word64
-                , Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
@@ -17,23 +12,6 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkDeviceSize(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkStructureType(..)
-                           )
-import Foreign.C.Types( CSize(..)
-                      )
 
 -- ** vkCreateBufferView
 foreign import ccall "vkCreateBufferView" vkCreateBufferView ::

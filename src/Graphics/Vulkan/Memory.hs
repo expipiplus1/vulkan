@@ -4,8 +4,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Memory where
 
-import {-# SOURCE #-} Graphics.Vulkan.Device( Device(..)
-                                            )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -31,13 +29,7 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkDeviceSize(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
-                           )
 import Foreign.C.Types( CSize
-                      , CSize(..)
                       )
 
 newtype DeviceMemory = DeviceMemory Word64

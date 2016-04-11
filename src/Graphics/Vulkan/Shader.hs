@@ -4,8 +4,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Shader where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -24,15 +22,6 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -40,12 +29,7 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
-                           )
 import Foreign.C.Types( CSize
-                      , CSize(..)
                       )
 
 

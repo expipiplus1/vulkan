@@ -26,7 +26,6 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , step
                                       )
 import Foreign.C.Types( CFloat
-                      , CFloat(..)
                       )
 
 newtype VkDeviceSize = VkDeviceSize Word64

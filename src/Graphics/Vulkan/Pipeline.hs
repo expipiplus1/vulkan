@@ -7,10 +7,6 @@ module Graphics.Vulkan.Pipeline where
 
 import Data.Vector.Storable.Sized( Vector
                                  )
-import Graphics.Vulkan.Device( Device(..)
-                             )
-import {-# SOURCE #-} Graphics.Vulkan.Pass( RenderPass(..)
-                                          )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -22,8 +18,6 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Graphics.Vulkan.PipelineCache( PipelineCache(..)
-                                    )
 import Data.Int( Int32
                )
 import Data.Bits( Bits
@@ -33,17 +27,6 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
-import Graphics.Vulkan.PipelineLayout( PipelineLayout(..)
-                                     )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -51,27 +34,9 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
-                             , ShaderModule(..)
-                             )
-import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
-                              , VkCompareOp(..)
-                              )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkBool32(..)
-                           , VkExtent2D(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkOffset2D(..)
-                           , VkRect2D(..)
-                           , VkViewport(..)
-                           , VkStructureType(..)
-                           )
 import Foreign.C.Types( CSize
                       , CFloat
-                      , CFloat(..)
                       , CChar
-                      , CSize(..)
                       )
 
 

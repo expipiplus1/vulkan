@@ -4,10 +4,6 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.DescriptorSet where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
-import Graphics.Vulkan.Buffer( Buffer(..)
-                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
@@ -28,15 +24,6 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -44,24 +31,6 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
-                             , VkShaderStageFlags(..)
-                             )
-import Graphics.Vulkan.Sampler( Sampler(..)
-                              )
-import Graphics.Vulkan.Image( VkImageLayout(..)
-                            )
-import Graphics.Vulkan.ImageView( ImageView(..)
-                                )
-import Graphics.Vulkan.BufferView( BufferView(..)
-                                 )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkDeviceSize(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
-                           )
-import Foreign.C.Types( CSize(..)
-                      )
 
 -- ** vkUpdateDescriptorSets
 foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets ::

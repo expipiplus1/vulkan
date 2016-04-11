@@ -2,54 +2,15 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.KHR.DisplaySwapchain where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
-import Graphics.Vulkan.KHR.Swapchain( SwapchainKHR(..)
-                                    , VkSwapchainCreateInfoKHR(..)
-                                    , VkSwapchainCreateFlagsKHR(..)
-                                    )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Graphics.Vulkan.KHR.Surface( VkColorSpaceKHR(..)
-                                  , VkSurfaceTransformFlagBitsKHR(..)
-                                  , VkPresentModeKHR(..)
-                                  , VkCompositeAlphaFlagBitsKHR(..)
-                                  , SurfaceKHR(..)
-                                  )
-import Data.Int( Int32
-               )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
-import Graphics.Vulkan.Image( VkImageUsageFlags(..)
-                            , VkImageUsageFlagBits(..)
-                            )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkBool32(..)
-                           , VkExtent2D(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkOffset2D(..)
-                           , VkRect2D(..)
-                           , VkStructureType(..)
-                           , VkSharingMode(..)
-                           )
-import Foreign.C.Types( CSize(..)
-                      )
 
 
 data VkDisplayPresentInfoKHR =

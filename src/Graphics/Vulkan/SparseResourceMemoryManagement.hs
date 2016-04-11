@@ -4,37 +4,23 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.SparseResourceMemoryManagement where
 
-import Graphics.Vulkan.Device( PhysicalDevice(..)
-                             , Device(..)
-                             )
-import Graphics.Vulkan.Buffer( Buffer(..)
-                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Graphics.Vulkan.Queue( Queue(..)
-                            )
-import Data.Int( Int32
-               )
 import Data.Bits( Bits
                 , FiniteBits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Fence( Fence(..)
-                            )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( DeviceMemory(..)
-                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -42,27 +28,6 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
-                              )
-import Graphics.Vulkan.Image( VkImageUsageFlags(..)
-                            , Image(..)
-                            , VkImageSubresource(..)
-                            , VkImageType(..)
-                            , VkImageAspectFlagBits(..)
-                            , VkImageUsageFlagBits(..)
-                            , VkImageTiling(..)
-                            , VkImageAspectFlags(..)
-                            )
-import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
-                                     )
-import Graphics.Vulkan.Core( VkExtent3D(..)
-                           , VkResult(..)
-                           , VkDeviceSize(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkOffset3D(..)
-                           , VkStructureType(..)
-                           )
 
 
 data VkSparseImageMemoryRequirements =

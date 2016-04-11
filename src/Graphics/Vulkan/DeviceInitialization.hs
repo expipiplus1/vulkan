@@ -7,17 +7,12 @@ module Graphics.Vulkan.DeviceInitialization where
 
 import Data.Vector.Storable.Sized( Vector
                                  )
-import Graphics.Vulkan.Device( VkPhysicalDeviceFeatures(..)
-                             , PhysicalDevice(..)
-                             , Device(..)
-                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
 import Data.Word( Word8
-                , Word64
                 , Word32
                 )
 import Foreign.Ptr( Ptr
@@ -31,22 +26,8 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Constants( VK_MAX_PHYSICAL_DEVICE_NAME_SIZE
-                                , VK_MAX_MEMORY_HEAPS
-                                , VK_UUID_SIZE
-                                , VK_MAX_MEMORY_TYPES
-                                )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -54,29 +35,9 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
-                              , VkSampleCountFlags(..)
-                              )
-import Graphics.Vulkan.Image( VkImageUsageFlags(..)
-                            , VkImageType(..)
-                            , VkImageUsageFlagBits(..)
-                            , VkImageCreateFlags(..)
-                            , VkImageTiling(..)
-                            , VkImageCreateFlagBits(..)
-                            )
-import Graphics.Vulkan.Core( VkExtent3D(..)
-                           , VkResult(..)
-                           , VkDeviceSize(..)
-                           , VkBool32(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkStructureType(..)
-                           )
 import Foreign.C.Types( CSize
                       , CFloat
-                      , CFloat(..)
                       , CChar
-                      , CSize(..)
                       )
 
 -- ** VkPhysicalDeviceType

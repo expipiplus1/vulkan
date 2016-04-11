@@ -4,15 +4,12 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.ImageView where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
 import Data.Word( Word64
-                , Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
@@ -23,15 +20,6 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -39,18 +27,6 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Image( Image(..)
-                            , VkImageAspectFlagBits(..)
-                            , VkImageSubresourceRange(..)
-                            , VkImageAspectFlags(..)
-                            )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkStructureType(..)
-                           )
-import Foreign.C.Types( CSize(..)
-                      )
 
 
 data VkImageViewCreateInfo =

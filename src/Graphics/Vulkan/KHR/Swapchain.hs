@@ -3,53 +3,16 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Swapchain where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
 import Data.Word( Word64
                 , Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Graphics.Vulkan.KHR.Surface( VkColorSpaceKHR(..)
-                                  , VkSurfaceTransformFlagBitsKHR(..)
-                                  , VkPresentModeKHR(..)
-                                  , VkCompositeAlphaFlagBitsKHR(..)
-                                  , SurfaceKHR(..)
-                                  )
-import Graphics.Vulkan.Queue( Queue(..)
-                            )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Fence( Fence(..)
-                            )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
-import Graphics.Vulkan.Image( VkImageUsageFlags(..)
-                            , Image(..)
-                            , VkImageUsageFlagBits(..)
-                            )
-import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
-                                     )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkBool32(..)
-                           , VkExtent2D(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkStructureType(..)
-                           , VkSharingMode(..)
-                           )
-import Foreign.C.Types( CSize(..)
-                      )
 
 
 data VkSwapchainCreateInfoKHR =

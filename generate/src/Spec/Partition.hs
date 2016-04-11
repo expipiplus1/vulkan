@@ -25,7 +25,7 @@ import           Spec.Spec
 import           Write.Utils
 
 data PartitionedSpec =
-  PartitionedSpec{ moduleExports :: M.HashMap ModuleName (S.HashSet String)
+  PartitionedSpec{ moduleExports :: M.HashMap ModuleName [SourceEntity]
                  }
   deriving(Show)
 
@@ -35,9 +35,10 @@ data PartitionedSpec =
 -- that module's section or extension and it is not reachable from any other
 -- extension or module or it is placed into that module by
 -- 'bespokeModuleExports' or inferredModuleExports.
-partitionSpec :: Spec -> SpecGraph -> PartitionedSpec
-partitionSpec spec graph =
-  let extensionModuleExports = M.fromList $
+partitionSpec :: Spec -> PartitionedSpec
+partitionSpec spec =
+  let graph = getSpecGraph spec
+      extensionModuleExports = M.fromList $
         (\extension -> ( extensionNameToModuleName . eName $ extension
                        , S.fromList (allExtensionNames extension)
                        )) <$> sExtensions spec
@@ -59,12 +60,14 @@ partitionSpec spec graph =
       coreModuleExports = M.unionWith S.union explicitCoreModuleExports
                                               inferredCoreModuleExports
 
-      moduleExports = calculateModuleExports graph coreModuleExports
+      moduleExportNames = calculateModuleExports graph coreModuleExports
+      moduleExports = (fmap (vSourceEntity . requiredLookup graph) . toList) <$>
+        moduleExportNames
 
       allEntityNames = S.fromList (M.keys (gNameVertexMap graph))
                        `S.difference` ignoredNames
       allBespokeNames = S.unions (M.elems bespokeModuleExports)
-      allExportedNames = S.unions (M.elems moduleExports)
+      allExportedNames = S.unions (M.elems moduleExportNames)
       -- unexportedEntities = allEntityNames `S.difference` allExportedNames
       missingBespokeNames = allBespokeNames `S.difference` allEntityNames
       exportedIgnoredNames = ignoredNames `S.intersection` allExportedNames

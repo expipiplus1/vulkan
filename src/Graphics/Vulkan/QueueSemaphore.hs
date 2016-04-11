@@ -3,10 +3,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.QueueSemaphore where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
 import Data.Word( Word64
-                , Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
@@ -15,21 +12,6 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
-                           )
-import Foreign.C.Types( CSize(..)
-                      )
 
 -- ** VkSemaphoreCreateFlags
 -- | Opaque flag

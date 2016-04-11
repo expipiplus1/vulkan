@@ -3,38 +3,16 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.PipelineLayout where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
 import Data.Word( Word64
                 , Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
-import Graphics.Vulkan.DescriptorSet( DescriptorSetLayout(..)
-                                    )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
-                             )
-import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
-                             , VkShaderStageFlags(..)
-                             )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
-                           )
-import Foreign.C.Types( CSize(..)
-                      )
 
 -- ** VkPipelineLayoutCreateFlags
 -- | Opaque flag

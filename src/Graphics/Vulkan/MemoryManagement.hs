@@ -2,27 +2,13 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.MemoryManagement where
 
-import Graphics.Vulkan.Device( Device(..)
-                             )
-import Graphics.Vulkan.Buffer( Buffer(..)
-                             )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word32
                 )
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
-                )
-import Graphics.Vulkan.Memory( DeviceMemory(..)
-                             )
-import Graphics.Vulkan.Image( Image(..)
-                            )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkDeviceSize(..)
-                           )
 
 -- ** vkGetImageMemoryRequirements
 foreign import ccall "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements ::

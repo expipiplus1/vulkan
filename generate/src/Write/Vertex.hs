@@ -13,12 +13,12 @@ import           Write.Type.Handle
 import           Write.Type.Struct
 import           Write.WriteMonad
 
-writeVertices :: [Vertex] -> Write Doc
+writeVertices :: [SourceEntity] -> Write Doc
 writeVertices = fmap vcat . traverse writeVertex
 
-writeVertex :: Vertex -> Write Doc
-writeVertex v =
-  case vSourceEntity v of
+writeVertex :: SourceEntity -> Write Doc
+writeVertex se =
+  case se of
     AnInclude _ -> pure empty
     ADefine define -> writeDefine define
     ABaseType baseType -> writeBaseType baseType
