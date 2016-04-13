@@ -6,7 +6,7 @@ module Parse.Type
   ( parseTypes
   ) where
 
-import           Data.Char         (isAlpha,isDigit)
+import           Data.Char         (isAlpha, isDigit)
 import           Parse.CType
 import           Parse.State
 import           Parse.Utils
