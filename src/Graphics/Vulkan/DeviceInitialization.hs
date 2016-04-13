@@ -195,9 +195,9 @@ instance Storable VkApplicationInfo where
 
 
 data VkPhysicalDeviceLimits =
-  VkPhysicalDeviceLimits{ vkMaxImageDimension :: Word32 
-                        , vkMaxImageDimension :: Word32 
-                        , vkMaxImageDimension :: Word32 
+  VkPhysicalDeviceLimits{ vkMaxImageDimension1D :: Word32 
+                        , vkMaxImageDimension2D :: Word32 
+                        , vkMaxImageDimension3D :: Word32 
                         , vkMaxImageDimensionCube :: Word32 
                         , vkMaxImageArrayLayers :: Word32 
                         , vkMaxTexelBufferElements :: Word32 
@@ -413,9 +413,9 @@ instance Storable VkPhysicalDeviceLimits where
                                     <*> peek (ptr `plusPtr` 480)
                                     <*> peek (ptr `plusPtr` 488)
                                     <*> peek (ptr `plusPtr` 496)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkMaxImageDimension (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 4) (vkMaxImageDimension (poked :: VkPhysicalDeviceLimits))
-                *> poke (ptr `plusPtr` 8) (vkMaxImageDimension (poked :: VkPhysicalDeviceLimits))
+  poke ptr poked = poke (ptr `plusPtr` 0) (vkMaxImageDimension1D (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 4) (vkMaxImageDimension2D (poked :: VkPhysicalDeviceLimits))
+                *> poke (ptr `plusPtr` 8) (vkMaxImageDimension3D (poked :: VkPhysicalDeviceLimits))
                 *> poke (ptr `plusPtr` 12) (vkMaxImageDimensionCube (poked :: VkPhysicalDeviceLimits))
                 *> poke (ptr `plusPtr` 16) (vkMaxImageArrayLayers (poked :: VkPhysicalDeviceLimits))
                 *> poke (ptr `plusPtr` 20) (vkMaxTexelBufferElements (poked :: VkPhysicalDeviceLimits))
@@ -726,9 +726,9 @@ instance Storable VkImageFormatProperties where
 
 
 data VkPhysicalDeviceSparseProperties =
-  VkPhysicalDeviceSparseProperties{ vkResidencyStandard :: VkBool32 
-                                  , vkResidencyStandard :: VkBool32 
-                                  , vkResidencyStandard :: VkBool32 
+  VkPhysicalDeviceSparseProperties{ vkResidencyStandard2DBlockShape :: VkBool32 
+                                  , vkResidencyStandard2DMultisampleBlockShape :: VkBool32 
+                                  , vkResidencyStandard3DBlockShape :: VkBool32 
                                   , vkResidencyAlignedMipSize :: VkBool32 
                                   , vkResidencyNonResidentStrict :: VkBool32 
                                   }
@@ -742,9 +742,9 @@ instance Storable VkPhysicalDeviceSparseProperties where
                                               <*> peek (ptr `plusPtr` 8)
                                               <*> peek (ptr `plusPtr` 12)
                                               <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkResidencyStandard (poked :: VkPhysicalDeviceSparseProperties))
-                *> poke (ptr `plusPtr` 4) (vkResidencyStandard (poked :: VkPhysicalDeviceSparseProperties))
-                *> poke (ptr `plusPtr` 8) (vkResidencyStandard (poked :: VkPhysicalDeviceSparseProperties))
+  poke ptr poked = poke (ptr `plusPtr` 0) (vkResidencyStandard2DBlockShape (poked :: VkPhysicalDeviceSparseProperties))
+                *> poke (ptr `plusPtr` 4) (vkResidencyStandard2DMultisampleBlockShape (poked :: VkPhysicalDeviceSparseProperties))
+                *> poke (ptr `plusPtr` 8) (vkResidencyStandard3DBlockShape (poked :: VkPhysicalDeviceSparseProperties))
                 *> poke (ptr `plusPtr` 12) (vkResidencyAlignedMipSize (poked :: VkPhysicalDeviceSparseProperties))
                 *> poke (ptr `plusPtr` 16) (vkResidencyNonResidentStrict (poked :: VkPhysicalDeviceSparseProperties))
 
