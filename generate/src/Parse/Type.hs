@@ -13,6 +13,7 @@ import           Parse.Utils
 import           Spec.Type
 import           Text.Regex.TDFA   ((=~))
 import           Text.XML.HXT.Core
+import           Control.Bool ((<||>))
 
 parseTypes :: ParseArrow XmlTree [TypeDecl]
 parseTypes = extractFields "type decls" (hasName "types") extract
@@ -210,7 +211,7 @@ parseMember = extractFields "struct member"
 -- In VkImageBlit "srcOffsets" is "srcOffsets[2]" and "dstOffsets" is
 -- "dstOffsets[2]"
 memberNameWorkarounds :: String -> String
-memberNameWorkarounds = takeWhile (isAlpha \|| isDigit \|| (=='_'))
+memberNameWorkarounds = takeWhile (isAlpha <||> isDigit <||> (=='_'))
 
 inCategory :: ArrowXml a => String -> a XmlTree XmlTree
 inCategory s = hasAttrValue "category" (==s)

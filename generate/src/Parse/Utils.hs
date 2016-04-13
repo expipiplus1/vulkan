@@ -30,7 +30,6 @@ module Parse.Utils
   , stripL
   , stripR
   , stripLines
-  , (\||)
   ) where
 
 import           Data.Char         (isSpace)
@@ -166,8 +165,3 @@ stripR = reverse . stripL . reverse
 
 stripLines :: String -> String
 stripLines = unlines . fmap strip . lines
-
--- | Make a predicate that returns True if either of the predicates is True
-infixr 2 \||
-(\||) :: (a -> Bool) -> (a -> Bool) -> (a -> Bool)
-f \|| g = \x -> f x || g x
