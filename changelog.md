@@ -1,5 +1,8 @@
 # Change Log
 
+## [1.7.0.0] - 2016-04-13
+  - Fix struct member names containing digits being erroneously truncated
+
 ## [1.6.0.0] - 2016-03-30
   - Add DebugReport, Display, DisplaySwapchain and Swapchain extension modules
 

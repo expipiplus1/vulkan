@@ -550,9 +550,9 @@ pattern VK_STENCIL_FACE_BACK_BIT = VkStencilFaceFlagBits 0x2
 pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlagBits 0x3
 
 -- | // Union allowing specification of floating point, integer, or unsigned integer color data. Actual value selected is based on image/attachment being cleared.
-data VkClearColorValue = VkFloat (Vector 4 CFloat) 
-                       | VkInt (Vector 4 Int32) 
-                       | VkUint (Vector 4 Word32) 
+data VkClearColorValue = VkFloat32 (Vector 4 CFloat) 
+                       | VkInt32 (Vector 4 Int32) 
+                       | VkUint32 (Vector 4 Word32) 
   deriving (Eq)
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use
@@ -561,9 +561,9 @@ instance Storable VkClearColorValue where
   alignment ~_ = 4
   peek ~_ = error "peek@VkClearColorValue"
   poke ptr poked = case poked of
-                     VkFloat e -> poke (castPtr ptr) e
-                     VkInt e -> poke (castPtr ptr) e
-                     VkUint e -> poke (castPtr ptr) e
+                     VkFloat32 e -> poke (castPtr ptr) e
+                     VkInt32 e -> poke (castPtr ptr) e
+                     VkUint32 e -> poke (castPtr ptr) e
 
 
 -- ** VkSubpassContents

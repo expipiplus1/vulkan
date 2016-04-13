@@ -6,7 +6,8 @@ module Parse.Type
   ( parseTypes
   ) where
 
-import           Data.Char         (isAlpha)
+import           Control.Bool      ((<||>))
+import           Data.Char         (isAlpha, isDigit)
 import           Parse.CType
 import           Parse.State
 import           Parse.Utils
@@ -210,7 +211,7 @@ parseMember = extractFields "struct member"
 -- In VkImageBlit "srcOffsets" is "srcOffsets[2]" and "dstOffsets" is
 -- "dstOffsets[2]"
 memberNameWorkarounds :: String -> String
-memberNameWorkarounds = takeWhile ((||) <$> isAlpha <*> (=='_'))
+memberNameWorkarounds = takeWhile (isAlpha <||> isDigit <||> (=='_'))
 
 inCategory :: ArrowXml a => String -> a XmlTree XmlTree
 inCategory s = hasAttrValue "category" (==s)
