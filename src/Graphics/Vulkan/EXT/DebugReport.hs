@@ -1,4 +1,5 @@
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -18,6 +19,9 @@ import Foreign.Ptr( Ptr
                   )
 import Data.Int( Int32
                )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -251,9 +255,47 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallb
   VkDebugReportCallbackEXT -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** VkDebugReportFlagsEXT
--- | Opaque flag
-newtype VkDebugReportFlagsEXT = VkDebugReportFlagsEXT VkFlags
-  deriving (Eq, Storable)
+
+newtype VkDebugReportFlagBitsEXT = VkDebugReportFlagBitsEXT VkFlags
+  deriving (Eq, Storable, Bits, FiniteBits)
+
+-- | Alias for VkDebugReportFlagBitsEXT
+type VkDebugReportFlagsEXT = VkDebugReportFlagBitsEXT
+
+instance Show VkDebugReportFlagBitsEXT where
+  showsPrec _ VK_DEBUG_REPORT_INFORMATION_BIT_EXT = showString "VK_DEBUG_REPORT_INFORMATION_BIT_EXT"
+  showsPrec _ VK_DEBUG_REPORT_WARNING_BIT_EXT = showString "VK_DEBUG_REPORT_WARNING_BIT_EXT"
+  showsPrec _ VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = showString "VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT"
+  showsPrec _ VK_DEBUG_REPORT_ERROR_BIT_EXT = showString "VK_DEBUG_REPORT_ERROR_BIT_EXT"
+  showsPrec _ VK_DEBUG_REPORT_DEBUG_BIT_EXT = showString "VK_DEBUG_REPORT_DEBUG_BIT_EXT"
+  
+  showsPrec p (VkDebugReportFlagBitsEXT x) = showParen (p >= 11) (showString "VkDebugReportFlagBitsEXT " . showsPrec 11 x)
+
+instance Read VkDebugReportFlagBitsEXT where
+  readPrec = parens ( choose [ ("VK_DEBUG_REPORT_INFORMATION_BIT_EXT", pure VK_DEBUG_REPORT_INFORMATION_BIT_EXT)
+                             , ("VK_DEBUG_REPORT_WARNING_BIT_EXT", pure VK_DEBUG_REPORT_WARNING_BIT_EXT)
+                             , ("VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT", pure VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)
+                             , ("VK_DEBUG_REPORT_ERROR_BIT_EXT", pure VK_DEBUG_REPORT_ERROR_BIT_EXT)
+                             , ("VK_DEBUG_REPORT_DEBUG_BIT_EXT", pure VK_DEBUG_REPORT_DEBUG_BIT_EXT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkDebugReportFlagBitsEXT")
+                        v <- step readPrec
+                        pure (VkDebugReportFlagBitsEXT v)
+                        )
+                    )
+
+
+pattern VK_DEBUG_REPORT_INFORMATION_BIT_EXT = VkDebugReportFlagBitsEXT 0x1
+
+pattern VK_DEBUG_REPORT_WARNING_BIT_EXT = VkDebugReportFlagBitsEXT 0x2
+
+pattern VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = VkDebugReportFlagBitsEXT 0x4
+
+pattern VK_DEBUG_REPORT_ERROR_BIT_EXT = VkDebugReportFlagBitsEXT 0x8
+
+pattern VK_DEBUG_REPORT_DEBUG_BIT_EXT = VkDebugReportFlagBitsEXT 0x10
+
 
 type PFN_vkDebugReportCallbackEXT = FunPtr
   (VkDebugReportFlagsEXT ->
