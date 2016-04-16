@@ -9,25 +9,23 @@ import Text.Read.Lex( Lexeme(Ident)
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
+import Data.Word( Word64(..)
                 )
-import Foreign.Ptr( Ptr
-                  , FunPtr
+import Foreign.Ptr( Ptr(..)
+                  , FunPtr(..)
                   , plusPtr
                   )
-import Data.Int( Int32
+import Data.Int( Int32(..)
+               , Int32
                )
-import Graphics.Vulkan.EXT.DebugReport( VkDebugReportObjectTypeEXT
-                                      , DebugReportCallbackEXT
-                                      , PFN_vkDebugReportCallbackEXT
-                                      , VkDebugReportCallbackCreateInfoEXT
-                                      , VkDebugReportFlagsEXT
-                                      )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -36,15 +34,15 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.DeviceInitialization( Instance
+import Graphics.Vulkan.DeviceInitialization( Instance(..)
                                            )
-import Graphics.Vulkan.Core( VkResult
-                           , VkBool32
-                           , VkFlags
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkBool32(..)
+                           , VkResult(..)
                            )
-import Foreign.C.Types( CSize
-                      , CChar
+import Foreign.C.Types( CChar(..)
+                      , CSize(..)
                       )
 
 -- ** vkDebugReportMessageEXT
@@ -248,9 +246,44 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallb
   DebugReportCallbackEXT -> Ptr VkAllocationCallbacks -> IO ()
 
 -- ** VkDebugReportFlagsEXT
--- | Opaque flag
+
 newtype VkDebugReportFlagsEXT = VkDebugReportFlagsEXT VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
+
+instance Show VkDebugReportFlagsEXT where
+  showsPrec _ VK_DEBUG_REPORT_INFORMATION_BIT_EXT = showString "VK_DEBUG_REPORT_INFORMATION_BIT_EXT"
+  showsPrec _ VK_DEBUG_REPORT_WARNING_BIT_EXT = showString "VK_DEBUG_REPORT_WARNING_BIT_EXT"
+  showsPrec _ VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = showString "VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT"
+  showsPrec _ VK_DEBUG_REPORT_ERROR_BIT_EXT = showString "VK_DEBUG_REPORT_ERROR_BIT_EXT"
+  showsPrec _ VK_DEBUG_REPORT_DEBUG_BIT_EXT = showString "VK_DEBUG_REPORT_DEBUG_BIT_EXT"
+  
+  showsPrec p (VkDebugReportFlagsEXT x) = showParen (p >= 11) (showString "VkDebugReportFlagsEXT " . showsPrec 11 x)
+
+instance Read VkDebugReportFlagsEXT where
+  readPrec = parens ( choose [ ("VK_DEBUG_REPORT_INFORMATION_BIT_EXT", pure VK_DEBUG_REPORT_INFORMATION_BIT_EXT)
+                             , ("VK_DEBUG_REPORT_WARNING_BIT_EXT", pure VK_DEBUG_REPORT_WARNING_BIT_EXT)
+                             , ("VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT", pure VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)
+                             , ("VK_DEBUG_REPORT_ERROR_BIT_EXT", pure VK_DEBUG_REPORT_ERROR_BIT_EXT)
+                             , ("VK_DEBUG_REPORT_DEBUG_BIT_EXT", pure VK_DEBUG_REPORT_DEBUG_BIT_EXT)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkDebugReportFlagsEXT")
+                        v <- step readPrec
+                        pure (VkDebugReportFlagsEXT v)
+                        )
+                    )
+
+
+pattern VK_DEBUG_REPORT_INFORMATION_BIT_EXT = VkDebugReportFlagsEXT 0x1
+
+pattern VK_DEBUG_REPORT_WARNING_BIT_EXT = VkDebugReportFlagsEXT 0x2
+
+pattern VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = VkDebugReportFlagsEXT 0x4
+
+pattern VK_DEBUG_REPORT_ERROR_BIT_EXT = VkDebugReportFlagsEXT 0x8
+
+pattern VK_DEBUG_REPORT_DEBUG_BIT_EXT = VkDebugReportFlagsEXT 0x10
+
 
 type PFN_vkDebugReportCallbackEXT = FunPtr
   (VkDebugReportFlagsEXT ->

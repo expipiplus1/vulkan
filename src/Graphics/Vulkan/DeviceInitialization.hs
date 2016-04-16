@@ -5,34 +5,41 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.DeviceInitialization where
 
-import Data.Vector.Storable.Sized( Vector
+import Data.Vector.Storable.Sized( Vector(..)
                                  )
-import Graphics.Vulkan.Device( VkPhysicalDeviceFeatures
-                             , Device
-                             , PhysicalDevice
+import Graphics.Vulkan.Device( Device(..)
+                             , PhysicalDevice(..)
+                             , VkPhysicalDeviceFeatures(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word8
-                , Word32
+import Data.Word( Word8(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
-                  , FunPtr
+import Foreign.Ptr( Ptr(..)
+                  , FunPtr(..)
+                  , Ptr
                   , plusPtr
                   )
-import Data.Int( Int32
+import Data.Int( Int32(..)
+               , Int32
                )
 import Data.Bits( Bits
                 , FiniteBits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Graphics.Vulkan.Constants( VK_MAX_PHYSICAL_DEVICE_NAME_SIZE
+                                , VK_UUID_SIZE
+                                , VK_MAX_MEMORY_TYPES
+                                , VK_MAX_MEMORY_HEAPS
+                                )
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -41,44 +48,24 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlags
+import Graphics.Vulkan.Sampler( VkSampleCountFlags(..)
                               )
-import Graphics.Vulkan.Image( VkImageType
-                            , VkImageCreateFlags
-                            , VkImageTiling
-                            , VkImageUsageFlags
+import Graphics.Vulkan.Image( VkImageCreateFlags(..)
+                            , VkImageType(..)
+                            , VkImageUsageFlags(..)
+                            , VkImageTiling(..)
                             )
-import Graphics.Vulkan.DeviceInitialization( VkQueueFlags
-                                           , VkMemoryPropertyFlags
-                                           , VkPhysicalDeviceProperties
-                                           , VkApplicationInfo
-                                           , VkPhysicalDeviceMemoryProperties
-                                           , VkInstanceCreateFlags
-                                           , VkPhysicalDeviceSparseProperties
-                                           , VkFormatFeatureFlags
-                                           , VkMemoryType
-                                           , VkInstanceCreateInfo
-                                           , VkMemoryHeap
-                                           , VkImageFormatProperties
-                                           , VkMemoryHeapFlags
-                                           , VkPhysicalDeviceType
-                                           , Instance
-                                           , VkFormatProperties
-                                           , PFN_vkVoidFunction
-                                           , VkQueueFamilyProperties
-                                           , VkPhysicalDeviceLimits
-                                           )
-import Graphics.Vulkan.Core( VkResult
-                           , VkExtent3D
-                           , VkDeviceSize
-                           , VkBool32
-                           , VkFlags
-                           , VkFormat
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFormat(..)
+                           , VkFlags(..)
+                           , VkBool32(..)
+                           , VkResult(..)
+                           , VkDeviceSize(..)
+                           , VkExtent3D(..)
                            )
-import Foreign.C.Types( CSize
-                      , CFloat
-                      , CChar
+import Foreign.C.Types( CFloat(..)
+                      , CChar(..)
+                      , CSize(..)
                       )
 
 -- ** VkPhysicalDeviceType
@@ -554,13 +541,10 @@ foreign import ccall "vkCreateInstance" vkCreateInstance ::
 
 -- ** VkFormatFeatureFlags
 
-newtype VkFormatFeatureFlagBits = VkFormatFeatureFlagBits VkFlags
+newtype VkFormatFeatureFlags = VkFormatFeatureFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkFormatFeatureFlagBits
-type VkFormatFeatureFlags = VkFormatFeatureFlagBits
-
-instance Show VkFormatFeatureFlagBits where
+instance Show VkFormatFeatureFlags where
   showsPrec _ VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT"
   showsPrec _ VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = showString "VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT"
   showsPrec _ VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = showString "VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT"
@@ -575,9 +559,9 @@ instance Show VkFormatFeatureFlagBits where
   showsPrec _ VK_FORMAT_FEATURE_BLIT_DST_BIT = showString "VK_FORMAT_FEATURE_BLIT_DST_BIT"
   showsPrec _ VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT"
   
-  showsPrec p (VkFormatFeatureFlagBits x) = showParen (p >= 11) (showString "VkFormatFeatureFlagBits " . showsPrec 11 x)
+  showsPrec p (VkFormatFeatureFlags x) = showParen (p >= 11) (showString "VkFormatFeatureFlags " . showsPrec 11 x)
 
-instance Read VkFormatFeatureFlagBits where
+instance Read VkFormatFeatureFlags where
   readPrec = parens ( choose [ ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT", pure VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)
                              , ("VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT", pure VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT)
                              , ("VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT", pure VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT)
@@ -593,38 +577,38 @@ instance Read VkFormatFeatureFlagBits where
                              , ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT", pure VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkFormatFeatureFlagBits")
+                        expectP (Ident "VkFormatFeatureFlags")
                         v <- step readPrec
-                        pure (VkFormatFeatureFlagBits v)
+                        pure (VkFormatFeatureFlags v)
                         )
                     )
 
 -- | Format can be used for sampled images (SAMPLED_IMAGE and COMBINED_IMAGE_SAMPLER descriptor types)
-pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = VkFormatFeatureFlagBits 0x1
+pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = VkFormatFeatureFlags 0x1
 -- | Format can be used for storage images (STORAGE_IMAGE descriptor type)
-pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = VkFormatFeatureFlagBits 0x2
+pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = VkFormatFeatureFlags 0x2
 -- | Format supports atomic operations in case it's used for storage images
-pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = VkFormatFeatureFlagBits 0x4
+pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = VkFormatFeatureFlags 0x4
 -- | Format can be used for uniform texel buffers (TBOs)
-pattern VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = VkFormatFeatureFlagBits 0x8
+pattern VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = VkFormatFeatureFlags 0x8
 -- | Format can be used for storage texel buffers (IBOs)
-pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = VkFormatFeatureFlagBits 0x10
+pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = VkFormatFeatureFlags 0x10
 -- | Format supports atomic operations in case it's used for storage texel buffers
-pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = VkFormatFeatureFlagBits 0x20
+pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = VkFormatFeatureFlags 0x20
 -- | Format can be used for vertex buffers (VBOs)
-pattern VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = VkFormatFeatureFlagBits 0x40
+pattern VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = VkFormatFeatureFlags 0x40
 -- | Format can be used for color attachment images
-pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = VkFormatFeatureFlagBits 0x80
+pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = VkFormatFeatureFlags 0x80
 -- | Format supports blending in case it's used for color attachment images
-pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = VkFormatFeatureFlagBits 0x100
+pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = VkFormatFeatureFlags 0x100
 -- | Format can be used for depth/stencil attachment images
-pattern VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = VkFormatFeatureFlagBits 0x200
+pattern VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = VkFormatFeatureFlags 0x200
 -- | Format can be used as the source image of blits with vkCmdBlitImage
-pattern VK_FORMAT_FEATURE_BLIT_SRC_BIT = VkFormatFeatureFlagBits 0x400
+pattern VK_FORMAT_FEATURE_BLIT_SRC_BIT = VkFormatFeatureFlags 0x400
 -- | Format can be used as the destination image of blits with vkCmdBlitImage
-pattern VK_FORMAT_FEATURE_BLIT_DST_BIT = VkFormatFeatureFlagBits 0x800
+pattern VK_FORMAT_FEATURE_BLIT_DST_BIT = VkFormatFeatureFlags 0x800
 -- | Format can be filtered with VK_FILTER_LINEAR when being sampled
-pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = VkFormatFeatureFlagBits 0x1000
+pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = VkFormatFeatureFlags 0x1000
 
 
 
@@ -654,29 +638,26 @@ type Instance = Ptr VkInstance_T
 
 -- ** VkMemoryHeapFlags
 
-newtype VkMemoryHeapFlagBits = VkMemoryHeapFlagBits VkFlags
+newtype VkMemoryHeapFlags = VkMemoryHeapFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkMemoryHeapFlagBits
-type VkMemoryHeapFlags = VkMemoryHeapFlagBits
-
-instance Show VkMemoryHeapFlagBits where
+instance Show VkMemoryHeapFlags where
   showsPrec _ VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = showString "VK_MEMORY_HEAP_DEVICE_LOCAL_BIT"
   
-  showsPrec p (VkMemoryHeapFlagBits x) = showParen (p >= 11) (showString "VkMemoryHeapFlagBits " . showsPrec 11 x)
+  showsPrec p (VkMemoryHeapFlags x) = showParen (p >= 11) (showString "VkMemoryHeapFlags " . showsPrec 11 x)
 
-instance Read VkMemoryHeapFlagBits where
+instance Read VkMemoryHeapFlags where
   readPrec = parens ( choose [ ("VK_MEMORY_HEAP_DEVICE_LOCAL_BIT", pure VK_MEMORY_HEAP_DEVICE_LOCAL_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkMemoryHeapFlagBits")
+                        expectP (Ident "VkMemoryHeapFlags")
                         v <- step readPrec
-                        pure (VkMemoryHeapFlagBits v)
+                        pure (VkMemoryHeapFlags v)
                         )
                     )
 
 -- | If set, heap represents device memory
-pattern VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = VkMemoryHeapFlagBits 0x1
+pattern VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = VkMemoryHeapFlags 0x1
 
 
 
@@ -823,22 +804,19 @@ foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr ::
 
 -- ** VkMemoryPropertyFlags
 
-newtype VkMemoryPropertyFlagBits = VkMemoryPropertyFlagBits VkFlags
+newtype VkMemoryPropertyFlags = VkMemoryPropertyFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkMemoryPropertyFlagBits
-type VkMemoryPropertyFlags = VkMemoryPropertyFlagBits
-
-instance Show VkMemoryPropertyFlagBits where
+instance Show VkMemoryPropertyFlags where
   showsPrec _ VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = showString "VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT"
   showsPrec _ VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = showString "VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT"
   showsPrec _ VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = showString "VK_MEMORY_PROPERTY_HOST_COHERENT_BIT"
   showsPrec _ VK_MEMORY_PROPERTY_HOST_CACHED_BIT = showString "VK_MEMORY_PROPERTY_HOST_CACHED_BIT"
   showsPrec _ VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = showString "VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT"
   
-  showsPrec p (VkMemoryPropertyFlagBits x) = showParen (p >= 11) (showString "VkMemoryPropertyFlagBits " . showsPrec 11 x)
+  showsPrec p (VkMemoryPropertyFlags x) = showParen (p >= 11) (showString "VkMemoryPropertyFlags " . showsPrec 11 x)
 
-instance Read VkMemoryPropertyFlagBits where
+instance Read VkMemoryPropertyFlags where
   readPrec = parens ( choose [ ("VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT", pure VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
                              , ("VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT", pure VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
                              , ("VK_MEMORY_PROPERTY_HOST_COHERENT_BIT", pure VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
@@ -846,22 +824,22 @@ instance Read VkMemoryPropertyFlagBits where
                              , ("VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT", pure VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkMemoryPropertyFlagBits")
+                        expectP (Ident "VkMemoryPropertyFlags")
                         v <- step readPrec
-                        pure (VkMemoryPropertyFlagBits v)
+                        pure (VkMemoryPropertyFlags v)
                         )
                     )
 
 -- | If otherwise stated, then allocate memory on device
-pattern VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = VkMemoryPropertyFlagBits 0x1
+pattern VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = VkMemoryPropertyFlags 0x1
 -- | Memory is mappable by host
-pattern VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = VkMemoryPropertyFlagBits 0x2
+pattern VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = VkMemoryPropertyFlags 0x2
 -- | Memory will have i/o coherency. If not set, application may need to use vkFlushMappedMemoryRanges and vkInvalidateMappedMemoryRanges to flush/invalidate host cache
-pattern VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = VkMemoryPropertyFlagBits 0x4
+pattern VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = VkMemoryPropertyFlags 0x4
 -- | Memory will be cached by the host
-pattern VK_MEMORY_PROPERTY_HOST_CACHED_BIT = VkMemoryPropertyFlagBits 0x8
+pattern VK_MEMORY_PROPERTY_HOST_CACHED_BIT = VkMemoryPropertyFlags 0x8
 -- | Memory may be allocated by the driver when it is required
-pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = VkMemoryPropertyFlagBits 0x10
+pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = VkMemoryPropertyFlags 0x10
 
 
 -- ** vkDestroyInstance
@@ -870,41 +848,38 @@ foreign import ccall "vkDestroyInstance" vkDestroyInstance ::
 
 -- ** VkQueueFlags
 
-newtype VkQueueFlagBits = VkQueueFlagBits VkFlags
+newtype VkQueueFlags = VkQueueFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkQueueFlagBits
-type VkQueueFlags = VkQueueFlagBits
-
-instance Show VkQueueFlagBits where
+instance Show VkQueueFlags where
   showsPrec _ VK_QUEUE_GRAPHICS_BIT = showString "VK_QUEUE_GRAPHICS_BIT"
   showsPrec _ VK_QUEUE_COMPUTE_BIT = showString "VK_QUEUE_COMPUTE_BIT"
   showsPrec _ VK_QUEUE_TRANSFER_BIT = showString "VK_QUEUE_TRANSFER_BIT"
   showsPrec _ VK_QUEUE_SPARSE_BINDING_BIT = showString "VK_QUEUE_SPARSE_BINDING_BIT"
   
-  showsPrec p (VkQueueFlagBits x) = showParen (p >= 11) (showString "VkQueueFlagBits " . showsPrec 11 x)
+  showsPrec p (VkQueueFlags x) = showParen (p >= 11) (showString "VkQueueFlags " . showsPrec 11 x)
 
-instance Read VkQueueFlagBits where
+instance Read VkQueueFlags where
   readPrec = parens ( choose [ ("VK_QUEUE_GRAPHICS_BIT", pure VK_QUEUE_GRAPHICS_BIT)
                              , ("VK_QUEUE_COMPUTE_BIT", pure VK_QUEUE_COMPUTE_BIT)
                              , ("VK_QUEUE_TRANSFER_BIT", pure VK_QUEUE_TRANSFER_BIT)
                              , ("VK_QUEUE_SPARSE_BINDING_BIT", pure VK_QUEUE_SPARSE_BINDING_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkQueueFlagBits")
+                        expectP (Ident "VkQueueFlags")
                         v <- step readPrec
-                        pure (VkQueueFlagBits v)
+                        pure (VkQueueFlags v)
                         )
                     )
 
 -- | Queue supports graphics operations
-pattern VK_QUEUE_GRAPHICS_BIT = VkQueueFlagBits 0x1
+pattern VK_QUEUE_GRAPHICS_BIT = VkQueueFlags 0x1
 -- | Queue supports compute operations
-pattern VK_QUEUE_COMPUTE_BIT = VkQueueFlagBits 0x2
+pattern VK_QUEUE_COMPUTE_BIT = VkQueueFlags 0x2
 -- | Queue supports transfer operations
-pattern VK_QUEUE_TRANSFER_BIT = VkQueueFlagBits 0x4
+pattern VK_QUEUE_TRANSFER_BIT = VkQueueFlags 0x4
 -- | Queue supports sparse resource memory management operations
-pattern VK_QUEUE_SPARSE_BINDING_BIT = VkQueueFlagBits 0x8
+pattern VK_QUEUE_SPARSE_BINDING_BIT = VkQueueFlags 0x8
 
 
 -- ** vkGetPhysicalDeviceProperties

@@ -4,17 +4,17 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Query where
 
-import Graphics.Vulkan.Device( Device
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Int( Int32
@@ -24,9 +24,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -35,19 +35,12 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Query( VkQueryPoolCreateFlags
-                            , VkQueryType
-                            , VkQueryResultFlags
-                            , VkQueryPoolCreateInfo
-                            , QueryPool
-                            , VkQueryPipelineStatisticFlags
-                            )
-import Graphics.Vulkan.Core( VkResult
-                           , VkDeviceSize
-                           , VkFlags
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkResult(..)
+                           , VkDeviceSize(..)
                            )
-import Foreign.C.Types( CSize
+import Foreign.C.Types( CSize(..)
                       )
 
 -- ** vkGetQueryPoolResults
@@ -93,41 +86,38 @@ instance Storable VkQueryPoolCreateInfo where
 
 -- ** VkQueryResultFlags
 
-newtype VkQueryResultFlagBits = VkQueryResultFlagBits VkFlags
+newtype VkQueryResultFlags = VkQueryResultFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkQueryResultFlagBits
-type VkQueryResultFlags = VkQueryResultFlagBits
-
-instance Show VkQueryResultFlagBits where
+instance Show VkQueryResultFlags where
   showsPrec _ VK_QUERY_RESULT_64_BIT = showString "VK_QUERY_RESULT_64_BIT"
   showsPrec _ VK_QUERY_RESULT_WAIT_BIT = showString "VK_QUERY_RESULT_WAIT_BIT"
   showsPrec _ VK_QUERY_RESULT_WITH_AVAILABILITY_BIT = showString "VK_QUERY_RESULT_WITH_AVAILABILITY_BIT"
   showsPrec _ VK_QUERY_RESULT_PARTIAL_BIT = showString "VK_QUERY_RESULT_PARTIAL_BIT"
   
-  showsPrec p (VkQueryResultFlagBits x) = showParen (p >= 11) (showString "VkQueryResultFlagBits " . showsPrec 11 x)
+  showsPrec p (VkQueryResultFlags x) = showParen (p >= 11) (showString "VkQueryResultFlags " . showsPrec 11 x)
 
-instance Read VkQueryResultFlagBits where
+instance Read VkQueryResultFlags where
   readPrec = parens ( choose [ ("VK_QUERY_RESULT_64_BIT", pure VK_QUERY_RESULT_64_BIT)
                              , ("VK_QUERY_RESULT_WAIT_BIT", pure VK_QUERY_RESULT_WAIT_BIT)
                              , ("VK_QUERY_RESULT_WITH_AVAILABILITY_BIT", pure VK_QUERY_RESULT_WITH_AVAILABILITY_BIT)
                              , ("VK_QUERY_RESULT_PARTIAL_BIT", pure VK_QUERY_RESULT_PARTIAL_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkQueryResultFlagBits")
+                        expectP (Ident "VkQueryResultFlags")
                         v <- step readPrec
-                        pure (VkQueryResultFlagBits v)
+                        pure (VkQueryResultFlags v)
                         )
                     )
 
 -- | Results of the queries are written to the destination buffer as 64-bit values
-pattern VK_QUERY_RESULT_64_BIT = VkQueryResultFlagBits 0x1
+pattern VK_QUERY_RESULT_64_BIT = VkQueryResultFlags 0x1
 -- | Results of the queries are waited on before proceeding with the result copy
-pattern VK_QUERY_RESULT_WAIT_BIT = VkQueryResultFlagBits 0x2
+pattern VK_QUERY_RESULT_WAIT_BIT = VkQueryResultFlags 0x2
 -- | Besides the results of the query, the availability of the results is also written
-pattern VK_QUERY_RESULT_WITH_AVAILABILITY_BIT = VkQueryResultFlagBits 0x4
+pattern VK_QUERY_RESULT_WITH_AVAILABILITY_BIT = VkQueryResultFlags 0x4
 -- | Copy the partial results of the query even if the final results aren't available
-pattern VK_QUERY_RESULT_PARTIAL_BIT = VkQueryResultFlagBits 0x8
+pattern VK_QUERY_RESULT_PARTIAL_BIT = VkQueryResultFlags 0x8
 
 
 -- ** VkQueryType
@@ -171,29 +161,26 @@ foreign import ccall "vkCreateQueryPool" vkCreateQueryPool ::
 
 -- ** VkQueryControlFlags
 
-newtype VkQueryControlFlagBits = VkQueryControlFlagBits VkFlags
+newtype VkQueryControlFlags = VkQueryControlFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkQueryControlFlagBits
-type VkQueryControlFlags = VkQueryControlFlagBits
-
-instance Show VkQueryControlFlagBits where
+instance Show VkQueryControlFlags where
   showsPrec _ VK_QUERY_CONTROL_PRECISE_BIT = showString "VK_QUERY_CONTROL_PRECISE_BIT"
   
-  showsPrec p (VkQueryControlFlagBits x) = showParen (p >= 11) (showString "VkQueryControlFlagBits " . showsPrec 11 x)
+  showsPrec p (VkQueryControlFlags x) = showParen (p >= 11) (showString "VkQueryControlFlags " . showsPrec 11 x)
 
-instance Read VkQueryControlFlagBits where
+instance Read VkQueryControlFlags where
   readPrec = parens ( choose [ ("VK_QUERY_CONTROL_PRECISE_BIT", pure VK_QUERY_CONTROL_PRECISE_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkQueryControlFlagBits")
+                        expectP (Ident "VkQueryControlFlags")
                         v <- step readPrec
-                        pure (VkQueryControlFlagBits v)
+                        pure (VkQueryControlFlags v)
                         )
                     )
 
 -- | Require precise results to be collected by the query
-pattern VK_QUERY_CONTROL_PRECISE_BIT = VkQueryControlFlagBits 0x1
+pattern VK_QUERY_CONTROL_PRECISE_BIT = VkQueryControlFlags 0x1
 
 
 -- ** VkQueryPoolCreateFlags
@@ -203,13 +190,10 @@ newtype VkQueryPoolCreateFlags = VkQueryPoolCreateFlags VkFlags
 
 -- ** VkQueryPipelineStatisticFlags
 
-newtype VkQueryPipelineStatisticFlagBits = VkQueryPipelineStatisticFlagBits VkFlags
+newtype VkQueryPipelineStatisticFlags = VkQueryPipelineStatisticFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkQueryPipelineStatisticFlagBits
-type VkQueryPipelineStatisticFlags = VkQueryPipelineStatisticFlagBits
-
-instance Show VkQueryPipelineStatisticFlagBits where
+instance Show VkQueryPipelineStatisticFlags where
   showsPrec _ VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT"
   showsPrec _ VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT"
   showsPrec _ VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT"
@@ -222,9 +206,9 @@ instance Show VkQueryPipelineStatisticFlagBits where
   showsPrec _ VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT"
   showsPrec _ VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT"
   
-  showsPrec p (VkQueryPipelineStatisticFlagBits x) = showParen (p >= 11) (showString "VkQueryPipelineStatisticFlagBits " . showsPrec 11 x)
+  showsPrec p (VkQueryPipelineStatisticFlags x) = showParen (p >= 11) (showString "VkQueryPipelineStatisticFlags " . showsPrec 11 x)
 
-instance Read VkQueryPipelineStatisticFlagBits where
+instance Read VkQueryPipelineStatisticFlags where
   readPrec = parens ( choose [ ("VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT", pure VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT)
                              , ("VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT", pure VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT)
                              , ("VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT", pure VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT)
@@ -238,33 +222,33 @@ instance Read VkQueryPipelineStatisticFlagBits where
                              , ("VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT", pure VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkQueryPipelineStatisticFlagBits")
+                        expectP (Ident "VkQueryPipelineStatisticFlags")
                         v <- step readPrec
-                        pure (VkQueryPipelineStatisticFlagBits v)
+                        pure (VkQueryPipelineStatisticFlags v)
                         )
                     )
 
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = VkQueryPipelineStatisticFlagBits 0x1
+pattern VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = VkQueryPipelineStatisticFlags 0x1
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = VkQueryPipelineStatisticFlagBits 0x2
+pattern VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = VkQueryPipelineStatisticFlags 0x2
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlagBits 0x4
+pattern VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlags 0x4
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlagBits 0x8
+pattern VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlags 0x8
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT = VkQueryPipelineStatisticFlagBits 0x10
+pattern VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT = VkQueryPipelineStatisticFlags 0x10
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT = VkQueryPipelineStatisticFlagBits 0x20
+pattern VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT = VkQueryPipelineStatisticFlags 0x20
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT = VkQueryPipelineStatisticFlagBits 0x40
+pattern VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT = VkQueryPipelineStatisticFlags 0x40
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlagBits 0x80
+pattern VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlags 0x80
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT = VkQueryPipelineStatisticFlagBits 0x100
+pattern VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT = VkQueryPipelineStatisticFlags 0x100
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlagBits 0x200
+pattern VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlags 0x200
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlagBits 0x400
+pattern VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = VkQueryPipelineStatisticFlags 0x400
 
 

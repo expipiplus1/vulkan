@@ -5,62 +5,46 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.CommandBufferBuilding where
 
-import Data.Vector.Storable.Sized( Vector
+import Data.Vector.Storable.Sized( Vector(..)
                                  )
-import Graphics.Vulkan.Buffer( Buffer
+import Graphics.Vulkan.Buffer( Buffer(..)
                              )
-import Graphics.Vulkan.Pass( Framebuffer
-                           , VkDependencyFlags
-                           , RenderPass
+import Graphics.Vulkan.Pass( RenderPass(..)
+                           , Framebuffer(..)
+                           , VkDependencyFlags(..)
                            )
 import Text.Read.Lex( Lexeme(Ident)
                     )
-import Graphics.Vulkan.Event( Event
+import Graphics.Vulkan.Event( Event(..)
                             )
 import GHC.Read( expectP
                , choose
                )
-import Graphics.Vulkan.Pipeline( VkPipelineStageFlagBits
-                               , VkPipelineStageFlags
-                               , VkPipelineBindPoint
-                               , Pipeline
+import Graphics.Vulkan.Pipeline( Pipeline(..)
+                               , VkPipelineBindPoint(..)
+                               , VkPipelineStageFlags(..)
                                )
-import Data.Word( Word32
+import Data.Word( Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , castPtr
                   , plusPtr
                   )
-import Graphics.Vulkan.DescriptorSet( DescriptorSet
+import Graphics.Vulkan.DescriptorSet( DescriptorSet(..)
                                     )
-import Graphics.Vulkan.CommandBuffer( CommandBuffer
+import Graphics.Vulkan.CommandBuffer( CommandBuffer(..)
                                     )
-import Data.Int( Int32
+import Data.Int( Int32(..)
+               , Int32
                )
 import Data.Bits( Bits
                 , FiniteBits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.CommandBufferBuilding( VkRenderPassBeginInfo
-                                            , VkClearValue
-                                            , VkStencilFaceFlags
-                                            , VkImageSubresourceLayers
-                                            , VkImageResolve
-                                            , VkClearRect
-                                            , VkClearColorValue
-                                            , VkSubpassContents
-                                            , VkImageBlit
-                                            , VkIndexType
-                                            , VkClearDepthStencilValue
-                                            , VkClearAttachment
-                                            , VkBufferCopy
-                                            , VkImageCopy
-                                            , VkBufferImageCopy
-                                            )
-import Graphics.Vulkan.PipelineLayout( PipelineLayout
+import Graphics.Vulkan.PipelineLayout( PipelineLayout(..)
                                      )
 import Text.Read( Read(..)
                 , parens
@@ -69,32 +53,32 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Shader( VkShaderStageFlags
+import Graphics.Vulkan.Shader( VkShaderStageFlags(..)
                              )
-import Graphics.Vulkan.Sampler( VkFilter
+import Graphics.Vulkan.Sampler( VkFilter(..)
                               )
-import Graphics.Vulkan.Image( VkImageAspectFlags
-                            , VkImageSubresourceRange
-                            , VkImageLayout
-                            , Image
+import Graphics.Vulkan.Image( Image(..)
+                            , VkImageAspectFlags(..)
+                            , VkImageSubresourceRange(..)
+                            , VkImageLayout(..)
                             )
-import Graphics.Vulkan.Query( VkQueryResultFlags
-                            , QueryPool
-                            , VkQueryControlFlags
+import Graphics.Vulkan.Query( VkQueryResultFlags(..)
+                            , QueryPool(..)
+                            , VkQueryControlFlags(..)
                             )
-import Graphics.Vulkan.OtherTypes( VkMemoryBarrier
-                                 , VkBufferMemoryBarrier
-                                 , VkImageMemoryBarrier
+import Graphics.Vulkan.OtherTypes( VkMemoryBarrier(..)
+                                 , VkBufferMemoryBarrier(..)
+                                 , VkImageMemoryBarrier(..)
                                  )
-import Graphics.Vulkan.Core( VkExtent3D
-                           , VkDeviceSize
-                           , VkFlags
-                           , VkOffset3D
-                           , VkViewport
-                           , VkRect2D
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkRect2D(..)
+                           , VkOffset3D(..)
+                           , VkViewport(..)
+                           , VkDeviceSize(..)
+                           , VkExtent3D(..)
                            )
-import Foreign.C.Types( CFloat
+import Foreign.C.Types( CFloat(..)
                       )
 
 -- ** vkCmdPushConstants
@@ -324,7 +308,7 @@ foreign import ccall "vkCmdCopyImage" vkCmdCopyImage ::
 -- ** vkCmdWriteTimestamp
 foreign import ccall "vkCmdWriteTimestamp" vkCmdWriteTimestamp ::
   CommandBuffer ->
-  VkPipelineStageFlagBits -> QueryPool -> Word32 -> IO ()
+  VkPipelineStageFlags -> QueryPool -> Word32 -> IO ()
 
 
 data VkImageSubresourceLayers =
@@ -521,36 +505,33 @@ instance Storable VkClearValue where
 
 -- ** VkStencilFaceFlags
 
-newtype VkStencilFaceFlagBits = VkStencilFaceFlagBits VkFlags
+newtype VkStencilFaceFlags = VkStencilFaceFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkStencilFaceFlagBits
-type VkStencilFaceFlags = VkStencilFaceFlagBits
-
-instance Show VkStencilFaceFlagBits where
+instance Show VkStencilFaceFlags where
   showsPrec _ VK_STENCIL_FACE_FRONT_BIT = showString "VK_STENCIL_FACE_FRONT_BIT"
   showsPrec _ VK_STENCIL_FACE_BACK_BIT = showString "VK_STENCIL_FACE_BACK_BIT"
   showsPrec _ VK_STENCIL_FRONT_AND_BACK = showString "VK_STENCIL_FRONT_AND_BACK"
-  showsPrec p (VkStencilFaceFlagBits x) = showParen (p >= 11) (showString "VkStencilFaceFlagBits " . showsPrec 11 x)
+  showsPrec p (VkStencilFaceFlags x) = showParen (p >= 11) (showString "VkStencilFaceFlags " . showsPrec 11 x)
 
-instance Read VkStencilFaceFlagBits where
+instance Read VkStencilFaceFlags where
   readPrec = parens ( choose [ ("VK_STENCIL_FACE_FRONT_BIT", pure VK_STENCIL_FACE_FRONT_BIT)
                              , ("VK_STENCIL_FACE_BACK_BIT", pure VK_STENCIL_FACE_BACK_BIT)
                              , ("VK_STENCIL_FRONT_AND_BACK", pure VK_STENCIL_FRONT_AND_BACK)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkStencilFaceFlagBits")
+                        expectP (Ident "VkStencilFaceFlags")
                         v <- step readPrec
-                        pure (VkStencilFaceFlagBits v)
+                        pure (VkStencilFaceFlags v)
                         )
                     )
 
 -- | Front face
-pattern VK_STENCIL_FACE_FRONT_BIT = VkStencilFaceFlagBits 0x1
+pattern VK_STENCIL_FACE_FRONT_BIT = VkStencilFaceFlags 0x1
 -- | Back face
-pattern VK_STENCIL_FACE_BACK_BIT = VkStencilFaceFlagBits 0x2
+pattern VK_STENCIL_FACE_BACK_BIT = VkStencilFaceFlags 0x2
 -- | Front and back faces
-pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlagBits 0x3
+pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlags 0x3
 
 -- | // Union allowing specification of floating point, integer, or unsigned integer color data. Actual value selected is based on image/attachment being cleared.
 data VkClearColorValue = Float32 (Vector 4 CFloat) 

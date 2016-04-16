@@ -2,25 +2,23 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.MemoryManagement where
 
-import Graphics.Vulkan.Device( Device
+import Graphics.Vulkan.Device( Device(..)
                              )
-import Graphics.Vulkan.Buffer( Buffer
+import Graphics.Vulkan.Buffer( Buffer(..)
                              )
-import Data.Word( Word32
+import Data.Word( Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
-import Graphics.Vulkan.MemoryManagement( VkMemoryRequirements
-                                       )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Memory( DeviceMemory
+import Graphics.Vulkan.Memory( DeviceMemory(..)
                              )
-import Graphics.Vulkan.Image( Image
+import Graphics.Vulkan.Image( Image(..)
                             )
-import Graphics.Vulkan.Core( VkResult
-                           , VkDeviceSize
+import Graphics.Vulkan.Core( VkResult(..)
+                           , VkDeviceSize(..)
                            )
 
 -- ** vkGetImageMemoryRequirements

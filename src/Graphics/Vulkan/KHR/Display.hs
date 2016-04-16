@@ -4,45 +4,30 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Display where
 
-import Graphics.Vulkan.Device( PhysicalDevice
+import Graphics.Vulkan.Device( PhysicalDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
-import Graphics.Vulkan.KHR.Surface( VkSurfaceTransformFlagBitsKHR
-                                  , SurfaceKHR
-                                  , VkSurfaceTransformFlagsKHR
+import Graphics.Vulkan.KHR.Surface( SurfaceKHR(..)
+                                  , VkSurfaceTransformFlagsKHR(..)
                                   )
 import Data.Bits( Bits
                 , FiniteBits
                 )
-import Graphics.Vulkan.KHR.Display( VkDisplayPropertiesKHR
-                                  , VkDisplayPlaneCapabilitiesKHR
-                                  , VkDisplaySurfaceCreateInfoKHR
-                                  , VkDisplayModePropertiesKHR
-                                  , VkDisplayPlanePropertiesKHR
-                                  , DisplayModeKHR
-                                  , VkDisplayPlaneAlphaFlagBitsKHR
-                                  , DisplayKHR
-                                  , VkDisplayModeCreateFlagsKHR
-                                  , VkDisplayModeCreateInfoKHR
-                                  , VkDisplayPlaneAlphaFlagsKHR
-                                  , VkDisplaySurfaceCreateFlagsKHR
-                                  , VkDisplayModeParametersKHR
-                                  )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -51,17 +36,17 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.DeviceInitialization( Instance
+import Graphics.Vulkan.DeviceInitialization( Instance(..)
                                            )
-import Graphics.Vulkan.Core( VkResult
-                           , VkBool32
-                           , VkExtent2D
-                           , VkFlags
-                           , VkOffset2D
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkBool32(..)
+                           , VkResult(..)
+                           , VkExtent2D(..)
+                           , VkOffset2D(..)
                            )
-import Foreign.C.Types( CFloat
-                      , CChar
+import Foreign.C.Types( CFloat(..)
+                      , CChar(..)
                       )
 
 
@@ -72,9 +57,9 @@ data VkDisplaySurfaceCreateInfoKHR =
                                , displayMode :: DisplayModeKHR 
                                , planeIndex :: Word32 
                                , planeStackIndex :: Word32 
-                               , transform :: VkSurfaceTransformFlagBitsKHR 
+                               , transform :: VkSurfaceTransformFlagsKHR 
                                , globalAlpha :: CFloat 
-                               , alphaMode :: VkDisplayPlaneAlphaFlagBitsKHR 
+                               , alphaMode :: VkDisplayPlaneAlphaFlagsKHR 
                                , imageExtent :: VkExtent2D 
                                }
   deriving (Eq)
@@ -230,41 +215,38 @@ instance Storable VkDisplayModePropertiesKHR where
 
 -- ** VkDisplayPlaneAlphaFlagsKHR
 
-newtype VkDisplayPlaneAlphaFlagBitsKHR = VkDisplayPlaneAlphaFlagBitsKHR VkFlags
+newtype VkDisplayPlaneAlphaFlagsKHR = VkDisplayPlaneAlphaFlagsKHR VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkDisplayPlaneAlphaFlagBitsKHR
-type VkDisplayPlaneAlphaFlagsKHR = VkDisplayPlaneAlphaFlagBitsKHR
-
-instance Show VkDisplayPlaneAlphaFlagBitsKHR where
+instance Show VkDisplayPlaneAlphaFlagsKHR where
   showsPrec _ VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR"
   showsPrec _ VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR"
   showsPrec _ VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR"
   showsPrec _ VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR"
   
-  showsPrec p (VkDisplayPlaneAlphaFlagBitsKHR x) = showParen (p >= 11) (showString "VkDisplayPlaneAlphaFlagBitsKHR " . showsPrec 11 x)
+  showsPrec p (VkDisplayPlaneAlphaFlagsKHR x) = showParen (p >= 11) (showString "VkDisplayPlaneAlphaFlagsKHR " . showsPrec 11 x)
 
-instance Read VkDisplayPlaneAlphaFlagBitsKHR where
+instance Read VkDisplayPlaneAlphaFlagsKHR where
   readPrec = parens ( choose [ ("VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR)
                              , ("VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR)
                              , ("VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR)
                              , ("VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDisplayPlaneAlphaFlagBitsKHR")
+                        expectP (Ident "VkDisplayPlaneAlphaFlagsKHR")
                         v <- step readPrec
-                        pure (VkDisplayPlaneAlphaFlagBitsKHR v)
+                        pure (VkDisplayPlaneAlphaFlagsKHR v)
                         )
                     )
 
 
-pattern VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = VkDisplayPlaneAlphaFlagBitsKHR 0x1
+pattern VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = VkDisplayPlaneAlphaFlagsKHR 0x1
 
-pattern VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = VkDisplayPlaneAlphaFlagBitsKHR 0x2
+pattern VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = VkDisplayPlaneAlphaFlagsKHR 0x2
 
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = VkDisplayPlaneAlphaFlagBitsKHR 0x4
+pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = VkDisplayPlaneAlphaFlagsKHR 0x4
 
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = VkDisplayPlaneAlphaFlagBitsKHR 0x8
+pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = VkDisplayPlaneAlphaFlagsKHR 0x8
 
 
 -- ** VkDisplayModeCreateFlagsKHR

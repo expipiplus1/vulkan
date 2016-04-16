@@ -3,7 +3,6 @@ module Spec.Bitmask where
 import           Data.Word (Word32)
 
 data Bitmask = Bitmask { bmName         :: String
-                       , bmHsName       :: String
                        , bmNamespace    :: Maybe String
                        , bmComment      :: Maybe String
                        , bmValues       :: [BitmaskValue]

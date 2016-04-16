@@ -236,21 +236,21 @@ vertexToEnumType v = case vSourceEntity v of
 getGraphEnumTypes :: SpecGraph -> [EnumType]
 getGraphEnumTypes graph = catMaybes (vertexToEnumType <$> gVertices graph)
 
-entityName :: SourceEntity -> Maybe String
-entityName e =
+entityNames :: SourceEntity -> [String]
+entityNames e =
   case e of
-    ABaseType bt -> Just $ btName bt
-    ABitmaskType bmt _ -> Just $ bmtName bmt
-    AHandleType ht -> Just $ htName ht
-    AnEnumType et -> Just $ etName et
-    AFuncPointerType fpt -> Just $ fptName fpt
-    AStructType st -> Just $ stName st
-    AUnionType ut -> Just $ utName ut
-    ACommand co -> Just $ Command.cName co
-    AnEnum en -> Just $ eName en
-    ABitmask bm -> Just $ bmName bm
-    AConstant c -> Just $ Constant.cName c
-    _ -> Nothing
+    ABaseType bt -> [btName bt]
+    ABitmaskType bmt bm -> [bmtName bmt] ++ maybeToList (bmName <$> bm)
+    AHandleType ht -> [htName ht]
+    AnEnumType et -> [etName et]
+    AFuncPointerType fpt -> [fptName fpt]
+    AStructType st -> [stName st]
+    AUnionType ut -> [utName ut]
+    ACommand co -> [Command.cName co]
+    AnEnum en -> [eName en]
+    ABitmask bm -> [bmName bm]
+    AConstant c -> [Constant.cName c]
+    _ -> []
 
 entityExportName :: SourceEntity -> Maybe String
 entityExportName e =
@@ -264,7 +264,6 @@ entityExportName e =
     AUnionType ut -> Just $ utHsName ut
     ACommand co -> Just $ Command.cHsName co
     AnEnum en -> Just $ eHsName en
-    ABitmask bm -> Just $ bmHsName bm
     AConstant c -> Just $ Constant.cHsName c
     _ -> Nothing
 

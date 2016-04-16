@@ -4,22 +4,17 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Buffer where
 
-import Graphics.Vulkan.Device( Device
-                             )
-import Graphics.Vulkan.Buffer( Buffer
-                             , VkBufferCreateFlags
-                             , VkBufferUsageFlags
-                             , VkBufferCreateInfo
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Bits( Bits
@@ -27,9 +22,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -38,11 +33,11 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkResult
-                           , VkDeviceSize
-                           , VkFlags
-                           , VkStructureType
-                           , VkSharingMode
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkResult(..)
+                           , VkDeviceSize(..)
+                           , VkSharingMode(..)
                            )
 
 -- ** vkCreateBuffer
@@ -53,48 +48,42 @@ foreign import ccall "vkCreateBuffer" vkCreateBuffer ::
 
 -- ** VkBufferCreateFlags
 
-newtype VkBufferCreateFlagBits = VkBufferCreateFlagBits VkFlags
+newtype VkBufferCreateFlags = VkBufferCreateFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkBufferCreateFlagBits
-type VkBufferCreateFlags = VkBufferCreateFlagBits
-
-instance Show VkBufferCreateFlagBits where
+instance Show VkBufferCreateFlags where
   showsPrec _ VK_BUFFER_CREATE_SPARSE_BINDING_BIT = showString "VK_BUFFER_CREATE_SPARSE_BINDING_BIT"
   showsPrec _ VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = showString "VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT"
   showsPrec _ VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = showString "VK_BUFFER_CREATE_SPARSE_ALIASED_BIT"
   
-  showsPrec p (VkBufferCreateFlagBits x) = showParen (p >= 11) (showString "VkBufferCreateFlagBits " . showsPrec 11 x)
+  showsPrec p (VkBufferCreateFlags x) = showParen (p >= 11) (showString "VkBufferCreateFlags " . showsPrec 11 x)
 
-instance Read VkBufferCreateFlagBits where
+instance Read VkBufferCreateFlags where
   readPrec = parens ( choose [ ("VK_BUFFER_CREATE_SPARSE_BINDING_BIT", pure VK_BUFFER_CREATE_SPARSE_BINDING_BIT)
                              , ("VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT", pure VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT)
                              , ("VK_BUFFER_CREATE_SPARSE_ALIASED_BIT", pure VK_BUFFER_CREATE_SPARSE_ALIASED_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkBufferCreateFlagBits")
+                        expectP (Ident "VkBufferCreateFlags")
                         v <- step readPrec
-                        pure (VkBufferCreateFlagBits v)
+                        pure (VkBufferCreateFlags v)
                         )
                     )
 
 -- | Buffer should support sparse backing
-pattern VK_BUFFER_CREATE_SPARSE_BINDING_BIT = VkBufferCreateFlagBits 0x1
+pattern VK_BUFFER_CREATE_SPARSE_BINDING_BIT = VkBufferCreateFlags 0x1
 -- | Buffer should support sparse backing with partial residency
-pattern VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = VkBufferCreateFlagBits 0x2
+pattern VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = VkBufferCreateFlags 0x2
 -- | Buffer should support constent data access to physical memory blocks mapped into multiple locations of sparse buffers
-pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = VkBufferCreateFlagBits 0x4
+pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = VkBufferCreateFlags 0x4
 
 
 -- ** VkBufferUsageFlags
 
-newtype VkBufferUsageFlagBits = VkBufferUsageFlagBits VkFlags
+newtype VkBufferUsageFlags = VkBufferUsageFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkBufferUsageFlagBits
-type VkBufferUsageFlags = VkBufferUsageFlagBits
-
-instance Show VkBufferUsageFlagBits where
+instance Show VkBufferUsageFlags where
   showsPrec _ VK_BUFFER_USAGE_TRANSFER_SRC_BIT = showString "VK_BUFFER_USAGE_TRANSFER_SRC_BIT"
   showsPrec _ VK_BUFFER_USAGE_TRANSFER_DST_BIT = showString "VK_BUFFER_USAGE_TRANSFER_DST_BIT"
   showsPrec _ VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = showString "VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT"
@@ -105,9 +94,9 @@ instance Show VkBufferUsageFlagBits where
   showsPrec _ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = showString "VK_BUFFER_USAGE_VERTEX_BUFFER_BIT"
   showsPrec _ VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = showString "VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT"
   
-  showsPrec p (VkBufferUsageFlagBits x) = showParen (p >= 11) (showString "VkBufferUsageFlagBits " . showsPrec 11 x)
+  showsPrec p (VkBufferUsageFlags x) = showParen (p >= 11) (showString "VkBufferUsageFlags " . showsPrec 11 x)
 
-instance Read VkBufferUsageFlagBits where
+instance Read VkBufferUsageFlags where
   readPrec = parens ( choose [ ("VK_BUFFER_USAGE_TRANSFER_SRC_BIT", pure VK_BUFFER_USAGE_TRANSFER_SRC_BIT)
                              , ("VK_BUFFER_USAGE_TRANSFER_DST_BIT", pure VK_BUFFER_USAGE_TRANSFER_DST_BIT)
                              , ("VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT", pure VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT)
@@ -119,30 +108,30 @@ instance Read VkBufferUsageFlagBits where
                              , ("VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT", pure VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkBufferUsageFlagBits")
+                        expectP (Ident "VkBufferUsageFlags")
                         v <- step readPrec
-                        pure (VkBufferUsageFlagBits v)
+                        pure (VkBufferUsageFlags v)
                         )
                     )
 
 -- | Can be used as a source of transfer operations
-pattern VK_BUFFER_USAGE_TRANSFER_SRC_BIT = VkBufferUsageFlagBits 0x1
+pattern VK_BUFFER_USAGE_TRANSFER_SRC_BIT = VkBufferUsageFlags 0x1
 -- | Can be used as a destination of transfer operations
-pattern VK_BUFFER_USAGE_TRANSFER_DST_BIT = VkBufferUsageFlagBits 0x2
+pattern VK_BUFFER_USAGE_TRANSFER_DST_BIT = VkBufferUsageFlags 0x2
 -- | Can be used as TBO
-pattern VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = VkBufferUsageFlagBits 0x4
+pattern VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = VkBufferUsageFlags 0x4
 -- | Can be used as IBO
-pattern VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = VkBufferUsageFlagBits 0x8
+pattern VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = VkBufferUsageFlags 0x8
 -- | Can be used as UBO
-pattern VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT = VkBufferUsageFlagBits 0x10
+pattern VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT = VkBufferUsageFlags 0x10
 -- | Can be used as SSBO
-pattern VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = VkBufferUsageFlagBits 0x20
+pattern VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = VkBufferUsageFlags 0x20
 -- | Can be used as source of fixed-function index fetch (index buffer)
-pattern VK_BUFFER_USAGE_INDEX_BUFFER_BIT = VkBufferUsageFlagBits 0x40
+pattern VK_BUFFER_USAGE_INDEX_BUFFER_BIT = VkBufferUsageFlags 0x40
 -- | Can be used as source of fixed-function vertex fetch (VBO)
-pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = VkBufferUsageFlagBits 0x80
+pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = VkBufferUsageFlags 0x80
 -- | Can be the source of indirect parameters (e.g. indirect buffer, parameter buffer)
-pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlagBits 0x100
+pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlags 0x100
 
 
 -- ** vkDestroyBuffer

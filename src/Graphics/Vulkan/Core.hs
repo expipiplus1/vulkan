@@ -9,12 +9,13 @@ import Text.Read.Lex( Lexeme(Ident)
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
 import Foreign.Ptr( plusPtr
                   )
-import Data.Int( Int32
+import Data.Int( Int32(..)
+               , Int32
                )
 import Foreign.Storable( Storable(..)
                        )
@@ -25,12 +26,7 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkExtent3D
-                           , VkExtent2D
-                           , VkOffset2D
-                           , VkOffset3D
-                           )
-import Foreign.C.Types( CFloat
+import Foreign.C.Types( CFloat(..)
                       )
 
 newtype VkDeviceSize = VkDeviceSize Word64

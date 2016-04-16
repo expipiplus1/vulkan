@@ -1,7 +1,7 @@
 
 module Graphics.Vulkan.Version where
 
-import Data.Word( Word32
+import Data.Word( Word32(..)
                 )
 import Data.Bits( shiftR
                 , shiftL

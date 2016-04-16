@@ -15,7 +15,7 @@ import           Data.Foldable     as F
 import qualified Data.HashMap.Lazy as M
 import qualified Data.HashSet      as S
 import           Data.List         (isPrefixOf, isSuffixOf)
-import           Data.Maybe        (catMaybes, fromMaybe)
+import           Data.Maybe        (fromMaybe)
 import           Safe              (assertNote)
 import           Spec.Extension
 import           Spec.ExtensionTag
@@ -66,14 +66,18 @@ partitionSpec spec =
         moduleExportNames
 
       nameLocation :: (ModuleName, [SourceEntity]) -> [(String, (ModuleName, String))]
-      nameLocation (m, names) = catMaybes
+      nameLocation (m, names) = concat
         (blarf m <$> names)
 
-      blarf :: ModuleName -> SourceEntity -> Maybe (String, (ModuleName, String))
-      blarf m e = do
-        name <- entityName e
-        export <- entityExportName e
-        return (name, (m, export))
+      blarf :: ModuleName -> SourceEntity -> [(String, (ModuleName, String))]
+      blarf m e =
+        let
+          names = entityNames e
+          export = entityExportName e
+        in
+          case export of
+            Just export' -> (flip (,) (m, export')) <$> names
+            Nothing -> []
 
       nameLocations = M.fromList $ concat (nameLocation <$> M.toList moduleExports)
 

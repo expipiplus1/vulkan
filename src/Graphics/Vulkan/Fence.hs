@@ -4,17 +4,17 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Fence where
 
-import Graphics.Vulkan.Device( Device
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Bits( Bits
@@ -22,13 +22,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Fence( VkFenceCreateInfo
-                            , Fence
-                            , VkFenceCreateFlags
-                            )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -37,10 +33,10 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkResult
-                           , VkBool32
-                           , VkFlags
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkBool32(..)
+                           , VkResult(..)
                            )
 
 
@@ -80,29 +76,26 @@ foreign import ccall "vkGetFenceStatus" vkGetFenceStatus ::
 
 -- ** VkFenceCreateFlags
 
-newtype VkFenceCreateFlagBits = VkFenceCreateFlagBits VkFlags
+newtype VkFenceCreateFlags = VkFenceCreateFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkFenceCreateFlagBits
-type VkFenceCreateFlags = VkFenceCreateFlagBits
-
-instance Show VkFenceCreateFlagBits where
+instance Show VkFenceCreateFlags where
   showsPrec _ VK_FENCE_CREATE_SIGNALED_BIT = showString "VK_FENCE_CREATE_SIGNALED_BIT"
   
-  showsPrec p (VkFenceCreateFlagBits x) = showParen (p >= 11) (showString "VkFenceCreateFlagBits " . showsPrec 11 x)
+  showsPrec p (VkFenceCreateFlags x) = showParen (p >= 11) (showString "VkFenceCreateFlags " . showsPrec 11 x)
 
-instance Read VkFenceCreateFlagBits where
+instance Read VkFenceCreateFlags where
   readPrec = parens ( choose [ ("VK_FENCE_CREATE_SIGNALED_BIT", pure VK_FENCE_CREATE_SIGNALED_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkFenceCreateFlagBits")
+                        expectP (Ident "VkFenceCreateFlags")
                         v <- step readPrec
-                        pure (VkFenceCreateFlagBits v)
+                        pure (VkFenceCreateFlags v)
                         )
                     )
 
 
-pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlagBits 0x1
+pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlags 0x1
 
 
 -- ** vkCreateFence

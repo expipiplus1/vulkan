@@ -4,17 +4,17 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Shader where
 
-import Graphics.Vulkan.Device( Device
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Bits( Bits
@@ -22,9 +22,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -33,15 +33,11 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Shader( VkShaderModuleCreateFlags
-                             , ShaderModule
-                             , VkShaderModuleCreateInfo
-                             )
-import Graphics.Vulkan.Core( VkResult
-                           , VkFlags
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkResult(..)
                            )
-import Foreign.C.Types( CSize
+import Foreign.C.Types( CSize(..)
                       )
 
 
@@ -80,13 +76,10 @@ newtype VkShaderModuleCreateFlags = VkShaderModuleCreateFlags VkFlags
 
 -- ** VkShaderStageFlags
 
-newtype VkShaderStageFlagBits = VkShaderStageFlagBits VkFlags
+newtype VkShaderStageFlags = VkShaderStageFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkShaderStageFlagBits
-type VkShaderStageFlags = VkShaderStageFlagBits
-
-instance Show VkShaderStageFlagBits where
+instance Show VkShaderStageFlags where
   showsPrec _ VK_SHADER_STAGE_VERTEX_BIT = showString "VK_SHADER_STAGE_VERTEX_BIT"
   showsPrec _ VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = showString "VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT"
   showsPrec _ VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = showString "VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT"
@@ -95,9 +88,9 @@ instance Show VkShaderStageFlagBits where
   showsPrec _ VK_SHADER_STAGE_COMPUTE_BIT = showString "VK_SHADER_STAGE_COMPUTE_BIT"
   showsPrec _ VK_SHADER_STAGE_ALL_GRAPHICS = showString "VK_SHADER_STAGE_ALL_GRAPHICS"
   showsPrec _ VK_SHADER_STAGE_ALL = showString "VK_SHADER_STAGE_ALL"
-  showsPrec p (VkShaderStageFlagBits x) = showParen (p >= 11) (showString "VkShaderStageFlagBits " . showsPrec 11 x)
+  showsPrec p (VkShaderStageFlags x) = showParen (p >= 11) (showString "VkShaderStageFlags " . showsPrec 11 x)
 
-instance Read VkShaderStageFlagBits where
+instance Read VkShaderStageFlags where
   readPrec = parens ( choose [ ("VK_SHADER_STAGE_VERTEX_BIT", pure VK_SHADER_STAGE_VERTEX_BIT)
                              , ("VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT", pure VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT)
                              , ("VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT", pure VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT)
@@ -108,28 +101,28 @@ instance Read VkShaderStageFlagBits where
                              , ("VK_SHADER_STAGE_ALL", pure VK_SHADER_STAGE_ALL)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkShaderStageFlagBits")
+                        expectP (Ident "VkShaderStageFlags")
                         v <- step readPrec
-                        pure (VkShaderStageFlagBits v)
+                        pure (VkShaderStageFlags v)
                         )
                     )
 
 
-pattern VK_SHADER_STAGE_VERTEX_BIT = VkShaderStageFlagBits 0x1
+pattern VK_SHADER_STAGE_VERTEX_BIT = VkShaderStageFlags 0x1
 
-pattern VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = VkShaderStageFlagBits 0x2
+pattern VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = VkShaderStageFlags 0x2
 
-pattern VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = VkShaderStageFlagBits 0x4
+pattern VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = VkShaderStageFlags 0x4
 
-pattern VK_SHADER_STAGE_GEOMETRY_BIT = VkShaderStageFlagBits 0x8
+pattern VK_SHADER_STAGE_GEOMETRY_BIT = VkShaderStageFlags 0x8
 
-pattern VK_SHADER_STAGE_FRAGMENT_BIT = VkShaderStageFlagBits 0x10
+pattern VK_SHADER_STAGE_FRAGMENT_BIT = VkShaderStageFlags 0x10
 
-pattern VK_SHADER_STAGE_COMPUTE_BIT = VkShaderStageFlagBits 0x20
+pattern VK_SHADER_STAGE_COMPUTE_BIT = VkShaderStageFlags 0x20
 
-pattern VK_SHADER_STAGE_ALL_GRAPHICS = VkShaderStageFlagBits 0x1f
+pattern VK_SHADER_STAGE_ALL_GRAPHICS = VkShaderStageFlags 0x1f
 
-pattern VK_SHADER_STAGE_ALL = VkShaderStageFlagBits 0x7fffffff
+pattern VK_SHADER_STAGE_ALL = VkShaderStageFlags 0x7fffffff
 
 newtype ShaderModule = ShaderModule Word64
   deriving (Eq, Storable)

@@ -3,26 +3,22 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Event where
 
-import Graphics.Vulkan.Device( Device
+import Graphics.Vulkan.Device( Device(..)
                              )
-import Graphics.Vulkan.Event( VkEventCreateInfo
-                            , Event
-                            , VkEventCreateFlags
-                            )
-import Data.Word( Word64
+import Data.Word( Word64(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkResult
-                           , VkFlags
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkResult(..)
                            )
 
 -- ** vkDestroyEvent

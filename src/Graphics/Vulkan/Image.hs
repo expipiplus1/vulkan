@@ -4,17 +4,17 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Image where
 
-import Graphics.Vulkan.Device( Device
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Int( Int32
@@ -24,9 +24,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -35,26 +35,15 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlagBits
+import Graphics.Vulkan.Sampler( VkSampleCountFlags(..)
                               )
-import Graphics.Vulkan.Image( VkImageType
-                            , VkSubresourceLayout
-                            , VkImageAspectFlags
-                            , VkImageCreateFlags
-                            , VkImageLayout
-                            , VkImageTiling
-                            , VkImageCreateInfo
-                            , VkImageSubresource
-                            , Image
-                            , VkImageUsageFlags
-                            )
-import Graphics.Vulkan.Core( VkResult
-                           , VkExtent3D
-                           , VkDeviceSize
-                           , VkFlags
-                           , VkFormat
-                           , VkStructureType
-                           , VkSharingMode
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFormat(..)
+                           , VkFlags(..)
+                           , VkResult(..)
+                           , VkDeviceSize(..)
+                           , VkExtent3D(..)
+                           , VkSharingMode(..)
                            )
 
 -- ** vkCreateImage
@@ -65,22 +54,19 @@ foreign import ccall "vkCreateImage" vkCreateImage ::
 
 -- ** VkImageCreateFlags
 
-newtype VkImageCreateFlagBits = VkImageCreateFlagBits VkFlags
+newtype VkImageCreateFlags = VkImageCreateFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkImageCreateFlagBits
-type VkImageCreateFlags = VkImageCreateFlagBits
-
-instance Show VkImageCreateFlagBits where
+instance Show VkImageCreateFlags where
   showsPrec _ VK_IMAGE_CREATE_SPARSE_BINDING_BIT = showString "VK_IMAGE_CREATE_SPARSE_BINDING_BIT"
   showsPrec _ VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = showString "VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT"
   showsPrec _ VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = showString "VK_IMAGE_CREATE_SPARSE_ALIASED_BIT"
   showsPrec _ VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = showString "VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT"
   showsPrec _ VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = showString "VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT"
   
-  showsPrec p (VkImageCreateFlagBits x) = showParen (p >= 11) (showString "VkImageCreateFlagBits " . showsPrec 11 x)
+  showsPrec p (VkImageCreateFlags x) = showParen (p >= 11) (showString "VkImageCreateFlags " . showsPrec 11 x)
 
-instance Read VkImageCreateFlagBits where
+instance Read VkImageCreateFlags where
   readPrec = parens ( choose [ ("VK_IMAGE_CREATE_SPARSE_BINDING_BIT", pure VK_IMAGE_CREATE_SPARSE_BINDING_BIT)
                              , ("VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT", pure VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT)
                              , ("VK_IMAGE_CREATE_SPARSE_ALIASED_BIT", pure VK_IMAGE_CREATE_SPARSE_ALIASED_BIT)
@@ -88,33 +74,30 @@ instance Read VkImageCreateFlagBits where
                              , ("VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT", pure VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageCreateFlagBits")
+                        expectP (Ident "VkImageCreateFlags")
                         v <- step readPrec
-                        pure (VkImageCreateFlagBits v)
+                        pure (VkImageCreateFlags v)
                         )
                     )
 
 -- | Image should support sparse backing
-pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT = VkImageCreateFlagBits 0x1
+pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT = VkImageCreateFlags 0x1
 -- | Image should support sparse backing with partial residency
-pattern VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = VkImageCreateFlagBits 0x2
+pattern VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = VkImageCreateFlags 0x2
 -- | Image should support constent data access to physical memory blocks mapped into multiple locations of sparse images
-pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = VkImageCreateFlagBits 0x4
+pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = VkImageCreateFlags 0x4
 -- | Allows image views to have different format than the base image
-pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = VkImageCreateFlagBits 0x8
+pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = VkImageCreateFlags 0x8
 -- | Allows creating image views with cube type from the created image
-pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VkImageCreateFlagBits 0x10
+pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VkImageCreateFlags 0x10
 
 
 -- ** VkImageUsageFlags
 
-newtype VkImageUsageFlagBits = VkImageUsageFlagBits VkFlags
+newtype VkImageUsageFlags = VkImageUsageFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkImageUsageFlagBits
-type VkImageUsageFlags = VkImageUsageFlagBits
-
-instance Show VkImageUsageFlagBits where
+instance Show VkImageUsageFlags where
   showsPrec _ VK_IMAGE_USAGE_TRANSFER_SRC_BIT = showString "VK_IMAGE_USAGE_TRANSFER_SRC_BIT"
   showsPrec _ VK_IMAGE_USAGE_TRANSFER_DST_BIT = showString "VK_IMAGE_USAGE_TRANSFER_DST_BIT"
   showsPrec _ VK_IMAGE_USAGE_SAMPLED_BIT = showString "VK_IMAGE_USAGE_SAMPLED_BIT"
@@ -124,9 +107,9 @@ instance Show VkImageUsageFlagBits where
   showsPrec _ VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT"
   showsPrec _ VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT"
   
-  showsPrec p (VkImageUsageFlagBits x) = showParen (p >= 11) (showString "VkImageUsageFlagBits " . showsPrec 11 x)
+  showsPrec p (VkImageUsageFlags x) = showParen (p >= 11) (showString "VkImageUsageFlags " . showsPrec 11 x)
 
-instance Read VkImageUsageFlagBits where
+instance Read VkImageUsageFlags where
   readPrec = parens ( choose [ ("VK_IMAGE_USAGE_TRANSFER_SRC_BIT", pure VK_IMAGE_USAGE_TRANSFER_SRC_BIT)
                              , ("VK_IMAGE_USAGE_TRANSFER_DST_BIT", pure VK_IMAGE_USAGE_TRANSFER_DST_BIT)
                              , ("VK_IMAGE_USAGE_SAMPLED_BIT", pure VK_IMAGE_USAGE_SAMPLED_BIT)
@@ -137,28 +120,28 @@ instance Read VkImageUsageFlagBits where
                              , ("VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageUsageFlagBits")
+                        expectP (Ident "VkImageUsageFlags")
                         v <- step readPrec
-                        pure (VkImageUsageFlagBits v)
+                        pure (VkImageUsageFlags v)
                         )
                     )
 
 -- | Can be used as a source of transfer operations
-pattern VK_IMAGE_USAGE_TRANSFER_SRC_BIT = VkImageUsageFlagBits 0x1
+pattern VK_IMAGE_USAGE_TRANSFER_SRC_BIT = VkImageUsageFlags 0x1
 -- | Can be used as a destination of transfer operations
-pattern VK_IMAGE_USAGE_TRANSFER_DST_BIT = VkImageUsageFlagBits 0x2
+pattern VK_IMAGE_USAGE_TRANSFER_DST_BIT = VkImageUsageFlags 0x2
 -- | Can be sampled from (SAMPLED_IMAGE and COMBINED_IMAGE_SAMPLER descriptor types)
-pattern VK_IMAGE_USAGE_SAMPLED_BIT = VkImageUsageFlagBits 0x4
+pattern VK_IMAGE_USAGE_SAMPLED_BIT = VkImageUsageFlags 0x4
 -- | Can be used as storage image (STORAGE_IMAGE descriptor type)
-pattern VK_IMAGE_USAGE_STORAGE_BIT = VkImageUsageFlagBits 0x8
+pattern VK_IMAGE_USAGE_STORAGE_BIT = VkImageUsageFlags 0x8
 -- | Can be used as framebuffer color attachment
-pattern VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = VkImageUsageFlagBits 0x10
+pattern VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = VkImageUsageFlags 0x10
 -- | Can be used as framebuffer depth/stencil attachment
-pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = VkImageUsageFlagBits 0x20
+pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = VkImageUsageFlags 0x20
 -- | Image data not needed outside of rendering
-pattern VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x40
+pattern VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = VkImageUsageFlags 0x40
 -- | Can be used as framebuffer input attachment
-pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x80
+pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VkImageUsageFlags 0x80
 
 
 newtype Image = Image Word64
@@ -166,41 +149,38 @@ newtype Image = Image Word64
 
 -- ** VkImageAspectFlags
 
-newtype VkImageAspectFlagBits = VkImageAspectFlagBits VkFlags
+newtype VkImageAspectFlags = VkImageAspectFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkImageAspectFlagBits
-type VkImageAspectFlags = VkImageAspectFlagBits
-
-instance Show VkImageAspectFlagBits where
+instance Show VkImageAspectFlags where
   showsPrec _ VK_IMAGE_ASPECT_COLOR_BIT = showString "VK_IMAGE_ASPECT_COLOR_BIT"
   showsPrec _ VK_IMAGE_ASPECT_DEPTH_BIT = showString "VK_IMAGE_ASPECT_DEPTH_BIT"
   showsPrec _ VK_IMAGE_ASPECT_STENCIL_BIT = showString "VK_IMAGE_ASPECT_STENCIL_BIT"
   showsPrec _ VK_IMAGE_ASPECT_METADATA_BIT = showString "VK_IMAGE_ASPECT_METADATA_BIT"
   
-  showsPrec p (VkImageAspectFlagBits x) = showParen (p >= 11) (showString "VkImageAspectFlagBits " . showsPrec 11 x)
+  showsPrec p (VkImageAspectFlags x) = showParen (p >= 11) (showString "VkImageAspectFlags " . showsPrec 11 x)
 
-instance Read VkImageAspectFlagBits where
+instance Read VkImageAspectFlags where
   readPrec = parens ( choose [ ("VK_IMAGE_ASPECT_COLOR_BIT", pure VK_IMAGE_ASPECT_COLOR_BIT)
                              , ("VK_IMAGE_ASPECT_DEPTH_BIT", pure VK_IMAGE_ASPECT_DEPTH_BIT)
                              , ("VK_IMAGE_ASPECT_STENCIL_BIT", pure VK_IMAGE_ASPECT_STENCIL_BIT)
                              , ("VK_IMAGE_ASPECT_METADATA_BIT", pure VK_IMAGE_ASPECT_METADATA_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageAspectFlagBits")
+                        expectP (Ident "VkImageAspectFlags")
                         v <- step readPrec
-                        pure (VkImageAspectFlagBits v)
+                        pure (VkImageAspectFlags v)
                         )
                     )
 
 
-pattern VK_IMAGE_ASPECT_COLOR_BIT = VkImageAspectFlagBits 0x1
+pattern VK_IMAGE_ASPECT_COLOR_BIT = VkImageAspectFlags 0x1
 
-pattern VK_IMAGE_ASPECT_DEPTH_BIT = VkImageAspectFlagBits 0x2
+pattern VK_IMAGE_ASPECT_DEPTH_BIT = VkImageAspectFlags 0x2
 
-pattern VK_IMAGE_ASPECT_STENCIL_BIT = VkImageAspectFlagBits 0x4
+pattern VK_IMAGE_ASPECT_STENCIL_BIT = VkImageAspectFlags 0x4
 
-pattern VK_IMAGE_ASPECT_METADATA_BIT = VkImageAspectFlagBits 0x8
+pattern VK_IMAGE_ASPECT_METADATA_BIT = VkImageAspectFlags 0x8
 
 
 
@@ -401,7 +381,7 @@ data VkImageCreateInfo =
                    , extent :: VkExtent3D 
                    , mipLevels :: Word32 
                    , arrayLayers :: Word32 
-                   , samples :: VkSampleCountFlagBits 
+                   , samples :: VkSampleCountFlags 
                    , tiling :: VkImageTiling 
                    , usage :: VkImageUsageFlags 
                    , sharingMode :: VkSharingMode 

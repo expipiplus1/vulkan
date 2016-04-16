@@ -18,7 +18,6 @@ parseBitmask = hasName "enums" >>> hasAttrValue "type" (== "bitmask") >>>
           bitPositions <-
                        listA (parseBitmaskBitPos <<< getChildren) -< bitmask
           returnA -< Bitmask{ bmName = name
-                            , bmHsName = name
                             , bmNamespace = namespace
                             , bmComment = comment
                             , bmValues = values

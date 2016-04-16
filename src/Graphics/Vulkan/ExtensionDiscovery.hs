@@ -3,22 +3,22 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.ExtensionDiscovery where
 
-import Data.Vector.Storable.Sized( Vector
+import Data.Vector.Storable.Sized( Vector(..)
                                  )
-import Graphics.Vulkan.Device( PhysicalDevice
+import Graphics.Vulkan.Device( PhysicalDevice(..)
                              )
-import Data.Word( Word32
+import Data.Word( Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.ExtensionDiscovery( VkExtensionProperties
-                                         )
-import Graphics.Vulkan.Core( VkResult
+import Graphics.Vulkan.Constants( VK_MAX_EXTENSION_NAME_SIZE
+                                )
+import Graphics.Vulkan.Core( VkResult(..)
                            )
-import Foreign.C.Types( CChar
+import Foreign.C.Types( CChar(..)
                       )
 
 

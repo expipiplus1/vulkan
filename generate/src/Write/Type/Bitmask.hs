@@ -57,40 +57,37 @@ writeBitmaskTypeWithBits bmt bm = do
                                               ])
   pure [qc|-- ** {bmtName bmt}
 {predocComment $ fromMaybe "" (bmComment bm)}
-newtype {bmHsName bm} = {bmHsName bm} {bmtHsType}
+newtype {bmtHsName bmt} = {bmtHsName bmt} {bmtHsType}
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for {bmHsName bm}
-type {bmtHsName bmt} = {bmHsName bm}
-
-instance Show {bmHsName bm} where
+instance Show {bmtHsName bmt} where
   {indent 0 $ vcat (writeBitPositionShowsPrec <$> bmBitPositions bm)}
   {indent 0 $ vcat (writeValueShowsPrec <$> bmValues bm)}
-  showsPrec p ({bmHsName bm} x) = showParen (p >= 11) (showString "{bmHsName bm} " . showsPrec 11 x)
+  showsPrec p ({bmtHsName bmt} x) = showParen (p >= 11) (showString "{bmtHsName bmt} " . showsPrec 11 x)
 
-instance Read {bmHsName bm} where
+instance Read {bmtHsName bmt} where
   readPrec = parens ( choose [ {indent (-2) . vcat $ intercalatePrepend "," ((writeBitPositionReadTuple <$> bmBitPositions bm) ++ (writeValueReadTuple <$> bmValues bm))}
                              ] +++
                       prec 10 (do
-                        expectP (Ident "{bmHsName bm}")
+                        expectP (Ident "{bmtHsName bmt}")
                         v <- step readPrec
-                        pure ({bmHsName bm} v)
+                        pure ({bmtHsName bmt} v)
                         )
                     )
 
-{vcat $ writeBitPosition bm <$> bmBitPositions bm}
-{vcat $ writeValue bm <$> bmValues bm}
+{vcat $ writeBitPosition bmt <$> bmBitPositions bm}
+{vcat $ writeValue bmt <$> bmValues bm}
 |]
 
-writeValue :: Bitmask -> BitmaskValue -> Doc
-writeValue bm v =
+writeValue :: BitmaskType -> BitmaskValue -> Doc
+writeValue bmt v =
   [qc|{maybe "" predocComment (bmvComment v)}
-pattern {bmvHsName v} = {bmHsName bm} {showHex' $ bmvValue v}|]
+pattern {bmvHsName v} = {bmtHsName bmt} {showHex' $ bmvValue v}|]
 
-writeBitPosition :: Bitmask -> BitmaskBitPosition -> Doc
-writeBitPosition bm bp =
+writeBitPosition :: BitmaskType -> BitmaskBitPosition -> Doc
+writeBitPosition bmt bp =
   [qc|{maybe "" predocComment (bmbpComment bp)}
-pattern {bmbpHsName bp} = {bmHsName bm} {showHex' $ (1 `shiftL` bmbpBitPos bp :: Word32)}|]
+pattern {bmbpHsName bp} = {bmtHsName bmt} {showHex' $ (1 `shiftL` bmbpBitPos bp :: Word32)}|]
 
 writeBitPositionShowsPrec :: BitmaskBitPosition -> Doc
 writeBitPositionShowsPrec bp =

@@ -3,22 +3,23 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.LayerDiscovery where
 
-import Data.Vector.Storable.Sized( Vector
+import Data.Vector.Storable.Sized( Vector(..)
                                  )
-import Graphics.Vulkan.Device( PhysicalDevice
+import Graphics.Vulkan.Device( PhysicalDevice(..)
                              )
-import Data.Word( Word32
+import Data.Word( Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Core( VkResult
+import Graphics.Vulkan.Constants( VK_MAX_DESCRIPTION_SIZE
+                                , VK_MAX_EXTENSION_NAME_SIZE
+                                )
+import Graphics.Vulkan.Core( VkResult(..)
                            )
-import Graphics.Vulkan.LayerDiscovery( VkLayerProperties
-                                     )
-import Foreign.C.Types( CChar
+import Foreign.C.Types( CChar(..)
                       )
 
 

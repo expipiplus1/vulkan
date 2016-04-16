@@ -4,33 +4,33 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.SparseResourceMemoryManagement where
 
-import Graphics.Vulkan.Device( Device
-                             , PhysicalDevice
+import Graphics.Vulkan.Device( Device(..)
+                             , PhysicalDevice(..)
                              )
-import Graphics.Vulkan.Buffer( Buffer
+import Graphics.Vulkan.Buffer( Buffer(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word32
+import Data.Word( Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
-import Graphics.Vulkan.Queue( Queue
+import Graphics.Vulkan.Queue( Queue(..)
                             )
 import Data.Bits( Bits
                 , FiniteBits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Fence( Fence
+import Graphics.Vulkan.Fence( Fence(..)
                             )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( DeviceMemory
+import Graphics.Vulkan.Memory( DeviceMemory(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -39,35 +39,24 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlagBits
+import Graphics.Vulkan.Sampler( VkSampleCountFlags(..)
                               )
-import Graphics.Vulkan.Image( VkImageType
-                            , VkImageAspectFlags
-                            , VkImageTiling
-                            , VkImageSubresource
-                            , Image
-                            , VkImageUsageFlags
+import Graphics.Vulkan.Image( Image(..)
+                            , VkImageType(..)
+                            , VkImageUsageFlags(..)
+                            , VkImageSubresource(..)
+                            , VkImageAspectFlags(..)
+                            , VkImageTiling(..)
                             )
-import Graphics.Vulkan.QueueSemaphore( Semaphore
+import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
                                      )
-import Graphics.Vulkan.SparseResourceMemoryManagement( VkSparseImageFormatProperties
-                                                     , VkSparseMemoryBindFlags
-                                                     , VkBindSparseInfo
-                                                     , VkSparseImageFormatFlags
-                                                     , VkSparseMemoryBind
-                                                     , VkSparseImageMemoryRequirements
-                                                     , VkSparseImageMemoryBindInfo
-                                                     , VkSparseBufferMemoryBindInfo
-                                                     , VkSparseImageMemoryBind
-                                                     , VkSparseImageOpaqueMemoryBindInfo
-                                                     )
-import Graphics.Vulkan.Core( VkResult
-                           , VkExtent3D
-                           , VkDeviceSize
-                           , VkFlags
-                           , VkFormat
-                           , VkOffset3D
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFormat(..)
+                           , VkFlags(..)
+                           , VkOffset3D(..)
+                           , VkResult(..)
+                           , VkDeviceSize(..)
+                           , VkExtent3D(..)
                            )
 
 
@@ -243,37 +232,34 @@ instance Storable VkSparseBufferMemoryBindInfo where
 
 -- ** VkSparseImageFormatFlags
 
-newtype VkSparseImageFormatFlagBits = VkSparseImageFormatFlagBits VkFlags
+newtype VkSparseImageFormatFlags = VkSparseImageFormatFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkSparseImageFormatFlagBits
-type VkSparseImageFormatFlags = VkSparseImageFormatFlagBits
-
-instance Show VkSparseImageFormatFlagBits where
+instance Show VkSparseImageFormatFlags where
   showsPrec _ VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = showString "VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"
   showsPrec _ VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = showString "VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"
   showsPrec _ VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = showString "VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"
   
-  showsPrec p (VkSparseImageFormatFlagBits x) = showParen (p >= 11) (showString "VkSparseImageFormatFlagBits " . showsPrec 11 x)
+  showsPrec p (VkSparseImageFormatFlags x) = showParen (p >= 11) (showString "VkSparseImageFormatFlags " . showsPrec 11 x)
 
-instance Read VkSparseImageFormatFlagBits where
+instance Read VkSparseImageFormatFlags where
   readPrec = parens ( choose [ ("VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT", pure VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT)
                              , ("VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT", pure VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT)
                              , ("VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT", pure VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSparseImageFormatFlagBits")
+                        expectP (Ident "VkSparseImageFormatFlags")
                         v <- step readPrec
-                        pure (VkSparseImageFormatFlagBits v)
+                        pure (VkSparseImageFormatFlags v)
                         )
                     )
 
 -- | Image uses a single miptail region for all array layers
-pattern VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = VkSparseImageFormatFlagBits 0x1
+pattern VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = VkSparseImageFormatFlags 0x1
 -- | Image requires mip levels to be an exact multiple of the sparse image block size for non-miptail levels.
-pattern VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = VkSparseImageFormatFlagBits 0x2
+pattern VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = VkSparseImageFormatFlags 0x2
 -- | Image uses a non-standard sparse block size
-pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = VkSparseImageFormatFlagBits 0x4
+pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = VkSparseImageFormatFlags 0x4
 
 
 -- ** vkGetPhysicalDeviceSparseImageFormatProperties
@@ -281,36 +267,33 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
   PhysicalDevice ->
   VkFormat ->
     VkImageType ->
-      VkSampleCountFlagBits ->
+      VkSampleCountFlags ->
         VkImageUsageFlags ->
           VkImageTiling ->
             Ptr Word32 -> Ptr VkSparseImageFormatProperties -> IO ()
 
 -- ** VkSparseMemoryBindFlags
 
-newtype VkSparseMemoryBindFlagBits = VkSparseMemoryBindFlagBits VkFlags
+newtype VkSparseMemoryBindFlags = VkSparseMemoryBindFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkSparseMemoryBindFlagBits
-type VkSparseMemoryBindFlags = VkSparseMemoryBindFlagBits
-
-instance Show VkSparseMemoryBindFlagBits where
+instance Show VkSparseMemoryBindFlags where
   showsPrec _ VK_SPARSE_MEMORY_BIND_METADATA_BIT = showString "VK_SPARSE_MEMORY_BIND_METADATA_BIT"
   
-  showsPrec p (VkSparseMemoryBindFlagBits x) = showParen (p >= 11) (showString "VkSparseMemoryBindFlagBits " . showsPrec 11 x)
+  showsPrec p (VkSparseMemoryBindFlags x) = showParen (p >= 11) (showString "VkSparseMemoryBindFlags " . showsPrec 11 x)
 
-instance Read VkSparseMemoryBindFlagBits where
+instance Read VkSparseMemoryBindFlags where
   readPrec = parens ( choose [ ("VK_SPARSE_MEMORY_BIND_METADATA_BIT", pure VK_SPARSE_MEMORY_BIND_METADATA_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSparseMemoryBindFlagBits")
+                        expectP (Ident "VkSparseMemoryBindFlags")
                         v <- step readPrec
-                        pure (VkSparseMemoryBindFlagBits v)
+                        pure (VkSparseMemoryBindFlags v)
                         )
                     )
 
 -- | Operation binds resource metadata to memory
-pattern VK_SPARSE_MEMORY_BIND_METADATA_BIT = VkSparseMemoryBindFlagBits 0x1
+pattern VK_SPARSE_MEMORY_BIND_METADATA_BIT = VkSparseMemoryBindFlags 0x1
 
 
 

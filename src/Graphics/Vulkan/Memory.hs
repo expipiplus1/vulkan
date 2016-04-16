@@ -4,39 +4,26 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Memory where
 
-import {-# SOURCE #-} Graphics.Vulkan.Device( Device
+import {-# SOURCE #-} Graphics.Vulkan.Device( Device(..)
                                             )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
-                  , FunPtr
+import Foreign.Ptr( Ptr(..)
+                  , FunPtr(..)
                   , plusPtr
                   )
 import Data.Int( Int32
                )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( PFN_vkAllocationFunction
-                             , VkMemoryMapFlags
-                             , VkSystemAllocationScope
-                             , PFN_vkFreeFunction
-                             , PFN_vkReallocationFunction
-                             , VkInternalAllocationType
-                             , VkAllocationCallbacks
-                             , DeviceMemory
-                             , VkMappedMemoryRange
-                             , VkMemoryAllocateInfo
-                             , PFN_vkInternalFreeNotification
-                             , PFN_vkInternalAllocationNotification
-                             )
 import Text.Read( Read(..)
                 , parens
                 )
@@ -44,12 +31,12 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkResult
-                           , VkDeviceSize
-                           , VkFlags
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkResult(..)
+                           , VkDeviceSize(..)
                            )
-import Foreign.C.Types( CSize
+import Foreign.C.Types( CSize(..)
                       )
 
 newtype DeviceMemory = DeviceMemory Word64

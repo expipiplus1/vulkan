@@ -4,17 +4,17 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.CommandPool where
 
-import Graphics.Vulkan.Device( Device
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Bits( Bits
@@ -22,14 +22,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.CommandPool( VkCommandPoolResetFlags
-                                  , VkCommandPoolCreateFlags
-                                  , CommandPool
-                                  , VkCommandPoolCreateInfo
-                                  )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -38,9 +33,9 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkResult
-                           , VkFlags
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkResult(..)
                            )
 
 
@@ -75,33 +70,30 @@ foreign import ccall "vkResetCommandPool" vkResetCommandPool ::
 
 -- ** VkCommandPoolCreateFlags
 
-newtype VkCommandPoolCreateFlagBits = VkCommandPoolCreateFlagBits VkFlags
+newtype VkCommandPoolCreateFlags = VkCommandPoolCreateFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkCommandPoolCreateFlagBits
-type VkCommandPoolCreateFlags = VkCommandPoolCreateFlagBits
-
-instance Show VkCommandPoolCreateFlagBits where
+instance Show VkCommandPoolCreateFlags where
   showsPrec _ VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = showString "VK_COMMAND_POOL_CREATE_TRANSIENT_BIT"
   showsPrec _ VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = showString "VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT"
   
-  showsPrec p (VkCommandPoolCreateFlagBits x) = showParen (p >= 11) (showString "VkCommandPoolCreateFlagBits " . showsPrec 11 x)
+  showsPrec p (VkCommandPoolCreateFlags x) = showParen (p >= 11) (showString "VkCommandPoolCreateFlags " . showsPrec 11 x)
 
-instance Read VkCommandPoolCreateFlagBits where
+instance Read VkCommandPoolCreateFlags where
   readPrec = parens ( choose [ ("VK_COMMAND_POOL_CREATE_TRANSIENT_BIT", pure VK_COMMAND_POOL_CREATE_TRANSIENT_BIT)
                              , ("VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT", pure VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCommandPoolCreateFlagBits")
+                        expectP (Ident "VkCommandPoolCreateFlags")
                         v <- step readPrec
-                        pure (VkCommandPoolCreateFlagBits v)
+                        pure (VkCommandPoolCreateFlags v)
                         )
                     )
 
 -- | Command buffers have a short lifetime
-pattern VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = VkCommandPoolCreateFlagBits 0x1
+pattern VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = VkCommandPoolCreateFlags 0x1
 -- | Command buffers may release their memory individually
-pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = VkCommandPoolCreateFlagBits 0x2
+pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = VkCommandPoolCreateFlags 0x2
 
 
 -- ** vkCreateCommandPool
@@ -112,29 +104,26 @@ foreign import ccall "vkCreateCommandPool" vkCreateCommandPool ::
 
 -- ** VkCommandPoolResetFlags
 
-newtype VkCommandPoolResetFlagBits = VkCommandPoolResetFlagBits VkFlags
+newtype VkCommandPoolResetFlags = VkCommandPoolResetFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkCommandPoolResetFlagBits
-type VkCommandPoolResetFlags = VkCommandPoolResetFlagBits
-
-instance Show VkCommandPoolResetFlagBits where
+instance Show VkCommandPoolResetFlags where
   showsPrec _ VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"
   
-  showsPrec p (VkCommandPoolResetFlagBits x) = showParen (p >= 11) (showString "VkCommandPoolResetFlagBits " . showsPrec 11 x)
+  showsPrec p (VkCommandPoolResetFlags x) = showParen (p >= 11) (showString "VkCommandPoolResetFlags " . showsPrec 11 x)
 
-instance Read VkCommandPoolResetFlagBits where
+instance Read VkCommandPoolResetFlags where
   readPrec = parens ( choose [ ("VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT", pure VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCommandPoolResetFlagBits")
+                        expectP (Ident "VkCommandPoolResetFlags")
                         v <- step readPrec
-                        pure (VkCommandPoolResetFlagBits v)
+                        pure (VkCommandPoolResetFlags v)
                         )
                     )
 
 -- | Release resources owned by the pool
-pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = VkCommandPoolResetFlagBits 0x1
+pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = VkCommandPoolResetFlags 0x1
 
 
 newtype CommandPool = CommandPool Word64

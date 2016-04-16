@@ -4,16 +4,16 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Sampler where
 
-import Graphics.Vulkan.Device( Device
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
+import Data.Word( Word64(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Int( Int32
@@ -23,9 +23,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -34,21 +34,12 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkCompareOp
-                              , VkFilter
-                              , Sampler
-                              , VkSamplerMipmapMode
-                              , VkBorderColor
-                              , VkSamplerAddressMode
-                              , VkSamplerCreateFlags
-                              , VkSamplerCreateInfo
-                              )
-import Graphics.Vulkan.Core( VkResult
-                           , VkBool32
-                           , VkFlags
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkFlags(..)
+                           , VkBool32(..)
+                           , VkResult(..)
                            )
-import Foreign.C.Types( CFloat
+import Foreign.C.Types( CFloat(..)
                       )
 
 -- ** VkSamplerAddressMode
@@ -313,13 +304,10 @@ foreign import ccall "vkCreateSampler" vkCreateSampler ::
 
 -- ** VkSampleCountFlags
 
-newtype VkSampleCountFlagBits = VkSampleCountFlagBits VkFlags
+newtype VkSampleCountFlags = VkSampleCountFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkSampleCountFlagBits
-type VkSampleCountFlags = VkSampleCountFlagBits
-
-instance Show VkSampleCountFlagBits where
+instance Show VkSampleCountFlags where
   showsPrec _ VK_SAMPLE_COUNT_1_BIT = showString "VK_SAMPLE_COUNT_1_BIT"
   showsPrec _ VK_SAMPLE_COUNT_2_BIT = showString "VK_SAMPLE_COUNT_2_BIT"
   showsPrec _ VK_SAMPLE_COUNT_4_BIT = showString "VK_SAMPLE_COUNT_4_BIT"
@@ -328,9 +316,9 @@ instance Show VkSampleCountFlagBits where
   showsPrec _ VK_SAMPLE_COUNT_32_BIT = showString "VK_SAMPLE_COUNT_32_BIT"
   showsPrec _ VK_SAMPLE_COUNT_64_BIT = showString "VK_SAMPLE_COUNT_64_BIT"
   
-  showsPrec p (VkSampleCountFlagBits x) = showParen (p >= 11) (showString "VkSampleCountFlagBits " . showsPrec 11 x)
+  showsPrec p (VkSampleCountFlags x) = showParen (p >= 11) (showString "VkSampleCountFlags " . showsPrec 11 x)
 
-instance Read VkSampleCountFlagBits where
+instance Read VkSampleCountFlags where
   readPrec = parens ( choose [ ("VK_SAMPLE_COUNT_1_BIT", pure VK_SAMPLE_COUNT_1_BIT)
                              , ("VK_SAMPLE_COUNT_2_BIT", pure VK_SAMPLE_COUNT_2_BIT)
                              , ("VK_SAMPLE_COUNT_4_BIT", pure VK_SAMPLE_COUNT_4_BIT)
@@ -340,26 +328,26 @@ instance Read VkSampleCountFlagBits where
                              , ("VK_SAMPLE_COUNT_64_BIT", pure VK_SAMPLE_COUNT_64_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSampleCountFlagBits")
+                        expectP (Ident "VkSampleCountFlags")
                         v <- step readPrec
-                        pure (VkSampleCountFlagBits v)
+                        pure (VkSampleCountFlags v)
                         )
                     )
 
 -- | Sample count 1 supported
-pattern VK_SAMPLE_COUNT_1_BIT = VkSampleCountFlagBits 0x1
+pattern VK_SAMPLE_COUNT_1_BIT = VkSampleCountFlags 0x1
 -- | Sample count 2 supported
-pattern VK_SAMPLE_COUNT_2_BIT = VkSampleCountFlagBits 0x2
+pattern VK_SAMPLE_COUNT_2_BIT = VkSampleCountFlags 0x2
 -- | Sample count 4 supported
-pattern VK_SAMPLE_COUNT_4_BIT = VkSampleCountFlagBits 0x4
+pattern VK_SAMPLE_COUNT_4_BIT = VkSampleCountFlags 0x4
 -- | Sample count 8 supported
-pattern VK_SAMPLE_COUNT_8_BIT = VkSampleCountFlagBits 0x8
+pattern VK_SAMPLE_COUNT_8_BIT = VkSampleCountFlags 0x8
 -- | Sample count 16 supported
-pattern VK_SAMPLE_COUNT_16_BIT = VkSampleCountFlagBits 0x10
+pattern VK_SAMPLE_COUNT_16_BIT = VkSampleCountFlags 0x10
 -- | Sample count 32 supported
-pattern VK_SAMPLE_COUNT_32_BIT = VkSampleCountFlagBits 0x20
+pattern VK_SAMPLE_COUNT_32_BIT = VkSampleCountFlags 0x20
 -- | Sample count 64 supported
-pattern VK_SAMPLE_COUNT_64_BIT = VkSampleCountFlagBits 0x40
+pattern VK_SAMPLE_COUNT_64_BIT = VkSampleCountFlags 0x40
 
 
 -- ** vkDestroySampler

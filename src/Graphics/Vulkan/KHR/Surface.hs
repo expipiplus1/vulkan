@@ -4,28 +4,19 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Surface where
 
-import Graphics.Vulkan.Device( PhysicalDevice
+import Graphics.Vulkan.Device( PhysicalDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
-import Graphics.Vulkan.KHR.Surface( VkCompositeAlphaFlagsKHR
-                                  , VkSurfaceFormatKHR
-                                  , VkSurfaceTransformFlagBitsKHR
-                                  , SurfaceKHR
-                                  , VkSurfaceCapabilitiesKHR
-                                  , VkPresentModeKHR
-                                  , VkSurfaceTransformFlagsKHR
-                                  , VkColorSpaceKHR
-                                  )
 import Data.Int( Int32
                )
 import Data.Bits( Bits
@@ -33,7 +24,7 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -42,15 +33,15 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Image( VkImageUsageFlags
+import Graphics.Vulkan.Image( VkImageUsageFlags(..)
                             )
-import Graphics.Vulkan.DeviceInitialization( Instance
+import Graphics.Vulkan.DeviceInitialization( Instance(..)
                                            )
-import Graphics.Vulkan.Core( VkResult
-                           , VkBool32
-                           , VkExtent2D
-                           , VkFlags
-                           , VkFormat
+import Graphics.Vulkan.Core( VkFormat(..)
+                           , VkFlags(..)
+                           , VkBool32(..)
+                           , VkResult(..)
+                           , VkExtent2D(..)
                            )
 
 -- ** vkGetPhysicalDeviceSurfaceFormatsKHR
@@ -65,41 +56,38 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDe
 
 -- ** VkCompositeAlphaFlagsKHR
 
-newtype VkCompositeAlphaFlagBitsKHR = VkCompositeAlphaFlagBitsKHR VkFlags
+newtype VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagsKHR VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkCompositeAlphaFlagBitsKHR
-type VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagBitsKHR
-
-instance Show VkCompositeAlphaFlagBitsKHR where
+instance Show VkCompositeAlphaFlagsKHR where
   showsPrec _ VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = showString "VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
   showsPrec _ VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = showString "VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR"
   showsPrec _ VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = showString "VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR"
   showsPrec _ VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = showString "VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR"
   
-  showsPrec p (VkCompositeAlphaFlagBitsKHR x) = showParen (p >= 11) (showString "VkCompositeAlphaFlagBitsKHR " . showsPrec 11 x)
+  showsPrec p (VkCompositeAlphaFlagsKHR x) = showParen (p >= 11) (showString "VkCompositeAlphaFlagsKHR " . showsPrec 11 x)
 
-instance Read VkCompositeAlphaFlagBitsKHR where
+instance Read VkCompositeAlphaFlagsKHR where
   readPrec = parens ( choose [ ("VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR", pure VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
                              , ("VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR", pure VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR)
                              , ("VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR", pure VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR)
                              , ("VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR", pure VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCompositeAlphaFlagBitsKHR")
+                        expectP (Ident "VkCompositeAlphaFlagsKHR")
                         v <- step readPrec
-                        pure (VkCompositeAlphaFlagBitsKHR v)
+                        pure (VkCompositeAlphaFlagsKHR v)
                         )
                     )
 
 
-pattern VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x1
+pattern VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = VkCompositeAlphaFlagsKHR 0x1
 
-pattern VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x2
+pattern VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagsKHR 0x2
 
-pattern VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x4
+pattern VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagsKHR 0x4
 
-pattern VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x8
+pattern VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = VkCompositeAlphaFlagsKHR 0x8
 
 
 -- ** VkPresentModeKHR
@@ -193,13 +181,10 @@ foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDe
 
 -- ** VkSurfaceTransformFlagsKHR
 
-newtype VkSurfaceTransformFlagBitsKHR = VkSurfaceTransformFlagBitsKHR VkFlags
+newtype VkSurfaceTransformFlagsKHR = VkSurfaceTransformFlagsKHR VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
--- | Alias for VkSurfaceTransformFlagBitsKHR
-type VkSurfaceTransformFlagsKHR = VkSurfaceTransformFlagBitsKHR
-
-instance Show VkSurfaceTransformFlagBitsKHR where
+instance Show VkSurfaceTransformFlagsKHR where
   showsPrec _ VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = showString "VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR"
   showsPrec _ VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = showString "VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR"
   showsPrec _ VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = showString "VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR"
@@ -210,9 +195,9 @@ instance Show VkSurfaceTransformFlagBitsKHR where
   showsPrec _ VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = showString "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR"
   showsPrec _ VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = showString "VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR"
   
-  showsPrec p (VkSurfaceTransformFlagBitsKHR x) = showParen (p >= 11) (showString "VkSurfaceTransformFlagBitsKHR " . showsPrec 11 x)
+  showsPrec p (VkSurfaceTransformFlagsKHR x) = showParen (p >= 11) (showString "VkSurfaceTransformFlagsKHR " . showsPrec 11 x)
 
-instance Read VkSurfaceTransformFlagBitsKHR where
+instance Read VkSurfaceTransformFlagsKHR where
   readPrec = parens ( choose [ ("VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR", pure VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
                              , ("VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR", pure VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR)
                              , ("VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR", pure VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR)
@@ -224,30 +209,30 @@ instance Read VkSurfaceTransformFlagBitsKHR where
                              , ("VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR", pure VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSurfaceTransformFlagBitsKHR")
+                        expectP (Ident "VkSurfaceTransformFlagsKHR")
                         v <- step readPrec
-                        pure (VkSurfaceTransformFlagBitsKHR v)
+                        pure (VkSurfaceTransformFlagsKHR v)
                         )
                     )
 
 
-pattern VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x1
+pattern VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = VkSurfaceTransformFlagsKHR 0x1
 
-pattern VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x2
+pattern VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = VkSurfaceTransformFlagsKHR 0x2
 
-pattern VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x4
+pattern VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = VkSurfaceTransformFlagsKHR 0x4
 
-pattern VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x8
+pattern VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = VkSurfaceTransformFlagsKHR 0x8
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x10
+pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = VkSurfaceTransformFlagsKHR 0x10
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x20
+pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = VkSurfaceTransformFlagsKHR 0x20
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x40
+pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = VkSurfaceTransformFlagsKHR 0x40
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x80
+pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = VkSurfaceTransformFlagsKHR 0x80
 
-pattern VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x100
+pattern VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = VkSurfaceTransformFlagsKHR 0x100
 
 
 
@@ -259,7 +244,7 @@ data VkSurfaceCapabilitiesKHR =
                           , maxImageExtent :: VkExtent2D 
                           , maxImageArrayLayers :: Word32 
                           , supportedTransforms :: VkSurfaceTransformFlagsKHR 
-                          , currentTransform :: VkSurfaceTransformFlagBitsKHR 
+                          , currentTransform :: VkSurfaceTransformFlagsKHR 
                           , supportedCompositeAlpha :: VkCompositeAlphaFlagsKHR 
                           , supportedUsageFlags :: VkImageUsageFlags 
                           }

@@ -2,27 +2,27 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.OtherTypes where
 
-import Graphics.Vulkan.Buffer( Buffer
+import Graphics.Vulkan.Buffer( Buffer(..)
                              )
-import Graphics.Vulkan.Pass( VkAccessFlags
+import Graphics.Vulkan.Pass( VkAccessFlags(..)
                            )
-import Data.Word( Word32
+import Data.Word( Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
-import Data.Int( Int32
+import Data.Int( Int32(..)
                )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Image( VkImageSubresourceRange
-                            , VkImageLayout
-                            , Image
+import Graphics.Vulkan.Image( Image(..)
+                            , VkImageSubresourceRange(..)
+                            , VkImageLayout(..)
                             )
-import Graphics.Vulkan.Core( VkDeviceSize
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkDeviceSize(..)
                            )
 
 

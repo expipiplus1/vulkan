@@ -68,7 +68,7 @@ getImportDeclarations importingModule names =
   where imports = catMaybes (getImportDeclaration <$> S.toList names)
         getImportDeclaration rn =
           case rn of
-            ExternalName moduleName name ->
+            ExternalName moduleName name | moduleName /= importingModule ->
               Just (Import NotSource moduleName [name])
             _ -> Nothing
 

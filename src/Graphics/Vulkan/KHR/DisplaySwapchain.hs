@@ -2,26 +2,26 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.KHR.DisplaySwapchain where
 
-import Graphics.Vulkan.Device( Device
+import Graphics.Vulkan.Device( Device(..)
                              )
-import Graphics.Vulkan.KHR.Swapchain( SwapchainKHR
-                                    , VkSwapchainCreateInfoKHR
+import Graphics.Vulkan.KHR.Swapchain( VkSwapchainCreateInfoKHR(..)
+                                    , SwapchainKHR(..)
                                     )
-import Data.Word( Word32
+import Data.Word( Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks
+import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkResult
-                           , VkBool32
-                           , VkRect2D
-                           , VkStructureType
+import Graphics.Vulkan.Core( VkStructureType(..)
+                           , VkRect2D(..)
+                           , VkBool32(..)
+                           , VkResult(..)
                            )
 
 
