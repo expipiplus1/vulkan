@@ -13,14 +13,12 @@ import           Spec.Bitmask
 import           Spec.Command      as Command
 import           Spec.Constant     as Constant
 import           Spec.Enum
-import           Spec.ExtensionTag
 import           Spec.Spec
 import           Spec.Type         hiding (ABaseType, ABitmaskType, ADefine,
                                     AFuncPointerType, AHandleType,
                                     APlatformType, AStructType, AUnionType,
                                     AnEnumType, AnInclude)
 import qualified Spec.Type         as T
-import           Write.Utils
 
 -- | Info is a more useful representation of the specification
 data SpecGraph = SpecGraph{ gVertices      :: [Vertex]
@@ -72,21 +70,20 @@ allReachable vs = go (S.fromList (vName <$> vs)) (concatMap vDependencies vs)
 
 getSpecGraph :: Spec -> SpecGraph
 getSpecGraph spec = graph
-  where gVertices = (typeDeclToVertex graph tags <$> sTypes spec) ++
+  where gVertices = (typeDeclToVertex graph <$> sTypes spec) ++
                     (constantToVertex graph <$> sConstants spec) ++
                     (enumToVertex <$> sEnums spec) ++
                     (bitmaskToVertex graph <$> sBitmasks spec) ++
                     (commandToVertex graph <$> sCommands spec)
         gNameVertexMap = M.fromList ((vName &&& id) <$> gVertices)
-        tags = getSpecExtensionTags spec
         graph = SpecGraph{..}
 
 --------------------------------------------------------------------------------
 -- Boring boilerplate conversions
 --------------------------------------------------------------------------------
 
-typeDeclToVertex :: SpecGraph -> [ExtensionTag] -> TypeDecl -> Vertex
-typeDeclToVertex graph tags td =
+typeDeclToVertex :: SpecGraph -> TypeDecl -> Vertex
+typeDeclToVertex graph td =
   let lookupNameMay name = M.lookup name (gNameVertexMap graph)
       lookupName name = fromMaybe (error ("Depended upon name not in spec: " ++ name)) (lookupNameMay name)
   in case td of
@@ -113,11 +110,10 @@ typeDeclToVertex graph tags td =
                , vSourceEntity = APlatformType pt
                }
        T.ABitmaskType bmt ->
-         let bm = (lookupNameMay =<< swapSuffixUnderTag tags "Flags" "FlagBits" (bmtName bmt))
+         let bm = (lookupNameMay =<< bmtRequires bmt)
          in Vertex{ vName = bmtName bmt
                   , vDependencies = (lookupName <$>
-                                     (cTypeDependencyNames (bmtCType bmt) ++
-                                      maybeToList (bmtRequires bmt)))
+                                     cTypeDependencyNames (bmtCType bmt))
                                    ++ maybeToList bm
                   , vSourceEntity = ABitmaskType bmt (bm >>= vertexToBitmask)
                   }
