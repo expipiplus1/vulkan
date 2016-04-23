@@ -44,190 +44,190 @@ import Graphics.Vulkan.Sampler( VkSampleCountFlags(..)
 import Graphics.Vulkan.Image( Image(..)
                             , VkImageType(..)
                             , VkImageUsageFlags(..)
-                            , VkImageSubresource(..)
                             , VkImageAspectFlags(..)
                             , VkImageTiling(..)
+                            , ImageSubresource(..)
                             )
 import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
                                      )
 import Graphics.Vulkan.Core( VkStructureType(..)
                            , VkFormat(..)
+                           , Offset3D(..)
                            , VkFlags(..)
-                           , VkOffset3D(..)
+                           , Extent3D(..)
                            , VkResult(..)
                            , VkDeviceSize(..)
-                           , VkExtent3D(..)
                            )
 
 
-data VkSparseImageMemoryRequirements =
-  VkSparseImageMemoryRequirements{ formatProperties :: VkSparseImageFormatProperties 
-                                 , imageMipTailFirstLod :: Word32 
-                                 , imageMipTailSize :: VkDeviceSize 
-                                 , imageMipTailOffset :: VkDeviceSize 
-                                 , imageMipTailStride :: VkDeviceSize 
-                                 }
+data SparseImageMemoryRequirements =
+  SparseImageMemoryRequirements{ formatProperties :: SparseImageFormatProperties 
+                               , imageMipTailFirstLod :: Word32 
+                               , imageMipTailSize :: VkDeviceSize 
+                               , imageMipTailOffset :: VkDeviceSize 
+                               , imageMipTailStride :: VkDeviceSize 
+                               }
   deriving (Eq)
 
-instance Storable VkSparseImageMemoryRequirements where
+instance Storable SparseImageMemoryRequirements where
   sizeOf ~_ = 48
   alignment ~_ = 8
-  peek ptr = VkSparseImageMemoryRequirements <$> peek (ptr `plusPtr` 0)
-                                             <*> peek (ptr `plusPtr` 20)
-                                             <*> peek (ptr `plusPtr` 24)
-                                             <*> peek (ptr `plusPtr` 32)
-                                             <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (formatProperties (poked :: VkSparseImageMemoryRequirements))
-                *> poke (ptr `plusPtr` 20) (imageMipTailFirstLod (poked :: VkSparseImageMemoryRequirements))
-                *> poke (ptr `plusPtr` 24) (imageMipTailSize (poked :: VkSparseImageMemoryRequirements))
-                *> poke (ptr `plusPtr` 32) (imageMipTailOffset (poked :: VkSparseImageMemoryRequirements))
-                *> poke (ptr `plusPtr` 40) (imageMipTailStride (poked :: VkSparseImageMemoryRequirements))
+  peek ptr = SparseImageMemoryRequirements <$> peek (ptr `plusPtr` 0)
+                                           <*> peek (ptr `plusPtr` 20)
+                                           <*> peek (ptr `plusPtr` 24)
+                                           <*> peek (ptr `plusPtr` 32)
+                                           <*> peek (ptr `plusPtr` 40)
+  poke ptr poked = poke (ptr `plusPtr` 0) (formatProperties (poked :: SparseImageMemoryRequirements))
+                *> poke (ptr `plusPtr` 20) (imageMipTailFirstLod (poked :: SparseImageMemoryRequirements))
+                *> poke (ptr `plusPtr` 24) (imageMipTailSize (poked :: SparseImageMemoryRequirements))
+                *> poke (ptr `plusPtr` 32) (imageMipTailOffset (poked :: SparseImageMemoryRequirements))
+                *> poke (ptr `plusPtr` 40) (imageMipTailStride (poked :: SparseImageMemoryRequirements))
 
 
 
-data VkSparseMemoryBind =
-  VkSparseMemoryBind{ resourceOffset :: VkDeviceSize 
-                    , size :: VkDeviceSize 
-                    , memory :: DeviceMemory 
-                    , memoryOffset :: VkDeviceSize 
-                    , flags :: VkSparseMemoryBindFlags 
-                    }
+data SparseMemoryBind =
+  SparseMemoryBind{ resourceOffset :: VkDeviceSize 
+                  , size :: VkDeviceSize 
+                  , memory :: DeviceMemory 
+                  , memoryOffset :: VkDeviceSize 
+                  , flags :: VkSparseMemoryBindFlags 
+                  }
   deriving (Eq)
 
-instance Storable VkSparseMemoryBind where
+instance Storable SparseMemoryBind where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkSparseMemoryBind <$> peek (ptr `plusPtr` 0)
-                                <*> peek (ptr `plusPtr` 8)
-                                <*> peek (ptr `plusPtr` 16)
-                                <*> peek (ptr `plusPtr` 24)
-                                <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (resourceOffset (poked :: VkSparseMemoryBind))
-                *> poke (ptr `plusPtr` 8) (size (poked :: VkSparseMemoryBind))
-                *> poke (ptr `plusPtr` 16) (memory (poked :: VkSparseMemoryBind))
-                *> poke (ptr `plusPtr` 24) (memoryOffset (poked :: VkSparseMemoryBind))
-                *> poke (ptr `plusPtr` 32) (flags (poked :: VkSparseMemoryBind))
+  peek ptr = SparseMemoryBind <$> peek (ptr `plusPtr` 0)
+                              <*> peek (ptr `plusPtr` 8)
+                              <*> peek (ptr `plusPtr` 16)
+                              <*> peek (ptr `plusPtr` 24)
+                              <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (resourceOffset (poked :: SparseMemoryBind))
+                *> poke (ptr `plusPtr` 8) (size (poked :: SparseMemoryBind))
+                *> poke (ptr `plusPtr` 16) (memory (poked :: SparseMemoryBind))
+                *> poke (ptr `plusPtr` 24) (memoryOffset (poked :: SparseMemoryBind))
+                *> poke (ptr `plusPtr` 32) (flags (poked :: SparseMemoryBind))
 
 
 
-data VkSparseImageMemoryBind =
-  VkSparseImageMemoryBind{ subresource :: VkImageSubresource 
-                         , offset :: VkOffset3D 
-                         , extent :: VkExtent3D 
-                         , memory :: DeviceMemory 
-                         , memoryOffset :: VkDeviceSize 
-                         , flags :: VkSparseMemoryBindFlags 
-                         }
+data SparseImageMemoryBind =
+  SparseImageMemoryBind{ subresource :: ImageSubresource 
+                       , offset :: Offset3D 
+                       , extent :: Extent3D 
+                       , memory :: DeviceMemory 
+                       , memoryOffset :: VkDeviceSize 
+                       , flags :: VkSparseMemoryBindFlags 
+                       }
   deriving (Eq)
 
-instance Storable VkSparseImageMemoryBind where
+instance Storable SparseImageMemoryBind where
   sizeOf ~_ = 64
   alignment ~_ = 8
-  peek ptr = VkSparseImageMemoryBind <$> peek (ptr `plusPtr` 0)
-                                     <*> peek (ptr `plusPtr` 12)
-                                     <*> peek (ptr `plusPtr` 24)
-                                     <*> peek (ptr `plusPtr` 40)
-                                     <*> peek (ptr `plusPtr` 48)
-                                     <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (subresource (poked :: VkSparseImageMemoryBind))
-                *> poke (ptr `plusPtr` 12) (offset (poked :: VkSparseImageMemoryBind))
-                *> poke (ptr `plusPtr` 24) (extent (poked :: VkSparseImageMemoryBind))
-                *> poke (ptr `plusPtr` 40) (memory (poked :: VkSparseImageMemoryBind))
-                *> poke (ptr `plusPtr` 48) (memoryOffset (poked :: VkSparseImageMemoryBind))
-                *> poke (ptr `plusPtr` 56) (flags (poked :: VkSparseImageMemoryBind))
+  peek ptr = SparseImageMemoryBind <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 12)
+                                   <*> peek (ptr `plusPtr` 24)
+                                   <*> peek (ptr `plusPtr` 40)
+                                   <*> peek (ptr `plusPtr` 48)
+                                   <*> peek (ptr `plusPtr` 56)
+  poke ptr poked = poke (ptr `plusPtr` 0) (subresource (poked :: SparseImageMemoryBind))
+                *> poke (ptr `plusPtr` 12) (offset (poked :: SparseImageMemoryBind))
+                *> poke (ptr `plusPtr` 24) (extent (poked :: SparseImageMemoryBind))
+                *> poke (ptr `plusPtr` 40) (memory (poked :: SparseImageMemoryBind))
+                *> poke (ptr `plusPtr` 48) (memoryOffset (poked :: SparseImageMemoryBind))
+                *> poke (ptr `plusPtr` 56) (flags (poked :: SparseImageMemoryBind))
 
 
 
-data VkSparseImageMemoryBindInfo =
-  VkSparseImageMemoryBindInfo{ image :: Image 
-                             , bindCount :: Word32 
-                             , pBinds :: Ptr VkSparseImageMemoryBind 
-                             }
+data SparseImageMemoryBindInfo =
+  SparseImageMemoryBindInfo{ image :: Image 
+                           , bindCount :: Word32 
+                           , pBinds :: Ptr SparseImageMemoryBind 
+                           }
   deriving (Eq)
 
-instance Storable VkSparseImageMemoryBindInfo where
+instance Storable SparseImageMemoryBindInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkSparseImageMemoryBindInfo <$> peek (ptr `plusPtr` 0)
-                                         <*> peek (ptr `plusPtr` 8)
-                                         <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (image (poked :: VkSparseImageMemoryBindInfo))
-                *> poke (ptr `plusPtr` 8) (bindCount (poked :: VkSparseImageMemoryBindInfo))
-                *> poke (ptr `plusPtr` 16) (pBinds (poked :: VkSparseImageMemoryBindInfo))
+  peek ptr = SparseImageMemoryBindInfo <$> peek (ptr `plusPtr` 0)
+                                       <*> peek (ptr `plusPtr` 8)
+                                       <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (image (poked :: SparseImageMemoryBindInfo))
+                *> poke (ptr `plusPtr` 8) (bindCount (poked :: SparseImageMemoryBindInfo))
+                *> poke (ptr `plusPtr` 16) (pBinds (poked :: SparseImageMemoryBindInfo))
 
 
 -- ** vkGetImageSparseMemoryRequirements
 foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemoryRequirements ::
   Device ->
-  Image -> Ptr Word32 -> Ptr VkSparseImageMemoryRequirements -> IO ()
+  Image -> Ptr Word32 -> Ptr SparseImageMemoryRequirements -> IO ()
 
 -- ** vkQueueBindSparse
 foreign import ccall "vkQueueBindSparse" vkQueueBindSparse ::
-  Queue -> Word32 -> Ptr VkBindSparseInfo -> Fence -> IO VkResult
+  Queue -> Word32 -> Ptr BindSparseInfo -> Fence -> IO VkResult
 
 
-data VkBindSparseInfo =
-  VkBindSparseInfo{ sType :: VkStructureType 
-                  , pNext :: Ptr Void 
-                  , waitSemaphoreCount :: Word32 
-                  , pWaitSemaphores :: Ptr Semaphore 
-                  , bufferBindCount :: Word32 
-                  , pBufferBinds :: Ptr VkSparseBufferMemoryBindInfo 
-                  , imageOpaqueBindCount :: Word32 
-                  , pImageOpaqueBinds :: Ptr VkSparseImageOpaqueMemoryBindInfo 
-                  , imageBindCount :: Word32 
-                  , pImageBinds :: Ptr VkSparseImageMemoryBindInfo 
-                  , signalSemaphoreCount :: Word32 
-                  , pSignalSemaphores :: Ptr Semaphore 
-                  }
+data BindSparseInfo =
+  BindSparseInfo{ sType :: VkStructureType 
+                , pNext :: Ptr Void 
+                , waitSemaphoreCount :: Word32 
+                , pWaitSemaphores :: Ptr Semaphore 
+                , bufferBindCount :: Word32 
+                , pBufferBinds :: Ptr SparseBufferMemoryBindInfo 
+                , imageOpaqueBindCount :: Word32 
+                , pImageOpaqueBinds :: Ptr SparseImageOpaqueMemoryBindInfo 
+                , imageBindCount :: Word32 
+                , pImageBinds :: Ptr SparseImageMemoryBindInfo 
+                , signalSemaphoreCount :: Word32 
+                , pSignalSemaphores :: Ptr Semaphore 
+                }
   deriving (Eq)
 
-instance Storable VkBindSparseInfo where
+instance Storable BindSparseInfo where
   sizeOf ~_ = 96
   alignment ~_ = 8
-  peek ptr = VkBindSparseInfo <$> peek (ptr `plusPtr` 0)
-                              <*> peek (ptr `plusPtr` 8)
-                              <*> peek (ptr `plusPtr` 16)
-                              <*> peek (ptr `plusPtr` 24)
-                              <*> peek (ptr `plusPtr` 32)
-                              <*> peek (ptr `plusPtr` 40)
-                              <*> peek (ptr `plusPtr` 48)
-                              <*> peek (ptr `plusPtr` 56)
-                              <*> peek (ptr `plusPtr` 64)
-                              <*> peek (ptr `plusPtr` 72)
-                              <*> peek (ptr `plusPtr` 80)
-                              <*> peek (ptr `plusPtr` 88)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 16) (waitSemaphoreCount (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 24) (pWaitSemaphores (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 32) (bufferBindCount (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 40) (pBufferBinds (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 48) (imageOpaqueBindCount (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 56) (pImageOpaqueBinds (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 64) (imageBindCount (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 72) (pImageBinds (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 80) (signalSemaphoreCount (poked :: VkBindSparseInfo))
-                *> poke (ptr `plusPtr` 88) (pSignalSemaphores (poked :: VkBindSparseInfo))
+  peek ptr = BindSparseInfo <$> peek (ptr `plusPtr` 0)
+                            <*> peek (ptr `plusPtr` 8)
+                            <*> peek (ptr `plusPtr` 16)
+                            <*> peek (ptr `plusPtr` 24)
+                            <*> peek (ptr `plusPtr` 32)
+                            <*> peek (ptr `plusPtr` 40)
+                            <*> peek (ptr `plusPtr` 48)
+                            <*> peek (ptr `plusPtr` 56)
+                            <*> peek (ptr `plusPtr` 64)
+                            <*> peek (ptr `plusPtr` 72)
+                            <*> peek (ptr `plusPtr` 80)
+                            <*> peek (ptr `plusPtr` 88)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 16) (waitSemaphoreCount (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 24) (pWaitSemaphores (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 32) (bufferBindCount (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 40) (pBufferBinds (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 48) (imageOpaqueBindCount (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 56) (pImageOpaqueBinds (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 64) (imageBindCount (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 72) (pImageBinds (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 80) (signalSemaphoreCount (poked :: BindSparseInfo))
+                *> poke (ptr `plusPtr` 88) (pSignalSemaphores (poked :: BindSparseInfo))
 
 
 
-data VkSparseBufferMemoryBindInfo =
-  VkSparseBufferMemoryBindInfo{ buffer :: Buffer 
-                              , bindCount :: Word32 
-                              , pBinds :: Ptr VkSparseMemoryBind 
-                              }
+data SparseBufferMemoryBindInfo =
+  SparseBufferMemoryBindInfo{ buffer :: Buffer 
+                            , bindCount :: Word32 
+                            , pBinds :: Ptr SparseMemoryBind 
+                            }
   deriving (Eq)
 
-instance Storable VkSparseBufferMemoryBindInfo where
+instance Storable SparseBufferMemoryBindInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkSparseBufferMemoryBindInfo <$> peek (ptr `plusPtr` 0)
-                                          <*> peek (ptr `plusPtr` 8)
-                                          <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (buffer (poked :: VkSparseBufferMemoryBindInfo))
-                *> poke (ptr `plusPtr` 8) (bindCount (poked :: VkSparseBufferMemoryBindInfo))
-                *> poke (ptr `plusPtr` 16) (pBinds (poked :: VkSparseBufferMemoryBindInfo))
+  peek ptr = SparseBufferMemoryBindInfo <$> peek (ptr `plusPtr` 0)
+                                        <*> peek (ptr `plusPtr` 8)
+                                        <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (buffer (poked :: SparseBufferMemoryBindInfo))
+                *> poke (ptr `plusPtr` 8) (bindCount (poked :: SparseBufferMemoryBindInfo))
+                *> poke (ptr `plusPtr` 16) (pBinds (poked :: SparseBufferMemoryBindInfo))
 
 
 -- ** VkSparseImageFormatFlags
@@ -270,7 +270,7 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
       VkSampleCountFlags ->
         VkImageUsageFlags ->
           VkImageTiling ->
-            Ptr Word32 -> Ptr VkSparseImageFormatProperties -> IO ()
+            Ptr Word32 -> Ptr SparseImageFormatProperties -> IO ()
 
 -- ** VkSparseMemoryBindFlags
 
@@ -297,40 +297,40 @@ pattern VK_SPARSE_MEMORY_BIND_METADATA_BIT = VkSparseMemoryBindFlags 0x1
 
 
 
-data VkSparseImageOpaqueMemoryBindInfo =
-  VkSparseImageOpaqueMemoryBindInfo{ image :: Image 
-                                   , bindCount :: Word32 
-                                   , pBinds :: Ptr VkSparseMemoryBind 
-                                   }
+data SparseImageOpaqueMemoryBindInfo =
+  SparseImageOpaqueMemoryBindInfo{ image :: Image 
+                                 , bindCount :: Word32 
+                                 , pBinds :: Ptr SparseMemoryBind 
+                                 }
   deriving (Eq)
 
-instance Storable VkSparseImageOpaqueMemoryBindInfo where
+instance Storable SparseImageOpaqueMemoryBindInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkSparseImageOpaqueMemoryBindInfo <$> peek (ptr `plusPtr` 0)
-                                               <*> peek (ptr `plusPtr` 8)
-                                               <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (image (poked :: VkSparseImageOpaqueMemoryBindInfo))
-                *> poke (ptr `plusPtr` 8) (bindCount (poked :: VkSparseImageOpaqueMemoryBindInfo))
-                *> poke (ptr `plusPtr` 16) (pBinds (poked :: VkSparseImageOpaqueMemoryBindInfo))
+  peek ptr = SparseImageOpaqueMemoryBindInfo <$> peek (ptr `plusPtr` 0)
+                                             <*> peek (ptr `plusPtr` 8)
+                                             <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (image (poked :: SparseImageOpaqueMemoryBindInfo))
+                *> poke (ptr `plusPtr` 8) (bindCount (poked :: SparseImageOpaqueMemoryBindInfo))
+                *> poke (ptr `plusPtr` 16) (pBinds (poked :: SparseImageOpaqueMemoryBindInfo))
 
 
 
-data VkSparseImageFormatProperties =
-  VkSparseImageFormatProperties{ aspectMask :: VkImageAspectFlags 
-                               , imageGranularity :: VkExtent3D 
-                               , flags :: VkSparseImageFormatFlags 
-                               }
+data SparseImageFormatProperties =
+  SparseImageFormatProperties{ aspectMask :: VkImageAspectFlags 
+                             , imageGranularity :: Extent3D 
+                             , flags :: VkSparseImageFormatFlags 
+                             }
   deriving (Eq)
 
-instance Storable VkSparseImageFormatProperties where
+instance Storable SparseImageFormatProperties where
   sizeOf ~_ = 20
   alignment ~_ = 4
-  peek ptr = VkSparseImageFormatProperties <$> peek (ptr `plusPtr` 0)
-                                           <*> peek (ptr `plusPtr` 4)
-                                           <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (aspectMask (poked :: VkSparseImageFormatProperties))
-                *> poke (ptr `plusPtr` 4) (imageGranularity (poked :: VkSparseImageFormatProperties))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkSparseImageFormatProperties))
+  peek ptr = SparseImageFormatProperties <$> peek (ptr `plusPtr` 0)
+                                         <*> peek (ptr `plusPtr` 4)
+                                         <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (aspectMask (poked :: SparseImageFormatProperties))
+                *> poke (ptr `plusPtr` 4) (imageGranularity (poked :: SparseImageFormatProperties))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: SparseImageFormatProperties))
 
 

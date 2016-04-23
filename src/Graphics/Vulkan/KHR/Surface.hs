@@ -24,7 +24,7 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -41,18 +41,18 @@ import Graphics.Vulkan.Core( VkFormat(..)
                            , VkFlags(..)
                            , VkBool32(..)
                            , VkResult(..)
-                           , VkExtent2D(..)
+                           , Extent2D(..)
                            )
 
 -- ** vkGetPhysicalDeviceSurfaceFormatsKHR
 foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceSurfaceFormatsKHR ::
   PhysicalDevice ->
-  SurfaceKHR -> Ptr Word32 -> Ptr VkSurfaceFormatKHR -> IO VkResult
+  SurfaceKHR -> Ptr Word32 -> Ptr SurfaceFormatKHR -> IO VkResult
 
 -- ** vkGetPhysicalDeviceSurfaceCapabilitiesKHR
 foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDeviceSurfaceCapabilitiesKHR ::
   PhysicalDevice ->
-  SurfaceKHR -> Ptr VkSurfaceCapabilitiesKHR -> IO VkResult
+  SurfaceKHR -> Ptr SurfaceCapabilitiesKHR -> IO VkResult
 
 -- ** VkCompositeAlphaFlagsKHR
 
@@ -133,24 +133,24 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceS
   Word32 -> SurfaceKHR -> Ptr VkBool32 -> IO VkResult
 
 
-data VkSurfaceFormatKHR =
-  VkSurfaceFormatKHR{ format :: VkFormat 
-                    , colorSpace :: VkColorSpaceKHR 
-                    }
+data SurfaceFormatKHR =
+  SurfaceFormatKHR{ format :: VkFormat 
+                  , colorSpace :: VkColorSpaceKHR 
+                  }
   deriving (Eq)
 
-instance Storable VkSurfaceFormatKHR where
+instance Storable SurfaceFormatKHR where
   sizeOf ~_ = 8
   alignment ~_ = 4
-  peek ptr = VkSurfaceFormatKHR <$> peek (ptr `plusPtr` 0)
-                                <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (format (poked :: VkSurfaceFormatKHR))
-                *> poke (ptr `plusPtr` 4) (colorSpace (poked :: VkSurfaceFormatKHR))
+  peek ptr = SurfaceFormatKHR <$> peek (ptr `plusPtr` 0)
+                              <*> peek (ptr `plusPtr` 4)
+  poke ptr poked = poke (ptr `plusPtr` 0) (format (poked :: SurfaceFormatKHR))
+                *> poke (ptr `plusPtr` 4) (colorSpace (poked :: SurfaceFormatKHR))
 
 
 -- ** vkDestroySurfaceKHR
 foreign import ccall "vkDestroySurfaceKHR" vkDestroySurfaceKHR ::
-  Instance -> SurfaceKHR -> Ptr VkAllocationCallbacks -> IO ()
+  Instance -> SurfaceKHR -> Ptr AllocationCallbacks -> IO ()
 
 -- ** VkColorSpaceKHR
 
@@ -236,42 +236,42 @@ pattern VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = VkSurfaceTransformFlagsKHR 0x100
 
 
 
-data VkSurfaceCapabilitiesKHR =
-  VkSurfaceCapabilitiesKHR{ minImageCount :: Word32 
-                          , maxImageCount :: Word32 
-                          , currentExtent :: VkExtent2D 
-                          , minImageExtent :: VkExtent2D 
-                          , maxImageExtent :: VkExtent2D 
-                          , maxImageArrayLayers :: Word32 
-                          , supportedTransforms :: VkSurfaceTransformFlagsKHR 
-                          , currentTransform :: VkSurfaceTransformFlagsKHR 
-                          , supportedCompositeAlpha :: VkCompositeAlphaFlagsKHR 
-                          , supportedUsageFlags :: VkImageUsageFlags 
-                          }
+data SurfaceCapabilitiesKHR =
+  SurfaceCapabilitiesKHR{ minImageCount :: Word32 
+                        , maxImageCount :: Word32 
+                        , currentExtent :: Extent2D 
+                        , minImageExtent :: Extent2D 
+                        , maxImageExtent :: Extent2D 
+                        , maxImageArrayLayers :: Word32 
+                        , supportedTransforms :: VkSurfaceTransformFlagsKHR 
+                        , currentTransform :: VkSurfaceTransformFlagsKHR 
+                        , supportedCompositeAlpha :: VkCompositeAlphaFlagsKHR 
+                        , supportedUsageFlags :: VkImageUsageFlags 
+                        }
   deriving (Eq)
 
-instance Storable VkSurfaceCapabilitiesKHR where
+instance Storable SurfaceCapabilitiesKHR where
   sizeOf ~_ = 52
   alignment ~_ = 4
-  peek ptr = VkSurfaceCapabilitiesKHR <$> peek (ptr `plusPtr` 0)
-                                      <*> peek (ptr `plusPtr` 4)
-                                      <*> peek (ptr `plusPtr` 8)
-                                      <*> peek (ptr `plusPtr` 16)
-                                      <*> peek (ptr `plusPtr` 24)
-                                      <*> peek (ptr `plusPtr` 32)
-                                      <*> peek (ptr `plusPtr` 36)
-                                      <*> peek (ptr `plusPtr` 40)
-                                      <*> peek (ptr `plusPtr` 44)
-                                      <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (minImageCount (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 4) (maxImageCount (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 8) (currentExtent (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 16) (minImageExtent (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 24) (maxImageExtent (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 32) (maxImageArrayLayers (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 36) (supportedTransforms (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 40) (currentTransform (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 44) (supportedCompositeAlpha (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 48) (supportedUsageFlags (poked :: VkSurfaceCapabilitiesKHR))
+  peek ptr = SurfaceCapabilitiesKHR <$> peek (ptr `plusPtr` 0)
+                                    <*> peek (ptr `plusPtr` 4)
+                                    <*> peek (ptr `plusPtr` 8)
+                                    <*> peek (ptr `plusPtr` 16)
+                                    <*> peek (ptr `plusPtr` 24)
+                                    <*> peek (ptr `plusPtr` 32)
+                                    <*> peek (ptr `plusPtr` 36)
+                                    <*> peek (ptr `plusPtr` 40)
+                                    <*> peek (ptr `plusPtr` 44)
+                                    <*> peek (ptr `plusPtr` 48)
+  poke ptr poked = poke (ptr `plusPtr` 0) (minImageCount (poked :: SurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 4) (maxImageCount (poked :: SurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 8) (currentExtent (poked :: SurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 16) (minImageExtent (poked :: SurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 24) (maxImageExtent (poked :: SurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 32) (maxImageArrayLayers (poked :: SurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 36) (supportedTransforms (poked :: SurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 40) (currentTransform (poked :: SurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 44) (supportedCompositeAlpha (poked :: SurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 48) (supportedUsageFlags (poked :: SurfaceCapabilitiesKHR))
 
 

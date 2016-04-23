@@ -24,7 +24,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -41,33 +41,33 @@ import Foreign.C.Types( CSize(..)
                       )
 
 
-data VkShaderModuleCreateInfo =
-  VkShaderModuleCreateInfo{ sType :: VkStructureType 
-                          , pNext :: Ptr Void 
-                          , flags :: VkShaderModuleCreateFlags 
-                          , codeSize :: CSize 
-                          , pCode :: Ptr Word32 
-                          }
+data ShaderModuleCreateInfo =
+  ShaderModuleCreateInfo{ sType :: VkStructureType 
+                        , pNext :: Ptr Void 
+                        , flags :: VkShaderModuleCreateFlags 
+                        , codeSize :: CSize 
+                        , pCode :: Ptr Word32 
+                        }
   deriving (Eq)
 
-instance Storable VkShaderModuleCreateInfo where
+instance Storable ShaderModuleCreateInfo where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkShaderModuleCreateInfo <$> peek (ptr `plusPtr` 0)
-                                      <*> peek (ptr `plusPtr` 8)
-                                      <*> peek (ptr `plusPtr` 16)
-                                      <*> peek (ptr `plusPtr` 24)
-                                      <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 24) (codeSize (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 32) (pCode (poked :: VkShaderModuleCreateInfo))
+  peek ptr = ShaderModuleCreateInfo <$> peek (ptr `plusPtr` 0)
+                                    <*> peek (ptr `plusPtr` 8)
+                                    <*> peek (ptr `plusPtr` 16)
+                                    <*> peek (ptr `plusPtr` 24)
+                                    <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: ShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: ShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: ShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 24) (codeSize (poked :: ShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pCode (poked :: ShaderModuleCreateInfo))
 
 
 -- ** vkDestroyShaderModule
 foreign import ccall "vkDestroyShaderModule" vkDestroyShaderModule ::
-  Device -> ShaderModule -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> ShaderModule -> Ptr AllocationCallbacks -> IO ()
 
 -- ** VkShaderModuleCreateFlags
 -- | Opaque flag
@@ -130,6 +130,6 @@ newtype ShaderModule = ShaderModule Word64
 -- ** vkCreateShaderModule
 foreign import ccall "vkCreateShaderModule" vkCreateShaderModule ::
   Device ->
-  Ptr VkShaderModuleCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr ShaderModule -> IO VkResult
+  Ptr ShaderModuleCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr ShaderModule -> IO VkResult
 

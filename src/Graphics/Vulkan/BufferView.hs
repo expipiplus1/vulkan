@@ -16,7 +16,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Graphics.Vulkan.Core( VkStructureType(..)
                            , VkFormat(..)
@@ -28,41 +28,41 @@ import Graphics.Vulkan.Core( VkStructureType(..)
 -- ** vkCreateBufferView
 foreign import ccall "vkCreateBufferView" vkCreateBufferView ::
   Device ->
-  Ptr VkBufferViewCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr BufferView -> IO VkResult
+  Ptr BufferViewCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr BufferView -> IO VkResult
 
 newtype BufferView = BufferView Word64
   deriving (Eq, Storable)
 
 
-data VkBufferViewCreateInfo =
-  VkBufferViewCreateInfo{ sType :: VkStructureType 
-                        , pNext :: Ptr Void 
-                        , flags :: VkBufferViewCreateFlags 
-                        , buffer :: Buffer 
-                        , format :: VkFormat 
-                        , offset :: VkDeviceSize 
-                        , range :: VkDeviceSize 
-                        }
+data BufferViewCreateInfo =
+  BufferViewCreateInfo{ sType :: VkStructureType 
+                      , pNext :: Ptr Void 
+                      , flags :: VkBufferViewCreateFlags 
+                      , buffer :: Buffer 
+                      , format :: VkFormat 
+                      , offset :: VkDeviceSize 
+                      , range :: VkDeviceSize 
+                      }
   deriving (Eq)
 
-instance Storable VkBufferViewCreateInfo where
+instance Storable BufferViewCreateInfo where
   sizeOf ~_ = 56
   alignment ~_ = 8
-  peek ptr = VkBufferViewCreateInfo <$> peek (ptr `plusPtr` 0)
-                                    <*> peek (ptr `plusPtr` 8)
-                                    <*> peek (ptr `plusPtr` 16)
-                                    <*> peek (ptr `plusPtr` 24)
-                                    <*> peek (ptr `plusPtr` 32)
-                                    <*> peek (ptr `plusPtr` 40)
-                                    <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 24) (buffer (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 32) (format (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 40) (offset (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 48) (range (poked :: VkBufferViewCreateInfo))
+  peek ptr = BufferViewCreateInfo <$> peek (ptr `plusPtr` 0)
+                                  <*> peek (ptr `plusPtr` 8)
+                                  <*> peek (ptr `plusPtr` 16)
+                                  <*> peek (ptr `plusPtr` 24)
+                                  <*> peek (ptr `plusPtr` 32)
+                                  <*> peek (ptr `plusPtr` 40)
+                                  <*> peek (ptr `plusPtr` 48)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: BufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: BufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: BufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 24) (buffer (poked :: BufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 32) (format (poked :: BufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 40) (offset (poked :: BufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 48) (range (poked :: BufferViewCreateInfo))
 
 
 -- ** VkBufferViewCreateFlags
@@ -72,5 +72,5 @@ newtype VkBufferViewCreateFlags = VkBufferViewCreateFlags VkFlags
 
 -- ** vkDestroyBufferView
 foreign import ccall "vkDestroyBufferView" vkDestroyBufferView ::
-  Device -> BufferView -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> BufferView -> Ptr AllocationCallbacks -> IO ()
 

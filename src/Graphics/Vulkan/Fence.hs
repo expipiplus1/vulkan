@@ -24,7 +24,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -40,22 +40,22 @@ import Graphics.Vulkan.Core( VkStructureType(..)
                            )
 
 
-data VkFenceCreateInfo =
-  VkFenceCreateInfo{ sType :: VkStructureType 
-                   , pNext :: Ptr Void 
-                   , flags :: VkFenceCreateFlags 
-                   }
+data FenceCreateInfo =
+  FenceCreateInfo{ sType :: VkStructureType 
+                 , pNext :: Ptr Void 
+                 , flags :: VkFenceCreateFlags 
+                 }
   deriving (Eq)
 
-instance Storable VkFenceCreateInfo where
+instance Storable FenceCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkFenceCreateInfo <$> peek (ptr `plusPtr` 0)
-                               <*> peek (ptr `plusPtr` 8)
-                               <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkFenceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkFenceCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkFenceCreateInfo))
+  peek ptr = FenceCreateInfo <$> peek (ptr `plusPtr` 0)
+                             <*> peek (ptr `plusPtr` 8)
+                             <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: FenceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: FenceCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: FenceCreateInfo))
 
 
 -- ** vkResetFences
@@ -64,7 +64,7 @@ foreign import ccall "vkResetFences" vkResetFences ::
 
 -- ** vkDestroyFence
 foreign import ccall "vkDestroyFence" vkDestroyFence ::
-  Device -> Fence -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Fence -> Ptr AllocationCallbacks -> IO ()
 
 -- ** vkWaitForFences
 foreign import ccall "vkWaitForFences" vkWaitForFences ::
@@ -101,8 +101,8 @@ pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlags 0x1
 -- ** vkCreateFence
 foreign import ccall "vkCreateFence" vkCreateFence ::
   Device ->
-  Ptr VkFenceCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr Fence -> IO VkResult
+  Ptr FenceCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Fence -> IO VkResult
 
 newtype Fence = Fence Word64
   deriving (Eq, Storable)

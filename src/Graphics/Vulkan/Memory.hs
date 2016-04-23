@@ -55,36 +55,36 @@ type PFN_vkInternalFreeNotification = FunPtr
        VkInternalAllocationType -> VkSystemAllocationScope -> IO ())
 
 
-data VkAllocationCallbacks =
-  VkAllocationCallbacks{ pUserData :: Ptr Void 
-                       , pfnAllocation :: PFN_vkAllocationFunction 
-                       , pfnReallocation :: PFN_vkReallocationFunction 
-                       , pfnFree :: PFN_vkFreeFunction 
-                       , pfnInternalAllocation :: PFN_vkInternalAllocationNotification 
-                       , pfnInternalFree :: PFN_vkInternalFreeNotification 
-                       }
+data AllocationCallbacks =
+  AllocationCallbacks{ pUserData :: Ptr Void 
+                     , pfnAllocation :: PFN_vkAllocationFunction 
+                     , pfnReallocation :: PFN_vkReallocationFunction 
+                     , pfnFree :: PFN_vkFreeFunction 
+                     , pfnInternalAllocation :: PFN_vkInternalAllocationNotification 
+                     , pfnInternalFree :: PFN_vkInternalFreeNotification 
+                     }
   deriving (Eq)
 
-instance Storable VkAllocationCallbacks where
+instance Storable AllocationCallbacks where
   sizeOf ~_ = 48
   alignment ~_ = 8
-  peek ptr = VkAllocationCallbacks <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 8)
-                                   <*> peek (ptr `plusPtr` 16)
-                                   <*> peek (ptr `plusPtr` 24)
-                                   <*> peek (ptr `plusPtr` 32)
-                                   <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (pUserData (poked :: VkAllocationCallbacks))
-                *> poke (ptr `plusPtr` 8) (pfnAllocation (poked :: VkAllocationCallbacks))
-                *> poke (ptr `plusPtr` 16) (pfnReallocation (poked :: VkAllocationCallbacks))
-                *> poke (ptr `plusPtr` 24) (pfnFree (poked :: VkAllocationCallbacks))
-                *> poke (ptr `plusPtr` 32) (pfnInternalAllocation (poked :: VkAllocationCallbacks))
-                *> poke (ptr `plusPtr` 40) (pfnInternalFree (poked :: VkAllocationCallbacks))
+  peek ptr = AllocationCallbacks <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 8)
+                                 <*> peek (ptr `plusPtr` 16)
+                                 <*> peek (ptr `plusPtr` 24)
+                                 <*> peek (ptr `plusPtr` 32)
+                                 <*> peek (ptr `plusPtr` 40)
+  poke ptr poked = poke (ptr `plusPtr` 0) (pUserData (poked :: AllocationCallbacks))
+                *> poke (ptr `plusPtr` 8) (pfnAllocation (poked :: AllocationCallbacks))
+                *> poke (ptr `plusPtr` 16) (pfnReallocation (poked :: AllocationCallbacks))
+                *> poke (ptr `plusPtr` 24) (pfnFree (poked :: AllocationCallbacks))
+                *> poke (ptr `plusPtr` 32) (pfnInternalAllocation (poked :: AllocationCallbacks))
+                *> poke (ptr `plusPtr` 40) (pfnInternalFree (poked :: AllocationCallbacks))
 
 
 -- ** vkInvalidateMappedMemoryRanges
 foreign import ccall "vkInvalidateMappedMemoryRanges" vkInvalidateMappedMemoryRanges ::
-  Device -> Word32 -> Ptr VkMappedMemoryRange -> IO VkResult
+  Device -> Word32 -> Ptr MappedMemoryRange -> IO VkResult
 
 -- ** VkSystemAllocationScope
 
@@ -126,7 +126,7 @@ pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = VkSystemAllocationScope 4
 
 -- ** vkFlushMappedMemoryRanges
 foreign import ccall "vkFlushMappedMemoryRanges" vkFlushMappedMemoryRanges ::
-  Device -> Word32 -> Ptr VkMappedMemoryRange -> IO VkResult
+  Device -> Word32 -> Ptr MappedMemoryRange -> IO VkResult
 
 -- ** VkMemoryMapFlags
 -- | Opaque flag
@@ -140,7 +140,7 @@ type PFN_vkInternalAllocationNotification = FunPtr
 
 -- ** vkFreeMemory
 foreign import ccall "vkFreeMemory" vkFreeMemory ::
-  Device -> DeviceMemory -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> DeviceMemory -> Ptr AllocationCallbacks -> IO ()
 
 type PFN_vkReallocationFunction = FunPtr
   (Ptr Void ->
@@ -186,53 +186,53 @@ foreign import ccall "vkGetDeviceMemoryCommitment" vkGetDeviceMemoryCommitment :
 -- ** vkAllocateMemory
 foreign import ccall "vkAllocateMemory" vkAllocateMemory ::
   Device ->
-  Ptr VkMemoryAllocateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr DeviceMemory -> IO VkResult
+  Ptr MemoryAllocateInfo ->
+    Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO VkResult
 
 
-data VkMappedMemoryRange =
-  VkMappedMemoryRange{ sType :: VkStructureType 
-                     , pNext :: Ptr Void 
-                     , memory :: DeviceMemory 
-                     , offset :: VkDeviceSize 
-                     , size :: VkDeviceSize 
-                     }
+data MappedMemoryRange =
+  MappedMemoryRange{ sType :: VkStructureType 
+                   , pNext :: Ptr Void 
+                   , memory :: DeviceMemory 
+                   , offset :: VkDeviceSize 
+                   , size :: VkDeviceSize 
+                   }
   deriving (Eq)
 
-instance Storable VkMappedMemoryRange where
+instance Storable MappedMemoryRange where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkMappedMemoryRange <$> peek (ptr `plusPtr` 0)
-                                 <*> peek (ptr `plusPtr` 8)
-                                 <*> peek (ptr `plusPtr` 16)
-                                 <*> peek (ptr `plusPtr` 24)
-                                 <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkMappedMemoryRange))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkMappedMemoryRange))
-                *> poke (ptr `plusPtr` 16) (memory (poked :: VkMappedMemoryRange))
-                *> poke (ptr `plusPtr` 24) (offset (poked :: VkMappedMemoryRange))
-                *> poke (ptr `plusPtr` 32) (size (poked :: VkMappedMemoryRange))
+  peek ptr = MappedMemoryRange <$> peek (ptr `plusPtr` 0)
+                               <*> peek (ptr `plusPtr` 8)
+                               <*> peek (ptr `plusPtr` 16)
+                               <*> peek (ptr `plusPtr` 24)
+                               <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: MappedMemoryRange))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: MappedMemoryRange))
+                *> poke (ptr `plusPtr` 16) (memory (poked :: MappedMemoryRange))
+                *> poke (ptr `plusPtr` 24) (offset (poked :: MappedMemoryRange))
+                *> poke (ptr `plusPtr` 32) (size (poked :: MappedMemoryRange))
 
 
 
-data VkMemoryAllocateInfo =
-  VkMemoryAllocateInfo{ sType :: VkStructureType 
-                      , pNext :: Ptr Void 
-                      , allocationSize :: VkDeviceSize 
-                      , memoryTypeIndex :: Word32 
-                      }
+data MemoryAllocateInfo =
+  MemoryAllocateInfo{ sType :: VkStructureType 
+                    , pNext :: Ptr Void 
+                    , allocationSize :: VkDeviceSize 
+                    , memoryTypeIndex :: Word32 
+                    }
   deriving (Eq)
 
-instance Storable VkMemoryAllocateInfo where
+instance Storable MemoryAllocateInfo where
   sizeOf ~_ = 32
   alignment ~_ = 8
-  peek ptr = VkMemoryAllocateInfo <$> peek (ptr `plusPtr` 0)
-                                  <*> peek (ptr `plusPtr` 8)
-                                  <*> peek (ptr `plusPtr` 16)
-                                  <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkMemoryAllocateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkMemoryAllocateInfo))
-                *> poke (ptr `plusPtr` 16) (allocationSize (poked :: VkMemoryAllocateInfo))
-                *> poke (ptr `plusPtr` 24) (memoryTypeIndex (poked :: VkMemoryAllocateInfo))
+  peek ptr = MemoryAllocateInfo <$> peek (ptr `plusPtr` 0)
+                                <*> peek (ptr `plusPtr` 8)
+                                <*> peek (ptr `plusPtr` 16)
+                                <*> peek (ptr `plusPtr` 24)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: MemoryAllocateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: MemoryAllocateInfo))
+                *> poke (ptr `plusPtr` 16) (allocationSize (poked :: MemoryAllocateInfo))
+                *> poke (ptr `plusPtr` 24) (memoryTypeIndex (poked :: MemoryAllocateInfo))
 
 

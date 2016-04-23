@@ -14,7 +14,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Graphics.Vulkan.Core( VkStructureType(..)
                            , VkFlags(..)
@@ -28,33 +28,33 @@ newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
 
 -- ** vkDestroySemaphore
 foreign import ccall "vkDestroySemaphore" vkDestroySemaphore ::
-  Device -> Semaphore -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Semaphore -> Ptr AllocationCallbacks -> IO ()
 
 newtype Semaphore = Semaphore Word64
   deriving (Eq, Storable)
 
 
-data VkSemaphoreCreateInfo =
-  VkSemaphoreCreateInfo{ sType :: VkStructureType 
-                       , pNext :: Ptr Void 
-                       , flags :: VkSemaphoreCreateFlags 
-                       }
+data SemaphoreCreateInfo =
+  SemaphoreCreateInfo{ sType :: VkStructureType 
+                     , pNext :: Ptr Void 
+                     , flags :: VkSemaphoreCreateFlags 
+                     }
   deriving (Eq)
 
-instance Storable VkSemaphoreCreateInfo where
+instance Storable SemaphoreCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkSemaphoreCreateInfo <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 8)
-                                   <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkSemaphoreCreateInfo))
+  peek ptr = SemaphoreCreateInfo <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 8)
+                                 <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: SemaphoreCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: SemaphoreCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: SemaphoreCreateInfo))
 
 
 -- ** vkCreateSemaphore
 foreign import ccall "vkCreateSemaphore" vkCreateSemaphore ::
   Device ->
-  Ptr VkSemaphoreCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr Semaphore -> IO VkResult
+  Ptr SemaphoreCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Semaphore -> IO VkResult
 

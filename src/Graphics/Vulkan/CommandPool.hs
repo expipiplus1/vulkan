@@ -24,7 +24,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -39,30 +39,30 @@ import Graphics.Vulkan.Core( VkStructureType(..)
                            )
 
 
-data VkCommandPoolCreateInfo =
-  VkCommandPoolCreateInfo{ sType :: VkStructureType 
-                         , pNext :: Ptr Void 
-                         , flags :: VkCommandPoolCreateFlags 
-                         , queueFamilyIndex :: Word32 
-                         }
+data CommandPoolCreateInfo =
+  CommandPoolCreateInfo{ sType :: VkStructureType 
+                       , pNext :: Ptr Void 
+                       , flags :: VkCommandPoolCreateFlags 
+                       , queueFamilyIndex :: Word32 
+                       }
   deriving (Eq)
 
-instance Storable VkCommandPoolCreateInfo where
+instance Storable CommandPoolCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkCommandPoolCreateInfo <$> peek (ptr `plusPtr` 0)
-                                     <*> peek (ptr `plusPtr` 8)
-                                     <*> peek (ptr `plusPtr` 16)
-                                     <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 20) (queueFamilyIndex (poked :: VkCommandPoolCreateInfo))
+  peek ptr = CommandPoolCreateInfo <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 8)
+                                   <*> peek (ptr `plusPtr` 16)
+                                   <*> peek (ptr `plusPtr` 20)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: CommandPoolCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: CommandPoolCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: CommandPoolCreateInfo))
+                *> poke (ptr `plusPtr` 20) (queueFamilyIndex (poked :: CommandPoolCreateInfo))
 
 
 -- ** vkDestroyCommandPool
 foreign import ccall "vkDestroyCommandPool" vkDestroyCommandPool ::
-  Device -> CommandPool -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> CommandPool -> Ptr AllocationCallbacks -> IO ()
 
 -- ** vkResetCommandPool
 foreign import ccall "vkResetCommandPool" vkResetCommandPool ::
@@ -99,8 +99,8 @@ pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = VkCommandPoolCreateFla
 -- ** vkCreateCommandPool
 foreign import ccall "vkCreateCommandPool" vkCreateCommandPool ::
   Device ->
-  Ptr VkCommandPoolCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr CommandPool -> IO VkResult
+  Ptr CommandPoolCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr CommandPool -> IO VkResult
 
 -- ** VkCommandPoolResetFlags
 

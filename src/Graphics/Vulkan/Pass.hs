@@ -29,7 +29,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -48,38 +48,38 @@ import Graphics.Vulkan.Core( VkStructureType(..)
                            , VkFormat(..)
                            , VkFlags(..)
                            , VkResult(..)
-                           , VkExtent2D(..)
+                           , Extent2D(..)
                            )
 
 
-data VkSubpassDependency =
-  VkSubpassDependency{ srcSubpass :: Word32 
-                     , dstSubpass :: Word32 
-                     , srcStageMask :: VkPipelineStageFlags 
-                     , dstStageMask :: VkPipelineStageFlags 
-                     , srcAccessMask :: VkAccessFlags 
-                     , dstAccessMask :: VkAccessFlags 
-                     , dependencyFlags :: VkDependencyFlags 
-                     }
+data SubpassDependency =
+  SubpassDependency{ srcSubpass :: Word32 
+                   , dstSubpass :: Word32 
+                   , srcStageMask :: VkPipelineStageFlags 
+                   , dstStageMask :: VkPipelineStageFlags 
+                   , srcAccessMask :: VkAccessFlags 
+                   , dstAccessMask :: VkAccessFlags 
+                   , dependencyFlags :: VkDependencyFlags 
+                   }
   deriving (Eq)
 
-instance Storable VkSubpassDependency where
+instance Storable SubpassDependency where
   sizeOf ~_ = 28
   alignment ~_ = 4
-  peek ptr = VkSubpassDependency <$> peek (ptr `plusPtr` 0)
-                                 <*> peek (ptr `plusPtr` 4)
-                                 <*> peek (ptr `plusPtr` 8)
-                                 <*> peek (ptr `plusPtr` 12)
-                                 <*> peek (ptr `plusPtr` 16)
-                                 <*> peek (ptr `plusPtr` 20)
-                                 <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (srcSubpass (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 4) (dstSubpass (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 8) (srcStageMask (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 12) (dstStageMask (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 16) (srcAccessMask (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 20) (dstAccessMask (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 24) (dependencyFlags (poked :: VkSubpassDependency))
+  peek ptr = SubpassDependency <$> peek (ptr `plusPtr` 0)
+                               <*> peek (ptr `plusPtr` 4)
+                               <*> peek (ptr `plusPtr` 8)
+                               <*> peek (ptr `plusPtr` 12)
+                               <*> peek (ptr `plusPtr` 16)
+                               <*> peek (ptr `plusPtr` 20)
+                               <*> peek (ptr `plusPtr` 24)
+  poke ptr poked = poke (ptr `plusPtr` 0) (srcSubpass (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 4) (dstSubpass (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 8) (srcStageMask (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 12) (dstStageMask (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 16) (srcAccessMask (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 20) (dstAccessMask (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 24) (dependencyFlags (poked :: SubpassDependency))
 
 
 -- ** VkSubpassDescriptionFlags
@@ -140,54 +140,54 @@ pattern VK_DEPENDENCY_BY_REGION_BIT = VkDependencyFlags 0x1
 
 -- ** vkDestroyRenderPass
 foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass ::
-  Device -> RenderPass -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> RenderPass -> Ptr AllocationCallbacks -> IO ()
 
 -- ** vkCreateFramebuffer
 foreign import ccall "vkCreateFramebuffer" vkCreateFramebuffer ::
   Device ->
-  Ptr VkFramebufferCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr Framebuffer -> IO VkResult
+  Ptr FramebufferCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Framebuffer -> IO VkResult
 
 
-data VkFramebufferCreateInfo =
-  VkFramebufferCreateInfo{ sType :: VkStructureType 
-                         , pNext :: Ptr Void 
-                         , flags :: VkFramebufferCreateFlags 
-                         , renderPass :: RenderPass 
-                         , attachmentCount :: Word32 
-                         , pAttachments :: Ptr ImageView 
-                         , width :: Word32 
-                         , height :: Word32 
-                         , layers :: Word32 
-                         }
+data FramebufferCreateInfo =
+  FramebufferCreateInfo{ sType :: VkStructureType 
+                       , pNext :: Ptr Void 
+                       , flags :: VkFramebufferCreateFlags 
+                       , renderPass :: RenderPass 
+                       , attachmentCount :: Word32 
+                       , pAttachments :: Ptr ImageView 
+                       , width :: Word32 
+                       , height :: Word32 
+                       , layers :: Word32 
+                       }
   deriving (Eq)
 
-instance Storable VkFramebufferCreateInfo where
+instance Storable FramebufferCreateInfo where
   sizeOf ~_ = 64
   alignment ~_ = 8
-  peek ptr = VkFramebufferCreateInfo <$> peek (ptr `plusPtr` 0)
-                                     <*> peek (ptr `plusPtr` 8)
-                                     <*> peek (ptr `plusPtr` 16)
-                                     <*> peek (ptr `plusPtr` 24)
-                                     <*> peek (ptr `plusPtr` 32)
-                                     <*> peek (ptr `plusPtr` 40)
-                                     <*> peek (ptr `plusPtr` 48)
-                                     <*> peek (ptr `plusPtr` 52)
-                                     <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 24) (renderPass (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 32) (attachmentCount (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 40) (pAttachments (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 48) (width (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 52) (height (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 56) (layers (poked :: VkFramebufferCreateInfo))
+  peek ptr = FramebufferCreateInfo <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 8)
+                                   <*> peek (ptr `plusPtr` 16)
+                                   <*> peek (ptr `plusPtr` 24)
+                                   <*> peek (ptr `plusPtr` 32)
+                                   <*> peek (ptr `plusPtr` 40)
+                                   <*> peek (ptr `plusPtr` 48)
+                                   <*> peek (ptr `plusPtr` 52)
+                                   <*> peek (ptr `plusPtr` 56)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 24) (renderPass (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 32) (attachmentCount (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 40) (pAttachments (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 48) (width (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 52) (height (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 56) (layers (poked :: FramebufferCreateInfo))
 
 
 -- ** vkGetRenderAreaGranularity
 foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity ::
-  Device -> RenderPass -> Ptr VkExtent2D -> IO ()
+  Device -> RenderPass -> Ptr Extent2D -> IO ()
 
 -- ** VkAttachmentLoadOp
 
@@ -338,22 +338,22 @@ newtype RenderPass = RenderPass Word64
 
 -- ** vkDestroyFramebuffer
 foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer ::
-  Device -> Framebuffer -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Framebuffer -> Ptr AllocationCallbacks -> IO ()
 
 
-data VkAttachmentReference =
-  VkAttachmentReference{ attachment :: Word32 
-                       , layout :: VkImageLayout 
-                       }
+data AttachmentReference =
+  AttachmentReference{ attachment :: Word32 
+                     , layout :: VkImageLayout 
+                     }
   deriving (Eq)
 
-instance Storable VkAttachmentReference where
+instance Storable AttachmentReference where
   sizeOf ~_ = 8
   alignment ~_ = 4
-  peek ptr = VkAttachmentReference <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (attachment (poked :: VkAttachmentReference))
-                *> poke (ptr `plusPtr` 4) (layout (poked :: VkAttachmentReference))
+  peek ptr = AttachmentReference <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 4)
+  poke ptr poked = poke (ptr `plusPtr` 0) (attachment (poked :: AttachmentReference))
+                *> poke (ptr `plusPtr` 4) (layout (poked :: AttachmentReference))
 
 
 -- ** VkRenderPassCreateFlags
@@ -362,123 +362,123 @@ newtype VkRenderPassCreateFlags = VkRenderPassCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
-data VkAttachmentDescription =
-  VkAttachmentDescription{ flags :: VkAttachmentDescriptionFlags 
-                         , format :: VkFormat 
-                         , samples :: VkSampleCountFlags 
-                         , loadOp :: VkAttachmentLoadOp 
-                         , storeOp :: VkAttachmentStoreOp 
-                         , stencilLoadOp :: VkAttachmentLoadOp 
-                         , stencilStoreOp :: VkAttachmentStoreOp 
-                         , initialLayout :: VkImageLayout 
-                         , finalLayout :: VkImageLayout 
-                         }
+data AttachmentDescription =
+  AttachmentDescription{ flags :: VkAttachmentDescriptionFlags 
+                       , format :: VkFormat 
+                       , samples :: VkSampleCountFlags 
+                       , loadOp :: VkAttachmentLoadOp 
+                       , storeOp :: VkAttachmentStoreOp 
+                       , stencilLoadOp :: VkAttachmentLoadOp 
+                       , stencilStoreOp :: VkAttachmentStoreOp 
+                       , initialLayout :: VkImageLayout 
+                       , finalLayout :: VkImageLayout 
+                       }
   deriving (Eq)
 
-instance Storable VkAttachmentDescription where
+instance Storable AttachmentDescription where
   sizeOf ~_ = 36
   alignment ~_ = 4
-  peek ptr = VkAttachmentDescription <$> peek (ptr `plusPtr` 0)
-                                     <*> peek (ptr `plusPtr` 4)
-                                     <*> peek (ptr `plusPtr` 8)
-                                     <*> peek (ptr `plusPtr` 12)
-                                     <*> peek (ptr `plusPtr` 16)
-                                     <*> peek (ptr `plusPtr` 20)
-                                     <*> peek (ptr `plusPtr` 24)
-                                     <*> peek (ptr `plusPtr` 28)
-                                     <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (flags (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 4) (format (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 8) (samples (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 12) (loadOp (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 16) (storeOp (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 20) (stencilLoadOp (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 24) (stencilStoreOp (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 28) (initialLayout (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 32) (finalLayout (poked :: VkAttachmentDescription))
+  peek ptr = AttachmentDescription <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 4)
+                                   <*> peek (ptr `plusPtr` 8)
+                                   <*> peek (ptr `plusPtr` 12)
+                                   <*> peek (ptr `plusPtr` 16)
+                                   <*> peek (ptr `plusPtr` 20)
+                                   <*> peek (ptr `plusPtr` 24)
+                                   <*> peek (ptr `plusPtr` 28)
+                                   <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (flags (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 4) (format (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 8) (samples (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 12) (loadOp (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 16) (storeOp (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 20) (stencilLoadOp (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 24) (stencilStoreOp (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 28) (initialLayout (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 32) (finalLayout (poked :: AttachmentDescription))
 
 
 
-data VkSubpassDescription =
-  VkSubpassDescription{ flags :: VkSubpassDescriptionFlags 
-                      , pipelineBindPoint :: VkPipelineBindPoint 
-                      , inputAttachmentCount :: Word32 
-                      , pInputAttachments :: Ptr VkAttachmentReference 
-                      , colorAttachmentCount :: Word32 
-                      , pColorAttachments :: Ptr VkAttachmentReference 
-                      , pResolveAttachments :: Ptr VkAttachmentReference 
-                      , pDepthStencilAttachment :: Ptr VkAttachmentReference 
-                      , preserveAttachmentCount :: Word32 
-                      , pPreserveAttachments :: Ptr Word32 
-                      }
+data SubpassDescription =
+  SubpassDescription{ flags :: VkSubpassDescriptionFlags 
+                    , pipelineBindPoint :: VkPipelineBindPoint 
+                    , inputAttachmentCount :: Word32 
+                    , pInputAttachments :: Ptr AttachmentReference 
+                    , colorAttachmentCount :: Word32 
+                    , pColorAttachments :: Ptr AttachmentReference 
+                    , pResolveAttachments :: Ptr AttachmentReference 
+                    , pDepthStencilAttachment :: Ptr AttachmentReference 
+                    , preserveAttachmentCount :: Word32 
+                    , pPreserveAttachments :: Ptr Word32 
+                    }
   deriving (Eq)
 
-instance Storable VkSubpassDescription where
+instance Storable SubpassDescription where
   sizeOf ~_ = 72
   alignment ~_ = 8
-  peek ptr = VkSubpassDescription <$> peek (ptr `plusPtr` 0)
-                                  <*> peek (ptr `plusPtr` 4)
-                                  <*> peek (ptr `plusPtr` 8)
-                                  <*> peek (ptr `plusPtr` 16)
-                                  <*> peek (ptr `plusPtr` 24)
-                                  <*> peek (ptr `plusPtr` 32)
-                                  <*> peek (ptr `plusPtr` 40)
-                                  <*> peek (ptr `plusPtr` 48)
-                                  <*> peek (ptr `plusPtr` 56)
-                                  <*> peek (ptr `plusPtr` 64)
-  poke ptr poked = poke (ptr `plusPtr` 0) (flags (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 4) (pipelineBindPoint (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 8) (inputAttachmentCount (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 16) (pInputAttachments (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 24) (colorAttachmentCount (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 32) (pColorAttachments (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 40) (pResolveAttachments (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 48) (pDepthStencilAttachment (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 56) (preserveAttachmentCount (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 64) (pPreserveAttachments (poked :: VkSubpassDescription))
+  peek ptr = SubpassDescription <$> peek (ptr `plusPtr` 0)
+                                <*> peek (ptr `plusPtr` 4)
+                                <*> peek (ptr `plusPtr` 8)
+                                <*> peek (ptr `plusPtr` 16)
+                                <*> peek (ptr `plusPtr` 24)
+                                <*> peek (ptr `plusPtr` 32)
+                                <*> peek (ptr `plusPtr` 40)
+                                <*> peek (ptr `plusPtr` 48)
+                                <*> peek (ptr `plusPtr` 56)
+                                <*> peek (ptr `plusPtr` 64)
+  poke ptr poked = poke (ptr `plusPtr` 0) (flags (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 4) (pipelineBindPoint (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 8) (inputAttachmentCount (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 16) (pInputAttachments (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 24) (colorAttachmentCount (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 32) (pColorAttachments (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 40) (pResolveAttachments (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 48) (pDepthStencilAttachment (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 56) (preserveAttachmentCount (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 64) (pPreserveAttachments (poked :: SubpassDescription))
 
 
 -- ** vkCreateRenderPass
 foreign import ccall "vkCreateRenderPass" vkCreateRenderPass ::
   Device ->
-  Ptr VkRenderPassCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr RenderPass -> IO VkResult
+  Ptr RenderPassCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr RenderPass -> IO VkResult
 
 
-data VkRenderPassCreateInfo =
-  VkRenderPassCreateInfo{ sType :: VkStructureType 
-                        , pNext :: Ptr Void 
-                        , flags :: VkRenderPassCreateFlags 
-                        , attachmentCount :: Word32 
-                        , pAttachments :: Ptr VkAttachmentDescription 
-                        , subpassCount :: Word32 
-                        , pSubpasses :: Ptr VkSubpassDescription 
-                        , dependencyCount :: Word32 
-                        , pDependencies :: Ptr VkSubpassDependency 
-                        }
+data RenderPassCreateInfo =
+  RenderPassCreateInfo{ sType :: VkStructureType 
+                      , pNext :: Ptr Void 
+                      , flags :: VkRenderPassCreateFlags 
+                      , attachmentCount :: Word32 
+                      , pAttachments :: Ptr AttachmentDescription 
+                      , subpassCount :: Word32 
+                      , pSubpasses :: Ptr SubpassDescription 
+                      , dependencyCount :: Word32 
+                      , pDependencies :: Ptr SubpassDependency 
+                      }
   deriving (Eq)
 
-instance Storable VkRenderPassCreateInfo where
+instance Storable RenderPassCreateInfo where
   sizeOf ~_ = 64
   alignment ~_ = 8
-  peek ptr = VkRenderPassCreateInfo <$> peek (ptr `plusPtr` 0)
-                                    <*> peek (ptr `plusPtr` 8)
-                                    <*> peek (ptr `plusPtr` 16)
-                                    <*> peek (ptr `plusPtr` 20)
-                                    <*> peek (ptr `plusPtr` 24)
-                                    <*> peek (ptr `plusPtr` 32)
-                                    <*> peek (ptr `plusPtr` 40)
-                                    <*> peek (ptr `plusPtr` 48)
-                                    <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 20) (attachmentCount (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 24) (pAttachments (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 32) (subpassCount (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 40) (pSubpasses (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 48) (dependencyCount (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 56) (pDependencies (poked :: VkRenderPassCreateInfo))
+  peek ptr = RenderPassCreateInfo <$> peek (ptr `plusPtr` 0)
+                                  <*> peek (ptr `plusPtr` 8)
+                                  <*> peek (ptr `plusPtr` 16)
+                                  <*> peek (ptr `plusPtr` 20)
+                                  <*> peek (ptr `plusPtr` 24)
+                                  <*> peek (ptr `plusPtr` 32)
+                                  <*> peek (ptr `plusPtr` 40)
+                                  <*> peek (ptr `plusPtr` 48)
+                                  <*> peek (ptr `plusPtr` 56)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 20) (attachmentCount (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pAttachments (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 32) (subpassCount (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 40) (pSubpasses (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 48) (dependencyCount (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 56) (pDependencies (poked :: RenderPassCreateInfo))
 
 
 -- ** VkFramebufferCreateFlags

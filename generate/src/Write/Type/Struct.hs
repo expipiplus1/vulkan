@@ -112,7 +112,7 @@ writeStructStorableInstance env st
   | null (stMembers st) = error "zero member struct...?"
   | otherwise = let memberPacking = calculateMemberPacking env (stMembers st)
                     TypeInfo structSize structAlignment = getTypeInfo env (stName st)
-                in [qc|instance Storable {stName st} where
+                in [qc|instance Storable {stHsName st} where
   sizeOf ~_ = {structSize}
   alignment ~_ = {structAlignment}
   peek ptr = {stHsName st} <$> {indent (-4) . vsep $

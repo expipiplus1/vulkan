@@ -22,27 +22,27 @@ import Foreign.C.Types( CChar(..)
                       )
 
 
-data VkExtensionProperties =
-  VkExtensionProperties{ extensionName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 
-                       , specVersion :: Word32 
-                       }
+data ExtensionProperties =
+  ExtensionProperties{ extensionName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 
+                     , specVersion :: Word32 
+                     }
   deriving (Eq)
 
-instance Storable VkExtensionProperties where
+instance Storable ExtensionProperties where
   sizeOf ~_ = 260
   alignment ~_ = 4
-  peek ptr = VkExtensionProperties <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 256)
-  poke ptr poked = poke (ptr `plusPtr` 0) (extensionName (poked :: VkExtensionProperties))
-                *> poke (ptr `plusPtr` 256) (specVersion (poked :: VkExtensionProperties))
+  peek ptr = ExtensionProperties <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 256)
+  poke ptr poked = poke (ptr `plusPtr` 0) (extensionName (poked :: ExtensionProperties))
+                *> poke (ptr `plusPtr` 256) (specVersion (poked :: ExtensionProperties))
 
 
 -- ** vkEnumerateInstanceExtensionProperties
 foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanceExtensionProperties ::
-  Ptr CChar -> Ptr Word32 -> Ptr VkExtensionProperties -> IO VkResult
+  Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO VkResult
 
 -- ** vkEnumerateDeviceExtensionProperties
 foreign import ccall "vkEnumerateDeviceExtensionProperties" vkEnumerateDeviceExtensionProperties ::
   PhysicalDevice ->
-  Ptr CChar -> Ptr Word32 -> Ptr VkExtensionProperties -> IO VkResult
+  Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO VkResult
 

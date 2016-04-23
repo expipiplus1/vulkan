@@ -22,7 +22,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -32,7 +32,7 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , step
                                       )
 import Graphics.Vulkan.Image( Image(..)
-                            , VkImageSubresourceRange(..)
+                            , ImageSubresourceRange(..)
                             )
 import Graphics.Vulkan.Core( VkStructureType(..)
                            , VkFormat(..)
@@ -41,44 +41,44 @@ import Graphics.Vulkan.Core( VkStructureType(..)
                            )
 
 
-data VkImageViewCreateInfo =
-  VkImageViewCreateInfo{ sType :: VkStructureType 
-                       , pNext :: Ptr Void 
-                       , flags :: VkImageViewCreateFlags 
-                       , image :: Image 
-                       , viewType :: VkImageViewType 
-                       , format :: VkFormat 
-                       , components :: VkComponentMapping 
-                       , subresourceRange :: VkImageSubresourceRange 
-                       }
+data ImageViewCreateInfo =
+  ImageViewCreateInfo{ sType :: VkStructureType 
+                     , pNext :: Ptr Void 
+                     , flags :: VkImageViewCreateFlags 
+                     , image :: Image 
+                     , viewType :: VkImageViewType 
+                     , format :: VkFormat 
+                     , components :: ComponentMapping 
+                     , subresourceRange :: ImageSubresourceRange 
+                     }
   deriving (Eq)
 
-instance Storable VkImageViewCreateInfo where
+instance Storable ImageViewCreateInfo where
   sizeOf ~_ = 80
   alignment ~_ = 8
-  peek ptr = VkImageViewCreateInfo <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 8)
-                                   <*> peek (ptr `plusPtr` 16)
-                                   <*> peek (ptr `plusPtr` 24)
-                                   <*> peek (ptr `plusPtr` 32)
-                                   <*> peek (ptr `plusPtr` 36)
-                                   <*> peek (ptr `plusPtr` 40)
-                                   <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkImageViewCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkImageViewCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkImageViewCreateInfo))
-                *> poke (ptr `plusPtr` 24) (image (poked :: VkImageViewCreateInfo))
-                *> poke (ptr `plusPtr` 32) (viewType (poked :: VkImageViewCreateInfo))
-                *> poke (ptr `plusPtr` 36) (format (poked :: VkImageViewCreateInfo))
-                *> poke (ptr `plusPtr` 40) (components (poked :: VkImageViewCreateInfo))
-                *> poke (ptr `plusPtr` 56) (subresourceRange (poked :: VkImageViewCreateInfo))
+  peek ptr = ImageViewCreateInfo <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 8)
+                                 <*> peek (ptr `plusPtr` 16)
+                                 <*> peek (ptr `plusPtr` 24)
+                                 <*> peek (ptr `plusPtr` 32)
+                                 <*> peek (ptr `plusPtr` 36)
+                                 <*> peek (ptr `plusPtr` 40)
+                                 <*> peek (ptr `plusPtr` 56)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: ImageViewCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: ImageViewCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: ImageViewCreateInfo))
+                *> poke (ptr `plusPtr` 24) (image (poked :: ImageViewCreateInfo))
+                *> poke (ptr `plusPtr` 32) (viewType (poked :: ImageViewCreateInfo))
+                *> poke (ptr `plusPtr` 36) (format (poked :: ImageViewCreateInfo))
+                *> poke (ptr `plusPtr` 40) (components (poked :: ImageViewCreateInfo))
+                *> poke (ptr `plusPtr` 56) (subresourceRange (poked :: ImageViewCreateInfo))
 
 
 -- ** vkCreateImageView
 foreign import ccall "vkCreateImageView" vkCreateImageView ::
   Device ->
-  Ptr VkImageViewCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr ImageView -> IO VkResult
+  Ptr ImageViewCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr ImageView -> IO VkResult
 
 newtype ImageView = ImageView Word64
   deriving (Eq, Storable)
@@ -135,25 +135,25 @@ newtype VkImageViewCreateFlags = VkImageViewCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
-data VkComponentMapping =
-  VkComponentMapping{ r :: VkComponentSwizzle 
-                    , g :: VkComponentSwizzle 
-                    , b :: VkComponentSwizzle 
-                    , a :: VkComponentSwizzle 
-                    }
+data ComponentMapping =
+  ComponentMapping{ r :: VkComponentSwizzle 
+                  , g :: VkComponentSwizzle 
+                  , b :: VkComponentSwizzle 
+                  , a :: VkComponentSwizzle 
+                  }
   deriving (Eq)
 
-instance Storable VkComponentMapping where
+instance Storable ComponentMapping where
   sizeOf ~_ = 16
   alignment ~_ = 4
-  peek ptr = VkComponentMapping <$> peek (ptr `plusPtr` 0)
-                                <*> peek (ptr `plusPtr` 4)
-                                <*> peek (ptr `plusPtr` 8)
-                                <*> peek (ptr `plusPtr` 12)
-  poke ptr poked = poke (ptr `plusPtr` 0) (r (poked :: VkComponentMapping))
-                *> poke (ptr `plusPtr` 4) (g (poked :: VkComponentMapping))
-                *> poke (ptr `plusPtr` 8) (b (poked :: VkComponentMapping))
-                *> poke (ptr `plusPtr` 12) (a (poked :: VkComponentMapping))
+  peek ptr = ComponentMapping <$> peek (ptr `plusPtr` 0)
+                              <*> peek (ptr `plusPtr` 4)
+                              <*> peek (ptr `plusPtr` 8)
+                              <*> peek (ptr `plusPtr` 12)
+  poke ptr poked = poke (ptr `plusPtr` 0) (r (poked :: ComponentMapping))
+                *> poke (ptr `plusPtr` 4) (g (poked :: ComponentMapping))
+                *> poke (ptr `plusPtr` 8) (b (poked :: ComponentMapping))
+                *> poke (ptr `plusPtr` 12) (a (poked :: ComponentMapping))
 
 
 -- ** VkComponentSwizzle
@@ -204,5 +204,5 @@ pattern VK_COMPONENT_SWIZZLE_A = VkComponentSwizzle 6
 
 -- ** vkDestroyImageView
 foreign import ccall "vkDestroyImageView" vkDestroyImageView ::
-  Device -> ImageView -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> ImageView -> Ptr AllocationCallbacks -> IO ()
 

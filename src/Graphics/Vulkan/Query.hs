@@ -26,7 +26,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -54,34 +54,34 @@ foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults ::
 
 -- ** vkDestroyQueryPool
 foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool ::
-  Device -> QueryPool -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> QueryPool -> Ptr AllocationCallbacks -> IO ()
 
 
-data VkQueryPoolCreateInfo =
-  VkQueryPoolCreateInfo{ sType :: VkStructureType 
-                       , pNext :: Ptr Void 
-                       , flags :: VkQueryPoolCreateFlags 
-                       , queryType :: VkQueryType 
-                       , queryCount :: Word32 
-                       , pipelineStatistics :: VkQueryPipelineStatisticFlags 
-                       }
+data QueryPoolCreateInfo =
+  QueryPoolCreateInfo{ sType :: VkStructureType 
+                     , pNext :: Ptr Void 
+                     , flags :: VkQueryPoolCreateFlags 
+                     , queryType :: VkQueryType 
+                     , queryCount :: Word32 
+                     , pipelineStatistics :: VkQueryPipelineStatisticFlags 
+                     }
   deriving (Eq)
 
-instance Storable VkQueryPoolCreateInfo where
+instance Storable QueryPoolCreateInfo where
   sizeOf ~_ = 32
   alignment ~_ = 8
-  peek ptr = VkQueryPoolCreateInfo <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 8)
-                                   <*> peek (ptr `plusPtr` 16)
-                                   <*> peek (ptr `plusPtr` 20)
-                                   <*> peek (ptr `plusPtr` 24)
-                                   <*> peek (ptr `plusPtr` 28)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkQueryPoolCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkQueryPoolCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkQueryPoolCreateInfo))
-                *> poke (ptr `plusPtr` 20) (queryType (poked :: VkQueryPoolCreateInfo))
-                *> poke (ptr `plusPtr` 24) (queryCount (poked :: VkQueryPoolCreateInfo))
-                *> poke (ptr `plusPtr` 28) (pipelineStatistics (poked :: VkQueryPoolCreateInfo))
+  peek ptr = QueryPoolCreateInfo <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 8)
+                                 <*> peek (ptr `plusPtr` 16)
+                                 <*> peek (ptr `plusPtr` 20)
+                                 <*> peek (ptr `plusPtr` 24)
+                                 <*> peek (ptr `plusPtr` 28)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: QueryPoolCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: QueryPoolCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: QueryPoolCreateInfo))
+                *> poke (ptr `plusPtr` 20) (queryType (poked :: QueryPoolCreateInfo))
+                *> poke (ptr `plusPtr` 24) (queryCount (poked :: QueryPoolCreateInfo))
+                *> poke (ptr `plusPtr` 28) (pipelineStatistics (poked :: QueryPoolCreateInfo))
 
 
 -- ** VkQueryResultFlags
@@ -156,8 +156,8 @@ newtype QueryPool = QueryPool Word64
 -- ** vkCreateQueryPool
 foreign import ccall "vkCreateQueryPool" vkCreateQueryPool ::
   Device ->
-  Ptr VkQueryPoolCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr QueryPool -> IO VkResult
+  Ptr QueryPoolCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr QueryPool -> IO VkResult
 
 -- ** VkQueryControlFlags
 

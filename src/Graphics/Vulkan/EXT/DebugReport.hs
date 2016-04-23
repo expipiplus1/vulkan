@@ -25,7 +25,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -216,34 +216,34 @@ pattern VK_DEBUG_REPORT_ERROR_NONE_EXT = VkDebugReportErrorEXT 0
 pattern VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT = VkDebugReportErrorEXT 1
 
 
-data VkDebugReportCallbackCreateInfoEXT =
-  VkDebugReportCallbackCreateInfoEXT{ sType :: VkStructureType 
-                                    , pNext :: Ptr Void 
-                                    , flags :: VkDebugReportFlagsEXT 
-                                    , pfnCallback :: PFN_vkDebugReportCallbackEXT 
-                                    , pUserData :: Ptr Void 
-                                    }
+data DebugReportCallbackCreateInfoEXT =
+  DebugReportCallbackCreateInfoEXT{ sType :: VkStructureType 
+                                  , pNext :: Ptr Void 
+                                  , flags :: VkDebugReportFlagsEXT 
+                                  , pfnCallback :: PFN_vkDebugReportCallbackEXT 
+                                  , pUserData :: Ptr Void 
+                                  }
   deriving (Eq)
 
-instance Storable VkDebugReportCallbackCreateInfoEXT where
+instance Storable DebugReportCallbackCreateInfoEXT where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkDebugReportCallbackCreateInfoEXT <$> peek (ptr `plusPtr` 0)
-                                                <*> peek (ptr `plusPtr` 8)
-                                                <*> peek (ptr `plusPtr` 16)
-                                                <*> peek (ptr `plusPtr` 24)
-                                                <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkDebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkDebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkDebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 24) (pfnCallback (poked :: VkDebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 32) (pUserData (poked :: VkDebugReportCallbackCreateInfoEXT))
+  peek ptr = DebugReportCallbackCreateInfoEXT <$> peek (ptr `plusPtr` 0)
+                                              <*> peek (ptr `plusPtr` 8)
+                                              <*> peek (ptr `plusPtr` 16)
+                                              <*> peek (ptr `plusPtr` 24)
+                                              <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DebugReportCallbackCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: DebugReportCallbackCreateInfoEXT))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: DebugReportCallbackCreateInfoEXT))
+                *> poke (ptr `plusPtr` 24) (pfnCallback (poked :: DebugReportCallbackCreateInfoEXT))
+                *> poke (ptr `plusPtr` 32) (pUserData (poked :: DebugReportCallbackCreateInfoEXT))
 
 
 -- ** vkDestroyDebugReportCallbackEXT
 foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallbackEXT ::
   Instance ->
-  DebugReportCallbackEXT -> Ptr VkAllocationCallbacks -> IO ()
+  DebugReportCallbackEXT -> Ptr AllocationCallbacks -> IO ()
 
 -- ** VkDebugReportFlagsEXT
 
@@ -295,7 +295,7 @@ type PFN_vkDebugReportCallbackEXT = FunPtr
 -- ** vkCreateDebugReportCallbackEXT
 foreign import ccall "vkCreateDebugReportCallbackEXT" vkCreateDebugReportCallbackEXT ::
   Instance ->
-  Ptr VkDebugReportCallbackCreateInfoEXT ->
-    Ptr VkAllocationCallbacks ->
+  Ptr DebugReportCallbackCreateInfoEXT ->
+    Ptr AllocationCallbacks ->
       Ptr DebugReportCallbackEXT -> IO VkResult
 

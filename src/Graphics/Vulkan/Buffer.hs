@@ -24,7 +24,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkAllocationCallbacks(..)
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -43,8 +43,8 @@ import Graphics.Vulkan.Core( VkStructureType(..)
 -- ** vkCreateBuffer
 foreign import ccall "vkCreateBuffer" vkCreateBuffer ::
   Device ->
-  Ptr VkBufferCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr Buffer -> IO VkResult
+  Ptr BufferCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Buffer -> IO VkResult
 
 -- ** VkBufferCreateFlags
 
@@ -136,42 +136,42 @@ pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlags 0x100
 
 -- ** vkDestroyBuffer
 foreign import ccall "vkDestroyBuffer" vkDestroyBuffer ::
-  Device -> Buffer -> Ptr VkAllocationCallbacks -> IO ()
+  Device -> Buffer -> Ptr AllocationCallbacks -> IO ()
 
 newtype Buffer = Buffer Word64
   deriving (Eq, Storable)
 
 
-data VkBufferCreateInfo =
-  VkBufferCreateInfo{ sType :: VkStructureType 
-                    , pNext :: Ptr Void 
-                    , flags :: VkBufferCreateFlags 
-                    , size :: VkDeviceSize 
-                    , usage :: VkBufferUsageFlags 
-                    , sharingMode :: VkSharingMode 
-                    , queueFamilyIndexCount :: Word32 
-                    , pQueueFamilyIndices :: Ptr Word32 
-                    }
+data BufferCreateInfo =
+  BufferCreateInfo{ sType :: VkStructureType 
+                  , pNext :: Ptr Void 
+                  , flags :: VkBufferCreateFlags 
+                  , size :: VkDeviceSize 
+                  , usage :: VkBufferUsageFlags 
+                  , sharingMode :: VkSharingMode 
+                  , queueFamilyIndexCount :: Word32 
+                  , pQueueFamilyIndices :: Ptr Word32 
+                  }
   deriving (Eq)
 
-instance Storable VkBufferCreateInfo where
+instance Storable BufferCreateInfo where
   sizeOf ~_ = 56
   alignment ~_ = 8
-  peek ptr = VkBufferCreateInfo <$> peek (ptr `plusPtr` 0)
-                                <*> peek (ptr `plusPtr` 8)
-                                <*> peek (ptr `plusPtr` 16)
-                                <*> peek (ptr `plusPtr` 24)
-                                <*> peek (ptr `plusPtr` 32)
-                                <*> peek (ptr `plusPtr` 36)
-                                <*> peek (ptr `plusPtr` 40)
-                                <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 24) (size (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 32) (usage (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 36) (sharingMode (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 40) (queueFamilyIndexCount (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 48) (pQueueFamilyIndices (poked :: VkBufferCreateInfo))
+  peek ptr = BufferCreateInfo <$> peek (ptr `plusPtr` 0)
+                              <*> peek (ptr `plusPtr` 8)
+                              <*> peek (ptr `plusPtr` 16)
+                              <*> peek (ptr `plusPtr` 24)
+                              <*> peek (ptr `plusPtr` 32)
+                              <*> peek (ptr `plusPtr` 36)
+                              <*> peek (ptr `plusPtr` 40)
+                              <*> peek (ptr `plusPtr` 48)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: BufferCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: BufferCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: BufferCreateInfo))
+                *> poke (ptr `plusPtr` 24) (size (poked :: BufferCreateInfo))
+                *> poke (ptr `plusPtr` 32) (usage (poked :: BufferCreateInfo))
+                *> poke (ptr `plusPtr` 36) (sharingMode (poked :: BufferCreateInfo))
+                *> poke (ptr `plusPtr` 40) (queueFamilyIndexCount (poked :: BufferCreateInfo))
+                *> poke (ptr `plusPtr` 48) (pQueueFamilyIndices (poked :: BufferCreateInfo))
 
 

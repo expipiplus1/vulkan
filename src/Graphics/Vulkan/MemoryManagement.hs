@@ -23,30 +23,30 @@ import Graphics.Vulkan.Core( VkResult(..)
 
 -- ** vkGetImageMemoryRequirements
 foreign import ccall "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements ::
-  Device -> Image -> Ptr VkMemoryRequirements -> IO ()
+  Device -> Image -> Ptr MemoryRequirements -> IO ()
 
 
-data VkMemoryRequirements =
-  VkMemoryRequirements{ size :: VkDeviceSize 
-                      , _alignment :: VkDeviceSize 
-                      , memoryTypeBits :: Word32 
-                      }
+data MemoryRequirements =
+  MemoryRequirements{ size :: VkDeviceSize 
+                    , _alignment :: VkDeviceSize 
+                    , memoryTypeBits :: Word32 
+                    }
   deriving (Eq)
 
-instance Storable VkMemoryRequirements where
+instance Storable MemoryRequirements where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkMemoryRequirements <$> peek (ptr `plusPtr` 0)
-                                  <*> peek (ptr `plusPtr` 8)
-                                  <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (size (poked :: VkMemoryRequirements))
-                *> poke (ptr `plusPtr` 8) (_alignment (poked :: VkMemoryRequirements))
-                *> poke (ptr `plusPtr` 16) (memoryTypeBits (poked :: VkMemoryRequirements))
+  peek ptr = MemoryRequirements <$> peek (ptr `plusPtr` 0)
+                                <*> peek (ptr `plusPtr` 8)
+                                <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (size (poked :: MemoryRequirements))
+                *> poke (ptr `plusPtr` 8) (_alignment (poked :: MemoryRequirements))
+                *> poke (ptr `plusPtr` 16) (memoryTypeBits (poked :: MemoryRequirements))
 
 
 -- ** vkGetBufferMemoryRequirements
 foreign import ccall "vkGetBufferMemoryRequirements" vkGetBufferMemoryRequirements ::
-  Device -> Buffer -> Ptr VkMemoryRequirements -> IO ()
+  Device -> Buffer -> Ptr MemoryRequirements -> IO ()
 
 -- ** vkBindBufferMemory
 foreign import ccall "vkBindBufferMemory" vkBindBufferMemory ::
