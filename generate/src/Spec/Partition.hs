@@ -65,12 +65,12 @@ partitionSpec spec =
       moduleExports = (fmap (vSourceEntity . requiredLookup graph) . toList) <$>
         moduleExportNames
 
-      nameLocation :: (ModuleName, [SourceEntity]) -> [(String, (ModuleName, String))]
-      nameLocation (m, names) = concat
-        (blarf m <$> names)
+      moduleNameLocations :: (ModuleName, [SourceEntity]) -> [(String, (ModuleName, String))]
+      moduleNameLocations (m, names) = concat
+        (entityNameLocations m <$> names)
 
-      blarf :: ModuleName -> SourceEntity -> [(String, (ModuleName, String))]
-      blarf m e =
+      entityNameLocations :: ModuleName -> SourceEntity -> [(String, (ModuleName, String))]
+      entityNameLocations m e =
         let
           names = entityNames e
           export = entityExportName e
@@ -79,7 +79,7 @@ partitionSpec spec =
             Just export' -> (flip (,) (m, export')) <$> names
             Nothing -> []
 
-      nameLocations = M.fromList $ concat (nameLocation <$> M.toList moduleExports)
+      nameLocations = M.fromList $ concat (moduleNameLocations <$> M.toList moduleExports)
 
       allEntityNames = S.fromList (M.keys (gNameVertexMap graph))
                        `S.difference` ignoredNames

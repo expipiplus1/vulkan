@@ -250,6 +250,7 @@ entityNames e =
     AnEnum en -> [eName en]
     ABitmask bm -> [bmName bm]
     AConstant c -> [Constant.cName c]
+    ADefine d -> [dName d]
     _ -> []
 
 entityExportName :: SourceEntity -> Maybe String
@@ -265,6 +266,7 @@ entityExportName e =
     ACommand co -> Just $ Command.cHsName co
     AnEnum en -> Just $ eHsName en
     AConstant c -> Just $ Constant.cHsName c
+    ADefine d -> Just $ dHsName d
     _ -> Nothing
 
 vertexExportName :: Vertex -> Maybe String

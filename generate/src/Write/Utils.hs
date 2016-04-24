@@ -123,9 +123,7 @@ pascalCase_ = concatMap word . splitOn "_"
 -- | Concatenate words separated by underscores in the string and make the
 -- first letter of each one but the first uppercase.
 camelCase_ :: String -> String
-camelCase_ "" = ""
-camelCase_ s = let w:ws = splitOn "_" . fmap toLower $ s
-               in w ++ concatMap upperFirst ws
+camelCase_ = lowerFirst . pascalCase_
 
 getModuleBaseName :: ModuleName -> String
 getModuleBaseName (ModuleName moduleName) =

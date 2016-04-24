@@ -18,7 +18,7 @@ prettifySpec spec = spec { sTypes = nameType <$> sTypes spec
                          , sCommands = nameCommand <$> sCommands spec
                          }
   where
-    nameType (ADefine d) = ADefine d { dHsName = camelCase_ $ dHsName d }
+    nameType (ADefine d) = ADefine d { dHsName = camelCase_ . dropVK $ dHsName d }
     nameType (AStructType st) = AStructType st { stHsName = dropVK $ stHsName st
                                                , stMembers = nameStructMember <$> stMembers st
                                                }

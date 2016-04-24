@@ -9,18 +9,18 @@ import Data.Bits( shiftR
                 , (.&.)
                 )
 
-vkApiVersion :: Word32
-vkApiVersion  = vkMakeVersion 1 0 3
+apiVersion :: Word32
+apiVersion  = makeVersion 1 0 3
 
-vkVersionMinor :: Word32 -> Word32
-vkVersionMinor version = (.&.) (shiftR version 12) 1023
+versionMinor :: Word32 -> Word32
+versionMinor version = (.&.) (shiftR version 12) 1023
 
-vkVersionPatch :: Word32 -> Word32
-vkVersionPatch version = (.&.) version 4095
+versionPatch :: Word32 -> Word32
+versionPatch version = (.&.) version 4095
 
-vkMakeVersion :: Word32 -> Word32 -> Word32 -> Word32
-vkMakeVersion major minor patch = (.|.) ((.|.) (shiftL major 22) (shiftL minor 12)) patch
+makeVersion :: Word32 -> Word32 -> Word32 -> Word32
+makeVersion major minor patch = (.|.) ((.|.) (shiftL major 22) (shiftL minor 12)) patch
 
-vkVersionMajor :: Word32 -> Word32
-vkVersionMajor version = shiftR version 22
+versionMajor :: Word32 -> Word32
+versionMajor version = shiftR version 22
 
