@@ -45,255 +45,254 @@ import Foreign.C.Types( CChar(..)
                       , CSize(..)
                       )
 
--- ** debugReportMessageEXT
-foreign import ccall "vkDebugReportMessageEXT" debugReportMessageEXT ::
+-- ** debugReportMessage
+foreign import ccall "vkDebugReportMessageEXT" debugReportMessage ::
   Instance ->
-  DebugReportFlagsEXT ->
-    DebugReportObjectTypeEXT ->
+  DebugReportFlags ->
+    DebugReportObjectType ->
       Word64 -> CSize -> Int32 -> Ptr CChar -> Ptr CChar -> IO ()
 
-newtype DebugReportCallbackEXT = DebugReportCallbackEXT Word64
+newtype DebugReportCallback = DebugReportCallback Word64
   deriving (Eq, Ord, Storable)
 
--- ** DebugReportObjectTypeEXT
+-- ** DebugReportObjectType
 
-newtype DebugReportObjectTypeEXT = DebugReportObjectTypeEXT Int32
+newtype DebugReportObjectType = DebugReportObjectType Int32
   deriving (Eq, Ord, Storable)
 
-instance Show DebugReportObjectTypeEXT where
-  showsPrec _ DebugReportObjectTypeUnknownExt = showString "DebugReportObjectTypeUnknownExt"
-  showsPrec _ DebugReportObjectTypeInstanceExt = showString "DebugReportObjectTypeInstanceExt"
-  showsPrec _ DebugReportObjectTypePhysicalDeviceExt = showString "DebugReportObjectTypePhysicalDeviceExt"
-  showsPrec _ DebugReportObjectTypeDeviceExt = showString "DebugReportObjectTypeDeviceExt"
-  showsPrec _ DebugReportObjectTypeQueueExt = showString "DebugReportObjectTypeQueueExt"
-  showsPrec _ DebugReportObjectTypeSemaphoreExt = showString "DebugReportObjectTypeSemaphoreExt"
-  showsPrec _ DebugReportObjectTypeCommandBufferExt = showString "DebugReportObjectTypeCommandBufferExt"
-  showsPrec _ DebugReportObjectTypeFenceExt = showString "DebugReportObjectTypeFenceExt"
-  showsPrec _ DebugReportObjectTypeDeviceMemoryExt = showString "DebugReportObjectTypeDeviceMemoryExt"
-  showsPrec _ DebugReportObjectTypeBufferExt = showString "DebugReportObjectTypeBufferExt"
-  showsPrec _ DebugReportObjectTypeImageExt = showString "DebugReportObjectTypeImageExt"
-  showsPrec _ DebugReportObjectTypeEventExt = showString "DebugReportObjectTypeEventExt"
-  showsPrec _ DebugReportObjectTypeQueryPoolExt = showString "DebugReportObjectTypeQueryPoolExt"
-  showsPrec _ DebugReportObjectTypeBufferViewExt = showString "DebugReportObjectTypeBufferViewExt"
-  showsPrec _ DebugReportObjectTypeImageViewExt = showString "DebugReportObjectTypeImageViewExt"
-  showsPrec _ DebugReportObjectTypeShaderModuleExt = showString "DebugReportObjectTypeShaderModuleExt"
-  showsPrec _ DebugReportObjectTypePipelineCacheExt = showString "DebugReportObjectTypePipelineCacheExt"
-  showsPrec _ DebugReportObjectTypePipelineLayoutExt = showString "DebugReportObjectTypePipelineLayoutExt"
-  showsPrec _ DebugReportObjectTypeRenderPassExt = showString "DebugReportObjectTypeRenderPassExt"
-  showsPrec _ DebugReportObjectTypePipelineExt = showString "DebugReportObjectTypePipelineExt"
-  showsPrec _ DebugReportObjectTypeDescriptorSetLayoutExt = showString "DebugReportObjectTypeDescriptorSetLayoutExt"
-  showsPrec _ DebugReportObjectTypeSamplerExt = showString "DebugReportObjectTypeSamplerExt"
-  showsPrec _ DebugReportObjectTypeDescriptorPoolExt = showString "DebugReportObjectTypeDescriptorPoolExt"
-  showsPrec _ DebugReportObjectTypeDescriptorSetExt = showString "DebugReportObjectTypeDescriptorSetExt"
-  showsPrec _ DebugReportObjectTypeFramebufferExt = showString "DebugReportObjectTypeFramebufferExt"
-  showsPrec _ DebugReportObjectTypeCommandPoolExt = showString "DebugReportObjectTypeCommandPoolExt"
-  showsPrec _ DebugReportObjectTypeSurfaceKhrExt = showString "DebugReportObjectTypeSurfaceKhrExt"
-  showsPrec _ DebugReportObjectTypeSwapchainKhrExt = showString "DebugReportObjectTypeSwapchainKhrExt"
-  showsPrec _ DebugReportObjectTypeDebugReportExt = showString "DebugReportObjectTypeDebugReportExt"
-  showsPrec p (DebugReportObjectTypeEXT x) = showParen (p >= 11) (showString "DebugReportObjectTypeEXT " . showsPrec 11 x)
+instance Show DebugReportObjectType where
+  showsPrec _ DebugReportObjectTypeUnknown = showString "DebugReportObjectTypeUnknown"
+  showsPrec _ DebugReportObjectTypeInstance = showString "DebugReportObjectTypeInstance"
+  showsPrec _ DebugReportObjectTypePhysicalDevice = showString "DebugReportObjectTypePhysicalDevice"
+  showsPrec _ DebugReportObjectTypeDevice = showString "DebugReportObjectTypeDevice"
+  showsPrec _ DebugReportObjectTypeQueue = showString "DebugReportObjectTypeQueue"
+  showsPrec _ DebugReportObjectTypeSemaphore = showString "DebugReportObjectTypeSemaphore"
+  showsPrec _ DebugReportObjectTypeCommandBuffer = showString "DebugReportObjectTypeCommandBuffer"
+  showsPrec _ DebugReportObjectTypeFence = showString "DebugReportObjectTypeFence"
+  showsPrec _ DebugReportObjectTypeDeviceMemory = showString "DebugReportObjectTypeDeviceMemory"
+  showsPrec _ DebugReportObjectTypeBuffer = showString "DebugReportObjectTypeBuffer"
+  showsPrec _ DebugReportObjectTypeImage = showString "DebugReportObjectTypeImage"
+  showsPrec _ DebugReportObjectTypeEvent = showString "DebugReportObjectTypeEvent"
+  showsPrec _ DebugReportObjectTypeQueryPool = showString "DebugReportObjectTypeQueryPool"
+  showsPrec _ DebugReportObjectTypeBufferView = showString "DebugReportObjectTypeBufferView"
+  showsPrec _ DebugReportObjectTypeImageView = showString "DebugReportObjectTypeImageView"
+  showsPrec _ DebugReportObjectTypeShaderModule = showString "DebugReportObjectTypeShaderModule"
+  showsPrec _ DebugReportObjectTypePipelineCache = showString "DebugReportObjectTypePipelineCache"
+  showsPrec _ DebugReportObjectTypePipelineLayout = showString "DebugReportObjectTypePipelineLayout"
+  showsPrec _ DebugReportObjectTypeRenderPass = showString "DebugReportObjectTypeRenderPass"
+  showsPrec _ DebugReportObjectTypePipeline = showString "DebugReportObjectTypePipeline"
+  showsPrec _ DebugReportObjectTypeDescriptorSetLayout = showString "DebugReportObjectTypeDescriptorSetLayout"
+  showsPrec _ DebugReportObjectTypeSampler = showString "DebugReportObjectTypeSampler"
+  showsPrec _ DebugReportObjectTypeDescriptorPool = showString "DebugReportObjectTypeDescriptorPool"
+  showsPrec _ DebugReportObjectTypeDescriptorSet = showString "DebugReportObjectTypeDescriptorSet"
+  showsPrec _ DebugReportObjectTypeFramebuffer = showString "DebugReportObjectTypeFramebuffer"
+  showsPrec _ DebugReportObjectTypeCommandPool = showString "DebugReportObjectTypeCommandPool"
+  showsPrec _ DebugReportObjectTypeSurfaceKhr = showString "DebugReportObjectTypeSurfaceKhr"
+  showsPrec _ DebugReportObjectTypeSwapchainKhr = showString "DebugReportObjectTypeSwapchainKhr"
+  showsPrec _ DebugReportObjectTypeDebugReport = showString "DebugReportObjectTypeDebugReport"
+  showsPrec p (DebugReportObjectType x) = showParen (p >= 11) (showString "DebugReportObjectType " . showsPrec 11 x)
 
-instance Read DebugReportObjectTypeEXT where
-  readPrec = parens ( choose [ ("DebugReportObjectTypeUnknownExt", pure DebugReportObjectTypeUnknownExt)
-                             , ("DebugReportObjectTypeInstanceExt", pure DebugReportObjectTypeInstanceExt)
-                             , ("DebugReportObjectTypePhysicalDeviceExt", pure DebugReportObjectTypePhysicalDeviceExt)
-                             , ("DebugReportObjectTypeDeviceExt", pure DebugReportObjectTypeDeviceExt)
-                             , ("DebugReportObjectTypeQueueExt", pure DebugReportObjectTypeQueueExt)
-                             , ("DebugReportObjectTypeSemaphoreExt", pure DebugReportObjectTypeSemaphoreExt)
-                             , ("DebugReportObjectTypeCommandBufferExt", pure DebugReportObjectTypeCommandBufferExt)
-                             , ("DebugReportObjectTypeFenceExt", pure DebugReportObjectTypeFenceExt)
-                             , ("DebugReportObjectTypeDeviceMemoryExt", pure DebugReportObjectTypeDeviceMemoryExt)
-                             , ("DebugReportObjectTypeBufferExt", pure DebugReportObjectTypeBufferExt)
-                             , ("DebugReportObjectTypeImageExt", pure DebugReportObjectTypeImageExt)
-                             , ("DebugReportObjectTypeEventExt", pure DebugReportObjectTypeEventExt)
-                             , ("DebugReportObjectTypeQueryPoolExt", pure DebugReportObjectTypeQueryPoolExt)
-                             , ("DebugReportObjectTypeBufferViewExt", pure DebugReportObjectTypeBufferViewExt)
-                             , ("DebugReportObjectTypeImageViewExt", pure DebugReportObjectTypeImageViewExt)
-                             , ("DebugReportObjectTypeShaderModuleExt", pure DebugReportObjectTypeShaderModuleExt)
-                             , ("DebugReportObjectTypePipelineCacheExt", pure DebugReportObjectTypePipelineCacheExt)
-                             , ("DebugReportObjectTypePipelineLayoutExt", pure DebugReportObjectTypePipelineLayoutExt)
-                             , ("DebugReportObjectTypeRenderPassExt", pure DebugReportObjectTypeRenderPassExt)
-                             , ("DebugReportObjectTypePipelineExt", pure DebugReportObjectTypePipelineExt)
-                             , ("DebugReportObjectTypeDescriptorSetLayoutExt", pure DebugReportObjectTypeDescriptorSetLayoutExt)
-                             , ("DebugReportObjectTypeSamplerExt", pure DebugReportObjectTypeSamplerExt)
-                             , ("DebugReportObjectTypeDescriptorPoolExt", pure DebugReportObjectTypeDescriptorPoolExt)
-                             , ("DebugReportObjectTypeDescriptorSetExt", pure DebugReportObjectTypeDescriptorSetExt)
-                             , ("DebugReportObjectTypeFramebufferExt", pure DebugReportObjectTypeFramebufferExt)
-                             , ("DebugReportObjectTypeCommandPoolExt", pure DebugReportObjectTypeCommandPoolExt)
-                             , ("DebugReportObjectTypeSurfaceKhrExt", pure DebugReportObjectTypeSurfaceKhrExt)
-                             , ("DebugReportObjectTypeSwapchainKhrExt", pure DebugReportObjectTypeSwapchainKhrExt)
-                             , ("DebugReportObjectTypeDebugReportExt", pure DebugReportObjectTypeDebugReportExt)
+instance Read DebugReportObjectType where
+  readPrec = parens ( choose [ ("DebugReportObjectTypeUnknown", pure DebugReportObjectTypeUnknown)
+                             , ("DebugReportObjectTypeInstance", pure DebugReportObjectTypeInstance)
+                             , ("DebugReportObjectTypePhysicalDevice", pure DebugReportObjectTypePhysicalDevice)
+                             , ("DebugReportObjectTypeDevice", pure DebugReportObjectTypeDevice)
+                             , ("DebugReportObjectTypeQueue", pure DebugReportObjectTypeQueue)
+                             , ("DebugReportObjectTypeSemaphore", pure DebugReportObjectTypeSemaphore)
+                             , ("DebugReportObjectTypeCommandBuffer", pure DebugReportObjectTypeCommandBuffer)
+                             , ("DebugReportObjectTypeFence", pure DebugReportObjectTypeFence)
+                             , ("DebugReportObjectTypeDeviceMemory", pure DebugReportObjectTypeDeviceMemory)
+                             , ("DebugReportObjectTypeBuffer", pure DebugReportObjectTypeBuffer)
+                             , ("DebugReportObjectTypeImage", pure DebugReportObjectTypeImage)
+                             , ("DebugReportObjectTypeEvent", pure DebugReportObjectTypeEvent)
+                             , ("DebugReportObjectTypeQueryPool", pure DebugReportObjectTypeQueryPool)
+                             , ("DebugReportObjectTypeBufferView", pure DebugReportObjectTypeBufferView)
+                             , ("DebugReportObjectTypeImageView", pure DebugReportObjectTypeImageView)
+                             , ("DebugReportObjectTypeShaderModule", pure DebugReportObjectTypeShaderModule)
+                             , ("DebugReportObjectTypePipelineCache", pure DebugReportObjectTypePipelineCache)
+                             , ("DebugReportObjectTypePipelineLayout", pure DebugReportObjectTypePipelineLayout)
+                             , ("DebugReportObjectTypeRenderPass", pure DebugReportObjectTypeRenderPass)
+                             , ("DebugReportObjectTypePipeline", pure DebugReportObjectTypePipeline)
+                             , ("DebugReportObjectTypeDescriptorSetLayout", pure DebugReportObjectTypeDescriptorSetLayout)
+                             , ("DebugReportObjectTypeSampler", pure DebugReportObjectTypeSampler)
+                             , ("DebugReportObjectTypeDescriptorPool", pure DebugReportObjectTypeDescriptorPool)
+                             , ("DebugReportObjectTypeDescriptorSet", pure DebugReportObjectTypeDescriptorSet)
+                             , ("DebugReportObjectTypeFramebuffer", pure DebugReportObjectTypeFramebuffer)
+                             , ("DebugReportObjectTypeCommandPool", pure DebugReportObjectTypeCommandPool)
+                             , ("DebugReportObjectTypeSurfaceKhr", pure DebugReportObjectTypeSurfaceKhr)
+                             , ("DebugReportObjectTypeSwapchainKhr", pure DebugReportObjectTypeSwapchainKhr)
+                             , ("DebugReportObjectTypeDebugReport", pure DebugReportObjectTypeDebugReport)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "DebugReportObjectTypeEXT")
+                        expectP (Ident "DebugReportObjectType")
                         v <- step readPrec
-                        pure (DebugReportObjectTypeEXT v)
+                        pure (DebugReportObjectType v)
                         )
                     )
 
 
-pattern DebugReportObjectTypeUnknownExt = DebugReportObjectTypeEXT 0
+pattern DebugReportObjectTypeUnknown = DebugReportObjectType 0
 
-pattern DebugReportObjectTypeInstanceExt = DebugReportObjectTypeEXT 1
+pattern DebugReportObjectTypeInstance = DebugReportObjectType 1
 
-pattern DebugReportObjectTypePhysicalDeviceExt = DebugReportObjectTypeEXT 2
+pattern DebugReportObjectTypePhysicalDevice = DebugReportObjectType 2
 
-pattern DebugReportObjectTypeDeviceExt = DebugReportObjectTypeEXT 3
+pattern DebugReportObjectTypeDevice = DebugReportObjectType 3
 
-pattern DebugReportObjectTypeQueueExt = DebugReportObjectTypeEXT 4
+pattern DebugReportObjectTypeQueue = DebugReportObjectType 4
 
-pattern DebugReportObjectTypeSemaphoreExt = DebugReportObjectTypeEXT 5
+pattern DebugReportObjectTypeSemaphore = DebugReportObjectType 5
 
-pattern DebugReportObjectTypeCommandBufferExt = DebugReportObjectTypeEXT 6
+pattern DebugReportObjectTypeCommandBuffer = DebugReportObjectType 6
 
-pattern DebugReportObjectTypeFenceExt = DebugReportObjectTypeEXT 7
+pattern DebugReportObjectTypeFence = DebugReportObjectType 7
 
-pattern DebugReportObjectTypeDeviceMemoryExt = DebugReportObjectTypeEXT 8
+pattern DebugReportObjectTypeDeviceMemory = DebugReportObjectType 8
 
-pattern DebugReportObjectTypeBufferExt = DebugReportObjectTypeEXT 9
+pattern DebugReportObjectTypeBuffer = DebugReportObjectType 9
 
-pattern DebugReportObjectTypeImageExt = DebugReportObjectTypeEXT 10
+pattern DebugReportObjectTypeImage = DebugReportObjectType 10
 
-pattern DebugReportObjectTypeEventExt = DebugReportObjectTypeEXT 11
+pattern DebugReportObjectTypeEvent = DebugReportObjectType 11
 
-pattern DebugReportObjectTypeQueryPoolExt = DebugReportObjectTypeEXT 12
+pattern DebugReportObjectTypeQueryPool = DebugReportObjectType 12
 
-pattern DebugReportObjectTypeBufferViewExt = DebugReportObjectTypeEXT 13
+pattern DebugReportObjectTypeBufferView = DebugReportObjectType 13
 
-pattern DebugReportObjectTypeImageViewExt = DebugReportObjectTypeEXT 14
+pattern DebugReportObjectTypeImageView = DebugReportObjectType 14
 
-pattern DebugReportObjectTypeShaderModuleExt = DebugReportObjectTypeEXT 15
+pattern DebugReportObjectTypeShaderModule = DebugReportObjectType 15
 
-pattern DebugReportObjectTypePipelineCacheExt = DebugReportObjectTypeEXT 16
+pattern DebugReportObjectTypePipelineCache = DebugReportObjectType 16
 
-pattern DebugReportObjectTypePipelineLayoutExt = DebugReportObjectTypeEXT 17
+pattern DebugReportObjectTypePipelineLayout = DebugReportObjectType 17
 
-pattern DebugReportObjectTypeRenderPassExt = DebugReportObjectTypeEXT 18
+pattern DebugReportObjectTypeRenderPass = DebugReportObjectType 18
 
-pattern DebugReportObjectTypePipelineExt = DebugReportObjectTypeEXT 19
+pattern DebugReportObjectTypePipeline = DebugReportObjectType 19
 
-pattern DebugReportObjectTypeDescriptorSetLayoutExt = DebugReportObjectTypeEXT 20
+pattern DebugReportObjectTypeDescriptorSetLayout = DebugReportObjectType 20
 
-pattern DebugReportObjectTypeSamplerExt = DebugReportObjectTypeEXT 21
+pattern DebugReportObjectTypeSampler = DebugReportObjectType 21
 
-pattern DebugReportObjectTypeDescriptorPoolExt = DebugReportObjectTypeEXT 22
+pattern DebugReportObjectTypeDescriptorPool = DebugReportObjectType 22
 
-pattern DebugReportObjectTypeDescriptorSetExt = DebugReportObjectTypeEXT 23
+pattern DebugReportObjectTypeDescriptorSet = DebugReportObjectType 23
 
-pattern DebugReportObjectTypeFramebufferExt = DebugReportObjectTypeEXT 24
+pattern DebugReportObjectTypeFramebuffer = DebugReportObjectType 24
 
-pattern DebugReportObjectTypeCommandPoolExt = DebugReportObjectTypeEXT 25
+pattern DebugReportObjectTypeCommandPool = DebugReportObjectType 25
 
-pattern DebugReportObjectTypeSurfaceKhrExt = DebugReportObjectTypeEXT 26
+pattern DebugReportObjectTypeSurfaceKhr = DebugReportObjectType 26
 
-pattern DebugReportObjectTypeSwapchainKhrExt = DebugReportObjectTypeEXT 27
+pattern DebugReportObjectTypeSwapchainKhr = DebugReportObjectType 27
 
-pattern DebugReportObjectTypeDebugReportExt = DebugReportObjectTypeEXT 28
+pattern DebugReportObjectTypeDebugReport = DebugReportObjectType 28
 
--- ** DebugReportErrorEXT
+-- ** DebugReportError
 
-newtype DebugReportErrorEXT = DebugReportErrorEXT Int32
+newtype DebugReportError = DebugReportError Int32
   deriving (Eq, Ord, Storable)
 
-instance Show DebugReportErrorEXT where
-  showsPrec _ DebugReportErrorNoneExt = showString "DebugReportErrorNoneExt"
-  showsPrec _ DebugReportErrorCallbackRefExt = showString "DebugReportErrorCallbackRefExt"
-  showsPrec p (DebugReportErrorEXT x) = showParen (p >= 11) (showString "DebugReportErrorEXT " . showsPrec 11 x)
+instance Show DebugReportError where
+  showsPrec _ DebugReportErrorNone = showString "DebugReportErrorNone"
+  showsPrec _ DebugReportErrorCallbackRef = showString "DebugReportErrorCallbackRef"
+  showsPrec p (DebugReportError x) = showParen (p >= 11) (showString "DebugReportError " . showsPrec 11 x)
 
-instance Read DebugReportErrorEXT where
-  readPrec = parens ( choose [ ("DebugReportErrorNoneExt", pure DebugReportErrorNoneExt)
-                             , ("DebugReportErrorCallbackRefExt", pure DebugReportErrorCallbackRefExt)
+instance Read DebugReportError where
+  readPrec = parens ( choose [ ("DebugReportErrorNone", pure DebugReportErrorNone)
+                             , ("DebugReportErrorCallbackRef", pure DebugReportErrorCallbackRef)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "DebugReportErrorEXT")
+                        expectP (Ident "DebugReportError")
                         v <- step readPrec
-                        pure (DebugReportErrorEXT v)
+                        pure (DebugReportError v)
                         )
                     )
 
 
-pattern DebugReportErrorNoneExt = DebugReportErrorEXT 0
+pattern DebugReportErrorNone = DebugReportError 0
 
-pattern DebugReportErrorCallbackRefExt = DebugReportErrorEXT 1
+pattern DebugReportErrorCallbackRef = DebugReportError 1
 
 
-data DebugReportCallbackCreateInfoEXT =
-  DebugReportCallbackCreateInfoEXT{ sType :: StructureType 
-                                  , pNext :: Ptr Void 
-                                  , flags :: DebugReportFlagsEXT 
-                                  , pfnCallback :: PFN_vkDebugReportCallbackEXT 
-                                  , pUserData :: Ptr Void 
-                                  }
+data DebugReportCallbackCreateInfo =
+  DebugReportCallbackCreateInfo{ sType :: StructureType 
+                               , pNext :: Ptr Void 
+                               , flags :: DebugReportFlags 
+                               , pfnCallback :: PFN_vkDebugReportCallbackEXT 
+                               , pUserData :: Ptr Void 
+                               }
   deriving (Eq, Ord)
 
-instance Storable DebugReportCallbackCreateInfoEXT where
+instance Storable DebugReportCallbackCreateInfo where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = DebugReportCallbackCreateInfoEXT <$> peek (ptr `plusPtr` 0)
-                                              <*> peek (ptr `plusPtr` 8)
-                                              <*> peek (ptr `plusPtr` 16)
-                                              <*> peek (ptr `plusPtr` 24)
-                                              <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: DebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: DebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 24) (pfnCallback (poked :: DebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 32) (pUserData (poked :: DebugReportCallbackCreateInfoEXT))
+  peek ptr = DebugReportCallbackCreateInfo <$> peek (ptr `plusPtr` 0)
+                                           <*> peek (ptr `plusPtr` 8)
+                                           <*> peek (ptr `plusPtr` 16)
+                                           <*> peek (ptr `plusPtr` 24)
+                                           <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DebugReportCallbackCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: DebugReportCallbackCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: DebugReportCallbackCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pfnCallback (poked :: DebugReportCallbackCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pUserData (poked :: DebugReportCallbackCreateInfo))
 
 
--- ** destroyDebugReportCallbackEXT
-foreign import ccall "vkDestroyDebugReportCallbackEXT" destroyDebugReportCallbackEXT ::
-  Instance ->
-  DebugReportCallbackEXT -> Ptr AllocationCallbacks -> IO ()
+-- ** destroyDebugReportCallback
+foreign import ccall "vkDestroyDebugReportCallbackEXT" destroyDebugReportCallback ::
+  Instance -> DebugReportCallback -> Ptr AllocationCallbacks -> IO ()
 
--- ** DebugReportFlagsEXT
+-- ** DebugReportFlags
 
-newtype DebugReportFlagsEXT = DebugReportFlagsEXT Flags
+newtype DebugReportFlags = DebugReportFlags Flags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
-instance Show DebugReportFlagsEXT where
-  showsPrec _ DebugReportInformationBitExt = showString "DebugReportInformationBitExt"
-  showsPrec _ DebugReportWarningBitExt = showString "DebugReportWarningBitExt"
-  showsPrec _ DebugReportPerformanceWarningBitExt = showString "DebugReportPerformanceWarningBitExt"
-  showsPrec _ DebugReportErrorBitExt = showString "DebugReportErrorBitExt"
-  showsPrec _ DebugReportDebugBitExt = showString "DebugReportDebugBitExt"
+instance Show DebugReportFlags where
+  showsPrec _ DebugReportInformationBit = showString "DebugReportInformationBit"
+  showsPrec _ DebugReportWarningBit = showString "DebugReportWarningBit"
+  showsPrec _ DebugReportPerformanceWarningBit = showString "DebugReportPerformanceWarningBit"
+  showsPrec _ DebugReportErrorBit = showString "DebugReportErrorBit"
+  showsPrec _ DebugReportDebugBit = showString "DebugReportDebugBit"
   
-  showsPrec p (DebugReportFlagsEXT x) = showParen (p >= 11) (showString "DebugReportFlagsEXT " . showsPrec 11 x)
+  showsPrec p (DebugReportFlags x) = showParen (p >= 11) (showString "DebugReportFlags " . showsPrec 11 x)
 
-instance Read DebugReportFlagsEXT where
-  readPrec = parens ( choose [ ("DebugReportInformationBitExt", pure DebugReportInformationBitExt)
-                             , ("DebugReportWarningBitExt", pure DebugReportWarningBitExt)
-                             , ("DebugReportPerformanceWarningBitExt", pure DebugReportPerformanceWarningBitExt)
-                             , ("DebugReportErrorBitExt", pure DebugReportErrorBitExt)
-                             , ("DebugReportDebugBitExt", pure DebugReportDebugBitExt)
+instance Read DebugReportFlags where
+  readPrec = parens ( choose [ ("DebugReportInformationBit", pure DebugReportInformationBit)
+                             , ("DebugReportWarningBit", pure DebugReportWarningBit)
+                             , ("DebugReportPerformanceWarningBit", pure DebugReportPerformanceWarningBit)
+                             , ("DebugReportErrorBit", pure DebugReportErrorBit)
+                             , ("DebugReportDebugBit", pure DebugReportDebugBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "DebugReportFlagsEXT")
+                        expectP (Ident "DebugReportFlags")
                         v <- step readPrec
-                        pure (DebugReportFlagsEXT v)
+                        pure (DebugReportFlags v)
                         )
                     )
 
 
-pattern DebugReportInformationBitExt = DebugReportFlagsEXT 0x1
+pattern DebugReportInformationBit = DebugReportFlags 0x1
 
-pattern DebugReportWarningBitExt = DebugReportFlagsEXT 0x2
+pattern DebugReportWarningBit = DebugReportFlags 0x2
 
-pattern DebugReportPerformanceWarningBitExt = DebugReportFlagsEXT 0x4
+pattern DebugReportPerformanceWarningBit = DebugReportFlags 0x4
 
-pattern DebugReportErrorBitExt = DebugReportFlagsEXT 0x8
+pattern DebugReportErrorBit = DebugReportFlags 0x8
 
-pattern DebugReportDebugBitExt = DebugReportFlagsEXT 0x10
+pattern DebugReportDebugBit = DebugReportFlags 0x10
 
 
 type PFN_vkDebugReportCallbackEXT = FunPtr
-  (DebugReportFlagsEXT ->
-     DebugReportObjectTypeEXT ->
+  (DebugReportFlags ->
+     DebugReportObjectType ->
        Word64 ->
          CSize -> Int32 -> Ptr CChar -> Ptr CChar -> Ptr Void -> IO Bool32)
 
--- ** createDebugReportCallbackEXT
-foreign import ccall "vkCreateDebugReportCallbackEXT" createDebugReportCallbackEXT ::
+-- ** createDebugReportCallback
+foreign import ccall "vkCreateDebugReportCallbackEXT" createDebugReportCallback ::
   Instance ->
-  Ptr DebugReportCallbackCreateInfoEXT ->
-    Ptr AllocationCallbacks -> Ptr DebugReportCallbackEXT -> IO Result
+  Ptr DebugReportCallbackCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr DebugReportCallback -> IO Result
 

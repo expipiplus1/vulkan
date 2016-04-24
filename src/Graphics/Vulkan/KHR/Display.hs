@@ -17,8 +17,8 @@ import Data.Word( Word64(..)
 import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
-import Graphics.Vulkan.KHR.Surface( SurfaceTransformFlagsKHR(..)
-                                  , SurfaceKHR(..)
+import Graphics.Vulkan.KHR.Surface( Surface(..)
+                                  , SurfaceTransformFlags(..)
                                   )
 import Data.Bits( Bits
                 , FiniteBits
@@ -50,272 +50,268 @@ import Foreign.C.Types( CFloat(..)
                       )
 
 
-data DisplaySurfaceCreateInfoKHR =
-  DisplaySurfaceCreateInfoKHR{ sType :: StructureType 
-                             , pNext :: Ptr Void 
-                             , flags :: DisplaySurfaceCreateFlagsKHR 
-                             , displayMode :: DisplayModeKHR 
-                             , planeIndex :: Word32 
-                             , planeStackIndex :: Word32 
-                             , transform :: SurfaceTransformFlagsKHR 
-                             , globalAlpha :: CFloat 
-                             , alphaMode :: DisplayPlaneAlphaFlagsKHR 
-                             , imageExtent :: Extent2D 
-                             }
-  deriving (Eq, Ord)
-
-instance Storable DisplaySurfaceCreateInfoKHR where
-  sizeOf ~_ = 64
-  alignment ~_ = 8
-  peek ptr = DisplaySurfaceCreateInfoKHR <$> peek (ptr `plusPtr` 0)
-                                         <*> peek (ptr `plusPtr` 8)
-                                         <*> peek (ptr `plusPtr` 16)
-                                         <*> peek (ptr `plusPtr` 24)
-                                         <*> peek (ptr `plusPtr` 32)
-                                         <*> peek (ptr `plusPtr` 36)
-                                         <*> peek (ptr `plusPtr` 40)
-                                         <*> peek (ptr `plusPtr` 44)
-                                         <*> peek (ptr `plusPtr` 48)
-                                         <*> peek (ptr `plusPtr` 52)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: DisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: DisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 24) (displayMode (poked :: DisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 32) (planeIndex (poked :: DisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 36) (planeStackIndex (poked :: DisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 40) (transform (poked :: DisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 44) (globalAlpha (poked :: DisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 48) (alphaMode (poked :: DisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 52) (imageExtent (poked :: DisplaySurfaceCreateInfoKHR))
-
-
-
-data DisplayPlaneCapabilitiesKHR =
-  DisplayPlaneCapabilitiesKHR{ supportedAlpha :: DisplayPlaneAlphaFlagsKHR 
-                             , minSrcPosition :: Offset2D 
-                             , maxSrcPosition :: Offset2D 
-                             , minSrcExtent :: Extent2D 
-                             , maxSrcExtent :: Extent2D 
-                             , minDstPosition :: Offset2D 
-                             , maxDstPosition :: Offset2D 
-                             , minDstExtent :: Extent2D 
-                             , maxDstExtent :: Extent2D 
-                             }
-  deriving (Eq, Ord)
-
-instance Storable DisplayPlaneCapabilitiesKHR where
-  sizeOf ~_ = 68
-  alignment ~_ = 4
-  peek ptr = DisplayPlaneCapabilitiesKHR <$> peek (ptr `plusPtr` 0)
-                                         <*> peek (ptr `plusPtr` 4)
-                                         <*> peek (ptr `plusPtr` 12)
-                                         <*> peek (ptr `plusPtr` 20)
-                                         <*> peek (ptr `plusPtr` 28)
-                                         <*> peek (ptr `plusPtr` 36)
-                                         <*> peek (ptr `plusPtr` 44)
-                                         <*> peek (ptr `plusPtr` 52)
-                                         <*> peek (ptr `plusPtr` 60)
-  poke ptr poked = poke (ptr `plusPtr` 0) (supportedAlpha (poked :: DisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 4) (minSrcPosition (poked :: DisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 12) (maxSrcPosition (poked :: DisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 20) (minSrcExtent (poked :: DisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 28) (maxSrcExtent (poked :: DisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 36) (minDstPosition (poked :: DisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 44) (maxDstPosition (poked :: DisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 52) (minDstExtent (poked :: DisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 60) (maxDstExtent (poked :: DisplayPlaneCapabilitiesKHR))
-
-
--- ** getDisplayModePropertiesKHR
-foreign import ccall "vkGetDisplayModePropertiesKHR" getDisplayModePropertiesKHR ::
-  PhysicalDevice ->
-  DisplayKHR ->
-    Ptr Word32 -> Ptr DisplayModePropertiesKHR -> IO Result
-
-
-data DisplayPropertiesKHR =
-  DisplayPropertiesKHR{ display :: DisplayKHR 
-                      , displayName :: Ptr CChar 
-                      , physicalDimensions :: Extent2D 
-                      , physicalResolution :: Extent2D 
-                      , supportedTransforms :: SurfaceTransformFlagsKHR 
-                      , planeReorderPossible :: Bool32 
-                      , persistentContent :: Bool32 
-                      }
-  deriving (Eq, Ord)
-
-instance Storable DisplayPropertiesKHR where
-  sizeOf ~_ = 48
-  alignment ~_ = 8
-  peek ptr = DisplayPropertiesKHR <$> peek (ptr `plusPtr` 0)
-                                  <*> peek (ptr `plusPtr` 8)
-                                  <*> peek (ptr `plusPtr` 16)
-                                  <*> peek (ptr `plusPtr` 24)
-                                  <*> peek (ptr `plusPtr` 32)
-                                  <*> peek (ptr `plusPtr` 36)
-                                  <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (display (poked :: DisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (displayName (poked :: DisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 16) (physicalDimensions (poked :: DisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 24) (physicalResolution (poked :: DisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 32) (supportedTransforms (poked :: DisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 36) (planeReorderPossible (poked :: DisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 40) (persistentContent (poked :: DisplayPropertiesKHR))
-
-
--- ** getDisplayPlaneSupportedDisplaysKHR
-foreign import ccall "vkGetDisplayPlaneSupportedDisplaysKHR" getDisplayPlaneSupportedDisplaysKHR ::
-  PhysicalDevice ->
-  Word32 -> Ptr Word32 -> Ptr DisplayKHR -> IO Result
-
--- ** createDisplayModeKHR
-foreign import ccall "vkCreateDisplayModeKHR" createDisplayModeKHR ::
-  PhysicalDevice ->
-  DisplayKHR ->
-    Ptr DisplayModeCreateInfoKHR ->
-      Ptr AllocationCallbacks -> Ptr DisplayModeKHR -> IO Result
-
-
-data DisplayPlanePropertiesKHR =
-  DisplayPlanePropertiesKHR{ currentDisplay :: DisplayKHR 
-                           , currentStackIndex :: Word32 
-                           }
-  deriving (Eq, Ord)
-
-instance Storable DisplayPlanePropertiesKHR where
-  sizeOf ~_ = 16
-  alignment ~_ = 8
-  peek ptr = DisplayPlanePropertiesKHR <$> peek (ptr `plusPtr` 0)
-                                       <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (currentDisplay (poked :: DisplayPlanePropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (currentStackIndex (poked :: DisplayPlanePropertiesKHR))
-
-
--- ** getDisplayPlaneCapabilitiesKHR
-foreign import ccall "vkGetDisplayPlaneCapabilitiesKHR" getDisplayPlaneCapabilitiesKHR ::
-  PhysicalDevice ->
-  DisplayModeKHR ->
-    Word32 -> Ptr DisplayPlaneCapabilitiesKHR -> IO Result
-
-
-data DisplayModePropertiesKHR =
-  DisplayModePropertiesKHR{ displayMode :: DisplayModeKHR 
-                          , parameters :: DisplayModeParametersKHR 
+data DisplaySurfaceCreateInfo =
+  DisplaySurfaceCreateInfo{ sType :: StructureType 
+                          , pNext :: Ptr Void 
+                          , flags :: DisplaySurfaceCreateFlags 
+                          , displayMode :: DisplayMode 
+                          , planeIndex :: Word32 
+                          , planeStackIndex :: Word32 
+                          , transform :: SurfaceTransformFlags 
+                          , globalAlpha :: CFloat 
+                          , alphaMode :: DisplayPlaneAlphaFlags 
+                          , imageExtent :: Extent2D 
                           }
   deriving (Eq, Ord)
 
-instance Storable DisplayModePropertiesKHR where
+instance Storable DisplaySurfaceCreateInfo where
+  sizeOf ~_ = 64
+  alignment ~_ = 8
+  peek ptr = DisplaySurfaceCreateInfo <$> peek (ptr `plusPtr` 0)
+                                      <*> peek (ptr `plusPtr` 8)
+                                      <*> peek (ptr `plusPtr` 16)
+                                      <*> peek (ptr `plusPtr` 24)
+                                      <*> peek (ptr `plusPtr` 32)
+                                      <*> peek (ptr `plusPtr` 36)
+                                      <*> peek (ptr `plusPtr` 40)
+                                      <*> peek (ptr `plusPtr` 44)
+                                      <*> peek (ptr `plusPtr` 48)
+                                      <*> peek (ptr `plusPtr` 52)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DisplaySurfaceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: DisplaySurfaceCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: DisplaySurfaceCreateInfo))
+                *> poke (ptr `plusPtr` 24) (displayMode (poked :: DisplaySurfaceCreateInfo))
+                *> poke (ptr `plusPtr` 32) (planeIndex (poked :: DisplaySurfaceCreateInfo))
+                *> poke (ptr `plusPtr` 36) (planeStackIndex (poked :: DisplaySurfaceCreateInfo))
+                *> poke (ptr `plusPtr` 40) (transform (poked :: DisplaySurfaceCreateInfo))
+                *> poke (ptr `plusPtr` 44) (globalAlpha (poked :: DisplaySurfaceCreateInfo))
+                *> poke (ptr `plusPtr` 48) (alphaMode (poked :: DisplaySurfaceCreateInfo))
+                *> poke (ptr `plusPtr` 52) (imageExtent (poked :: DisplaySurfaceCreateInfo))
+
+
+
+data DisplayPlaneCapabilities =
+  DisplayPlaneCapabilities{ supportedAlpha :: DisplayPlaneAlphaFlags 
+                          , minSrcPosition :: Offset2D 
+                          , maxSrcPosition :: Offset2D 
+                          , minSrcExtent :: Extent2D 
+                          , maxSrcExtent :: Extent2D 
+                          , minDstPosition :: Offset2D 
+                          , maxDstPosition :: Offset2D 
+                          , minDstExtent :: Extent2D 
+                          , maxDstExtent :: Extent2D 
+                          }
+  deriving (Eq, Ord)
+
+instance Storable DisplayPlaneCapabilities where
+  sizeOf ~_ = 68
+  alignment ~_ = 4
+  peek ptr = DisplayPlaneCapabilities <$> peek (ptr `plusPtr` 0)
+                                      <*> peek (ptr `plusPtr` 4)
+                                      <*> peek (ptr `plusPtr` 12)
+                                      <*> peek (ptr `plusPtr` 20)
+                                      <*> peek (ptr `plusPtr` 28)
+                                      <*> peek (ptr `plusPtr` 36)
+                                      <*> peek (ptr `plusPtr` 44)
+                                      <*> peek (ptr `plusPtr` 52)
+                                      <*> peek (ptr `plusPtr` 60)
+  poke ptr poked = poke (ptr `plusPtr` 0) (supportedAlpha (poked :: DisplayPlaneCapabilities))
+                *> poke (ptr `plusPtr` 4) (minSrcPosition (poked :: DisplayPlaneCapabilities))
+                *> poke (ptr `plusPtr` 12) (maxSrcPosition (poked :: DisplayPlaneCapabilities))
+                *> poke (ptr `plusPtr` 20) (minSrcExtent (poked :: DisplayPlaneCapabilities))
+                *> poke (ptr `plusPtr` 28) (maxSrcExtent (poked :: DisplayPlaneCapabilities))
+                *> poke (ptr `plusPtr` 36) (minDstPosition (poked :: DisplayPlaneCapabilities))
+                *> poke (ptr `plusPtr` 44) (maxDstPosition (poked :: DisplayPlaneCapabilities))
+                *> poke (ptr `plusPtr` 52) (minDstExtent (poked :: DisplayPlaneCapabilities))
+                *> poke (ptr `plusPtr` 60) (maxDstExtent (poked :: DisplayPlaneCapabilities))
+
+
+-- ** getDisplayModeProperties
+foreign import ccall "vkGetDisplayModePropertiesKHR" getDisplayModeProperties ::
+  PhysicalDevice ->
+  Display -> Ptr Word32 -> Ptr DisplayModeProperties -> IO Result
+
+
+data DisplayProperties =
+  DisplayProperties{ display :: Display 
+                   , displayName :: Ptr CChar 
+                   , physicalDimensions :: Extent2D 
+                   , physicalResolution :: Extent2D 
+                   , supportedTransforms :: SurfaceTransformFlags 
+                   , planeReorderPossible :: Bool32 
+                   , persistentContent :: Bool32 
+                   }
+  deriving (Eq, Ord)
+
+instance Storable DisplayProperties where
+  sizeOf ~_ = 48
+  alignment ~_ = 8
+  peek ptr = DisplayProperties <$> peek (ptr `plusPtr` 0)
+                               <*> peek (ptr `plusPtr` 8)
+                               <*> peek (ptr `plusPtr` 16)
+                               <*> peek (ptr `plusPtr` 24)
+                               <*> peek (ptr `plusPtr` 32)
+                               <*> peek (ptr `plusPtr` 36)
+                               <*> peek (ptr `plusPtr` 40)
+  poke ptr poked = poke (ptr `plusPtr` 0) (display (poked :: DisplayProperties))
+                *> poke (ptr `plusPtr` 8) (displayName (poked :: DisplayProperties))
+                *> poke (ptr `plusPtr` 16) (physicalDimensions (poked :: DisplayProperties))
+                *> poke (ptr `plusPtr` 24) (physicalResolution (poked :: DisplayProperties))
+                *> poke (ptr `plusPtr` 32) (supportedTransforms (poked :: DisplayProperties))
+                *> poke (ptr `plusPtr` 36) (planeReorderPossible (poked :: DisplayProperties))
+                *> poke (ptr `plusPtr` 40) (persistentContent (poked :: DisplayProperties))
+
+
+-- ** getDisplayPlaneSupportedDisplays
+foreign import ccall "vkGetDisplayPlaneSupportedDisplaysKHR" getDisplayPlaneSupportedDisplays ::
+  PhysicalDevice -> Word32 -> Ptr Word32 -> Ptr Display -> IO Result
+
+-- ** createDisplayMode
+foreign import ccall "vkCreateDisplayModeKHR" createDisplayMode ::
+  PhysicalDevice ->
+  Display ->
+    Ptr DisplayModeCreateInfo ->
+      Ptr AllocationCallbacks -> Ptr DisplayMode -> IO Result
+
+
+data DisplayPlaneProperties =
+  DisplayPlaneProperties{ currentDisplay :: Display 
+                        , currentStackIndex :: Word32 
+                        }
+  deriving (Eq, Ord)
+
+instance Storable DisplayPlaneProperties where
+  sizeOf ~_ = 16
+  alignment ~_ = 8
+  peek ptr = DisplayPlaneProperties <$> peek (ptr `plusPtr` 0)
+                                    <*> peek (ptr `plusPtr` 8)
+  poke ptr poked = poke (ptr `plusPtr` 0) (currentDisplay (poked :: DisplayPlaneProperties))
+                *> poke (ptr `plusPtr` 8) (currentStackIndex (poked :: DisplayPlaneProperties))
+
+
+-- ** getDisplayPlaneCapabilities
+foreign import ccall "vkGetDisplayPlaneCapabilitiesKHR" getDisplayPlaneCapabilities ::
+  PhysicalDevice ->
+  DisplayMode -> Word32 -> Ptr DisplayPlaneCapabilities -> IO Result
+
+
+data DisplayModeProperties =
+  DisplayModeProperties{ displayMode :: DisplayMode 
+                       , parameters :: DisplayModeParameters 
+                       }
+  deriving (Eq, Ord)
+
+instance Storable DisplayModeProperties where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = DisplayModePropertiesKHR <$> peek (ptr `plusPtr` 0)
-                                      <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (displayMode (poked :: DisplayModePropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (parameters (poked :: DisplayModePropertiesKHR))
+  peek ptr = DisplayModeProperties <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 8)
+  poke ptr poked = poke (ptr `plusPtr` 0) (displayMode (poked :: DisplayModeProperties))
+                *> poke (ptr `plusPtr` 8) (parameters (poked :: DisplayModeProperties))
 
 
--- ** DisplayPlaneAlphaFlagsKHR
+-- ** DisplayPlaneAlphaFlags
 
-newtype DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagsKHR Flags
+newtype DisplayPlaneAlphaFlags = DisplayPlaneAlphaFlags Flags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
-instance Show DisplayPlaneAlphaFlagsKHR where
-  showsPrec _ DisplayPlaneAlphaOpaqueBitKhr = showString "DisplayPlaneAlphaOpaqueBitKhr"
-  showsPrec _ DisplayPlaneAlphaGlobalBitKhr = showString "DisplayPlaneAlphaGlobalBitKhr"
-  showsPrec _ DisplayPlaneAlphaPerPixelBitKhr = showString "DisplayPlaneAlphaPerPixelBitKhr"
-  showsPrec _ DisplayPlaneAlphaPerPixelPremultipliedBitKhr = showString "DisplayPlaneAlphaPerPixelPremultipliedBitKhr"
+instance Show DisplayPlaneAlphaFlags where
+  showsPrec _ DisplayPlaneAlphaOpaqueBit = showString "DisplayPlaneAlphaOpaqueBit"
+  showsPrec _ DisplayPlaneAlphaGlobalBit = showString "DisplayPlaneAlphaGlobalBit"
+  showsPrec _ DisplayPlaneAlphaPerPixelBit = showString "DisplayPlaneAlphaPerPixelBit"
+  showsPrec _ DisplayPlaneAlphaPerPixelPremultipliedBit = showString "DisplayPlaneAlphaPerPixelPremultipliedBit"
   
-  showsPrec p (DisplayPlaneAlphaFlagsKHR x) = showParen (p >= 11) (showString "DisplayPlaneAlphaFlagsKHR " . showsPrec 11 x)
+  showsPrec p (DisplayPlaneAlphaFlags x) = showParen (p >= 11) (showString "DisplayPlaneAlphaFlags " . showsPrec 11 x)
 
-instance Read DisplayPlaneAlphaFlagsKHR where
-  readPrec = parens ( choose [ ("DisplayPlaneAlphaOpaqueBitKhr", pure DisplayPlaneAlphaOpaqueBitKhr)
-                             , ("DisplayPlaneAlphaGlobalBitKhr", pure DisplayPlaneAlphaGlobalBitKhr)
-                             , ("DisplayPlaneAlphaPerPixelBitKhr", pure DisplayPlaneAlphaPerPixelBitKhr)
-                             , ("DisplayPlaneAlphaPerPixelPremultipliedBitKhr", pure DisplayPlaneAlphaPerPixelPremultipliedBitKhr)
+instance Read DisplayPlaneAlphaFlags where
+  readPrec = parens ( choose [ ("DisplayPlaneAlphaOpaqueBit", pure DisplayPlaneAlphaOpaqueBit)
+                             , ("DisplayPlaneAlphaGlobalBit", pure DisplayPlaneAlphaGlobalBit)
+                             , ("DisplayPlaneAlphaPerPixelBit", pure DisplayPlaneAlphaPerPixelBit)
+                             , ("DisplayPlaneAlphaPerPixelPremultipliedBit", pure DisplayPlaneAlphaPerPixelPremultipliedBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "DisplayPlaneAlphaFlagsKHR")
+                        expectP (Ident "DisplayPlaneAlphaFlags")
                         v <- step readPrec
-                        pure (DisplayPlaneAlphaFlagsKHR v)
+                        pure (DisplayPlaneAlphaFlags v)
                         )
                     )
 
 
-pattern DisplayPlaneAlphaOpaqueBitKhr = DisplayPlaneAlphaFlagsKHR 0x1
+pattern DisplayPlaneAlphaOpaqueBit = DisplayPlaneAlphaFlags 0x1
 
-pattern DisplayPlaneAlphaGlobalBitKhr = DisplayPlaneAlphaFlagsKHR 0x2
+pattern DisplayPlaneAlphaGlobalBit = DisplayPlaneAlphaFlags 0x2
 
-pattern DisplayPlaneAlphaPerPixelBitKhr = DisplayPlaneAlphaFlagsKHR 0x4
+pattern DisplayPlaneAlphaPerPixelBit = DisplayPlaneAlphaFlags 0x4
 
-pattern DisplayPlaneAlphaPerPixelPremultipliedBitKhr = DisplayPlaneAlphaFlagsKHR 0x8
+pattern DisplayPlaneAlphaPerPixelPremultipliedBit = DisplayPlaneAlphaFlags 0x8
 
 
--- ** DisplayModeCreateFlagsKHR
+-- ** DisplayModeCreateFlags
 -- | Opaque flag
-newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR Flags
+newtype DisplayModeCreateFlags = DisplayModeCreateFlags Flags
   deriving (Eq, Ord, Storable)
 
 
-data DisplayModeCreateInfoKHR =
-  DisplayModeCreateInfoKHR{ sType :: StructureType 
-                          , pNext :: Ptr Void 
-                          , flags :: DisplayModeCreateFlagsKHR 
-                          , parameters :: DisplayModeParametersKHR 
-                          }
+data DisplayModeCreateInfo =
+  DisplayModeCreateInfo{ sType :: StructureType 
+                       , pNext :: Ptr Void 
+                       , flags :: DisplayModeCreateFlags 
+                       , parameters :: DisplayModeParameters 
+                       }
   deriving (Eq, Ord)
 
-instance Storable DisplayModeCreateInfoKHR where
+instance Storable DisplayModeCreateInfo where
   sizeOf ~_ = 32
   alignment ~_ = 8
-  peek ptr = DisplayModeCreateInfoKHR <$> peek (ptr `plusPtr` 0)
-                                      <*> peek (ptr `plusPtr` 8)
-                                      <*> peek (ptr `plusPtr` 16)
-                                      <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DisplayModeCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (pNext (poked :: DisplayModeCreateInfoKHR))
-                *> poke (ptr `plusPtr` 16) (flags (poked :: DisplayModeCreateInfoKHR))
-                *> poke (ptr `plusPtr` 20) (parameters (poked :: DisplayModeCreateInfoKHR))
+  peek ptr = DisplayModeCreateInfo <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 8)
+                                   <*> peek (ptr `plusPtr` 16)
+                                   <*> peek (ptr `plusPtr` 20)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DisplayModeCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: DisplayModeCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: DisplayModeCreateInfo))
+                *> poke (ptr `plusPtr` 20) (parameters (poked :: DisplayModeCreateInfo))
 
 
--- ** getPhysicalDeviceDisplayPlanePropertiesKHR
-foreign import ccall "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" getPhysicalDeviceDisplayPlanePropertiesKHR ::
+-- ** getPhysicalDeviceDisplayPlaneProperties
+foreign import ccall "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" getPhysicalDeviceDisplayPlaneProperties ::
   PhysicalDevice ->
-  Ptr Word32 -> Ptr DisplayPlanePropertiesKHR -> IO Result
+  Ptr Word32 -> Ptr DisplayPlaneProperties -> IO Result
 
-newtype DisplayModeKHR = DisplayModeKHR Word64
+newtype DisplayMode = DisplayMode Word64
   deriving (Eq, Ord, Storable)
 
 
-data DisplayModeParametersKHR =
-  DisplayModeParametersKHR{ visibleRegion :: Extent2D 
-                          , refreshRate :: Word32 
-                          }
+data DisplayModeParameters =
+  DisplayModeParameters{ visibleRegion :: Extent2D 
+                       , refreshRate :: Word32 
+                       }
   deriving (Eq, Ord)
 
-instance Storable DisplayModeParametersKHR where
+instance Storable DisplayModeParameters where
   sizeOf ~_ = 12
   alignment ~_ = 4
-  peek ptr = DisplayModeParametersKHR <$> peek (ptr `plusPtr` 0)
-                                      <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (visibleRegion (poked :: DisplayModeParametersKHR))
-                *> poke (ptr `plusPtr` 8) (refreshRate (poked :: DisplayModeParametersKHR))
+  peek ptr = DisplayModeParameters <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 8)
+  poke ptr poked = poke (ptr `plusPtr` 0) (visibleRegion (poked :: DisplayModeParameters))
+                *> poke (ptr `plusPtr` 8) (refreshRate (poked :: DisplayModeParameters))
 
 
--- ** DisplaySurfaceCreateFlagsKHR
+-- ** DisplaySurfaceCreateFlags
 -- | Opaque flag
-newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
+newtype DisplaySurfaceCreateFlags = DisplaySurfaceCreateFlags Flags
   deriving (Eq, Ord, Storable)
 
-newtype DisplayKHR = DisplayKHR Word64
+newtype Display = Display Word64
   deriving (Eq, Ord, Storable)
 
--- ** getPhysicalDeviceDisplayPropertiesKHR
-foreign import ccall "vkGetPhysicalDeviceDisplayPropertiesKHR" getPhysicalDeviceDisplayPropertiesKHR ::
-  PhysicalDevice ->
-  Ptr Word32 -> Ptr DisplayPropertiesKHR -> IO Result
+-- ** getPhysicalDeviceDisplayProperties
+foreign import ccall "vkGetPhysicalDeviceDisplayPropertiesKHR" getPhysicalDeviceDisplayProperties ::
+  PhysicalDevice -> Ptr Word32 -> Ptr DisplayProperties -> IO Result
 
--- ** createDisplayPlaneSurfaceKHR
-foreign import ccall "vkCreateDisplayPlaneSurfaceKHR" createDisplayPlaneSurfaceKHR ::
+-- ** createDisplayPlaneSurface
+foreign import ccall "vkCreateDisplayPlaneSurfaceKHR" createDisplayPlaneSurface ::
   Instance ->
-  Ptr DisplaySurfaceCreateInfoKHR ->
-    Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
+  Ptr DisplaySurfaceCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Surface -> IO Result
 

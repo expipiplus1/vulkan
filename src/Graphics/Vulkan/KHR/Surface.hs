@@ -44,233 +44,232 @@ import Graphics.Vulkan.Core( Bool32(..)
                            , Extent2D(..)
                            )
 
--- ** getPhysicalDeviceSurfaceFormatsKHR
-foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" getPhysicalDeviceSurfaceFormatsKHR ::
+-- ** getPhysicalDeviceSurfaceFormats
+foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" getPhysicalDeviceSurfaceFormats ::
   PhysicalDevice ->
-  SurfaceKHR -> Ptr Word32 -> Ptr SurfaceFormatKHR -> IO Result
+  Surface -> Ptr Word32 -> Ptr SurfaceFormat -> IO Result
 
--- ** getPhysicalDeviceSurfaceCapabilitiesKHR
-foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" getPhysicalDeviceSurfaceCapabilitiesKHR ::
-  PhysicalDevice ->
-  SurfaceKHR -> Ptr SurfaceCapabilitiesKHR -> IO Result
+-- ** getPhysicalDeviceSurfaceCapabilities
+foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" getPhysicalDeviceSurfaceCapabilities ::
+  PhysicalDevice -> Surface -> Ptr SurfaceCapabilities -> IO Result
 
--- ** CompositeAlphaFlagsKHR
+-- ** CompositeAlphaFlags
 
-newtype CompositeAlphaFlagsKHR = CompositeAlphaFlagsKHR Flags
+newtype CompositeAlphaFlags = CompositeAlphaFlags Flags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
-instance Show CompositeAlphaFlagsKHR where
-  showsPrec _ CompositeAlphaOpaqueBitKhr = showString "CompositeAlphaOpaqueBitKhr"
-  showsPrec _ CompositeAlphaPreMultipliedBitKhr = showString "CompositeAlphaPreMultipliedBitKhr"
-  showsPrec _ CompositeAlphaPostMultipliedBitKhr = showString "CompositeAlphaPostMultipliedBitKhr"
-  showsPrec _ CompositeAlphaInheritBitKhr = showString "CompositeAlphaInheritBitKhr"
+instance Show CompositeAlphaFlags where
+  showsPrec _ CompositeAlphaOpaqueBit = showString "CompositeAlphaOpaqueBit"
+  showsPrec _ CompositeAlphaPreMultipliedBit = showString "CompositeAlphaPreMultipliedBit"
+  showsPrec _ CompositeAlphaPostMultipliedBit = showString "CompositeAlphaPostMultipliedBit"
+  showsPrec _ CompositeAlphaInheritBit = showString "CompositeAlphaInheritBit"
   
-  showsPrec p (CompositeAlphaFlagsKHR x) = showParen (p >= 11) (showString "CompositeAlphaFlagsKHR " . showsPrec 11 x)
+  showsPrec p (CompositeAlphaFlags x) = showParen (p >= 11) (showString "CompositeAlphaFlags " . showsPrec 11 x)
 
-instance Read CompositeAlphaFlagsKHR where
-  readPrec = parens ( choose [ ("CompositeAlphaOpaqueBitKhr", pure CompositeAlphaOpaqueBitKhr)
-                             , ("CompositeAlphaPreMultipliedBitKhr", pure CompositeAlphaPreMultipliedBitKhr)
-                             , ("CompositeAlphaPostMultipliedBitKhr", pure CompositeAlphaPostMultipliedBitKhr)
-                             , ("CompositeAlphaInheritBitKhr", pure CompositeAlphaInheritBitKhr)
+instance Read CompositeAlphaFlags where
+  readPrec = parens ( choose [ ("CompositeAlphaOpaqueBit", pure CompositeAlphaOpaqueBit)
+                             , ("CompositeAlphaPreMultipliedBit", pure CompositeAlphaPreMultipliedBit)
+                             , ("CompositeAlphaPostMultipliedBit", pure CompositeAlphaPostMultipliedBit)
+                             , ("CompositeAlphaInheritBit", pure CompositeAlphaInheritBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "CompositeAlphaFlagsKHR")
+                        expectP (Ident "CompositeAlphaFlags")
                         v <- step readPrec
-                        pure (CompositeAlphaFlagsKHR v)
+                        pure (CompositeAlphaFlags v)
                         )
                     )
 
 
-pattern CompositeAlphaOpaqueBitKhr = CompositeAlphaFlagsKHR 0x1
+pattern CompositeAlphaOpaqueBit = CompositeAlphaFlags 0x1
 
-pattern CompositeAlphaPreMultipliedBitKhr = CompositeAlphaFlagsKHR 0x2
+pattern CompositeAlphaPreMultipliedBit = CompositeAlphaFlags 0x2
 
-pattern CompositeAlphaPostMultipliedBitKhr = CompositeAlphaFlagsKHR 0x4
+pattern CompositeAlphaPostMultipliedBit = CompositeAlphaFlags 0x4
 
-pattern CompositeAlphaInheritBitKhr = CompositeAlphaFlagsKHR 0x8
+pattern CompositeAlphaInheritBit = CompositeAlphaFlags 0x8
 
 
--- ** PresentModeKHR
+-- ** PresentMode
 
-newtype PresentModeKHR = PresentModeKHR Int32
+newtype PresentMode = PresentMode Int32
   deriving (Eq, Ord, Storable)
 
-instance Show PresentModeKHR where
-  showsPrec _ PresentModeImmediateKhr = showString "PresentModeImmediateKhr"
-  showsPrec _ PresentModeMailboxKhr = showString "PresentModeMailboxKhr"
-  showsPrec _ PresentModeFifoKhr = showString "PresentModeFifoKhr"
-  showsPrec _ PresentModeFifoRelaxedKhr = showString "PresentModeFifoRelaxedKhr"
-  showsPrec p (PresentModeKHR x) = showParen (p >= 11) (showString "PresentModeKHR " . showsPrec 11 x)
+instance Show PresentMode where
+  showsPrec _ PresentModeImmediate = showString "PresentModeImmediate"
+  showsPrec _ PresentModeMailbox = showString "PresentModeMailbox"
+  showsPrec _ PresentModeFifo = showString "PresentModeFifo"
+  showsPrec _ PresentModeFifoRelaxed = showString "PresentModeFifoRelaxed"
+  showsPrec p (PresentMode x) = showParen (p >= 11) (showString "PresentMode " . showsPrec 11 x)
 
-instance Read PresentModeKHR where
-  readPrec = parens ( choose [ ("PresentModeImmediateKhr", pure PresentModeImmediateKhr)
-                             , ("PresentModeMailboxKhr", pure PresentModeMailboxKhr)
-                             , ("PresentModeFifoKhr", pure PresentModeFifoKhr)
-                             , ("PresentModeFifoRelaxedKhr", pure PresentModeFifoRelaxedKhr)
+instance Read PresentMode where
+  readPrec = parens ( choose [ ("PresentModeImmediate", pure PresentModeImmediate)
+                             , ("PresentModeMailbox", pure PresentModeMailbox)
+                             , ("PresentModeFifo", pure PresentModeFifo)
+                             , ("PresentModeFifoRelaxed", pure PresentModeFifoRelaxed)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "PresentModeKHR")
+                        expectP (Ident "PresentMode")
                         v <- step readPrec
-                        pure (PresentModeKHR v)
+                        pure (PresentMode v)
                         )
                     )
 
 
-pattern PresentModeImmediateKhr = PresentModeKHR 0
+pattern PresentModeImmediate = PresentMode 0
 
-pattern PresentModeMailboxKhr = PresentModeKHR 1
+pattern PresentModeMailbox = PresentMode 1
 
-pattern PresentModeFifoKhr = PresentModeKHR 2
+pattern PresentModeFifo = PresentMode 2
 
-pattern PresentModeFifoRelaxedKhr = PresentModeKHR 3
+pattern PresentModeFifoRelaxed = PresentMode 3
 
-newtype SurfaceKHR = SurfaceKHR Word64
+newtype Surface = Surface Word64
   deriving (Eq, Ord, Storable)
 
--- ** getPhysicalDeviceSurfaceSupportKHR
-foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" getPhysicalDeviceSurfaceSupportKHR ::
-  PhysicalDevice -> Word32 -> SurfaceKHR -> Ptr Bool32 -> IO Result
+-- ** getPhysicalDeviceSurfaceSupport
+foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" getPhysicalDeviceSurfaceSupport ::
+  PhysicalDevice -> Word32 -> Surface -> Ptr Bool32 -> IO Result
 
 
-data SurfaceFormatKHR =
-  SurfaceFormatKHR{ format :: Format 
-                  , colorSpace :: ColorSpaceKHR 
-                  }
+data SurfaceFormat =
+  SurfaceFormat{ format :: Format 
+               , colorSpace :: ColorSpace 
+               }
   deriving (Eq, Ord)
 
-instance Storable SurfaceFormatKHR where
+instance Storable SurfaceFormat where
   sizeOf ~_ = 8
   alignment ~_ = 4
-  peek ptr = SurfaceFormatKHR <$> peek (ptr `plusPtr` 0)
-                              <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (format (poked :: SurfaceFormatKHR))
-                *> poke (ptr `plusPtr` 4) (colorSpace (poked :: SurfaceFormatKHR))
+  peek ptr = SurfaceFormat <$> peek (ptr `plusPtr` 0)
+                           <*> peek (ptr `plusPtr` 4)
+  poke ptr poked = poke (ptr `plusPtr` 0) (format (poked :: SurfaceFormat))
+                *> poke (ptr `plusPtr` 4) (colorSpace (poked :: SurfaceFormat))
 
 
--- ** destroySurfaceKHR
-foreign import ccall "vkDestroySurfaceKHR" destroySurfaceKHR ::
-  Instance -> SurfaceKHR -> Ptr AllocationCallbacks -> IO ()
+-- ** destroySurface
+foreign import ccall "vkDestroySurfaceKHR" destroySurface ::
+  Instance -> Surface -> Ptr AllocationCallbacks -> IO ()
 
--- ** ColorSpaceKHR
+-- ** ColorSpace
 
-newtype ColorSpaceKHR = ColorSpaceKHR Int32
+newtype ColorSpace = ColorSpace Int32
   deriving (Eq, Ord, Storable)
 
-instance Show ColorSpaceKHR where
-  showsPrec _ ColorspaceSrgbNonlinearKhr = showString "ColorspaceSrgbNonlinearKhr"
-  showsPrec p (ColorSpaceKHR x) = showParen (p >= 11) (showString "ColorSpaceKHR " . showsPrec 11 x)
+instance Show ColorSpace where
+  showsPrec _ ColorspaceSrgbNonlinear = showString "ColorspaceSrgbNonlinear"
+  showsPrec p (ColorSpace x) = showParen (p >= 11) (showString "ColorSpace " . showsPrec 11 x)
 
-instance Read ColorSpaceKHR where
-  readPrec = parens ( choose [ ("ColorspaceSrgbNonlinearKhr", pure ColorspaceSrgbNonlinearKhr)
+instance Read ColorSpace where
+  readPrec = parens ( choose [ ("ColorspaceSrgbNonlinear", pure ColorspaceSrgbNonlinear)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "ColorSpaceKHR")
+                        expectP (Ident "ColorSpace")
                         v <- step readPrec
-                        pure (ColorSpaceKHR v)
+                        pure (ColorSpace v)
                         )
                     )
 
 
-pattern ColorspaceSrgbNonlinearKhr = ColorSpaceKHR 0
+pattern ColorspaceSrgbNonlinear = ColorSpace 0
 
--- ** getPhysicalDeviceSurfacePresentModesKHR
-foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" getPhysicalDeviceSurfacePresentModesKHR ::
+-- ** getPhysicalDeviceSurfacePresentModes
+foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" getPhysicalDeviceSurfacePresentModes ::
   PhysicalDevice ->
-  SurfaceKHR -> Ptr Word32 -> Ptr PresentModeKHR -> IO Result
+  Surface -> Ptr Word32 -> Ptr PresentMode -> IO Result
 
--- ** SurfaceTransformFlagsKHR
+-- ** SurfaceTransformFlags
 
-newtype SurfaceTransformFlagsKHR = SurfaceTransformFlagsKHR Flags
+newtype SurfaceTransformFlags = SurfaceTransformFlags Flags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
-instance Show SurfaceTransformFlagsKHR where
-  showsPrec _ SurfaceTransformIdentityBitKhr = showString "SurfaceTransformIdentityBitKhr"
-  showsPrec _ SurfaceTransformRotate90BitKhr = showString "SurfaceTransformRotate90BitKhr"
-  showsPrec _ SurfaceTransformRotate180BitKhr = showString "SurfaceTransformRotate180BitKhr"
-  showsPrec _ SurfaceTransformRotate270BitKhr = showString "SurfaceTransformRotate270BitKhr"
-  showsPrec _ SurfaceTransformHorizontalMirrorBitKhr = showString "SurfaceTransformHorizontalMirrorBitKhr"
-  showsPrec _ SurfaceTransformHorizontalMirrorRotate90BitKhr = showString "SurfaceTransformHorizontalMirrorRotate90BitKhr"
-  showsPrec _ SurfaceTransformHorizontalMirrorRotate180BitKhr = showString "SurfaceTransformHorizontalMirrorRotate180BitKhr"
-  showsPrec _ SurfaceTransformHorizontalMirrorRotate270BitKhr = showString "SurfaceTransformHorizontalMirrorRotate270BitKhr"
-  showsPrec _ SurfaceTransformInheritBitKhr = showString "SurfaceTransformInheritBitKhr"
+instance Show SurfaceTransformFlags where
+  showsPrec _ SurfaceTransformIdentityBit = showString "SurfaceTransformIdentityBit"
+  showsPrec _ SurfaceTransformRotate90Bit = showString "SurfaceTransformRotate90Bit"
+  showsPrec _ SurfaceTransformRotate180Bit = showString "SurfaceTransformRotate180Bit"
+  showsPrec _ SurfaceTransformRotate270Bit = showString "SurfaceTransformRotate270Bit"
+  showsPrec _ SurfaceTransformHorizontalMirrorBit = showString "SurfaceTransformHorizontalMirrorBit"
+  showsPrec _ SurfaceTransformHorizontalMirrorRotate90Bit = showString "SurfaceTransformHorizontalMirrorRotate90Bit"
+  showsPrec _ SurfaceTransformHorizontalMirrorRotate180Bit = showString "SurfaceTransformHorizontalMirrorRotate180Bit"
+  showsPrec _ SurfaceTransformHorizontalMirrorRotate270Bit = showString "SurfaceTransformHorizontalMirrorRotate270Bit"
+  showsPrec _ SurfaceTransformInheritBit = showString "SurfaceTransformInheritBit"
   
-  showsPrec p (SurfaceTransformFlagsKHR x) = showParen (p >= 11) (showString "SurfaceTransformFlagsKHR " . showsPrec 11 x)
+  showsPrec p (SurfaceTransformFlags x) = showParen (p >= 11) (showString "SurfaceTransformFlags " . showsPrec 11 x)
 
-instance Read SurfaceTransformFlagsKHR where
-  readPrec = parens ( choose [ ("SurfaceTransformIdentityBitKhr", pure SurfaceTransformIdentityBitKhr)
-                             , ("SurfaceTransformRotate90BitKhr", pure SurfaceTransformRotate90BitKhr)
-                             , ("SurfaceTransformRotate180BitKhr", pure SurfaceTransformRotate180BitKhr)
-                             , ("SurfaceTransformRotate270BitKhr", pure SurfaceTransformRotate270BitKhr)
-                             , ("SurfaceTransformHorizontalMirrorBitKhr", pure SurfaceTransformHorizontalMirrorBitKhr)
-                             , ("SurfaceTransformHorizontalMirrorRotate90BitKhr", pure SurfaceTransformHorizontalMirrorRotate90BitKhr)
-                             , ("SurfaceTransformHorizontalMirrorRotate180BitKhr", pure SurfaceTransformHorizontalMirrorRotate180BitKhr)
-                             , ("SurfaceTransformHorizontalMirrorRotate270BitKhr", pure SurfaceTransformHorizontalMirrorRotate270BitKhr)
-                             , ("SurfaceTransformInheritBitKhr", pure SurfaceTransformInheritBitKhr)
+instance Read SurfaceTransformFlags where
+  readPrec = parens ( choose [ ("SurfaceTransformIdentityBit", pure SurfaceTransformIdentityBit)
+                             , ("SurfaceTransformRotate90Bit", pure SurfaceTransformRotate90Bit)
+                             , ("SurfaceTransformRotate180Bit", pure SurfaceTransformRotate180Bit)
+                             , ("SurfaceTransformRotate270Bit", pure SurfaceTransformRotate270Bit)
+                             , ("SurfaceTransformHorizontalMirrorBit", pure SurfaceTransformHorizontalMirrorBit)
+                             , ("SurfaceTransformHorizontalMirrorRotate90Bit", pure SurfaceTransformHorizontalMirrorRotate90Bit)
+                             , ("SurfaceTransformHorizontalMirrorRotate180Bit", pure SurfaceTransformHorizontalMirrorRotate180Bit)
+                             , ("SurfaceTransformHorizontalMirrorRotate270Bit", pure SurfaceTransformHorizontalMirrorRotate270Bit)
+                             , ("SurfaceTransformInheritBit", pure SurfaceTransformInheritBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "SurfaceTransformFlagsKHR")
+                        expectP (Ident "SurfaceTransformFlags")
                         v <- step readPrec
-                        pure (SurfaceTransformFlagsKHR v)
+                        pure (SurfaceTransformFlags v)
                         )
                     )
 
 
-pattern SurfaceTransformIdentityBitKhr = SurfaceTransformFlagsKHR 0x1
+pattern SurfaceTransformIdentityBit = SurfaceTransformFlags 0x1
 
-pattern SurfaceTransformRotate90BitKhr = SurfaceTransformFlagsKHR 0x2
+pattern SurfaceTransformRotate90Bit = SurfaceTransformFlags 0x2
 
-pattern SurfaceTransformRotate180BitKhr = SurfaceTransformFlagsKHR 0x4
+pattern SurfaceTransformRotate180Bit = SurfaceTransformFlags 0x4
 
-pattern SurfaceTransformRotate270BitKhr = SurfaceTransformFlagsKHR 0x8
+pattern SurfaceTransformRotate270Bit = SurfaceTransformFlags 0x8
 
-pattern SurfaceTransformHorizontalMirrorBitKhr = SurfaceTransformFlagsKHR 0x10
+pattern SurfaceTransformHorizontalMirrorBit = SurfaceTransformFlags 0x10
 
-pattern SurfaceTransformHorizontalMirrorRotate90BitKhr = SurfaceTransformFlagsKHR 0x20
+pattern SurfaceTransformHorizontalMirrorRotate90Bit = SurfaceTransformFlags 0x20
 
-pattern SurfaceTransformHorizontalMirrorRotate180BitKhr = SurfaceTransformFlagsKHR 0x40
+pattern SurfaceTransformHorizontalMirrorRotate180Bit = SurfaceTransformFlags 0x40
 
-pattern SurfaceTransformHorizontalMirrorRotate270BitKhr = SurfaceTransformFlagsKHR 0x80
+pattern SurfaceTransformHorizontalMirrorRotate270Bit = SurfaceTransformFlags 0x80
 
-pattern SurfaceTransformInheritBitKhr = SurfaceTransformFlagsKHR 0x100
+pattern SurfaceTransformInheritBit = SurfaceTransformFlags 0x100
 
 
 
-data SurfaceCapabilitiesKHR =
-  SurfaceCapabilitiesKHR{ minImageCount :: Word32 
-                        , maxImageCount :: Word32 
-                        , currentExtent :: Extent2D 
-                        , minImageExtent :: Extent2D 
-                        , maxImageExtent :: Extent2D 
-                        , maxImageArrayLayers :: Word32 
-                        , supportedTransforms :: SurfaceTransformFlagsKHR 
-                        , currentTransform :: SurfaceTransformFlagsKHR 
-                        , supportedCompositeAlpha :: CompositeAlphaFlagsKHR 
-                        , supportedUsageFlags :: ImageUsageFlags 
-                        }
+data SurfaceCapabilities =
+  SurfaceCapabilities{ minImageCount :: Word32 
+                     , maxImageCount :: Word32 
+                     , currentExtent :: Extent2D 
+                     , minImageExtent :: Extent2D 
+                     , maxImageExtent :: Extent2D 
+                     , maxImageArrayLayers :: Word32 
+                     , supportedTransforms :: SurfaceTransformFlags 
+                     , currentTransform :: SurfaceTransformFlags 
+                     , supportedCompositeAlpha :: CompositeAlphaFlags 
+                     , supportedUsageFlags :: ImageUsageFlags 
+                     }
   deriving (Eq, Ord)
 
-instance Storable SurfaceCapabilitiesKHR where
+instance Storable SurfaceCapabilities where
   sizeOf ~_ = 52
   alignment ~_ = 4
-  peek ptr = SurfaceCapabilitiesKHR <$> peek (ptr `plusPtr` 0)
-                                    <*> peek (ptr `plusPtr` 4)
-                                    <*> peek (ptr `plusPtr` 8)
-                                    <*> peek (ptr `plusPtr` 16)
-                                    <*> peek (ptr `plusPtr` 24)
-                                    <*> peek (ptr `plusPtr` 32)
-                                    <*> peek (ptr `plusPtr` 36)
-                                    <*> peek (ptr `plusPtr` 40)
-                                    <*> peek (ptr `plusPtr` 44)
-                                    <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (minImageCount (poked :: SurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 4) (maxImageCount (poked :: SurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 8) (currentExtent (poked :: SurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 16) (minImageExtent (poked :: SurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 24) (maxImageExtent (poked :: SurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 32) (maxImageArrayLayers (poked :: SurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 36) (supportedTransforms (poked :: SurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 40) (currentTransform (poked :: SurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 44) (supportedCompositeAlpha (poked :: SurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 48) (supportedUsageFlags (poked :: SurfaceCapabilitiesKHR))
+  peek ptr = SurfaceCapabilities <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 4)
+                                 <*> peek (ptr `plusPtr` 8)
+                                 <*> peek (ptr `plusPtr` 16)
+                                 <*> peek (ptr `plusPtr` 24)
+                                 <*> peek (ptr `plusPtr` 32)
+                                 <*> peek (ptr `plusPtr` 36)
+                                 <*> peek (ptr `plusPtr` 40)
+                                 <*> peek (ptr `plusPtr` 44)
+                                 <*> peek (ptr `plusPtr` 48)
+  poke ptr poked = poke (ptr `plusPtr` 0) (minImageCount (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 4) (maxImageCount (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 8) (currentExtent (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 16) (minImageExtent (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 24) (maxImageExtent (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 32) (maxImageArrayLayers (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 36) (supportedTransforms (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 40) (currentTransform (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 44) (supportedCompositeAlpha (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 48) (supportedUsageFlags (poked :: SurfaceCapabilities))
 
 
