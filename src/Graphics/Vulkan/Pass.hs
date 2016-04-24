@@ -11,8 +11,8 @@ import Text.Read.Lex( Lexeme(Ident)
 import GHC.Read( expectP
                , choose
                )
-import Graphics.Vulkan.Pipeline( VkPipelineBindPoint(..)
-                               , VkPipelineStageFlags(..)
+import Graphics.Vulkan.Pipeline( PipelineBindPoint(..)
+                               , PipelineStageFlags(..)
                                )
 import Data.Word( Word64(..)
                 , Word32(..)
@@ -38,16 +38,16 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlags(..)
+import Graphics.Vulkan.Sampler( SampleCountFlags(..)
                               )
-import Graphics.Vulkan.Image( VkImageLayout(..)
+import Graphics.Vulkan.Image( ImageLayout(..)
                             )
 import Graphics.Vulkan.ImageView( ImageView(..)
                                 )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFormat(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
+                           , Format(..)
+                           , Result(..)
                            , Extent2D(..)
                            )
 
@@ -55,11 +55,11 @@ import Graphics.Vulkan.Core( VkStructureType(..)
 data SubpassDependency =
   SubpassDependency{ srcSubpass :: Word32 
                    , dstSubpass :: Word32 
-                   , srcStageMask :: VkPipelineStageFlags 
-                   , dstStageMask :: VkPipelineStageFlags 
-                   , srcAccessMask :: VkAccessFlags 
-                   , dstAccessMask :: VkAccessFlags 
-                   , dependencyFlags :: VkDependencyFlags 
+                   , srcStageMask :: PipelineStageFlags 
+                   , dstStageMask :: PipelineStageFlags 
+                   , srcAccessMask :: AccessFlags 
+                   , dstAccessMask :: AccessFlags 
+                   , dependencyFlags :: DependencyFlags 
                    }
   deriving (Eq)
 
@@ -82,9 +82,9 @@ instance Storable SubpassDependency where
                 *> poke (ptr `plusPtr` 24) (dependencyFlags (poked :: SubpassDependency))
 
 
--- ** VkSubpassDescriptionFlags
+-- ** SubpassDescriptionFlags
 -- | Opaque flag
-newtype VkSubpassDescriptionFlags = VkSubpassDescriptionFlags VkFlags
+newtype SubpassDescriptionFlags = SubpassDescriptionFlags VkFlags
   deriving (Eq, Storable)
 
 newtype Framebuffer = Framebuffer Word64
@@ -92,50 +92,50 @@ newtype Framebuffer = Framebuffer Word64
 
 -- ** VkAttachmentDescriptionFlags
 
-newtype VkAttachmentDescriptionFlags = VkAttachmentDescriptionFlags VkFlags
+newtype AttachmentDescriptionFlags = AttachmentDescriptionFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkAttachmentDescriptionFlags where
+instance Show AttachmentDescriptionFlags where
   showsPrec _ VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = showString "VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
   
-  showsPrec p (VkAttachmentDescriptionFlags x) = showParen (p >= 11) (showString "VkAttachmentDescriptionFlags " . showsPrec 11 x)
+  showsPrec p (AttachmentDescriptionFlags x) = showParen (p >= 11) (showString "AttachmentDescriptionFlags " . showsPrec 11 x)
 
-instance Read VkAttachmentDescriptionFlags where
+instance Read AttachmentDescriptionFlags where
   readPrec = parens ( choose [ ("VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT", pure VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkAttachmentDescriptionFlags")
+                        expectP (Ident "AttachmentDescriptionFlags")
                         v <- step readPrec
-                        pure (VkAttachmentDescriptionFlags v)
+                        pure (AttachmentDescriptionFlags v)
                         )
                     )
 
 -- | The attachment may alias physical memory of another attachment in the same render pass
-pattern VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = VkAttachmentDescriptionFlags 0x1
+pattern VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = AttachmentDescriptionFlags 0x1
 
 
 -- ** VkDependencyFlags
 
-newtype VkDependencyFlags = VkDependencyFlags VkFlags
+newtype DependencyFlags = DependencyFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkDependencyFlags where
+instance Show DependencyFlags where
   showsPrec _ VK_DEPENDENCY_BY_REGION_BIT = showString "VK_DEPENDENCY_BY_REGION_BIT"
   
-  showsPrec p (VkDependencyFlags x) = showParen (p >= 11) (showString "VkDependencyFlags " . showsPrec 11 x)
+  showsPrec p (DependencyFlags x) = showParen (p >= 11) (showString "DependencyFlags " . showsPrec 11 x)
 
-instance Read VkDependencyFlags where
+instance Read DependencyFlags where
   readPrec = parens ( choose [ ("VK_DEPENDENCY_BY_REGION_BIT", pure VK_DEPENDENCY_BY_REGION_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDependencyFlags")
+                        expectP (Ident "DependencyFlags")
                         v <- step readPrec
-                        pure (VkDependencyFlags v)
+                        pure (DependencyFlags v)
                         )
                     )
 
 -- | Dependency is per pixel region 
-pattern VK_DEPENDENCY_BY_REGION_BIT = VkDependencyFlags 0x1
+pattern VK_DEPENDENCY_BY_REGION_BIT = DependencyFlags 0x1
 
 
 -- ** vkDestroyRenderPass
@@ -146,13 +146,13 @@ foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass ::
 foreign import ccall "vkCreateFramebuffer" vkCreateFramebuffer ::
   Device ->
   Ptr FramebufferCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr Framebuffer -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr Framebuffer -> IO Result
 
 
 data FramebufferCreateInfo =
-  FramebufferCreateInfo{ sType :: VkStructureType 
+  FramebufferCreateInfo{ sType :: StructureType 
                        , pNext :: Ptr Void 
-                       , flags :: VkFramebufferCreateFlags 
+                       , flags :: FramebufferCreateFlags 
                        , renderPass :: RenderPass 
                        , attachmentCount :: Word32 
                        , pAttachments :: Ptr ImageView 
@@ -189,68 +189,68 @@ instance Storable FramebufferCreateInfo where
 foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity ::
   Device -> RenderPass -> Ptr Extent2D -> IO ()
 
--- ** VkAttachmentLoadOp
+-- ** AttachmentLoadOp
 
-newtype VkAttachmentLoadOp = VkAttachmentLoadOp Int32
+newtype AttachmentLoadOp = AttachmentLoadOp Int32
   deriving (Eq, Storable)
 
-instance Show VkAttachmentLoadOp where
+instance Show AttachmentLoadOp where
   showsPrec _ VK_ATTACHMENT_LOAD_OP_LOAD = showString "VK_ATTACHMENT_LOAD_OP_LOAD"
   showsPrec _ VK_ATTACHMENT_LOAD_OP_CLEAR = showString "VK_ATTACHMENT_LOAD_OP_CLEAR"
   showsPrec _ VK_ATTACHMENT_LOAD_OP_DONT_CARE = showString "VK_ATTACHMENT_LOAD_OP_DONT_CARE"
-  showsPrec p (VkAttachmentLoadOp x) = showParen (p >= 11) (showString "VkAttachmentLoadOp " . showsPrec 11 x)
+  showsPrec p (AttachmentLoadOp x) = showParen (p >= 11) (showString "AttachmentLoadOp " . showsPrec 11 x)
 
-instance Read VkAttachmentLoadOp where
+instance Read AttachmentLoadOp where
   readPrec = parens ( choose [ ("VK_ATTACHMENT_LOAD_OP_LOAD", pure VK_ATTACHMENT_LOAD_OP_LOAD)
                              , ("VK_ATTACHMENT_LOAD_OP_CLEAR", pure VK_ATTACHMENT_LOAD_OP_CLEAR)
                              , ("VK_ATTACHMENT_LOAD_OP_DONT_CARE", pure VK_ATTACHMENT_LOAD_OP_DONT_CARE)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkAttachmentLoadOp")
+                        expectP (Ident "AttachmentLoadOp")
                         v <- step readPrec
-                        pure (VkAttachmentLoadOp v)
+                        pure (AttachmentLoadOp v)
                         )
                     )
 
 
-pattern VK_ATTACHMENT_LOAD_OP_LOAD = VkAttachmentLoadOp 0
+pattern VK_ATTACHMENT_LOAD_OP_LOAD = AttachmentLoadOp 0
 
-pattern VK_ATTACHMENT_LOAD_OP_CLEAR = VkAttachmentLoadOp 1
+pattern VK_ATTACHMENT_LOAD_OP_CLEAR = AttachmentLoadOp 1
 
-pattern VK_ATTACHMENT_LOAD_OP_DONT_CARE = VkAttachmentLoadOp 2
+pattern VK_ATTACHMENT_LOAD_OP_DONT_CARE = AttachmentLoadOp 2
 
--- ** VkAttachmentStoreOp
+-- ** AttachmentStoreOp
 
-newtype VkAttachmentStoreOp = VkAttachmentStoreOp Int32
+newtype AttachmentStoreOp = AttachmentStoreOp Int32
   deriving (Eq, Storable)
 
-instance Show VkAttachmentStoreOp where
+instance Show AttachmentStoreOp where
   showsPrec _ VK_ATTACHMENT_STORE_OP_STORE = showString "VK_ATTACHMENT_STORE_OP_STORE"
   showsPrec _ VK_ATTACHMENT_STORE_OP_DONT_CARE = showString "VK_ATTACHMENT_STORE_OP_DONT_CARE"
-  showsPrec p (VkAttachmentStoreOp x) = showParen (p >= 11) (showString "VkAttachmentStoreOp " . showsPrec 11 x)
+  showsPrec p (AttachmentStoreOp x) = showParen (p >= 11) (showString "AttachmentStoreOp " . showsPrec 11 x)
 
-instance Read VkAttachmentStoreOp where
+instance Read AttachmentStoreOp where
   readPrec = parens ( choose [ ("VK_ATTACHMENT_STORE_OP_STORE", pure VK_ATTACHMENT_STORE_OP_STORE)
                              , ("VK_ATTACHMENT_STORE_OP_DONT_CARE", pure VK_ATTACHMENT_STORE_OP_DONT_CARE)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkAttachmentStoreOp")
+                        expectP (Ident "AttachmentStoreOp")
                         v <- step readPrec
-                        pure (VkAttachmentStoreOp v)
+                        pure (AttachmentStoreOp v)
                         )
                     )
 
 
-pattern VK_ATTACHMENT_STORE_OP_STORE = VkAttachmentStoreOp 0
+pattern VK_ATTACHMENT_STORE_OP_STORE = AttachmentStoreOp 0
 
-pattern VK_ATTACHMENT_STORE_OP_DONT_CARE = VkAttachmentStoreOp 1
+pattern VK_ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
 
 -- ** VkAccessFlags
 
-newtype VkAccessFlags = VkAccessFlags VkFlags
+newtype AccessFlags = AccessFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkAccessFlags where
+instance Show AccessFlags where
   showsPrec _ VK_ACCESS_INDIRECT_COMMAND_READ_BIT = showString "VK_ACCESS_INDIRECT_COMMAND_READ_BIT"
   showsPrec _ VK_ACCESS_INDEX_READ_BIT = showString "VK_ACCESS_INDEX_READ_BIT"
   showsPrec _ VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = showString "VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT"
@@ -269,9 +269,9 @@ instance Show VkAccessFlags where
   showsPrec _ VK_ACCESS_MEMORY_READ_BIT = showString "VK_ACCESS_MEMORY_READ_BIT"
   showsPrec _ VK_ACCESS_MEMORY_WRITE_BIT = showString "VK_ACCESS_MEMORY_WRITE_BIT"
   
-  showsPrec p (VkAccessFlags x) = showParen (p >= 11) (showString "VkAccessFlags " . showsPrec 11 x)
+  showsPrec p (AccessFlags x) = showParen (p >= 11) (showString "AccessFlags " . showsPrec 11 x)
 
-instance Read VkAccessFlags where
+instance Read AccessFlags where
   readPrec = parens ( choose [ ("VK_ACCESS_INDIRECT_COMMAND_READ_BIT", pure VK_ACCESS_INDIRECT_COMMAND_READ_BIT)
                              , ("VK_ACCESS_INDEX_READ_BIT", pure VK_ACCESS_INDEX_READ_BIT)
                              , ("VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT", pure VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT)
@@ -291,46 +291,46 @@ instance Read VkAccessFlags where
                              , ("VK_ACCESS_MEMORY_WRITE_BIT", pure VK_ACCESS_MEMORY_WRITE_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkAccessFlags")
+                        expectP (Ident "AccessFlags")
                         v <- step readPrec
-                        pure (VkAccessFlags v)
+                        pure (AccessFlags v)
                         )
                     )
 
 -- | Controls coherency of indirect command reads
-pattern VK_ACCESS_INDIRECT_COMMAND_READ_BIT = VkAccessFlags 0x1
+pattern VK_ACCESS_INDIRECT_COMMAND_READ_BIT = AccessFlags 0x1
 -- | Controls coherency of index reads
-pattern VK_ACCESS_INDEX_READ_BIT = VkAccessFlags 0x2
+pattern VK_ACCESS_INDEX_READ_BIT = AccessFlags 0x2
 -- | Controls coherency of vertex attribute reads
-pattern VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = VkAccessFlags 0x4
+pattern VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = AccessFlags 0x4
 -- | Controls coherency of uniform buffer reads
-pattern VK_ACCESS_UNIFORM_READ_BIT = VkAccessFlags 0x8
+pattern VK_ACCESS_UNIFORM_READ_BIT = AccessFlags 0x8
 -- | Controls coherency of input attachment reads
-pattern VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = VkAccessFlags 0x10
+pattern VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = AccessFlags 0x10
 -- | Controls coherency of shader reads
-pattern VK_ACCESS_SHADER_READ_BIT = VkAccessFlags 0x20
+pattern VK_ACCESS_SHADER_READ_BIT = AccessFlags 0x20
 -- | Controls coherency of shader writes
-pattern VK_ACCESS_SHADER_WRITE_BIT = VkAccessFlags 0x40
+pattern VK_ACCESS_SHADER_WRITE_BIT = AccessFlags 0x40
 -- | Controls coherency of color attachment reads
-pattern VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = VkAccessFlags 0x80
+pattern VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = AccessFlags 0x80
 -- | Controls coherency of color attachment writes
-pattern VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = VkAccessFlags 0x100
+pattern VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = AccessFlags 0x100
 -- | Controls coherency of depth/stencil attachment reads
-pattern VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = VkAccessFlags 0x200
+pattern VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = AccessFlags 0x200
 -- | Controls coherency of depth/stencil attachment writes
-pattern VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = VkAccessFlags 0x400
+pattern VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = AccessFlags 0x400
 -- | Controls coherency of transfer reads
-pattern VK_ACCESS_TRANSFER_READ_BIT = VkAccessFlags 0x800
+pattern VK_ACCESS_TRANSFER_READ_BIT = AccessFlags 0x800
 -- | Controls coherency of transfer writes
-pattern VK_ACCESS_TRANSFER_WRITE_BIT = VkAccessFlags 0x1000
+pattern VK_ACCESS_TRANSFER_WRITE_BIT = AccessFlags 0x1000
 -- | Controls coherency of host reads
-pattern VK_ACCESS_HOST_READ_BIT = VkAccessFlags 0x2000
+pattern VK_ACCESS_HOST_READ_BIT = AccessFlags 0x2000
 -- | Controls coherency of host writes
-pattern VK_ACCESS_HOST_WRITE_BIT = VkAccessFlags 0x4000
+pattern VK_ACCESS_HOST_WRITE_BIT = AccessFlags 0x4000
 -- | Controls coherency of memory reads
-pattern VK_ACCESS_MEMORY_READ_BIT = VkAccessFlags 0x8000
+pattern VK_ACCESS_MEMORY_READ_BIT = AccessFlags 0x8000
 -- | Controls coherency of memory writes
-pattern VK_ACCESS_MEMORY_WRITE_BIT = VkAccessFlags 0x10000
+pattern VK_ACCESS_MEMORY_WRITE_BIT = AccessFlags 0x10000
 
 
 newtype RenderPass = RenderPass Word64
@@ -343,7 +343,7 @@ foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer ::
 
 data AttachmentReference =
   AttachmentReference{ attachment :: Word32 
-                     , layout :: VkImageLayout 
+                     , layout :: ImageLayout 
                      }
   deriving (Eq)
 
@@ -356,22 +356,22 @@ instance Storable AttachmentReference where
                 *> poke (ptr `plusPtr` 4) (layout (poked :: AttachmentReference))
 
 
--- ** VkRenderPassCreateFlags
+-- ** RenderPassCreateFlags
 -- | Opaque flag
-newtype VkRenderPassCreateFlags = VkRenderPassCreateFlags VkFlags
+newtype RenderPassCreateFlags = RenderPassCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
 data AttachmentDescription =
-  AttachmentDescription{ flags :: VkAttachmentDescriptionFlags 
-                       , format :: VkFormat 
-                       , samples :: VkSampleCountFlags 
-                       , loadOp :: VkAttachmentLoadOp 
-                       , storeOp :: VkAttachmentStoreOp 
-                       , stencilLoadOp :: VkAttachmentLoadOp 
-                       , stencilStoreOp :: VkAttachmentStoreOp 
-                       , initialLayout :: VkImageLayout 
-                       , finalLayout :: VkImageLayout 
+  AttachmentDescription{ flags :: AttachmentDescriptionFlags 
+                       , format :: Format 
+                       , samples :: SampleCountFlags 
+                       , loadOp :: AttachmentLoadOp 
+                       , storeOp :: AttachmentStoreOp 
+                       , stencilLoadOp :: AttachmentLoadOp 
+                       , stencilStoreOp :: AttachmentStoreOp 
+                       , initialLayout :: ImageLayout 
+                       , finalLayout :: ImageLayout 
                        }
   deriving (Eq)
 
@@ -400,8 +400,8 @@ instance Storable AttachmentDescription where
 
 
 data SubpassDescription =
-  SubpassDescription{ flags :: VkSubpassDescriptionFlags 
-                    , pipelineBindPoint :: VkPipelineBindPoint 
+  SubpassDescription{ flags :: SubpassDescriptionFlags 
+                    , pipelineBindPoint :: PipelineBindPoint 
                     , inputAttachmentCount :: Word32 
                     , pInputAttachments :: Ptr AttachmentReference 
                     , colorAttachmentCount :: Word32 
@@ -442,13 +442,13 @@ instance Storable SubpassDescription where
 foreign import ccall "vkCreateRenderPass" vkCreateRenderPass ::
   Device ->
   Ptr RenderPassCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr RenderPass -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result
 
 
 data RenderPassCreateInfo =
-  RenderPassCreateInfo{ sType :: VkStructureType 
+  RenderPassCreateInfo{ sType :: StructureType 
                       , pNext :: Ptr Void 
-                      , flags :: VkRenderPassCreateFlags 
+                      , flags :: RenderPassCreateFlags 
                       , attachmentCount :: Word32 
                       , pAttachments :: Ptr AttachmentDescription 
                       , subpassCount :: Word32 
@@ -481,8 +481,8 @@ instance Storable RenderPassCreateInfo where
                 *> poke (ptr `plusPtr` 56) (pDependencies (poked :: RenderPassCreateInfo))
 
 
--- ** VkFramebufferCreateFlags
+-- ** FramebufferCreateFlags
 -- | Opaque flag
-newtype VkFramebufferCreateFlags = VkFramebufferCreateFlags VkFlags
+newtype FramebufferCreateFlags = FramebufferCreateFlags VkFlags
   deriving (Eq, Storable)
 

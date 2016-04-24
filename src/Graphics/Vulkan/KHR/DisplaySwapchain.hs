@@ -18,15 +18,15 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkStructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , VkBool32(..)
                            , Rect2D(..)
-                           , VkResult(..)
+                           , Result(..)
                            )
 
 
 data DisplayPresentInfoKHR =
-  DisplayPresentInfoKHR{ sType :: VkStructureType 
+  DisplayPresentInfoKHR{ sType :: StructureType 
                        , pNext :: Ptr Void 
                        , srcRect :: Rect2D 
                        , dstRect :: Rect2D 
@@ -54,5 +54,5 @@ foreign import ccall "vkCreateSharedSwapchainsKHR" vkCreateSharedSwapchainsKHR :
   Device ->
   Word32 ->
     Ptr SwapchainCreateInfoKHR ->
-      Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO VkResult
+      Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result
 

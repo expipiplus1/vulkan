@@ -10,8 +10,8 @@ import Data.Vector.Storable.Sized( Vector(..)
 import Graphics.Vulkan.Buffer( Buffer(..)
                              )
 import Graphics.Vulkan.Pass( RenderPass(..)
+                           , DependencyFlags(..)
                            , Framebuffer(..)
-                           , VkDependencyFlags(..)
                            )
 import Text.Read.Lex( Lexeme(Ident)
                     )
@@ -21,8 +21,8 @@ import GHC.Read( expectP
                , choose
                )
 import Graphics.Vulkan.Pipeline( Pipeline(..)
-                               , VkPipelineBindPoint(..)
-                               , VkPipelineStageFlags(..)
+                               , PipelineBindPoint(..)
+                               , PipelineStageFlags(..)
                                )
 import Data.Word( Word32(..)
                 )
@@ -53,26 +53,26 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Shader( VkShaderStageFlags(..)
+import Graphics.Vulkan.Shader( ShaderStageFlags(..)
                              )
-import Graphics.Vulkan.Sampler( VkFilter(..)
+import Graphics.Vulkan.Sampler( Filter(..)
                               )
-import Graphics.Vulkan.Image( Image(..)
-                            , VkImageAspectFlags(..)
+import Graphics.Vulkan.Image( ImageAspectFlags(..)
+                            , Image(..)
+                            , ImageLayout(..)
                             , ImageSubresourceRange(..)
-                            , VkImageLayout(..)
                             )
-import Graphics.Vulkan.Query( VkQueryResultFlags(..)
-                            , QueryPool(..)
-                            , VkQueryControlFlags(..)
+import Graphics.Vulkan.Query( QueryPool(..)
+                            , QueryControlFlags(..)
+                            , QueryResultFlags(..)
                             )
 import Graphics.Vulkan.OtherTypes( BufferMemoryBarrier(..)
                                  , ImageMemoryBarrier(..)
                                  , MemoryBarrier(..)
                                  )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , Offset3D(..)
+import Graphics.Vulkan.Core( Offset3D(..)
                            , VkFlags(..)
+                           , StructureType(..)
                            , Viewport(..)
                            , Rect2D(..)
                            , Extent3D(..)
@@ -85,15 +85,15 @@ import Foreign.C.Types( CFloat(..)
 foreign import ccall "vkCmdPushConstants" vkCmdPushConstants ::
   CommandBuffer ->
   PipelineLayout ->
-    VkShaderStageFlags -> Word32 -> Word32 -> Ptr Void -> IO ()
+    ShaderStageFlags -> Word32 -> Word32 -> Ptr Void -> IO ()
 
 -- ** vkCmdSetStencilWriteMask
 foreign import ccall "vkCmdSetStencilWriteMask" vkCmdSetStencilWriteMask ::
-  CommandBuffer -> VkStencilFaceFlags -> Word32 -> IO ()
+  CommandBuffer -> StencilFaceFlags -> Word32 -> IO ()
 
 -- ** vkCmdBindIndexBuffer
 foreign import ccall "vkCmdBindIndexBuffer" vkCmdBindIndexBuffer ::
-  CommandBuffer -> Buffer -> VkDeviceSize -> VkIndexType -> IO ()
+  CommandBuffer -> Buffer -> VkDeviceSize -> IndexType -> IO ()
 
 -- ** vkCmdResetQueryPool
 foreign import ccall "vkCmdResetQueryPool" vkCmdResetQueryPool ::
@@ -103,12 +103,12 @@ foreign import ccall "vkCmdResetQueryPool" vkCmdResetQueryPool ::
 foreign import ccall "vkCmdResolveImage" vkCmdResolveImage ::
   CommandBuffer ->
   Image ->
-    VkImageLayout ->
-      Image -> VkImageLayout -> Word32 -> Ptr ImageResolve -> IO ()
+    ImageLayout ->
+      Image -> ImageLayout -> Word32 -> Ptr ImageResolve -> IO ()
 
 -- ** vkCmdBindPipeline
 foreign import ccall "vkCmdBindPipeline" vkCmdBindPipeline ::
-  CommandBuffer -> VkPipelineBindPoint -> Pipeline -> IO ()
+  CommandBuffer -> PipelineBindPoint -> Pipeline -> IO ()
 
 -- ** vkCmdBindVertexBuffers
 foreign import ccall "vkCmdBindVertexBuffers" vkCmdBindVertexBuffers ::
@@ -146,7 +146,7 @@ instance Storable ImageCopy where
 
 -- ** vkCmdNextSubpass
 foreign import ccall "vkCmdNextSubpass" vkCmdNextSubpass ::
-  CommandBuffer -> VkSubpassContents -> IO ()
+  CommandBuffer -> SubpassContents -> IO ()
 
 -- ** vkCmdEndQuery
 foreign import ccall "vkCmdEndQuery" vkCmdEndQuery ::
@@ -158,13 +158,13 @@ foreign import ccall "vkCmdSetScissor" vkCmdSetScissor ::
 
 -- ** vkCmdSetEvent
 foreign import ccall "vkCmdSetEvent" vkCmdSetEvent ::
-  CommandBuffer -> Event -> VkPipelineStageFlags -> IO ()
+  CommandBuffer -> Event -> PipelineStageFlags -> IO ()
 
 -- ** vkCmdCopyImageToBuffer
 foreign import ccall "vkCmdCopyImageToBuffer" vkCmdCopyImageToBuffer ::
   CommandBuffer ->
   Image ->
-    VkImageLayout -> Buffer -> Word32 -> Ptr BufferImageCopy -> IO ()
+    ImageLayout -> Buffer -> Word32 -> Ptr BufferImageCopy -> IO ()
 
 -- ** vkCmdDispatchIndirect
 foreign import ccall "vkCmdDispatchIndirect" vkCmdDispatchIndirect ::
@@ -172,8 +172,7 @@ foreign import ccall "vkCmdDispatchIndirect" vkCmdDispatchIndirect ::
 
 -- ** vkCmdBeginQuery
 foreign import ccall "vkCmdBeginQuery" vkCmdBeginQuery ::
-  CommandBuffer ->
-  QueryPool -> Word32 -> VkQueryControlFlags -> IO ()
+  CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> IO ()
 
 -- ** vkCmdEndRenderPass
 foreign import ccall "vkCmdEndRenderPass" vkCmdEndRenderPass ::
@@ -208,8 +207,8 @@ foreign import ccall "vkCmdWaitEvents" vkCmdWaitEvents ::
   CommandBuffer ->
   Word32 ->
     Ptr Event ->
-      VkPipelineStageFlags ->
-        VkPipelineStageFlags ->
+      PipelineStageFlags ->
+        PipelineStageFlags ->
           Word32 ->
             Ptr MemoryBarrier ->
               Word32 ->
@@ -220,34 +219,34 @@ foreign import ccall "vkCmdWaitEvents" vkCmdWaitEvents ::
 foreign import ccall "vkCmdClearColorImage" vkCmdClearColorImage ::
   CommandBuffer ->
   Image ->
-    VkImageLayout ->
+    ImageLayout ->
       Ptr ClearColorValue -> Word32 -> Ptr ImageSubresourceRange -> IO ()
 
--- ** VkIndexType
+-- ** IndexType
 
-newtype VkIndexType = VkIndexType Int32
+newtype IndexType = IndexType Int32
   deriving (Eq, Storable)
 
-instance Show VkIndexType where
+instance Show IndexType where
   showsPrec _ VK_INDEX_TYPE_UINT16 = showString "VK_INDEX_TYPE_UINT16"
   showsPrec _ VK_INDEX_TYPE_UINT32 = showString "VK_INDEX_TYPE_UINT32"
-  showsPrec p (VkIndexType x) = showParen (p >= 11) (showString "VkIndexType " . showsPrec 11 x)
+  showsPrec p (IndexType x) = showParen (p >= 11) (showString "IndexType " . showsPrec 11 x)
 
-instance Read VkIndexType where
+instance Read IndexType where
   readPrec = parens ( choose [ ("VK_INDEX_TYPE_UINT16", pure VK_INDEX_TYPE_UINT16)
                              , ("VK_INDEX_TYPE_UINT32", pure VK_INDEX_TYPE_UINT32)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkIndexType")
+                        expectP (Ident "IndexType")
                         v <- step readPrec
-                        pure (VkIndexType v)
+                        pure (IndexType v)
                         )
                     )
 
 
-pattern VK_INDEX_TYPE_UINT16 = VkIndexType 0
+pattern VK_INDEX_TYPE_UINT16 = IndexType 0
 
-pattern VK_INDEX_TYPE_UINT32 = VkIndexType 1
+pattern VK_INDEX_TYPE_UINT32 = IndexType 1
 
 
 data BufferImageCopy =
@@ -285,7 +284,7 @@ foreign import ccall "vkCmdSetDepthBounds" vkCmdSetDepthBounds ::
 foreign import ccall "vkCmdCopyBufferToImage" vkCmdCopyBufferToImage ::
   CommandBuffer ->
   Buffer ->
-    Image -> VkImageLayout -> Word32 -> Ptr BufferImageCopy -> IO ()
+    Image -> ImageLayout -> Word32 -> Ptr BufferImageCopy -> IO ()
 
 -- ** vkCmdDrawIndexedIndirect
 foreign import ccall "vkCmdDrawIndexedIndirect" vkCmdDrawIndexedIndirect ::
@@ -301,17 +300,16 @@ foreign import ccall "vkCmdUpdateBuffer" vkCmdUpdateBuffer ::
 foreign import ccall "vkCmdCopyImage" vkCmdCopyImage ::
   CommandBuffer ->
   Image ->
-    VkImageLayout ->
-      Image -> VkImageLayout -> Word32 -> Ptr ImageCopy -> IO ()
+    ImageLayout ->
+      Image -> ImageLayout -> Word32 -> Ptr ImageCopy -> IO ()
 
 -- ** vkCmdWriteTimestamp
 foreign import ccall "vkCmdWriteTimestamp" vkCmdWriteTimestamp ::
-  CommandBuffer ->
-  VkPipelineStageFlags -> QueryPool -> Word32 -> IO ()
+  CommandBuffer -> PipelineStageFlags -> QueryPool -> Word32 -> IO ()
 
 
 data ImageSubresourceLayers =
-  ImageSubresourceLayers{ aspectMask :: VkImageAspectFlags 
+  ImageSubresourceLayers{ aspectMask :: ImageAspectFlags 
                         , mipLevel :: Word32 
                         , baseArrayLayer :: Word32 
                         , layerCount :: Word32 
@@ -397,7 +395,7 @@ foreign import ccall "vkCmdCopyBuffer" vkCmdCopyBuffer ::
 -- ** vkCmdBindDescriptorSets
 foreign import ccall "vkCmdBindDescriptorSets" vkCmdBindDescriptorSets ::
   CommandBuffer ->
-  VkPipelineBindPoint ->
+  PipelineBindPoint ->
     PipelineLayout ->
       Word32 ->
         Word32 -> Ptr DescriptorSet -> Word32 -> Ptr Word32 -> IO ()
@@ -412,7 +410,7 @@ foreign import ccall "vkCmdExecuteCommands" vkCmdExecuteCommands ::
 
 
 data RenderPassBeginInfo =
-  RenderPassBeginInfo{ sType :: VkStructureType 
+  RenderPassBeginInfo{ sType :: StructureType 
                      , pNext :: Ptr Void 
                      , renderPass :: RenderPass 
                      , framebuffer :: Framebuffer 
@@ -443,7 +441,7 @@ instance Storable RenderPassBeginInfo where
 
 -- ** vkCmdSetStencilCompareMask
 foreign import ccall "vkCmdSetStencilCompareMask" vkCmdSetStencilCompareMask ::
-  CommandBuffer -> VkStencilFaceFlags -> Word32 -> IO ()
+  CommandBuffer -> StencilFaceFlags -> Word32 -> IO ()
 
 
 data ImageBlit =
@@ -469,7 +467,7 @@ instance Storable ImageBlit where
 
 
 data ClearAttachment =
-  ClearAttachment{ aspectMask :: VkImageAspectFlags 
+  ClearAttachment{ aspectMask :: ImageAspectFlags 
                  , colorAttachment :: Word32 
                  , clearValue :: ClearValue 
                  }
@@ -503,33 +501,33 @@ instance Storable ClearValue where
 
 -- ** VkStencilFaceFlags
 
-newtype VkStencilFaceFlags = VkStencilFaceFlags VkFlags
+newtype StencilFaceFlags = StencilFaceFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkStencilFaceFlags where
+instance Show StencilFaceFlags where
   showsPrec _ VK_STENCIL_FACE_FRONT_BIT = showString "VK_STENCIL_FACE_FRONT_BIT"
   showsPrec _ VK_STENCIL_FACE_BACK_BIT = showString "VK_STENCIL_FACE_BACK_BIT"
   showsPrec _ VK_STENCIL_FRONT_AND_BACK = showString "VK_STENCIL_FRONT_AND_BACK"
-  showsPrec p (VkStencilFaceFlags x) = showParen (p >= 11) (showString "VkStencilFaceFlags " . showsPrec 11 x)
+  showsPrec p (StencilFaceFlags x) = showParen (p >= 11) (showString "StencilFaceFlags " . showsPrec 11 x)
 
-instance Read VkStencilFaceFlags where
+instance Read StencilFaceFlags where
   readPrec = parens ( choose [ ("VK_STENCIL_FACE_FRONT_BIT", pure VK_STENCIL_FACE_FRONT_BIT)
                              , ("VK_STENCIL_FACE_BACK_BIT", pure VK_STENCIL_FACE_BACK_BIT)
                              , ("VK_STENCIL_FRONT_AND_BACK", pure VK_STENCIL_FRONT_AND_BACK)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkStencilFaceFlags")
+                        expectP (Ident "StencilFaceFlags")
                         v <- step readPrec
-                        pure (VkStencilFaceFlags v)
+                        pure (StencilFaceFlags v)
                         )
                     )
 
 -- | Front face
-pattern VK_STENCIL_FACE_FRONT_BIT = VkStencilFaceFlags 0x1
+pattern VK_STENCIL_FACE_FRONT_BIT = StencilFaceFlags 0x1
 -- | Back face
-pattern VK_STENCIL_FACE_BACK_BIT = VkStencilFaceFlags 0x2
+pattern VK_STENCIL_FACE_BACK_BIT = StencilFaceFlags 0x2
 -- | Front and back faces
-pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlags 0x3
+pattern VK_STENCIL_FRONT_AND_BACK = StencilFaceFlags 0x3
 
 -- | // Union allowing specification of floating point, integer, or unsigned integer color data. Actual value selected is based on image/attachment being cleared.
 data ClearColorValue = Float32 (Vector 4 CFloat) 
@@ -548,31 +546,31 @@ instance Storable ClearColorValue where
                      Uint32 e -> poke (castPtr ptr) e
 
 
--- ** VkSubpassContents
+-- ** SubpassContents
 
-newtype VkSubpassContents = VkSubpassContents Int32
+newtype SubpassContents = SubpassContents Int32
   deriving (Eq, Storable)
 
-instance Show VkSubpassContents where
+instance Show SubpassContents where
   showsPrec _ VK_SUBPASS_CONTENTS_INLINE = showString "VK_SUBPASS_CONTENTS_INLINE"
   showsPrec _ VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = showString "VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"
-  showsPrec p (VkSubpassContents x) = showParen (p >= 11) (showString "VkSubpassContents " . showsPrec 11 x)
+  showsPrec p (SubpassContents x) = showParen (p >= 11) (showString "SubpassContents " . showsPrec 11 x)
 
-instance Read VkSubpassContents where
+instance Read SubpassContents where
   readPrec = parens ( choose [ ("VK_SUBPASS_CONTENTS_INLINE", pure VK_SUBPASS_CONTENTS_INLINE)
                              , ("VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS", pure VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSubpassContents")
+                        expectP (Ident "SubpassContents")
                         v <- step readPrec
-                        pure (VkSubpassContents v)
+                        pure (SubpassContents v)
                         )
                     )
 
 
-pattern VK_SUBPASS_CONTENTS_INLINE = VkSubpassContents 0
+pattern VK_SUBPASS_CONTENTS_INLINE = SubpassContents 0
 
-pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = VkSubpassContents 1
+pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = SubpassContents 1
 
 -- ** vkCmdCopyQueryPoolResults
 foreign import ccall "vkCmdCopyQueryPoolResults" vkCmdCopyQueryPoolResults ::
@@ -580,16 +578,14 @@ foreign import ccall "vkCmdCopyQueryPoolResults" vkCmdCopyQueryPoolResults ::
   QueryPool ->
     Word32 ->
       Word32 ->
-        Buffer ->
-          VkDeviceSize -> VkDeviceSize -> VkQueryResultFlags -> IO ()
+        Buffer -> VkDeviceSize -> VkDeviceSize -> QueryResultFlags -> IO ()
 
 -- ** vkCmdBlitImage
 foreign import ccall "vkCmdBlitImage" vkCmdBlitImage ::
   CommandBuffer ->
   Image ->
-    VkImageLayout ->
-      Image ->
-        VkImageLayout -> Word32 -> Ptr ImageBlit -> VkFilter -> IO ()
+    ImageLayout ->
+      Image -> ImageLayout -> Word32 -> Ptr ImageBlit -> Filter -> IO ()
 
 -- ** vkCmdSetBlendConstants
 foreign import ccall "vkCmdSetBlendConstants" vkCmdSetBlendConstants ::
@@ -599,7 +595,7 @@ foreign import ccall "vkCmdSetBlendConstants" vkCmdSetBlendConstants ::
 foreign import ccall "vkCmdClearDepthStencilImage" vkCmdClearDepthStencilImage ::
   CommandBuffer ->
   Image ->
-    VkImageLayout ->
+    ImageLayout ->
       Ptr ClearDepthStencilValue ->
         Word32 -> Ptr ImageSubresourceRange -> IO ()
 
@@ -634,14 +630,14 @@ foreign import ccall "vkCmdDispatch" vkCmdDispatch ::
 
 -- ** vkCmdSetStencilReference
 foreign import ccall "vkCmdSetStencilReference" vkCmdSetStencilReference ::
-  CommandBuffer -> VkStencilFaceFlags -> Word32 -> IO ()
+  CommandBuffer -> StencilFaceFlags -> Word32 -> IO ()
 
 -- ** vkCmdPipelineBarrier
 foreign import ccall "vkCmdPipelineBarrier" vkCmdPipelineBarrier ::
   CommandBuffer ->
-  VkPipelineStageFlags ->
-    VkPipelineStageFlags ->
-      VkDependencyFlags ->
+  PipelineStageFlags ->
+    PipelineStageFlags ->
+      DependencyFlags ->
         Word32 ->
           Ptr MemoryBarrier ->
             Word32 ->
@@ -651,9 +647,9 @@ foreign import ccall "vkCmdPipelineBarrier" vkCmdPipelineBarrier ::
 -- ** vkCmdBeginRenderPass
 foreign import ccall "vkCmdBeginRenderPass" vkCmdBeginRenderPass ::
   CommandBuffer ->
-  Ptr RenderPassBeginInfo -> VkSubpassContents -> IO ()
+  Ptr RenderPassBeginInfo -> SubpassContents -> IO ()
 
 -- ** vkCmdResetEvent
 foreign import ccall "vkCmdResetEvent" vkCmdResetEvent ::
-  CommandBuffer -> Event -> VkPipelineStageFlags -> IO ()
+  CommandBuffer -> Event -> PipelineStageFlags -> IO ()
 

@@ -35,38 +35,38 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlags(..)
+import Graphics.Vulkan.Sampler( SampleCountFlags(..)
                               )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFormat(..)
-                           , VkFlags(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , SharingMode(..)
+                           , StructureType(..)
+                           , Format(..)
                            , Extent3D(..)
-                           , VkResult(..)
+                           , Result(..)
                            , VkDeviceSize(..)
-                           , VkSharingMode(..)
                            )
 
 -- ** vkCreateImage
 foreign import ccall "vkCreateImage" vkCreateImage ::
   Device ->
   Ptr ImageCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr Image -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr Image -> IO Result
 
 -- ** VkImageCreateFlags
 
-newtype VkImageCreateFlags = VkImageCreateFlags VkFlags
+newtype ImageCreateFlags = ImageCreateFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkImageCreateFlags where
+instance Show ImageCreateFlags where
   showsPrec _ VK_IMAGE_CREATE_SPARSE_BINDING_BIT = showString "VK_IMAGE_CREATE_SPARSE_BINDING_BIT"
   showsPrec _ VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = showString "VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT"
   showsPrec _ VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = showString "VK_IMAGE_CREATE_SPARSE_ALIASED_BIT"
   showsPrec _ VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = showString "VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT"
   showsPrec _ VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = showString "VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT"
   
-  showsPrec p (VkImageCreateFlags x) = showParen (p >= 11) (showString "VkImageCreateFlags " . showsPrec 11 x)
+  showsPrec p (ImageCreateFlags x) = showParen (p >= 11) (showString "ImageCreateFlags " . showsPrec 11 x)
 
-instance Read VkImageCreateFlags where
+instance Read ImageCreateFlags where
   readPrec = parens ( choose [ ("VK_IMAGE_CREATE_SPARSE_BINDING_BIT", pure VK_IMAGE_CREATE_SPARSE_BINDING_BIT)
                              , ("VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT", pure VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT)
                              , ("VK_IMAGE_CREATE_SPARSE_ALIASED_BIT", pure VK_IMAGE_CREATE_SPARSE_ALIASED_BIT)
@@ -74,30 +74,30 @@ instance Read VkImageCreateFlags where
                              , ("VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT", pure VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageCreateFlags")
+                        expectP (Ident "ImageCreateFlags")
                         v <- step readPrec
-                        pure (VkImageCreateFlags v)
+                        pure (ImageCreateFlags v)
                         )
                     )
 
 -- | Image should support sparse backing
-pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT = VkImageCreateFlags 0x1
+pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT = ImageCreateFlags 0x1
 -- | Image should support sparse backing with partial residency
-pattern VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = VkImageCreateFlags 0x2
+pattern VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = ImageCreateFlags 0x2
 -- | Image should support constent data access to physical memory blocks mapped into multiple locations of sparse images
-pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = VkImageCreateFlags 0x4
+pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = ImageCreateFlags 0x4
 -- | Allows image views to have different format than the base image
-pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = VkImageCreateFlags 0x8
+pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = ImageCreateFlags 0x8
 -- | Allows creating image views with cube type from the created image
-pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VkImageCreateFlags 0x10
+pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlags 0x10
 
 
 -- ** VkImageUsageFlags
 
-newtype VkImageUsageFlags = VkImageUsageFlags VkFlags
+newtype ImageUsageFlags = ImageUsageFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkImageUsageFlags where
+instance Show ImageUsageFlags where
   showsPrec _ VK_IMAGE_USAGE_TRANSFER_SRC_BIT = showString "VK_IMAGE_USAGE_TRANSFER_SRC_BIT"
   showsPrec _ VK_IMAGE_USAGE_TRANSFER_DST_BIT = showString "VK_IMAGE_USAGE_TRANSFER_DST_BIT"
   showsPrec _ VK_IMAGE_USAGE_SAMPLED_BIT = showString "VK_IMAGE_USAGE_SAMPLED_BIT"
@@ -107,9 +107,9 @@ instance Show VkImageUsageFlags where
   showsPrec _ VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT"
   showsPrec _ VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT"
   
-  showsPrec p (VkImageUsageFlags x) = showParen (p >= 11) (showString "VkImageUsageFlags " . showsPrec 11 x)
+  showsPrec p (ImageUsageFlags x) = showParen (p >= 11) (showString "ImageUsageFlags " . showsPrec 11 x)
 
-instance Read VkImageUsageFlags where
+instance Read ImageUsageFlags where
   readPrec = parens ( choose [ ("VK_IMAGE_USAGE_TRANSFER_SRC_BIT", pure VK_IMAGE_USAGE_TRANSFER_SRC_BIT)
                              , ("VK_IMAGE_USAGE_TRANSFER_DST_BIT", pure VK_IMAGE_USAGE_TRANSFER_DST_BIT)
                              , ("VK_IMAGE_USAGE_SAMPLED_BIT", pure VK_IMAGE_USAGE_SAMPLED_BIT)
@@ -120,28 +120,28 @@ instance Read VkImageUsageFlags where
                              , ("VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageUsageFlags")
+                        expectP (Ident "ImageUsageFlags")
                         v <- step readPrec
-                        pure (VkImageUsageFlags v)
+                        pure (ImageUsageFlags v)
                         )
                     )
 
 -- | Can be used as a source of transfer operations
-pattern VK_IMAGE_USAGE_TRANSFER_SRC_BIT = VkImageUsageFlags 0x1
+pattern VK_IMAGE_USAGE_TRANSFER_SRC_BIT = ImageUsageFlags 0x1
 -- | Can be used as a destination of transfer operations
-pattern VK_IMAGE_USAGE_TRANSFER_DST_BIT = VkImageUsageFlags 0x2
+pattern VK_IMAGE_USAGE_TRANSFER_DST_BIT = ImageUsageFlags 0x2
 -- | Can be sampled from (SAMPLED_IMAGE and COMBINED_IMAGE_SAMPLER descriptor types)
-pattern VK_IMAGE_USAGE_SAMPLED_BIT = VkImageUsageFlags 0x4
+pattern VK_IMAGE_USAGE_SAMPLED_BIT = ImageUsageFlags 0x4
 -- | Can be used as storage image (STORAGE_IMAGE descriptor type)
-pattern VK_IMAGE_USAGE_STORAGE_BIT = VkImageUsageFlags 0x8
+pattern VK_IMAGE_USAGE_STORAGE_BIT = ImageUsageFlags 0x8
 -- | Can be used as framebuffer color attachment
-pattern VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = VkImageUsageFlags 0x10
+pattern VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = ImageUsageFlags 0x10
 -- | Can be used as framebuffer depth/stencil attachment
-pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = VkImageUsageFlags 0x20
+pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = ImageUsageFlags 0x20
 -- | Image data not needed outside of rendering
-pattern VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = VkImageUsageFlags 0x40
+pattern VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = ImageUsageFlags 0x40
 -- | Can be used as framebuffer input attachment
-pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VkImageUsageFlags 0x80
+pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = ImageUsageFlags 0x80
 
 
 newtype Image = Image Word64
@@ -149,38 +149,38 @@ newtype Image = Image Word64
 
 -- ** VkImageAspectFlags
 
-newtype VkImageAspectFlags = VkImageAspectFlags VkFlags
+newtype ImageAspectFlags = ImageAspectFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkImageAspectFlags where
+instance Show ImageAspectFlags where
   showsPrec _ VK_IMAGE_ASPECT_COLOR_BIT = showString "VK_IMAGE_ASPECT_COLOR_BIT"
   showsPrec _ VK_IMAGE_ASPECT_DEPTH_BIT = showString "VK_IMAGE_ASPECT_DEPTH_BIT"
   showsPrec _ VK_IMAGE_ASPECT_STENCIL_BIT = showString "VK_IMAGE_ASPECT_STENCIL_BIT"
   showsPrec _ VK_IMAGE_ASPECT_METADATA_BIT = showString "VK_IMAGE_ASPECT_METADATA_BIT"
   
-  showsPrec p (VkImageAspectFlags x) = showParen (p >= 11) (showString "VkImageAspectFlags " . showsPrec 11 x)
+  showsPrec p (ImageAspectFlags x) = showParen (p >= 11) (showString "ImageAspectFlags " . showsPrec 11 x)
 
-instance Read VkImageAspectFlags where
+instance Read ImageAspectFlags where
   readPrec = parens ( choose [ ("VK_IMAGE_ASPECT_COLOR_BIT", pure VK_IMAGE_ASPECT_COLOR_BIT)
                              , ("VK_IMAGE_ASPECT_DEPTH_BIT", pure VK_IMAGE_ASPECT_DEPTH_BIT)
                              , ("VK_IMAGE_ASPECT_STENCIL_BIT", pure VK_IMAGE_ASPECT_STENCIL_BIT)
                              , ("VK_IMAGE_ASPECT_METADATA_BIT", pure VK_IMAGE_ASPECT_METADATA_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageAspectFlags")
+                        expectP (Ident "ImageAspectFlags")
                         v <- step readPrec
-                        pure (VkImageAspectFlags v)
+                        pure (ImageAspectFlags v)
                         )
                     )
 
 
-pattern VK_IMAGE_ASPECT_COLOR_BIT = VkImageAspectFlags 0x1
+pattern VK_IMAGE_ASPECT_COLOR_BIT = ImageAspectFlags 0x1
 
-pattern VK_IMAGE_ASPECT_DEPTH_BIT = VkImageAspectFlags 0x2
+pattern VK_IMAGE_ASPECT_DEPTH_BIT = ImageAspectFlags 0x2
 
-pattern VK_IMAGE_ASPECT_STENCIL_BIT = VkImageAspectFlags 0x4
+pattern VK_IMAGE_ASPECT_STENCIL_BIT = ImageAspectFlags 0x4
 
-pattern VK_IMAGE_ASPECT_METADATA_BIT = VkImageAspectFlags 0x8
+pattern VK_IMAGE_ASPECT_METADATA_BIT = ImageAspectFlags 0x8
 
 
 
@@ -208,38 +208,38 @@ instance Storable SubresourceLayout where
                 *> poke (ptr `plusPtr` 32) (depthPitch (poked :: SubresourceLayout))
 
 
--- ** VkImageTiling
+-- ** ImageTiling
 
-newtype VkImageTiling = VkImageTiling Int32
+newtype ImageTiling = ImageTiling Int32
   deriving (Eq, Storable)
 
-instance Show VkImageTiling where
+instance Show ImageTiling where
   showsPrec _ VK_IMAGE_TILING_OPTIMAL = showString "VK_IMAGE_TILING_OPTIMAL"
   showsPrec _ VK_IMAGE_TILING_LINEAR = showString "VK_IMAGE_TILING_LINEAR"
-  showsPrec p (VkImageTiling x) = showParen (p >= 11) (showString "VkImageTiling " . showsPrec 11 x)
+  showsPrec p (ImageTiling x) = showParen (p >= 11) (showString "ImageTiling " . showsPrec 11 x)
 
-instance Read VkImageTiling where
+instance Read ImageTiling where
   readPrec = parens ( choose [ ("VK_IMAGE_TILING_OPTIMAL", pure VK_IMAGE_TILING_OPTIMAL)
                              , ("VK_IMAGE_TILING_LINEAR", pure VK_IMAGE_TILING_LINEAR)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageTiling")
+                        expectP (Ident "ImageTiling")
                         v <- step readPrec
-                        pure (VkImageTiling v)
+                        pure (ImageTiling v)
                         )
                     )
 
 
-pattern VK_IMAGE_TILING_OPTIMAL = VkImageTiling 0
+pattern VK_IMAGE_TILING_OPTIMAL = ImageTiling 0
 
-pattern VK_IMAGE_TILING_LINEAR = VkImageTiling 1
+pattern VK_IMAGE_TILING_LINEAR = ImageTiling 1
 
--- ** VkImageLayout
+-- ** ImageLayout
 
-newtype VkImageLayout = VkImageLayout Int32
+newtype ImageLayout = ImageLayout Int32
   deriving (Eq, Storable)
 
-instance Show VkImageLayout where
+instance Show ImageLayout where
   showsPrec _ VK_IMAGE_LAYOUT_UNDEFINED = showString "VK_IMAGE_LAYOUT_UNDEFINED"
   showsPrec _ VK_IMAGE_LAYOUT_GENERAL = showString "VK_IMAGE_LAYOUT_GENERAL"
   showsPrec _ VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = showString "VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL"
@@ -249,9 +249,9 @@ instance Show VkImageLayout where
   showsPrec _ VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = showString "VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL"
   showsPrec _ VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = showString "VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL"
   showsPrec _ VK_IMAGE_LAYOUT_PREINITIALIZED = showString "VK_IMAGE_LAYOUT_PREINITIALIZED"
-  showsPrec p (VkImageLayout x) = showParen (p >= 11) (showString "VkImageLayout " . showsPrec 11 x)
+  showsPrec p (ImageLayout x) = showParen (p >= 11) (showString "ImageLayout " . showsPrec 11 x)
 
-instance Read VkImageLayout where
+instance Read ImageLayout where
   readPrec = parens ( choose [ ("VK_IMAGE_LAYOUT_UNDEFINED", pure VK_IMAGE_LAYOUT_UNDEFINED)
                              , ("VK_IMAGE_LAYOUT_GENERAL", pure VK_IMAGE_LAYOUT_GENERAL)
                              , ("VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL", pure VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
@@ -263,60 +263,60 @@ instance Read VkImageLayout where
                              , ("VK_IMAGE_LAYOUT_PREINITIALIZED", pure VK_IMAGE_LAYOUT_PREINITIALIZED)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageLayout")
+                        expectP (Ident "ImageLayout")
                         v <- step readPrec
-                        pure (VkImageLayout v)
+                        pure (ImageLayout v)
                         )
                     )
 
 -- | Implicit layout an image is when its contents are undefined due to various reasons (e.g. right after creation)
-pattern VK_IMAGE_LAYOUT_UNDEFINED = VkImageLayout 0
+pattern VK_IMAGE_LAYOUT_UNDEFINED = ImageLayout 0
 -- | General layout when image can be used for any kind of access
-pattern VK_IMAGE_LAYOUT_GENERAL = VkImageLayout 1
+pattern VK_IMAGE_LAYOUT_GENERAL = ImageLayout 1
 -- | Optimal layout when image is only used for color attachment read/write
-pattern VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = VkImageLayout 2
+pattern VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = ImageLayout 2
 -- | Optimal layout when image is only used for depth/stencil attachment read/write
-pattern VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = VkImageLayout 3
+pattern VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = ImageLayout 3
 -- | Optimal layout when image is used for read only depth/stencil attachment and shader access
-pattern VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL = VkImageLayout 4
+pattern VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL = ImageLayout 4
 -- | Optimal layout when image is used for read only shader access
-pattern VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = VkImageLayout 5
+pattern VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = ImageLayout 5
 -- | Optimal layout when image is used only as source of transfer operations
-pattern VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = VkImageLayout 6
+pattern VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = ImageLayout 6
 -- | Optimal layout when image is used only as destination of transfer operations
-pattern VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = VkImageLayout 7
+pattern VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = ImageLayout 7
 -- | Initial layout used when the data is populated by the CPU
-pattern VK_IMAGE_LAYOUT_PREINITIALIZED = VkImageLayout 8
+pattern VK_IMAGE_LAYOUT_PREINITIALIZED = ImageLayout 8
 
--- ** VkImageType
+-- ** ImageType
 
-newtype VkImageType = VkImageType Int32
+newtype ImageType = ImageType Int32
   deriving (Eq, Storable)
 
-instance Show VkImageType where
+instance Show ImageType where
   showsPrec _ VK_IMAGE_TYPE_1D = showString "VK_IMAGE_TYPE_1D"
   showsPrec _ VK_IMAGE_TYPE_2D = showString "VK_IMAGE_TYPE_2D"
   showsPrec _ VK_IMAGE_TYPE_3D = showString "VK_IMAGE_TYPE_3D"
-  showsPrec p (VkImageType x) = showParen (p >= 11) (showString "VkImageType " . showsPrec 11 x)
+  showsPrec p (ImageType x) = showParen (p >= 11) (showString "ImageType " . showsPrec 11 x)
 
-instance Read VkImageType where
+instance Read ImageType where
   readPrec = parens ( choose [ ("VK_IMAGE_TYPE_1D", pure VK_IMAGE_TYPE_1D)
                              , ("VK_IMAGE_TYPE_2D", pure VK_IMAGE_TYPE_2D)
                              , ("VK_IMAGE_TYPE_3D", pure VK_IMAGE_TYPE_3D)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageType")
+                        expectP (Ident "ImageType")
                         v <- step readPrec
-                        pure (VkImageType v)
+                        pure (ImageType v)
                         )
                     )
 
 
-pattern VK_IMAGE_TYPE_1D = VkImageType 0
+pattern VK_IMAGE_TYPE_1D = ImageType 0
 
-pattern VK_IMAGE_TYPE_2D = VkImageType 1
+pattern VK_IMAGE_TYPE_2D = ImageType 1
 
-pattern VK_IMAGE_TYPE_3D = VkImageType 2
+pattern VK_IMAGE_TYPE_3D = ImageType 2
 
 -- ** vkDestroyImage
 foreign import ccall "vkDestroyImage" vkDestroyImage ::
@@ -324,7 +324,7 @@ foreign import ccall "vkDestroyImage" vkDestroyImage ::
 
 
 data ImageSubresource =
-  ImageSubresource{ aspectMask :: VkImageAspectFlags 
+  ImageSubresource{ aspectMask :: ImageAspectFlags 
                   , mipLevel :: Word32 
                   , arrayLayer :: Word32 
                   }
@@ -343,7 +343,7 @@ instance Storable ImageSubresource where
 
 
 data ImageSubresourceRange =
-  ImageSubresourceRange{ aspectMask :: VkImageAspectFlags 
+  ImageSubresourceRange{ aspectMask :: ImageAspectFlags 
                        , baseMipLevel :: Word32 
                        , levelCount :: Word32 
                        , baseArrayLayer :: Word32 
@@ -373,21 +373,21 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 
 
 data ImageCreateInfo =
-  ImageCreateInfo{ sType :: VkStructureType 
+  ImageCreateInfo{ sType :: StructureType 
                  , pNext :: Ptr Void 
-                 , flags :: VkImageCreateFlags 
-                 , imageType :: VkImageType 
-                 , format :: VkFormat 
+                 , flags :: ImageCreateFlags 
+                 , imageType :: ImageType 
+                 , format :: Format 
                  , extent :: Extent3D 
                  , mipLevels :: Word32 
                  , arrayLayers :: Word32 
-                 , samples :: VkSampleCountFlags 
-                 , tiling :: VkImageTiling 
-                 , usage :: VkImageUsageFlags 
-                 , sharingMode :: VkSharingMode 
+                 , samples :: SampleCountFlags 
+                 , tiling :: ImageTiling 
+                 , usage :: ImageUsageFlags 
+                 , sharingMode :: SharingMode 
                  , queueFamilyIndexCount :: Word32 
                  , pQueueFamilyIndices :: Ptr Word32 
-                 , initialLayout :: VkImageLayout 
+                 , initialLayout :: ImageLayout 
                  }
   deriving (Eq)
 

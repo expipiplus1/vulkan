@@ -17,9 +17,9 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
+                           , Result(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
@@ -28,20 +28,20 @@ import Foreign.C.Types( CSize(..)
 foreign import ccall "vkCreatePipelineCache" vkCreatePipelineCache ::
   Device ->
   Ptr PipelineCacheCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr PipelineCache -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr PipelineCache -> IO Result
 
 -- ** vkGetPipelineCacheData
 foreign import ccall "vkGetPipelineCacheData" vkGetPipelineCacheData ::
-  Device -> PipelineCache -> Ptr CSize -> Ptr Void -> IO VkResult
+  Device -> PipelineCache -> Ptr CSize -> Ptr Void -> IO Result
 
 newtype PipelineCache = PipelineCache Word64
   deriving (Eq, Storable)
 
 
 data PipelineCacheCreateInfo =
-  PipelineCacheCreateInfo{ sType :: VkStructureType 
+  PipelineCacheCreateInfo{ sType :: StructureType 
                          , pNext :: Ptr Void 
-                         , flags :: VkPipelineCacheCreateFlags 
+                         , flags :: PipelineCacheCreateFlags 
                          , initialDataSize :: CSize 
                          , pInitialData :: Ptr Void 
                          }
@@ -64,12 +64,11 @@ instance Storable PipelineCacheCreateInfo where
 
 -- ** vkMergePipelineCaches
 foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches ::
-  Device ->
-  PipelineCache -> Word32 -> Ptr PipelineCache -> IO VkResult
+  Device -> PipelineCache -> Word32 -> Ptr PipelineCache -> IO Result
 
--- ** VkPipelineCacheCreateFlags
+-- ** PipelineCacheCreateFlags
 -- | Opaque flag
-newtype VkPipelineCacheCreateFlags = VkPipelineCacheCreateFlags VkFlags
+newtype PipelineCacheCreateFlags = PipelineCacheCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkDestroyPipelineCache

@@ -4,7 +4,7 @@ module Graphics.Vulkan.Queue where
 
 import Graphics.Vulkan.Device( Device(..)
                              )
-import Graphics.Vulkan.Pipeline( VkPipelineStageFlags(..)
+import Graphics.Vulkan.Pipeline( PipelineStageFlags(..)
                                )
 import Data.Word( Word32(..)
                 )
@@ -22,8 +22,8 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
                                      )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( StructureType(..)
+                           , Result(..)
                            )
 
 data VkQueue_T
@@ -31,15 +31,15 @@ type Queue = Ptr VkQueue_T
 
 -- ** vkDeviceWaitIdle
 foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle ::
-  Device -> IO VkResult
+  Device -> IO Result
 
 -- ** vkQueueSubmit
 foreign import ccall "vkQueueSubmit" vkQueueSubmit ::
-  Queue -> Word32 -> Ptr SubmitInfo -> Fence -> IO VkResult
+  Queue -> Word32 -> Ptr SubmitInfo -> Fence -> IO Result
 
 -- ** vkQueueWaitIdle
 foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle ::
-  Queue -> IO VkResult
+  Queue -> IO Result
 
 -- ** vkGetDeviceQueue
 foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue ::
@@ -47,11 +47,11 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue ::
 
 
 data SubmitInfo =
-  SubmitInfo{ sType :: VkStructureType 
+  SubmitInfo{ sType :: StructureType 
             , pNext :: Ptr Void 
             , waitSemaphoreCount :: Word32 
             , pWaitSemaphores :: Ptr Semaphore 
-            , pWaitDstStageMask :: Ptr VkPipelineStageFlags 
+            , pWaitDstStageMask :: Ptr PipelineStageFlags 
             , commandBufferCount :: Word32 
             , pCommandBuffers :: Ptr CommandBuffer 
             , signalSemaphoreCount :: Word32 

@@ -33,57 +33,57 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , SharingMode(..)
+                           , StructureType(..)
+                           , Result(..)
                            , VkDeviceSize(..)
-                           , VkSharingMode(..)
                            )
 
 -- ** vkCreateBuffer
 foreign import ccall "vkCreateBuffer" vkCreateBuffer ::
   Device ->
   Ptr BufferCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr Buffer -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr Buffer -> IO Result
 
 -- ** VkBufferCreateFlags
 
-newtype VkBufferCreateFlags = VkBufferCreateFlags VkFlags
+newtype BufferCreateFlags = BufferCreateFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkBufferCreateFlags where
+instance Show BufferCreateFlags where
   showsPrec _ VK_BUFFER_CREATE_SPARSE_BINDING_BIT = showString "VK_BUFFER_CREATE_SPARSE_BINDING_BIT"
   showsPrec _ VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = showString "VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT"
   showsPrec _ VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = showString "VK_BUFFER_CREATE_SPARSE_ALIASED_BIT"
   
-  showsPrec p (VkBufferCreateFlags x) = showParen (p >= 11) (showString "VkBufferCreateFlags " . showsPrec 11 x)
+  showsPrec p (BufferCreateFlags x) = showParen (p >= 11) (showString "BufferCreateFlags " . showsPrec 11 x)
 
-instance Read VkBufferCreateFlags where
+instance Read BufferCreateFlags where
   readPrec = parens ( choose [ ("VK_BUFFER_CREATE_SPARSE_BINDING_BIT", pure VK_BUFFER_CREATE_SPARSE_BINDING_BIT)
                              , ("VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT", pure VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT)
                              , ("VK_BUFFER_CREATE_SPARSE_ALIASED_BIT", pure VK_BUFFER_CREATE_SPARSE_ALIASED_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkBufferCreateFlags")
+                        expectP (Ident "BufferCreateFlags")
                         v <- step readPrec
-                        pure (VkBufferCreateFlags v)
+                        pure (BufferCreateFlags v)
                         )
                     )
 
 -- | Buffer should support sparse backing
-pattern VK_BUFFER_CREATE_SPARSE_BINDING_BIT = VkBufferCreateFlags 0x1
+pattern VK_BUFFER_CREATE_SPARSE_BINDING_BIT = BufferCreateFlags 0x1
 -- | Buffer should support sparse backing with partial residency
-pattern VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = VkBufferCreateFlags 0x2
+pattern VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = BufferCreateFlags 0x2
 -- | Buffer should support constent data access to physical memory blocks mapped into multiple locations of sparse buffers
-pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = VkBufferCreateFlags 0x4
+pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = BufferCreateFlags 0x4
 
 
 -- ** VkBufferUsageFlags
 
-newtype VkBufferUsageFlags = VkBufferUsageFlags VkFlags
+newtype BufferUsageFlags = BufferUsageFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkBufferUsageFlags where
+instance Show BufferUsageFlags where
   showsPrec _ VK_BUFFER_USAGE_TRANSFER_SRC_BIT = showString "VK_BUFFER_USAGE_TRANSFER_SRC_BIT"
   showsPrec _ VK_BUFFER_USAGE_TRANSFER_DST_BIT = showString "VK_BUFFER_USAGE_TRANSFER_DST_BIT"
   showsPrec _ VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = showString "VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT"
@@ -94,9 +94,9 @@ instance Show VkBufferUsageFlags where
   showsPrec _ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = showString "VK_BUFFER_USAGE_VERTEX_BUFFER_BIT"
   showsPrec _ VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = showString "VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT"
   
-  showsPrec p (VkBufferUsageFlags x) = showParen (p >= 11) (showString "VkBufferUsageFlags " . showsPrec 11 x)
+  showsPrec p (BufferUsageFlags x) = showParen (p >= 11) (showString "BufferUsageFlags " . showsPrec 11 x)
 
-instance Read VkBufferUsageFlags where
+instance Read BufferUsageFlags where
   readPrec = parens ( choose [ ("VK_BUFFER_USAGE_TRANSFER_SRC_BIT", pure VK_BUFFER_USAGE_TRANSFER_SRC_BIT)
                              , ("VK_BUFFER_USAGE_TRANSFER_DST_BIT", pure VK_BUFFER_USAGE_TRANSFER_DST_BIT)
                              , ("VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT", pure VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT)
@@ -108,30 +108,30 @@ instance Read VkBufferUsageFlags where
                              , ("VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT", pure VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkBufferUsageFlags")
+                        expectP (Ident "BufferUsageFlags")
                         v <- step readPrec
-                        pure (VkBufferUsageFlags v)
+                        pure (BufferUsageFlags v)
                         )
                     )
 
 -- | Can be used as a source of transfer operations
-pattern VK_BUFFER_USAGE_TRANSFER_SRC_BIT = VkBufferUsageFlags 0x1
+pattern VK_BUFFER_USAGE_TRANSFER_SRC_BIT = BufferUsageFlags 0x1
 -- | Can be used as a destination of transfer operations
-pattern VK_BUFFER_USAGE_TRANSFER_DST_BIT = VkBufferUsageFlags 0x2
+pattern VK_BUFFER_USAGE_TRANSFER_DST_BIT = BufferUsageFlags 0x2
 -- | Can be used as TBO
-pattern VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = VkBufferUsageFlags 0x4
+pattern VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = BufferUsageFlags 0x4
 -- | Can be used as IBO
-pattern VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = VkBufferUsageFlags 0x8
+pattern VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = BufferUsageFlags 0x8
 -- | Can be used as UBO
-pattern VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT = VkBufferUsageFlags 0x10
+pattern VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT = BufferUsageFlags 0x10
 -- | Can be used as SSBO
-pattern VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = VkBufferUsageFlags 0x20
+pattern VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = BufferUsageFlags 0x20
 -- | Can be used as source of fixed-function index fetch (index buffer)
-pattern VK_BUFFER_USAGE_INDEX_BUFFER_BIT = VkBufferUsageFlags 0x40
+pattern VK_BUFFER_USAGE_INDEX_BUFFER_BIT = BufferUsageFlags 0x40
 -- | Can be used as source of fixed-function vertex fetch (VBO)
-pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = VkBufferUsageFlags 0x80
+pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = BufferUsageFlags 0x80
 -- | Can be the source of indirect parameters (e.g. indirect buffer, parameter buffer)
-pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlags 0x100
+pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = BufferUsageFlags 0x100
 
 
 -- ** vkDestroyBuffer
@@ -143,12 +143,12 @@ newtype Buffer = Buffer Word64
 
 
 data BufferCreateInfo =
-  BufferCreateInfo{ sType :: VkStructureType 
+  BufferCreateInfo{ sType :: StructureType 
                   , pNext :: Ptr Void 
-                  , flags :: VkBufferCreateFlags 
+                  , flags :: BufferCreateFlags 
                   , size :: VkDeviceSize 
-                  , usage :: VkBufferUsageFlags 
-                  , sharingMode :: VkSharingMode 
+                  , usage :: BufferUsageFlags 
+                  , sharingMode :: SharingMode 
                   , queueFamilyIndexCount :: Word32 
                   , pQueueFamilyIndices :: Ptr Word32 
                   }

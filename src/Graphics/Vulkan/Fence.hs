@@ -33,17 +33,17 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
                            , VkBool32(..)
-                           , VkResult(..)
+                           , Result(..)
                            )
 
 
 data FenceCreateInfo =
-  FenceCreateInfo{ sType :: VkStructureType 
+  FenceCreateInfo{ sType :: StructureType 
                  , pNext :: Ptr Void 
-                 , flags :: VkFenceCreateFlags 
+                 , flags :: FenceCreateFlags 
                  }
   deriving (Eq)
 
@@ -60,7 +60,7 @@ instance Storable FenceCreateInfo where
 
 -- ** vkResetFences
 foreign import ccall "vkResetFences" vkResetFences ::
-  Device -> Word32 -> Ptr Fence -> IO VkResult
+  Device -> Word32 -> Ptr Fence -> IO Result
 
 -- ** vkDestroyFence
 foreign import ccall "vkDestroyFence" vkDestroyFence ::
@@ -68,41 +68,41 @@ foreign import ccall "vkDestroyFence" vkDestroyFence ::
 
 -- ** vkWaitForFences
 foreign import ccall "vkWaitForFences" vkWaitForFences ::
-  Device -> Word32 -> Ptr Fence -> VkBool32 -> Word64 -> IO VkResult
+  Device -> Word32 -> Ptr Fence -> VkBool32 -> Word64 -> IO Result
 
 -- ** vkGetFenceStatus
 foreign import ccall "vkGetFenceStatus" vkGetFenceStatus ::
-  Device -> Fence -> IO VkResult
+  Device -> Fence -> IO Result
 
 -- ** VkFenceCreateFlags
 
-newtype VkFenceCreateFlags = VkFenceCreateFlags VkFlags
+newtype FenceCreateFlags = FenceCreateFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkFenceCreateFlags where
+instance Show FenceCreateFlags where
   showsPrec _ VK_FENCE_CREATE_SIGNALED_BIT = showString "VK_FENCE_CREATE_SIGNALED_BIT"
   
-  showsPrec p (VkFenceCreateFlags x) = showParen (p >= 11) (showString "VkFenceCreateFlags " . showsPrec 11 x)
+  showsPrec p (FenceCreateFlags x) = showParen (p >= 11) (showString "FenceCreateFlags " . showsPrec 11 x)
 
-instance Read VkFenceCreateFlags where
+instance Read FenceCreateFlags where
   readPrec = parens ( choose [ ("VK_FENCE_CREATE_SIGNALED_BIT", pure VK_FENCE_CREATE_SIGNALED_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkFenceCreateFlags")
+                        expectP (Ident "FenceCreateFlags")
                         v <- step readPrec
-                        pure (VkFenceCreateFlags v)
+                        pure (FenceCreateFlags v)
                         )
                     )
 
 
-pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlags 0x1
+pattern VK_FENCE_CREATE_SIGNALED_BIT = FenceCreateFlags 0x1
 
 
 -- ** vkCreateFence
 foreign import ccall "vkCreateFence" vkCreateFence ::
   Device ->
   Ptr FenceCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr Fence -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr Fence -> IO Result
 
 newtype Fence = Fence Word64
   deriving (Eq, Storable)

@@ -16,9 +16,9 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
+                           , Result(..)
                            )
 
 -- ** vkDestroyEvent
@@ -27,9 +27,9 @@ foreign import ccall "vkDestroyEvent" vkDestroyEvent ::
 
 
 data EventCreateInfo =
-  EventCreateInfo{ sType :: VkStructureType 
+  EventCreateInfo{ sType :: StructureType 
                  , pNext :: Ptr Void 
-                 , flags :: VkEventCreateFlags 
+                 , flags :: EventCreateFlags 
                  }
   deriving (Eq)
 
@@ -46,27 +46,27 @@ instance Storable EventCreateInfo where
 
 -- ** vkSetEvent
 foreign import ccall "vkSetEvent" vkSetEvent ::
-  Device -> Event -> IO VkResult
+  Device -> Event -> IO Result
 
 -- ** vkGetEventStatus
 foreign import ccall "vkGetEventStatus" vkGetEventStatus ::
-  Device -> Event -> IO VkResult
+  Device -> Event -> IO Result
 
 -- ** vkResetEvent
 foreign import ccall "vkResetEvent" vkResetEvent ::
-  Device -> Event -> IO VkResult
+  Device -> Event -> IO Result
 
 -- ** vkCreateEvent
 foreign import ccall "vkCreateEvent" vkCreateEvent ::
   Device ->
   Ptr EventCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr Event -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr Event -> IO Result
 
 newtype Event = Event Word64
   deriving (Eq, Storable)
 
--- ** VkEventCreateFlags
+-- ** EventCreateFlags
 -- | Opaque flag
-newtype VkEventCreateFlags = VkEventCreateFlags VkFlags
+newtype EventCreateFlags = EventCreateFlags VkFlags
   deriving (Eq, Storable)
 

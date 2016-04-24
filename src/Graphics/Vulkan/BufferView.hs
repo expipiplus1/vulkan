@@ -18,10 +18,10 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFormat(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
+                           , Format(..)
+                           , Result(..)
                            , VkDeviceSize(..)
                            )
 
@@ -29,18 +29,18 @@ import Graphics.Vulkan.Core( VkStructureType(..)
 foreign import ccall "vkCreateBufferView" vkCreateBufferView ::
   Device ->
   Ptr BufferViewCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr BufferView -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr BufferView -> IO Result
 
 newtype BufferView = BufferView Word64
   deriving (Eq, Storable)
 
 
 data BufferViewCreateInfo =
-  BufferViewCreateInfo{ sType :: VkStructureType 
+  BufferViewCreateInfo{ sType :: StructureType 
                       , pNext :: Ptr Void 
-                      , flags :: VkBufferViewCreateFlags 
+                      , flags :: BufferViewCreateFlags 
                       , buffer :: Buffer 
-                      , format :: VkFormat 
+                      , format :: Format 
                       , offset :: VkDeviceSize 
                       , range :: VkDeviceSize 
                       }
@@ -65,9 +65,9 @@ instance Storable BufferViewCreateInfo where
                 *> poke (ptr `plusPtr` 48) (range (poked :: BufferViewCreateInfo))
 
 
--- ** VkBufferViewCreateFlags
+-- ** BufferViewCreateFlags
 -- | Opaque flag
-newtype VkBufferViewCreateFlags = VkBufferViewCreateFlags VkFlags
+newtype BufferViewCreateFlags = BufferViewCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkDestroyBufferView

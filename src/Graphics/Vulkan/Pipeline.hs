@@ -45,19 +45,19 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Shader( VkShaderStageFlags(..)
+import Graphics.Vulkan.Shader( ShaderStageFlags(..)
                              , ShaderModule(..)
                              )
-import Graphics.Vulkan.Sampler( VkSampleCountFlags(..)
-                              , VkCompareOp(..)
+import Graphics.Vulkan.Sampler( CompareOp(..)
+                              , SampleCountFlags(..)
                               )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFormat(..)
-                           , VkFlags(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
                            , Viewport(..)
                            , VkBool32(..)
                            , Rect2D(..)
-                           , VkResult(..)
+                           , Format(..)
+                           , Result(..)
                            )
 import Foreign.C.Types( CFloat(..)
                       , CChar(..)
@@ -66,9 +66,9 @@ import Foreign.C.Types( CFloat(..)
 
 
 data PipelineTessellationStateCreateInfo =
-  PipelineTessellationStateCreateInfo{ sType :: VkStructureType 
+  PipelineTessellationStateCreateInfo{ sType :: StructureType 
                                      , pNext :: Ptr Void 
-                                     , flags :: VkPipelineTessellationStateCreateFlags 
+                                     , flags :: PipelineTessellationStateCreateFlags 
                                      , patchControlPoints :: Word32 
                                      }
   deriving (Eq)
@@ -90,7 +90,7 @@ instance Storable PipelineTessellationStateCreateInfo where
 data VertexInputAttributeDescription =
   VertexInputAttributeDescription{ location :: Word32 
                                  , binding :: Word32 
-                                 , format :: VkFormat 
+                                 , format :: Format 
                                  , offset :: Word32 
                                  }
   deriving (Eq)
@@ -110,9 +110,9 @@ instance Storable VertexInputAttributeDescription where
 
 
 data GraphicsPipelineCreateInfo =
-  GraphicsPipelineCreateInfo{ sType :: VkStructureType 
+  GraphicsPipelineCreateInfo{ sType :: StructureType 
                             , pNext :: Ptr Void 
-                            , flags :: VkPipelineCreateFlags 
+                            , flags :: PipelineCreateFlags 
                             , stageCount :: Word32 
                             , pStages :: Ptr PipelineShaderStageCreateInfo 
                             , pVertexInputState :: Ptr PipelineVertexInputStateCreateInfo 
@@ -177,49 +177,49 @@ instance Storable GraphicsPipelineCreateInfo where
 
 -- ** VkCullModeFlags
 
-newtype VkCullModeFlags = VkCullModeFlags VkFlags
+newtype CullModeFlags = CullModeFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkCullModeFlags where
+instance Show CullModeFlags where
   showsPrec _ VK_CULL_MODE_FRONT_BIT = showString "VK_CULL_MODE_FRONT_BIT"
   showsPrec _ VK_CULL_MODE_BACK_BIT = showString "VK_CULL_MODE_BACK_BIT"
   showsPrec _ VK_CULL_MODE_NONE = showString "VK_CULL_MODE_NONE"
   showsPrec _ VK_CULL_MODE_FRONT_AND_BACK = showString "VK_CULL_MODE_FRONT_AND_BACK"
-  showsPrec p (VkCullModeFlags x) = showParen (p >= 11) (showString "VkCullModeFlags " . showsPrec 11 x)
+  showsPrec p (CullModeFlags x) = showParen (p >= 11) (showString "CullModeFlags " . showsPrec 11 x)
 
-instance Read VkCullModeFlags where
+instance Read CullModeFlags where
   readPrec = parens ( choose [ ("VK_CULL_MODE_FRONT_BIT", pure VK_CULL_MODE_FRONT_BIT)
                              , ("VK_CULL_MODE_BACK_BIT", pure VK_CULL_MODE_BACK_BIT)
                              , ("VK_CULL_MODE_NONE", pure VK_CULL_MODE_NONE)
                              , ("VK_CULL_MODE_FRONT_AND_BACK", pure VK_CULL_MODE_FRONT_AND_BACK)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCullModeFlags")
+                        expectP (Ident "CullModeFlags")
                         v <- step readPrec
-                        pure (VkCullModeFlags v)
+                        pure (CullModeFlags v)
                         )
                     )
 
 
-pattern VK_CULL_MODE_FRONT_BIT = VkCullModeFlags 0x1
+pattern VK_CULL_MODE_FRONT_BIT = CullModeFlags 0x1
 
-pattern VK_CULL_MODE_BACK_BIT = VkCullModeFlags 0x2
+pattern VK_CULL_MODE_BACK_BIT = CullModeFlags 0x2
 
-pattern VK_CULL_MODE_NONE = VkCullModeFlags 0x0
+pattern VK_CULL_MODE_NONE = CullModeFlags 0x0
 
-pattern VK_CULL_MODE_FRONT_AND_BACK = VkCullModeFlags 0x3
+pattern VK_CULL_MODE_FRONT_AND_BACK = CullModeFlags 0x3
 
--- ** VkPipelineDepthStencilStateCreateFlags
+-- ** PipelineDepthStencilStateCreateFlags
 -- | Opaque flag
-newtype VkPipelineDepthStencilStateCreateFlags = VkPipelineDepthStencilStateCreateFlags VkFlags
+newtype PipelineDepthStencilStateCreateFlags = PipelineDepthStencilStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
 data PipelineShaderStageCreateInfo =
-  PipelineShaderStageCreateInfo{ sType :: VkStructureType 
+  PipelineShaderStageCreateInfo{ sType :: StructureType 
                                , pNext :: Ptr Void 
-                               , flags :: VkPipelineShaderStageCreateFlags 
-                               , stage :: VkShaderStageFlags 
+                               , flags :: PipelineShaderStageCreateFlags 
+                               , stage :: ShaderStageFlags 
                                , _module :: ShaderModule 
                                , pName :: Ptr CChar 
                                , pSpecializationInfo :: Ptr SpecializationInfo 
@@ -247,45 +247,45 @@ instance Storable PipelineShaderStageCreateInfo where
 
 -- ** VkColorComponentFlags
 
-newtype VkColorComponentFlags = VkColorComponentFlags VkFlags
+newtype ColorComponentFlags = ColorComponentFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkColorComponentFlags where
+instance Show ColorComponentFlags where
   showsPrec _ VK_COLOR_COMPONENT_R_BIT = showString "VK_COLOR_COMPONENT_R_BIT"
   showsPrec _ VK_COLOR_COMPONENT_G_BIT = showString "VK_COLOR_COMPONENT_G_BIT"
   showsPrec _ VK_COLOR_COMPONENT_B_BIT = showString "VK_COLOR_COMPONENT_B_BIT"
   showsPrec _ VK_COLOR_COMPONENT_A_BIT = showString "VK_COLOR_COMPONENT_A_BIT"
   
-  showsPrec p (VkColorComponentFlags x) = showParen (p >= 11) (showString "VkColorComponentFlags " . showsPrec 11 x)
+  showsPrec p (ColorComponentFlags x) = showParen (p >= 11) (showString "ColorComponentFlags " . showsPrec 11 x)
 
-instance Read VkColorComponentFlags where
+instance Read ColorComponentFlags where
   readPrec = parens ( choose [ ("VK_COLOR_COMPONENT_R_BIT", pure VK_COLOR_COMPONENT_R_BIT)
                              , ("VK_COLOR_COMPONENT_G_BIT", pure VK_COLOR_COMPONENT_G_BIT)
                              , ("VK_COLOR_COMPONENT_B_BIT", pure VK_COLOR_COMPONENT_B_BIT)
                              , ("VK_COLOR_COMPONENT_A_BIT", pure VK_COLOR_COMPONENT_A_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkColorComponentFlags")
+                        expectP (Ident "ColorComponentFlags")
                         v <- step readPrec
-                        pure (VkColorComponentFlags v)
+                        pure (ColorComponentFlags v)
                         )
                     )
 
 
-pattern VK_COLOR_COMPONENT_R_BIT = VkColorComponentFlags 0x1
+pattern VK_COLOR_COMPONENT_R_BIT = ColorComponentFlags 0x1
 
-pattern VK_COLOR_COMPONENT_G_BIT = VkColorComponentFlags 0x2
+pattern VK_COLOR_COMPONENT_G_BIT = ColorComponentFlags 0x2
 
-pattern VK_COLOR_COMPONENT_B_BIT = VkColorComponentFlags 0x4
+pattern VK_COLOR_COMPONENT_B_BIT = ColorComponentFlags 0x4
 
-pattern VK_COLOR_COMPONENT_A_BIT = VkColorComponentFlags 0x8
+pattern VK_COLOR_COMPONENT_A_BIT = ColorComponentFlags 0x8
 
 
 
 data ComputePipelineCreateInfo =
-  ComputePipelineCreateInfo{ sType :: VkStructureType 
+  ComputePipelineCreateInfo{ sType :: StructureType 
                            , pNext :: Ptr Void 
-                           , flags :: VkPipelineCreateFlags 
+                           , flags :: PipelineCreateFlags 
                            , stage :: PipelineShaderStageCreateInfo 
                            , layout :: PipelineLayout 
                            , basePipelineHandle :: Pipeline 
@@ -312,12 +312,12 @@ instance Storable ComputePipelineCreateInfo where
                 *> poke (ptr `plusPtr` 88) (basePipelineIndex (poked :: ComputePipelineCreateInfo))
 
 
--- ** VkStencilOp
+-- ** StencilOp
 
-newtype VkStencilOp = VkStencilOp Int32
+newtype StencilOp = StencilOp Int32
   deriving (Eq, Storable)
 
-instance Show VkStencilOp where
+instance Show StencilOp where
   showsPrec _ VK_STENCIL_OP_KEEP = showString "VK_STENCIL_OP_KEEP"
   showsPrec _ VK_STENCIL_OP_ZERO = showString "VK_STENCIL_OP_ZERO"
   showsPrec _ VK_STENCIL_OP_REPLACE = showString "VK_STENCIL_OP_REPLACE"
@@ -326,9 +326,9 @@ instance Show VkStencilOp where
   showsPrec _ VK_STENCIL_OP_INVERT = showString "VK_STENCIL_OP_INVERT"
   showsPrec _ VK_STENCIL_OP_INCREMENT_AND_WRAP = showString "VK_STENCIL_OP_INCREMENT_AND_WRAP"
   showsPrec _ VK_STENCIL_OP_DECREMENT_AND_WRAP = showString "VK_STENCIL_OP_DECREMENT_AND_WRAP"
-  showsPrec p (VkStencilOp x) = showParen (p >= 11) (showString "VkStencilOp " . showsPrec 11 x)
+  showsPrec p (StencilOp x) = showParen (p >= 11) (showString "StencilOp " . showsPrec 11 x)
 
-instance Read VkStencilOp where
+instance Read StencilOp where
   readPrec = parens ( choose [ ("VK_STENCIL_OP_KEEP", pure VK_STENCIL_OP_KEEP)
                              , ("VK_STENCIL_OP_ZERO", pure VK_STENCIL_OP_ZERO)
                              , ("VK_STENCIL_OP_REPLACE", pure VK_STENCIL_OP_REPLACE)
@@ -339,28 +339,28 @@ instance Read VkStencilOp where
                              , ("VK_STENCIL_OP_DECREMENT_AND_WRAP", pure VK_STENCIL_OP_DECREMENT_AND_WRAP)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkStencilOp")
+                        expectP (Ident "StencilOp")
                         v <- step readPrec
-                        pure (VkStencilOp v)
+                        pure (StencilOp v)
                         )
                     )
 
 
-pattern VK_STENCIL_OP_KEEP = VkStencilOp 0
+pattern VK_STENCIL_OP_KEEP = StencilOp 0
 
-pattern VK_STENCIL_OP_ZERO = VkStencilOp 1
+pattern VK_STENCIL_OP_ZERO = StencilOp 1
 
-pattern VK_STENCIL_OP_REPLACE = VkStencilOp 2
+pattern VK_STENCIL_OP_REPLACE = StencilOp 2
 
-pattern VK_STENCIL_OP_INCREMENT_AND_CLAMP = VkStencilOp 3
+pattern VK_STENCIL_OP_INCREMENT_AND_CLAMP = StencilOp 3
 
-pattern VK_STENCIL_OP_DECREMENT_AND_CLAMP = VkStencilOp 4
+pattern VK_STENCIL_OP_DECREMENT_AND_CLAMP = StencilOp 4
 
-pattern VK_STENCIL_OP_INVERT = VkStencilOp 5
+pattern VK_STENCIL_OP_INVERT = StencilOp 5
 
-pattern VK_STENCIL_OP_INCREMENT_AND_WRAP = VkStencilOp 6
+pattern VK_STENCIL_OP_INCREMENT_AND_WRAP = StencilOp 6
 
-pattern VK_STENCIL_OP_DECREMENT_AND_WRAP = VkStencilOp 7
+pattern VK_STENCIL_OP_DECREMENT_AND_WRAP = StencilOp 7
 
 
 data SpecializationInfo =
@@ -384,17 +384,17 @@ instance Storable SpecializationInfo where
                 *> poke (ptr `plusPtr` 24) (pData (poked :: SpecializationInfo))
 
 
--- ** VkPipelineColorBlendStateCreateFlags
+-- ** PipelineColorBlendStateCreateFlags
 -- | Opaque flag
-newtype VkPipelineColorBlendStateCreateFlags = VkPipelineColorBlendStateCreateFlags VkFlags
+newtype PipelineColorBlendStateCreateFlags = PipelineColorBlendStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
 newtype Pipeline = Pipeline Word64
   deriving (Eq, Storable)
 
--- ** VkPipelineInputAssemblyStateCreateFlags
+-- ** PipelineInputAssemblyStateCreateFlags
 -- | Opaque flag
-newtype VkPipelineInputAssemblyStateCreateFlags = VkPipelineInputAssemblyStateCreateFlags VkFlags
+newtype PipelineInputAssemblyStateCreateFlags = PipelineInputAssemblyStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkCreateGraphicsPipelines
@@ -403,75 +403,75 @@ foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines ::
   PipelineCache ->
     Word32 ->
       Ptr GraphicsPipelineCreateInfo ->
-        Ptr AllocationCallbacks -> Ptr Pipeline -> IO VkResult
+        Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result
 
--- ** VkFrontFace
+-- ** FrontFace
 
-newtype VkFrontFace = VkFrontFace Int32
+newtype FrontFace = FrontFace Int32
   deriving (Eq, Storable)
 
-instance Show VkFrontFace where
+instance Show FrontFace where
   showsPrec _ VK_FRONT_FACE_COUNTER_CLOCKWISE = showString "VK_FRONT_FACE_COUNTER_CLOCKWISE"
   showsPrec _ VK_FRONT_FACE_CLOCKWISE = showString "VK_FRONT_FACE_CLOCKWISE"
-  showsPrec p (VkFrontFace x) = showParen (p >= 11) (showString "VkFrontFace " . showsPrec 11 x)
+  showsPrec p (FrontFace x) = showParen (p >= 11) (showString "FrontFace " . showsPrec 11 x)
 
-instance Read VkFrontFace where
+instance Read FrontFace where
   readPrec = parens ( choose [ ("VK_FRONT_FACE_COUNTER_CLOCKWISE", pure VK_FRONT_FACE_COUNTER_CLOCKWISE)
                              , ("VK_FRONT_FACE_CLOCKWISE", pure VK_FRONT_FACE_CLOCKWISE)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkFrontFace")
+                        expectP (Ident "FrontFace")
                         v <- step readPrec
-                        pure (VkFrontFace v)
+                        pure (FrontFace v)
                         )
                     )
 
 
-pattern VK_FRONT_FACE_COUNTER_CLOCKWISE = VkFrontFace 0
+pattern VK_FRONT_FACE_COUNTER_CLOCKWISE = FrontFace 0
 
-pattern VK_FRONT_FACE_CLOCKWISE = VkFrontFace 1
+pattern VK_FRONT_FACE_CLOCKWISE = FrontFace 1
 
--- ** VkPolygonMode
+-- ** PolygonMode
 
-newtype VkPolygonMode = VkPolygonMode Int32
+newtype PolygonMode = PolygonMode Int32
   deriving (Eq, Storable)
 
-instance Show VkPolygonMode where
+instance Show PolygonMode where
   showsPrec _ VK_POLYGON_MODE_FILL = showString "VK_POLYGON_MODE_FILL"
   showsPrec _ VK_POLYGON_MODE_LINE = showString "VK_POLYGON_MODE_LINE"
   showsPrec _ VK_POLYGON_MODE_POINT = showString "VK_POLYGON_MODE_POINT"
-  showsPrec p (VkPolygonMode x) = showParen (p >= 11) (showString "VkPolygonMode " . showsPrec 11 x)
+  showsPrec p (PolygonMode x) = showParen (p >= 11) (showString "PolygonMode " . showsPrec 11 x)
 
-instance Read VkPolygonMode where
+instance Read PolygonMode where
   readPrec = parens ( choose [ ("VK_POLYGON_MODE_FILL", pure VK_POLYGON_MODE_FILL)
                              , ("VK_POLYGON_MODE_LINE", pure VK_POLYGON_MODE_LINE)
                              , ("VK_POLYGON_MODE_POINT", pure VK_POLYGON_MODE_POINT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkPolygonMode")
+                        expectP (Ident "PolygonMode")
                         v <- step readPrec
-                        pure (VkPolygonMode v)
+                        pure (PolygonMode v)
                         )
                     )
 
 
-pattern VK_POLYGON_MODE_FILL = VkPolygonMode 0
+pattern VK_POLYGON_MODE_FILL = PolygonMode 0
 
-pattern VK_POLYGON_MODE_LINE = VkPolygonMode 1
+pattern VK_POLYGON_MODE_LINE = PolygonMode 1
 
-pattern VK_POLYGON_MODE_POINT = VkPolygonMode 2
+pattern VK_POLYGON_MODE_POINT = PolygonMode 2
 
--- ** VkPipelineViewportStateCreateFlags
+-- ** PipelineViewportStateCreateFlags
 -- | Opaque flag
-newtype VkPipelineViewportStateCreateFlags = VkPipelineViewportStateCreateFlags VkFlags
+newtype PipelineViewportStateCreateFlags = PipelineViewportStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
--- ** VkLogicOp
+-- ** LogicOp
 
-newtype VkLogicOp = VkLogicOp Int32
+newtype LogicOp = LogicOp Int32
   deriving (Eq, Storable)
 
-instance Show VkLogicOp where
+instance Show LogicOp where
   showsPrec _ VK_LOGIC_OP_CLEAR = showString "VK_LOGIC_OP_CLEAR"
   showsPrec _ VK_LOGIC_OP_AND = showString "VK_LOGIC_OP_AND"
   showsPrec _ VK_LOGIC_OP_AND_REVERSE = showString "VK_LOGIC_OP_AND_REVERSE"
@@ -488,9 +488,9 @@ instance Show VkLogicOp where
   showsPrec _ VK_LOGIC_OP_OR_INVERTED = showString "VK_LOGIC_OP_OR_INVERTED"
   showsPrec _ VK_LOGIC_OP_NAND = showString "VK_LOGIC_OP_NAND"
   showsPrec _ VK_LOGIC_OP_SET = showString "VK_LOGIC_OP_SET"
-  showsPrec p (VkLogicOp x) = showParen (p >= 11) (showString "VkLogicOp " . showsPrec 11 x)
+  showsPrec p (LogicOp x) = showParen (p >= 11) (showString "LogicOp " . showsPrec 11 x)
 
-instance Read VkLogicOp where
+instance Read LogicOp where
   readPrec = parens ( choose [ ("VK_LOGIC_OP_CLEAR", pure VK_LOGIC_OP_CLEAR)
                              , ("VK_LOGIC_OP_AND", pure VK_LOGIC_OP_AND)
                              , ("VK_LOGIC_OP_AND_REVERSE", pure VK_LOGIC_OP_AND_REVERSE)
@@ -509,88 +509,88 @@ instance Read VkLogicOp where
                              , ("VK_LOGIC_OP_SET", pure VK_LOGIC_OP_SET)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkLogicOp")
+                        expectP (Ident "LogicOp")
                         v <- step readPrec
-                        pure (VkLogicOp v)
+                        pure (LogicOp v)
                         )
                     )
 
 
-pattern VK_LOGIC_OP_CLEAR = VkLogicOp 0
+pattern VK_LOGIC_OP_CLEAR = LogicOp 0
 
-pattern VK_LOGIC_OP_AND = VkLogicOp 1
+pattern VK_LOGIC_OP_AND = LogicOp 1
 
-pattern VK_LOGIC_OP_AND_REVERSE = VkLogicOp 2
+pattern VK_LOGIC_OP_AND_REVERSE = LogicOp 2
 
-pattern VK_LOGIC_OP_COPY = VkLogicOp 3
+pattern VK_LOGIC_OP_COPY = LogicOp 3
 
-pattern VK_LOGIC_OP_AND_INVERTED = VkLogicOp 4
+pattern VK_LOGIC_OP_AND_INVERTED = LogicOp 4
 
-pattern VK_LOGIC_OP_NO_OP = VkLogicOp 5
+pattern VK_LOGIC_OP_NO_OP = LogicOp 5
 
-pattern VK_LOGIC_OP_XOR = VkLogicOp 6
+pattern VK_LOGIC_OP_XOR = LogicOp 6
 
-pattern VK_LOGIC_OP_OR = VkLogicOp 7
+pattern VK_LOGIC_OP_OR = LogicOp 7
 
-pattern VK_LOGIC_OP_NOR = VkLogicOp 8
+pattern VK_LOGIC_OP_NOR = LogicOp 8
 
-pattern VK_LOGIC_OP_EQUIVALENT = VkLogicOp 9
+pattern VK_LOGIC_OP_EQUIVALENT = LogicOp 9
 
-pattern VK_LOGIC_OP_INVERT = VkLogicOp 10
+pattern VK_LOGIC_OP_INVERT = LogicOp 10
 
-pattern VK_LOGIC_OP_OR_REVERSE = VkLogicOp 11
+pattern VK_LOGIC_OP_OR_REVERSE = LogicOp 11
 
-pattern VK_LOGIC_OP_COPY_INVERTED = VkLogicOp 12
+pattern VK_LOGIC_OP_COPY_INVERTED = LogicOp 12
 
-pattern VK_LOGIC_OP_OR_INVERTED = VkLogicOp 13
+pattern VK_LOGIC_OP_OR_INVERTED = LogicOp 13
 
-pattern VK_LOGIC_OP_NAND = VkLogicOp 14
+pattern VK_LOGIC_OP_NAND = LogicOp 14
 
-pattern VK_LOGIC_OP_SET = VkLogicOp 15
+pattern VK_LOGIC_OP_SET = LogicOp 15
 
 -- ** VkPipelineCreateFlags
 
-newtype VkPipelineCreateFlags = VkPipelineCreateFlags VkFlags
+newtype PipelineCreateFlags = PipelineCreateFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkPipelineCreateFlags where
+instance Show PipelineCreateFlags where
   showsPrec _ VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = showString "VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT"
   showsPrec _ VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = showString "VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT"
   showsPrec _ VK_PIPELINE_CREATE_DERIVATIVE_BIT = showString "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
   
-  showsPrec p (VkPipelineCreateFlags x) = showParen (p >= 11) (showString "VkPipelineCreateFlags " . showsPrec 11 x)
+  showsPrec p (PipelineCreateFlags x) = showParen (p >= 11) (showString "PipelineCreateFlags " . showsPrec 11 x)
 
-instance Read VkPipelineCreateFlags where
+instance Read PipelineCreateFlags where
   readPrec = parens ( choose [ ("VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT", pure VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT)
                              , ("VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT", pure VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT)
                              , ("VK_PIPELINE_CREATE_DERIVATIVE_BIT", pure VK_PIPELINE_CREATE_DERIVATIVE_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkPipelineCreateFlags")
+                        expectP (Ident "PipelineCreateFlags")
                         v <- step readPrec
-                        pure (VkPipelineCreateFlags v)
+                        pure (PipelineCreateFlags v)
                         )
                     )
 
 
-pattern VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = VkPipelineCreateFlags 0x1
+pattern VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = PipelineCreateFlags 0x1
 
-pattern VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = VkPipelineCreateFlags 0x2
+pattern VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = PipelineCreateFlags 0x2
 
-pattern VK_PIPELINE_CREATE_DERIVATIVE_BIT = VkPipelineCreateFlags 0x4
+pattern VK_PIPELINE_CREATE_DERIVATIVE_BIT = PipelineCreateFlags 0x4
 
 
--- ** VkPipelineRasterizationStateCreateFlags
+-- ** PipelineRasterizationStateCreateFlags
 -- | Opaque flag
-newtype VkPipelineRasterizationStateCreateFlags = VkPipelineRasterizationStateCreateFlags VkFlags
+newtype PipelineRasterizationStateCreateFlags = PipelineRasterizationStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
--- ** VkDynamicState
+-- ** DynamicState
 
-newtype VkDynamicState = VkDynamicState Int32
+newtype DynamicState = DynamicState Int32
   deriving (Eq, Storable)
 
-instance Show VkDynamicState where
+instance Show DynamicState where
   showsPrec _ VK_DYNAMIC_STATE_VIEWPORT = showString "VK_DYNAMIC_STATE_VIEWPORT"
   showsPrec _ VK_DYNAMIC_STATE_SCISSOR = showString "VK_DYNAMIC_STATE_SCISSOR"
   showsPrec _ VK_DYNAMIC_STATE_LINE_WIDTH = showString "VK_DYNAMIC_STATE_LINE_WIDTH"
@@ -600,9 +600,9 @@ instance Show VkDynamicState where
   showsPrec _ VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK = showString "VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK"
   showsPrec _ VK_DYNAMIC_STATE_STENCIL_WRITE_MASK = showString "VK_DYNAMIC_STATE_STENCIL_WRITE_MASK"
   showsPrec _ VK_DYNAMIC_STATE_STENCIL_REFERENCE = showString "VK_DYNAMIC_STATE_STENCIL_REFERENCE"
-  showsPrec p (VkDynamicState x) = showParen (p >= 11) (showString "VkDynamicState " . showsPrec 11 x)
+  showsPrec p (DynamicState x) = showParen (p >= 11) (showString "DynamicState " . showsPrec 11 x)
 
-instance Read VkDynamicState where
+instance Read DynamicState where
   readPrec = parens ( choose [ ("VK_DYNAMIC_STATE_VIEWPORT", pure VK_DYNAMIC_STATE_VIEWPORT)
                              , ("VK_DYNAMIC_STATE_SCISSOR", pure VK_DYNAMIC_STATE_SCISSOR)
                              , ("VK_DYNAMIC_STATE_LINE_WIDTH", pure VK_DYNAMIC_STATE_LINE_WIDTH)
@@ -614,72 +614,72 @@ instance Read VkDynamicState where
                              , ("VK_DYNAMIC_STATE_STENCIL_REFERENCE", pure VK_DYNAMIC_STATE_STENCIL_REFERENCE)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDynamicState")
+                        expectP (Ident "DynamicState")
                         v <- step readPrec
-                        pure (VkDynamicState v)
+                        pure (DynamicState v)
                         )
                     )
 
 
-pattern VK_DYNAMIC_STATE_VIEWPORT = VkDynamicState 0
+pattern VK_DYNAMIC_STATE_VIEWPORT = DynamicState 0
 
-pattern VK_DYNAMIC_STATE_SCISSOR = VkDynamicState 1
+pattern VK_DYNAMIC_STATE_SCISSOR = DynamicState 1
 
-pattern VK_DYNAMIC_STATE_LINE_WIDTH = VkDynamicState 2
+pattern VK_DYNAMIC_STATE_LINE_WIDTH = DynamicState 2
 
-pattern VK_DYNAMIC_STATE_DEPTH_BIAS = VkDynamicState 3
+pattern VK_DYNAMIC_STATE_DEPTH_BIAS = DynamicState 3
 
-pattern VK_DYNAMIC_STATE_BLEND_CONSTANTS = VkDynamicState 4
+pattern VK_DYNAMIC_STATE_BLEND_CONSTANTS = DynamicState 4
 
-pattern VK_DYNAMIC_STATE_DEPTH_BOUNDS = VkDynamicState 5
+pattern VK_DYNAMIC_STATE_DEPTH_BOUNDS = DynamicState 5
 
-pattern VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK = VkDynamicState 6
+pattern VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK = DynamicState 6
 
-pattern VK_DYNAMIC_STATE_STENCIL_WRITE_MASK = VkDynamicState 7
+pattern VK_DYNAMIC_STATE_STENCIL_WRITE_MASK = DynamicState 7
 
-pattern VK_DYNAMIC_STATE_STENCIL_REFERENCE = VkDynamicState 8
+pattern VK_DYNAMIC_STATE_STENCIL_REFERENCE = DynamicState 8
 
--- ** VkPipelineBindPoint
+-- ** PipelineBindPoint
 
-newtype VkPipelineBindPoint = VkPipelineBindPoint Int32
+newtype PipelineBindPoint = PipelineBindPoint Int32
   deriving (Eq, Storable)
 
-instance Show VkPipelineBindPoint where
+instance Show PipelineBindPoint where
   showsPrec _ VK_PIPELINE_BIND_POINT_GRAPHICS = showString "VK_PIPELINE_BIND_POINT_GRAPHICS"
   showsPrec _ VK_PIPELINE_BIND_POINT_COMPUTE = showString "VK_PIPELINE_BIND_POINT_COMPUTE"
-  showsPrec p (VkPipelineBindPoint x) = showParen (p >= 11) (showString "VkPipelineBindPoint " . showsPrec 11 x)
+  showsPrec p (PipelineBindPoint x) = showParen (p >= 11) (showString "PipelineBindPoint " . showsPrec 11 x)
 
-instance Read VkPipelineBindPoint where
+instance Read PipelineBindPoint where
   readPrec = parens ( choose [ ("VK_PIPELINE_BIND_POINT_GRAPHICS", pure VK_PIPELINE_BIND_POINT_GRAPHICS)
                              , ("VK_PIPELINE_BIND_POINT_COMPUTE", pure VK_PIPELINE_BIND_POINT_COMPUTE)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkPipelineBindPoint")
+                        expectP (Ident "PipelineBindPoint")
                         v <- step readPrec
-                        pure (VkPipelineBindPoint v)
+                        pure (PipelineBindPoint v)
                         )
                     )
 
 
-pattern VK_PIPELINE_BIND_POINT_GRAPHICS = VkPipelineBindPoint 0
+pattern VK_PIPELINE_BIND_POINT_GRAPHICS = PipelineBindPoint 0
 
-pattern VK_PIPELINE_BIND_POINT_COMPUTE = VkPipelineBindPoint 1
+pattern VK_PIPELINE_BIND_POINT_COMPUTE = PipelineBindPoint 1
 
--- ** VkPipelineDynamicStateCreateFlags
+-- ** PipelineDynamicStateCreateFlags
 -- | Opaque flag
-newtype VkPipelineDynamicStateCreateFlags = VkPipelineDynamicStateCreateFlags VkFlags
+newtype PipelineDynamicStateCreateFlags = PipelineDynamicStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
 data PipelineRasterizationStateCreateInfo =
-  PipelineRasterizationStateCreateInfo{ sType :: VkStructureType 
+  PipelineRasterizationStateCreateInfo{ sType :: StructureType 
                                       , pNext :: Ptr Void 
-                                      , flags :: VkPipelineRasterizationStateCreateFlags 
+                                      , flags :: PipelineRasterizationStateCreateFlags 
                                       , depthClampEnable :: VkBool32 
                                       , rasterizerDiscardEnable :: VkBool32 
-                                      , polygonMode :: VkPolygonMode 
-                                      , cullMode :: VkCullModeFlags 
-                                      , frontFace :: VkFrontFace 
+                                      , polygonMode :: PolygonMode 
+                                      , cullMode :: CullModeFlags 
+                                      , frontFace :: FrontFace 
                                       , depthBiasEnable :: VkBool32 
                                       , depthBiasConstantFactor :: CFloat 
                                       , depthBiasClamp :: CFloat 
@@ -719,20 +719,20 @@ instance Storable PipelineRasterizationStateCreateInfo where
                 *> poke (ptr `plusPtr` 56) (lineWidth (poked :: PipelineRasterizationStateCreateInfo))
 
 
--- ** VkBlendOp
+-- ** BlendOp
 
-newtype VkBlendOp = VkBlendOp Int32
+newtype BlendOp = BlendOp Int32
   deriving (Eq, Storable)
 
-instance Show VkBlendOp where
+instance Show BlendOp where
   showsPrec _ VK_BLEND_OP_ADD = showString "VK_BLEND_OP_ADD"
   showsPrec _ VK_BLEND_OP_SUBTRACT = showString "VK_BLEND_OP_SUBTRACT"
   showsPrec _ VK_BLEND_OP_REVERSE_SUBTRACT = showString "VK_BLEND_OP_REVERSE_SUBTRACT"
   showsPrec _ VK_BLEND_OP_MIN = showString "VK_BLEND_OP_MIN"
   showsPrec _ VK_BLEND_OP_MAX = showString "VK_BLEND_OP_MAX"
-  showsPrec p (VkBlendOp x) = showParen (p >= 11) (showString "VkBlendOp " . showsPrec 11 x)
+  showsPrec p (BlendOp x) = showParen (p >= 11) (showString "BlendOp " . showsPrec 11 x)
 
-instance Read VkBlendOp where
+instance Read BlendOp where
   readPrec = parens ( choose [ ("VK_BLEND_OP_ADD", pure VK_BLEND_OP_ADD)
                              , ("VK_BLEND_OP_SUBTRACT", pure VK_BLEND_OP_SUBTRACT)
                              , ("VK_BLEND_OP_REVERSE_SUBTRACT", pure VK_BLEND_OP_REVERSE_SUBTRACT)
@@ -740,37 +740,37 @@ instance Read VkBlendOp where
                              , ("VK_BLEND_OP_MAX", pure VK_BLEND_OP_MAX)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkBlendOp")
+                        expectP (Ident "BlendOp")
                         v <- step readPrec
-                        pure (VkBlendOp v)
+                        pure (BlendOp v)
                         )
                     )
 
 
-pattern VK_BLEND_OP_ADD = VkBlendOp 0
+pattern VK_BLEND_OP_ADD = BlendOp 0
 
-pattern VK_BLEND_OP_SUBTRACT = VkBlendOp 1
+pattern VK_BLEND_OP_SUBTRACT = BlendOp 1
 
-pattern VK_BLEND_OP_REVERSE_SUBTRACT = VkBlendOp 2
+pattern VK_BLEND_OP_REVERSE_SUBTRACT = BlendOp 2
 
-pattern VK_BLEND_OP_MIN = VkBlendOp 3
+pattern VK_BLEND_OP_MIN = BlendOp 3
 
-pattern VK_BLEND_OP_MAX = VkBlendOp 4
+pattern VK_BLEND_OP_MAX = BlendOp 4
 
 -- ** vkDestroyPipeline
 foreign import ccall "vkDestroyPipeline" vkDestroyPipeline ::
   Device -> Pipeline -> Ptr AllocationCallbacks -> IO ()
 
--- ** VkPipelineShaderStageCreateFlags
+-- ** PipelineShaderStageCreateFlags
 -- | Opaque flag
-newtype VkPipelineShaderStageCreateFlags = VkPipelineShaderStageCreateFlags VkFlags
+newtype PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
 data PipelineViewportStateCreateInfo =
-  PipelineViewportStateCreateInfo{ sType :: VkStructureType 
+  PipelineViewportStateCreateInfo{ sType :: StructureType 
                                  , pNext :: Ptr Void 
-                                 , flags :: VkPipelineViewportStateCreateFlags 
+                                 , flags :: PipelineViewportStateCreateFlags 
                                  , viewportCount :: Word32 
                                  , pViewports :: Ptr Viewport 
                                  , scissorCount :: Word32 
@@ -797,16 +797,16 @@ instance Storable PipelineViewportStateCreateInfo where
                 *> poke (ptr `plusPtr` 40) (pScissors (poked :: PipelineViewportStateCreateInfo))
 
 
--- ** VkPipelineTessellationStateCreateFlags
+-- ** PipelineTessellationStateCreateFlags
 -- | Opaque flag
-newtype VkPipelineTessellationStateCreateFlags = VkPipelineTessellationStateCreateFlags VkFlags
+newtype PipelineTessellationStateCreateFlags = PipelineTessellationStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
 data PipelineVertexInputStateCreateInfo =
-  PipelineVertexInputStateCreateInfo{ sType :: VkStructureType 
+  PipelineVertexInputStateCreateInfo{ sType :: StructureType 
                                     , pNext :: Ptr Void 
-                                    , flags :: VkPipelineVertexInputStateCreateFlags 
+                                    , flags :: PipelineVertexInputStateCreateFlags 
                                     , vertexBindingDescriptionCount :: Word32 
                                     , pVertexBindingDescriptions :: Ptr VertexInputBindingDescription 
                                     , vertexAttributeDescriptionCount :: Word32 
@@ -833,12 +833,12 @@ instance Storable PipelineVertexInputStateCreateInfo where
                 *> poke (ptr `plusPtr` 40) (pVertexAttributeDescriptions (poked :: PipelineVertexInputStateCreateInfo))
 
 
--- ** VkPrimitiveTopology
+-- ** PrimitiveTopology
 
-newtype VkPrimitiveTopology = VkPrimitiveTopology Int32
+newtype PrimitiveTopology = PrimitiveTopology Int32
   deriving (Eq, Storable)
 
-instance Show VkPrimitiveTopology where
+instance Show PrimitiveTopology where
   showsPrec _ VK_PRIMITIVE_TOPOLOGY_POINT_LIST = showString "VK_PRIMITIVE_TOPOLOGY_POINT_LIST"
   showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_LIST = showString "VK_PRIMITIVE_TOPOLOGY_LINE_LIST"
   showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_STRIP = showString "VK_PRIMITIVE_TOPOLOGY_LINE_STRIP"
@@ -850,9 +850,9 @@ instance Show VkPrimitiveTopology where
   showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY"
   showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY"
   showsPrec _ VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = showString "VK_PRIMITIVE_TOPOLOGY_PATCH_LIST"
-  showsPrec p (VkPrimitiveTopology x) = showParen (p >= 11) (showString "VkPrimitiveTopology " . showsPrec 11 x)
+  showsPrec p (PrimitiveTopology x) = showParen (p >= 11) (showString "PrimitiveTopology " . showsPrec 11 x)
 
-instance Read VkPrimitiveTopology where
+instance Read PrimitiveTopology where
   readPrec = parens ( choose [ ("VK_PRIMITIVE_TOPOLOGY_POINT_LIST", pure VK_PRIMITIVE_TOPOLOGY_POINT_LIST)
                              , ("VK_PRIMITIVE_TOPOLOGY_LINE_LIST", pure VK_PRIMITIVE_TOPOLOGY_LINE_LIST)
                              , ("VK_PRIMITIVE_TOPOLOGY_LINE_STRIP", pure VK_PRIMITIVE_TOPOLOGY_LINE_STRIP)
@@ -866,41 +866,41 @@ instance Read VkPrimitiveTopology where
                              , ("VK_PRIMITIVE_TOPOLOGY_PATCH_LIST", pure VK_PRIMITIVE_TOPOLOGY_PATCH_LIST)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkPrimitiveTopology")
+                        expectP (Ident "PrimitiveTopology")
                         v <- step readPrec
-                        pure (VkPrimitiveTopology v)
+                        pure (PrimitiveTopology v)
                         )
                     )
 
 
-pattern VK_PRIMITIVE_TOPOLOGY_POINT_LIST = VkPrimitiveTopology 0
+pattern VK_PRIMITIVE_TOPOLOGY_POINT_LIST = PrimitiveTopology 0
 
-pattern VK_PRIMITIVE_TOPOLOGY_LINE_LIST = VkPrimitiveTopology 1
+pattern VK_PRIMITIVE_TOPOLOGY_LINE_LIST = PrimitiveTopology 1
 
-pattern VK_PRIMITIVE_TOPOLOGY_LINE_STRIP = VkPrimitiveTopology 2
+pattern VK_PRIMITIVE_TOPOLOGY_LINE_STRIP = PrimitiveTopology 2
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = VkPrimitiveTopology 3
+pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = PrimitiveTopology 3
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = VkPrimitiveTopology 4
+pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = PrimitiveTopology 4
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN = VkPrimitiveTopology 5
+pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN = PrimitiveTopology 5
 
-pattern VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY = VkPrimitiveTopology 6
+pattern VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY = PrimitiveTopology 6
 
-pattern VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY = VkPrimitiveTopology 7
+pattern VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY = PrimitiveTopology 7
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = VkPrimitiveTopology 8
+pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = PrimitiveTopology 8
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = VkPrimitiveTopology 9
+pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = PrimitiveTopology 9
 
-pattern VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = VkPrimitiveTopology 10
+pattern VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = PrimitiveTopology 10
 
 
 data PipelineInputAssemblyStateCreateInfo =
-  PipelineInputAssemblyStateCreateInfo{ sType :: VkStructureType 
+  PipelineInputAssemblyStateCreateInfo{ sType :: StructureType 
                                       , pNext :: Ptr Void 
-                                      , flags :: VkPipelineInputAssemblyStateCreateFlags 
-                                      , topology :: VkPrimitiveTopology 
+                                      , flags :: PipelineInputAssemblyStateCreateFlags 
+                                      , topology :: PrimitiveTopology 
                                       , primitiveRestartEnable :: VkBool32 
                                       }
   deriving (Eq)
@@ -922,11 +922,11 @@ instance Storable PipelineInputAssemblyStateCreateInfo where
 
 
 data PipelineColorBlendStateCreateInfo =
-  PipelineColorBlendStateCreateInfo{ sType :: VkStructureType 
+  PipelineColorBlendStateCreateInfo{ sType :: StructureType 
                                    , pNext :: Ptr Void 
-                                   , flags :: VkPipelineColorBlendStateCreateFlags 
+                                   , flags :: PipelineColorBlendStateCreateFlags 
                                    , logicOpEnable :: VkBool32 
-                                   , logicOp :: VkLogicOp 
+                                   , logicOp :: LogicOp 
                                    , attachmentCount :: Word32 
                                    , pAttachments :: Ptr PipelineColorBlendAttachmentState 
                                    , blendConstants :: Vector 4 CFloat 
@@ -956,11 +956,11 @@ instance Storable PipelineColorBlendStateCreateInfo where
 
 
 data PipelineDynamicStateCreateInfo =
-  PipelineDynamicStateCreateInfo{ sType :: VkStructureType 
+  PipelineDynamicStateCreateInfo{ sType :: StructureType 
                                 , pNext :: Ptr Void 
-                                , flags :: VkPipelineDynamicStateCreateFlags 
+                                , flags :: PipelineDynamicStateCreateFlags 
                                 , dynamicStateCount :: Word32 
-                                , pDynamicStates :: Ptr VkDynamicState 
+                                , pDynamicStates :: Ptr DynamicState 
                                 }
   deriving (Eq)
 
@@ -998,43 +998,43 @@ instance Storable SpecializationMapEntry where
                 *> poke (ptr `plusPtr` 8) (size (poked :: SpecializationMapEntry))
 
 
--- ** VkPipelineVertexInputStateCreateFlags
+-- ** PipelineVertexInputStateCreateFlags
 -- | Opaque flag
-newtype VkPipelineVertexInputStateCreateFlags = VkPipelineVertexInputStateCreateFlags VkFlags
+newtype PipelineVertexInputStateCreateFlags = PipelineVertexInputStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
--- ** VkVertexInputRate
+-- ** VertexInputRate
 
-newtype VkVertexInputRate = VkVertexInputRate Int32
+newtype VertexInputRate = VertexInputRate Int32
   deriving (Eq, Storable)
 
-instance Show VkVertexInputRate where
+instance Show VertexInputRate where
   showsPrec _ VK_VERTEX_INPUT_RATE_VERTEX = showString "VK_VERTEX_INPUT_RATE_VERTEX"
   showsPrec _ VK_VERTEX_INPUT_RATE_INSTANCE = showString "VK_VERTEX_INPUT_RATE_INSTANCE"
-  showsPrec p (VkVertexInputRate x) = showParen (p >= 11) (showString "VkVertexInputRate " . showsPrec 11 x)
+  showsPrec p (VertexInputRate x) = showParen (p >= 11) (showString "VertexInputRate " . showsPrec 11 x)
 
-instance Read VkVertexInputRate where
+instance Read VertexInputRate where
   readPrec = parens ( choose [ ("VK_VERTEX_INPUT_RATE_VERTEX", pure VK_VERTEX_INPUT_RATE_VERTEX)
                              , ("VK_VERTEX_INPUT_RATE_INSTANCE", pure VK_VERTEX_INPUT_RATE_INSTANCE)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkVertexInputRate")
+                        expectP (Ident "VertexInputRate")
                         v <- step readPrec
-                        pure (VkVertexInputRate v)
+                        pure (VertexInputRate v)
                         )
                     )
 
 
-pattern VK_VERTEX_INPUT_RATE_VERTEX = VkVertexInputRate 0
+pattern VK_VERTEX_INPUT_RATE_VERTEX = VertexInputRate 0
 
-pattern VK_VERTEX_INPUT_RATE_INSTANCE = VkVertexInputRate 1
+pattern VK_VERTEX_INPUT_RATE_INSTANCE = VertexInputRate 1
 
 -- ** VkPipelineStageFlags
 
-newtype VkPipelineStageFlags = VkPipelineStageFlags VkFlags
+newtype PipelineStageFlags = PipelineStageFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkPipelineStageFlags where
+instance Show PipelineStageFlags where
   showsPrec _ VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = showString "VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT"
   showsPrec _ VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT = showString "VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT"
   showsPrec _ VK_PIPELINE_STAGE_VERTEX_INPUT_BIT = showString "VK_PIPELINE_STAGE_VERTEX_INPUT_BIT"
@@ -1053,9 +1053,9 @@ instance Show VkPipelineStageFlags where
   showsPrec _ VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = showString "VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT"
   showsPrec _ VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = showString "VK_PIPELINE_STAGE_ALL_COMMANDS_BIT"
   
-  showsPrec p (VkPipelineStageFlags x) = showParen (p >= 11) (showString "VkPipelineStageFlags " . showsPrec 11 x)
+  showsPrec p (PipelineStageFlags x) = showParen (p >= 11) (showString "PipelineStageFlags " . showsPrec 11 x)
 
-instance Read VkPipelineStageFlags where
+instance Read PipelineStageFlags where
   readPrec = parens ( choose [ ("VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT", pure VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
                              , ("VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT", pure VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT)
                              , ("VK_PIPELINE_STAGE_VERTEX_INPUT_BIT", pure VK_PIPELINE_STAGE_VERTEX_INPUT_BIT)
@@ -1075,58 +1075,58 @@ instance Read VkPipelineStageFlags where
                              , ("VK_PIPELINE_STAGE_ALL_COMMANDS_BIT", pure VK_PIPELINE_STAGE_ALL_COMMANDS_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkPipelineStageFlags")
+                        expectP (Ident "PipelineStageFlags")
                         v <- step readPrec
-                        pure (VkPipelineStageFlags v)
+                        pure (PipelineStageFlags v)
                         )
                     )
 
 -- | Before subsequent commands are processed
-pattern VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = VkPipelineStageFlags 0x1
+pattern VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = PipelineStageFlags 0x1
 -- | Draw/DispatchIndirect command fetch
-pattern VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT = VkPipelineStageFlags 0x2
+pattern VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT = PipelineStageFlags 0x2
 -- | Vertex/index fetch
-pattern VK_PIPELINE_STAGE_VERTEX_INPUT_BIT = VkPipelineStageFlags 0x4
+pattern VK_PIPELINE_STAGE_VERTEX_INPUT_BIT = PipelineStageFlags 0x4
 -- | Vertex shading
-pattern VK_PIPELINE_STAGE_VERTEX_SHADER_BIT = VkPipelineStageFlags 0x8
+pattern VK_PIPELINE_STAGE_VERTEX_SHADER_BIT = PipelineStageFlags 0x8
 -- | Tessellation control shading
-pattern VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT = VkPipelineStageFlags 0x10
+pattern VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT = PipelineStageFlags 0x10
 -- | Tessellation evaluation shading
-pattern VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT = VkPipelineStageFlags 0x20
+pattern VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT = PipelineStageFlags 0x20
 -- | Geometry shading
-pattern VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT = VkPipelineStageFlags 0x40
+pattern VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT = PipelineStageFlags 0x40
 -- | Fragment shading
-pattern VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT = VkPipelineStageFlags 0x80
+pattern VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT = PipelineStageFlags 0x80
 -- | Early fragment (depth and stencil) tests
-pattern VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT = VkPipelineStageFlags 0x100
+pattern VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT = PipelineStageFlags 0x100
 -- | Late fragment (depth and stencil) tests
-pattern VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT = VkPipelineStageFlags 0x200
+pattern VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT = PipelineStageFlags 0x200
 -- | Color attachment writes
-pattern VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT = VkPipelineStageFlags 0x400
+pattern VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT = PipelineStageFlags 0x400
 -- | Compute shading
-pattern VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT = VkPipelineStageFlags 0x800
+pattern VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT = PipelineStageFlags 0x800
 -- | Transfer/copy operations
-pattern VK_PIPELINE_STAGE_TRANSFER_BIT = VkPipelineStageFlags 0x1000
+pattern VK_PIPELINE_STAGE_TRANSFER_BIT = PipelineStageFlags 0x1000
 -- | After previous commands have completed
-pattern VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT = VkPipelineStageFlags 0x2000
+pattern VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT = PipelineStageFlags 0x2000
 -- | Indicates host (CPU) is a source/sink of the dependency
-pattern VK_PIPELINE_STAGE_HOST_BIT = VkPipelineStageFlags 0x4000
+pattern VK_PIPELINE_STAGE_HOST_BIT = PipelineStageFlags 0x4000
 -- | All stages of the graphics pipeline
-pattern VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = VkPipelineStageFlags 0x8000
+pattern VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = PipelineStageFlags 0x8000
 -- | All stages supported on the queue
-pattern VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = VkPipelineStageFlags 0x10000
+pattern VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = PipelineStageFlags 0x10000
 
 
 
 data PipelineColorBlendAttachmentState =
   PipelineColorBlendAttachmentState{ blendEnable :: VkBool32 
-                                   , srcColorBlendFactor :: VkBlendFactor 
-                                   , dstColorBlendFactor :: VkBlendFactor 
-                                   , colorBlendOp :: VkBlendOp 
-                                   , srcAlphaBlendFactor :: VkBlendFactor 
-                                   , dstAlphaBlendFactor :: VkBlendFactor 
-                                   , alphaBlendOp :: VkBlendOp 
-                                   , colorWriteMask :: VkColorComponentFlags 
+                                   , srcColorBlendFactor :: BlendFactor 
+                                   , dstColorBlendFactor :: BlendFactor 
+                                   , colorBlendOp :: BlendOp 
+                                   , srcAlphaBlendFactor :: BlendFactor 
+                                   , dstAlphaBlendFactor :: BlendFactor 
+                                   , alphaBlendOp :: BlendOp 
+                                   , colorWriteMask :: ColorComponentFlags 
                                    }
   deriving (Eq)
 
@@ -1151,12 +1151,12 @@ instance Storable PipelineColorBlendAttachmentState where
                 *> poke (ptr `plusPtr` 28) (colorWriteMask (poked :: PipelineColorBlendAttachmentState))
 
 
--- ** VkBlendFactor
+-- ** BlendFactor
 
-newtype VkBlendFactor = VkBlendFactor Int32
+newtype BlendFactor = BlendFactor Int32
   deriving (Eq, Storable)
 
-instance Show VkBlendFactor where
+instance Show BlendFactor where
   showsPrec _ VK_BLEND_FACTOR_ZERO = showString "VK_BLEND_FACTOR_ZERO"
   showsPrec _ VK_BLEND_FACTOR_ONE = showString "VK_BLEND_FACTOR_ONE"
   showsPrec _ VK_BLEND_FACTOR_SRC_COLOR = showString "VK_BLEND_FACTOR_SRC_COLOR"
@@ -1176,9 +1176,9 @@ instance Show VkBlendFactor where
   showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR"
   showsPrec _ VK_BLEND_FACTOR_SRC1_ALPHA = showString "VK_BLEND_FACTOR_SRC1_ALPHA"
   showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA"
-  showsPrec p (VkBlendFactor x) = showParen (p >= 11) (showString "VkBlendFactor " . showsPrec 11 x)
+  showsPrec p (BlendFactor x) = showParen (p >= 11) (showString "BlendFactor " . showsPrec 11 x)
 
-instance Read VkBlendFactor where
+instance Read BlendFactor where
   readPrec = parens ( choose [ ("VK_BLEND_FACTOR_ZERO", pure VK_BLEND_FACTOR_ZERO)
                              , ("VK_BLEND_FACTOR_ONE", pure VK_BLEND_FACTOR_ONE)
                              , ("VK_BLEND_FACTOR_SRC_COLOR", pure VK_BLEND_FACTOR_SRC_COLOR)
@@ -1200,65 +1200,65 @@ instance Read VkBlendFactor where
                              , ("VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA", pure VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkBlendFactor")
+                        expectP (Ident "BlendFactor")
                         v <- step readPrec
-                        pure (VkBlendFactor v)
+                        pure (BlendFactor v)
                         )
                     )
 
 
-pattern VK_BLEND_FACTOR_ZERO = VkBlendFactor 0
+pattern VK_BLEND_FACTOR_ZERO = BlendFactor 0
 
-pattern VK_BLEND_FACTOR_ONE = VkBlendFactor 1
+pattern VK_BLEND_FACTOR_ONE = BlendFactor 1
 
-pattern VK_BLEND_FACTOR_SRC_COLOR = VkBlendFactor 2
+pattern VK_BLEND_FACTOR_SRC_COLOR = BlendFactor 2
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR = VkBlendFactor 3
+pattern VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR = BlendFactor 3
 
-pattern VK_BLEND_FACTOR_DST_COLOR = VkBlendFactor 4
+pattern VK_BLEND_FACTOR_DST_COLOR = BlendFactor 4
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR = VkBlendFactor 5
+pattern VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR = BlendFactor 5
 
-pattern VK_BLEND_FACTOR_SRC_ALPHA = VkBlendFactor 6
+pattern VK_BLEND_FACTOR_SRC_ALPHA = BlendFactor 6
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA = VkBlendFactor 7
+pattern VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA = BlendFactor 7
 
-pattern VK_BLEND_FACTOR_DST_ALPHA = VkBlendFactor 8
+pattern VK_BLEND_FACTOR_DST_ALPHA = BlendFactor 8
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA = VkBlendFactor 9
+pattern VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA = BlendFactor 9
 
-pattern VK_BLEND_FACTOR_CONSTANT_COLOR = VkBlendFactor 10
+pattern VK_BLEND_FACTOR_CONSTANT_COLOR = BlendFactor 10
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR = VkBlendFactor 11
+pattern VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR = BlendFactor 11
 
-pattern VK_BLEND_FACTOR_CONSTANT_ALPHA = VkBlendFactor 12
+pattern VK_BLEND_FACTOR_CONSTANT_ALPHA = BlendFactor 12
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA = VkBlendFactor 13
+pattern VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA = BlendFactor 13
 
-pattern VK_BLEND_FACTOR_SRC_ALPHA_SATURATE = VkBlendFactor 14
+pattern VK_BLEND_FACTOR_SRC_ALPHA_SATURATE = BlendFactor 14
 
-pattern VK_BLEND_FACTOR_SRC1_COLOR = VkBlendFactor 15
+pattern VK_BLEND_FACTOR_SRC1_COLOR = BlendFactor 15
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = VkBlendFactor 16
+pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = BlendFactor 16
 
-pattern VK_BLEND_FACTOR_SRC1_ALPHA = VkBlendFactor 17
+pattern VK_BLEND_FACTOR_SRC1_ALPHA = BlendFactor 17
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = VkBlendFactor 18
+pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = BlendFactor 18
 
 newtype VkSampleMask = VkSampleMask Word32
   deriving (Eq, Storable)
 
--- ** VkPipelineMultisampleStateCreateFlags
+-- ** PipelineMultisampleStateCreateFlags
 -- | Opaque flag
-newtype VkPipelineMultisampleStateCreateFlags = VkPipelineMultisampleStateCreateFlags VkFlags
+newtype PipelineMultisampleStateCreateFlags = PipelineMultisampleStateCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
 data PipelineMultisampleStateCreateInfo =
-  PipelineMultisampleStateCreateInfo{ sType :: VkStructureType 
+  PipelineMultisampleStateCreateInfo{ sType :: StructureType 
                                     , pNext :: Ptr Void 
-                                    , flags :: VkPipelineMultisampleStateCreateFlags 
-                                    , rasterizationSamples :: VkSampleCountFlags 
+                                    , flags :: PipelineMultisampleStateCreateFlags 
+                                    , rasterizationSamples :: SampleCountFlags 
                                     , sampleShadingEnable :: VkBool32 
                                     , minSampleShading :: CFloat 
                                     , pSampleMask :: Ptr VkSampleMask 
@@ -1294,7 +1294,7 @@ instance Storable PipelineMultisampleStateCreateInfo where
 data VertexInputBindingDescription =
   VertexInputBindingDescription{ binding :: Word32 
                                , stride :: Word32 
-                               , inputRate :: VkVertexInputRate 
+                               , inputRate :: VertexInputRate 
                                }
   deriving (Eq)
 
@@ -1311,12 +1311,12 @@ instance Storable VertexInputBindingDescription where
 
 
 data PipelineDepthStencilStateCreateInfo =
-  PipelineDepthStencilStateCreateInfo{ sType :: VkStructureType 
+  PipelineDepthStencilStateCreateInfo{ sType :: StructureType 
                                      , pNext :: Ptr Void 
-                                     , flags :: VkPipelineDepthStencilStateCreateFlags 
+                                     , flags :: PipelineDepthStencilStateCreateFlags 
                                      , depthTestEnable :: VkBool32 
                                      , depthWriteEnable :: VkBool32 
-                                     , depthCompareOp :: VkCompareOp 
+                                     , depthCompareOp :: CompareOp 
                                      , depthBoundsTestEnable :: VkBool32 
                                      , stencilTestEnable :: VkBool32 
                                      , front :: StencilOpState 
@@ -1361,14 +1361,14 @@ foreign import ccall "vkCreateComputePipelines" vkCreateComputePipelines ::
   PipelineCache ->
     Word32 ->
       Ptr ComputePipelineCreateInfo ->
-        Ptr AllocationCallbacks -> Ptr Pipeline -> IO VkResult
+        Ptr AllocationCallbacks -> Ptr Pipeline -> IO Result
 
 
 data StencilOpState =
-  StencilOpState{ failOp :: VkStencilOp 
-                , passOp :: VkStencilOp 
-                , depthFailOp :: VkStencilOp 
-                , compareOp :: VkCompareOp 
+  StencilOpState{ failOp :: StencilOp 
+                , passOp :: StencilOp 
+                , depthFailOp :: StencilOp 
+                , compareOp :: CompareOp 
                 , compareMask :: Word32 
                 , writeMask :: Word32 
                 , reference :: Word32 

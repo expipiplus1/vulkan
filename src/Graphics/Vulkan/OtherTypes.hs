@@ -4,7 +4,7 @@ module Graphics.Vulkan.OtherTypes where
 
 import Graphics.Vulkan.Buffer( Buffer(..)
                              )
-import Graphics.Vulkan.Pass( VkAccessFlags(..)
+import Graphics.Vulkan.Pass( AccessFlags(..)
                            )
 import Data.Word( Word32(..)
                 )
@@ -18,19 +18,19 @@ import Foreign.Storable( Storable(..)
 import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Image( Image(..)
+                            , ImageLayout(..)
                             , ImageSubresourceRange(..)
-                            , VkImageLayout(..)
                             )
-import Graphics.Vulkan.Core( VkStructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , VkDeviceSize(..)
                            )
 
 
 data BufferMemoryBarrier =
-  BufferMemoryBarrier{ sType :: VkStructureType 
+  BufferMemoryBarrier{ sType :: StructureType 
                      , pNext :: Ptr Void 
-                     , srcAccessMask :: VkAccessFlags 
-                     , dstAccessMask :: VkAccessFlags 
+                     , srcAccessMask :: AccessFlags 
+                     , dstAccessMask :: AccessFlags 
                      , srcQueueFamilyIndex :: Word32 
                      , dstQueueFamilyIndex :: Word32 
                      , buffer :: Buffer 
@@ -89,12 +89,12 @@ instance Storable DrawIndexedIndirectCommand where
 
 
 data ImageMemoryBarrier =
-  ImageMemoryBarrier{ sType :: VkStructureType 
+  ImageMemoryBarrier{ sType :: StructureType 
                     , pNext :: Ptr Void 
-                    , srcAccessMask :: VkAccessFlags 
-                    , dstAccessMask :: VkAccessFlags 
-                    , oldLayout :: VkImageLayout 
-                    , newLayout :: VkImageLayout 
+                    , srcAccessMask :: AccessFlags 
+                    , dstAccessMask :: AccessFlags 
+                    , oldLayout :: ImageLayout 
+                    , newLayout :: ImageLayout 
                     , srcQueueFamilyIndex :: Word32 
                     , dstQueueFamilyIndex :: Word32 
                     , image :: Image 
@@ -129,10 +129,10 @@ instance Storable ImageMemoryBarrier where
 
 
 data MemoryBarrier =
-  MemoryBarrier{ sType :: VkStructureType 
+  MemoryBarrier{ sType :: StructureType 
                , pNext :: Ptr Void 
-               , srcAccessMask :: VkAccessFlags 
-               , dstAccessMask :: VkAccessFlags 
+               , srcAccessMask :: AccessFlags 
+               , dstAccessMask :: AccessFlags 
                }
   deriving (Eq)
 

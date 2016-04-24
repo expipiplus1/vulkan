@@ -34,20 +34,20 @@ import Text.ParserCombinators.ReadPrec( prec
 import Graphics.Vulkan.Image( Image(..)
                             , ImageSubresourceRange(..)
                             )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFormat(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
+                           , Format(..)
+                           , Result(..)
                            )
 
 
 data ImageViewCreateInfo =
-  ImageViewCreateInfo{ sType :: VkStructureType 
+  ImageViewCreateInfo{ sType :: StructureType 
                      , pNext :: Ptr Void 
-                     , flags :: VkImageViewCreateFlags 
+                     , flags :: ImageViewCreateFlags 
                      , image :: Image 
-                     , viewType :: VkImageViewType 
-                     , format :: VkFormat 
+                     , viewType :: ImageViewType 
+                     , format :: Format 
                      , components :: ComponentMapping 
                      , subresourceRange :: ImageSubresourceRange 
                      }
@@ -78,17 +78,17 @@ instance Storable ImageViewCreateInfo where
 foreign import ccall "vkCreateImageView" vkCreateImageView ::
   Device ->
   Ptr ImageViewCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr ImageView -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr ImageView -> IO Result
 
 newtype ImageView = ImageView Word64
   deriving (Eq, Storable)
 
--- ** VkImageViewType
+-- ** ImageViewType
 
-newtype VkImageViewType = VkImageViewType Int32
+newtype ImageViewType = ImageViewType Int32
   deriving (Eq, Storable)
 
-instance Show VkImageViewType where
+instance Show ImageViewType where
   showsPrec _ VK_IMAGE_VIEW_TYPE_1D = showString "VK_IMAGE_VIEW_TYPE_1D"
   showsPrec _ VK_IMAGE_VIEW_TYPE_2D = showString "VK_IMAGE_VIEW_TYPE_2D"
   showsPrec _ VK_IMAGE_VIEW_TYPE_3D = showString "VK_IMAGE_VIEW_TYPE_3D"
@@ -96,9 +96,9 @@ instance Show VkImageViewType where
   showsPrec _ VK_IMAGE_VIEW_TYPE_1D_ARRAY = showString "VK_IMAGE_VIEW_TYPE_1D_ARRAY"
   showsPrec _ VK_IMAGE_VIEW_TYPE_2D_ARRAY = showString "VK_IMAGE_VIEW_TYPE_2D_ARRAY"
   showsPrec _ VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = showString "VK_IMAGE_VIEW_TYPE_CUBE_ARRAY"
-  showsPrec p (VkImageViewType x) = showParen (p >= 11) (showString "VkImageViewType " . showsPrec 11 x)
+  showsPrec p (ImageViewType x) = showParen (p >= 11) (showString "ImageViewType " . showsPrec 11 x)
 
-instance Read VkImageViewType where
+instance Read ImageViewType where
   readPrec = parens ( choose [ ("VK_IMAGE_VIEW_TYPE_1D", pure VK_IMAGE_VIEW_TYPE_1D)
                              , ("VK_IMAGE_VIEW_TYPE_2D", pure VK_IMAGE_VIEW_TYPE_2D)
                              , ("VK_IMAGE_VIEW_TYPE_3D", pure VK_IMAGE_VIEW_TYPE_3D)
@@ -108,38 +108,38 @@ instance Read VkImageViewType where
                              , ("VK_IMAGE_VIEW_TYPE_CUBE_ARRAY", pure VK_IMAGE_VIEW_TYPE_CUBE_ARRAY)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageViewType")
+                        expectP (Ident "ImageViewType")
                         v <- step readPrec
-                        pure (VkImageViewType v)
+                        pure (ImageViewType v)
                         )
                     )
 
 
-pattern VK_IMAGE_VIEW_TYPE_1D = VkImageViewType 0
+pattern VK_IMAGE_VIEW_TYPE_1D = ImageViewType 0
 
-pattern VK_IMAGE_VIEW_TYPE_2D = VkImageViewType 1
+pattern VK_IMAGE_VIEW_TYPE_2D = ImageViewType 1
 
-pattern VK_IMAGE_VIEW_TYPE_3D = VkImageViewType 2
+pattern VK_IMAGE_VIEW_TYPE_3D = ImageViewType 2
 
-pattern VK_IMAGE_VIEW_TYPE_CUBE = VkImageViewType 3
+pattern VK_IMAGE_VIEW_TYPE_CUBE = ImageViewType 3
 
-pattern VK_IMAGE_VIEW_TYPE_1D_ARRAY = VkImageViewType 4
+pattern VK_IMAGE_VIEW_TYPE_1D_ARRAY = ImageViewType 4
 
-pattern VK_IMAGE_VIEW_TYPE_2D_ARRAY = VkImageViewType 5
+pattern VK_IMAGE_VIEW_TYPE_2D_ARRAY = ImageViewType 5
 
-pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = VkImageViewType 6
+pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = ImageViewType 6
 
--- ** VkImageViewCreateFlags
+-- ** ImageViewCreateFlags
 -- | Opaque flag
-newtype VkImageViewCreateFlags = VkImageViewCreateFlags VkFlags
+newtype ImageViewCreateFlags = ImageViewCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
 data ComponentMapping =
-  ComponentMapping{ r :: VkComponentSwizzle 
-                  , g :: VkComponentSwizzle 
-                  , b :: VkComponentSwizzle 
-                  , a :: VkComponentSwizzle 
+  ComponentMapping{ r :: ComponentSwizzle 
+                  , g :: ComponentSwizzle 
+                  , b :: ComponentSwizzle 
+                  , a :: ComponentSwizzle 
                   }
   deriving (Eq)
 
@@ -156,12 +156,12 @@ instance Storable ComponentMapping where
                 *> poke (ptr `plusPtr` 12) (a (poked :: ComponentMapping))
 
 
--- ** VkComponentSwizzle
+-- ** ComponentSwizzle
 
-newtype VkComponentSwizzle = VkComponentSwizzle Int32
+newtype ComponentSwizzle = ComponentSwizzle Int32
   deriving (Eq, Storable)
 
-instance Show VkComponentSwizzle where
+instance Show ComponentSwizzle where
   showsPrec _ VK_COMPONENT_SWIZZLE_IDENTITY = showString "VK_COMPONENT_SWIZZLE_IDENTITY"
   showsPrec _ VK_COMPONENT_SWIZZLE_ZERO = showString "VK_COMPONENT_SWIZZLE_ZERO"
   showsPrec _ VK_COMPONENT_SWIZZLE_ONE = showString "VK_COMPONENT_SWIZZLE_ONE"
@@ -169,9 +169,9 @@ instance Show VkComponentSwizzle where
   showsPrec _ VK_COMPONENT_SWIZZLE_G = showString "VK_COMPONENT_SWIZZLE_G"
   showsPrec _ VK_COMPONENT_SWIZZLE_B = showString "VK_COMPONENT_SWIZZLE_B"
   showsPrec _ VK_COMPONENT_SWIZZLE_A = showString "VK_COMPONENT_SWIZZLE_A"
-  showsPrec p (VkComponentSwizzle x) = showParen (p >= 11) (showString "VkComponentSwizzle " . showsPrec 11 x)
+  showsPrec p (ComponentSwizzle x) = showParen (p >= 11) (showString "ComponentSwizzle " . showsPrec 11 x)
 
-instance Read VkComponentSwizzle where
+instance Read ComponentSwizzle where
   readPrec = parens ( choose [ ("VK_COMPONENT_SWIZZLE_IDENTITY", pure VK_COMPONENT_SWIZZLE_IDENTITY)
                              , ("VK_COMPONENT_SWIZZLE_ZERO", pure VK_COMPONENT_SWIZZLE_ZERO)
                              , ("VK_COMPONENT_SWIZZLE_ONE", pure VK_COMPONENT_SWIZZLE_ONE)
@@ -181,26 +181,26 @@ instance Read VkComponentSwizzle where
                              , ("VK_COMPONENT_SWIZZLE_A", pure VK_COMPONENT_SWIZZLE_A)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkComponentSwizzle")
+                        expectP (Ident "ComponentSwizzle")
                         v <- step readPrec
-                        pure (VkComponentSwizzle v)
+                        pure (ComponentSwizzle v)
                         )
                     )
 
 
-pattern VK_COMPONENT_SWIZZLE_IDENTITY = VkComponentSwizzle 0
+pattern VK_COMPONENT_SWIZZLE_IDENTITY = ComponentSwizzle 0
 
-pattern VK_COMPONENT_SWIZZLE_ZERO = VkComponentSwizzle 1
+pattern VK_COMPONENT_SWIZZLE_ZERO = ComponentSwizzle 1
 
-pattern VK_COMPONENT_SWIZZLE_ONE = VkComponentSwizzle 2
+pattern VK_COMPONENT_SWIZZLE_ONE = ComponentSwizzle 2
 
-pattern VK_COMPONENT_SWIZZLE_R = VkComponentSwizzle 3
+pattern VK_COMPONENT_SWIZZLE_R = ComponentSwizzle 3
 
-pattern VK_COMPONENT_SWIZZLE_G = VkComponentSwizzle 4
+pattern VK_COMPONENT_SWIZZLE_G = ComponentSwizzle 4
 
-pattern VK_COMPONENT_SWIZZLE_B = VkComponentSwizzle 5
+pattern VK_COMPONENT_SWIZZLE_B = ComponentSwizzle 5
 
-pattern VK_COMPONENT_SWIZZLE_A = VkComponentSwizzle 6
+pattern VK_COMPONENT_SWIZZLE_A = ComponentSwizzle 6
 
 -- ** vkDestroyImageView
 foreign import ccall "vkDestroyImageView" vkDestroyImageView ::

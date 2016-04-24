@@ -15,10 +15,10 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
                            , VkBool32(..)
-                           , VkResult(..)
+                           , Result(..)
                            )
 import Foreign.C.Types( CFloat(..)
                       , CChar(..)
@@ -28,7 +28,7 @@ import Foreign.C.Types( CFloat(..)
 foreign import ccall "vkCreateDevice" vkCreateDevice ::
   PhysicalDevice ->
   Ptr DeviceCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr Device -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr Device -> IO Result
 
 
 data PhysicalDeviceFeatures =
@@ -205,16 +205,16 @@ instance Storable PhysicalDeviceFeatures where
                 *> poke (ptr `plusPtr` 216) (inheritedQueries (poked :: PhysicalDeviceFeatures))
 
 
--- ** VkDeviceCreateFlags
+-- ** DeviceCreateFlags
 -- | Opaque flag
-newtype VkDeviceCreateFlags = VkDeviceCreateFlags VkFlags
+newtype DeviceCreateFlags = DeviceCreateFlags VkFlags
   deriving (Eq, Storable)
 
 
 data DeviceQueueCreateInfo =
-  DeviceQueueCreateInfo{ sType :: VkStructureType 
+  DeviceQueueCreateInfo{ sType :: StructureType 
                        , pNext :: Ptr Void 
-                       , flags :: VkDeviceQueueCreateFlags 
+                       , flags :: DeviceQueueCreateFlags 
                        , queueFamilyIndex :: Word32 
                        , queueCount :: Word32 
                        , pQueuePriorities :: Ptr CFloat 
@@ -238,9 +238,9 @@ instance Storable DeviceQueueCreateInfo where
                 *> poke (ptr `plusPtr` 32) (pQueuePriorities (poked :: DeviceQueueCreateInfo))
 
 
--- ** VkDeviceQueueCreateFlags
+-- ** DeviceQueueCreateFlags
 -- | Opaque flag
-newtype VkDeviceQueueCreateFlags = VkDeviceQueueCreateFlags VkFlags
+newtype DeviceQueueCreateFlags = DeviceQueueCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkDestroyDevice
@@ -255,9 +255,9 @@ type Device = Ptr VkDevice_T
 
 
 data DeviceCreateInfo =
-  DeviceCreateInfo{ sType :: VkStructureType 
+  DeviceCreateInfo{ sType :: StructureType 
                   , pNext :: Ptr Void 
-                  , flags :: VkDeviceCreateFlags 
+                  , flags :: DeviceCreateFlags 
                   , queueCreateInfoCount :: Word32 
                   , pQueueCreateInfos :: Ptr DeviceQueueCreateInfo 
                   , enabledLayerCount :: Word32 

@@ -38,49 +38,49 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Query( VkQueryPipelineStatisticFlags(..)
-                            , VkQueryControlFlags(..)
+import Graphics.Vulkan.Query( QueryPipelineStatisticFlags(..)
+                            , QueryControlFlags(..)
                             )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
                            , VkBool32(..)
-                           , VkResult(..)
+                           , Result(..)
                            )
 
--- ** VkCommandBufferLevel
+-- ** CommandBufferLevel
 
-newtype VkCommandBufferLevel = VkCommandBufferLevel Int32
+newtype CommandBufferLevel = CommandBufferLevel Int32
   deriving (Eq, Storable)
 
-instance Show VkCommandBufferLevel where
+instance Show CommandBufferLevel where
   showsPrec _ VK_COMMAND_BUFFER_LEVEL_PRIMARY = showString "VK_COMMAND_BUFFER_LEVEL_PRIMARY"
   showsPrec _ VK_COMMAND_BUFFER_LEVEL_SECONDARY = showString "VK_COMMAND_BUFFER_LEVEL_SECONDARY"
-  showsPrec p (VkCommandBufferLevel x) = showParen (p >= 11) (showString "VkCommandBufferLevel " . showsPrec 11 x)
+  showsPrec p (CommandBufferLevel x) = showParen (p >= 11) (showString "CommandBufferLevel " . showsPrec 11 x)
 
-instance Read VkCommandBufferLevel where
+instance Read CommandBufferLevel where
   readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_LEVEL_PRIMARY", pure VK_COMMAND_BUFFER_LEVEL_PRIMARY)
                              , ("VK_COMMAND_BUFFER_LEVEL_SECONDARY", pure VK_COMMAND_BUFFER_LEVEL_SECONDARY)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCommandBufferLevel")
+                        expectP (Ident "CommandBufferLevel")
                         v <- step readPrec
-                        pure (VkCommandBufferLevel v)
+                        pure (CommandBufferLevel v)
                         )
                     )
 
 
-pattern VK_COMMAND_BUFFER_LEVEL_PRIMARY = VkCommandBufferLevel 0
+pattern VK_COMMAND_BUFFER_LEVEL_PRIMARY = CommandBufferLevel 0
 
-pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY = VkCommandBufferLevel 1
+pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY = CommandBufferLevel 1
 
 -- ** vkAllocateCommandBuffers
 foreign import ccall "vkAllocateCommandBuffers" vkAllocateCommandBuffers ::
   Device ->
-  Ptr CommandBufferAllocateInfo -> Ptr CommandBuffer -> IO VkResult
+  Ptr CommandBufferAllocateInfo -> Ptr CommandBuffer -> IO Result
 
 -- ** vkResetCommandBuffer
 foreign import ccall "vkResetCommandBuffer" vkResetCommandBuffer ::
-  CommandBuffer -> VkCommandBufferResetFlags -> IO VkResult
+  CommandBuffer -> CommandBufferResetFlags -> IO Result
 
 -- ** vkFreeCommandBuffers
 foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers ::
@@ -88,41 +88,41 @@ foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers ::
 
 -- ** VkCommandBufferUsageFlags
 
-newtype VkCommandBufferUsageFlags = VkCommandBufferUsageFlags VkFlags
+newtype CommandBufferUsageFlags = CommandBufferUsageFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkCommandBufferUsageFlags where
+instance Show CommandBufferUsageFlags where
   showsPrec _ VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = showString "VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT"
   showsPrec _ VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = showString "VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT"
   showsPrec _ VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = showString "VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT"
   
-  showsPrec p (VkCommandBufferUsageFlags x) = showParen (p >= 11) (showString "VkCommandBufferUsageFlags " . showsPrec 11 x)
+  showsPrec p (CommandBufferUsageFlags x) = showParen (p >= 11) (showString "CommandBufferUsageFlags " . showsPrec 11 x)
 
-instance Read VkCommandBufferUsageFlags where
+instance Read CommandBufferUsageFlags where
   readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT", pure VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT)
                              , ("VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT", pure VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT)
                              , ("VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT", pure VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCommandBufferUsageFlags")
+                        expectP (Ident "CommandBufferUsageFlags")
                         v <- step readPrec
-                        pure (VkCommandBufferUsageFlags v)
+                        pure (CommandBufferUsageFlags v)
                         )
                     )
 
 
-pattern VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = VkCommandBufferUsageFlags 0x1
+pattern VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = CommandBufferUsageFlags 0x1
 
-pattern VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = VkCommandBufferUsageFlags 0x2
+pattern VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = CommandBufferUsageFlags 0x2
 -- | Command buffer may be submitted/executed more than once simultaneously
-pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = VkCommandBufferUsageFlags 0x4
+pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = CommandBufferUsageFlags 0x4
 
 
 
 data CommandBufferBeginInfo =
-  CommandBufferBeginInfo{ sType :: VkStructureType 
+  CommandBufferBeginInfo{ sType :: StructureType 
                         , pNext :: Ptr Void 
-                        , flags :: VkCommandBufferUsageFlags 
+                        , flags :: CommandBufferUsageFlags 
                         , pInheritanceInfo :: Ptr CommandBufferInheritanceInfo 
                         }
   deriving (Eq)
@@ -142,14 +142,14 @@ instance Storable CommandBufferBeginInfo where
 
 
 data CommandBufferInheritanceInfo =
-  CommandBufferInheritanceInfo{ sType :: VkStructureType 
+  CommandBufferInheritanceInfo{ sType :: StructureType 
                               , pNext :: Ptr Void 
                               , renderPass :: RenderPass 
                               , subpass :: Word32 
                               , framebuffer :: Framebuffer 
                               , occlusionQueryEnable :: VkBool32 
-                              , queryFlags :: VkQueryControlFlags 
-                              , pipelineStatistics :: VkQueryPipelineStatisticFlags 
+                              , queryFlags :: QueryControlFlags 
+                              , pipelineStatistics :: QueryPipelineStatisticFlags 
                               }
   deriving (Eq)
 
@@ -179,42 +179,42 @@ type CommandBuffer = Ptr VkCommandBuffer_T
 
 -- ** VkCommandBufferResetFlags
 
-newtype VkCommandBufferResetFlags = VkCommandBufferResetFlags VkFlags
+newtype CommandBufferResetFlags = CommandBufferResetFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkCommandBufferResetFlags where
+instance Show CommandBufferResetFlags where
   showsPrec _ VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
   
-  showsPrec p (VkCommandBufferResetFlags x) = showParen (p >= 11) (showString "VkCommandBufferResetFlags " . showsPrec 11 x)
+  showsPrec p (CommandBufferResetFlags x) = showParen (p >= 11) (showString "CommandBufferResetFlags " . showsPrec 11 x)
 
-instance Read VkCommandBufferResetFlags where
+instance Read CommandBufferResetFlags where
   readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT", pure VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCommandBufferResetFlags")
+                        expectP (Ident "CommandBufferResetFlags")
                         v <- step readPrec
-                        pure (VkCommandBufferResetFlags v)
+                        pure (CommandBufferResetFlags v)
                         )
                     )
 
 -- | Release resources owned by the buffer
-pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = VkCommandBufferResetFlags 0x1
+pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = CommandBufferResetFlags 0x1
 
 
 -- ** vkEndCommandBuffer
 foreign import ccall "vkEndCommandBuffer" vkEndCommandBuffer ::
-  CommandBuffer -> IO VkResult
+  CommandBuffer -> IO Result
 
 -- ** vkBeginCommandBuffer
 foreign import ccall "vkBeginCommandBuffer" vkBeginCommandBuffer ::
-  CommandBuffer -> Ptr CommandBufferBeginInfo -> IO VkResult
+  CommandBuffer -> Ptr CommandBufferBeginInfo -> IO Result
 
 
 data CommandBufferAllocateInfo =
-  CommandBufferAllocateInfo{ sType :: VkStructureType 
+  CommandBufferAllocateInfo{ sType :: StructureType 
                            , pNext :: Ptr Void 
                            , commandPool :: CommandPool 
-                           , level :: VkCommandBufferLevel 
+                           , level :: CommandBufferLevel 
                            , commandBufferCount :: Word32 
                            }
   deriving (Eq)

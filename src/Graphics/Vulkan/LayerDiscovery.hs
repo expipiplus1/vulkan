@@ -17,7 +17,7 @@ import Foreign.Storable( Storable(..)
 import Graphics.Vulkan.Constants( VK_MAX_DESCRIPTION_SIZE
                                 , VK_MAX_EXTENSION_NAME_SIZE
                                 )
-import Graphics.Vulkan.Core( VkResult(..)
+import Graphics.Vulkan.Core( Result(..)
                            )
 import Foreign.C.Types( CChar(..)
                       )
@@ -46,9 +46,9 @@ instance Storable LayerProperties where
 
 -- ** vkEnumerateInstanceLayerProperties
 foreign import ccall "vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLayerProperties ::
-  Ptr Word32 -> Ptr LayerProperties -> IO VkResult
+  Ptr Word32 -> Ptr LayerProperties -> IO Result
 
 -- ** vkEnumerateDeviceLayerProperties
 foreign import ccall "vkEnumerateDeviceLayerProperties" vkEnumerateDeviceLayerProperties ::
-  PhysicalDevice -> Ptr Word32 -> Ptr LayerProperties -> IO VkResult
+  PhysicalDevice -> Ptr Word32 -> Ptr LayerProperties -> IO Result
 

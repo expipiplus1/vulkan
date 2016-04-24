@@ -16,14 +16,14 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
+                           , Result(..)
                            )
 
--- ** VkSemaphoreCreateFlags
+-- ** SemaphoreCreateFlags
 -- | Opaque flag
-newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
+newtype SemaphoreCreateFlags = SemaphoreCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkDestroySemaphore
@@ -35,9 +35,9 @@ newtype Semaphore = Semaphore Word64
 
 
 data SemaphoreCreateInfo =
-  SemaphoreCreateInfo{ sType :: VkStructureType 
+  SemaphoreCreateInfo{ sType :: StructureType 
                      , pNext :: Ptr Void 
-                     , flags :: VkSemaphoreCreateFlags 
+                     , flags :: SemaphoreCreateFlags 
                      }
   deriving (Eq)
 
@@ -56,5 +56,5 @@ instance Storable SemaphoreCreateInfo where
 foreign import ccall "vkCreateSemaphore" vkCreateSemaphore ::
   Device ->
   Ptr SemaphoreCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr Semaphore -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr Semaphore -> IO Result
 

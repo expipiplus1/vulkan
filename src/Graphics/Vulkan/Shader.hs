@@ -33,18 +33,18 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
+                           , Result(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
 
 
 data ShaderModuleCreateInfo =
-  ShaderModuleCreateInfo{ sType :: VkStructureType 
+  ShaderModuleCreateInfo{ sType :: StructureType 
                         , pNext :: Ptr Void 
-                        , flags :: VkShaderModuleCreateFlags 
+                        , flags :: ShaderModuleCreateFlags 
                         , codeSize :: CSize 
                         , pCode :: Ptr Word32 
                         }
@@ -69,17 +69,17 @@ instance Storable ShaderModuleCreateInfo where
 foreign import ccall "vkDestroyShaderModule" vkDestroyShaderModule ::
   Device -> ShaderModule -> Ptr AllocationCallbacks -> IO ()
 
--- ** VkShaderModuleCreateFlags
+-- ** ShaderModuleCreateFlags
 -- | Opaque flag
-newtype VkShaderModuleCreateFlags = VkShaderModuleCreateFlags VkFlags
+newtype ShaderModuleCreateFlags = ShaderModuleCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** VkShaderStageFlags
 
-newtype VkShaderStageFlags = VkShaderStageFlags VkFlags
+newtype ShaderStageFlags = ShaderStageFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkShaderStageFlags where
+instance Show ShaderStageFlags where
   showsPrec _ VK_SHADER_STAGE_VERTEX_BIT = showString "VK_SHADER_STAGE_VERTEX_BIT"
   showsPrec _ VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = showString "VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT"
   showsPrec _ VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = showString "VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT"
@@ -88,9 +88,9 @@ instance Show VkShaderStageFlags where
   showsPrec _ VK_SHADER_STAGE_COMPUTE_BIT = showString "VK_SHADER_STAGE_COMPUTE_BIT"
   showsPrec _ VK_SHADER_STAGE_ALL_GRAPHICS = showString "VK_SHADER_STAGE_ALL_GRAPHICS"
   showsPrec _ VK_SHADER_STAGE_ALL = showString "VK_SHADER_STAGE_ALL"
-  showsPrec p (VkShaderStageFlags x) = showParen (p >= 11) (showString "VkShaderStageFlags " . showsPrec 11 x)
+  showsPrec p (ShaderStageFlags x) = showParen (p >= 11) (showString "ShaderStageFlags " . showsPrec 11 x)
 
-instance Read VkShaderStageFlags where
+instance Read ShaderStageFlags where
   readPrec = parens ( choose [ ("VK_SHADER_STAGE_VERTEX_BIT", pure VK_SHADER_STAGE_VERTEX_BIT)
                              , ("VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT", pure VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT)
                              , ("VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT", pure VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT)
@@ -101,28 +101,28 @@ instance Read VkShaderStageFlags where
                              , ("VK_SHADER_STAGE_ALL", pure VK_SHADER_STAGE_ALL)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkShaderStageFlags")
+                        expectP (Ident "ShaderStageFlags")
                         v <- step readPrec
-                        pure (VkShaderStageFlags v)
+                        pure (ShaderStageFlags v)
                         )
                     )
 
 
-pattern VK_SHADER_STAGE_VERTEX_BIT = VkShaderStageFlags 0x1
+pattern VK_SHADER_STAGE_VERTEX_BIT = ShaderStageFlags 0x1
 
-pattern VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = VkShaderStageFlags 0x2
+pattern VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = ShaderStageFlags 0x2
 
-pattern VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = VkShaderStageFlags 0x4
+pattern VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = ShaderStageFlags 0x4
 
-pattern VK_SHADER_STAGE_GEOMETRY_BIT = VkShaderStageFlags 0x8
+pattern VK_SHADER_STAGE_GEOMETRY_BIT = ShaderStageFlags 0x8
 
-pattern VK_SHADER_STAGE_FRAGMENT_BIT = VkShaderStageFlags 0x10
+pattern VK_SHADER_STAGE_FRAGMENT_BIT = ShaderStageFlags 0x10
 
-pattern VK_SHADER_STAGE_COMPUTE_BIT = VkShaderStageFlags 0x20
+pattern VK_SHADER_STAGE_COMPUTE_BIT = ShaderStageFlags 0x20
 
-pattern VK_SHADER_STAGE_ALL_GRAPHICS = VkShaderStageFlags 0x1f
+pattern VK_SHADER_STAGE_ALL_GRAPHICS = ShaderStageFlags 0x1f
 
-pattern VK_SHADER_STAGE_ALL = VkShaderStageFlags 0x7fffffff
+pattern VK_SHADER_STAGE_ALL = ShaderStageFlags 0x7fffffff
 
 newtype ShaderModule = ShaderModule Word64
   deriving (Eq, Storable)
@@ -131,5 +131,5 @@ newtype ShaderModule = ShaderModule Word64
 foreign import ccall "vkCreateShaderModule" vkCreateShaderModule ::
   Device ->
   Ptr ShaderModuleCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr ShaderModule -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr ShaderModule -> IO Result
 

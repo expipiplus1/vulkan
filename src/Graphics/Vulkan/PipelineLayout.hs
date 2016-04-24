@@ -19,16 +19,16 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Shader( VkShaderStageFlags(..)
+import Graphics.Vulkan.Shader( ShaderStageFlags(..)
                              )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
+                           , Result(..)
                            )
 
--- ** VkPipelineLayoutCreateFlags
+-- ** PipelineLayoutCreateFlags
 -- | Opaque flag
-newtype VkPipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags VkFlags
+newtype PipelineLayoutCreateFlags = PipelineLayoutCreateFlags VkFlags
   deriving (Eq, Storable)
 
 newtype PipelineLayout = PipelineLayout Word64
@@ -40,7 +40,7 @@ foreign import ccall "vkDestroyPipelineLayout" vkDestroyPipelineLayout ::
 
 
 data PushConstantRange =
-  PushConstantRange{ stageFlags :: VkShaderStageFlags 
+  PushConstantRange{ stageFlags :: ShaderStageFlags 
                    , offset :: Word32 
                    , size :: Word32 
                    }
@@ -59,9 +59,9 @@ instance Storable PushConstantRange where
 
 
 data PipelineLayoutCreateInfo =
-  PipelineLayoutCreateInfo{ sType :: VkStructureType 
+  PipelineLayoutCreateInfo{ sType :: StructureType 
                           , pNext :: Ptr Void 
-                          , flags :: VkPipelineLayoutCreateFlags 
+                          , flags :: PipelineLayoutCreateFlags 
                           , setLayoutCount :: Word32 
                           , pSetLayouts :: Ptr DescriptorSetLayout 
                           , pushConstantRangeCount :: Word32 
@@ -92,5 +92,5 @@ instance Storable PipelineLayoutCreateInfo where
 foreign import ccall "vkCreatePipelineLayout" vkCreatePipelineLayout ::
   Device ->
   Ptr PipelineLayoutCreateInfo ->
-    Ptr AllocationCallbacks -> Ptr PipelineLayout -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr PipelineLayout -> IO Result
 

@@ -39,23 +39,23 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlags(..)
+import Graphics.Vulkan.Sampler( SampleCountFlags(..)
                               )
-import Graphics.Vulkan.Image( Image(..)
-                            , VkImageType(..)
-                            , VkImageUsageFlags(..)
-                            , VkImageAspectFlags(..)
-                            , VkImageTiling(..)
+import Graphics.Vulkan.Image( ImageAspectFlags(..)
+                            , Image(..)
+                            , ImageUsageFlags(..)
+                            , ImageTiling(..)
+                            , ImageType(..)
                             , ImageSubresource(..)
                             )
 import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
                                      )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFormat(..)
-                           , Offset3D(..)
+import Graphics.Vulkan.Core( Offset3D(..)
                            , VkFlags(..)
+                           , StructureType(..)
+                           , Format(..)
                            , Extent3D(..)
-                           , VkResult(..)
+                           , Result(..)
                            , VkDeviceSize(..)
                            )
 
@@ -90,7 +90,7 @@ data SparseMemoryBind =
                   , size :: VkDeviceSize 
                   , memory :: DeviceMemory 
                   , memoryOffset :: VkDeviceSize 
-                  , flags :: VkSparseMemoryBindFlags 
+                  , flags :: SparseMemoryBindFlags 
                   }
   deriving (Eq)
 
@@ -116,7 +116,7 @@ data SparseImageMemoryBind =
                        , extent :: Extent3D 
                        , memory :: DeviceMemory 
                        , memoryOffset :: VkDeviceSize 
-                       , flags :: VkSparseMemoryBindFlags 
+                       , flags :: SparseMemoryBindFlags 
                        }
   deriving (Eq)
 
@@ -163,11 +163,11 @@ foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemory
 
 -- ** vkQueueBindSparse
 foreign import ccall "vkQueueBindSparse" vkQueueBindSparse ::
-  Queue -> Word32 -> Ptr BindSparseInfo -> Fence -> IO VkResult
+  Queue -> Word32 -> Ptr BindSparseInfo -> Fence -> IO Result
 
 
 data BindSparseInfo =
-  BindSparseInfo{ sType :: VkStructureType 
+  BindSparseInfo{ sType :: StructureType 
                 , pNext :: Ptr Void 
                 , waitSemaphoreCount :: Word32 
                 , pWaitSemaphores :: Ptr Semaphore 
@@ -232,68 +232,68 @@ instance Storable SparseBufferMemoryBindInfo where
 
 -- ** VkSparseImageFormatFlags
 
-newtype VkSparseImageFormatFlags = VkSparseImageFormatFlags VkFlags
+newtype SparseImageFormatFlags = SparseImageFormatFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkSparseImageFormatFlags where
+instance Show SparseImageFormatFlags where
   showsPrec _ VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = showString "VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"
   showsPrec _ VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = showString "VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"
   showsPrec _ VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = showString "VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"
   
-  showsPrec p (VkSparseImageFormatFlags x) = showParen (p >= 11) (showString "VkSparseImageFormatFlags " . showsPrec 11 x)
+  showsPrec p (SparseImageFormatFlags x) = showParen (p >= 11) (showString "SparseImageFormatFlags " . showsPrec 11 x)
 
-instance Read VkSparseImageFormatFlags where
+instance Read SparseImageFormatFlags where
   readPrec = parens ( choose [ ("VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT", pure VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT)
                              , ("VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT", pure VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT)
                              , ("VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT", pure VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSparseImageFormatFlags")
+                        expectP (Ident "SparseImageFormatFlags")
                         v <- step readPrec
-                        pure (VkSparseImageFormatFlags v)
+                        pure (SparseImageFormatFlags v)
                         )
                     )
 
 -- | Image uses a single miptail region for all array layers
-pattern VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = VkSparseImageFormatFlags 0x1
+pattern VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = SparseImageFormatFlags 0x1
 -- | Image requires mip levels to be an exact multiple of the sparse image block size for non-miptail levels.
-pattern VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = VkSparseImageFormatFlags 0x2
+pattern VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = SparseImageFormatFlags 0x2
 -- | Image uses a non-standard sparse block size
-pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = VkSparseImageFormatFlags 0x4
+pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = SparseImageFormatFlags 0x4
 
 
 -- ** vkGetPhysicalDeviceSparseImageFormatProperties
 foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysicalDeviceSparseImageFormatProperties ::
   PhysicalDevice ->
-  VkFormat ->
-    VkImageType ->
-      VkSampleCountFlags ->
-        VkImageUsageFlags ->
-          VkImageTiling ->
+  Format ->
+    ImageType ->
+      SampleCountFlags ->
+        ImageUsageFlags ->
+          ImageTiling ->
             Ptr Word32 -> Ptr SparseImageFormatProperties -> IO ()
 
 -- ** VkSparseMemoryBindFlags
 
-newtype VkSparseMemoryBindFlags = VkSparseMemoryBindFlags VkFlags
+newtype SparseMemoryBindFlags = SparseMemoryBindFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkSparseMemoryBindFlags where
+instance Show SparseMemoryBindFlags where
   showsPrec _ VK_SPARSE_MEMORY_BIND_METADATA_BIT = showString "VK_SPARSE_MEMORY_BIND_METADATA_BIT"
   
-  showsPrec p (VkSparseMemoryBindFlags x) = showParen (p >= 11) (showString "VkSparseMemoryBindFlags " . showsPrec 11 x)
+  showsPrec p (SparseMemoryBindFlags x) = showParen (p >= 11) (showString "SparseMemoryBindFlags " . showsPrec 11 x)
 
-instance Read VkSparseMemoryBindFlags where
+instance Read SparseMemoryBindFlags where
   readPrec = parens ( choose [ ("VK_SPARSE_MEMORY_BIND_METADATA_BIT", pure VK_SPARSE_MEMORY_BIND_METADATA_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSparseMemoryBindFlags")
+                        expectP (Ident "SparseMemoryBindFlags")
                         v <- step readPrec
-                        pure (VkSparseMemoryBindFlags v)
+                        pure (SparseMemoryBindFlags v)
                         )
                     )
 
 -- | Operation binds resource metadata to memory
-pattern VK_SPARSE_MEMORY_BIND_METADATA_BIT = VkSparseMemoryBindFlags 0x1
+pattern VK_SPARSE_MEMORY_BIND_METADATA_BIT = SparseMemoryBindFlags 0x1
 
 
 
@@ -317,9 +317,9 @@ instance Storable SparseImageOpaqueMemoryBindInfo where
 
 
 data SparseImageFormatProperties =
-  SparseImageFormatProperties{ aspectMask :: VkImageAspectFlags 
+  SparseImageFormatProperties{ aspectMask :: ImageAspectFlags 
                              , imageGranularity :: Extent3D 
-                             , flags :: VkSparseImageFormatFlags 
+                             , flags :: SparseImageFormatFlags 
                              }
   deriving (Eq)
 

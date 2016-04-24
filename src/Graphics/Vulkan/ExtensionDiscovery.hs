@@ -16,7 +16,7 @@ import Foreign.Storable( Storable(..)
                        )
 import Graphics.Vulkan.Constants( VK_MAX_EXTENSION_NAME_SIZE
                                 )
-import Graphics.Vulkan.Core( VkResult(..)
+import Graphics.Vulkan.Core( Result(..)
                            )
 import Foreign.C.Types( CChar(..)
                       )
@@ -39,10 +39,10 @@ instance Storable ExtensionProperties where
 
 -- ** vkEnumerateInstanceExtensionProperties
 foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanceExtensionProperties ::
-  Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO VkResult
+  Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO Result
 
 -- ** vkEnumerateDeviceExtensionProperties
 foreign import ccall "vkEnumerateDeviceExtensionProperties" vkEnumerateDeviceExtensionProperties ::
   PhysicalDevice ->
-  Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO VkResult
+  Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO Result
 

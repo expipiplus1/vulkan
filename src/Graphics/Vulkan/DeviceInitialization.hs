@@ -48,19 +48,19 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlags(..)
+import Graphics.Vulkan.Sampler( SampleCountFlags(..)
                               )
-import Graphics.Vulkan.Image( VkImageCreateFlags(..)
-                            , VkImageType(..)
-                            , VkImageUsageFlags(..)
-                            , VkImageTiling(..)
+import Graphics.Vulkan.Image( ImageUsageFlags(..)
+                            , ImageCreateFlags(..)
+                            , ImageTiling(..)
+                            , ImageType(..)
                             )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFormat(..)
-                           , VkFlags(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
                            , VkBool32(..)
+                           , Format(..)
                            , Extent3D(..)
-                           , VkResult(..)
+                           , Result(..)
                            , VkDeviceSize(..)
                            )
 import Foreign.C.Types( CFloat(..)
@@ -68,20 +68,20 @@ import Foreign.C.Types( CFloat(..)
                       , CSize(..)
                       )
 
--- ** VkPhysicalDeviceType
+-- ** PhysicalDeviceType
 
-newtype VkPhysicalDeviceType = VkPhysicalDeviceType Int32
+newtype PhysicalDeviceType = PhysicalDeviceType Int32
   deriving (Eq, Storable)
 
-instance Show VkPhysicalDeviceType where
+instance Show PhysicalDeviceType where
   showsPrec _ VK_PHYSICAL_DEVICE_TYPE_OTHER = showString "VK_PHYSICAL_DEVICE_TYPE_OTHER"
   showsPrec _ VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = showString "VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU"
   showsPrec _ VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = showString "VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU"
   showsPrec _ VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = showString "VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU"
   showsPrec _ VK_PHYSICAL_DEVICE_TYPE_CPU = showString "VK_PHYSICAL_DEVICE_TYPE_CPU"
-  showsPrec p (VkPhysicalDeviceType x) = showParen (p >= 11) (showString "VkPhysicalDeviceType " . showsPrec 11 x)
+  showsPrec p (PhysicalDeviceType x) = showParen (p >= 11) (showString "PhysicalDeviceType " . showsPrec 11 x)
 
-instance Read VkPhysicalDeviceType where
+instance Read PhysicalDeviceType where
   readPrec = parens ( choose [ ("VK_PHYSICAL_DEVICE_TYPE_OTHER", pure VK_PHYSICAL_DEVICE_TYPE_OTHER)
                              , ("VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU", pure VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU)
                              , ("VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU", pure VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
@@ -89,28 +89,28 @@ instance Read VkPhysicalDeviceType where
                              , ("VK_PHYSICAL_DEVICE_TYPE_CPU", pure VK_PHYSICAL_DEVICE_TYPE_CPU)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkPhysicalDeviceType")
+                        expectP (Ident "PhysicalDeviceType")
                         v <- step readPrec
-                        pure (VkPhysicalDeviceType v)
+                        pure (PhysicalDeviceType v)
                         )
                     )
 
 
-pattern VK_PHYSICAL_DEVICE_TYPE_OTHER = VkPhysicalDeviceType 0
+pattern VK_PHYSICAL_DEVICE_TYPE_OTHER = PhysicalDeviceType 0
 
-pattern VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = VkPhysicalDeviceType 1
+pattern VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = PhysicalDeviceType 1
 
-pattern VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = VkPhysicalDeviceType 2
+pattern VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = PhysicalDeviceType 2
 
-pattern VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = VkPhysicalDeviceType 3
+pattern VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = PhysicalDeviceType 3
 
-pattern VK_PHYSICAL_DEVICE_TYPE_CPU = VkPhysicalDeviceType 4
+pattern VK_PHYSICAL_DEVICE_TYPE_CPU = PhysicalDeviceType 4
 
 
 data InstanceCreateInfo =
-  InstanceCreateInfo{ sType :: VkStructureType 
+  InstanceCreateInfo{ sType :: StructureType 
                     , pNext :: Ptr Void 
-                    , flags :: VkInstanceCreateFlags 
+                    , flags :: InstanceCreateFlags 
                     , pApplicationInfo :: Ptr ApplicationInfo 
                     , enabledLayerCount :: Word32 
                     , ppEnabledLayerNames :: Ptr (Ptr CChar) 
@@ -143,17 +143,17 @@ instance Storable InstanceCreateInfo where
 -- ** vkGetPhysicalDeviceImageFormatProperties
 foreign import ccall "vkGetPhysicalDeviceImageFormatProperties" vkGetPhysicalDeviceImageFormatProperties ::
   PhysicalDevice ->
-  VkFormat ->
-    VkImageType ->
-      VkImageTiling ->
-        VkImageUsageFlags ->
-          VkImageCreateFlags -> Ptr ImageFormatProperties -> IO VkResult
+  Format ->
+    ImageType ->
+      ImageTiling ->
+        ImageUsageFlags ->
+          ImageCreateFlags -> Ptr ImageFormatProperties -> IO Result
 
 type PFN_vkVoidFunction = FunPtr (IO ())
 
 
 data ApplicationInfo =
-  ApplicationInfo{ sType :: VkStructureType 
+  ApplicationInfo{ sType :: StructureType 
                  , pNext :: Ptr Void 
                  , pApplicationName :: Ptr CChar 
                  , applicationVersion :: Word32 
@@ -264,16 +264,16 @@ data PhysicalDeviceLimits =
                       , maxFramebufferWidth :: Word32 
                       , maxFramebufferHeight :: Word32 
                       , maxFramebufferLayers :: Word32 
-                      , framebufferColorSampleCounts :: VkSampleCountFlags 
-                      , framebufferDepthSampleCounts :: VkSampleCountFlags 
-                      , framebufferStencilSampleCounts :: VkSampleCountFlags 
-                      , framebufferNoAttachmentsSampleCounts :: VkSampleCountFlags 
+                      , framebufferColorSampleCounts :: SampleCountFlags 
+                      , framebufferDepthSampleCounts :: SampleCountFlags 
+                      , framebufferStencilSampleCounts :: SampleCountFlags 
+                      , framebufferNoAttachmentsSampleCounts :: SampleCountFlags 
                       , maxColorAttachments :: Word32 
-                      , sampledImageColorSampleCounts :: VkSampleCountFlags 
-                      , sampledImageIntegerSampleCounts :: VkSampleCountFlags 
-                      , sampledImageDepthSampleCounts :: VkSampleCountFlags 
-                      , sampledImageStencilSampleCounts :: VkSampleCountFlags 
-                      , storageImageSampleCounts :: VkSampleCountFlags 
+                      , sampledImageColorSampleCounts :: SampleCountFlags 
+                      , sampledImageIntegerSampleCounts :: SampleCountFlags 
+                      , sampledImageDepthSampleCounts :: SampleCountFlags 
+                      , sampledImageStencilSampleCounts :: SampleCountFlags 
+                      , storageImageSampleCounts :: SampleCountFlags 
                       , maxSampleMaskWords :: Word32 
                       , timestampComputeAndGraphics :: VkBool32 
                       , timestampPeriod :: CFloat 
@@ -513,7 +513,7 @@ instance Storable PhysicalDeviceLimits where
 
 data MemoryHeap =
   MemoryHeap{ size :: VkDeviceSize 
-            , flags :: VkMemoryHeapFlags 
+            , flags :: MemoryHeapFlags 
             }
   deriving (Eq)
 
@@ -528,7 +528,7 @@ instance Storable MemoryHeap where
 
 -- ** vkEnumeratePhysicalDevices
 foreign import ccall "vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices ::
-  Instance -> Ptr Word32 -> Ptr PhysicalDevice -> IO VkResult
+  Instance -> Ptr Word32 -> Ptr PhysicalDevice -> IO Result
 
 -- ** vkGetDeviceProcAddr
 foreign import ccall "vkGetDeviceProcAddr" vkGetDeviceProcAddr ::
@@ -537,14 +537,14 @@ foreign import ccall "vkGetDeviceProcAddr" vkGetDeviceProcAddr ::
 -- ** vkCreateInstance
 foreign import ccall "vkCreateInstance" vkCreateInstance ::
   Ptr InstanceCreateInfo ->
-  Ptr AllocationCallbacks -> Ptr Instance -> IO VkResult
+  Ptr AllocationCallbacks -> Ptr Instance -> IO Result
 
 -- ** VkFormatFeatureFlags
 
-newtype VkFormatFeatureFlags = VkFormatFeatureFlags VkFlags
+newtype FormatFeatureFlags = FormatFeatureFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkFormatFeatureFlags where
+instance Show FormatFeatureFlags where
   showsPrec _ VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT"
   showsPrec _ VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = showString "VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT"
   showsPrec _ VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = showString "VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT"
@@ -559,9 +559,9 @@ instance Show VkFormatFeatureFlags where
   showsPrec _ VK_FORMAT_FEATURE_BLIT_DST_BIT = showString "VK_FORMAT_FEATURE_BLIT_DST_BIT"
   showsPrec _ VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT"
   
-  showsPrec p (VkFormatFeatureFlags x) = showParen (p >= 11) (showString "VkFormatFeatureFlags " . showsPrec 11 x)
+  showsPrec p (FormatFeatureFlags x) = showParen (p >= 11) (showString "FormatFeatureFlags " . showsPrec 11 x)
 
-instance Read VkFormatFeatureFlags where
+instance Read FormatFeatureFlags where
   readPrec = parens ( choose [ ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT", pure VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)
                              , ("VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT", pure VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT)
                              , ("VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT", pure VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT)
@@ -577,38 +577,38 @@ instance Read VkFormatFeatureFlags where
                              , ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT", pure VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkFormatFeatureFlags")
+                        expectP (Ident "FormatFeatureFlags")
                         v <- step readPrec
-                        pure (VkFormatFeatureFlags v)
+                        pure (FormatFeatureFlags v)
                         )
                     )
 
 -- | Format can be used for sampled images (SAMPLED_IMAGE and COMBINED_IMAGE_SAMPLER descriptor types)
-pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = VkFormatFeatureFlags 0x1
+pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = FormatFeatureFlags 0x1
 -- | Format can be used for storage images (STORAGE_IMAGE descriptor type)
-pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = VkFormatFeatureFlags 0x2
+pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = FormatFeatureFlags 0x2
 -- | Format supports atomic operations in case it's used for storage images
-pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = VkFormatFeatureFlags 0x4
+pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = FormatFeatureFlags 0x4
 -- | Format can be used for uniform texel buffers (TBOs)
-pattern VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = VkFormatFeatureFlags 0x8
+pattern VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = FormatFeatureFlags 0x8
 -- | Format can be used for storage texel buffers (IBOs)
-pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = VkFormatFeatureFlags 0x10
+pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = FormatFeatureFlags 0x10
 -- | Format supports atomic operations in case it's used for storage texel buffers
-pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = VkFormatFeatureFlags 0x20
+pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = FormatFeatureFlags 0x20
 -- | Format can be used for vertex buffers (VBOs)
-pattern VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = VkFormatFeatureFlags 0x40
+pattern VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = FormatFeatureFlags 0x40
 -- | Format can be used for color attachment images
-pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = VkFormatFeatureFlags 0x80
+pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = FormatFeatureFlags 0x80
 -- | Format supports blending in case it's used for color attachment images
-pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = VkFormatFeatureFlags 0x100
+pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = FormatFeatureFlags 0x100
 -- | Format can be used for depth/stencil attachment images
-pattern VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = VkFormatFeatureFlags 0x200
+pattern VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = FormatFeatureFlags 0x200
 -- | Format can be used as the source image of blits with vkCmdBlitImage
-pattern VK_FORMAT_FEATURE_BLIT_SRC_BIT = VkFormatFeatureFlags 0x400
+pattern VK_FORMAT_FEATURE_BLIT_SRC_BIT = FormatFeatureFlags 0x400
 -- | Format can be used as the destination image of blits with vkCmdBlitImage
-pattern VK_FORMAT_FEATURE_BLIT_DST_BIT = VkFormatFeatureFlags 0x800
+pattern VK_FORMAT_FEATURE_BLIT_DST_BIT = FormatFeatureFlags 0x800
 -- | Format can be filtered with VK_FILTER_LINEAR when being sampled
-pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = VkFormatFeatureFlags 0x1000
+pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = FormatFeatureFlags 0x1000
 
 
 
@@ -638,31 +638,31 @@ type Instance = Ptr VkInstance_T
 
 -- ** VkMemoryHeapFlags
 
-newtype VkMemoryHeapFlags = VkMemoryHeapFlags VkFlags
+newtype MemoryHeapFlags = MemoryHeapFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkMemoryHeapFlags where
+instance Show MemoryHeapFlags where
   showsPrec _ VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = showString "VK_MEMORY_HEAP_DEVICE_LOCAL_BIT"
   
-  showsPrec p (VkMemoryHeapFlags x) = showParen (p >= 11) (showString "VkMemoryHeapFlags " . showsPrec 11 x)
+  showsPrec p (MemoryHeapFlags x) = showParen (p >= 11) (showString "MemoryHeapFlags " . showsPrec 11 x)
 
-instance Read VkMemoryHeapFlags where
+instance Read MemoryHeapFlags where
   readPrec = parens ( choose [ ("VK_MEMORY_HEAP_DEVICE_LOCAL_BIT", pure VK_MEMORY_HEAP_DEVICE_LOCAL_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkMemoryHeapFlags")
+                        expectP (Ident "MemoryHeapFlags")
                         v <- step readPrec
-                        pure (VkMemoryHeapFlags v)
+                        pure (MemoryHeapFlags v)
                         )
                     )
 
 -- | If set, heap represents device memory
-pattern VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = VkMemoryHeapFlags 0x1
+pattern VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = MemoryHeapFlags 0x1
 
 
 
 data QueueFamilyProperties =
-  QueueFamilyProperties{ queueFlags :: VkQueueFlags 
+  QueueFamilyProperties{ queueFlags :: QueueFlags 
                        , queueCount :: Word32 
                        , timestampValidBits :: Word32 
                        , minImageTransferGranularity :: Extent3D 
@@ -687,7 +687,7 @@ data ImageFormatProperties =
   ImageFormatProperties{ maxExtent :: Extent3D 
                        , maxMipLevels :: Word32 
                        , maxArrayLayers :: Word32 
-                       , sampleCounts :: VkSampleCountFlags 
+                       , sampleCounts :: SampleCountFlags 
                        , maxResourceSize :: VkDeviceSize 
                        }
   deriving (Eq)
@@ -746,7 +746,7 @@ data PhysicalDeviceProperties =
                           , driverVersion :: Word32 
                           , vendorID :: Word32 
                           , deviceID :: Word32 
-                          , deviceType :: VkPhysicalDeviceType 
+                          , deviceType :: PhysicalDeviceType 
                           , deviceName :: Vector VK_MAX_PHYSICAL_DEVICE_NAME_SIZE CChar 
                           , pipelineCacheUUID :: Vector VK_UUID_SIZE Word8 
                           , limits :: PhysicalDeviceLimits 
@@ -783,7 +783,7 @@ foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties" vkGetPhysicalDev
 
 
 data MemoryType =
-  MemoryType{ propertyFlags :: VkMemoryPropertyFlags 
+  MemoryType{ propertyFlags :: MemoryPropertyFlags 
             , heapIndex :: Word32 
             }
   deriving (Eq)
@@ -803,19 +803,19 @@ foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr ::
 
 -- ** VkMemoryPropertyFlags
 
-newtype VkMemoryPropertyFlags = VkMemoryPropertyFlags VkFlags
+newtype MemoryPropertyFlags = MemoryPropertyFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkMemoryPropertyFlags where
+instance Show MemoryPropertyFlags where
   showsPrec _ VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = showString "VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT"
   showsPrec _ VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = showString "VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT"
   showsPrec _ VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = showString "VK_MEMORY_PROPERTY_HOST_COHERENT_BIT"
   showsPrec _ VK_MEMORY_PROPERTY_HOST_CACHED_BIT = showString "VK_MEMORY_PROPERTY_HOST_CACHED_BIT"
   showsPrec _ VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = showString "VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT"
   
-  showsPrec p (VkMemoryPropertyFlags x) = showParen (p >= 11) (showString "VkMemoryPropertyFlags " . showsPrec 11 x)
+  showsPrec p (MemoryPropertyFlags x) = showParen (p >= 11) (showString "MemoryPropertyFlags " . showsPrec 11 x)
 
-instance Read VkMemoryPropertyFlags where
+instance Read MemoryPropertyFlags where
   readPrec = parens ( choose [ ("VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT", pure VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
                              , ("VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT", pure VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
                              , ("VK_MEMORY_PROPERTY_HOST_COHERENT_BIT", pure VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
@@ -823,22 +823,22 @@ instance Read VkMemoryPropertyFlags where
                              , ("VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT", pure VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkMemoryPropertyFlags")
+                        expectP (Ident "MemoryPropertyFlags")
                         v <- step readPrec
-                        pure (VkMemoryPropertyFlags v)
+                        pure (MemoryPropertyFlags v)
                         )
                     )
 
 -- | If otherwise stated, then allocate memory on device
-pattern VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = VkMemoryPropertyFlags 0x1
+pattern VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = MemoryPropertyFlags 0x1
 -- | Memory is mappable by host
-pattern VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = VkMemoryPropertyFlags 0x2
+pattern VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = MemoryPropertyFlags 0x2
 -- | Memory will have i/o coherency. If not set, application may need to use vkFlushMappedMemoryRanges and vkInvalidateMappedMemoryRanges to flush/invalidate host cache
-pattern VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = VkMemoryPropertyFlags 0x4
+pattern VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = MemoryPropertyFlags 0x4
 -- | Memory will be cached by the host
-pattern VK_MEMORY_PROPERTY_HOST_CACHED_BIT = VkMemoryPropertyFlags 0x8
+pattern VK_MEMORY_PROPERTY_HOST_CACHED_BIT = MemoryPropertyFlags 0x8
 -- | Memory may be allocated by the driver when it is required
-pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = VkMemoryPropertyFlags 0x10
+pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = MemoryPropertyFlags 0x10
 
 
 -- ** vkDestroyInstance
@@ -847,58 +847,58 @@ foreign import ccall "vkDestroyInstance" vkDestroyInstance ::
 
 -- ** VkQueueFlags
 
-newtype VkQueueFlags = VkQueueFlags VkFlags
+newtype QueueFlags = QueueFlags VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkQueueFlags where
+instance Show QueueFlags where
   showsPrec _ VK_QUEUE_GRAPHICS_BIT = showString "VK_QUEUE_GRAPHICS_BIT"
   showsPrec _ VK_QUEUE_COMPUTE_BIT = showString "VK_QUEUE_COMPUTE_BIT"
   showsPrec _ VK_QUEUE_TRANSFER_BIT = showString "VK_QUEUE_TRANSFER_BIT"
   showsPrec _ VK_QUEUE_SPARSE_BINDING_BIT = showString "VK_QUEUE_SPARSE_BINDING_BIT"
   
-  showsPrec p (VkQueueFlags x) = showParen (p >= 11) (showString "VkQueueFlags " . showsPrec 11 x)
+  showsPrec p (QueueFlags x) = showParen (p >= 11) (showString "QueueFlags " . showsPrec 11 x)
 
-instance Read VkQueueFlags where
+instance Read QueueFlags where
   readPrec = parens ( choose [ ("VK_QUEUE_GRAPHICS_BIT", pure VK_QUEUE_GRAPHICS_BIT)
                              , ("VK_QUEUE_COMPUTE_BIT", pure VK_QUEUE_COMPUTE_BIT)
                              , ("VK_QUEUE_TRANSFER_BIT", pure VK_QUEUE_TRANSFER_BIT)
                              , ("VK_QUEUE_SPARSE_BINDING_BIT", pure VK_QUEUE_SPARSE_BINDING_BIT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkQueueFlags")
+                        expectP (Ident "QueueFlags")
                         v <- step readPrec
-                        pure (VkQueueFlags v)
+                        pure (QueueFlags v)
                         )
                     )
 
 -- | Queue supports graphics operations
-pattern VK_QUEUE_GRAPHICS_BIT = VkQueueFlags 0x1
+pattern VK_QUEUE_GRAPHICS_BIT = QueueFlags 0x1
 -- | Queue supports compute operations
-pattern VK_QUEUE_COMPUTE_BIT = VkQueueFlags 0x2
+pattern VK_QUEUE_COMPUTE_BIT = QueueFlags 0x2
 -- | Queue supports transfer operations
-pattern VK_QUEUE_TRANSFER_BIT = VkQueueFlags 0x4
+pattern VK_QUEUE_TRANSFER_BIT = QueueFlags 0x4
 -- | Queue supports sparse resource memory management operations
-pattern VK_QUEUE_SPARSE_BINDING_BIT = VkQueueFlags 0x8
+pattern VK_QUEUE_SPARSE_BINDING_BIT = QueueFlags 0x8
 
 
 -- ** vkGetPhysicalDeviceProperties
 foreign import ccall "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperties ::
   PhysicalDevice -> Ptr PhysicalDeviceProperties -> IO ()
 
--- ** VkInstanceCreateFlags
+-- ** InstanceCreateFlags
 -- | Opaque flag
-newtype VkInstanceCreateFlags = VkInstanceCreateFlags VkFlags
+newtype InstanceCreateFlags = InstanceCreateFlags VkFlags
   deriving (Eq, Storable)
 
 -- ** vkGetPhysicalDeviceFormatProperties
 foreign import ccall "vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties ::
-  PhysicalDevice -> VkFormat -> Ptr FormatProperties -> IO ()
+  PhysicalDevice -> Format -> Ptr FormatProperties -> IO ()
 
 
 data FormatProperties =
-  FormatProperties{ linearTilingFeatures :: VkFormatFeatureFlags 
-                  , optimalTilingFeatures :: VkFormatFeatureFlags 
-                  , bufferFeatures :: VkFormatFeatureFlags 
+  FormatProperties{ linearTilingFeatures :: FormatFeatureFlags 
+                  , optimalTilingFeatures :: FormatFeatureFlags 
+                  , bufferFeatures :: FormatFeatureFlags 
                   }
   deriving (Eq)
 

@@ -31,9 +31,9 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
-                           , VkResult(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
+                           , Result(..)
                            , VkDeviceSize(..)
                            )
 import Foreign.C.Types( CSize(..)
@@ -47,12 +47,11 @@ foreign import ccall "vkMapMemory" vkMapMemory ::
   Device ->
   DeviceMemory ->
     VkDeviceSize ->
-      VkDeviceSize -> VkMemoryMapFlags -> Ptr (Ptr Void) -> IO VkResult
+      VkDeviceSize -> MemoryMapFlags -> Ptr (Ptr Void) -> IO Result
 
 type PFN_vkInternalFreeNotification = FunPtr
   (Ptr Void ->
-     CSize ->
-       VkInternalAllocationType -> VkSystemAllocationScope -> IO ())
+     CSize -> InternalAllocationType -> SystemAllocationScope -> IO ())
 
 
 data AllocationCallbacks =
@@ -84,22 +83,22 @@ instance Storable AllocationCallbacks where
 
 -- ** vkInvalidateMappedMemoryRanges
 foreign import ccall "vkInvalidateMappedMemoryRanges" vkInvalidateMappedMemoryRanges ::
-  Device -> Word32 -> Ptr MappedMemoryRange -> IO VkResult
+  Device -> Word32 -> Ptr MappedMemoryRange -> IO Result
 
--- ** VkSystemAllocationScope
+-- ** SystemAllocationScope
 
-newtype VkSystemAllocationScope = VkSystemAllocationScope Int32
+newtype SystemAllocationScope = SystemAllocationScope Int32
   deriving (Eq, Storable)
 
-instance Show VkSystemAllocationScope where
+instance Show SystemAllocationScope where
   showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = showString "VK_SYSTEM_ALLOCATION_SCOPE_COMMAND"
   showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_OBJECT = showString "VK_SYSTEM_ALLOCATION_SCOPE_OBJECT"
   showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_CACHE = showString "VK_SYSTEM_ALLOCATION_SCOPE_CACHE"
   showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = showString "VK_SYSTEM_ALLOCATION_SCOPE_DEVICE"
   showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = showString "VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE"
-  showsPrec p (VkSystemAllocationScope x) = showParen (p >= 11) (showString "VkSystemAllocationScope " . showsPrec 11 x)
+  showsPrec p (SystemAllocationScope x) = showParen (p >= 11) (showString "SystemAllocationScope " . showsPrec 11 x)
 
-instance Read VkSystemAllocationScope where
+instance Read SystemAllocationScope where
   readPrec = parens ( choose [ ("VK_SYSTEM_ALLOCATION_SCOPE_COMMAND", pure VK_SYSTEM_ALLOCATION_SCOPE_COMMAND)
                              , ("VK_SYSTEM_ALLOCATION_SCOPE_OBJECT", pure VK_SYSTEM_ALLOCATION_SCOPE_OBJECT)
                              , ("VK_SYSTEM_ALLOCATION_SCOPE_CACHE", pure VK_SYSTEM_ALLOCATION_SCOPE_CACHE)
@@ -107,36 +106,35 @@ instance Read VkSystemAllocationScope where
                              , ("VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE", pure VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSystemAllocationScope")
+                        expectP (Ident "SystemAllocationScope")
                         v <- step readPrec
-                        pure (VkSystemAllocationScope v)
+                        pure (SystemAllocationScope v)
                         )
                     )
 
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = VkSystemAllocationScope 0
+pattern VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = SystemAllocationScope 0
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_OBJECT = VkSystemAllocationScope 1
+pattern VK_SYSTEM_ALLOCATION_SCOPE_OBJECT = SystemAllocationScope 1
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_CACHE = VkSystemAllocationScope 2
+pattern VK_SYSTEM_ALLOCATION_SCOPE_CACHE = SystemAllocationScope 2
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = VkSystemAllocationScope 3
+pattern VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = SystemAllocationScope 3
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = VkSystemAllocationScope 4
+pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = SystemAllocationScope 4
 
 -- ** vkFlushMappedMemoryRanges
 foreign import ccall "vkFlushMappedMemoryRanges" vkFlushMappedMemoryRanges ::
-  Device -> Word32 -> Ptr MappedMemoryRange -> IO VkResult
+  Device -> Word32 -> Ptr MappedMemoryRange -> IO Result
 
--- ** VkMemoryMapFlags
+-- ** MemoryMapFlags
 -- | Opaque flag
-newtype VkMemoryMapFlags = VkMemoryMapFlags VkFlags
+newtype MemoryMapFlags = MemoryMapFlags VkFlags
   deriving (Eq, Storable)
 
 type PFN_vkInternalAllocationNotification = FunPtr
   (Ptr Void ->
-     CSize ->
-       VkInternalAllocationType -> VkSystemAllocationScope -> IO ())
+     CSize -> InternalAllocationType -> SystemAllocationScope -> IO ())
 
 -- ** vkFreeMemory
 foreign import ccall "vkFreeMemory" vkFreeMemory ::
@@ -145,7 +143,7 @@ foreign import ccall "vkFreeMemory" vkFreeMemory ::
 type PFN_vkReallocationFunction = FunPtr
   (Ptr Void ->
      Ptr Void ->
-       CSize -> CSize -> VkSystemAllocationScope -> IO (Ptr Void))
+       CSize -> CSize -> SystemAllocationScope -> IO (Ptr Void))
 
 -- ** vkUnmapMemory
 foreign import ccall "vkUnmapMemory" vkUnmapMemory ::
@@ -153,29 +151,29 @@ foreign import ccall "vkUnmapMemory" vkUnmapMemory ::
 
 type PFN_vkAllocationFunction = FunPtr
   (Ptr Void ->
-     CSize -> CSize -> VkSystemAllocationScope -> IO (Ptr Void))
+     CSize -> CSize -> SystemAllocationScope -> IO (Ptr Void))
 
--- ** VkInternalAllocationType
+-- ** InternalAllocationType
 
-newtype VkInternalAllocationType = VkInternalAllocationType Int32
+newtype InternalAllocationType = InternalAllocationType Int32
   deriving (Eq, Storable)
 
-instance Show VkInternalAllocationType where
+instance Show InternalAllocationType where
   showsPrec _ VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = showString "VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
-  showsPrec p (VkInternalAllocationType x) = showParen (p >= 11) (showString "VkInternalAllocationType " . showsPrec 11 x)
+  showsPrec p (InternalAllocationType x) = showParen (p >= 11) (showString "InternalAllocationType " . showsPrec 11 x)
 
-instance Read VkInternalAllocationType where
+instance Read InternalAllocationType where
   readPrec = parens ( choose [ ("VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE", pure VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkInternalAllocationType")
+                        expectP (Ident "InternalAllocationType")
                         v <- step readPrec
-                        pure (VkInternalAllocationType v)
+                        pure (InternalAllocationType v)
                         )
                     )
 
 
-pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = VkInternalAllocationType 0
+pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = InternalAllocationType 0
 
 type PFN_vkFreeFunction = FunPtr (Ptr Void -> Ptr Void -> IO ())
 
@@ -187,11 +185,11 @@ foreign import ccall "vkGetDeviceMemoryCommitment" vkGetDeviceMemoryCommitment :
 foreign import ccall "vkAllocateMemory" vkAllocateMemory ::
   Device ->
   Ptr MemoryAllocateInfo ->
-    Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO Result
 
 
 data MappedMemoryRange =
-  MappedMemoryRange{ sType :: VkStructureType 
+  MappedMemoryRange{ sType :: StructureType 
                    , pNext :: Ptr Void 
                    , memory :: DeviceMemory 
                    , offset :: VkDeviceSize 
@@ -216,7 +214,7 @@ instance Storable MappedMemoryRange where
 
 
 data MemoryAllocateInfo =
-  MemoryAllocateInfo{ sType :: VkStructureType 
+  MemoryAllocateInfo{ sType :: StructureType 
                     , pNext :: Ptr Void 
                     , allocationSize :: VkDeviceSize 
                     , memoryTypeIndex :: Word32 

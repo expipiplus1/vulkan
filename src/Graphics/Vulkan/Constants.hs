@@ -52,27 +52,27 @@ type VK_MAX_MEMORY_HEAPS = 16
 
 pattern VK_FALSE = 0
 type VK_FALSE = 0
--- ** VkPipelineCacheHeaderVersion
+-- ** PipelineCacheHeaderVersion
 
-newtype VkPipelineCacheHeaderVersion = VkPipelineCacheHeaderVersion Int32
+newtype PipelineCacheHeaderVersion = PipelineCacheHeaderVersion Int32
   deriving (Eq, Storable)
 
-instance Show VkPipelineCacheHeaderVersion where
+instance Show PipelineCacheHeaderVersion where
   showsPrec _ VK_PIPELINE_CACHE_HEADER_VERSION_ONE = showString "VK_PIPELINE_CACHE_HEADER_VERSION_ONE"
-  showsPrec p (VkPipelineCacheHeaderVersion x) = showParen (p >= 11) (showString "VkPipelineCacheHeaderVersion " . showsPrec 11 x)
+  showsPrec p (PipelineCacheHeaderVersion x) = showParen (p >= 11) (showString "PipelineCacheHeaderVersion " . showsPrec 11 x)
 
-instance Read VkPipelineCacheHeaderVersion where
+instance Read PipelineCacheHeaderVersion where
   readPrec = parens ( choose [ ("VK_PIPELINE_CACHE_HEADER_VERSION_ONE", pure VK_PIPELINE_CACHE_HEADER_VERSION_ONE)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkPipelineCacheHeaderVersion")
+                        expectP (Ident "PipelineCacheHeaderVersion")
                         v <- step readPrec
-                        pure (VkPipelineCacheHeaderVersion v)
+                        pure (PipelineCacheHeaderVersion v)
                         )
                     )
 
 
-pattern VK_PIPELINE_CACHE_HEADER_VERSION_ONE = VkPipelineCacheHeaderVersion 1
+pattern VK_PIPELINE_CACHE_HEADER_VERSION_ONE = PipelineCacheHeaderVersion 1
 
 
 pattern VK_MAX_EXTENSION_NAME_SIZE = 256

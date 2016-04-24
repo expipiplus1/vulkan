@@ -36,10 +36,10 @@ import Text.ParserCombinators.ReadPrec( prec
                                       )
 import Graphics.Vulkan.DeviceInitialization( Instance(..)
                                            )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFlags(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , StructureType(..)
                            , VkBool32(..)
-                           , VkResult(..)
+                           , Result(..)
                            )
 import Foreign.C.Types( CChar(..)
                       , CSize(..)
@@ -48,19 +48,19 @@ import Foreign.C.Types( CChar(..)
 -- ** vkDebugReportMessageEXT
 foreign import ccall "vkDebugReportMessageEXT" vkDebugReportMessageEXT ::
   Instance ->
-  VkDebugReportFlagsEXT ->
-    VkDebugReportObjectTypeEXT ->
+  DebugReportFlagsEXT ->
+    DebugReportObjectTypeEXT ->
       Word64 -> CSize -> Int32 -> Ptr CChar -> Ptr CChar -> IO ()
 
 newtype DebugReportCallbackEXT = DebugReportCallbackEXT Word64
   deriving (Eq, Storable)
 
--- ** VkDebugReportObjectTypeEXT
+-- ** DebugReportObjectTypeEXT
 
-newtype VkDebugReportObjectTypeEXT = VkDebugReportObjectTypeEXT Int32
+newtype DebugReportObjectTypeEXT = DebugReportObjectTypeEXT Int32
   deriving (Eq, Storable)
 
-instance Show VkDebugReportObjectTypeEXT where
+instance Show DebugReportObjectTypeEXT where
   showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT"
   showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT"
   showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT"
@@ -90,9 +90,9 @@ instance Show VkDebugReportObjectTypeEXT where
   showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT"
   showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT"
   showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT"
-  showsPrec p (VkDebugReportObjectTypeEXT x) = showParen (p >= 11) (showString "VkDebugReportObjectTypeEXT " . showsPrec 11 x)
+  showsPrec p (DebugReportObjectTypeEXT x) = showParen (p >= 11) (showString "DebugReportObjectTypeEXT " . showsPrec 11 x)
 
-instance Read VkDebugReportObjectTypeEXT where
+instance Read DebugReportObjectTypeEXT where
   readPrec = parens ( choose [ ("VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT)
                              , ("VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT)
                              , ("VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT)
@@ -124,102 +124,102 @@ instance Read VkDebugReportObjectTypeEXT where
                              , ("VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDebugReportObjectTypeEXT")
+                        expectP (Ident "DebugReportObjectTypeEXT")
                         v <- step readPrec
-                        pure (VkDebugReportObjectTypeEXT v)
+                        pure (DebugReportObjectTypeEXT v)
                         )
                     )
 
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = VkDebugReportObjectTypeEXT 0
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = DebugReportObjectTypeEXT 0
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = VkDebugReportObjectTypeEXT 1
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = DebugReportObjectTypeEXT 1
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = VkDebugReportObjectTypeEXT 2
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = DebugReportObjectTypeEXT 2
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT = VkDebugReportObjectTypeEXT 3
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT = DebugReportObjectTypeEXT 3
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT = VkDebugReportObjectTypeEXT 4
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT = DebugReportObjectTypeEXT 4
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT = VkDebugReportObjectTypeEXT 5
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT = DebugReportObjectTypeEXT 5
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT = VkDebugReportObjectTypeEXT 6
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT = DebugReportObjectTypeEXT 6
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT = VkDebugReportObjectTypeEXT 7
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT = DebugReportObjectTypeEXT 7
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT = VkDebugReportObjectTypeEXT 8
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT = DebugReportObjectTypeEXT 8
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT = VkDebugReportObjectTypeEXT 9
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT = DebugReportObjectTypeEXT 9
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT = VkDebugReportObjectTypeEXT 10
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT = DebugReportObjectTypeEXT 10
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT = VkDebugReportObjectTypeEXT 11
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT = DebugReportObjectTypeEXT 11
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT = VkDebugReportObjectTypeEXT 12
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT = DebugReportObjectTypeEXT 12
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT = VkDebugReportObjectTypeEXT 13
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT = DebugReportObjectTypeEXT 13
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT = VkDebugReportObjectTypeEXT 14
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT = DebugReportObjectTypeEXT 14
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT = VkDebugReportObjectTypeEXT 15
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT = DebugReportObjectTypeEXT 15
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT = VkDebugReportObjectTypeEXT 16
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT = DebugReportObjectTypeEXT 16
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT = VkDebugReportObjectTypeEXT 17
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT = DebugReportObjectTypeEXT 17
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT = VkDebugReportObjectTypeEXT 18
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT = DebugReportObjectTypeEXT 18
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT = VkDebugReportObjectTypeEXT 19
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT = DebugReportObjectTypeEXT 19
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT = VkDebugReportObjectTypeEXT 20
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT = DebugReportObjectTypeEXT 20
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT = VkDebugReportObjectTypeEXT 21
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT = DebugReportObjectTypeEXT 21
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT = VkDebugReportObjectTypeEXT 22
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT = DebugReportObjectTypeEXT 22
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT = VkDebugReportObjectTypeEXT 23
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT = DebugReportObjectTypeEXT 23
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT = VkDebugReportObjectTypeEXT 24
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT = DebugReportObjectTypeEXT 24
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT = VkDebugReportObjectTypeEXT 25
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT = DebugReportObjectTypeEXT 25
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT = VkDebugReportObjectTypeEXT 26
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT = DebugReportObjectTypeEXT 26
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT = VkDebugReportObjectTypeEXT 27
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT = DebugReportObjectTypeEXT 27
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = VkDebugReportObjectTypeEXT 28
+pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = DebugReportObjectTypeEXT 28
 
--- ** VkDebugReportErrorEXT
+-- ** DebugReportErrorEXT
 
-newtype VkDebugReportErrorEXT = VkDebugReportErrorEXT Int32
+newtype DebugReportErrorEXT = DebugReportErrorEXT Int32
   deriving (Eq, Storable)
 
-instance Show VkDebugReportErrorEXT where
+instance Show DebugReportErrorEXT where
   showsPrec _ VK_DEBUG_REPORT_ERROR_NONE_EXT = showString "VK_DEBUG_REPORT_ERROR_NONE_EXT"
   showsPrec _ VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT = showString "VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT"
-  showsPrec p (VkDebugReportErrorEXT x) = showParen (p >= 11) (showString "VkDebugReportErrorEXT " . showsPrec 11 x)
+  showsPrec p (DebugReportErrorEXT x) = showParen (p >= 11) (showString "DebugReportErrorEXT " . showsPrec 11 x)
 
-instance Read VkDebugReportErrorEXT where
+instance Read DebugReportErrorEXT where
   readPrec = parens ( choose [ ("VK_DEBUG_REPORT_ERROR_NONE_EXT", pure VK_DEBUG_REPORT_ERROR_NONE_EXT)
                              , ("VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT", pure VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDebugReportErrorEXT")
+                        expectP (Ident "DebugReportErrorEXT")
                         v <- step readPrec
-                        pure (VkDebugReportErrorEXT v)
+                        pure (DebugReportErrorEXT v)
                         )
                     )
 
 
-pattern VK_DEBUG_REPORT_ERROR_NONE_EXT = VkDebugReportErrorEXT 0
+pattern VK_DEBUG_REPORT_ERROR_NONE_EXT = DebugReportErrorEXT 0
 
-pattern VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT = VkDebugReportErrorEXT 1
+pattern VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT = DebugReportErrorEXT 1
 
 
 data DebugReportCallbackCreateInfoEXT =
-  DebugReportCallbackCreateInfoEXT{ sType :: VkStructureType 
+  DebugReportCallbackCreateInfoEXT{ sType :: StructureType 
                                   , pNext :: Ptr Void 
-                                  , flags :: VkDebugReportFlagsEXT 
+                                  , flags :: DebugReportFlagsEXT 
                                   , pfnCallback :: PFN_vkDebugReportCallbackEXT 
                                   , pUserData :: Ptr Void 
                                   }
@@ -247,19 +247,19 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallb
 
 -- ** VkDebugReportFlagsEXT
 
-newtype VkDebugReportFlagsEXT = VkDebugReportFlagsEXT VkFlags
+newtype DebugReportFlagsEXT = DebugReportFlagsEXT VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkDebugReportFlagsEXT where
+instance Show DebugReportFlagsEXT where
   showsPrec _ VK_DEBUG_REPORT_INFORMATION_BIT_EXT = showString "VK_DEBUG_REPORT_INFORMATION_BIT_EXT"
   showsPrec _ VK_DEBUG_REPORT_WARNING_BIT_EXT = showString "VK_DEBUG_REPORT_WARNING_BIT_EXT"
   showsPrec _ VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = showString "VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT"
   showsPrec _ VK_DEBUG_REPORT_ERROR_BIT_EXT = showString "VK_DEBUG_REPORT_ERROR_BIT_EXT"
   showsPrec _ VK_DEBUG_REPORT_DEBUG_BIT_EXT = showString "VK_DEBUG_REPORT_DEBUG_BIT_EXT"
   
-  showsPrec p (VkDebugReportFlagsEXT x) = showParen (p >= 11) (showString "VkDebugReportFlagsEXT " . showsPrec 11 x)
+  showsPrec p (DebugReportFlagsEXT x) = showParen (p >= 11) (showString "DebugReportFlagsEXT " . showsPrec 11 x)
 
-instance Read VkDebugReportFlagsEXT where
+instance Read DebugReportFlagsEXT where
   readPrec = parens ( choose [ ("VK_DEBUG_REPORT_INFORMATION_BIT_EXT", pure VK_DEBUG_REPORT_INFORMATION_BIT_EXT)
                              , ("VK_DEBUG_REPORT_WARNING_BIT_EXT", pure VK_DEBUG_REPORT_WARNING_BIT_EXT)
                              , ("VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT", pure VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)
@@ -267,27 +267,27 @@ instance Read VkDebugReportFlagsEXT where
                              , ("VK_DEBUG_REPORT_DEBUG_BIT_EXT", pure VK_DEBUG_REPORT_DEBUG_BIT_EXT)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDebugReportFlagsEXT")
+                        expectP (Ident "DebugReportFlagsEXT")
                         v <- step readPrec
-                        pure (VkDebugReportFlagsEXT v)
+                        pure (DebugReportFlagsEXT v)
                         )
                     )
 
 
-pattern VK_DEBUG_REPORT_INFORMATION_BIT_EXT = VkDebugReportFlagsEXT 0x1
+pattern VK_DEBUG_REPORT_INFORMATION_BIT_EXT = DebugReportFlagsEXT 0x1
 
-pattern VK_DEBUG_REPORT_WARNING_BIT_EXT = VkDebugReportFlagsEXT 0x2
+pattern VK_DEBUG_REPORT_WARNING_BIT_EXT = DebugReportFlagsEXT 0x2
 
-pattern VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = VkDebugReportFlagsEXT 0x4
+pattern VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = DebugReportFlagsEXT 0x4
 
-pattern VK_DEBUG_REPORT_ERROR_BIT_EXT = VkDebugReportFlagsEXT 0x8
+pattern VK_DEBUG_REPORT_ERROR_BIT_EXT = DebugReportFlagsEXT 0x8
 
-pattern VK_DEBUG_REPORT_DEBUG_BIT_EXT = VkDebugReportFlagsEXT 0x10
+pattern VK_DEBUG_REPORT_DEBUG_BIT_EXT = DebugReportFlagsEXT 0x10
 
 
 type PFN_vkDebugReportCallbackEXT = FunPtr
-  (VkDebugReportFlagsEXT ->
-     VkDebugReportObjectTypeEXT ->
+  (DebugReportFlagsEXT ->
+     DebugReportObjectTypeEXT ->
        Word64 ->
          CSize ->
            Int32 -> Ptr CChar -> Ptr CChar -> Ptr Void -> IO VkBool32)
@@ -296,6 +296,5 @@ type PFN_vkDebugReportCallbackEXT = FunPtr
 foreign import ccall "vkCreateDebugReportCallbackEXT" vkCreateDebugReportCallbackEXT ::
   Instance ->
   Ptr DebugReportCallbackCreateInfoEXT ->
-    Ptr AllocationCallbacks ->
-      Ptr DebugReportCallbackEXT -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr DebugReportCallbackEXT -> IO Result
 

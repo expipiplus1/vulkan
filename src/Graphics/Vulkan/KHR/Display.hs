@@ -17,8 +17,8 @@ import Data.Word( Word64(..)
 import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
-import Graphics.Vulkan.KHR.Surface( SurfaceKHR(..)
-                                  , VkSurfaceTransformFlagsKHR(..)
+import Graphics.Vulkan.KHR.Surface( SurfaceTransformFlagsKHR(..)
+                                  , SurfaceKHR(..)
                                   )
 import Data.Bits( Bits
                 , FiniteBits
@@ -38,11 +38,11 @@ import Text.ParserCombinators.ReadPrec( prec
                                       )
 import Graphics.Vulkan.DeviceInitialization( Instance(..)
                                            )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , Offset2D(..)
+import Graphics.Vulkan.Core( Offset2D(..)
                            , VkFlags(..)
+                           , StructureType(..)
                            , VkBool32(..)
-                           , VkResult(..)
+                           , Result(..)
                            , Extent2D(..)
                            )
 import Foreign.C.Types( CFloat(..)
@@ -51,15 +51,15 @@ import Foreign.C.Types( CFloat(..)
 
 
 data DisplaySurfaceCreateInfoKHR =
-  DisplaySurfaceCreateInfoKHR{ sType :: VkStructureType 
+  DisplaySurfaceCreateInfoKHR{ sType :: StructureType 
                              , pNext :: Ptr Void 
-                             , flags :: VkDisplaySurfaceCreateFlagsKHR 
+                             , flags :: DisplaySurfaceCreateFlagsKHR 
                              , displayMode :: DisplayModeKHR 
                              , planeIndex :: Word32 
                              , planeStackIndex :: Word32 
-                             , transform :: VkSurfaceTransformFlagsKHR 
+                             , transform :: SurfaceTransformFlagsKHR 
                              , globalAlpha :: CFloat 
-                             , alphaMode :: VkDisplayPlaneAlphaFlagsKHR 
+                             , alphaMode :: DisplayPlaneAlphaFlagsKHR 
                              , imageExtent :: Extent2D 
                              }
   deriving (Eq)
@@ -91,7 +91,7 @@ instance Storable DisplaySurfaceCreateInfoKHR where
 
 
 data DisplayPlaneCapabilitiesKHR =
-  DisplayPlaneCapabilitiesKHR{ supportedAlpha :: VkDisplayPlaneAlphaFlagsKHR 
+  DisplayPlaneCapabilitiesKHR{ supportedAlpha :: DisplayPlaneAlphaFlagsKHR 
                              , minSrcPosition :: Offset2D 
                              , maxSrcPosition :: Offset2D 
                              , minSrcExtent :: Extent2D 
@@ -130,7 +130,7 @@ instance Storable DisplayPlaneCapabilitiesKHR where
 foreign import ccall "vkGetDisplayModePropertiesKHR" vkGetDisplayModePropertiesKHR ::
   PhysicalDevice ->
   DisplayKHR ->
-    Ptr Word32 -> Ptr DisplayModePropertiesKHR -> IO VkResult
+    Ptr Word32 -> Ptr DisplayModePropertiesKHR -> IO Result
 
 
 data DisplayPropertiesKHR =
@@ -138,7 +138,7 @@ data DisplayPropertiesKHR =
                       , displayName :: Ptr CChar 
                       , physicalDimensions :: Extent2D 
                       , physicalResolution :: Extent2D 
-                      , supportedTransforms :: VkSurfaceTransformFlagsKHR 
+                      , supportedTransforms :: SurfaceTransformFlagsKHR 
                       , planeReorderPossible :: VkBool32 
                       , persistentContent :: VkBool32 
                       }
@@ -166,14 +166,14 @@ instance Storable DisplayPropertiesKHR where
 -- ** vkGetDisplayPlaneSupportedDisplaysKHR
 foreign import ccall "vkGetDisplayPlaneSupportedDisplaysKHR" vkGetDisplayPlaneSupportedDisplaysKHR ::
   PhysicalDevice ->
-  Word32 -> Ptr Word32 -> Ptr DisplayKHR -> IO VkResult
+  Word32 -> Ptr Word32 -> Ptr DisplayKHR -> IO Result
 
 -- ** vkCreateDisplayModeKHR
 foreign import ccall "vkCreateDisplayModeKHR" vkCreateDisplayModeKHR ::
   PhysicalDevice ->
   DisplayKHR ->
     Ptr DisplayModeCreateInfoKHR ->
-      Ptr AllocationCallbacks -> Ptr DisplayModeKHR -> IO VkResult
+      Ptr AllocationCallbacks -> Ptr DisplayModeKHR -> IO Result
 
 
 data DisplayPlanePropertiesKHR =
@@ -195,7 +195,7 @@ instance Storable DisplayPlanePropertiesKHR where
 foreign import ccall "vkGetDisplayPlaneCapabilitiesKHR" vkGetDisplayPlaneCapabilitiesKHR ::
   PhysicalDevice ->
   DisplayModeKHR ->
-    Word32 -> Ptr DisplayPlaneCapabilitiesKHR -> IO VkResult
+    Word32 -> Ptr DisplayPlaneCapabilitiesKHR -> IO Result
 
 
 data DisplayModePropertiesKHR =
@@ -215,50 +215,50 @@ instance Storable DisplayModePropertiesKHR where
 
 -- ** VkDisplayPlaneAlphaFlagsKHR
 
-newtype VkDisplayPlaneAlphaFlagsKHR = VkDisplayPlaneAlphaFlagsKHR VkFlags
+newtype DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagsKHR VkFlags
   deriving (Eq, Storable, Bits, FiniteBits)
 
-instance Show VkDisplayPlaneAlphaFlagsKHR where
+instance Show DisplayPlaneAlphaFlagsKHR where
   showsPrec _ VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR"
   showsPrec _ VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR"
   showsPrec _ VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR"
   showsPrec _ VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR"
   
-  showsPrec p (VkDisplayPlaneAlphaFlagsKHR x) = showParen (p >= 11) (showString "VkDisplayPlaneAlphaFlagsKHR " . showsPrec 11 x)
+  showsPrec p (DisplayPlaneAlphaFlagsKHR x) = showParen (p >= 11) (showString "DisplayPlaneAlphaFlagsKHR " . showsPrec 11 x)
 
-instance Read VkDisplayPlaneAlphaFlagsKHR where
+instance Read DisplayPlaneAlphaFlagsKHR where
   readPrec = parens ( choose [ ("VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR)
                              , ("VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR)
                              , ("VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR)
                              , ("VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDisplayPlaneAlphaFlagsKHR")
+                        expectP (Ident "DisplayPlaneAlphaFlagsKHR")
                         v <- step readPrec
-                        pure (VkDisplayPlaneAlphaFlagsKHR v)
+                        pure (DisplayPlaneAlphaFlagsKHR v)
                         )
                     )
 
 
-pattern VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = VkDisplayPlaneAlphaFlagsKHR 0x1
+pattern VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = DisplayPlaneAlphaFlagsKHR 0x1
 
-pattern VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = VkDisplayPlaneAlphaFlagsKHR 0x2
+pattern VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = DisplayPlaneAlphaFlagsKHR 0x2
 
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = VkDisplayPlaneAlphaFlagsKHR 0x4
+pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = DisplayPlaneAlphaFlagsKHR 0x4
 
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = VkDisplayPlaneAlphaFlagsKHR 0x8
+pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = DisplayPlaneAlphaFlagsKHR 0x8
 
 
--- ** VkDisplayModeCreateFlagsKHR
+-- ** DisplayModeCreateFlagsKHR
 -- | Opaque flag
-newtype VkDisplayModeCreateFlagsKHR = VkDisplayModeCreateFlagsKHR VkFlags
+newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR VkFlags
   deriving (Eq, Storable)
 
 
 data DisplayModeCreateInfoKHR =
-  DisplayModeCreateInfoKHR{ sType :: VkStructureType 
+  DisplayModeCreateInfoKHR{ sType :: StructureType 
                           , pNext :: Ptr Void 
-                          , flags :: VkDisplayModeCreateFlagsKHR 
+                          , flags :: DisplayModeCreateFlagsKHR 
                           , parameters :: DisplayModeParametersKHR 
                           }
   deriving (Eq)
@@ -279,7 +279,7 @@ instance Storable DisplayModeCreateInfoKHR where
 -- ** vkGetPhysicalDeviceDisplayPlanePropertiesKHR
 foreign import ccall "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" vkGetPhysicalDeviceDisplayPlanePropertiesKHR ::
   PhysicalDevice ->
-  Ptr Word32 -> Ptr DisplayPlanePropertiesKHR -> IO VkResult
+  Ptr Word32 -> Ptr DisplayPlanePropertiesKHR -> IO Result
 
 newtype DisplayModeKHR = DisplayModeKHR Word64
   deriving (Eq, Storable)
@@ -300,9 +300,9 @@ instance Storable DisplayModeParametersKHR where
                 *> poke (ptr `plusPtr` 8) (refreshRate (poked :: DisplayModeParametersKHR))
 
 
--- ** VkDisplaySurfaceCreateFlagsKHR
+-- ** DisplaySurfaceCreateFlagsKHR
 -- | Opaque flag
-newtype VkDisplaySurfaceCreateFlagsKHR = VkDisplaySurfaceCreateFlagsKHR VkFlags
+newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR VkFlags
   deriving (Eq, Storable)
 
 newtype DisplayKHR = DisplayKHR Word64
@@ -311,11 +311,11 @@ newtype DisplayKHR = DisplayKHR Word64
 -- ** vkGetPhysicalDeviceDisplayPropertiesKHR
 foreign import ccall "vkGetPhysicalDeviceDisplayPropertiesKHR" vkGetPhysicalDeviceDisplayPropertiesKHR ::
   PhysicalDevice ->
-  Ptr Word32 -> Ptr DisplayPropertiesKHR -> IO VkResult
+  Ptr Word32 -> Ptr DisplayPropertiesKHR -> IO Result
 
 -- ** vkCreateDisplayPlaneSurfaceKHR
 foreign import ccall "vkCreateDisplayPlaneSurfaceKHR" vkCreateDisplayPlaneSurfaceKHR ::
   Instance ->
   Ptr DisplaySurfaceCreateInfoKHR ->
-    Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 

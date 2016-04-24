@@ -11,11 +11,11 @@ import Data.Word( Word64(..)
 import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
-import Graphics.Vulkan.KHR.Surface( SurfaceKHR(..)
-                                  , VkCompositeAlphaFlagsKHR(..)
-                                  , VkColorSpaceKHR(..)
-                                  , VkSurfaceTransformFlagsKHR(..)
-                                  , VkPresentModeKHR(..)
+import Graphics.Vulkan.KHR.Surface( SurfaceTransformFlagsKHR(..)
+                                  , PresentModeKHR(..)
+                                  , ColorSpaceKHR(..)
+                                  , SurfaceKHR(..)
+                                  , CompositeAlphaFlagsKHR(..)
                                   )
 import Graphics.Vulkan.Queue( Queue(..)
                             )
@@ -28,37 +28,37 @@ import Data.Void( Void(..)
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Graphics.Vulkan.Image( Image(..)
-                            , VkImageUsageFlags(..)
+                            , ImageUsageFlags(..)
                             )
 import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
                                      )
-import Graphics.Vulkan.Core( VkStructureType(..)
-                           , VkFormat(..)
-                           , VkFlags(..)
+import Graphics.Vulkan.Core( VkFlags(..)
+                           , SharingMode(..)
+                           , StructureType(..)
                            , VkBool32(..)
-                           , VkResult(..)
-                           , VkSharingMode(..)
+                           , Format(..)
+                           , Result(..)
                            , Extent2D(..)
                            )
 
 
 data SwapchainCreateInfoKHR =
-  SwapchainCreateInfoKHR{ sType :: VkStructureType 
+  SwapchainCreateInfoKHR{ sType :: StructureType 
                         , pNext :: Ptr Void 
-                        , flags :: VkSwapchainCreateFlagsKHR 
+                        , flags :: SwapchainCreateFlagsKHR 
                         , surface :: SurfaceKHR 
                         , minImageCount :: Word32 
-                        , imageFormat :: VkFormat 
-                        , imageColorSpace :: VkColorSpaceKHR 
+                        , imageFormat :: Format 
+                        , imageColorSpace :: ColorSpaceKHR 
                         , imageExtent :: Extent2D 
                         , imageArrayLayers :: Word32 
-                        , imageUsage :: VkImageUsageFlags 
-                        , imageSharingMode :: VkSharingMode 
+                        , imageUsage :: ImageUsageFlags 
+                        , imageSharingMode :: SharingMode 
                         , queueFamilyIndexCount :: Word32 
                         , pQueueFamilyIndices :: Ptr Word32 
-                        , preTransform :: VkSurfaceTransformFlagsKHR 
-                        , compositeAlpha :: VkCompositeAlphaFlagsKHR 
-                        , presentMode :: VkPresentModeKHR 
+                        , preTransform :: SurfaceTransformFlagsKHR 
+                        , compositeAlpha :: CompositeAlphaFlagsKHR 
+                        , presentMode :: PresentModeKHR 
                         , clipped :: VkBool32 
                         , oldSwapchain :: SwapchainKHR 
                         }
@@ -107,7 +107,7 @@ instance Storable SwapchainCreateInfoKHR where
 
 -- ** vkGetSwapchainImagesKHR
 foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR ::
-  Device -> SwapchainKHR -> Ptr Word32 -> Ptr Image -> IO VkResult
+  Device -> SwapchainKHR -> Ptr Word32 -> Ptr Image -> IO Result
 
 -- ** vkDestroySwapchainKHR
 foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR ::
@@ -115,35 +115,35 @@ foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR ::
 
 -- ** vkQueuePresentKHR
 foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR ::
-  Queue -> Ptr PresentInfoKHR -> IO VkResult
+  Queue -> Ptr PresentInfoKHR -> IO Result
 
--- ** VkSwapchainCreateFlagsKHR
+-- ** SwapchainCreateFlagsKHR
 -- | Opaque flag
-newtype VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagsKHR VkFlags
+newtype SwapchainCreateFlagsKHR = SwapchainCreateFlagsKHR VkFlags
   deriving (Eq, Storable)
 
 -- ** vkCreateSwapchainKHR
 foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR ::
   Device ->
   Ptr SwapchainCreateInfoKHR ->
-    Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO VkResult
+    Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result
 
 -- ** vkAcquireNextImageKHR
 foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR ::
   Device ->
   SwapchainKHR ->
-    Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO VkResult
+    Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result
 
 
 data PresentInfoKHR =
-  PresentInfoKHR{ sType :: VkStructureType 
+  PresentInfoKHR{ sType :: StructureType 
                 , pNext :: Ptr Void 
                 , waitSemaphoreCount :: Word32 
                 , pWaitSemaphores :: Ptr Semaphore 
                 , swapchainCount :: Word32 
                 , pSwapchains :: Ptr SwapchainKHR 
                 , pImageIndices :: Ptr Word32 
-                , pResults :: Ptr VkResult 
+                , pResults :: Ptr Result 
                 }
   deriving (Eq)
 
