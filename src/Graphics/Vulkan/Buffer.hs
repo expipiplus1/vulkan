@@ -40,8 +40,8 @@ import Graphics.Vulkan.Core( SharingMode(..)
                            , Flags(..)
                            )
 
--- ** vkCreateBuffer
-foreign import ccall "vkCreateBuffer" vkCreateBuffer ::
+-- ** createBuffer
+foreign import ccall "vkCreateBuffer" createBuffer ::
   Device ->
   Ptr BufferCreateInfo ->
     Ptr AllocationCallbacks -> Ptr Buffer -> IO Result
@@ -134,8 +134,8 @@ pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = BufferUsageFlags 0x80
 pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = BufferUsageFlags 0x100
 
 
--- ** vkDestroyBuffer
-foreign import ccall "vkDestroyBuffer" vkDestroyBuffer ::
+-- ** destroyBuffer
+foreign import ccall "vkDestroyBuffer" destroyBuffer ::
   Device -> Buffer -> Ptr AllocationCallbacks -> IO ()
 
 newtype Buffer = Buffer Word64

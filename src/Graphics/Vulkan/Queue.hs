@@ -29,20 +29,20 @@ import Graphics.Vulkan.Core( StructureType(..)
 data VkQueue_T
 type Queue = Ptr VkQueue_T
 
--- ** vkDeviceWaitIdle
-foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle ::
+-- ** deviceWaitIdle
+foreign import ccall "vkDeviceWaitIdle" deviceWaitIdle ::
   Device -> IO Result
 
--- ** vkQueueSubmit
-foreign import ccall "vkQueueSubmit" vkQueueSubmit ::
+-- ** queueSubmit
+foreign import ccall "vkQueueSubmit" queueSubmit ::
   Queue -> Word32 -> Ptr SubmitInfo -> Fence -> IO Result
 
--- ** vkQueueWaitIdle
-foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle ::
+-- ** queueWaitIdle
+foreign import ccall "vkQueueWaitIdle" queueWaitIdle ::
   Queue -> IO Result
 
--- ** vkGetDeviceQueue
-foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue ::
+-- ** getDeviceQueue
+foreign import ccall "vkGetDeviceQueue" getDeviceQueue ::
   Device -> Word32 -> Word32 -> Ptr Queue -> IO ()
 
 

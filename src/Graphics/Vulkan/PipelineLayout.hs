@@ -34,8 +34,8 @@ newtype PipelineLayoutCreateFlags = PipelineLayoutCreateFlags Flags
 newtype PipelineLayout = PipelineLayout Word64
   deriving (Eq, Storable)
 
--- ** vkDestroyPipelineLayout
-foreign import ccall "vkDestroyPipelineLayout" vkDestroyPipelineLayout ::
+-- ** destroyPipelineLayout
+foreign import ccall "vkDestroyPipelineLayout" destroyPipelineLayout ::
   Device -> PipelineLayout -> Ptr AllocationCallbacks -> IO ()
 
 
@@ -88,8 +88,8 @@ instance Storable PipelineLayoutCreateInfo where
                 *> poke (ptr `plusPtr` 40) (pPushConstantRanges (poked :: PipelineLayoutCreateInfo))
 
 
--- ** vkCreatePipelineLayout
-foreign import ccall "vkCreatePipelineLayout" vkCreatePipelineLayout ::
+-- ** createPipelineLayout
+foreign import ccall "vkCreatePipelineLayout" createPipelineLayout ::
   Device ->
   Ptr PipelineLayoutCreateInfo ->
     Ptr AllocationCallbacks -> Ptr PipelineLayout -> IO Result

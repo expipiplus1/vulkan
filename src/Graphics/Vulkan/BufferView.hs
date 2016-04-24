@@ -25,8 +25,8 @@ import Graphics.Vulkan.Core( StructureType(..)
                            , Flags(..)
                            )
 
--- ** vkCreateBufferView
-foreign import ccall "vkCreateBufferView" vkCreateBufferView ::
+-- ** createBufferView
+foreign import ccall "vkCreateBufferView" createBufferView ::
   Device ->
   Ptr BufferViewCreateInfo ->
     Ptr AllocationCallbacks -> Ptr BufferView -> IO Result
@@ -70,7 +70,7 @@ instance Storable BufferViewCreateInfo where
 newtype BufferViewCreateFlags = BufferViewCreateFlags Flags
   deriving (Eq, Storable)
 
--- ** vkDestroyBufferView
-foreign import ccall "vkDestroyBufferView" vkDestroyBufferView ::
+-- ** destroyBufferView
+foreign import ccall "vkDestroyBufferView" destroyBufferView ::
   Device -> BufferView -> Ptr AllocationCallbacks -> IO ()
 

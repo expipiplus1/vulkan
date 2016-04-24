@@ -45,8 +45,8 @@ import Foreign.C.Types( CChar(..)
                       , CSize(..)
                       )
 
--- ** vkDebugReportMessageEXT
-foreign import ccall "vkDebugReportMessageEXT" vkDebugReportMessageEXT ::
+-- ** debugReportMessageEXT
+foreign import ccall "vkDebugReportMessageEXT" debugReportMessageEXT ::
   Instance ->
   DebugReportFlagsEXT ->
     DebugReportObjectTypeEXT ->
@@ -240,8 +240,8 @@ instance Storable DebugReportCallbackCreateInfoEXT where
                 *> poke (ptr `plusPtr` 32) (pUserData (poked :: DebugReportCallbackCreateInfoEXT))
 
 
--- ** vkDestroyDebugReportCallbackEXT
-foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallbackEXT ::
+-- ** destroyDebugReportCallbackEXT
+foreign import ccall "vkDestroyDebugReportCallbackEXT" destroyDebugReportCallbackEXT ::
   Instance ->
   DebugReportCallbackEXT -> Ptr AllocationCallbacks -> IO ()
 
@@ -291,8 +291,8 @@ type PFN_vkDebugReportCallbackEXT = FunPtr
        Word64 ->
          CSize -> Int32 -> Ptr CChar -> Ptr CChar -> Ptr Void -> IO Bool32)
 
--- ** vkCreateDebugReportCallbackEXT
-foreign import ccall "vkCreateDebugReportCallbackEXT" vkCreateDebugReportCallbackEXT ::
+-- ** createDebugReportCallbackEXT
+foreign import ccall "vkCreateDebugReportCallbackEXT" createDebugReportCallbackEXT ::
   Instance ->
   Ptr DebugReportCallbackCreateInfoEXT ->
     Ptr AllocationCallbacks -> Ptr DebugReportCallbackEXT -> IO Result

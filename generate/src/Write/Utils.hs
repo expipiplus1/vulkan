@@ -51,6 +51,11 @@ showHex' n = sign ++ "0x" ++ showHex n ""
                  then "-"
                  else ""
 
+-- | Mame the first letter of the word lowercase
+lowerFirst :: String -> String
+lowerFirst "" = ""
+lowerFirst (x:xs) = toLower x : xs
+
 -- | Mame the first letter of the word uppercase
 upperFirst :: String -> String
 upperFirst "" = ""

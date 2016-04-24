@@ -44,13 +44,13 @@ import Graphics.Vulkan.Core( Bool32(..)
                            , Extent2D(..)
                            )
 
--- ** vkGetPhysicalDeviceSurfaceFormatsKHR
-foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceSurfaceFormatsKHR ::
+-- ** getPhysicalDeviceSurfaceFormatsKHR
+foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" getPhysicalDeviceSurfaceFormatsKHR ::
   PhysicalDevice ->
   SurfaceKHR -> Ptr Word32 -> Ptr SurfaceFormatKHR -> IO Result
 
--- ** vkGetPhysicalDeviceSurfaceCapabilitiesKHR
-foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDeviceSurfaceCapabilitiesKHR ::
+-- ** getPhysicalDeviceSurfaceCapabilitiesKHR
+foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" getPhysicalDeviceSurfaceCapabilitiesKHR ::
   PhysicalDevice ->
   SurfaceKHR -> Ptr SurfaceCapabilitiesKHR -> IO Result
 
@@ -127,8 +127,8 @@ pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR = PresentModeKHR 3
 newtype SurfaceKHR = SurfaceKHR Word64
   deriving (Eq, Storable)
 
--- ** vkGetPhysicalDeviceSurfaceSupportKHR
-foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceSurfaceSupportKHR ::
+-- ** getPhysicalDeviceSurfaceSupportKHR
+foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" getPhysicalDeviceSurfaceSupportKHR ::
   PhysicalDevice -> Word32 -> SurfaceKHR -> Ptr Bool32 -> IO Result
 
 
@@ -147,8 +147,8 @@ instance Storable SurfaceFormatKHR where
                 *> poke (ptr `plusPtr` 4) (colorSpace (poked :: SurfaceFormatKHR))
 
 
--- ** vkDestroySurfaceKHR
-foreign import ccall "vkDestroySurfaceKHR" vkDestroySurfaceKHR ::
+-- ** destroySurfaceKHR
+foreign import ccall "vkDestroySurfaceKHR" destroySurfaceKHR ::
   Instance -> SurfaceKHR -> Ptr AllocationCallbacks -> IO ()
 
 -- ** ColorSpaceKHR
@@ -173,8 +173,8 @@ instance Read ColorSpaceKHR where
 
 pattern VK_COLORSPACE_SRGB_NONLINEAR_KHR = ColorSpaceKHR 0
 
--- ** vkGetPhysicalDeviceSurfacePresentModesKHR
-foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDeviceSurfacePresentModesKHR ::
+-- ** getPhysicalDeviceSurfacePresentModesKHR
+foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" getPhysicalDeviceSurfacePresentModesKHR ::
   PhysicalDevice ->
   SurfaceKHR -> Ptr Word32 -> Ptr PresentModeKHR -> IO Result
 

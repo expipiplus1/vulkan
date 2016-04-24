@@ -58,20 +58,20 @@ instance Storable FenceCreateInfo where
                 *> poke (ptr `plusPtr` 16) (flags (poked :: FenceCreateInfo))
 
 
--- ** vkResetFences
-foreign import ccall "vkResetFences" vkResetFences ::
+-- ** resetFences
+foreign import ccall "vkResetFences" resetFences ::
   Device -> Word32 -> Ptr Fence -> IO Result
 
--- ** vkDestroyFence
-foreign import ccall "vkDestroyFence" vkDestroyFence ::
+-- ** destroyFence
+foreign import ccall "vkDestroyFence" destroyFence ::
   Device -> Fence -> Ptr AllocationCallbacks -> IO ()
 
--- ** vkWaitForFences
-foreign import ccall "vkWaitForFences" vkWaitForFences ::
+-- ** waitForFences
+foreign import ccall "vkWaitForFences" waitForFences ::
   Device -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
 
--- ** vkGetFenceStatus
-foreign import ccall "vkGetFenceStatus" vkGetFenceStatus ::
+-- ** getFenceStatus
+foreign import ccall "vkGetFenceStatus" getFenceStatus ::
   Device -> Fence -> IO Result
 
 -- ** VkFenceCreateFlags
@@ -98,8 +98,8 @@ instance Read FenceCreateFlags where
 pattern VK_FENCE_CREATE_SIGNALED_BIT = FenceCreateFlags 0x1
 
 
--- ** vkCreateFence
-foreign import ccall "vkCreateFence" vkCreateFence ::
+-- ** createFence
+foreign import ccall "vkCreateFence" createFence ::
   Device ->
   Ptr FenceCreateInfo ->
     Ptr AllocationCallbacks -> Ptr Fence -> IO Result

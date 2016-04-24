@@ -65,8 +65,8 @@ instance Storable ShaderModuleCreateInfo where
                 *> poke (ptr `plusPtr` 32) (pCode (poked :: ShaderModuleCreateInfo))
 
 
--- ** vkDestroyShaderModule
-foreign import ccall "vkDestroyShaderModule" vkDestroyShaderModule ::
+-- ** destroyShaderModule
+foreign import ccall "vkDestroyShaderModule" destroyShaderModule ::
   Device -> ShaderModule -> Ptr AllocationCallbacks -> IO ()
 
 -- ** ShaderModuleCreateFlags
@@ -127,8 +127,8 @@ pattern VK_SHADER_STAGE_ALL = ShaderStageFlags 0x7fffffff
 newtype ShaderModule = ShaderModule Word64
   deriving (Eq, Storable)
 
--- ** vkCreateShaderModule
-foreign import ccall "vkCreateShaderModule" vkCreateShaderModule ::
+-- ** createShaderModule
+foreign import ccall "vkCreateShaderModule" createShaderModule ::
   Device ->
   Ptr ShaderModuleCreateInfo ->
     Ptr AllocationCallbacks -> Ptr ShaderModule -> IO Result

@@ -156,13 +156,13 @@ instance Storable SparseImageMemoryBindInfo where
                 *> poke (ptr `plusPtr` 16) (pBinds (poked :: SparseImageMemoryBindInfo))
 
 
--- ** vkGetImageSparseMemoryRequirements
-foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemoryRequirements ::
+-- ** getImageSparseMemoryRequirements
+foreign import ccall "vkGetImageSparseMemoryRequirements" getImageSparseMemoryRequirements ::
   Device ->
   Image -> Ptr Word32 -> Ptr SparseImageMemoryRequirements -> IO ()
 
--- ** vkQueueBindSparse
-foreign import ccall "vkQueueBindSparse" vkQueueBindSparse ::
+-- ** queueBindSparse
+foreign import ccall "vkQueueBindSparse" queueBindSparse ::
   Queue -> Word32 -> Ptr BindSparseInfo -> Fence -> IO Result
 
 
@@ -262,8 +262,8 @@ pattern VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = SparseImageFormatFlags 0x2
 pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = SparseImageFormatFlags 0x4
 
 
--- ** vkGetPhysicalDeviceSparseImageFormatProperties
-foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysicalDeviceSparseImageFormatProperties ::
+-- ** getPhysicalDeviceSparseImageFormatProperties
+foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" getPhysicalDeviceSparseImageFormatProperties ::
   PhysicalDevice ->
   Format ->
     ImageType ->

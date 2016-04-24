@@ -140,8 +140,8 @@ instance Storable InstanceCreateInfo where
                 *> poke (ptr `plusPtr` 56) (ppEnabledExtensionNames (poked :: InstanceCreateInfo))
 
 
--- ** vkGetPhysicalDeviceImageFormatProperties
-foreign import ccall "vkGetPhysicalDeviceImageFormatProperties" vkGetPhysicalDeviceImageFormatProperties ::
+-- ** getPhysicalDeviceImageFormatProperties
+foreign import ccall "vkGetPhysicalDeviceImageFormatProperties" getPhysicalDeviceImageFormatProperties ::
   PhysicalDevice ->
   Format ->
     ImageType ->
@@ -526,16 +526,16 @@ instance Storable MemoryHeap where
                 *> poke (ptr `plusPtr` 8) (flags (poked :: MemoryHeap))
 
 
--- ** vkEnumeratePhysicalDevices
-foreign import ccall "vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices ::
+-- ** enumeratePhysicalDevices
+foreign import ccall "vkEnumeratePhysicalDevices" enumeratePhysicalDevices ::
   Instance -> Ptr Word32 -> Ptr PhysicalDevice -> IO Result
 
--- ** vkGetDeviceProcAddr
-foreign import ccall "vkGetDeviceProcAddr" vkGetDeviceProcAddr ::
+-- ** getDeviceProcAddr
+foreign import ccall "vkGetDeviceProcAddr" getDeviceProcAddr ::
   Device -> Ptr CChar -> IO PFN_vkVoidFunction
 
--- ** vkCreateInstance
-foreign import ccall "vkCreateInstance" vkCreateInstance ::
+-- ** createInstance
+foreign import ccall "vkCreateInstance" createInstance ::
   Ptr InstanceCreateInfo ->
   Ptr AllocationCallbacks -> Ptr Instance -> IO Result
 
@@ -732,12 +732,12 @@ instance Storable PhysicalDeviceSparseProperties where
                 *> poke (ptr `plusPtr` 16) (residencyNonResidentStrict (poked :: PhysicalDeviceSparseProperties))
 
 
--- ** vkGetPhysicalDeviceFeatures
-foreign import ccall "vkGetPhysicalDeviceFeatures" vkGetPhysicalDeviceFeatures ::
+-- ** getPhysicalDeviceFeatures
+foreign import ccall "vkGetPhysicalDeviceFeatures" getPhysicalDeviceFeatures ::
   PhysicalDevice -> Ptr PhysicalDeviceFeatures -> IO ()
 
--- ** vkGetPhysicalDeviceMemoryProperties
-foreign import ccall "vkGetPhysicalDeviceMemoryProperties" vkGetPhysicalDeviceMemoryProperties ::
+-- ** getPhysicalDeviceMemoryProperties
+foreign import ccall "vkGetPhysicalDeviceMemoryProperties" getPhysicalDeviceMemoryProperties ::
   PhysicalDevice -> Ptr PhysicalDeviceMemoryProperties -> IO ()
 
 
@@ -777,8 +777,8 @@ instance Storable PhysicalDeviceProperties where
                 *> poke (ptr `plusPtr` 800) (sparseProperties (poked :: PhysicalDeviceProperties))
 
 
--- ** vkGetPhysicalDeviceQueueFamilyProperties
-foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties" vkGetPhysicalDeviceQueueFamilyProperties ::
+-- ** getPhysicalDeviceQueueFamilyProperties
+foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties" getPhysicalDeviceQueueFamilyProperties ::
   PhysicalDevice -> Ptr Word32 -> Ptr QueueFamilyProperties -> IO ()
 
 
@@ -797,8 +797,8 @@ instance Storable MemoryType where
                 *> poke (ptr `plusPtr` 4) (heapIndex (poked :: MemoryType))
 
 
--- ** vkGetInstanceProcAddr
-foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr ::
+-- ** getInstanceProcAddr
+foreign import ccall "vkGetInstanceProcAddr" getInstanceProcAddr ::
   Instance -> Ptr CChar -> IO PFN_vkVoidFunction
 
 -- ** VkMemoryPropertyFlags
@@ -841,8 +841,8 @@ pattern VK_MEMORY_PROPERTY_HOST_CACHED_BIT = MemoryPropertyFlags 0x8
 pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = MemoryPropertyFlags 0x10
 
 
--- ** vkDestroyInstance
-foreign import ccall "vkDestroyInstance" vkDestroyInstance ::
+-- ** destroyInstance
+foreign import ccall "vkDestroyInstance" destroyInstance ::
   Instance -> Ptr AllocationCallbacks -> IO ()
 
 -- ** VkQueueFlags
@@ -881,8 +881,8 @@ pattern VK_QUEUE_TRANSFER_BIT = QueueFlags 0x4
 pattern VK_QUEUE_SPARSE_BINDING_BIT = QueueFlags 0x8
 
 
--- ** vkGetPhysicalDeviceProperties
-foreign import ccall "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperties ::
+-- ** getPhysicalDeviceProperties
+foreign import ccall "vkGetPhysicalDeviceProperties" getPhysicalDeviceProperties ::
   PhysicalDevice -> Ptr PhysicalDeviceProperties -> IO ()
 
 -- ** InstanceCreateFlags
@@ -890,8 +890,8 @@ foreign import ccall "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperti
 newtype InstanceCreateFlags = InstanceCreateFlags Flags
   deriving (Eq, Storable)
 
--- ** vkGetPhysicalDeviceFormatProperties
-foreign import ccall "vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties ::
+-- ** getPhysicalDeviceFormatProperties
+foreign import ccall "vkGetPhysicalDeviceFormatProperties" getPhysicalDeviceFormatProperties ::
   PhysicalDevice -> Format -> Ptr FormatProperties -> IO ()
 
 

@@ -44,11 +44,11 @@ instance Storable LayerProperties where
                 *> poke (ptr `plusPtr` 264) (description (poked :: LayerProperties))
 
 
--- ** vkEnumerateInstanceLayerProperties
-foreign import ccall "vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLayerProperties ::
+-- ** enumerateInstanceLayerProperties
+foreign import ccall "vkEnumerateInstanceLayerProperties" enumerateInstanceLayerProperties ::
   Ptr Word32 -> Ptr LayerProperties -> IO Result
 
--- ** vkEnumerateDeviceLayerProperties
-foreign import ccall "vkEnumerateDeviceLayerProperties" vkEnumerateDeviceLayerProperties ::
+-- ** enumerateDeviceLayerProperties
+foreign import ccall "vkEnumerateDeviceLayerProperties" enumerateDeviceLayerProperties ::
   PhysicalDevice -> Ptr Word32 -> Ptr LayerProperties -> IO Result
 

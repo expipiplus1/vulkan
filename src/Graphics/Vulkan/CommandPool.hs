@@ -60,12 +60,12 @@ instance Storable CommandPoolCreateInfo where
                 *> poke (ptr `plusPtr` 20) (queueFamilyIndex (poked :: CommandPoolCreateInfo))
 
 
--- ** vkDestroyCommandPool
-foreign import ccall "vkDestroyCommandPool" vkDestroyCommandPool ::
+-- ** destroyCommandPool
+foreign import ccall "vkDestroyCommandPool" destroyCommandPool ::
   Device -> CommandPool -> Ptr AllocationCallbacks -> IO ()
 
--- ** vkResetCommandPool
-foreign import ccall "vkResetCommandPool" vkResetCommandPool ::
+-- ** resetCommandPool
+foreign import ccall "vkResetCommandPool" resetCommandPool ::
   Device -> CommandPool -> CommandPoolResetFlags -> IO Result
 
 -- ** VkCommandPoolCreateFlags
@@ -96,8 +96,8 @@ pattern VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = CommandPoolCreateFlags 0x1
 pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = CommandPoolCreateFlags 0x2
 
 
--- ** vkCreateCommandPool
-foreign import ccall "vkCreateCommandPool" vkCreateCommandPool ::
+-- ** createCommandPool
+foreign import ccall "vkCreateCommandPool" createCommandPool ::
   Device ->
   Ptr CommandPoolCreateInfo ->
     Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result

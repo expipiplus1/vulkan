@@ -138,12 +138,12 @@ instance Read DependencyFlags where
 pattern VK_DEPENDENCY_BY_REGION_BIT = DependencyFlags 0x1
 
 
--- ** vkDestroyRenderPass
-foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass ::
+-- ** destroyRenderPass
+foreign import ccall "vkDestroyRenderPass" destroyRenderPass ::
   Device -> RenderPass -> Ptr AllocationCallbacks -> IO ()
 
--- ** vkCreateFramebuffer
-foreign import ccall "vkCreateFramebuffer" vkCreateFramebuffer ::
+-- ** createFramebuffer
+foreign import ccall "vkCreateFramebuffer" createFramebuffer ::
   Device ->
   Ptr FramebufferCreateInfo ->
     Ptr AllocationCallbacks -> Ptr Framebuffer -> IO Result
@@ -185,8 +185,8 @@ instance Storable FramebufferCreateInfo where
                 *> poke (ptr `plusPtr` 56) (layers (poked :: FramebufferCreateInfo))
 
 
--- ** vkGetRenderAreaGranularity
-foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity ::
+-- ** getRenderAreaGranularity
+foreign import ccall "vkGetRenderAreaGranularity" getRenderAreaGranularity ::
   Device -> RenderPass -> Ptr Extent2D -> IO ()
 
 -- ** AttachmentLoadOp
@@ -336,8 +336,8 @@ pattern VK_ACCESS_MEMORY_WRITE_BIT = AccessFlags 0x10000
 newtype RenderPass = RenderPass Word64
   deriving (Eq, Storable)
 
--- ** vkDestroyFramebuffer
-foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer ::
+-- ** destroyFramebuffer
+foreign import ccall "vkDestroyFramebuffer" destroyFramebuffer ::
   Device -> Framebuffer -> Ptr AllocationCallbacks -> IO ()
 
 
@@ -438,8 +438,8 @@ instance Storable SubpassDescription where
                 *> poke (ptr `plusPtr` 64) (pPreserveAttachments (poked :: SubpassDescription))
 
 
--- ** vkCreateRenderPass
-foreign import ccall "vkCreateRenderPass" vkCreateRenderPass ::
+-- ** createRenderPass
+foreign import ccall "vkCreateRenderPass" createRenderPass ::
   Device ->
   Ptr RenderPassCreateInfo ->
     Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result

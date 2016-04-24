@@ -37,12 +37,12 @@ instance Storable ExtensionProperties where
                 *> poke (ptr `plusPtr` 256) (specVersion (poked :: ExtensionProperties))
 
 
--- ** vkEnumerateInstanceExtensionProperties
-foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanceExtensionProperties ::
+-- ** enumerateInstanceExtensionProperties
+foreign import ccall "vkEnumerateInstanceExtensionProperties" enumerateInstanceExtensionProperties ::
   Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO Result
 
--- ** vkEnumerateDeviceExtensionProperties
-foreign import ccall "vkEnumerateDeviceExtensionProperties" vkEnumerateDeviceExtensionProperties ::
+-- ** enumerateDeviceExtensionProperties
+foreign import ccall "vkEnumerateDeviceExtensionProperties" enumerateDeviceExtensionProperties ::
   PhysicalDevice ->
   Ptr CChar -> Ptr Word32 -> Ptr ExtensionProperties -> IO Result
 

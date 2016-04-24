@@ -81,42 +81,42 @@ import Graphics.Vulkan.Core( Offset3D(..)
 import Foreign.C.Types( CFloat(..)
                       )
 
--- ** vkCmdPushConstants
-foreign import ccall "vkCmdPushConstants" vkCmdPushConstants ::
+-- ** cmdPushConstants
+foreign import ccall "vkCmdPushConstants" cmdPushConstants ::
   CommandBuffer ->
   PipelineLayout ->
     ShaderStageFlags -> Word32 -> Word32 -> Ptr Void -> IO ()
 
--- ** vkCmdSetStencilWriteMask
-foreign import ccall "vkCmdSetStencilWriteMask" vkCmdSetStencilWriteMask ::
+-- ** cmdSetStencilWriteMask
+foreign import ccall "vkCmdSetStencilWriteMask" cmdSetStencilWriteMask ::
   CommandBuffer -> StencilFaceFlags -> Word32 -> IO ()
 
--- ** vkCmdBindIndexBuffer
-foreign import ccall "vkCmdBindIndexBuffer" vkCmdBindIndexBuffer ::
+-- ** cmdBindIndexBuffer
+foreign import ccall "vkCmdBindIndexBuffer" cmdBindIndexBuffer ::
   CommandBuffer -> Buffer -> DeviceSize -> IndexType -> IO ()
 
--- ** vkCmdResetQueryPool
-foreign import ccall "vkCmdResetQueryPool" vkCmdResetQueryPool ::
+-- ** cmdResetQueryPool
+foreign import ccall "vkCmdResetQueryPool" cmdResetQueryPool ::
   CommandBuffer -> QueryPool -> Word32 -> Word32 -> IO ()
 
--- ** vkCmdResolveImage
-foreign import ccall "vkCmdResolveImage" vkCmdResolveImage ::
+-- ** cmdResolveImage
+foreign import ccall "vkCmdResolveImage" cmdResolveImage ::
   CommandBuffer ->
   Image ->
     ImageLayout ->
       Image -> ImageLayout -> Word32 -> Ptr ImageResolve -> IO ()
 
--- ** vkCmdBindPipeline
-foreign import ccall "vkCmdBindPipeline" vkCmdBindPipeline ::
+-- ** cmdBindPipeline
+foreign import ccall "vkCmdBindPipeline" cmdBindPipeline ::
   CommandBuffer -> PipelineBindPoint -> Pipeline -> IO ()
 
--- ** vkCmdBindVertexBuffers
-foreign import ccall "vkCmdBindVertexBuffers" vkCmdBindVertexBuffers ::
+-- ** cmdBindVertexBuffers
+foreign import ccall "vkCmdBindVertexBuffers" cmdBindVertexBuffers ::
   CommandBuffer ->
   Word32 -> Word32 -> Ptr Buffer -> Ptr DeviceSize -> IO ()
 
--- ** vkCmdDraw
-foreign import ccall "vkCmdDraw" vkCmdDraw ::
+-- ** cmdDraw
+foreign import ccall "vkCmdDraw" cmdDraw ::
   CommandBuffer -> Word32 -> Word32 -> Word32 -> Word32 -> IO ()
 
 
@@ -144,42 +144,42 @@ instance Storable ImageCopy where
                 *> poke (ptr `plusPtr` 56) (extent (poked :: ImageCopy))
 
 
--- ** vkCmdNextSubpass
-foreign import ccall "vkCmdNextSubpass" vkCmdNextSubpass ::
+-- ** cmdNextSubpass
+foreign import ccall "vkCmdNextSubpass" cmdNextSubpass ::
   CommandBuffer -> SubpassContents -> IO ()
 
--- ** vkCmdEndQuery
-foreign import ccall "vkCmdEndQuery" vkCmdEndQuery ::
+-- ** cmdEndQuery
+foreign import ccall "vkCmdEndQuery" cmdEndQuery ::
   CommandBuffer -> QueryPool -> Word32 -> IO ()
 
--- ** vkCmdSetScissor
-foreign import ccall "vkCmdSetScissor" vkCmdSetScissor ::
+-- ** cmdSetScissor
+foreign import ccall "vkCmdSetScissor" cmdSetScissor ::
   CommandBuffer -> Word32 -> Word32 -> Ptr Rect2D -> IO ()
 
--- ** vkCmdSetEvent
-foreign import ccall "vkCmdSetEvent" vkCmdSetEvent ::
+-- ** cmdSetEvent
+foreign import ccall "vkCmdSetEvent" cmdSetEvent ::
   CommandBuffer -> Event -> PipelineStageFlags -> IO ()
 
--- ** vkCmdCopyImageToBuffer
-foreign import ccall "vkCmdCopyImageToBuffer" vkCmdCopyImageToBuffer ::
+-- ** cmdCopyImageToBuffer
+foreign import ccall "vkCmdCopyImageToBuffer" cmdCopyImageToBuffer ::
   CommandBuffer ->
   Image ->
     ImageLayout -> Buffer -> Word32 -> Ptr BufferImageCopy -> IO ()
 
--- ** vkCmdDispatchIndirect
-foreign import ccall "vkCmdDispatchIndirect" vkCmdDispatchIndirect ::
+-- ** cmdDispatchIndirect
+foreign import ccall "vkCmdDispatchIndirect" cmdDispatchIndirect ::
   CommandBuffer -> Buffer -> DeviceSize -> IO ()
 
--- ** vkCmdBeginQuery
-foreign import ccall "vkCmdBeginQuery" vkCmdBeginQuery ::
+-- ** cmdBeginQuery
+foreign import ccall "vkCmdBeginQuery" cmdBeginQuery ::
   CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> IO ()
 
--- ** vkCmdEndRenderPass
-foreign import ccall "vkCmdEndRenderPass" vkCmdEndRenderPass ::
+-- ** cmdEndRenderPass
+foreign import ccall "vkCmdEndRenderPass" cmdEndRenderPass ::
   CommandBuffer -> IO ()
 
--- ** vkCmdFillBuffer
-foreign import ccall "vkCmdFillBuffer" vkCmdFillBuffer ::
+-- ** cmdFillBuffer
+foreign import ccall "vkCmdFillBuffer" cmdFillBuffer ::
   CommandBuffer ->
   Buffer -> DeviceSize -> DeviceSize -> Word32 -> IO ()
 
@@ -202,8 +202,8 @@ instance Storable ClearRect where
                 *> poke (ptr `plusPtr` 20) (layerCount (poked :: ClearRect))
 
 
--- ** vkCmdWaitEvents
-foreign import ccall "vkCmdWaitEvents" vkCmdWaitEvents ::
+-- ** cmdWaitEvents
+foreign import ccall "vkCmdWaitEvents" cmdWaitEvents ::
   CommandBuffer ->
   Word32 ->
     Ptr Event ->
@@ -215,8 +215,8 @@ foreign import ccall "vkCmdWaitEvents" vkCmdWaitEvents ::
                 Ptr BufferMemoryBarrier ->
                   Word32 -> Ptr ImageMemoryBarrier -> IO ()
 
--- ** vkCmdClearColorImage
-foreign import ccall "vkCmdClearColorImage" vkCmdClearColorImage ::
+-- ** cmdClearColorImage
+foreign import ccall "vkCmdClearColorImage" cmdClearColorImage ::
   CommandBuffer ->
   Image ->
     ImageLayout ->
@@ -276,34 +276,34 @@ instance Storable BufferImageCopy where
                 *> poke (ptr `plusPtr` 44) (imageExtent (poked :: BufferImageCopy))
 
 
--- ** vkCmdSetDepthBounds
-foreign import ccall "vkCmdSetDepthBounds" vkCmdSetDepthBounds ::
+-- ** cmdSetDepthBounds
+foreign import ccall "vkCmdSetDepthBounds" cmdSetDepthBounds ::
   CommandBuffer -> CFloat -> CFloat -> IO ()
 
--- ** vkCmdCopyBufferToImage
-foreign import ccall "vkCmdCopyBufferToImage" vkCmdCopyBufferToImage ::
+-- ** cmdCopyBufferToImage
+foreign import ccall "vkCmdCopyBufferToImage" cmdCopyBufferToImage ::
   CommandBuffer ->
   Buffer ->
     Image -> ImageLayout -> Word32 -> Ptr BufferImageCopy -> IO ()
 
--- ** vkCmdDrawIndexedIndirect
-foreign import ccall "vkCmdDrawIndexedIndirect" vkCmdDrawIndexedIndirect ::
+-- ** cmdDrawIndexedIndirect
+foreign import ccall "vkCmdDrawIndexedIndirect" cmdDrawIndexedIndirect ::
   CommandBuffer -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
--- ** vkCmdUpdateBuffer
-foreign import ccall "vkCmdUpdateBuffer" vkCmdUpdateBuffer ::
+-- ** cmdUpdateBuffer
+foreign import ccall "vkCmdUpdateBuffer" cmdUpdateBuffer ::
   CommandBuffer ->
   Buffer -> DeviceSize -> DeviceSize -> Ptr Word32 -> IO ()
 
--- ** vkCmdCopyImage
-foreign import ccall "vkCmdCopyImage" vkCmdCopyImage ::
+-- ** cmdCopyImage
+foreign import ccall "vkCmdCopyImage" cmdCopyImage ::
   CommandBuffer ->
   Image ->
     ImageLayout ->
       Image -> ImageLayout -> Word32 -> Ptr ImageCopy -> IO ()
 
--- ** vkCmdWriteTimestamp
-foreign import ccall "vkCmdWriteTimestamp" vkCmdWriteTimestamp ::
+-- ** cmdWriteTimestamp
+foreign import ccall "vkCmdWriteTimestamp" cmdWriteTimestamp ::
   CommandBuffer -> PipelineStageFlags -> QueryPool -> Word32 -> IO ()
 
 
@@ -328,17 +328,17 @@ instance Storable ImageSubresourceLayers where
                 *> poke (ptr `plusPtr` 12) (layerCount (poked :: ImageSubresourceLayers))
 
 
--- ** vkCmdDrawIndexed
-foreign import ccall "vkCmdDrawIndexed" vkCmdDrawIndexed ::
+-- ** cmdDrawIndexed
+foreign import ccall "vkCmdDrawIndexed" cmdDrawIndexed ::
   CommandBuffer ->
   Word32 -> Word32 -> Word32 -> Int32 -> Word32 -> IO ()
 
--- ** vkCmdSetDepthBias
-foreign import ccall "vkCmdSetDepthBias" vkCmdSetDepthBias ::
+-- ** cmdSetDepthBias
+foreign import ccall "vkCmdSetDepthBias" cmdSetDepthBias ::
   CommandBuffer -> CFloat -> CFloat -> CFloat -> IO ()
 
--- ** vkCmdDrawIndirect
-foreign import ccall "vkCmdDrawIndirect" vkCmdDrawIndirect ::
+-- ** cmdDrawIndirect
+foreign import ccall "vkCmdDrawIndirect" cmdDrawIndirect ::
   CommandBuffer -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
 
@@ -376,34 +376,34 @@ instance Storable BufferCopy where
                 *> poke (ptr `plusPtr` 16) (size (poked :: BufferCopy))
 
 
--- ** vkCmdClearAttachments
-foreign import ccall "vkCmdClearAttachments" vkCmdClearAttachments ::
+-- ** cmdClearAttachments
+foreign import ccall "vkCmdClearAttachments" cmdClearAttachments ::
   CommandBuffer ->
   Word32 -> Ptr ClearAttachment -> Word32 -> Ptr ClearRect -> IO ()
 
--- ** vkCmdSetViewport
-foreign import ccall "vkCmdSetViewport" vkCmdSetViewport ::
+-- ** cmdSetViewport
+foreign import ccall "vkCmdSetViewport" cmdSetViewport ::
   CommandBuffer -> Word32 -> Word32 -> Ptr Viewport -> IO ()
 
--- ** vkCmdCopyBuffer
-foreign import ccall "vkCmdCopyBuffer" vkCmdCopyBuffer ::
+-- ** cmdCopyBuffer
+foreign import ccall "vkCmdCopyBuffer" cmdCopyBuffer ::
   CommandBuffer ->
   Buffer -> Buffer -> Word32 -> Ptr BufferCopy -> IO ()
 
--- ** vkCmdBindDescriptorSets
-foreign import ccall "vkCmdBindDescriptorSets" vkCmdBindDescriptorSets ::
+-- ** cmdBindDescriptorSets
+foreign import ccall "vkCmdBindDescriptorSets" cmdBindDescriptorSets ::
   CommandBuffer ->
   PipelineBindPoint ->
     PipelineLayout ->
       Word32 ->
         Word32 -> Ptr DescriptorSet -> Word32 -> Ptr Word32 -> IO ()
 
--- ** vkCmdSetLineWidth
-foreign import ccall "vkCmdSetLineWidth" vkCmdSetLineWidth ::
+-- ** cmdSetLineWidth
+foreign import ccall "vkCmdSetLineWidth" cmdSetLineWidth ::
   CommandBuffer -> CFloat -> IO ()
 
--- ** vkCmdExecuteCommands
-foreign import ccall "vkCmdExecuteCommands" vkCmdExecuteCommands ::
+-- ** cmdExecuteCommands
+foreign import ccall "vkCmdExecuteCommands" cmdExecuteCommands ::
   CommandBuffer -> Word32 -> Ptr CommandBuffer -> IO ()
 
 
@@ -437,8 +437,8 @@ instance Storable RenderPassBeginInfo where
                 *> poke (ptr `plusPtr` 56) (pClearValues (poked :: RenderPassBeginInfo))
 
 
--- ** vkCmdSetStencilCompareMask
-foreign import ccall "vkCmdSetStencilCompareMask" vkCmdSetStencilCompareMask ::
+-- ** cmdSetStencilCompareMask
+foreign import ccall "vkCmdSetStencilCompareMask" cmdSetStencilCompareMask ::
   CommandBuffer -> StencilFaceFlags -> Word32 -> IO ()
 
 
@@ -570,27 +570,27 @@ pattern VK_SUBPASS_CONTENTS_INLINE = SubpassContents 0
 
 pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = SubpassContents 1
 
--- ** vkCmdCopyQueryPoolResults
-foreign import ccall "vkCmdCopyQueryPoolResults" vkCmdCopyQueryPoolResults ::
+-- ** cmdCopyQueryPoolResults
+foreign import ccall "vkCmdCopyQueryPoolResults" cmdCopyQueryPoolResults ::
   CommandBuffer ->
   QueryPool ->
     Word32 ->
       Word32 ->
         Buffer -> DeviceSize -> DeviceSize -> QueryResultFlags -> IO ()
 
--- ** vkCmdBlitImage
-foreign import ccall "vkCmdBlitImage" vkCmdBlitImage ::
+-- ** cmdBlitImage
+foreign import ccall "vkCmdBlitImage" cmdBlitImage ::
   CommandBuffer ->
   Image ->
     ImageLayout ->
       Image -> ImageLayout -> Word32 -> Ptr ImageBlit -> Filter -> IO ()
 
--- ** vkCmdSetBlendConstants
-foreign import ccall "vkCmdSetBlendConstants" vkCmdSetBlendConstants ::
+-- ** cmdSetBlendConstants
+foreign import ccall "vkCmdSetBlendConstants" cmdSetBlendConstants ::
   CommandBuffer -> Ptr CFloat -> IO ()
 
--- ** vkCmdClearDepthStencilImage
-foreign import ccall "vkCmdClearDepthStencilImage" vkCmdClearDepthStencilImage ::
+-- ** cmdClearDepthStencilImage
+foreign import ccall "vkCmdClearDepthStencilImage" cmdClearDepthStencilImage ::
   CommandBuffer ->
   Image ->
     ImageLayout ->
@@ -622,16 +622,16 @@ instance Storable ImageResolve where
                 *> poke (ptr `plusPtr` 56) (extent (poked :: ImageResolve))
 
 
--- ** vkCmdDispatch
-foreign import ccall "vkCmdDispatch" vkCmdDispatch ::
+-- ** cmdDispatch
+foreign import ccall "vkCmdDispatch" cmdDispatch ::
   CommandBuffer -> Word32 -> Word32 -> Word32 -> IO ()
 
--- ** vkCmdSetStencilReference
-foreign import ccall "vkCmdSetStencilReference" vkCmdSetStencilReference ::
+-- ** cmdSetStencilReference
+foreign import ccall "vkCmdSetStencilReference" cmdSetStencilReference ::
   CommandBuffer -> StencilFaceFlags -> Word32 -> IO ()
 
--- ** vkCmdPipelineBarrier
-foreign import ccall "vkCmdPipelineBarrier" vkCmdPipelineBarrier ::
+-- ** cmdPipelineBarrier
+foreign import ccall "vkCmdPipelineBarrier" cmdPipelineBarrier ::
   CommandBuffer ->
   PipelineStageFlags ->
     PipelineStageFlags ->
@@ -642,12 +642,12 @@ foreign import ccall "vkCmdPipelineBarrier" vkCmdPipelineBarrier ::
               Ptr BufferMemoryBarrier ->
                 Word32 -> Ptr ImageMemoryBarrier -> IO ()
 
--- ** vkCmdBeginRenderPass
-foreign import ccall "vkCmdBeginRenderPass" vkCmdBeginRenderPass ::
+-- ** cmdBeginRenderPass
+foreign import ccall "vkCmdBeginRenderPass" cmdBeginRenderPass ::
   CommandBuffer ->
   Ptr RenderPassBeginInfo -> SubpassContents -> IO ()
 
--- ** vkCmdResetEvent
-foreign import ccall "vkCmdResetEvent" vkCmdResetEvent ::
+-- ** cmdResetEvent
+foreign import ccall "vkCmdResetEvent" cmdResetEvent ::
   CommandBuffer -> Event -> PipelineStageFlags -> IO ()
 

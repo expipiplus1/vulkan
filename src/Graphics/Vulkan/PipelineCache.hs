@@ -24,14 +24,14 @@ import Graphics.Vulkan.Core( StructureType(..)
 import Foreign.C.Types( CSize(..)
                       )
 
--- ** vkCreatePipelineCache
-foreign import ccall "vkCreatePipelineCache" vkCreatePipelineCache ::
+-- ** createPipelineCache
+foreign import ccall "vkCreatePipelineCache" createPipelineCache ::
   Device ->
   Ptr PipelineCacheCreateInfo ->
     Ptr AllocationCallbacks -> Ptr PipelineCache -> IO Result
 
--- ** vkGetPipelineCacheData
-foreign import ccall "vkGetPipelineCacheData" vkGetPipelineCacheData ::
+-- ** getPipelineCacheData
+foreign import ccall "vkGetPipelineCacheData" getPipelineCacheData ::
   Device -> PipelineCache -> Ptr CSize -> Ptr Void -> IO Result
 
 newtype PipelineCache = PipelineCache Word64
@@ -62,8 +62,8 @@ instance Storable PipelineCacheCreateInfo where
                 *> poke (ptr `plusPtr` 32) (pInitialData (poked :: PipelineCacheCreateInfo))
 
 
--- ** vkMergePipelineCaches
-foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches ::
+-- ** mergePipelineCaches
+foreign import ccall "vkMergePipelineCaches" mergePipelineCaches ::
   Device -> PipelineCache -> Word32 -> Ptr PipelineCache -> IO Result
 
 -- ** PipelineCacheCreateFlags
@@ -71,7 +71,7 @@ foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches ::
 newtype PipelineCacheCreateFlags = PipelineCacheCreateFlags Flags
   deriving (Eq, Storable)
 
--- ** vkDestroyPipelineCache
-foreign import ccall "vkDestroyPipelineCache" vkDestroyPipelineCache ::
+-- ** destroyPipelineCache
+foreign import ccall "vkDestroyPipelineCache" destroyPipelineCache ::
   Device -> PipelineCache -> Ptr AllocationCallbacks -> IO ()
 

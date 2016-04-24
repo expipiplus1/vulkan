@@ -42,8 +42,8 @@ import Foreign.C.Types( CSize(..)
 newtype DeviceMemory = DeviceMemory Word64
   deriving (Eq, Storable)
 
--- ** vkMapMemory
-foreign import ccall "vkMapMemory" vkMapMemory ::
+-- ** mapMemory
+foreign import ccall "vkMapMemory" mapMemory ::
   Device ->
   DeviceMemory ->
     DeviceSize ->
@@ -81,8 +81,8 @@ instance Storable AllocationCallbacks where
                 *> poke (ptr `plusPtr` 40) (pfnInternalFree (poked :: AllocationCallbacks))
 
 
--- ** vkInvalidateMappedMemoryRanges
-foreign import ccall "vkInvalidateMappedMemoryRanges" vkInvalidateMappedMemoryRanges ::
+-- ** invalidateMappedMemoryRanges
+foreign import ccall "vkInvalidateMappedMemoryRanges" invalidateMappedMemoryRanges ::
   Device -> Word32 -> Ptr MappedMemoryRange -> IO Result
 
 -- ** SystemAllocationScope
@@ -123,8 +123,8 @@ pattern VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = SystemAllocationScope 3
 
 pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = SystemAllocationScope 4
 
--- ** vkFlushMappedMemoryRanges
-foreign import ccall "vkFlushMappedMemoryRanges" vkFlushMappedMemoryRanges ::
+-- ** flushMappedMemoryRanges
+foreign import ccall "vkFlushMappedMemoryRanges" flushMappedMemoryRanges ::
   Device -> Word32 -> Ptr MappedMemoryRange -> IO Result
 
 -- ** MemoryMapFlags
@@ -136,8 +136,8 @@ type PFN_vkInternalAllocationNotification = FunPtr
   (Ptr Void ->
      CSize -> InternalAllocationType -> SystemAllocationScope -> IO ())
 
--- ** vkFreeMemory
-foreign import ccall "vkFreeMemory" vkFreeMemory ::
+-- ** freeMemory
+foreign import ccall "vkFreeMemory" freeMemory ::
   Device -> DeviceMemory -> Ptr AllocationCallbacks -> IO ()
 
 type PFN_vkReallocationFunction = FunPtr
@@ -145,8 +145,8 @@ type PFN_vkReallocationFunction = FunPtr
      Ptr Void ->
        CSize -> CSize -> SystemAllocationScope -> IO (Ptr Void))
 
--- ** vkUnmapMemory
-foreign import ccall "vkUnmapMemory" vkUnmapMemory ::
+-- ** unmapMemory
+foreign import ccall "vkUnmapMemory" unmapMemory ::
   Device -> DeviceMemory -> IO ()
 
 type PFN_vkAllocationFunction = FunPtr
@@ -177,12 +177,12 @@ pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = InternalAllocationType 0
 
 type PFN_vkFreeFunction = FunPtr (Ptr Void -> Ptr Void -> IO ())
 
--- ** vkGetDeviceMemoryCommitment
-foreign import ccall "vkGetDeviceMemoryCommitment" vkGetDeviceMemoryCommitment ::
+-- ** getDeviceMemoryCommitment
+foreign import ccall "vkGetDeviceMemoryCommitment" getDeviceMemoryCommitment ::
   Device -> DeviceMemory -> Ptr DeviceSize -> IO ()
 
--- ** vkAllocateMemory
-foreign import ccall "vkAllocateMemory" vkAllocateMemory ::
+-- ** allocateMemory
+foreign import ccall "vkAllocateMemory" allocateMemory ::
   Device ->
   Ptr MemoryAllocateInfo ->
     Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO Result

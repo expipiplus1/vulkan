@@ -126,8 +126,8 @@ instance Storable DisplayPlaneCapabilitiesKHR where
                 *> poke (ptr `plusPtr` 60) (maxDstExtent (poked :: DisplayPlaneCapabilitiesKHR))
 
 
--- ** vkGetDisplayModePropertiesKHR
-foreign import ccall "vkGetDisplayModePropertiesKHR" vkGetDisplayModePropertiesKHR ::
+-- ** getDisplayModePropertiesKHR
+foreign import ccall "vkGetDisplayModePropertiesKHR" getDisplayModePropertiesKHR ::
   PhysicalDevice ->
   DisplayKHR ->
     Ptr Word32 -> Ptr DisplayModePropertiesKHR -> IO Result
@@ -163,13 +163,13 @@ instance Storable DisplayPropertiesKHR where
                 *> poke (ptr `plusPtr` 40) (persistentContent (poked :: DisplayPropertiesKHR))
 
 
--- ** vkGetDisplayPlaneSupportedDisplaysKHR
-foreign import ccall "vkGetDisplayPlaneSupportedDisplaysKHR" vkGetDisplayPlaneSupportedDisplaysKHR ::
+-- ** getDisplayPlaneSupportedDisplaysKHR
+foreign import ccall "vkGetDisplayPlaneSupportedDisplaysKHR" getDisplayPlaneSupportedDisplaysKHR ::
   PhysicalDevice ->
   Word32 -> Ptr Word32 -> Ptr DisplayKHR -> IO Result
 
--- ** vkCreateDisplayModeKHR
-foreign import ccall "vkCreateDisplayModeKHR" vkCreateDisplayModeKHR ::
+-- ** createDisplayModeKHR
+foreign import ccall "vkCreateDisplayModeKHR" createDisplayModeKHR ::
   PhysicalDevice ->
   DisplayKHR ->
     Ptr DisplayModeCreateInfoKHR ->
@@ -191,8 +191,8 @@ instance Storable DisplayPlanePropertiesKHR where
                 *> poke (ptr `plusPtr` 8) (currentStackIndex (poked :: DisplayPlanePropertiesKHR))
 
 
--- ** vkGetDisplayPlaneCapabilitiesKHR
-foreign import ccall "vkGetDisplayPlaneCapabilitiesKHR" vkGetDisplayPlaneCapabilitiesKHR ::
+-- ** getDisplayPlaneCapabilitiesKHR
+foreign import ccall "vkGetDisplayPlaneCapabilitiesKHR" getDisplayPlaneCapabilitiesKHR ::
   PhysicalDevice ->
   DisplayModeKHR ->
     Word32 -> Ptr DisplayPlaneCapabilitiesKHR -> IO Result
@@ -276,8 +276,8 @@ instance Storable DisplayModeCreateInfoKHR where
                 *> poke (ptr `plusPtr` 20) (parameters (poked :: DisplayModeCreateInfoKHR))
 
 
--- ** vkGetPhysicalDeviceDisplayPlanePropertiesKHR
-foreign import ccall "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" vkGetPhysicalDeviceDisplayPlanePropertiesKHR ::
+-- ** getPhysicalDeviceDisplayPlanePropertiesKHR
+foreign import ccall "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" getPhysicalDeviceDisplayPlanePropertiesKHR ::
   PhysicalDevice ->
   Ptr Word32 -> Ptr DisplayPlanePropertiesKHR -> IO Result
 
@@ -308,13 +308,13 @@ newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
 newtype DisplayKHR = DisplayKHR Word64
   deriving (Eq, Storable)
 
--- ** vkGetPhysicalDeviceDisplayPropertiesKHR
-foreign import ccall "vkGetPhysicalDeviceDisplayPropertiesKHR" vkGetPhysicalDeviceDisplayPropertiesKHR ::
+-- ** getPhysicalDeviceDisplayPropertiesKHR
+foreign import ccall "vkGetPhysicalDeviceDisplayPropertiesKHR" getPhysicalDeviceDisplayPropertiesKHR ::
   PhysicalDevice ->
   Ptr Word32 -> Ptr DisplayPropertiesKHR -> IO Result
 
--- ** vkCreateDisplayPlaneSurfaceKHR
-foreign import ccall "vkCreateDisplayPlaneSurfaceKHR" vkCreateDisplayPlaneSurfaceKHR ::
+-- ** createDisplayPlaneSurfaceKHR
+foreign import ccall "vkCreateDisplayPlaneSurfaceKHR" createDisplayPlaneSurfaceKHR ::
   Instance ->
   Ptr DisplaySurfaceCreateInfoKHR ->
     Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result

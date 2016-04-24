@@ -26,8 +26,8 @@ import Graphics.Vulkan.Core( StructureType(..)
 newtype SemaphoreCreateFlags = SemaphoreCreateFlags Flags
   deriving (Eq, Storable)
 
--- ** vkDestroySemaphore
-foreign import ccall "vkDestroySemaphore" vkDestroySemaphore ::
+-- ** destroySemaphore
+foreign import ccall "vkDestroySemaphore" destroySemaphore ::
   Device -> Semaphore -> Ptr AllocationCallbacks -> IO ()
 
 newtype Semaphore = Semaphore Word64
@@ -52,8 +52,8 @@ instance Storable SemaphoreCreateInfo where
                 *> poke (ptr `plusPtr` 16) (flags (poked :: SemaphoreCreateInfo))
 
 
--- ** vkCreateSemaphore
-foreign import ccall "vkCreateSemaphore" vkCreateSemaphore ::
+-- ** createSemaphore
+foreign import ccall "vkCreateSemaphore" createSemaphore ::
   Device ->
   Ptr SemaphoreCreateInfo ->
     Ptr AllocationCallbacks -> Ptr Semaphore -> IO Result

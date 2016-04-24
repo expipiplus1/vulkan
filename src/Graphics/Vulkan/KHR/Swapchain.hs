@@ -105,16 +105,16 @@ instance Storable SwapchainCreateInfoKHR where
                 *> poke (ptr `plusPtr` 96) (oldSwapchain (poked :: SwapchainCreateInfoKHR))
 
 
--- ** vkGetSwapchainImagesKHR
-foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR ::
+-- ** getSwapchainImagesKHR
+foreign import ccall "vkGetSwapchainImagesKHR" getSwapchainImagesKHR ::
   Device -> SwapchainKHR -> Ptr Word32 -> Ptr Image -> IO Result
 
--- ** vkDestroySwapchainKHR
-foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR ::
+-- ** destroySwapchainKHR
+foreign import ccall "vkDestroySwapchainKHR" destroySwapchainKHR ::
   Device -> SwapchainKHR -> Ptr AllocationCallbacks -> IO ()
 
--- ** vkQueuePresentKHR
-foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR ::
+-- ** queuePresentKHR
+foreign import ccall "vkQueuePresentKHR" queuePresentKHR ::
   Queue -> Ptr PresentInfoKHR -> IO Result
 
 -- ** SwapchainCreateFlagsKHR
@@ -122,14 +122,14 @@ foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR ::
 newtype SwapchainCreateFlagsKHR = SwapchainCreateFlagsKHR Flags
   deriving (Eq, Storable)
 
--- ** vkCreateSwapchainKHR
-foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR ::
+-- ** createSwapchainKHR
+foreign import ccall "vkCreateSwapchainKHR" createSwapchainKHR ::
   Device ->
   Ptr SwapchainCreateInfoKHR ->
     Ptr AllocationCallbacks -> Ptr SwapchainKHR -> IO Result
 
--- ** vkAcquireNextImageKHR
-foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR ::
+-- ** acquireNextImageKHR
+foreign import ccall "vkAcquireNextImageKHR" acquireNextImageKHR ::
   Device ->
   SwapchainKHR ->
     Word64 -> Semaphore -> Fence -> Ptr Word32 -> IO Result

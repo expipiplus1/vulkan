@@ -74,8 +74,8 @@ instance Storable ImageViewCreateInfo where
                 *> poke (ptr `plusPtr` 56) (subresourceRange (poked :: ImageViewCreateInfo))
 
 
--- ** vkCreateImageView
-foreign import ccall "vkCreateImageView" vkCreateImageView ::
+-- ** createImageView
+foreign import ccall "vkCreateImageView" createImageView ::
   Device ->
   Ptr ImageViewCreateInfo ->
     Ptr AllocationCallbacks -> Ptr ImageView -> IO Result
@@ -202,7 +202,7 @@ pattern VK_COMPONENT_SWIZZLE_B = ComponentSwizzle 5
 
 pattern VK_COMPONENT_SWIZZLE_A = ComponentSwizzle 6
 
--- ** vkDestroyImageView
-foreign import ccall "vkDestroyImageView" vkDestroyImageView ::
+-- ** destroyImageView
+foreign import ccall "vkDestroyImageView" destroyImageView ::
   Device -> ImageView -> Ptr AllocationCallbacks -> IO ()
 

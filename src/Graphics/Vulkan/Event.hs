@@ -21,8 +21,8 @@ import Graphics.Vulkan.Core( StructureType(..)
                            , Flags(..)
                            )
 
--- ** vkDestroyEvent
-foreign import ccall "vkDestroyEvent" vkDestroyEvent ::
+-- ** destroyEvent
+foreign import ccall "vkDestroyEvent" destroyEvent ::
   Device -> Event -> Ptr AllocationCallbacks -> IO ()
 
 
@@ -44,20 +44,20 @@ instance Storable EventCreateInfo where
                 *> poke (ptr `plusPtr` 16) (flags (poked :: EventCreateInfo))
 
 
--- ** vkSetEvent
-foreign import ccall "vkSetEvent" vkSetEvent ::
+-- ** setEvent
+foreign import ccall "vkSetEvent" setEvent ::
   Device -> Event -> IO Result
 
--- ** vkGetEventStatus
-foreign import ccall "vkGetEventStatus" vkGetEventStatus ::
+-- ** getEventStatus
+foreign import ccall "vkGetEventStatus" getEventStatus ::
   Device -> Event -> IO Result
 
--- ** vkResetEvent
-foreign import ccall "vkResetEvent" vkResetEvent ::
+-- ** resetEvent
+foreign import ccall "vkResetEvent" resetEvent ::
   Device -> Event -> IO Result
 
--- ** vkCreateEvent
-foreign import ccall "vkCreateEvent" vkCreateEvent ::
+-- ** createEvent
+foreign import ccall "vkCreateEvent" createEvent ::
   Device ->
   Ptr EventCreateInfo ->
     Ptr AllocationCallbacks -> Ptr Event -> IO Result

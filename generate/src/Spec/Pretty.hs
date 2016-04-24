@@ -11,7 +11,7 @@ import           Write.Utils
 prettifySpec :: Spec -> Spec
 prettifySpec spec = spec { sTypes = nameType <$> sTypes spec
                          , sEnums = nameEnum <$> sEnums spec
-                         , sCommands = commands
+                         , sCommands = nameCommand <$> sCommands spec
                          }
   where
     nameType (ADefine d) = ADefine d { dHsName = camelCase_ $ dHsName d }
@@ -36,9 +36,7 @@ prettifySpec spec = spec { sTypes = nameType <$> sTypes spec
     recordName "alignment" = "_alignment"
     recordName n = n
 
-    commands = nameCommand <$> sCommands spec
-    nameCommand c = c { cParameters = nameParameter <$> cParameters c
+    nameCommand c = c { cHsName = lowerFirst . dropVK $ cHsName c
+                      , cParameters = nameParameter <$> cParameters c
                       }
     nameParameter p = p
-
-

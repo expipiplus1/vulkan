@@ -49,8 +49,8 @@ instance Storable DisplayPresentInfoKHR where
                 *> poke (ptr `plusPtr` 48) (persistent (poked :: DisplayPresentInfoKHR))
 
 
--- ** vkCreateSharedSwapchainsKHR
-foreign import ccall "vkCreateSharedSwapchainsKHR" vkCreateSharedSwapchainsKHR ::
+-- ** createSharedSwapchainsKHR
+foreign import ccall "vkCreateSharedSwapchainsKHR" createSharedSwapchainsKHR ::
   Device ->
   Word32 ->
     Ptr SwapchainCreateInfoKHR ->

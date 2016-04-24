@@ -53,8 +53,8 @@ import Graphics.Vulkan.Core( StructureType(..)
                            , Flags(..)
                            )
 
--- ** vkUpdateDescriptorSets
-foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets ::
+-- ** updateDescriptorSets
+foreign import ccall "vkUpdateDescriptorSets" updateDescriptorSets ::
   Device ->
   Word32 ->
     Ptr WriteDescriptorSet -> Word32 -> Ptr CopyDescriptorSet -> IO ()
@@ -64,8 +64,8 @@ foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets ::
 newtype DescriptorPoolResetFlags = DescriptorPoolResetFlags Flags
   deriving (Eq, Storable)
 
--- ** vkAllocateDescriptorSets
-foreign import ccall "vkAllocateDescriptorSets" vkAllocateDescriptorSets ::
+-- ** allocateDescriptorSets
+foreign import ccall "vkAllocateDescriptorSets" allocateDescriptorSets ::
   Device ->
   Ptr DescriptorSetAllocateInfo -> Ptr DescriptorSet -> IO Result
 
@@ -144,12 +144,12 @@ instance Storable CopyDescriptorSet where
                 *> poke (ptr `plusPtr` 48) (descriptorCount (poked :: CopyDescriptorSet))
 
 
--- ** vkDestroyDescriptorPool
-foreign import ccall "vkDestroyDescriptorPool" vkDestroyDescriptorPool ::
+-- ** destroyDescriptorPool
+foreign import ccall "vkDestroyDescriptorPool" destroyDescriptorPool ::
   Device -> DescriptorPool -> Ptr AllocationCallbacks -> IO ()
 
--- ** vkCreateDescriptorSetLayout
-foreign import ccall "vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout ::
+-- ** createDescriptorSetLayout
+foreign import ccall "vkCreateDescriptorSetLayout" createDescriptorSetLayout ::
   Device ->
   Ptr DescriptorSetLayoutCreateInfo ->
     Ptr AllocationCallbacks -> Ptr DescriptorSetLayout -> IO Result
@@ -157,15 +157,15 @@ foreign import ccall "vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout :
 newtype DescriptorPool = DescriptorPool Word64
   deriving (Eq, Storable)
 
--- ** vkResetDescriptorPool
-foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool ::
+-- ** resetDescriptorPool
+foreign import ccall "vkResetDescriptorPool" resetDescriptorPool ::
   Device -> DescriptorPool -> DescriptorPoolResetFlags -> IO Result
 
 newtype DescriptorSetLayout = DescriptorSetLayout Word64
   deriving (Eq, Storable)
 
--- ** vkFreeDescriptorSets
-foreign import ccall "vkFreeDescriptorSets" vkFreeDescriptorSets ::
+-- ** freeDescriptorSets
+foreign import ccall "vkFreeDescriptorSets" freeDescriptorSets ::
   Device ->
   DescriptorPool -> Word32 -> Ptr DescriptorSet -> IO Result
 
@@ -310,14 +310,14 @@ instance Storable WriteDescriptorSet where
                 *> poke (ptr `plusPtr` 56) (pTexelBufferView (poked :: WriteDescriptorSet))
 
 
--- ** vkCreateDescriptorPool
-foreign import ccall "vkCreateDescriptorPool" vkCreateDescriptorPool ::
+-- ** createDescriptorPool
+foreign import ccall "vkCreateDescriptorPool" createDescriptorPool ::
   Device ->
   Ptr DescriptorPoolCreateInfo ->
     Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result
 
--- ** vkDestroyDescriptorSetLayout
-foreign import ccall "vkDestroyDescriptorSetLayout" vkDestroyDescriptorSetLayout ::
+-- ** destroyDescriptorSetLayout
+foreign import ccall "vkDestroyDescriptorSetLayout" destroyDescriptorSetLayout ::
   Device -> DescriptorSetLayout -> Ptr AllocationCallbacks -> IO ()
 
 

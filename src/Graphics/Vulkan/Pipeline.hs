@@ -397,8 +397,8 @@ newtype Pipeline = Pipeline Word64
 newtype PipelineInputAssemblyStateCreateFlags = PipelineInputAssemblyStateCreateFlags Flags
   deriving (Eq, Storable)
 
--- ** vkCreateGraphicsPipelines
-foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines ::
+-- ** createGraphicsPipelines
+foreign import ccall "vkCreateGraphicsPipelines" createGraphicsPipelines ::
   Device ->
   PipelineCache ->
     Word32 ->
@@ -757,8 +757,8 @@ pattern VK_BLEND_OP_MIN = BlendOp 3
 
 pattern VK_BLEND_OP_MAX = BlendOp 4
 
--- ** vkDestroyPipeline
-foreign import ccall "vkDestroyPipeline" vkDestroyPipeline ::
+-- ** destroyPipeline
+foreign import ccall "vkDestroyPipeline" destroyPipeline ::
   Device -> Pipeline -> Ptr AllocationCallbacks -> IO ()
 
 -- ** PipelineShaderStageCreateFlags
@@ -1355,8 +1355,8 @@ instance Storable PipelineDepthStencilStateCreateInfo where
                 *> poke (ptr `plusPtr` 100) (maxDepthBounds (poked :: PipelineDepthStencilStateCreateInfo))
 
 
--- ** vkCreateComputePipelines
-foreign import ccall "vkCreateComputePipelines" vkCreateComputePipelines ::
+-- ** createComputePipelines
+foreign import ccall "vkCreateComputePipelines" createComputePipelines ::
   Device ->
   PipelineCache ->
     Word32 ->

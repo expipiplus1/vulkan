@@ -46,8 +46,8 @@ import Graphics.Vulkan.Core( SharingMode(..)
                            , Flags(..)
                            )
 
--- ** vkCreateImage
-foreign import ccall "vkCreateImage" vkCreateImage ::
+-- ** createImage
+foreign import ccall "vkCreateImage" createImage ::
   Device ->
   Ptr ImageCreateInfo ->
     Ptr AllocationCallbacks -> Ptr Image -> IO Result
@@ -318,8 +318,8 @@ pattern VK_IMAGE_TYPE_2D = ImageType 1
 
 pattern VK_IMAGE_TYPE_3D = ImageType 2
 
--- ** vkDestroyImage
-foreign import ccall "vkDestroyImage" vkDestroyImage ::
+-- ** destroyImage
+foreign import ccall "vkDestroyImage" destroyImage ::
   Device -> Image -> Ptr AllocationCallbacks -> IO ()
 
 
@@ -366,8 +366,8 @@ instance Storable ImageSubresourceRange where
                 *> poke (ptr `plusPtr` 16) (layerCount (poked :: ImageSubresourceRange))
 
 
--- ** vkGetImageSubresourceLayout
-foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout ::
+-- ** getImageSubresourceLayout
+foreign import ccall "vkGetImageSubresourceLayout" getImageSubresourceLayout ::
   Device ->
   Image -> Ptr ImageSubresource -> Ptr SubresourceLayout -> IO ()
 

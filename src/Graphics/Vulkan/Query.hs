@@ -43,16 +43,16 @@ import Graphics.Vulkan.Core( StructureType(..)
 import Foreign.C.Types( CSize(..)
                       )
 
--- ** vkGetQueryPoolResults
-foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults ::
+-- ** getQueryPoolResults
+foreign import ccall "vkGetQueryPoolResults" getQueryPoolResults ::
   Device ->
   QueryPool ->
     Word32 ->
       Word32 ->
         CSize -> Ptr Void -> DeviceSize -> QueryResultFlags -> IO Result
 
--- ** vkDestroyQueryPool
-foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool ::
+-- ** destroyQueryPool
+foreign import ccall "vkDestroyQueryPool" destroyQueryPool ::
   Device -> QueryPool -> Ptr AllocationCallbacks -> IO ()
 
 
@@ -152,8 +152,8 @@ pattern VK_QUERY_TYPE_TIMESTAMP = QueryType 2
 newtype QueryPool = QueryPool Word64
   deriving (Eq, Storable)
 
--- ** vkCreateQueryPool
-foreign import ccall "vkCreateQueryPool" vkCreateQueryPool ::
+-- ** createQueryPool
+foreign import ccall "vkCreateQueryPool" createQueryPool ::
   Device ->
   Ptr QueryPoolCreateInfo ->
     Ptr AllocationCallbacks -> Ptr QueryPool -> IO Result
