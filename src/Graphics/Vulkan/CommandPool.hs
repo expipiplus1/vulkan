@@ -68,7 +68,7 @@ foreign import ccall "vkDestroyCommandPool" destroyCommandPool ::
 foreign import ccall "vkResetCommandPool" resetCommandPool ::
   Device -> CommandPool -> CommandPoolResetFlags -> IO Result
 
--- ** VkCommandPoolCreateFlags
+-- ** CommandPoolCreateFlags
 
 newtype CommandPoolCreateFlags = CommandPoolCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -102,7 +102,7 @@ foreign import ccall "vkCreateCommandPool" createCommandPool ::
   Ptr CommandPoolCreateInfo ->
     Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result
 
--- ** VkCommandPoolResetFlags
+-- ** CommandPoolResetFlags
 
 newtype CommandPoolResetFlags = CommandPoolResetFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

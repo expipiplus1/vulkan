@@ -227,7 +227,7 @@ instance Storable DescriptorSetLayoutCreateInfo where
                 *> poke (ptr `plusPtr` 24) (pBindings (poked :: DescriptorSetLayoutCreateInfo))
 
 
--- ** VkDescriptorPoolCreateFlags
+-- ** DescriptorPoolCreateFlags
 
 newtype DescriptorPoolCreateFlags = DescriptorPoolCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

@@ -83,7 +83,7 @@ instance Storable QueryPoolCreateInfo where
                 *> poke (ptr `plusPtr` 28) (pipelineStatistics (poked :: QueryPoolCreateInfo))
 
 
--- ** VkQueryResultFlags
+-- ** QueryResultFlags
 
 newtype QueryResultFlags = QueryResultFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -158,7 +158,7 @@ foreign import ccall "vkCreateQueryPool" createQueryPool ::
   Ptr QueryPoolCreateInfo ->
     Ptr AllocationCallbacks -> Ptr QueryPool -> IO Result
 
--- ** VkQueryControlFlags
+-- ** QueryControlFlags
 
 newtype QueryControlFlags = QueryControlFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -187,7 +187,7 @@ pattern VK_QUERY_CONTROL_PRECISE_BIT = QueryControlFlags 0x1
 newtype QueryPoolCreateFlags = QueryPoolCreateFlags Flags
   deriving (Eq, Storable)
 
--- ** VkQueryPipelineStatisticFlags
+-- ** QueryPipelineStatisticFlags
 
 newtype QueryPipelineStatisticFlags = QueryPipelineStatisticFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

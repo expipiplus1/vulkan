@@ -74,7 +74,7 @@ foreign import ccall "vkWaitForFences" waitForFences ::
 foreign import ccall "vkGetFenceStatus" getFenceStatus ::
   Device -> Fence -> IO Result
 
--- ** VkFenceCreateFlags
+-- ** FenceCreateFlags
 
 newtype FenceCreateFlags = FenceCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

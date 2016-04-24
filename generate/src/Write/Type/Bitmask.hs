@@ -55,7 +55,7 @@ writeBitmaskTypeWithBits bmt bm = do
     (ExternalName (ModuleName "GHC.Read") <$> [ "expectP"
                                               , "choose"
                                               ])
-  pure [qc|-- ** {bmtName bmt}
+  pure [qc|-- ** {bmtHsName bmt}
 {predocComment $ fromMaybe "" (bmComment bm)}
 newtype {bmtHsName bmt} = {bmtHsName bmt} {bmtHsType}
   deriving (Eq, Storable, Bits, FiniteBits)

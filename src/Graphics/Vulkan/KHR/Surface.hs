@@ -54,7 +54,7 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" getPhysicalDevi
   PhysicalDevice ->
   SurfaceKHR -> Ptr SurfaceCapabilitiesKHR -> IO Result
 
--- ** VkCompositeAlphaFlagsKHR
+-- ** CompositeAlphaFlagsKHR
 
 newtype CompositeAlphaFlagsKHR = CompositeAlphaFlagsKHR Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -178,7 +178,7 @@ foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" getPhysicalDevi
   PhysicalDevice ->
   SurfaceKHR -> Ptr Word32 -> Ptr PresentModeKHR -> IO Result
 
--- ** VkSurfaceTransformFlagsKHR
+-- ** SurfaceTransformFlagsKHR
 
 newtype SurfaceTransformFlagsKHR = SurfaceTransformFlagsKHR Flags
   deriving (Eq, Storable, Bits, FiniteBits)

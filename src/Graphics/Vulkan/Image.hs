@@ -52,7 +52,7 @@ foreign import ccall "vkCreateImage" createImage ::
   Ptr ImageCreateInfo ->
     Ptr AllocationCallbacks -> Ptr Image -> IO Result
 
--- ** VkImageCreateFlags
+-- ** ImageCreateFlags
 
 newtype ImageCreateFlags = ImageCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -92,7 +92,7 @@ pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = ImageCreateFlags 0x8
 pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlags 0x10
 
 
--- ** VkImageUsageFlags
+-- ** ImageUsageFlags
 
 newtype ImageUsageFlags = ImageUsageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -147,7 +147,7 @@ pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = ImageUsageFlags 0x80
 newtype Image = Image Word64
   deriving (Eq, Storable)
 
--- ** VkImageAspectFlags
+-- ** ImageAspectFlags
 
 newtype ImageAspectFlags = ImageAspectFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

@@ -230,7 +230,7 @@ instance Storable SparseBufferMemoryBindInfo where
                 *> poke (ptr `plusPtr` 16) (pBinds (poked :: SparseBufferMemoryBindInfo))
 
 
--- ** VkSparseImageFormatFlags
+-- ** SparseImageFormatFlags
 
 newtype SparseImageFormatFlags = SparseImageFormatFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -272,7 +272,7 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" getPhysica
           ImageTiling ->
             Ptr Word32 -> Ptr SparseImageFormatProperties -> IO ()
 
--- ** VkSparseMemoryBindFlags
+-- ** SparseMemoryBindFlags
 
 newtype SparseMemoryBindFlags = SparseMemoryBindFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

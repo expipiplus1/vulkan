@@ -245,7 +245,7 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" destroyDebugReportCallbac
   Instance ->
   DebugReportCallbackEXT -> Ptr AllocationCallbacks -> IO ()
 
--- ** VkDebugReportFlagsEXT
+-- ** DebugReportFlagsEXT
 
 newtype DebugReportFlagsEXT = DebugReportFlagsEXT Flags
   deriving (Eq, Storable, Bits, FiniteBits)

@@ -497,7 +497,7 @@ instance Storable ClearValue where
                      DepthStencil e -> poke (castPtr ptr) e
 
 
--- ** VkStencilFaceFlags
+-- ** StencilFaceFlags
 
 newtype StencilFaceFlags = StencilFaceFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

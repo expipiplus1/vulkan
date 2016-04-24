@@ -74,7 +74,7 @@ foreign import ccall "vkDestroyShaderModule" destroyShaderModule ::
 newtype ShaderModuleCreateFlags = ShaderModuleCreateFlags Flags
   deriving (Eq, Storable)
 
--- ** VkShaderStageFlags
+-- ** ShaderStageFlags
 
 newtype ShaderStageFlags = ShaderStageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

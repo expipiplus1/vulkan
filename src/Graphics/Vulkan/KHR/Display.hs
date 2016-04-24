@@ -213,7 +213,7 @@ instance Storable DisplayModePropertiesKHR where
                 *> poke (ptr `plusPtr` 8) (parameters (poked :: DisplayModePropertiesKHR))
 
 
--- ** VkDisplayPlaneAlphaFlagsKHR
+-- ** DisplayPlaneAlphaFlagsKHR
 
 newtype DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagsKHR Flags
   deriving (Eq, Storable, Bits, FiniteBits)

@@ -90,7 +90,7 @@ newtype SubpassDescriptionFlags = SubpassDescriptionFlags Flags
 newtype Framebuffer = Framebuffer Word64
   deriving (Eq, Storable)
 
--- ** VkAttachmentDescriptionFlags
+-- ** AttachmentDescriptionFlags
 
 newtype AttachmentDescriptionFlags = AttachmentDescriptionFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -114,7 +114,7 @@ instance Read AttachmentDescriptionFlags where
 pattern VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = AttachmentDescriptionFlags 0x1
 
 
--- ** VkDependencyFlags
+-- ** DependencyFlags
 
 newtype DependencyFlags = DependencyFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -245,7 +245,7 @@ pattern VK_ATTACHMENT_STORE_OP_STORE = AttachmentStoreOp 0
 
 pattern VK_ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
 
--- ** VkAccessFlags
+-- ** AccessFlags
 
 newtype AccessFlags = AccessFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

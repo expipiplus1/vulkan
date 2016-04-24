@@ -539,7 +539,7 @@ foreign import ccall "vkCreateInstance" createInstance ::
   Ptr InstanceCreateInfo ->
   Ptr AllocationCallbacks -> Ptr Instance -> IO Result
 
--- ** VkFormatFeatureFlags
+-- ** FormatFeatureFlags
 
 newtype FormatFeatureFlags = FormatFeatureFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -636,7 +636,7 @@ instance Storable PhysicalDeviceMemoryProperties where
 data VkInstance_T
 type Instance = Ptr VkInstance_T
 
--- ** VkMemoryHeapFlags
+-- ** MemoryHeapFlags
 
 newtype MemoryHeapFlags = MemoryHeapFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -801,7 +801,7 @@ instance Storable MemoryType where
 foreign import ccall "vkGetInstanceProcAddr" getInstanceProcAddr ::
   Instance -> Ptr CChar -> IO PFN_vkVoidFunction
 
--- ** VkMemoryPropertyFlags
+-- ** MemoryPropertyFlags
 
 newtype MemoryPropertyFlags = MemoryPropertyFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -845,7 +845,7 @@ pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = MemoryPropertyFlags 0x10
 foreign import ccall "vkDestroyInstance" destroyInstance ::
   Instance -> Ptr AllocationCallbacks -> IO ()
 
--- ** VkQueueFlags
+-- ** QueueFlags
 
 newtype QueueFlags = QueueFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

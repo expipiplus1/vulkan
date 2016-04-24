@@ -46,7 +46,7 @@ foreign import ccall "vkCreateBuffer" createBuffer ::
   Ptr BufferCreateInfo ->
     Ptr AllocationCallbacks -> Ptr Buffer -> IO Result
 
--- ** VkBufferCreateFlags
+-- ** BufferCreateFlags
 
 newtype BufferCreateFlags = BufferCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -78,7 +78,7 @@ pattern VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = BufferCreateFlags 0x2
 pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = BufferCreateFlags 0x4
 
 
--- ** VkBufferUsageFlags
+-- ** BufferUsageFlags
 
 newtype BufferUsageFlags = BufferUsageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

@@ -175,7 +175,7 @@ instance Storable GraphicsPipelineCreateInfo where
                 *> poke (ptr `plusPtr` 136) (basePipelineIndex (poked :: GraphicsPipelineCreateInfo))
 
 
--- ** VkCullModeFlags
+-- ** CullModeFlags
 
 newtype CullModeFlags = CullModeFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -245,7 +245,7 @@ instance Storable PipelineShaderStageCreateInfo where
                 *> poke (ptr `plusPtr` 40) (pSpecializationInfo (poked :: PipelineShaderStageCreateInfo))
 
 
--- ** VkColorComponentFlags
+-- ** ColorComponentFlags
 
 newtype ColorComponentFlags = ColorComponentFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -548,7 +548,7 @@ pattern VK_LOGIC_OP_NAND = LogicOp 14
 
 pattern VK_LOGIC_OP_SET = LogicOp 15
 
--- ** VkPipelineCreateFlags
+-- ** PipelineCreateFlags
 
 newtype PipelineCreateFlags = PipelineCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -1029,7 +1029,7 @@ pattern VK_VERTEX_INPUT_RATE_VERTEX = VertexInputRate 0
 
 pattern VK_VERTEX_INPUT_RATE_INSTANCE = VertexInputRate 1
 
--- ** VkPipelineStageFlags
+-- ** PipelineStageFlags
 
 newtype PipelineStageFlags = PipelineStageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

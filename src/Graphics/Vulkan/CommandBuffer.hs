@@ -86,7 +86,7 @@ foreign import ccall "vkResetCommandBuffer" resetCommandBuffer ::
 foreign import ccall "vkFreeCommandBuffers" freeCommandBuffers ::
   Device -> CommandPool -> Word32 -> Ptr CommandBuffer -> IO ()
 
--- ** VkCommandBufferUsageFlags
+-- ** CommandBufferUsageFlags
 
 newtype CommandBufferUsageFlags = CommandBufferUsageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
@@ -177,7 +177,7 @@ instance Storable CommandBufferInheritanceInfo where
 data VkCommandBuffer_T
 type CommandBuffer = Ptr VkCommandBuffer_T
 
--- ** VkCommandBufferResetFlags
+-- ** CommandBufferResetFlags
 
 newtype CommandBufferResetFlags = CommandBufferResetFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)

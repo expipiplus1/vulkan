@@ -302,7 +302,7 @@ foreign import ccall "vkCreateSampler" createSampler ::
   Ptr SamplerCreateInfo ->
     Ptr AllocationCallbacks -> Ptr Sampler -> IO Result
 
--- ** VkSampleCountFlags
+-- ** SampleCountFlags
 
 newtype SampleCountFlags = SampleCountFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
