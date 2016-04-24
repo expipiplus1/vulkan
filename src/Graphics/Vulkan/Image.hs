@@ -214,13 +214,13 @@ newtype ImageTiling = ImageTiling Int32
   deriving (Eq, Storable)
 
 instance Show ImageTiling where
-  showsPrec _ VK_IMAGE_TILING_OPTIMAL = showString "VK_IMAGE_TILING_OPTIMAL"
-  showsPrec _ VK_IMAGE_TILING_LINEAR = showString "VK_IMAGE_TILING_LINEAR"
+  showsPrec _ ImageTilingOptimal = showString "ImageTilingOptimal"
+  showsPrec _ ImageTilingLinear = showString "ImageTilingLinear"
   showsPrec p (ImageTiling x) = showParen (p >= 11) (showString "ImageTiling " . showsPrec 11 x)
 
 instance Read ImageTiling where
-  readPrec = parens ( choose [ ("VK_IMAGE_TILING_OPTIMAL", pure VK_IMAGE_TILING_OPTIMAL)
-                             , ("VK_IMAGE_TILING_LINEAR", pure VK_IMAGE_TILING_LINEAR)
+  readPrec = parens ( choose [ ("ImageTilingOptimal", pure ImageTilingOptimal)
+                             , ("ImageTilingLinear", pure ImageTilingLinear)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ImageTiling")
@@ -230,9 +230,9 @@ instance Read ImageTiling where
                     )
 
 
-pattern VK_IMAGE_TILING_OPTIMAL = ImageTiling 0
+pattern ImageTilingOptimal = ImageTiling 0
 
-pattern VK_IMAGE_TILING_LINEAR = ImageTiling 1
+pattern ImageTilingLinear = ImageTiling 1
 
 -- ** ImageLayout
 
@@ -240,27 +240,27 @@ newtype ImageLayout = ImageLayout Int32
   deriving (Eq, Storable)
 
 instance Show ImageLayout where
-  showsPrec _ VK_IMAGE_LAYOUT_UNDEFINED = showString "VK_IMAGE_LAYOUT_UNDEFINED"
-  showsPrec _ VK_IMAGE_LAYOUT_GENERAL = showString "VK_IMAGE_LAYOUT_GENERAL"
-  showsPrec _ VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = showString "VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = showString "VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL = showString "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = showString "VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = showString "VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = showString "VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_PREINITIALIZED = showString "VK_IMAGE_LAYOUT_PREINITIALIZED"
+  showsPrec _ ImageLayoutUndefined = showString "ImageLayoutUndefined"
+  showsPrec _ ImageLayoutGeneral = showString "ImageLayoutGeneral"
+  showsPrec _ ImageLayoutColorAttachmentOptimal = showString "ImageLayoutColorAttachmentOptimal"
+  showsPrec _ ImageLayoutDepthStencilAttachmentOptimal = showString "ImageLayoutDepthStencilAttachmentOptimal"
+  showsPrec _ ImageLayoutDepthStencilReadOnlyOptimal = showString "ImageLayoutDepthStencilReadOnlyOptimal"
+  showsPrec _ ImageLayoutShaderReadOnlyOptimal = showString "ImageLayoutShaderReadOnlyOptimal"
+  showsPrec _ ImageLayoutTransferSrcOptimal = showString "ImageLayoutTransferSrcOptimal"
+  showsPrec _ ImageLayoutTransferDstOptimal = showString "ImageLayoutTransferDstOptimal"
+  showsPrec _ ImageLayoutPreinitialized = showString "ImageLayoutPreinitialized"
   showsPrec p (ImageLayout x) = showParen (p >= 11) (showString "ImageLayout " . showsPrec 11 x)
 
 instance Read ImageLayout where
-  readPrec = parens ( choose [ ("VK_IMAGE_LAYOUT_UNDEFINED", pure VK_IMAGE_LAYOUT_UNDEFINED)
-                             , ("VK_IMAGE_LAYOUT_GENERAL", pure VK_IMAGE_LAYOUT_GENERAL)
-                             , ("VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL", pure VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL", pure VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL", pure VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL", pure VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL", pure VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL", pure VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_PREINITIALIZED", pure VK_IMAGE_LAYOUT_PREINITIALIZED)
+  readPrec = parens ( choose [ ("ImageLayoutUndefined", pure ImageLayoutUndefined)
+                             , ("ImageLayoutGeneral", pure ImageLayoutGeneral)
+                             , ("ImageLayoutColorAttachmentOptimal", pure ImageLayoutColorAttachmentOptimal)
+                             , ("ImageLayoutDepthStencilAttachmentOptimal", pure ImageLayoutDepthStencilAttachmentOptimal)
+                             , ("ImageLayoutDepthStencilReadOnlyOptimal", pure ImageLayoutDepthStencilReadOnlyOptimal)
+                             , ("ImageLayoutShaderReadOnlyOptimal", pure ImageLayoutShaderReadOnlyOptimal)
+                             , ("ImageLayoutTransferSrcOptimal", pure ImageLayoutTransferSrcOptimal)
+                             , ("ImageLayoutTransferDstOptimal", pure ImageLayoutTransferDstOptimal)
+                             , ("ImageLayoutPreinitialized", pure ImageLayoutPreinitialized)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ImageLayout")
@@ -270,23 +270,23 @@ instance Read ImageLayout where
                     )
 
 -- | Implicit layout an image is when its contents are undefined due to various reasons (e.g. right after creation)
-pattern VK_IMAGE_LAYOUT_UNDEFINED = ImageLayout 0
+pattern ImageLayoutUndefined = ImageLayout 0
 -- | General layout when image can be used for any kind of access
-pattern VK_IMAGE_LAYOUT_GENERAL = ImageLayout 1
+pattern ImageLayoutGeneral = ImageLayout 1
 -- | Optimal layout when image is only used for color attachment read/write
-pattern VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = ImageLayout 2
+pattern ImageLayoutColorAttachmentOptimal = ImageLayout 2
 -- | Optimal layout when image is only used for depth/stencil attachment read/write
-pattern VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = ImageLayout 3
+pattern ImageLayoutDepthStencilAttachmentOptimal = ImageLayout 3
 -- | Optimal layout when image is used for read only depth/stencil attachment and shader access
-pattern VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL = ImageLayout 4
+pattern ImageLayoutDepthStencilReadOnlyOptimal = ImageLayout 4
 -- | Optimal layout when image is used for read only shader access
-pattern VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = ImageLayout 5
+pattern ImageLayoutShaderReadOnlyOptimal = ImageLayout 5
 -- | Optimal layout when image is used only as source of transfer operations
-pattern VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = ImageLayout 6
+pattern ImageLayoutTransferSrcOptimal = ImageLayout 6
 -- | Optimal layout when image is used only as destination of transfer operations
-pattern VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = ImageLayout 7
+pattern ImageLayoutTransferDstOptimal = ImageLayout 7
 -- | Initial layout used when the data is populated by the CPU
-pattern VK_IMAGE_LAYOUT_PREINITIALIZED = ImageLayout 8
+pattern ImageLayoutPreinitialized = ImageLayout 8
 
 -- ** ImageType
 
@@ -294,15 +294,15 @@ newtype ImageType = ImageType Int32
   deriving (Eq, Storable)
 
 instance Show ImageType where
-  showsPrec _ VK_IMAGE_TYPE_1D = showString "VK_IMAGE_TYPE_1D"
-  showsPrec _ VK_IMAGE_TYPE_2D = showString "VK_IMAGE_TYPE_2D"
-  showsPrec _ VK_IMAGE_TYPE_3D = showString "VK_IMAGE_TYPE_3D"
+  showsPrec _ ImageType1d = showString "ImageType1d"
+  showsPrec _ ImageType2d = showString "ImageType2d"
+  showsPrec _ ImageType3d = showString "ImageType3d"
   showsPrec p (ImageType x) = showParen (p >= 11) (showString "ImageType " . showsPrec 11 x)
 
 instance Read ImageType where
-  readPrec = parens ( choose [ ("VK_IMAGE_TYPE_1D", pure VK_IMAGE_TYPE_1D)
-                             , ("VK_IMAGE_TYPE_2D", pure VK_IMAGE_TYPE_2D)
-                             , ("VK_IMAGE_TYPE_3D", pure VK_IMAGE_TYPE_3D)
+  readPrec = parens ( choose [ ("ImageType1d", pure ImageType1d)
+                             , ("ImageType2d", pure ImageType2d)
+                             , ("ImageType3d", pure ImageType3d)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ImageType")
@@ -312,11 +312,11 @@ instance Read ImageType where
                     )
 
 
-pattern VK_IMAGE_TYPE_1D = ImageType 0
+pattern ImageType1d = ImageType 0
 
-pattern VK_IMAGE_TYPE_2D = ImageType 1
+pattern ImageType2d = ImageType 1
 
-pattern VK_IMAGE_TYPE_3D = ImageType 2
+pattern ImageType3d = ImageType 2
 
 -- ** destroyImage
 foreign import ccall "vkDestroyImage" destroyImage ::

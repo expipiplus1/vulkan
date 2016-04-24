@@ -91,19 +91,19 @@ newtype SystemAllocationScope = SystemAllocationScope Int32
   deriving (Eq, Storable)
 
 instance Show SystemAllocationScope where
-  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = showString "VK_SYSTEM_ALLOCATION_SCOPE_COMMAND"
-  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_OBJECT = showString "VK_SYSTEM_ALLOCATION_SCOPE_OBJECT"
-  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_CACHE = showString "VK_SYSTEM_ALLOCATION_SCOPE_CACHE"
-  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = showString "VK_SYSTEM_ALLOCATION_SCOPE_DEVICE"
-  showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = showString "VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE"
+  showsPrec _ SystemAllocationScopeCommand = showString "SystemAllocationScopeCommand"
+  showsPrec _ SystemAllocationScopeObject = showString "SystemAllocationScopeObject"
+  showsPrec _ SystemAllocationScopeCache = showString "SystemAllocationScopeCache"
+  showsPrec _ SystemAllocationScopeDevice = showString "SystemAllocationScopeDevice"
+  showsPrec _ SystemAllocationScopeInstance = showString "SystemAllocationScopeInstance"
   showsPrec p (SystemAllocationScope x) = showParen (p >= 11) (showString "SystemAllocationScope " . showsPrec 11 x)
 
 instance Read SystemAllocationScope where
-  readPrec = parens ( choose [ ("VK_SYSTEM_ALLOCATION_SCOPE_COMMAND", pure VK_SYSTEM_ALLOCATION_SCOPE_COMMAND)
-                             , ("VK_SYSTEM_ALLOCATION_SCOPE_OBJECT", pure VK_SYSTEM_ALLOCATION_SCOPE_OBJECT)
-                             , ("VK_SYSTEM_ALLOCATION_SCOPE_CACHE", pure VK_SYSTEM_ALLOCATION_SCOPE_CACHE)
-                             , ("VK_SYSTEM_ALLOCATION_SCOPE_DEVICE", pure VK_SYSTEM_ALLOCATION_SCOPE_DEVICE)
-                             , ("VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE", pure VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE)
+  readPrec = parens ( choose [ ("SystemAllocationScopeCommand", pure SystemAllocationScopeCommand)
+                             , ("SystemAllocationScopeObject", pure SystemAllocationScopeObject)
+                             , ("SystemAllocationScopeCache", pure SystemAllocationScopeCache)
+                             , ("SystemAllocationScopeDevice", pure SystemAllocationScopeDevice)
+                             , ("SystemAllocationScopeInstance", pure SystemAllocationScopeInstance)
                              ] +++
                       prec 10 (do
                         expectP (Ident "SystemAllocationScope")
@@ -113,15 +113,15 @@ instance Read SystemAllocationScope where
                     )
 
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = SystemAllocationScope 0
+pattern SystemAllocationScopeCommand = SystemAllocationScope 0
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_OBJECT = SystemAllocationScope 1
+pattern SystemAllocationScopeObject = SystemAllocationScope 1
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_CACHE = SystemAllocationScope 2
+pattern SystemAllocationScopeCache = SystemAllocationScope 2
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = SystemAllocationScope 3
+pattern SystemAllocationScopeDevice = SystemAllocationScope 3
 
-pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = SystemAllocationScope 4
+pattern SystemAllocationScopeInstance = SystemAllocationScope 4
 
 -- ** flushMappedMemoryRanges
 foreign import ccall "vkFlushMappedMemoryRanges" flushMappedMemoryRanges ::
@@ -159,11 +159,11 @@ newtype InternalAllocationType = InternalAllocationType Int32
   deriving (Eq, Storable)
 
 instance Show InternalAllocationType where
-  showsPrec _ VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = showString "VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
+  showsPrec _ InternalAllocationTypeExecutable = showString "InternalAllocationTypeExecutable"
   showsPrec p (InternalAllocationType x) = showParen (p >= 11) (showString "InternalAllocationType " . showsPrec 11 x)
 
 instance Read InternalAllocationType where
-  readPrec = parens ( choose [ ("VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE", pure VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE)
+  readPrec = parens ( choose [ ("InternalAllocationTypeExecutable", pure InternalAllocationTypeExecutable)
                              ] +++
                       prec 10 (do
                         expectP (Ident "InternalAllocationType")
@@ -173,7 +173,7 @@ instance Read InternalAllocationType where
                     )
 
 
-pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = InternalAllocationType 0
+pattern InternalAllocationTypeExecutable = InternalAllocationType 0
 
 type PFN_vkFreeFunction = FunPtr (Ptr Void -> Ptr Void -> IO ())
 

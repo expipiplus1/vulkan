@@ -96,17 +96,17 @@ newtype PresentModeKHR = PresentModeKHR Int32
   deriving (Eq, Storable)
 
 instance Show PresentModeKHR where
-  showsPrec _ VK_PRESENT_MODE_IMMEDIATE_KHR = showString "VK_PRESENT_MODE_IMMEDIATE_KHR"
-  showsPrec _ VK_PRESENT_MODE_MAILBOX_KHR = showString "VK_PRESENT_MODE_MAILBOX_KHR"
-  showsPrec _ VK_PRESENT_MODE_FIFO_KHR = showString "VK_PRESENT_MODE_FIFO_KHR"
-  showsPrec _ VK_PRESENT_MODE_FIFO_RELAXED_KHR = showString "VK_PRESENT_MODE_FIFO_RELAXED_KHR"
+  showsPrec _ PresentModeImmediateKhr = showString "PresentModeImmediateKhr"
+  showsPrec _ PresentModeMailboxKhr = showString "PresentModeMailboxKhr"
+  showsPrec _ PresentModeFifoKhr = showString "PresentModeFifoKhr"
+  showsPrec _ PresentModeFifoRelaxedKhr = showString "PresentModeFifoRelaxedKhr"
   showsPrec p (PresentModeKHR x) = showParen (p >= 11) (showString "PresentModeKHR " . showsPrec 11 x)
 
 instance Read PresentModeKHR where
-  readPrec = parens ( choose [ ("VK_PRESENT_MODE_IMMEDIATE_KHR", pure VK_PRESENT_MODE_IMMEDIATE_KHR)
-                             , ("VK_PRESENT_MODE_MAILBOX_KHR", pure VK_PRESENT_MODE_MAILBOX_KHR)
-                             , ("VK_PRESENT_MODE_FIFO_KHR", pure VK_PRESENT_MODE_FIFO_KHR)
-                             , ("VK_PRESENT_MODE_FIFO_RELAXED_KHR", pure VK_PRESENT_MODE_FIFO_RELAXED_KHR)
+  readPrec = parens ( choose [ ("PresentModeImmediateKhr", pure PresentModeImmediateKhr)
+                             , ("PresentModeMailboxKhr", pure PresentModeMailboxKhr)
+                             , ("PresentModeFifoKhr", pure PresentModeFifoKhr)
+                             , ("PresentModeFifoRelaxedKhr", pure PresentModeFifoRelaxedKhr)
                              ] +++
                       prec 10 (do
                         expectP (Ident "PresentModeKHR")
@@ -116,13 +116,13 @@ instance Read PresentModeKHR where
                     )
 
 
-pattern VK_PRESENT_MODE_IMMEDIATE_KHR = PresentModeKHR 0
+pattern PresentModeImmediateKhr = PresentModeKHR 0
 
-pattern VK_PRESENT_MODE_MAILBOX_KHR = PresentModeKHR 1
+pattern PresentModeMailboxKhr = PresentModeKHR 1
 
-pattern VK_PRESENT_MODE_FIFO_KHR = PresentModeKHR 2
+pattern PresentModeFifoKhr = PresentModeKHR 2
 
-pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR = PresentModeKHR 3
+pattern PresentModeFifoRelaxedKhr = PresentModeKHR 3
 
 newtype SurfaceKHR = SurfaceKHR Word64
   deriving (Eq, Storable)
@@ -157,11 +157,11 @@ newtype ColorSpaceKHR = ColorSpaceKHR Int32
   deriving (Eq, Storable)
 
 instance Show ColorSpaceKHR where
-  showsPrec _ VK_COLORSPACE_SRGB_NONLINEAR_KHR = showString "VK_COLORSPACE_SRGB_NONLINEAR_KHR"
+  showsPrec _ ColorspaceSrgbNonlinearKhr = showString "ColorspaceSrgbNonlinearKhr"
   showsPrec p (ColorSpaceKHR x) = showParen (p >= 11) (showString "ColorSpaceKHR " . showsPrec 11 x)
 
 instance Read ColorSpaceKHR where
-  readPrec = parens ( choose [ ("VK_COLORSPACE_SRGB_NONLINEAR_KHR", pure VK_COLORSPACE_SRGB_NONLINEAR_KHR)
+  readPrec = parens ( choose [ ("ColorspaceSrgbNonlinearKhr", pure ColorspaceSrgbNonlinearKhr)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ColorSpaceKHR")
@@ -171,7 +171,7 @@ instance Read ColorSpaceKHR where
                     )
 
 
-pattern VK_COLORSPACE_SRGB_NONLINEAR_KHR = ColorSpaceKHR 0
+pattern ColorspaceSrgbNonlinearKhr = ColorSpaceKHR 0
 
 -- ** getPhysicalDeviceSurfacePresentModesKHR
 foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" getPhysicalDeviceSurfacePresentModesKHR ::

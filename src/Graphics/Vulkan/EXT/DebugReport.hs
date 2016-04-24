@@ -61,67 +61,67 @@ newtype DebugReportObjectTypeEXT = DebugReportObjectTypeEXT Int32
   deriving (Eq, Storable)
 
 instance Show DebugReportObjectTypeEXT where
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT"
-  showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT"
+  showsPrec _ DebugReportObjectTypeUnknownExt = showString "DebugReportObjectTypeUnknownExt"
+  showsPrec _ DebugReportObjectTypeInstanceExt = showString "DebugReportObjectTypeInstanceExt"
+  showsPrec _ DebugReportObjectTypePhysicalDeviceExt = showString "DebugReportObjectTypePhysicalDeviceExt"
+  showsPrec _ DebugReportObjectTypeDeviceExt = showString "DebugReportObjectTypeDeviceExt"
+  showsPrec _ DebugReportObjectTypeQueueExt = showString "DebugReportObjectTypeQueueExt"
+  showsPrec _ DebugReportObjectTypeSemaphoreExt = showString "DebugReportObjectTypeSemaphoreExt"
+  showsPrec _ DebugReportObjectTypeCommandBufferExt = showString "DebugReportObjectTypeCommandBufferExt"
+  showsPrec _ DebugReportObjectTypeFenceExt = showString "DebugReportObjectTypeFenceExt"
+  showsPrec _ DebugReportObjectTypeDeviceMemoryExt = showString "DebugReportObjectTypeDeviceMemoryExt"
+  showsPrec _ DebugReportObjectTypeBufferExt = showString "DebugReportObjectTypeBufferExt"
+  showsPrec _ DebugReportObjectTypeImageExt = showString "DebugReportObjectTypeImageExt"
+  showsPrec _ DebugReportObjectTypeEventExt = showString "DebugReportObjectTypeEventExt"
+  showsPrec _ DebugReportObjectTypeQueryPoolExt = showString "DebugReportObjectTypeQueryPoolExt"
+  showsPrec _ DebugReportObjectTypeBufferViewExt = showString "DebugReportObjectTypeBufferViewExt"
+  showsPrec _ DebugReportObjectTypeImageViewExt = showString "DebugReportObjectTypeImageViewExt"
+  showsPrec _ DebugReportObjectTypeShaderModuleExt = showString "DebugReportObjectTypeShaderModuleExt"
+  showsPrec _ DebugReportObjectTypePipelineCacheExt = showString "DebugReportObjectTypePipelineCacheExt"
+  showsPrec _ DebugReportObjectTypePipelineLayoutExt = showString "DebugReportObjectTypePipelineLayoutExt"
+  showsPrec _ DebugReportObjectTypeRenderPassExt = showString "DebugReportObjectTypeRenderPassExt"
+  showsPrec _ DebugReportObjectTypePipelineExt = showString "DebugReportObjectTypePipelineExt"
+  showsPrec _ DebugReportObjectTypeDescriptorSetLayoutExt = showString "DebugReportObjectTypeDescriptorSetLayoutExt"
+  showsPrec _ DebugReportObjectTypeSamplerExt = showString "DebugReportObjectTypeSamplerExt"
+  showsPrec _ DebugReportObjectTypeDescriptorPoolExt = showString "DebugReportObjectTypeDescriptorPoolExt"
+  showsPrec _ DebugReportObjectTypeDescriptorSetExt = showString "DebugReportObjectTypeDescriptorSetExt"
+  showsPrec _ DebugReportObjectTypeFramebufferExt = showString "DebugReportObjectTypeFramebufferExt"
+  showsPrec _ DebugReportObjectTypeCommandPoolExt = showString "DebugReportObjectTypeCommandPoolExt"
+  showsPrec _ DebugReportObjectTypeSurfaceKhrExt = showString "DebugReportObjectTypeSurfaceKhrExt"
+  showsPrec _ DebugReportObjectTypeSwapchainKhrExt = showString "DebugReportObjectTypeSwapchainKhrExt"
+  showsPrec _ DebugReportObjectTypeDebugReportExt = showString "DebugReportObjectTypeDebugReportExt"
   showsPrec p (DebugReportObjectTypeEXT x) = showParen (p >= 11) (showString "DebugReportObjectTypeEXT " . showsPrec 11 x)
 
 instance Read DebugReportObjectTypeEXT where
-  readPrec = parens ( choose [ ("VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT)
-                             , ("VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT", pure VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT)
+  readPrec = parens ( choose [ ("DebugReportObjectTypeUnknownExt", pure DebugReportObjectTypeUnknownExt)
+                             , ("DebugReportObjectTypeInstanceExt", pure DebugReportObjectTypeInstanceExt)
+                             , ("DebugReportObjectTypePhysicalDeviceExt", pure DebugReportObjectTypePhysicalDeviceExt)
+                             , ("DebugReportObjectTypeDeviceExt", pure DebugReportObjectTypeDeviceExt)
+                             , ("DebugReportObjectTypeQueueExt", pure DebugReportObjectTypeQueueExt)
+                             , ("DebugReportObjectTypeSemaphoreExt", pure DebugReportObjectTypeSemaphoreExt)
+                             , ("DebugReportObjectTypeCommandBufferExt", pure DebugReportObjectTypeCommandBufferExt)
+                             , ("DebugReportObjectTypeFenceExt", pure DebugReportObjectTypeFenceExt)
+                             , ("DebugReportObjectTypeDeviceMemoryExt", pure DebugReportObjectTypeDeviceMemoryExt)
+                             , ("DebugReportObjectTypeBufferExt", pure DebugReportObjectTypeBufferExt)
+                             , ("DebugReportObjectTypeImageExt", pure DebugReportObjectTypeImageExt)
+                             , ("DebugReportObjectTypeEventExt", pure DebugReportObjectTypeEventExt)
+                             , ("DebugReportObjectTypeQueryPoolExt", pure DebugReportObjectTypeQueryPoolExt)
+                             , ("DebugReportObjectTypeBufferViewExt", pure DebugReportObjectTypeBufferViewExt)
+                             , ("DebugReportObjectTypeImageViewExt", pure DebugReportObjectTypeImageViewExt)
+                             , ("DebugReportObjectTypeShaderModuleExt", pure DebugReportObjectTypeShaderModuleExt)
+                             , ("DebugReportObjectTypePipelineCacheExt", pure DebugReportObjectTypePipelineCacheExt)
+                             , ("DebugReportObjectTypePipelineLayoutExt", pure DebugReportObjectTypePipelineLayoutExt)
+                             , ("DebugReportObjectTypeRenderPassExt", pure DebugReportObjectTypeRenderPassExt)
+                             , ("DebugReportObjectTypePipelineExt", pure DebugReportObjectTypePipelineExt)
+                             , ("DebugReportObjectTypeDescriptorSetLayoutExt", pure DebugReportObjectTypeDescriptorSetLayoutExt)
+                             , ("DebugReportObjectTypeSamplerExt", pure DebugReportObjectTypeSamplerExt)
+                             , ("DebugReportObjectTypeDescriptorPoolExt", pure DebugReportObjectTypeDescriptorPoolExt)
+                             , ("DebugReportObjectTypeDescriptorSetExt", pure DebugReportObjectTypeDescriptorSetExt)
+                             , ("DebugReportObjectTypeFramebufferExt", pure DebugReportObjectTypeFramebufferExt)
+                             , ("DebugReportObjectTypeCommandPoolExt", pure DebugReportObjectTypeCommandPoolExt)
+                             , ("DebugReportObjectTypeSurfaceKhrExt", pure DebugReportObjectTypeSurfaceKhrExt)
+                             , ("DebugReportObjectTypeSwapchainKhrExt", pure DebugReportObjectTypeSwapchainKhrExt)
+                             , ("DebugReportObjectTypeDebugReportExt", pure DebugReportObjectTypeDebugReportExt)
                              ] +++
                       prec 10 (do
                         expectP (Ident "DebugReportObjectTypeEXT")
@@ -131,63 +131,63 @@ instance Read DebugReportObjectTypeEXT where
                     )
 
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = DebugReportObjectTypeEXT 0
+pattern DebugReportObjectTypeUnknownExt = DebugReportObjectTypeEXT 0
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT = DebugReportObjectTypeEXT 1
+pattern DebugReportObjectTypeInstanceExt = DebugReportObjectTypeEXT 1
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT = DebugReportObjectTypeEXT 2
+pattern DebugReportObjectTypePhysicalDeviceExt = DebugReportObjectTypeEXT 2
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT = DebugReportObjectTypeEXT 3
+pattern DebugReportObjectTypeDeviceExt = DebugReportObjectTypeEXT 3
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT = DebugReportObjectTypeEXT 4
+pattern DebugReportObjectTypeQueueExt = DebugReportObjectTypeEXT 4
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT = DebugReportObjectTypeEXT 5
+pattern DebugReportObjectTypeSemaphoreExt = DebugReportObjectTypeEXT 5
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT = DebugReportObjectTypeEXT 6
+pattern DebugReportObjectTypeCommandBufferExt = DebugReportObjectTypeEXT 6
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT = DebugReportObjectTypeEXT 7
+pattern DebugReportObjectTypeFenceExt = DebugReportObjectTypeEXT 7
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT = DebugReportObjectTypeEXT 8
+pattern DebugReportObjectTypeDeviceMemoryExt = DebugReportObjectTypeEXT 8
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT = DebugReportObjectTypeEXT 9
+pattern DebugReportObjectTypeBufferExt = DebugReportObjectTypeEXT 9
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT = DebugReportObjectTypeEXT 10
+pattern DebugReportObjectTypeImageExt = DebugReportObjectTypeEXT 10
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT = DebugReportObjectTypeEXT 11
+pattern DebugReportObjectTypeEventExt = DebugReportObjectTypeEXT 11
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT = DebugReportObjectTypeEXT 12
+pattern DebugReportObjectTypeQueryPoolExt = DebugReportObjectTypeEXT 12
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT = DebugReportObjectTypeEXT 13
+pattern DebugReportObjectTypeBufferViewExt = DebugReportObjectTypeEXT 13
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT = DebugReportObjectTypeEXT 14
+pattern DebugReportObjectTypeImageViewExt = DebugReportObjectTypeEXT 14
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT = DebugReportObjectTypeEXT 15
+pattern DebugReportObjectTypeShaderModuleExt = DebugReportObjectTypeEXT 15
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT = DebugReportObjectTypeEXT 16
+pattern DebugReportObjectTypePipelineCacheExt = DebugReportObjectTypeEXT 16
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT = DebugReportObjectTypeEXT 17
+pattern DebugReportObjectTypePipelineLayoutExt = DebugReportObjectTypeEXT 17
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT = DebugReportObjectTypeEXT 18
+pattern DebugReportObjectTypeRenderPassExt = DebugReportObjectTypeEXT 18
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT = DebugReportObjectTypeEXT 19
+pattern DebugReportObjectTypePipelineExt = DebugReportObjectTypeEXT 19
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT = DebugReportObjectTypeEXT 20
+pattern DebugReportObjectTypeDescriptorSetLayoutExt = DebugReportObjectTypeEXT 20
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT = DebugReportObjectTypeEXT 21
+pattern DebugReportObjectTypeSamplerExt = DebugReportObjectTypeEXT 21
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT = DebugReportObjectTypeEXT 22
+pattern DebugReportObjectTypeDescriptorPoolExt = DebugReportObjectTypeEXT 22
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT = DebugReportObjectTypeEXT 23
+pattern DebugReportObjectTypeDescriptorSetExt = DebugReportObjectTypeEXT 23
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT = DebugReportObjectTypeEXT 24
+pattern DebugReportObjectTypeFramebufferExt = DebugReportObjectTypeEXT 24
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT = DebugReportObjectTypeEXT 25
+pattern DebugReportObjectTypeCommandPoolExt = DebugReportObjectTypeEXT 25
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT = DebugReportObjectTypeEXT 26
+pattern DebugReportObjectTypeSurfaceKhrExt = DebugReportObjectTypeEXT 26
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT = DebugReportObjectTypeEXT 27
+pattern DebugReportObjectTypeSwapchainKhrExt = DebugReportObjectTypeEXT 27
 
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = DebugReportObjectTypeEXT 28
+pattern DebugReportObjectTypeDebugReportExt = DebugReportObjectTypeEXT 28
 
 -- ** DebugReportErrorEXT
 
@@ -195,13 +195,13 @@ newtype DebugReportErrorEXT = DebugReportErrorEXT Int32
   deriving (Eq, Storable)
 
 instance Show DebugReportErrorEXT where
-  showsPrec _ VK_DEBUG_REPORT_ERROR_NONE_EXT = showString "VK_DEBUG_REPORT_ERROR_NONE_EXT"
-  showsPrec _ VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT = showString "VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT"
+  showsPrec _ DebugReportErrorNoneExt = showString "DebugReportErrorNoneExt"
+  showsPrec _ DebugReportErrorCallbackRefExt = showString "DebugReportErrorCallbackRefExt"
   showsPrec p (DebugReportErrorEXT x) = showParen (p >= 11) (showString "DebugReportErrorEXT " . showsPrec 11 x)
 
 instance Read DebugReportErrorEXT where
-  readPrec = parens ( choose [ ("VK_DEBUG_REPORT_ERROR_NONE_EXT", pure VK_DEBUG_REPORT_ERROR_NONE_EXT)
-                             , ("VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT", pure VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT)
+  readPrec = parens ( choose [ ("DebugReportErrorNoneExt", pure DebugReportErrorNoneExt)
+                             , ("DebugReportErrorCallbackRefExt", pure DebugReportErrorCallbackRefExt)
                              ] +++
                       prec 10 (do
                         expectP (Ident "DebugReportErrorEXT")
@@ -211,9 +211,9 @@ instance Read DebugReportErrorEXT where
                     )
 
 
-pattern VK_DEBUG_REPORT_ERROR_NONE_EXT = DebugReportErrorEXT 0
+pattern DebugReportErrorNoneExt = DebugReportErrorEXT 0
 
-pattern VK_DEBUG_REPORT_ERROR_CALLBACK_REF_EXT = DebugReportErrorEXT 1
+pattern DebugReportErrorCallbackRefExt = DebugReportErrorEXT 1
 
 
 data DebugReportCallbackCreateInfoEXT =

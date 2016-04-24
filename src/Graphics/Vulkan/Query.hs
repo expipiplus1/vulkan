@@ -125,15 +125,15 @@ newtype QueryType = QueryType Int32
   deriving (Eq, Storable)
 
 instance Show QueryType where
-  showsPrec _ VK_QUERY_TYPE_OCCLUSION = showString "VK_QUERY_TYPE_OCCLUSION"
-  showsPrec _ VK_QUERY_TYPE_PIPELINE_STATISTICS = showString "VK_QUERY_TYPE_PIPELINE_STATISTICS"
-  showsPrec _ VK_QUERY_TYPE_TIMESTAMP = showString "VK_QUERY_TYPE_TIMESTAMP"
+  showsPrec _ QueryTypeOcclusion = showString "QueryTypeOcclusion"
+  showsPrec _ QueryTypePipelineStatistics = showString "QueryTypePipelineStatistics"
+  showsPrec _ QueryTypeTimestamp = showString "QueryTypeTimestamp"
   showsPrec p (QueryType x) = showParen (p >= 11) (showString "QueryType " . showsPrec 11 x)
 
 instance Read QueryType where
-  readPrec = parens ( choose [ ("VK_QUERY_TYPE_OCCLUSION", pure VK_QUERY_TYPE_OCCLUSION)
-                             , ("VK_QUERY_TYPE_PIPELINE_STATISTICS", pure VK_QUERY_TYPE_PIPELINE_STATISTICS)
-                             , ("VK_QUERY_TYPE_TIMESTAMP", pure VK_QUERY_TYPE_TIMESTAMP)
+  readPrec = parens ( choose [ ("QueryTypeOcclusion", pure QueryTypeOcclusion)
+                             , ("QueryTypePipelineStatistics", pure QueryTypePipelineStatistics)
+                             , ("QueryTypeTimestamp", pure QueryTypeTimestamp)
                              ] +++
                       prec 10 (do
                         expectP (Ident "QueryType")
@@ -143,11 +143,11 @@ instance Read QueryType where
                     )
 
 
-pattern VK_QUERY_TYPE_OCCLUSION = QueryType 0
+pattern QueryTypeOcclusion = QueryType 0
 -- | Optional
-pattern VK_QUERY_TYPE_PIPELINE_STATISTICS = QueryType 1
+pattern QueryTypePipelineStatistics = QueryType 1
 
-pattern VK_QUERY_TYPE_TIMESTAMP = QueryType 2
+pattern QueryTypeTimestamp = QueryType 2
 
 newtype QueryPool = QueryPool Word64
   deriving (Eq, Storable)

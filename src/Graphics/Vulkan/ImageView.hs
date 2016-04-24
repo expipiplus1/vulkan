@@ -89,23 +89,23 @@ newtype ImageViewType = ImageViewType Int32
   deriving (Eq, Storable)
 
 instance Show ImageViewType where
-  showsPrec _ VK_IMAGE_VIEW_TYPE_1D = showString "VK_IMAGE_VIEW_TYPE_1D"
-  showsPrec _ VK_IMAGE_VIEW_TYPE_2D = showString "VK_IMAGE_VIEW_TYPE_2D"
-  showsPrec _ VK_IMAGE_VIEW_TYPE_3D = showString "VK_IMAGE_VIEW_TYPE_3D"
-  showsPrec _ VK_IMAGE_VIEW_TYPE_CUBE = showString "VK_IMAGE_VIEW_TYPE_CUBE"
-  showsPrec _ VK_IMAGE_VIEW_TYPE_1D_ARRAY = showString "VK_IMAGE_VIEW_TYPE_1D_ARRAY"
-  showsPrec _ VK_IMAGE_VIEW_TYPE_2D_ARRAY = showString "VK_IMAGE_VIEW_TYPE_2D_ARRAY"
-  showsPrec _ VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = showString "VK_IMAGE_VIEW_TYPE_CUBE_ARRAY"
+  showsPrec _ ImageViewType1d = showString "ImageViewType1d"
+  showsPrec _ ImageViewType2d = showString "ImageViewType2d"
+  showsPrec _ ImageViewType3d = showString "ImageViewType3d"
+  showsPrec _ ImageViewTypeCube = showString "ImageViewTypeCube"
+  showsPrec _ ImageViewType1dArray = showString "ImageViewType1dArray"
+  showsPrec _ ImageViewType2dArray = showString "ImageViewType2dArray"
+  showsPrec _ ImageViewTypeCubeArray = showString "ImageViewTypeCubeArray"
   showsPrec p (ImageViewType x) = showParen (p >= 11) (showString "ImageViewType " . showsPrec 11 x)
 
 instance Read ImageViewType where
-  readPrec = parens ( choose [ ("VK_IMAGE_VIEW_TYPE_1D", pure VK_IMAGE_VIEW_TYPE_1D)
-                             , ("VK_IMAGE_VIEW_TYPE_2D", pure VK_IMAGE_VIEW_TYPE_2D)
-                             , ("VK_IMAGE_VIEW_TYPE_3D", pure VK_IMAGE_VIEW_TYPE_3D)
-                             , ("VK_IMAGE_VIEW_TYPE_CUBE", pure VK_IMAGE_VIEW_TYPE_CUBE)
-                             , ("VK_IMAGE_VIEW_TYPE_1D_ARRAY", pure VK_IMAGE_VIEW_TYPE_1D_ARRAY)
-                             , ("VK_IMAGE_VIEW_TYPE_2D_ARRAY", pure VK_IMAGE_VIEW_TYPE_2D_ARRAY)
-                             , ("VK_IMAGE_VIEW_TYPE_CUBE_ARRAY", pure VK_IMAGE_VIEW_TYPE_CUBE_ARRAY)
+  readPrec = parens ( choose [ ("ImageViewType1d", pure ImageViewType1d)
+                             , ("ImageViewType2d", pure ImageViewType2d)
+                             , ("ImageViewType3d", pure ImageViewType3d)
+                             , ("ImageViewTypeCube", pure ImageViewTypeCube)
+                             , ("ImageViewType1dArray", pure ImageViewType1dArray)
+                             , ("ImageViewType2dArray", pure ImageViewType2dArray)
+                             , ("ImageViewTypeCubeArray", pure ImageViewTypeCubeArray)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ImageViewType")
@@ -115,19 +115,19 @@ instance Read ImageViewType where
                     )
 
 
-pattern VK_IMAGE_VIEW_TYPE_1D = ImageViewType 0
+pattern ImageViewType1d = ImageViewType 0
 
-pattern VK_IMAGE_VIEW_TYPE_2D = ImageViewType 1
+pattern ImageViewType2d = ImageViewType 1
 
-pattern VK_IMAGE_VIEW_TYPE_3D = ImageViewType 2
+pattern ImageViewType3d = ImageViewType 2
 
-pattern VK_IMAGE_VIEW_TYPE_CUBE = ImageViewType 3
+pattern ImageViewTypeCube = ImageViewType 3
 
-pattern VK_IMAGE_VIEW_TYPE_1D_ARRAY = ImageViewType 4
+pattern ImageViewType1dArray = ImageViewType 4
 
-pattern VK_IMAGE_VIEW_TYPE_2D_ARRAY = ImageViewType 5
+pattern ImageViewType2dArray = ImageViewType 5
 
-pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = ImageViewType 6
+pattern ImageViewTypeCubeArray = ImageViewType 6
 
 -- ** ImageViewCreateFlags
 -- | Opaque flag
@@ -162,23 +162,23 @@ newtype ComponentSwizzle = ComponentSwizzle Int32
   deriving (Eq, Storable)
 
 instance Show ComponentSwizzle where
-  showsPrec _ VK_COMPONENT_SWIZZLE_IDENTITY = showString "VK_COMPONENT_SWIZZLE_IDENTITY"
-  showsPrec _ VK_COMPONENT_SWIZZLE_ZERO = showString "VK_COMPONENT_SWIZZLE_ZERO"
-  showsPrec _ VK_COMPONENT_SWIZZLE_ONE = showString "VK_COMPONENT_SWIZZLE_ONE"
-  showsPrec _ VK_COMPONENT_SWIZZLE_R = showString "VK_COMPONENT_SWIZZLE_R"
-  showsPrec _ VK_COMPONENT_SWIZZLE_G = showString "VK_COMPONENT_SWIZZLE_G"
-  showsPrec _ VK_COMPONENT_SWIZZLE_B = showString "VK_COMPONENT_SWIZZLE_B"
-  showsPrec _ VK_COMPONENT_SWIZZLE_A = showString "VK_COMPONENT_SWIZZLE_A"
+  showsPrec _ ComponentSwizzleIdentity = showString "ComponentSwizzleIdentity"
+  showsPrec _ ComponentSwizzleZero = showString "ComponentSwizzleZero"
+  showsPrec _ ComponentSwizzleOne = showString "ComponentSwizzleOne"
+  showsPrec _ ComponentSwizzleR = showString "ComponentSwizzleR"
+  showsPrec _ ComponentSwizzleG = showString "ComponentSwizzleG"
+  showsPrec _ ComponentSwizzleB = showString "ComponentSwizzleB"
+  showsPrec _ ComponentSwizzleA = showString "ComponentSwizzleA"
   showsPrec p (ComponentSwizzle x) = showParen (p >= 11) (showString "ComponentSwizzle " . showsPrec 11 x)
 
 instance Read ComponentSwizzle where
-  readPrec = parens ( choose [ ("VK_COMPONENT_SWIZZLE_IDENTITY", pure VK_COMPONENT_SWIZZLE_IDENTITY)
-                             , ("VK_COMPONENT_SWIZZLE_ZERO", pure VK_COMPONENT_SWIZZLE_ZERO)
-                             , ("VK_COMPONENT_SWIZZLE_ONE", pure VK_COMPONENT_SWIZZLE_ONE)
-                             , ("VK_COMPONENT_SWIZZLE_R", pure VK_COMPONENT_SWIZZLE_R)
-                             , ("VK_COMPONENT_SWIZZLE_G", pure VK_COMPONENT_SWIZZLE_G)
-                             , ("VK_COMPONENT_SWIZZLE_B", pure VK_COMPONENT_SWIZZLE_B)
-                             , ("VK_COMPONENT_SWIZZLE_A", pure VK_COMPONENT_SWIZZLE_A)
+  readPrec = parens ( choose [ ("ComponentSwizzleIdentity", pure ComponentSwizzleIdentity)
+                             , ("ComponentSwizzleZero", pure ComponentSwizzleZero)
+                             , ("ComponentSwizzleOne", pure ComponentSwizzleOne)
+                             , ("ComponentSwizzleR", pure ComponentSwizzleR)
+                             , ("ComponentSwizzleG", pure ComponentSwizzleG)
+                             , ("ComponentSwizzleB", pure ComponentSwizzleB)
+                             , ("ComponentSwizzleA", pure ComponentSwizzleA)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ComponentSwizzle")
@@ -188,19 +188,19 @@ instance Read ComponentSwizzle where
                     )
 
 
-pattern VK_COMPONENT_SWIZZLE_IDENTITY = ComponentSwizzle 0
+pattern ComponentSwizzleIdentity = ComponentSwizzle 0
 
-pattern VK_COMPONENT_SWIZZLE_ZERO = ComponentSwizzle 1
+pattern ComponentSwizzleZero = ComponentSwizzle 1
 
-pattern VK_COMPONENT_SWIZZLE_ONE = ComponentSwizzle 2
+pattern ComponentSwizzleOne = ComponentSwizzle 2
 
-pattern VK_COMPONENT_SWIZZLE_R = ComponentSwizzle 3
+pattern ComponentSwizzleR = ComponentSwizzle 3
 
-pattern VK_COMPONENT_SWIZZLE_G = ComponentSwizzle 4
+pattern ComponentSwizzleG = ComponentSwizzle 4
 
-pattern VK_COMPONENT_SWIZZLE_B = ComponentSwizzle 5
+pattern ComponentSwizzleB = ComponentSwizzle 5
 
-pattern VK_COMPONENT_SWIZZLE_A = ComponentSwizzle 6
+pattern ComponentSwizzleA = ComponentSwizzle 6
 
 -- ** destroyImageView
 foreign import ccall "vkDestroyImageView" destroyImageView ::

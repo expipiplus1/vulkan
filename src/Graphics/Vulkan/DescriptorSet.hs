@@ -351,31 +351,31 @@ newtype DescriptorType = DescriptorType Int32
   deriving (Eq, Storable)
 
 instance Show DescriptorType where
-  showsPrec _ VK_DESCRIPTOR_TYPE_SAMPLER = showString "VK_DESCRIPTOR_TYPE_SAMPLER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = showString "VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE = showString "VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE"
-  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE = showString "VK_DESCRIPTOR_TYPE_STORAGE_IMAGE"
-  showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER = showString "VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER = showString "VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER = showString "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER = showString "VK_DESCRIPTOR_TYPE_STORAGE_BUFFER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = showString "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC"
-  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = showString "VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC"
-  showsPrec _ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = showString "VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT"
+  showsPrec _ DescriptorTypeSampler = showString "DescriptorTypeSampler"
+  showsPrec _ DescriptorTypeCombinedImageSampler = showString "DescriptorTypeCombinedImageSampler"
+  showsPrec _ DescriptorTypeSampledImage = showString "DescriptorTypeSampledImage"
+  showsPrec _ DescriptorTypeStorageImage = showString "DescriptorTypeStorageImage"
+  showsPrec _ DescriptorTypeUniformTexelBuffer = showString "DescriptorTypeUniformTexelBuffer"
+  showsPrec _ DescriptorTypeStorageTexelBuffer = showString "DescriptorTypeStorageTexelBuffer"
+  showsPrec _ DescriptorTypeUniformBuffer = showString "DescriptorTypeUniformBuffer"
+  showsPrec _ DescriptorTypeStorageBuffer = showString "DescriptorTypeStorageBuffer"
+  showsPrec _ DescriptorTypeUniformBufferDynamic = showString "DescriptorTypeUniformBufferDynamic"
+  showsPrec _ DescriptorTypeStorageBufferDynamic = showString "DescriptorTypeStorageBufferDynamic"
+  showsPrec _ DescriptorTypeInputAttachment = showString "DescriptorTypeInputAttachment"
   showsPrec p (DescriptorType x) = showParen (p >= 11) (showString "DescriptorType " . showsPrec 11 x)
 
 instance Read DescriptorType where
-  readPrec = parens ( choose [ ("VK_DESCRIPTOR_TYPE_SAMPLER", pure VK_DESCRIPTOR_TYPE_SAMPLER)
-                             , ("VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER", pure VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-                             , ("VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE", pure VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE)
-                             , ("VK_DESCRIPTOR_TYPE_STORAGE_IMAGE", pure VK_DESCRIPTOR_TYPE_STORAGE_IMAGE)
-                             , ("VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER", pure VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER)
-                             , ("VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER", pure VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER)
-                             , ("VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER", pure VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-                             , ("VK_DESCRIPTOR_TYPE_STORAGE_BUFFER", pure VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
-                             , ("VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC", pure VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC)
-                             , ("VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC", pure VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC)
-                             , ("VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT", pure VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+  readPrec = parens ( choose [ ("DescriptorTypeSampler", pure DescriptorTypeSampler)
+                             , ("DescriptorTypeCombinedImageSampler", pure DescriptorTypeCombinedImageSampler)
+                             , ("DescriptorTypeSampledImage", pure DescriptorTypeSampledImage)
+                             , ("DescriptorTypeStorageImage", pure DescriptorTypeStorageImage)
+                             , ("DescriptorTypeUniformTexelBuffer", pure DescriptorTypeUniformTexelBuffer)
+                             , ("DescriptorTypeStorageTexelBuffer", pure DescriptorTypeStorageTexelBuffer)
+                             , ("DescriptorTypeUniformBuffer", pure DescriptorTypeUniformBuffer)
+                             , ("DescriptorTypeStorageBuffer", pure DescriptorTypeStorageBuffer)
+                             , ("DescriptorTypeUniformBufferDynamic", pure DescriptorTypeUniformBufferDynamic)
+                             , ("DescriptorTypeStorageBufferDynamic", pure DescriptorTypeStorageBufferDynamic)
+                             , ("DescriptorTypeInputAttachment", pure DescriptorTypeInputAttachment)
                              ] +++
                       prec 10 (do
                         expectP (Ident "DescriptorType")
@@ -385,27 +385,27 @@ instance Read DescriptorType where
                     )
 
 
-pattern VK_DESCRIPTOR_TYPE_SAMPLER = DescriptorType 0
+pattern DescriptorTypeSampler = DescriptorType 0
 
-pattern VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = DescriptorType 1
+pattern DescriptorTypeCombinedImageSampler = DescriptorType 1
 
-pattern VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE = DescriptorType 2
+pattern DescriptorTypeSampledImage = DescriptorType 2
 
-pattern VK_DESCRIPTOR_TYPE_STORAGE_IMAGE = DescriptorType 3
+pattern DescriptorTypeStorageImage = DescriptorType 3
 
-pattern VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER = DescriptorType 4
+pattern DescriptorTypeUniformTexelBuffer = DescriptorType 4
 
-pattern VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER = DescriptorType 5
+pattern DescriptorTypeStorageTexelBuffer = DescriptorType 5
 
-pattern VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER = DescriptorType 6
+pattern DescriptorTypeUniformBuffer = DescriptorType 6
 
-pattern VK_DESCRIPTOR_TYPE_STORAGE_BUFFER = DescriptorType 7
+pattern DescriptorTypeStorageBuffer = DescriptorType 7
 
-pattern VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = DescriptorType 8
+pattern DescriptorTypeUniformBufferDynamic = DescriptorType 8
 
-pattern VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = DescriptorType 9
+pattern DescriptorTypeStorageBufferDynamic = DescriptorType 9
 
-pattern VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = DescriptorType 10
+pattern DescriptorTypeInputAttachment = DescriptorType 10
 
 
 data DescriptorSetAllocateInfo =

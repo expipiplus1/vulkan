@@ -195,15 +195,15 @@ newtype AttachmentLoadOp = AttachmentLoadOp Int32
   deriving (Eq, Storable)
 
 instance Show AttachmentLoadOp where
-  showsPrec _ VK_ATTACHMENT_LOAD_OP_LOAD = showString "VK_ATTACHMENT_LOAD_OP_LOAD"
-  showsPrec _ VK_ATTACHMENT_LOAD_OP_CLEAR = showString "VK_ATTACHMENT_LOAD_OP_CLEAR"
-  showsPrec _ VK_ATTACHMENT_LOAD_OP_DONT_CARE = showString "VK_ATTACHMENT_LOAD_OP_DONT_CARE"
+  showsPrec _ AttachmentLoadOpLoad = showString "AttachmentLoadOpLoad"
+  showsPrec _ AttachmentLoadOpClear = showString "AttachmentLoadOpClear"
+  showsPrec _ AttachmentLoadOpDontCare = showString "AttachmentLoadOpDontCare"
   showsPrec p (AttachmentLoadOp x) = showParen (p >= 11) (showString "AttachmentLoadOp " . showsPrec 11 x)
 
 instance Read AttachmentLoadOp where
-  readPrec = parens ( choose [ ("VK_ATTACHMENT_LOAD_OP_LOAD", pure VK_ATTACHMENT_LOAD_OP_LOAD)
-                             , ("VK_ATTACHMENT_LOAD_OP_CLEAR", pure VK_ATTACHMENT_LOAD_OP_CLEAR)
-                             , ("VK_ATTACHMENT_LOAD_OP_DONT_CARE", pure VK_ATTACHMENT_LOAD_OP_DONT_CARE)
+  readPrec = parens ( choose [ ("AttachmentLoadOpLoad", pure AttachmentLoadOpLoad)
+                             , ("AttachmentLoadOpClear", pure AttachmentLoadOpClear)
+                             , ("AttachmentLoadOpDontCare", pure AttachmentLoadOpDontCare)
                              ] +++
                       prec 10 (do
                         expectP (Ident "AttachmentLoadOp")
@@ -213,11 +213,11 @@ instance Read AttachmentLoadOp where
                     )
 
 
-pattern VK_ATTACHMENT_LOAD_OP_LOAD = AttachmentLoadOp 0
+pattern AttachmentLoadOpLoad = AttachmentLoadOp 0
 
-pattern VK_ATTACHMENT_LOAD_OP_CLEAR = AttachmentLoadOp 1
+pattern AttachmentLoadOpClear = AttachmentLoadOp 1
 
-pattern VK_ATTACHMENT_LOAD_OP_DONT_CARE = AttachmentLoadOp 2
+pattern AttachmentLoadOpDontCare = AttachmentLoadOp 2
 
 -- ** AttachmentStoreOp
 
@@ -225,13 +225,13 @@ newtype AttachmentStoreOp = AttachmentStoreOp Int32
   deriving (Eq, Storable)
 
 instance Show AttachmentStoreOp where
-  showsPrec _ VK_ATTACHMENT_STORE_OP_STORE = showString "VK_ATTACHMENT_STORE_OP_STORE"
-  showsPrec _ VK_ATTACHMENT_STORE_OP_DONT_CARE = showString "VK_ATTACHMENT_STORE_OP_DONT_CARE"
+  showsPrec _ AttachmentStoreOpStore = showString "AttachmentStoreOpStore"
+  showsPrec _ AttachmentStoreOpDontCare = showString "AttachmentStoreOpDontCare"
   showsPrec p (AttachmentStoreOp x) = showParen (p >= 11) (showString "AttachmentStoreOp " . showsPrec 11 x)
 
 instance Read AttachmentStoreOp where
-  readPrec = parens ( choose [ ("VK_ATTACHMENT_STORE_OP_STORE", pure VK_ATTACHMENT_STORE_OP_STORE)
-                             , ("VK_ATTACHMENT_STORE_OP_DONT_CARE", pure VK_ATTACHMENT_STORE_OP_DONT_CARE)
+  readPrec = parens ( choose [ ("AttachmentStoreOpStore", pure AttachmentStoreOpStore)
+                             , ("AttachmentStoreOpDontCare", pure AttachmentStoreOpDontCare)
                              ] +++
                       prec 10 (do
                         expectP (Ident "AttachmentStoreOp")
@@ -241,9 +241,9 @@ instance Read AttachmentStoreOp where
                     )
 
 
-pattern VK_ATTACHMENT_STORE_OP_STORE = AttachmentStoreOp 0
+pattern AttachmentStoreOpStore = AttachmentStoreOp 0
 
-pattern VK_ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
+pattern AttachmentStoreOpDontCare = AttachmentStoreOp 1
 
 -- ** AccessFlags
 

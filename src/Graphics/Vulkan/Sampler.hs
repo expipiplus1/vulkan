@@ -48,19 +48,19 @@ newtype SamplerAddressMode = SamplerAddressMode Int32
   deriving (Eq, Storable)
 
 instance Show SamplerAddressMode where
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_REPEAT = showString "VK_SAMPLER_ADDRESS_MODE_REPEAT"
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = showString "VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT"
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = showString "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE"
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = showString "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER"
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = showString "VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE"
+  showsPrec _ SamplerAddressModeRepeat = showString "SamplerAddressModeRepeat"
+  showsPrec _ SamplerAddressModeMirroredRepeat = showString "SamplerAddressModeMirroredRepeat"
+  showsPrec _ SamplerAddressModeClampToEdge = showString "SamplerAddressModeClampToEdge"
+  showsPrec _ SamplerAddressModeClampToBorder = showString "SamplerAddressModeClampToBorder"
+  showsPrec _ SamplerAddressModeMirrorClampToEdge = showString "SamplerAddressModeMirrorClampToEdge"
   showsPrec p (SamplerAddressMode x) = showParen (p >= 11) (showString "SamplerAddressMode " . showsPrec 11 x)
 
 instance Read SamplerAddressMode where
-  readPrec = parens ( choose [ ("VK_SAMPLER_ADDRESS_MODE_REPEAT", pure VK_SAMPLER_ADDRESS_MODE_REPEAT)
-                             , ("VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT", pure VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT)
-                             , ("VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE", pure VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-                             , ("VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER", pure VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER)
-                             , ("VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE", pure VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE)
+  readPrec = parens ( choose [ ("SamplerAddressModeRepeat", pure SamplerAddressModeRepeat)
+                             , ("SamplerAddressModeMirroredRepeat", pure SamplerAddressModeMirroredRepeat)
+                             , ("SamplerAddressModeClampToEdge", pure SamplerAddressModeClampToEdge)
+                             , ("SamplerAddressModeClampToBorder", pure SamplerAddressModeClampToBorder)
+                             , ("SamplerAddressModeMirrorClampToEdge", pure SamplerAddressModeMirrorClampToEdge)
                              ] +++
                       prec 10 (do
                         expectP (Ident "SamplerAddressMode")
@@ -70,15 +70,15 @@ instance Read SamplerAddressMode where
                     )
 
 
-pattern VK_SAMPLER_ADDRESS_MODE_REPEAT = SamplerAddressMode 0
+pattern SamplerAddressModeRepeat = SamplerAddressMode 0
 
-pattern VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = SamplerAddressMode 1
+pattern SamplerAddressModeMirroredRepeat = SamplerAddressMode 1
 
-pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = SamplerAddressMode 2
+pattern SamplerAddressModeClampToEdge = SamplerAddressMode 2
 
-pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = SamplerAddressMode 3
+pattern SamplerAddressModeClampToBorder = SamplerAddressMode 3
 
-pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = SamplerAddressMode 4
+pattern SamplerAddressModeMirrorClampToEdge = SamplerAddressMode 4
 
 -- ** Filter
 
@@ -86,13 +86,13 @@ newtype Filter = Filter Int32
   deriving (Eq, Storable)
 
 instance Show Filter where
-  showsPrec _ VK_FILTER_NEAREST = showString "VK_FILTER_NEAREST"
-  showsPrec _ VK_FILTER_LINEAR = showString "VK_FILTER_LINEAR"
+  showsPrec _ FilterNearest = showString "FilterNearest"
+  showsPrec _ FilterLinear = showString "FilterLinear"
   showsPrec p (Filter x) = showParen (p >= 11) (showString "Filter " . showsPrec 11 x)
 
 instance Read Filter where
-  readPrec = parens ( choose [ ("VK_FILTER_NEAREST", pure VK_FILTER_NEAREST)
-                             , ("VK_FILTER_LINEAR", pure VK_FILTER_LINEAR)
+  readPrec = parens ( choose [ ("FilterNearest", pure FilterNearest)
+                             , ("FilterLinear", pure FilterLinear)
                              ] +++
                       prec 10 (do
                         expectP (Ident "Filter")
@@ -102,9 +102,9 @@ instance Read Filter where
                     )
 
 
-pattern VK_FILTER_NEAREST = Filter 0
+pattern FilterNearest = Filter 0
 
-pattern VK_FILTER_LINEAR = Filter 1
+pattern FilterLinear = Filter 1
 
 -- ** BorderColor
 
@@ -112,21 +112,21 @@ newtype BorderColor = BorderColor Int32
   deriving (Eq, Storable)
 
 instance Show BorderColor where
-  showsPrec _ VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = showString "VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"
-  showsPrec _ VK_BORDER_COLOR_INT_TRANSPARENT_BLACK = showString "VK_BORDER_COLOR_INT_TRANSPARENT_BLACK"
-  showsPrec _ VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK = showString "VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK"
-  showsPrec _ VK_BORDER_COLOR_INT_OPAQUE_BLACK = showString "VK_BORDER_COLOR_INT_OPAQUE_BLACK"
-  showsPrec _ VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE = showString "VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE"
-  showsPrec _ VK_BORDER_COLOR_INT_OPAQUE_WHITE = showString "VK_BORDER_COLOR_INT_OPAQUE_WHITE"
+  showsPrec _ BorderColorFloatTransparentBlack = showString "BorderColorFloatTransparentBlack"
+  showsPrec _ BorderColorIntTransparentBlack = showString "BorderColorIntTransparentBlack"
+  showsPrec _ BorderColorFloatOpaqueBlack = showString "BorderColorFloatOpaqueBlack"
+  showsPrec _ BorderColorIntOpaqueBlack = showString "BorderColorIntOpaqueBlack"
+  showsPrec _ BorderColorFloatOpaqueWhite = showString "BorderColorFloatOpaqueWhite"
+  showsPrec _ BorderColorIntOpaqueWhite = showString "BorderColorIntOpaqueWhite"
   showsPrec p (BorderColor x) = showParen (p >= 11) (showString "BorderColor " . showsPrec 11 x)
 
 instance Read BorderColor where
-  readPrec = parens ( choose [ ("VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK", pure VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK)
-                             , ("VK_BORDER_COLOR_INT_TRANSPARENT_BLACK", pure VK_BORDER_COLOR_INT_TRANSPARENT_BLACK)
-                             , ("VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK", pure VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK)
-                             , ("VK_BORDER_COLOR_INT_OPAQUE_BLACK", pure VK_BORDER_COLOR_INT_OPAQUE_BLACK)
-                             , ("VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE", pure VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE)
-                             , ("VK_BORDER_COLOR_INT_OPAQUE_WHITE", pure VK_BORDER_COLOR_INT_OPAQUE_WHITE)
+  readPrec = parens ( choose [ ("BorderColorFloatTransparentBlack", pure BorderColorFloatTransparentBlack)
+                             , ("BorderColorIntTransparentBlack", pure BorderColorIntTransparentBlack)
+                             , ("BorderColorFloatOpaqueBlack", pure BorderColorFloatOpaqueBlack)
+                             , ("BorderColorIntOpaqueBlack", pure BorderColorIntOpaqueBlack)
+                             , ("BorderColorFloatOpaqueWhite", pure BorderColorFloatOpaqueWhite)
+                             , ("BorderColorIntOpaqueWhite", pure BorderColorIntOpaqueWhite)
                              ] +++
                       prec 10 (do
                         expectP (Ident "BorderColor")
@@ -136,17 +136,17 @@ instance Read BorderColor where
                     )
 
 
-pattern VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = BorderColor 0
+pattern BorderColorFloatTransparentBlack = BorderColor 0
 
-pattern VK_BORDER_COLOR_INT_TRANSPARENT_BLACK = BorderColor 1
+pattern BorderColorIntTransparentBlack = BorderColor 1
 
-pattern VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK = BorderColor 2
+pattern BorderColorFloatOpaqueBlack = BorderColor 2
 
-pattern VK_BORDER_COLOR_INT_OPAQUE_BLACK = BorderColor 3
+pattern BorderColorIntOpaqueBlack = BorderColor 3
 
-pattern VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE = BorderColor 4
+pattern BorderColorFloatOpaqueWhite = BorderColor 4
 
-pattern VK_BORDER_COLOR_INT_OPAQUE_WHITE = BorderColor 5
+pattern BorderColorIntOpaqueWhite = BorderColor 5
 
 -- ** CompareOp
 
@@ -154,25 +154,25 @@ newtype CompareOp = CompareOp Int32
   deriving (Eq, Storable)
 
 instance Show CompareOp where
-  showsPrec _ VK_COMPARE_OP_NEVER = showString "VK_COMPARE_OP_NEVER"
-  showsPrec _ VK_COMPARE_OP_LESS = showString "VK_COMPARE_OP_LESS"
-  showsPrec _ VK_COMPARE_OP_EQUAL = showString "VK_COMPARE_OP_EQUAL"
-  showsPrec _ VK_COMPARE_OP_LESS_OR_EQUAL = showString "VK_COMPARE_OP_LESS_OR_EQUAL"
-  showsPrec _ VK_COMPARE_OP_GREATER = showString "VK_COMPARE_OP_GREATER"
-  showsPrec _ VK_COMPARE_OP_NOT_EQUAL = showString "VK_COMPARE_OP_NOT_EQUAL"
-  showsPrec _ VK_COMPARE_OP_GREATER_OR_EQUAL = showString "VK_COMPARE_OP_GREATER_OR_EQUAL"
-  showsPrec _ VK_COMPARE_OP_ALWAYS = showString "VK_COMPARE_OP_ALWAYS"
+  showsPrec _ CompareOpNever = showString "CompareOpNever"
+  showsPrec _ CompareOpLess = showString "CompareOpLess"
+  showsPrec _ CompareOpEqual = showString "CompareOpEqual"
+  showsPrec _ CompareOpLessOrEqual = showString "CompareOpLessOrEqual"
+  showsPrec _ CompareOpGreater = showString "CompareOpGreater"
+  showsPrec _ CompareOpNotEqual = showString "CompareOpNotEqual"
+  showsPrec _ CompareOpGreaterOrEqual = showString "CompareOpGreaterOrEqual"
+  showsPrec _ CompareOpAlways = showString "CompareOpAlways"
   showsPrec p (CompareOp x) = showParen (p >= 11) (showString "CompareOp " . showsPrec 11 x)
 
 instance Read CompareOp where
-  readPrec = parens ( choose [ ("VK_COMPARE_OP_NEVER", pure VK_COMPARE_OP_NEVER)
-                             , ("VK_COMPARE_OP_LESS", pure VK_COMPARE_OP_LESS)
-                             , ("VK_COMPARE_OP_EQUAL", pure VK_COMPARE_OP_EQUAL)
-                             , ("VK_COMPARE_OP_LESS_OR_EQUAL", pure VK_COMPARE_OP_LESS_OR_EQUAL)
-                             , ("VK_COMPARE_OP_GREATER", pure VK_COMPARE_OP_GREATER)
-                             , ("VK_COMPARE_OP_NOT_EQUAL", pure VK_COMPARE_OP_NOT_EQUAL)
-                             , ("VK_COMPARE_OP_GREATER_OR_EQUAL", pure VK_COMPARE_OP_GREATER_OR_EQUAL)
-                             , ("VK_COMPARE_OP_ALWAYS", pure VK_COMPARE_OP_ALWAYS)
+  readPrec = parens ( choose [ ("CompareOpNever", pure CompareOpNever)
+                             , ("CompareOpLess", pure CompareOpLess)
+                             , ("CompareOpEqual", pure CompareOpEqual)
+                             , ("CompareOpLessOrEqual", pure CompareOpLessOrEqual)
+                             , ("CompareOpGreater", pure CompareOpGreater)
+                             , ("CompareOpNotEqual", pure CompareOpNotEqual)
+                             , ("CompareOpGreaterOrEqual", pure CompareOpGreaterOrEqual)
+                             , ("CompareOpAlways", pure CompareOpAlways)
                              ] +++
                       prec 10 (do
                         expectP (Ident "CompareOp")
@@ -182,21 +182,21 @@ instance Read CompareOp where
                     )
 
 
-pattern VK_COMPARE_OP_NEVER = CompareOp 0
+pattern CompareOpNever = CompareOp 0
 
-pattern VK_COMPARE_OP_LESS = CompareOp 1
+pattern CompareOpLess = CompareOp 1
 
-pattern VK_COMPARE_OP_EQUAL = CompareOp 2
+pattern CompareOpEqual = CompareOp 2
 
-pattern VK_COMPARE_OP_LESS_OR_EQUAL = CompareOp 3
+pattern CompareOpLessOrEqual = CompareOp 3
 
-pattern VK_COMPARE_OP_GREATER = CompareOp 4
+pattern CompareOpGreater = CompareOp 4
 
-pattern VK_COMPARE_OP_NOT_EQUAL = CompareOp 5
+pattern CompareOpNotEqual = CompareOp 5
 
-pattern VK_COMPARE_OP_GREATER_OR_EQUAL = CompareOp 6
+pattern CompareOpGreaterOrEqual = CompareOp 6
 
-pattern VK_COMPARE_OP_ALWAYS = CompareOp 7
+pattern CompareOpAlways = CompareOp 7
 
 newtype Sampler = Sampler Word64
   deriving (Eq, Storable)
@@ -276,13 +276,13 @@ newtype SamplerMipmapMode = SamplerMipmapMode Int32
   deriving (Eq, Storable)
 
 instance Show SamplerMipmapMode where
-  showsPrec _ VK_SAMPLER_MIPMAP_MODE_NEAREST = showString "VK_SAMPLER_MIPMAP_MODE_NEAREST"
-  showsPrec _ VK_SAMPLER_MIPMAP_MODE_LINEAR = showString "VK_SAMPLER_MIPMAP_MODE_LINEAR"
+  showsPrec _ SamplerMipmapModeNearest = showString "SamplerMipmapModeNearest"
+  showsPrec _ SamplerMipmapModeLinear = showString "SamplerMipmapModeLinear"
   showsPrec p (SamplerMipmapMode x) = showParen (p >= 11) (showString "SamplerMipmapMode " . showsPrec 11 x)
 
 instance Read SamplerMipmapMode where
-  readPrec = parens ( choose [ ("VK_SAMPLER_MIPMAP_MODE_NEAREST", pure VK_SAMPLER_MIPMAP_MODE_NEAREST)
-                             , ("VK_SAMPLER_MIPMAP_MODE_LINEAR", pure VK_SAMPLER_MIPMAP_MODE_LINEAR)
+  readPrec = parens ( choose [ ("SamplerMipmapModeNearest", pure SamplerMipmapModeNearest)
+                             , ("SamplerMipmapModeLinear", pure SamplerMipmapModeLinear)
                              ] +++
                       prec 10 (do
                         expectP (Ident "SamplerMipmapMode")
@@ -292,9 +292,9 @@ instance Read SamplerMipmapMode where
                     )
 
 -- | Choose nearest mip level
-pattern VK_SAMPLER_MIPMAP_MODE_NEAREST = SamplerMipmapMode 0
+pattern SamplerMipmapModeNearest = SamplerMipmapMode 0
 -- | Linear filter between mip levels
-pattern VK_SAMPLER_MIPMAP_MODE_LINEAR = SamplerMipmapMode 1
+pattern SamplerMipmapModeLinear = SamplerMipmapMode 1
 
 -- ** createSampler
 foreign import ccall "vkCreateSampler" createSampler ::

@@ -74,19 +74,19 @@ newtype PhysicalDeviceType = PhysicalDeviceType Int32
   deriving (Eq, Storable)
 
 instance Show PhysicalDeviceType where
-  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_OTHER = showString "VK_PHYSICAL_DEVICE_TYPE_OTHER"
-  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = showString "VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU"
-  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = showString "VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU"
-  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = showString "VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU"
-  showsPrec _ VK_PHYSICAL_DEVICE_TYPE_CPU = showString "VK_PHYSICAL_DEVICE_TYPE_CPU"
+  showsPrec _ PhysicalDeviceTypeOther = showString "PhysicalDeviceTypeOther"
+  showsPrec _ PhysicalDeviceTypeIntegratedGpu = showString "PhysicalDeviceTypeIntegratedGpu"
+  showsPrec _ PhysicalDeviceTypeDiscreteGpu = showString "PhysicalDeviceTypeDiscreteGpu"
+  showsPrec _ PhysicalDeviceTypeVirtualGpu = showString "PhysicalDeviceTypeVirtualGpu"
+  showsPrec _ PhysicalDeviceTypeCpu = showString "PhysicalDeviceTypeCpu"
   showsPrec p (PhysicalDeviceType x) = showParen (p >= 11) (showString "PhysicalDeviceType " . showsPrec 11 x)
 
 instance Read PhysicalDeviceType where
-  readPrec = parens ( choose [ ("VK_PHYSICAL_DEVICE_TYPE_OTHER", pure VK_PHYSICAL_DEVICE_TYPE_OTHER)
-                             , ("VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU", pure VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU)
-                             , ("VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU", pure VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-                             , ("VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU", pure VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU)
-                             , ("VK_PHYSICAL_DEVICE_TYPE_CPU", pure VK_PHYSICAL_DEVICE_TYPE_CPU)
+  readPrec = parens ( choose [ ("PhysicalDeviceTypeOther", pure PhysicalDeviceTypeOther)
+                             , ("PhysicalDeviceTypeIntegratedGpu", pure PhysicalDeviceTypeIntegratedGpu)
+                             , ("PhysicalDeviceTypeDiscreteGpu", pure PhysicalDeviceTypeDiscreteGpu)
+                             , ("PhysicalDeviceTypeVirtualGpu", pure PhysicalDeviceTypeVirtualGpu)
+                             , ("PhysicalDeviceTypeCpu", pure PhysicalDeviceTypeCpu)
                              ] +++
                       prec 10 (do
                         expectP (Ident "PhysicalDeviceType")
@@ -96,15 +96,15 @@ instance Read PhysicalDeviceType where
                     )
 
 
-pattern VK_PHYSICAL_DEVICE_TYPE_OTHER = PhysicalDeviceType 0
+pattern PhysicalDeviceTypeOther = PhysicalDeviceType 0
 
-pattern VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = PhysicalDeviceType 1
+pattern PhysicalDeviceTypeIntegratedGpu = PhysicalDeviceType 1
 
-pattern VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = PhysicalDeviceType 2
+pattern PhysicalDeviceTypeDiscreteGpu = PhysicalDeviceType 2
 
-pattern VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = PhysicalDeviceType 3
+pattern PhysicalDeviceTypeVirtualGpu = PhysicalDeviceType 3
 
-pattern VK_PHYSICAL_DEVICE_TYPE_CPU = PhysicalDeviceType 4
+pattern PhysicalDeviceTypeCpu = PhysicalDeviceType 4
 
 
 data InstanceCreateInfo =

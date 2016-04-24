@@ -228,13 +228,13 @@ newtype IndexType = IndexType Int32
   deriving (Eq, Storable)
 
 instance Show IndexType where
-  showsPrec _ VK_INDEX_TYPE_UINT16 = showString "VK_INDEX_TYPE_UINT16"
-  showsPrec _ VK_INDEX_TYPE_UINT32 = showString "VK_INDEX_TYPE_UINT32"
+  showsPrec _ IndexTypeUint16 = showString "IndexTypeUint16"
+  showsPrec _ IndexTypeUint32 = showString "IndexTypeUint32"
   showsPrec p (IndexType x) = showParen (p >= 11) (showString "IndexType " . showsPrec 11 x)
 
 instance Read IndexType where
-  readPrec = parens ( choose [ ("VK_INDEX_TYPE_UINT16", pure VK_INDEX_TYPE_UINT16)
-                             , ("VK_INDEX_TYPE_UINT32", pure VK_INDEX_TYPE_UINT32)
+  readPrec = parens ( choose [ ("IndexTypeUint16", pure IndexTypeUint16)
+                             , ("IndexTypeUint32", pure IndexTypeUint32)
                              ] +++
                       prec 10 (do
                         expectP (Ident "IndexType")
@@ -244,9 +244,9 @@ instance Read IndexType where
                     )
 
 
-pattern VK_INDEX_TYPE_UINT16 = IndexType 0
+pattern IndexTypeUint16 = IndexType 0
 
-pattern VK_INDEX_TYPE_UINT32 = IndexType 1
+pattern IndexTypeUint32 = IndexType 1
 
 
 data BufferImageCopy =
@@ -550,13 +550,13 @@ newtype SubpassContents = SubpassContents Int32
   deriving (Eq, Storable)
 
 instance Show SubpassContents where
-  showsPrec _ VK_SUBPASS_CONTENTS_INLINE = showString "VK_SUBPASS_CONTENTS_INLINE"
-  showsPrec _ VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = showString "VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS"
+  showsPrec _ SubpassContentsInline = showString "SubpassContentsInline"
+  showsPrec _ SubpassContentsSecondaryCommandBuffers = showString "SubpassContentsSecondaryCommandBuffers"
   showsPrec p (SubpassContents x) = showParen (p >= 11) (showString "SubpassContents " . showsPrec 11 x)
 
 instance Read SubpassContents where
-  readPrec = parens ( choose [ ("VK_SUBPASS_CONTENTS_INLINE", pure VK_SUBPASS_CONTENTS_INLINE)
-                             , ("VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS", pure VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS)
+  readPrec = parens ( choose [ ("SubpassContentsInline", pure SubpassContentsInline)
+                             , ("SubpassContentsSecondaryCommandBuffers", pure SubpassContentsSecondaryCommandBuffers)
                              ] +++
                       prec 10 (do
                         expectP (Ident "SubpassContents")
@@ -566,9 +566,9 @@ instance Read SubpassContents where
                     )
 
 
-pattern VK_SUBPASS_CONTENTS_INLINE = SubpassContents 0
+pattern SubpassContentsInline = SubpassContents 0
 
-pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = SubpassContents 1
+pattern SubpassContentsSecondaryCommandBuffers = SubpassContents 1
 
 -- ** cmdCopyQueryPoolResults
 foreign import ccall "vkCmdCopyQueryPoolResults" cmdCopyQueryPoolResults ::

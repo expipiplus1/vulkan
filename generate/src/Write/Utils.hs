@@ -116,7 +116,9 @@ pascalCase = concatMap upperFirst . words
 -- | Concatenate words separated by underscores in the string and make the
 -- first letter of each one uppercase.
 pascalCase_ :: String -> String
-pascalCase_ = concatMap upperFirst . splitOn "_"
+pascalCase_ = concatMap word . splitOn "_"
+  where word "" = ""
+        word (x:xs) = toUpper x : (toLower <$> xs)
 
 -- | Concatenate words separated by underscores in the string and make the
 -- first letter of each one but the first uppercase.

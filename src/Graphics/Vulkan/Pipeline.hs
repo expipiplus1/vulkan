@@ -318,25 +318,25 @@ newtype StencilOp = StencilOp Int32
   deriving (Eq, Storable)
 
 instance Show StencilOp where
-  showsPrec _ VK_STENCIL_OP_KEEP = showString "VK_STENCIL_OP_KEEP"
-  showsPrec _ VK_STENCIL_OP_ZERO = showString "VK_STENCIL_OP_ZERO"
-  showsPrec _ VK_STENCIL_OP_REPLACE = showString "VK_STENCIL_OP_REPLACE"
-  showsPrec _ VK_STENCIL_OP_INCREMENT_AND_CLAMP = showString "VK_STENCIL_OP_INCREMENT_AND_CLAMP"
-  showsPrec _ VK_STENCIL_OP_DECREMENT_AND_CLAMP = showString "VK_STENCIL_OP_DECREMENT_AND_CLAMP"
-  showsPrec _ VK_STENCIL_OP_INVERT = showString "VK_STENCIL_OP_INVERT"
-  showsPrec _ VK_STENCIL_OP_INCREMENT_AND_WRAP = showString "VK_STENCIL_OP_INCREMENT_AND_WRAP"
-  showsPrec _ VK_STENCIL_OP_DECREMENT_AND_WRAP = showString "VK_STENCIL_OP_DECREMENT_AND_WRAP"
+  showsPrec _ StencilOpKeep = showString "StencilOpKeep"
+  showsPrec _ StencilOpZero = showString "StencilOpZero"
+  showsPrec _ StencilOpReplace = showString "StencilOpReplace"
+  showsPrec _ StencilOpIncrementAndClamp = showString "StencilOpIncrementAndClamp"
+  showsPrec _ StencilOpDecrementAndClamp = showString "StencilOpDecrementAndClamp"
+  showsPrec _ StencilOpInvert = showString "StencilOpInvert"
+  showsPrec _ StencilOpIncrementAndWrap = showString "StencilOpIncrementAndWrap"
+  showsPrec _ StencilOpDecrementAndWrap = showString "StencilOpDecrementAndWrap"
   showsPrec p (StencilOp x) = showParen (p >= 11) (showString "StencilOp " . showsPrec 11 x)
 
 instance Read StencilOp where
-  readPrec = parens ( choose [ ("VK_STENCIL_OP_KEEP", pure VK_STENCIL_OP_KEEP)
-                             , ("VK_STENCIL_OP_ZERO", pure VK_STENCIL_OP_ZERO)
-                             , ("VK_STENCIL_OP_REPLACE", pure VK_STENCIL_OP_REPLACE)
-                             , ("VK_STENCIL_OP_INCREMENT_AND_CLAMP", pure VK_STENCIL_OP_INCREMENT_AND_CLAMP)
-                             , ("VK_STENCIL_OP_DECREMENT_AND_CLAMP", pure VK_STENCIL_OP_DECREMENT_AND_CLAMP)
-                             , ("VK_STENCIL_OP_INVERT", pure VK_STENCIL_OP_INVERT)
-                             , ("VK_STENCIL_OP_INCREMENT_AND_WRAP", pure VK_STENCIL_OP_INCREMENT_AND_WRAP)
-                             , ("VK_STENCIL_OP_DECREMENT_AND_WRAP", pure VK_STENCIL_OP_DECREMENT_AND_WRAP)
+  readPrec = parens ( choose [ ("StencilOpKeep", pure StencilOpKeep)
+                             , ("StencilOpZero", pure StencilOpZero)
+                             , ("StencilOpReplace", pure StencilOpReplace)
+                             , ("StencilOpIncrementAndClamp", pure StencilOpIncrementAndClamp)
+                             , ("StencilOpDecrementAndClamp", pure StencilOpDecrementAndClamp)
+                             , ("StencilOpInvert", pure StencilOpInvert)
+                             , ("StencilOpIncrementAndWrap", pure StencilOpIncrementAndWrap)
+                             , ("StencilOpDecrementAndWrap", pure StencilOpDecrementAndWrap)
                              ] +++
                       prec 10 (do
                         expectP (Ident "StencilOp")
@@ -346,21 +346,21 @@ instance Read StencilOp where
                     )
 
 
-pattern VK_STENCIL_OP_KEEP = StencilOp 0
+pattern StencilOpKeep = StencilOp 0
 
-pattern VK_STENCIL_OP_ZERO = StencilOp 1
+pattern StencilOpZero = StencilOp 1
 
-pattern VK_STENCIL_OP_REPLACE = StencilOp 2
+pattern StencilOpReplace = StencilOp 2
 
-pattern VK_STENCIL_OP_INCREMENT_AND_CLAMP = StencilOp 3
+pattern StencilOpIncrementAndClamp = StencilOp 3
 
-pattern VK_STENCIL_OP_DECREMENT_AND_CLAMP = StencilOp 4
+pattern StencilOpDecrementAndClamp = StencilOp 4
 
-pattern VK_STENCIL_OP_INVERT = StencilOp 5
+pattern StencilOpInvert = StencilOp 5
 
-pattern VK_STENCIL_OP_INCREMENT_AND_WRAP = StencilOp 6
+pattern StencilOpIncrementAndWrap = StencilOp 6
 
-pattern VK_STENCIL_OP_DECREMENT_AND_WRAP = StencilOp 7
+pattern StencilOpDecrementAndWrap = StencilOp 7
 
 
 data SpecializationInfo =
@@ -411,13 +411,13 @@ newtype FrontFace = FrontFace Int32
   deriving (Eq, Storable)
 
 instance Show FrontFace where
-  showsPrec _ VK_FRONT_FACE_COUNTER_CLOCKWISE = showString "VK_FRONT_FACE_COUNTER_CLOCKWISE"
-  showsPrec _ VK_FRONT_FACE_CLOCKWISE = showString "VK_FRONT_FACE_CLOCKWISE"
+  showsPrec _ FrontFaceCounterClockwise = showString "FrontFaceCounterClockwise"
+  showsPrec _ FrontFaceClockwise = showString "FrontFaceClockwise"
   showsPrec p (FrontFace x) = showParen (p >= 11) (showString "FrontFace " . showsPrec 11 x)
 
 instance Read FrontFace where
-  readPrec = parens ( choose [ ("VK_FRONT_FACE_COUNTER_CLOCKWISE", pure VK_FRONT_FACE_COUNTER_CLOCKWISE)
-                             , ("VK_FRONT_FACE_CLOCKWISE", pure VK_FRONT_FACE_CLOCKWISE)
+  readPrec = parens ( choose [ ("FrontFaceCounterClockwise", pure FrontFaceCounterClockwise)
+                             , ("FrontFaceClockwise", pure FrontFaceClockwise)
                              ] +++
                       prec 10 (do
                         expectP (Ident "FrontFace")
@@ -427,9 +427,9 @@ instance Read FrontFace where
                     )
 
 
-pattern VK_FRONT_FACE_COUNTER_CLOCKWISE = FrontFace 0
+pattern FrontFaceCounterClockwise = FrontFace 0
 
-pattern VK_FRONT_FACE_CLOCKWISE = FrontFace 1
+pattern FrontFaceClockwise = FrontFace 1
 
 -- ** PolygonMode
 
@@ -437,15 +437,15 @@ newtype PolygonMode = PolygonMode Int32
   deriving (Eq, Storable)
 
 instance Show PolygonMode where
-  showsPrec _ VK_POLYGON_MODE_FILL = showString "VK_POLYGON_MODE_FILL"
-  showsPrec _ VK_POLYGON_MODE_LINE = showString "VK_POLYGON_MODE_LINE"
-  showsPrec _ VK_POLYGON_MODE_POINT = showString "VK_POLYGON_MODE_POINT"
+  showsPrec _ PolygonModeFill = showString "PolygonModeFill"
+  showsPrec _ PolygonModeLine = showString "PolygonModeLine"
+  showsPrec _ PolygonModePoint = showString "PolygonModePoint"
   showsPrec p (PolygonMode x) = showParen (p >= 11) (showString "PolygonMode " . showsPrec 11 x)
 
 instance Read PolygonMode where
-  readPrec = parens ( choose [ ("VK_POLYGON_MODE_FILL", pure VK_POLYGON_MODE_FILL)
-                             , ("VK_POLYGON_MODE_LINE", pure VK_POLYGON_MODE_LINE)
-                             , ("VK_POLYGON_MODE_POINT", pure VK_POLYGON_MODE_POINT)
+  readPrec = parens ( choose [ ("PolygonModeFill", pure PolygonModeFill)
+                             , ("PolygonModeLine", pure PolygonModeLine)
+                             , ("PolygonModePoint", pure PolygonModePoint)
                              ] +++
                       prec 10 (do
                         expectP (Ident "PolygonMode")
@@ -455,11 +455,11 @@ instance Read PolygonMode where
                     )
 
 
-pattern VK_POLYGON_MODE_FILL = PolygonMode 0
+pattern PolygonModeFill = PolygonMode 0
 
-pattern VK_POLYGON_MODE_LINE = PolygonMode 1
+pattern PolygonModeLine = PolygonMode 1
 
-pattern VK_POLYGON_MODE_POINT = PolygonMode 2
+pattern PolygonModePoint = PolygonMode 2
 
 -- ** PipelineViewportStateCreateFlags
 -- | Opaque flag
@@ -472,41 +472,41 @@ newtype LogicOp = LogicOp Int32
   deriving (Eq, Storable)
 
 instance Show LogicOp where
-  showsPrec _ VK_LOGIC_OP_CLEAR = showString "VK_LOGIC_OP_CLEAR"
-  showsPrec _ VK_LOGIC_OP_AND = showString "VK_LOGIC_OP_AND"
-  showsPrec _ VK_LOGIC_OP_AND_REVERSE = showString "VK_LOGIC_OP_AND_REVERSE"
-  showsPrec _ VK_LOGIC_OP_COPY = showString "VK_LOGIC_OP_COPY"
-  showsPrec _ VK_LOGIC_OP_AND_INVERTED = showString "VK_LOGIC_OP_AND_INVERTED"
-  showsPrec _ VK_LOGIC_OP_NO_OP = showString "VK_LOGIC_OP_NO_OP"
-  showsPrec _ VK_LOGIC_OP_XOR = showString "VK_LOGIC_OP_XOR"
-  showsPrec _ VK_LOGIC_OP_OR = showString "VK_LOGIC_OP_OR"
-  showsPrec _ VK_LOGIC_OP_NOR = showString "VK_LOGIC_OP_NOR"
-  showsPrec _ VK_LOGIC_OP_EQUIVALENT = showString "VK_LOGIC_OP_EQUIVALENT"
-  showsPrec _ VK_LOGIC_OP_INVERT = showString "VK_LOGIC_OP_INVERT"
-  showsPrec _ VK_LOGIC_OP_OR_REVERSE = showString "VK_LOGIC_OP_OR_REVERSE"
-  showsPrec _ VK_LOGIC_OP_COPY_INVERTED = showString "VK_LOGIC_OP_COPY_INVERTED"
-  showsPrec _ VK_LOGIC_OP_OR_INVERTED = showString "VK_LOGIC_OP_OR_INVERTED"
-  showsPrec _ VK_LOGIC_OP_NAND = showString "VK_LOGIC_OP_NAND"
-  showsPrec _ VK_LOGIC_OP_SET = showString "VK_LOGIC_OP_SET"
+  showsPrec _ LogicOpClear = showString "LogicOpClear"
+  showsPrec _ LogicOpAnd = showString "LogicOpAnd"
+  showsPrec _ LogicOpAndReverse = showString "LogicOpAndReverse"
+  showsPrec _ LogicOpCopy = showString "LogicOpCopy"
+  showsPrec _ LogicOpAndInverted = showString "LogicOpAndInverted"
+  showsPrec _ LogicOpNoOp = showString "LogicOpNoOp"
+  showsPrec _ LogicOpXor = showString "LogicOpXor"
+  showsPrec _ LogicOpOr = showString "LogicOpOr"
+  showsPrec _ LogicOpNor = showString "LogicOpNor"
+  showsPrec _ LogicOpEquivalent = showString "LogicOpEquivalent"
+  showsPrec _ LogicOpInvert = showString "LogicOpInvert"
+  showsPrec _ LogicOpOrReverse = showString "LogicOpOrReverse"
+  showsPrec _ LogicOpCopyInverted = showString "LogicOpCopyInverted"
+  showsPrec _ LogicOpOrInverted = showString "LogicOpOrInverted"
+  showsPrec _ LogicOpNand = showString "LogicOpNand"
+  showsPrec _ LogicOpSet = showString "LogicOpSet"
   showsPrec p (LogicOp x) = showParen (p >= 11) (showString "LogicOp " . showsPrec 11 x)
 
 instance Read LogicOp where
-  readPrec = parens ( choose [ ("VK_LOGIC_OP_CLEAR", pure VK_LOGIC_OP_CLEAR)
-                             , ("VK_LOGIC_OP_AND", pure VK_LOGIC_OP_AND)
-                             , ("VK_LOGIC_OP_AND_REVERSE", pure VK_LOGIC_OP_AND_REVERSE)
-                             , ("VK_LOGIC_OP_COPY", pure VK_LOGIC_OP_COPY)
-                             , ("VK_LOGIC_OP_AND_INVERTED", pure VK_LOGIC_OP_AND_INVERTED)
-                             , ("VK_LOGIC_OP_NO_OP", pure VK_LOGIC_OP_NO_OP)
-                             , ("VK_LOGIC_OP_XOR", pure VK_LOGIC_OP_XOR)
-                             , ("VK_LOGIC_OP_OR", pure VK_LOGIC_OP_OR)
-                             , ("VK_LOGIC_OP_NOR", pure VK_LOGIC_OP_NOR)
-                             , ("VK_LOGIC_OP_EQUIVALENT", pure VK_LOGIC_OP_EQUIVALENT)
-                             , ("VK_LOGIC_OP_INVERT", pure VK_LOGIC_OP_INVERT)
-                             , ("VK_LOGIC_OP_OR_REVERSE", pure VK_LOGIC_OP_OR_REVERSE)
-                             , ("VK_LOGIC_OP_COPY_INVERTED", pure VK_LOGIC_OP_COPY_INVERTED)
-                             , ("VK_LOGIC_OP_OR_INVERTED", pure VK_LOGIC_OP_OR_INVERTED)
-                             , ("VK_LOGIC_OP_NAND", pure VK_LOGIC_OP_NAND)
-                             , ("VK_LOGIC_OP_SET", pure VK_LOGIC_OP_SET)
+  readPrec = parens ( choose [ ("LogicOpClear", pure LogicOpClear)
+                             , ("LogicOpAnd", pure LogicOpAnd)
+                             , ("LogicOpAndReverse", pure LogicOpAndReverse)
+                             , ("LogicOpCopy", pure LogicOpCopy)
+                             , ("LogicOpAndInverted", pure LogicOpAndInverted)
+                             , ("LogicOpNoOp", pure LogicOpNoOp)
+                             , ("LogicOpXor", pure LogicOpXor)
+                             , ("LogicOpOr", pure LogicOpOr)
+                             , ("LogicOpNor", pure LogicOpNor)
+                             , ("LogicOpEquivalent", pure LogicOpEquivalent)
+                             , ("LogicOpInvert", pure LogicOpInvert)
+                             , ("LogicOpOrReverse", pure LogicOpOrReverse)
+                             , ("LogicOpCopyInverted", pure LogicOpCopyInverted)
+                             , ("LogicOpOrInverted", pure LogicOpOrInverted)
+                             , ("LogicOpNand", pure LogicOpNand)
+                             , ("LogicOpSet", pure LogicOpSet)
                              ] +++
                       prec 10 (do
                         expectP (Ident "LogicOp")
@@ -516,37 +516,37 @@ instance Read LogicOp where
                     )
 
 
-pattern VK_LOGIC_OP_CLEAR = LogicOp 0
+pattern LogicOpClear = LogicOp 0
 
-pattern VK_LOGIC_OP_AND = LogicOp 1
+pattern LogicOpAnd = LogicOp 1
 
-pattern VK_LOGIC_OP_AND_REVERSE = LogicOp 2
+pattern LogicOpAndReverse = LogicOp 2
 
-pattern VK_LOGIC_OP_COPY = LogicOp 3
+pattern LogicOpCopy = LogicOp 3
 
-pattern VK_LOGIC_OP_AND_INVERTED = LogicOp 4
+pattern LogicOpAndInverted = LogicOp 4
 
-pattern VK_LOGIC_OP_NO_OP = LogicOp 5
+pattern LogicOpNoOp = LogicOp 5
 
-pattern VK_LOGIC_OP_XOR = LogicOp 6
+pattern LogicOpXor = LogicOp 6
 
-pattern VK_LOGIC_OP_OR = LogicOp 7
+pattern LogicOpOr = LogicOp 7
 
-pattern VK_LOGIC_OP_NOR = LogicOp 8
+pattern LogicOpNor = LogicOp 8
 
-pattern VK_LOGIC_OP_EQUIVALENT = LogicOp 9
+pattern LogicOpEquivalent = LogicOp 9
 
-pattern VK_LOGIC_OP_INVERT = LogicOp 10
+pattern LogicOpInvert = LogicOp 10
 
-pattern VK_LOGIC_OP_OR_REVERSE = LogicOp 11
+pattern LogicOpOrReverse = LogicOp 11
 
-pattern VK_LOGIC_OP_COPY_INVERTED = LogicOp 12
+pattern LogicOpCopyInverted = LogicOp 12
 
-pattern VK_LOGIC_OP_OR_INVERTED = LogicOp 13
+pattern LogicOpOrInverted = LogicOp 13
 
-pattern VK_LOGIC_OP_NAND = LogicOp 14
+pattern LogicOpNand = LogicOp 14
 
-pattern VK_LOGIC_OP_SET = LogicOp 15
+pattern LogicOpSet = LogicOp 15
 
 -- ** PipelineCreateFlags
 
@@ -591,27 +591,27 @@ newtype DynamicState = DynamicState Int32
   deriving (Eq, Storable)
 
 instance Show DynamicState where
-  showsPrec _ VK_DYNAMIC_STATE_VIEWPORT = showString "VK_DYNAMIC_STATE_VIEWPORT"
-  showsPrec _ VK_DYNAMIC_STATE_SCISSOR = showString "VK_DYNAMIC_STATE_SCISSOR"
-  showsPrec _ VK_DYNAMIC_STATE_LINE_WIDTH = showString "VK_DYNAMIC_STATE_LINE_WIDTH"
-  showsPrec _ VK_DYNAMIC_STATE_DEPTH_BIAS = showString "VK_DYNAMIC_STATE_DEPTH_BIAS"
-  showsPrec _ VK_DYNAMIC_STATE_BLEND_CONSTANTS = showString "VK_DYNAMIC_STATE_BLEND_CONSTANTS"
-  showsPrec _ VK_DYNAMIC_STATE_DEPTH_BOUNDS = showString "VK_DYNAMIC_STATE_DEPTH_BOUNDS"
-  showsPrec _ VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK = showString "VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK"
-  showsPrec _ VK_DYNAMIC_STATE_STENCIL_WRITE_MASK = showString "VK_DYNAMIC_STATE_STENCIL_WRITE_MASK"
-  showsPrec _ VK_DYNAMIC_STATE_STENCIL_REFERENCE = showString "VK_DYNAMIC_STATE_STENCIL_REFERENCE"
+  showsPrec _ DynamicStateViewport = showString "DynamicStateViewport"
+  showsPrec _ DynamicStateScissor = showString "DynamicStateScissor"
+  showsPrec _ DynamicStateLineWidth = showString "DynamicStateLineWidth"
+  showsPrec _ DynamicStateDepthBias = showString "DynamicStateDepthBias"
+  showsPrec _ DynamicStateBlendConstants = showString "DynamicStateBlendConstants"
+  showsPrec _ DynamicStateDepthBounds = showString "DynamicStateDepthBounds"
+  showsPrec _ DynamicStateStencilCompareMask = showString "DynamicStateStencilCompareMask"
+  showsPrec _ DynamicStateStencilWriteMask = showString "DynamicStateStencilWriteMask"
+  showsPrec _ DynamicStateStencilReference = showString "DynamicStateStencilReference"
   showsPrec p (DynamicState x) = showParen (p >= 11) (showString "DynamicState " . showsPrec 11 x)
 
 instance Read DynamicState where
-  readPrec = parens ( choose [ ("VK_DYNAMIC_STATE_VIEWPORT", pure VK_DYNAMIC_STATE_VIEWPORT)
-                             , ("VK_DYNAMIC_STATE_SCISSOR", pure VK_DYNAMIC_STATE_SCISSOR)
-                             , ("VK_DYNAMIC_STATE_LINE_WIDTH", pure VK_DYNAMIC_STATE_LINE_WIDTH)
-                             , ("VK_DYNAMIC_STATE_DEPTH_BIAS", pure VK_DYNAMIC_STATE_DEPTH_BIAS)
-                             , ("VK_DYNAMIC_STATE_BLEND_CONSTANTS", pure VK_DYNAMIC_STATE_BLEND_CONSTANTS)
-                             , ("VK_DYNAMIC_STATE_DEPTH_BOUNDS", pure VK_DYNAMIC_STATE_DEPTH_BOUNDS)
-                             , ("VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK", pure VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK)
-                             , ("VK_DYNAMIC_STATE_STENCIL_WRITE_MASK", pure VK_DYNAMIC_STATE_STENCIL_WRITE_MASK)
-                             , ("VK_DYNAMIC_STATE_STENCIL_REFERENCE", pure VK_DYNAMIC_STATE_STENCIL_REFERENCE)
+  readPrec = parens ( choose [ ("DynamicStateViewport", pure DynamicStateViewport)
+                             , ("DynamicStateScissor", pure DynamicStateScissor)
+                             , ("DynamicStateLineWidth", pure DynamicStateLineWidth)
+                             , ("DynamicStateDepthBias", pure DynamicStateDepthBias)
+                             , ("DynamicStateBlendConstants", pure DynamicStateBlendConstants)
+                             , ("DynamicStateDepthBounds", pure DynamicStateDepthBounds)
+                             , ("DynamicStateStencilCompareMask", pure DynamicStateStencilCompareMask)
+                             , ("DynamicStateStencilWriteMask", pure DynamicStateStencilWriteMask)
+                             , ("DynamicStateStencilReference", pure DynamicStateStencilReference)
                              ] +++
                       prec 10 (do
                         expectP (Ident "DynamicState")
@@ -621,23 +621,23 @@ instance Read DynamicState where
                     )
 
 
-pattern VK_DYNAMIC_STATE_VIEWPORT = DynamicState 0
+pattern DynamicStateViewport = DynamicState 0
 
-pattern VK_DYNAMIC_STATE_SCISSOR = DynamicState 1
+pattern DynamicStateScissor = DynamicState 1
 
-pattern VK_DYNAMIC_STATE_LINE_WIDTH = DynamicState 2
+pattern DynamicStateLineWidth = DynamicState 2
 
-pattern VK_DYNAMIC_STATE_DEPTH_BIAS = DynamicState 3
+pattern DynamicStateDepthBias = DynamicState 3
 
-pattern VK_DYNAMIC_STATE_BLEND_CONSTANTS = DynamicState 4
+pattern DynamicStateBlendConstants = DynamicState 4
 
-pattern VK_DYNAMIC_STATE_DEPTH_BOUNDS = DynamicState 5
+pattern DynamicStateDepthBounds = DynamicState 5
 
-pattern VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK = DynamicState 6
+pattern DynamicStateStencilCompareMask = DynamicState 6
 
-pattern VK_DYNAMIC_STATE_STENCIL_WRITE_MASK = DynamicState 7
+pattern DynamicStateStencilWriteMask = DynamicState 7
 
-pattern VK_DYNAMIC_STATE_STENCIL_REFERENCE = DynamicState 8
+pattern DynamicStateStencilReference = DynamicState 8
 
 -- ** PipelineBindPoint
 
@@ -645,13 +645,13 @@ newtype PipelineBindPoint = PipelineBindPoint Int32
   deriving (Eq, Storable)
 
 instance Show PipelineBindPoint where
-  showsPrec _ VK_PIPELINE_BIND_POINT_GRAPHICS = showString "VK_PIPELINE_BIND_POINT_GRAPHICS"
-  showsPrec _ VK_PIPELINE_BIND_POINT_COMPUTE = showString "VK_PIPELINE_BIND_POINT_COMPUTE"
+  showsPrec _ PipelineBindPointGraphics = showString "PipelineBindPointGraphics"
+  showsPrec _ PipelineBindPointCompute = showString "PipelineBindPointCompute"
   showsPrec p (PipelineBindPoint x) = showParen (p >= 11) (showString "PipelineBindPoint " . showsPrec 11 x)
 
 instance Read PipelineBindPoint where
-  readPrec = parens ( choose [ ("VK_PIPELINE_BIND_POINT_GRAPHICS", pure VK_PIPELINE_BIND_POINT_GRAPHICS)
-                             , ("VK_PIPELINE_BIND_POINT_COMPUTE", pure VK_PIPELINE_BIND_POINT_COMPUTE)
+  readPrec = parens ( choose [ ("PipelineBindPointGraphics", pure PipelineBindPointGraphics)
+                             , ("PipelineBindPointCompute", pure PipelineBindPointCompute)
                              ] +++
                       prec 10 (do
                         expectP (Ident "PipelineBindPoint")
@@ -661,9 +661,9 @@ instance Read PipelineBindPoint where
                     )
 
 
-pattern VK_PIPELINE_BIND_POINT_GRAPHICS = PipelineBindPoint 0
+pattern PipelineBindPointGraphics = PipelineBindPoint 0
 
-pattern VK_PIPELINE_BIND_POINT_COMPUTE = PipelineBindPoint 1
+pattern PipelineBindPointCompute = PipelineBindPoint 1
 
 -- ** PipelineDynamicStateCreateFlags
 -- | Opaque flag
@@ -725,19 +725,19 @@ newtype BlendOp = BlendOp Int32
   deriving (Eq, Storable)
 
 instance Show BlendOp where
-  showsPrec _ VK_BLEND_OP_ADD = showString "VK_BLEND_OP_ADD"
-  showsPrec _ VK_BLEND_OP_SUBTRACT = showString "VK_BLEND_OP_SUBTRACT"
-  showsPrec _ VK_BLEND_OP_REVERSE_SUBTRACT = showString "VK_BLEND_OP_REVERSE_SUBTRACT"
-  showsPrec _ VK_BLEND_OP_MIN = showString "VK_BLEND_OP_MIN"
-  showsPrec _ VK_BLEND_OP_MAX = showString "VK_BLEND_OP_MAX"
+  showsPrec _ BlendOpAdd = showString "BlendOpAdd"
+  showsPrec _ BlendOpSubtract = showString "BlendOpSubtract"
+  showsPrec _ BlendOpReverseSubtract = showString "BlendOpReverseSubtract"
+  showsPrec _ BlendOpMin = showString "BlendOpMin"
+  showsPrec _ BlendOpMax = showString "BlendOpMax"
   showsPrec p (BlendOp x) = showParen (p >= 11) (showString "BlendOp " . showsPrec 11 x)
 
 instance Read BlendOp where
-  readPrec = parens ( choose [ ("VK_BLEND_OP_ADD", pure VK_BLEND_OP_ADD)
-                             , ("VK_BLEND_OP_SUBTRACT", pure VK_BLEND_OP_SUBTRACT)
-                             , ("VK_BLEND_OP_REVERSE_SUBTRACT", pure VK_BLEND_OP_REVERSE_SUBTRACT)
-                             , ("VK_BLEND_OP_MIN", pure VK_BLEND_OP_MIN)
-                             , ("VK_BLEND_OP_MAX", pure VK_BLEND_OP_MAX)
+  readPrec = parens ( choose [ ("BlendOpAdd", pure BlendOpAdd)
+                             , ("BlendOpSubtract", pure BlendOpSubtract)
+                             , ("BlendOpReverseSubtract", pure BlendOpReverseSubtract)
+                             , ("BlendOpMin", pure BlendOpMin)
+                             , ("BlendOpMax", pure BlendOpMax)
                              ] +++
                       prec 10 (do
                         expectP (Ident "BlendOp")
@@ -747,15 +747,15 @@ instance Read BlendOp where
                     )
 
 
-pattern VK_BLEND_OP_ADD = BlendOp 0
+pattern BlendOpAdd = BlendOp 0
 
-pattern VK_BLEND_OP_SUBTRACT = BlendOp 1
+pattern BlendOpSubtract = BlendOp 1
 
-pattern VK_BLEND_OP_REVERSE_SUBTRACT = BlendOp 2
+pattern BlendOpReverseSubtract = BlendOp 2
 
-pattern VK_BLEND_OP_MIN = BlendOp 3
+pattern BlendOpMin = BlendOp 3
 
-pattern VK_BLEND_OP_MAX = BlendOp 4
+pattern BlendOpMax = BlendOp 4
 
 -- ** destroyPipeline
 foreign import ccall "vkDestroyPipeline" destroyPipeline ::
@@ -839,31 +839,31 @@ newtype PrimitiveTopology = PrimitiveTopology Int32
   deriving (Eq, Storable)
 
 instance Show PrimitiveTopology where
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_POINT_LIST = showString "VK_PRIMITIVE_TOPOLOGY_POINT_LIST"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_LIST = showString "VK_PRIMITIVE_TOPOLOGY_LINE_LIST"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_STRIP = showString "VK_PRIMITIVE_TOPOLOGY_LINE_STRIP"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = showString "VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY"
-  showsPrec _ VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = showString "VK_PRIMITIVE_TOPOLOGY_PATCH_LIST"
+  showsPrec _ PrimitiveTopologyPointList = showString "PrimitiveTopologyPointList"
+  showsPrec _ PrimitiveTopologyLineList = showString "PrimitiveTopologyLineList"
+  showsPrec _ PrimitiveTopologyLineStrip = showString "PrimitiveTopologyLineStrip"
+  showsPrec _ PrimitiveTopologyTriangleList = showString "PrimitiveTopologyTriangleList"
+  showsPrec _ PrimitiveTopologyTriangleStrip = showString "PrimitiveTopologyTriangleStrip"
+  showsPrec _ PrimitiveTopologyTriangleFan = showString "PrimitiveTopologyTriangleFan"
+  showsPrec _ PrimitiveTopologyLineListWithAdjacency = showString "PrimitiveTopologyLineListWithAdjacency"
+  showsPrec _ PrimitiveTopologyLineStripWithAdjacency = showString "PrimitiveTopologyLineStripWithAdjacency"
+  showsPrec _ PrimitiveTopologyTriangleListWithAdjacency = showString "PrimitiveTopologyTriangleListWithAdjacency"
+  showsPrec _ PrimitiveTopologyTriangleStripWithAdjacency = showString "PrimitiveTopologyTriangleStripWithAdjacency"
+  showsPrec _ PrimitiveTopologyPatchList = showString "PrimitiveTopologyPatchList"
   showsPrec p (PrimitiveTopology x) = showParen (p >= 11) (showString "PrimitiveTopology " . showsPrec 11 x)
 
 instance Read PrimitiveTopology where
-  readPrec = parens ( choose [ ("VK_PRIMITIVE_TOPOLOGY_POINT_LIST", pure VK_PRIMITIVE_TOPOLOGY_POINT_LIST)
-                             , ("VK_PRIMITIVE_TOPOLOGY_LINE_LIST", pure VK_PRIMITIVE_TOPOLOGY_LINE_LIST)
-                             , ("VK_PRIMITIVE_TOPOLOGY_LINE_STRIP", pure VK_PRIMITIVE_TOPOLOGY_LINE_STRIP)
-                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST)
-                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP)
-                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN)
-                             , ("VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY", pure VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY)
-                             , ("VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY", pure VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY)
-                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY)
-                             , ("VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY", pure VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY)
-                             , ("VK_PRIMITIVE_TOPOLOGY_PATCH_LIST", pure VK_PRIMITIVE_TOPOLOGY_PATCH_LIST)
+  readPrec = parens ( choose [ ("PrimitiveTopologyPointList", pure PrimitiveTopologyPointList)
+                             , ("PrimitiveTopologyLineList", pure PrimitiveTopologyLineList)
+                             , ("PrimitiveTopologyLineStrip", pure PrimitiveTopologyLineStrip)
+                             , ("PrimitiveTopologyTriangleList", pure PrimitiveTopologyTriangleList)
+                             , ("PrimitiveTopologyTriangleStrip", pure PrimitiveTopologyTriangleStrip)
+                             , ("PrimitiveTopologyTriangleFan", pure PrimitiveTopologyTriangleFan)
+                             , ("PrimitiveTopologyLineListWithAdjacency", pure PrimitiveTopologyLineListWithAdjacency)
+                             , ("PrimitiveTopologyLineStripWithAdjacency", pure PrimitiveTopologyLineStripWithAdjacency)
+                             , ("PrimitiveTopologyTriangleListWithAdjacency", pure PrimitiveTopologyTriangleListWithAdjacency)
+                             , ("PrimitiveTopologyTriangleStripWithAdjacency", pure PrimitiveTopologyTriangleStripWithAdjacency)
+                             , ("PrimitiveTopologyPatchList", pure PrimitiveTopologyPatchList)
                              ] +++
                       prec 10 (do
                         expectP (Ident "PrimitiveTopology")
@@ -873,27 +873,27 @@ instance Read PrimitiveTopology where
                     )
 
 
-pattern VK_PRIMITIVE_TOPOLOGY_POINT_LIST = PrimitiveTopology 0
+pattern PrimitiveTopologyPointList = PrimitiveTopology 0
 
-pattern VK_PRIMITIVE_TOPOLOGY_LINE_LIST = PrimitiveTopology 1
+pattern PrimitiveTopologyLineList = PrimitiveTopology 1
 
-pattern VK_PRIMITIVE_TOPOLOGY_LINE_STRIP = PrimitiveTopology 2
+pattern PrimitiveTopologyLineStrip = PrimitiveTopology 2
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = PrimitiveTopology 3
+pattern PrimitiveTopologyTriangleList = PrimitiveTopology 3
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = PrimitiveTopology 4
+pattern PrimitiveTopologyTriangleStrip = PrimitiveTopology 4
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN = PrimitiveTopology 5
+pattern PrimitiveTopologyTriangleFan = PrimitiveTopology 5
 
-pattern VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY = PrimitiveTopology 6
+pattern PrimitiveTopologyLineListWithAdjacency = PrimitiveTopology 6
 
-pattern VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY = PrimitiveTopology 7
+pattern PrimitiveTopologyLineStripWithAdjacency = PrimitiveTopology 7
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY = PrimitiveTopology 8
+pattern PrimitiveTopologyTriangleListWithAdjacency = PrimitiveTopology 8
 
-pattern VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY = PrimitiveTopology 9
+pattern PrimitiveTopologyTriangleStripWithAdjacency = PrimitiveTopology 9
 
-pattern VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = PrimitiveTopology 10
+pattern PrimitiveTopologyPatchList = PrimitiveTopology 10
 
 
 data PipelineInputAssemblyStateCreateInfo =
@@ -1009,13 +1009,13 @@ newtype VertexInputRate = VertexInputRate Int32
   deriving (Eq, Storable)
 
 instance Show VertexInputRate where
-  showsPrec _ VK_VERTEX_INPUT_RATE_VERTEX = showString "VK_VERTEX_INPUT_RATE_VERTEX"
-  showsPrec _ VK_VERTEX_INPUT_RATE_INSTANCE = showString "VK_VERTEX_INPUT_RATE_INSTANCE"
+  showsPrec _ VertexInputRateVertex = showString "VertexInputRateVertex"
+  showsPrec _ VertexInputRateInstance = showString "VertexInputRateInstance"
   showsPrec p (VertexInputRate x) = showParen (p >= 11) (showString "VertexInputRate " . showsPrec 11 x)
 
 instance Read VertexInputRate where
-  readPrec = parens ( choose [ ("VK_VERTEX_INPUT_RATE_VERTEX", pure VK_VERTEX_INPUT_RATE_VERTEX)
-                             , ("VK_VERTEX_INPUT_RATE_INSTANCE", pure VK_VERTEX_INPUT_RATE_INSTANCE)
+  readPrec = parens ( choose [ ("VertexInputRateVertex", pure VertexInputRateVertex)
+                             , ("VertexInputRateInstance", pure VertexInputRateInstance)
                              ] +++
                       prec 10 (do
                         expectP (Ident "VertexInputRate")
@@ -1025,9 +1025,9 @@ instance Read VertexInputRate where
                     )
 
 
-pattern VK_VERTEX_INPUT_RATE_VERTEX = VertexInputRate 0
+pattern VertexInputRateVertex = VertexInputRate 0
 
-pattern VK_VERTEX_INPUT_RATE_INSTANCE = VertexInputRate 1
+pattern VertexInputRateInstance = VertexInputRate 1
 
 -- ** PipelineStageFlags
 
@@ -1157,47 +1157,47 @@ newtype BlendFactor = BlendFactor Int32
   deriving (Eq, Storable)
 
 instance Show BlendFactor where
-  showsPrec _ VK_BLEND_FACTOR_ZERO = showString "VK_BLEND_FACTOR_ZERO"
-  showsPrec _ VK_BLEND_FACTOR_ONE = showString "VK_BLEND_FACTOR_ONE"
-  showsPrec _ VK_BLEND_FACTOR_SRC_COLOR = showString "VK_BLEND_FACTOR_SRC_COLOR"
-  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR"
-  showsPrec _ VK_BLEND_FACTOR_DST_COLOR = showString "VK_BLEND_FACTOR_DST_COLOR"
-  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR = showString "VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR"
-  showsPrec _ VK_BLEND_FACTOR_SRC_ALPHA = showString "VK_BLEND_FACTOR_SRC_ALPHA"
-  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA"
-  showsPrec _ VK_BLEND_FACTOR_DST_ALPHA = showString "VK_BLEND_FACTOR_DST_ALPHA"
-  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA = showString "VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA"
-  showsPrec _ VK_BLEND_FACTOR_CONSTANT_COLOR = showString "VK_BLEND_FACTOR_CONSTANT_COLOR"
-  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR = showString "VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR"
-  showsPrec _ VK_BLEND_FACTOR_CONSTANT_ALPHA = showString "VK_BLEND_FACTOR_CONSTANT_ALPHA"
-  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA = showString "VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA"
-  showsPrec _ VK_BLEND_FACTOR_SRC_ALPHA_SATURATE = showString "VK_BLEND_FACTOR_SRC_ALPHA_SATURATE"
-  showsPrec _ VK_BLEND_FACTOR_SRC1_COLOR = showString "VK_BLEND_FACTOR_SRC1_COLOR"
-  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR"
-  showsPrec _ VK_BLEND_FACTOR_SRC1_ALPHA = showString "VK_BLEND_FACTOR_SRC1_ALPHA"
-  showsPrec _ VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = showString "VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA"
+  showsPrec _ BlendFactorZero = showString "BlendFactorZero"
+  showsPrec _ BlendFactorOne = showString "BlendFactorOne"
+  showsPrec _ BlendFactorSrcColor = showString "BlendFactorSrcColor"
+  showsPrec _ BlendFactorOneMinusSrcColor = showString "BlendFactorOneMinusSrcColor"
+  showsPrec _ BlendFactorDstColor = showString "BlendFactorDstColor"
+  showsPrec _ BlendFactorOneMinusDstColor = showString "BlendFactorOneMinusDstColor"
+  showsPrec _ BlendFactorSrcAlpha = showString "BlendFactorSrcAlpha"
+  showsPrec _ BlendFactorOneMinusSrcAlpha = showString "BlendFactorOneMinusSrcAlpha"
+  showsPrec _ BlendFactorDstAlpha = showString "BlendFactorDstAlpha"
+  showsPrec _ BlendFactorOneMinusDstAlpha = showString "BlendFactorOneMinusDstAlpha"
+  showsPrec _ BlendFactorConstantColor = showString "BlendFactorConstantColor"
+  showsPrec _ BlendFactorOneMinusConstantColor = showString "BlendFactorOneMinusConstantColor"
+  showsPrec _ BlendFactorConstantAlpha = showString "BlendFactorConstantAlpha"
+  showsPrec _ BlendFactorOneMinusConstantAlpha = showString "BlendFactorOneMinusConstantAlpha"
+  showsPrec _ BlendFactorSrcAlphaSaturate = showString "BlendFactorSrcAlphaSaturate"
+  showsPrec _ BlendFactorSrc1Color = showString "BlendFactorSrc1Color"
+  showsPrec _ BlendFactorOneMinusSrc1Color = showString "BlendFactorOneMinusSrc1Color"
+  showsPrec _ BlendFactorSrc1Alpha = showString "BlendFactorSrc1Alpha"
+  showsPrec _ BlendFactorOneMinusSrc1Alpha = showString "BlendFactorOneMinusSrc1Alpha"
   showsPrec p (BlendFactor x) = showParen (p >= 11) (showString "BlendFactor " . showsPrec 11 x)
 
 instance Read BlendFactor where
-  readPrec = parens ( choose [ ("VK_BLEND_FACTOR_ZERO", pure VK_BLEND_FACTOR_ZERO)
-                             , ("VK_BLEND_FACTOR_ONE", pure VK_BLEND_FACTOR_ONE)
-                             , ("VK_BLEND_FACTOR_SRC_COLOR", pure VK_BLEND_FACTOR_SRC_COLOR)
-                             , ("VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR", pure VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR)
-                             , ("VK_BLEND_FACTOR_DST_COLOR", pure VK_BLEND_FACTOR_DST_COLOR)
-                             , ("VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR", pure VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR)
-                             , ("VK_BLEND_FACTOR_SRC_ALPHA", pure VK_BLEND_FACTOR_SRC_ALPHA)
-                             , ("VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA", pure VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA)
-                             , ("VK_BLEND_FACTOR_DST_ALPHA", pure VK_BLEND_FACTOR_DST_ALPHA)
-                             , ("VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA", pure VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA)
-                             , ("VK_BLEND_FACTOR_CONSTANT_COLOR", pure VK_BLEND_FACTOR_CONSTANT_COLOR)
-                             , ("VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR", pure VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR)
-                             , ("VK_BLEND_FACTOR_CONSTANT_ALPHA", pure VK_BLEND_FACTOR_CONSTANT_ALPHA)
-                             , ("VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA", pure VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA)
-                             , ("VK_BLEND_FACTOR_SRC_ALPHA_SATURATE", pure VK_BLEND_FACTOR_SRC_ALPHA_SATURATE)
-                             , ("VK_BLEND_FACTOR_SRC1_COLOR", pure VK_BLEND_FACTOR_SRC1_COLOR)
-                             , ("VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR", pure VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR)
-                             , ("VK_BLEND_FACTOR_SRC1_ALPHA", pure VK_BLEND_FACTOR_SRC1_ALPHA)
-                             , ("VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA", pure VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA)
+  readPrec = parens ( choose [ ("BlendFactorZero", pure BlendFactorZero)
+                             , ("BlendFactorOne", pure BlendFactorOne)
+                             , ("BlendFactorSrcColor", pure BlendFactorSrcColor)
+                             , ("BlendFactorOneMinusSrcColor", pure BlendFactorOneMinusSrcColor)
+                             , ("BlendFactorDstColor", pure BlendFactorDstColor)
+                             , ("BlendFactorOneMinusDstColor", pure BlendFactorOneMinusDstColor)
+                             , ("BlendFactorSrcAlpha", pure BlendFactorSrcAlpha)
+                             , ("BlendFactorOneMinusSrcAlpha", pure BlendFactorOneMinusSrcAlpha)
+                             , ("BlendFactorDstAlpha", pure BlendFactorDstAlpha)
+                             , ("BlendFactorOneMinusDstAlpha", pure BlendFactorOneMinusDstAlpha)
+                             , ("BlendFactorConstantColor", pure BlendFactorConstantColor)
+                             , ("BlendFactorOneMinusConstantColor", pure BlendFactorOneMinusConstantColor)
+                             , ("BlendFactorConstantAlpha", pure BlendFactorConstantAlpha)
+                             , ("BlendFactorOneMinusConstantAlpha", pure BlendFactorOneMinusConstantAlpha)
+                             , ("BlendFactorSrcAlphaSaturate", pure BlendFactorSrcAlphaSaturate)
+                             , ("BlendFactorSrc1Color", pure BlendFactorSrc1Color)
+                             , ("BlendFactorOneMinusSrc1Color", pure BlendFactorOneMinusSrc1Color)
+                             , ("BlendFactorSrc1Alpha", pure BlendFactorSrc1Alpha)
+                             , ("BlendFactorOneMinusSrc1Alpha", pure BlendFactorOneMinusSrc1Alpha)
                              ] +++
                       prec 10 (do
                         expectP (Ident "BlendFactor")
@@ -1207,43 +1207,43 @@ instance Read BlendFactor where
                     )
 
 
-pattern VK_BLEND_FACTOR_ZERO = BlendFactor 0
+pattern BlendFactorZero = BlendFactor 0
 
-pattern VK_BLEND_FACTOR_ONE = BlendFactor 1
+pattern BlendFactorOne = BlendFactor 1
 
-pattern VK_BLEND_FACTOR_SRC_COLOR = BlendFactor 2
+pattern BlendFactorSrcColor = BlendFactor 2
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR = BlendFactor 3
+pattern BlendFactorOneMinusSrcColor = BlendFactor 3
 
-pattern VK_BLEND_FACTOR_DST_COLOR = BlendFactor 4
+pattern BlendFactorDstColor = BlendFactor 4
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR = BlendFactor 5
+pattern BlendFactorOneMinusDstColor = BlendFactor 5
 
-pattern VK_BLEND_FACTOR_SRC_ALPHA = BlendFactor 6
+pattern BlendFactorSrcAlpha = BlendFactor 6
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA = BlendFactor 7
+pattern BlendFactorOneMinusSrcAlpha = BlendFactor 7
 
-pattern VK_BLEND_FACTOR_DST_ALPHA = BlendFactor 8
+pattern BlendFactorDstAlpha = BlendFactor 8
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA = BlendFactor 9
+pattern BlendFactorOneMinusDstAlpha = BlendFactor 9
 
-pattern VK_BLEND_FACTOR_CONSTANT_COLOR = BlendFactor 10
+pattern BlendFactorConstantColor = BlendFactor 10
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR = BlendFactor 11
+pattern BlendFactorOneMinusConstantColor = BlendFactor 11
 
-pattern VK_BLEND_FACTOR_CONSTANT_ALPHA = BlendFactor 12
+pattern BlendFactorConstantAlpha = BlendFactor 12
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA = BlendFactor 13
+pattern BlendFactorOneMinusConstantAlpha = BlendFactor 13
 
-pattern VK_BLEND_FACTOR_SRC_ALPHA_SATURATE = BlendFactor 14
+pattern BlendFactorSrcAlphaSaturate = BlendFactor 14
 
-pattern VK_BLEND_FACTOR_SRC1_COLOR = BlendFactor 15
+pattern BlendFactorSrc1Color = BlendFactor 15
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR = BlendFactor 16
+pattern BlendFactorOneMinusSrc1Color = BlendFactor 16
 
-pattern VK_BLEND_FACTOR_SRC1_ALPHA = BlendFactor 17
+pattern BlendFactorSrc1Alpha = BlendFactor 17
 
-pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = BlendFactor 18
+pattern BlendFactorOneMinusSrc1Alpha = BlendFactor 18
 
 newtype SampleMask = SampleMask Word32
   deriving (Eq, Storable)

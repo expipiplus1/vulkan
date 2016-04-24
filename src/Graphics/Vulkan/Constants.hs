@@ -58,11 +58,11 @@ newtype PipelineCacheHeaderVersion = PipelineCacheHeaderVersion Int32
   deriving (Eq, Storable)
 
 instance Show PipelineCacheHeaderVersion where
-  showsPrec _ VK_PIPELINE_CACHE_HEADER_VERSION_ONE = showString "VK_PIPELINE_CACHE_HEADER_VERSION_ONE"
+  showsPrec _ PipelineCacheHeaderVersionOne = showString "PipelineCacheHeaderVersionOne"
   showsPrec p (PipelineCacheHeaderVersion x) = showParen (p >= 11) (showString "PipelineCacheHeaderVersion " . showsPrec 11 x)
 
 instance Read PipelineCacheHeaderVersion where
-  readPrec = parens ( choose [ ("VK_PIPELINE_CACHE_HEADER_VERSION_ONE", pure VK_PIPELINE_CACHE_HEADER_VERSION_ONE)
+  readPrec = parens ( choose [ ("PipelineCacheHeaderVersionOne", pure PipelineCacheHeaderVersionOne)
                              ] +++
                       prec 10 (do
                         expectP (Ident "PipelineCacheHeaderVersion")
@@ -72,7 +72,7 @@ instance Read PipelineCacheHeaderVersion where
                     )
 
 
-pattern VK_PIPELINE_CACHE_HEADER_VERSION_ONE = PipelineCacheHeaderVersion 1
+pattern PipelineCacheHeaderVersionOne = PipelineCacheHeaderVersion 1
 
 
 pattern VK_MAX_EXTENSION_NAME_SIZE = 256

@@ -53,13 +53,13 @@ newtype CommandBufferLevel = CommandBufferLevel Int32
   deriving (Eq, Storable)
 
 instance Show CommandBufferLevel where
-  showsPrec _ VK_COMMAND_BUFFER_LEVEL_PRIMARY = showString "VK_COMMAND_BUFFER_LEVEL_PRIMARY"
-  showsPrec _ VK_COMMAND_BUFFER_LEVEL_SECONDARY = showString "VK_COMMAND_BUFFER_LEVEL_SECONDARY"
+  showsPrec _ CommandBufferLevelPrimary = showString "CommandBufferLevelPrimary"
+  showsPrec _ CommandBufferLevelSecondary = showString "CommandBufferLevelSecondary"
   showsPrec p (CommandBufferLevel x) = showParen (p >= 11) (showString "CommandBufferLevel " . showsPrec 11 x)
 
 instance Read CommandBufferLevel where
-  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_LEVEL_PRIMARY", pure VK_COMMAND_BUFFER_LEVEL_PRIMARY)
-                             , ("VK_COMMAND_BUFFER_LEVEL_SECONDARY", pure VK_COMMAND_BUFFER_LEVEL_SECONDARY)
+  readPrec = parens ( choose [ ("CommandBufferLevelPrimary", pure CommandBufferLevelPrimary)
+                             , ("CommandBufferLevelSecondary", pure CommandBufferLevelSecondary)
                              ] +++
                       prec 10 (do
                         expectP (Ident "CommandBufferLevel")
@@ -69,9 +69,9 @@ instance Read CommandBufferLevel where
                     )
 
 
-pattern VK_COMMAND_BUFFER_LEVEL_PRIMARY = CommandBufferLevel 0
+pattern CommandBufferLevelPrimary = CommandBufferLevel 0
 
-pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY = CommandBufferLevel 1
+pattern CommandBufferLevelSecondary = CommandBufferLevel 1
 
 -- ** allocateCommandBuffers
 foreign import ccall "vkAllocateCommandBuffers" allocateCommandBuffers ::

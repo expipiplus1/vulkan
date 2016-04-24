@@ -26,15 +26,19 @@ prettifySpec spec = spec { sTypes = nameType <$> sTypes spec
     nameType (ABitmaskType h) = ABitmaskType h { bmtHsName = dropVK $ bmtHsName h }
     nameType (ABaseType h) = ABaseType h { btHsName = dropVK $ btHsName h }
     nameType t = t
-    nameStructMember sm = sm { smHsName = recordName $ smHsName sm
+    nameStructMember sm = sm { smHsName = nameRecord $ smHsName sm
                              }
 
-    nameEnum e = e { eHsName = dropVK $ eHsName e }
+    nameRecord "type" = "_type"
+    nameRecord "module" = "_module"
+    nameRecord "alignment" = "_alignment"
+    nameRecord n = n
 
-    recordName "type" = "_type"
-    recordName "module" = "_module"
-    recordName "alignment" = "_alignment"
-    recordName n = n
+    nameEnum e = e { eHsName = dropVK $ eHsName e
+                   , eElements = nameEnumElement <$> eElements e
+                   }
+
+    nameEnumElement ee = ee { eeHsName = pascalCase_ . dropVK $ eeHsName ee }
 
     nameCommand c = c { cHsName = lowerFirst . dropVK $ cHsName c
                       , cParameters = nameParameter <$> cParameters c
