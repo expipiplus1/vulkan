@@ -42,6 +42,10 @@ prettifySpec spec = spec { sTypes = nameType <$> sTypes spec
     nameRecord "type" = "_type"
     nameRecord "module" = "_module"
     nameRecord "alignment" = "_alignment"
+    nameRecord "r" = "red"
+    nameRecord "g" = "green"
+    nameRecord "b" = "blue"
+    nameRecord "a" = "alpha"
     nameRecord n = n
 
     nameEnum e = e { eHsName = name $ eHsName e

@@ -136,10 +136,10 @@ newtype ImageViewCreateFlags = ImageViewCreateFlags Flags
 
 
 data ComponentMapping =
-  ComponentMapping{ r :: ComponentSwizzle 
-                  , g :: ComponentSwizzle 
-                  , b :: ComponentSwizzle 
-                  , a :: ComponentSwizzle 
+  ComponentMapping{ red :: ComponentSwizzle 
+                  , green :: ComponentSwizzle 
+                  , blue :: ComponentSwizzle 
+                  , alpha :: ComponentSwizzle 
                   }
   deriving (Eq, Ord)
 
@@ -150,10 +150,10 @@ instance Storable ComponentMapping where
                               <*> peek (ptr `plusPtr` 4)
                               <*> peek (ptr `plusPtr` 8)
                               <*> peek (ptr `plusPtr` 12)
-  poke ptr poked = poke (ptr `plusPtr` 0) (r (poked :: ComponentMapping))
-                *> poke (ptr `plusPtr` 4) (g (poked :: ComponentMapping))
-                *> poke (ptr `plusPtr` 8) (b (poked :: ComponentMapping))
-                *> poke (ptr `plusPtr` 12) (a (poked :: ComponentMapping))
+  poke ptr poked = poke (ptr `plusPtr` 0) (red (poked :: ComponentMapping))
+                *> poke (ptr `plusPtr` 4) (green (poked :: ComponentMapping))
+                *> poke (ptr `plusPtr` 8) (blue (poked :: ComponentMapping))
+                *> poke (ptr `plusPtr` 12) (alpha (poked :: ComponentMapping))
 
 
 -- ** ComponentSwizzle
