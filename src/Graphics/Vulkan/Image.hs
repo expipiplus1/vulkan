@@ -37,13 +37,13 @@ import Text.ParserCombinators.ReadPrec( prec
                                       )
 import Graphics.Vulkan.Sampler( SampleCountFlags(..)
                               )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , SharingMode(..)
+import Graphics.Vulkan.Core( SharingMode(..)
                            , StructureType(..)
                            , Format(..)
                            , Extent3D(..)
                            , Result(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
 
 -- ** vkCreateImage
@@ -54,7 +54,7 @@ foreign import ccall "vkCreateImage" vkCreateImage ::
 
 -- ** VkImageCreateFlags
 
-newtype ImageCreateFlags = ImageCreateFlags VkFlags
+newtype ImageCreateFlags = ImageCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ImageCreateFlags where
@@ -94,7 +94,7 @@ pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlags 0x10
 
 -- ** VkImageUsageFlags
 
-newtype ImageUsageFlags = ImageUsageFlags VkFlags
+newtype ImageUsageFlags = ImageUsageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ImageUsageFlags where
@@ -149,7 +149,7 @@ newtype Image = Image Word64
 
 -- ** VkImageAspectFlags
 
-newtype ImageAspectFlags = ImageAspectFlags VkFlags
+newtype ImageAspectFlags = ImageAspectFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ImageAspectFlags where
@@ -185,11 +185,11 @@ pattern VK_IMAGE_ASPECT_METADATA_BIT = ImageAspectFlags 0x8
 
 
 data SubresourceLayout =
-  SubresourceLayout{ offset :: VkDeviceSize 
-                   , size :: VkDeviceSize 
-                   , rowPitch :: VkDeviceSize 
-                   , arrayPitch :: VkDeviceSize 
-                   , depthPitch :: VkDeviceSize 
+  SubresourceLayout{ offset :: DeviceSize 
+                   , size :: DeviceSize 
+                   , rowPitch :: DeviceSize 
+                   , arrayPitch :: DeviceSize 
+                   , depthPitch :: DeviceSize 
                    }
   deriving (Eq)
 

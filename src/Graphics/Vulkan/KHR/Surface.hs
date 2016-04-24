@@ -37,10 +37,10 @@ import Graphics.Vulkan.Image( ImageUsageFlags(..)
                             )
 import Graphics.Vulkan.DeviceInitialization( Instance(..)
                                            )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , VkBool32(..)
+import Graphics.Vulkan.Core( Bool32(..)
                            , Format(..)
                            , Result(..)
+                           , Flags(..)
                            , Extent2D(..)
                            )
 
@@ -56,7 +56,7 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDe
 
 -- ** VkCompositeAlphaFlagsKHR
 
-newtype CompositeAlphaFlagsKHR = CompositeAlphaFlagsKHR VkFlags
+newtype CompositeAlphaFlagsKHR = CompositeAlphaFlagsKHR Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CompositeAlphaFlagsKHR where
@@ -129,7 +129,7 @@ newtype SurfaceKHR = SurfaceKHR Word64
 
 -- ** vkGetPhysicalDeviceSurfaceSupportKHR
 foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceSurfaceSupportKHR ::
-  PhysicalDevice -> Word32 -> SurfaceKHR -> Ptr VkBool32 -> IO Result
+  PhysicalDevice -> Word32 -> SurfaceKHR -> Ptr Bool32 -> IO Result
 
 
 data SurfaceFormatKHR =
@@ -180,7 +180,7 @@ foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDe
 
 -- ** VkSurfaceTransformFlagsKHR
 
-newtype SurfaceTransformFlagsKHR = SurfaceTransformFlagsKHR VkFlags
+newtype SurfaceTransformFlagsKHR = SurfaceTransformFlagsKHR Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show SurfaceTransformFlagsKHR where

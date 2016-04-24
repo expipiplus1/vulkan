@@ -44,10 +44,10 @@ import Graphics.Vulkan.Image( ImageLayout(..)
                             )
 import Graphics.Vulkan.ImageView( ImageView(..)
                                 )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Format(..)
                            , Result(..)
+                           , Flags(..)
                            , Extent2D(..)
                            )
 
@@ -84,7 +84,7 @@ instance Storable SubpassDependency where
 
 -- ** SubpassDescriptionFlags
 -- | Opaque flag
-newtype SubpassDescriptionFlags = SubpassDescriptionFlags VkFlags
+newtype SubpassDescriptionFlags = SubpassDescriptionFlags Flags
   deriving (Eq, Storable)
 
 newtype Framebuffer = Framebuffer Word64
@@ -92,7 +92,7 @@ newtype Framebuffer = Framebuffer Word64
 
 -- ** VkAttachmentDescriptionFlags
 
-newtype AttachmentDescriptionFlags = AttachmentDescriptionFlags VkFlags
+newtype AttachmentDescriptionFlags = AttachmentDescriptionFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show AttachmentDescriptionFlags where
@@ -116,7 +116,7 @@ pattern VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = AttachmentDescriptionFlags 0x1
 
 -- ** VkDependencyFlags
 
-newtype DependencyFlags = DependencyFlags VkFlags
+newtype DependencyFlags = DependencyFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show DependencyFlags where
@@ -247,7 +247,7 @@ pattern VK_ATTACHMENT_STORE_OP_DONT_CARE = AttachmentStoreOp 1
 
 -- ** VkAccessFlags
 
-newtype AccessFlags = AccessFlags VkFlags
+newtype AccessFlags = AccessFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show AccessFlags where
@@ -358,7 +358,7 @@ instance Storable AttachmentReference where
 
 -- ** RenderPassCreateFlags
 -- | Opaque flag
-newtype RenderPassCreateFlags = RenderPassCreateFlags VkFlags
+newtype RenderPassCreateFlags = RenderPassCreateFlags Flags
   deriving (Eq, Storable)
 
 
@@ -483,6 +483,6 @@ instance Storable RenderPassCreateInfo where
 
 -- ** FramebufferCreateFlags
 -- | Opaque flag
-newtype FramebufferCreateFlags = FramebufferCreateFlags VkFlags
+newtype FramebufferCreateFlags = FramebufferCreateFlags Flags
   deriving (Eq, Storable)
 

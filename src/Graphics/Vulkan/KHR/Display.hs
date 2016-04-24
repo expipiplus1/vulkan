@@ -39,10 +39,10 @@ import Text.ParserCombinators.ReadPrec( prec
 import Graphics.Vulkan.DeviceInitialization( Instance(..)
                                            )
 import Graphics.Vulkan.Core( Offset2D(..)
-                           , VkFlags(..)
+                           , Bool32(..)
                            , StructureType(..)
-                           , VkBool32(..)
                            , Result(..)
+                           , Flags(..)
                            , Extent2D(..)
                            )
 import Foreign.C.Types( CFloat(..)
@@ -139,8 +139,8 @@ data DisplayPropertiesKHR =
                       , physicalDimensions :: Extent2D 
                       , physicalResolution :: Extent2D 
                       , supportedTransforms :: SurfaceTransformFlagsKHR 
-                      , planeReorderPossible :: VkBool32 
-                      , persistentContent :: VkBool32 
+                      , planeReorderPossible :: Bool32 
+                      , persistentContent :: Bool32 
                       }
   deriving (Eq)
 
@@ -215,7 +215,7 @@ instance Storable DisplayModePropertiesKHR where
 
 -- ** VkDisplayPlaneAlphaFlagsKHR
 
-newtype DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagsKHR VkFlags
+newtype DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagsKHR Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show DisplayPlaneAlphaFlagsKHR where
@@ -251,7 +251,7 @@ pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = DisplayPlaneAlp
 
 -- ** DisplayModeCreateFlagsKHR
 -- | Opaque flag
-newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR VkFlags
+newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR Flags
   deriving (Eq, Storable)
 
 
@@ -302,7 +302,7 @@ instance Storable DisplayModeParametersKHR where
 
 -- ** DisplaySurfaceCreateFlagsKHR
 -- | Opaque flag
-newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR VkFlags
+newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
   deriving (Eq, Storable)
 
 newtype DisplayKHR = DisplayKHR Word64

@@ -16,14 +16,14 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Result(..)
+                           , Flags(..)
                            )
 
 -- ** SemaphoreCreateFlags
 -- | Opaque flag
-newtype SemaphoreCreateFlags = SemaphoreCreateFlags VkFlags
+newtype SemaphoreCreateFlags = SemaphoreCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** vkDestroySemaphore

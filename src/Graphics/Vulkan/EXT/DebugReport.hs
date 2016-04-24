@@ -36,10 +36,10 @@ import Text.ParserCombinators.ReadPrec( prec
                                       )
 import Graphics.Vulkan.DeviceInitialization( Instance(..)
                                            )
-import Graphics.Vulkan.Core( VkFlags(..)
+import Graphics.Vulkan.Core( Bool32(..)
                            , StructureType(..)
-                           , VkBool32(..)
                            , Result(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CChar(..)
                       , CSize(..)
@@ -247,7 +247,7 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallb
 
 -- ** VkDebugReportFlagsEXT
 
-newtype DebugReportFlagsEXT = DebugReportFlagsEXT VkFlags
+newtype DebugReportFlagsEXT = DebugReportFlagsEXT Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show DebugReportFlagsEXT where
@@ -289,8 +289,7 @@ type PFN_vkDebugReportCallbackEXT = FunPtr
   (DebugReportFlagsEXT ->
      DebugReportObjectTypeEXT ->
        Word64 ->
-         CSize ->
-           Int32 -> Ptr CChar -> Ptr CChar -> Ptr Void -> IO VkBool32)
+         CSize -> Int32 -> Ptr CChar -> Ptr CChar -> Ptr Void -> IO Bool32)
 
 -- ** vkCreateDebugReportCallbackEXT
 foreign import ccall "vkCreateDebugReportCallbackEXT" vkCreateDebugReportCallbackEXT ::

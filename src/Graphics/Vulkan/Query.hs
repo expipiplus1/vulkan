@@ -35,10 +35,10 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Result(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
@@ -49,7 +49,7 @@ foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults ::
   QueryPool ->
     Word32 ->
       Word32 ->
-        CSize -> Ptr Void -> VkDeviceSize -> QueryResultFlags -> IO Result
+        CSize -> Ptr Void -> DeviceSize -> QueryResultFlags -> IO Result
 
 -- ** vkDestroyQueryPool
 foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool ::
@@ -85,7 +85,7 @@ instance Storable QueryPoolCreateInfo where
 
 -- ** VkQueryResultFlags
 
-newtype QueryResultFlags = QueryResultFlags VkFlags
+newtype QueryResultFlags = QueryResultFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show QueryResultFlags where
@@ -160,7 +160,7 @@ foreign import ccall "vkCreateQueryPool" vkCreateQueryPool ::
 
 -- ** VkQueryControlFlags
 
-newtype QueryControlFlags = QueryControlFlags VkFlags
+newtype QueryControlFlags = QueryControlFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show QueryControlFlags where
@@ -184,12 +184,12 @@ pattern VK_QUERY_CONTROL_PRECISE_BIT = QueryControlFlags 0x1
 
 -- ** QueryPoolCreateFlags
 -- | Opaque flag
-newtype QueryPoolCreateFlags = QueryPoolCreateFlags VkFlags
+newtype QueryPoolCreateFlags = QueryPoolCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** VkQueryPipelineStatisticFlags
 
-newtype QueryPipelineStatisticFlags = QueryPipelineStatisticFlags VkFlags
+newtype QueryPipelineStatisticFlags = QueryPipelineStatisticFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show QueryPipelineStatisticFlags where

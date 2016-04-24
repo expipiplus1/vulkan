@@ -47,10 +47,10 @@ import Graphics.Vulkan.ImageView( ImageView(..)
                                 )
 import Graphics.Vulkan.BufferView( BufferView(..)
                                  )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Result(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
 
 -- ** vkUpdateDescriptorSets
@@ -61,7 +61,7 @@ foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets ::
 
 -- ** DescriptorPoolResetFlags
 -- | Opaque flag
-newtype DescriptorPoolResetFlags = DescriptorPoolResetFlags VkFlags
+newtype DescriptorPoolResetFlags = DescriptorPoolResetFlags Flags
   deriving (Eq, Storable)
 
 -- ** vkAllocateDescriptorSets
@@ -72,8 +72,8 @@ foreign import ccall "vkAllocateDescriptorSets" vkAllocateDescriptorSets ::
 
 data DescriptorBufferInfo =
   DescriptorBufferInfo{ buffer :: Buffer 
-                      , offset :: VkDeviceSize 
-                      , range :: VkDeviceSize 
+                      , offset :: DeviceSize 
+                      , range :: DeviceSize 
                       }
   deriving (Eq)
 
@@ -199,7 +199,7 @@ instance Storable DescriptorPoolCreateInfo where
 
 -- ** DescriptorSetLayoutCreateFlags
 -- | Opaque flag
-newtype DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlags VkFlags
+newtype DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlags Flags
   deriving (Eq, Storable)
 
 
@@ -229,7 +229,7 @@ instance Storable DescriptorSetLayoutCreateInfo where
 
 -- ** VkDescriptorPoolCreateFlags
 
-newtype DescriptorPoolCreateFlags = DescriptorPoolCreateFlags VkFlags
+newtype DescriptorPoolCreateFlags = DescriptorPoolCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show DescriptorPoolCreateFlags where

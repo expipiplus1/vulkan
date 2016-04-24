@@ -18,11 +18,11 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Format(..)
                            , Result(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
 
 -- ** vkCreateBufferView
@@ -41,8 +41,8 @@ data BufferViewCreateInfo =
                       , flags :: BufferViewCreateFlags 
                       , buffer :: Buffer 
                       , format :: Format 
-                      , offset :: VkDeviceSize 
-                      , range :: VkDeviceSize 
+                      , offset :: DeviceSize 
+                      , range :: DeviceSize 
                       }
   deriving (Eq)
 
@@ -67,7 +67,7 @@ instance Storable BufferViewCreateInfo where
 
 -- ** BufferViewCreateFlags
 -- | Opaque flag
-newtype BufferViewCreateFlags = BufferViewCreateFlags VkFlags
+newtype BufferViewCreateFlags = BufferViewCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** vkDestroyBufferView

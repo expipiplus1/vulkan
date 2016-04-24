@@ -51,13 +51,13 @@ import Graphics.Vulkan.Shader( ShaderStageFlags(..)
 import Graphics.Vulkan.Sampler( CompareOp(..)
                               , SampleCountFlags(..)
                               )
-import Graphics.Vulkan.Core( VkFlags(..)
+import Graphics.Vulkan.Core( Bool32(..)
                            , StructureType(..)
                            , Viewport(..)
-                           , VkBool32(..)
                            , Rect2D(..)
                            , Format(..)
                            , Result(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CFloat(..)
                       , CChar(..)
@@ -177,7 +177,7 @@ instance Storable GraphicsPipelineCreateInfo where
 
 -- ** VkCullModeFlags
 
-newtype CullModeFlags = CullModeFlags VkFlags
+newtype CullModeFlags = CullModeFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CullModeFlags where
@@ -211,7 +211,7 @@ pattern VK_CULL_MODE_FRONT_AND_BACK = CullModeFlags 0x3
 
 -- ** PipelineDepthStencilStateCreateFlags
 -- | Opaque flag
-newtype PipelineDepthStencilStateCreateFlags = PipelineDepthStencilStateCreateFlags VkFlags
+newtype PipelineDepthStencilStateCreateFlags = PipelineDepthStencilStateCreateFlags Flags
   deriving (Eq, Storable)
 
 
@@ -247,7 +247,7 @@ instance Storable PipelineShaderStageCreateInfo where
 
 -- ** VkColorComponentFlags
 
-newtype ColorComponentFlags = ColorComponentFlags VkFlags
+newtype ColorComponentFlags = ColorComponentFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ColorComponentFlags where
@@ -386,7 +386,7 @@ instance Storable SpecializationInfo where
 
 -- ** PipelineColorBlendStateCreateFlags
 -- | Opaque flag
-newtype PipelineColorBlendStateCreateFlags = PipelineColorBlendStateCreateFlags VkFlags
+newtype PipelineColorBlendStateCreateFlags = PipelineColorBlendStateCreateFlags Flags
   deriving (Eq, Storable)
 
 newtype Pipeline = Pipeline Word64
@@ -394,7 +394,7 @@ newtype Pipeline = Pipeline Word64
 
 -- ** PipelineInputAssemblyStateCreateFlags
 -- | Opaque flag
-newtype PipelineInputAssemblyStateCreateFlags = PipelineInputAssemblyStateCreateFlags VkFlags
+newtype PipelineInputAssemblyStateCreateFlags = PipelineInputAssemblyStateCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** vkCreateGraphicsPipelines
@@ -463,7 +463,7 @@ pattern VK_POLYGON_MODE_POINT = PolygonMode 2
 
 -- ** PipelineViewportStateCreateFlags
 -- | Opaque flag
-newtype PipelineViewportStateCreateFlags = PipelineViewportStateCreateFlags VkFlags
+newtype PipelineViewportStateCreateFlags = PipelineViewportStateCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** LogicOp
@@ -550,7 +550,7 @@ pattern VK_LOGIC_OP_SET = LogicOp 15
 
 -- ** VkPipelineCreateFlags
 
-newtype PipelineCreateFlags = PipelineCreateFlags VkFlags
+newtype PipelineCreateFlags = PipelineCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show PipelineCreateFlags where
@@ -582,7 +582,7 @@ pattern VK_PIPELINE_CREATE_DERIVATIVE_BIT = PipelineCreateFlags 0x4
 
 -- ** PipelineRasterizationStateCreateFlags
 -- | Opaque flag
-newtype PipelineRasterizationStateCreateFlags = PipelineRasterizationStateCreateFlags VkFlags
+newtype PipelineRasterizationStateCreateFlags = PipelineRasterizationStateCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** DynamicState
@@ -667,7 +667,7 @@ pattern VK_PIPELINE_BIND_POINT_COMPUTE = PipelineBindPoint 1
 
 -- ** PipelineDynamicStateCreateFlags
 -- | Opaque flag
-newtype PipelineDynamicStateCreateFlags = PipelineDynamicStateCreateFlags VkFlags
+newtype PipelineDynamicStateCreateFlags = PipelineDynamicStateCreateFlags Flags
   deriving (Eq, Storable)
 
 
@@ -675,12 +675,12 @@ data PipelineRasterizationStateCreateInfo =
   PipelineRasterizationStateCreateInfo{ sType :: StructureType 
                                       , pNext :: Ptr Void 
                                       , flags :: PipelineRasterizationStateCreateFlags 
-                                      , depthClampEnable :: VkBool32 
-                                      , rasterizerDiscardEnable :: VkBool32 
+                                      , depthClampEnable :: Bool32 
+                                      , rasterizerDiscardEnable :: Bool32 
                                       , polygonMode :: PolygonMode 
                                       , cullMode :: CullModeFlags 
                                       , frontFace :: FrontFace 
-                                      , depthBiasEnable :: VkBool32 
+                                      , depthBiasEnable :: Bool32 
                                       , depthBiasConstantFactor :: CFloat 
                                       , depthBiasClamp :: CFloat 
                                       , depthBiasSlopeFactor :: CFloat 
@@ -763,7 +763,7 @@ foreign import ccall "vkDestroyPipeline" vkDestroyPipeline ::
 
 -- ** PipelineShaderStageCreateFlags
 -- | Opaque flag
-newtype PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlags VkFlags
+newtype PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlags Flags
   deriving (Eq, Storable)
 
 
@@ -799,7 +799,7 @@ instance Storable PipelineViewportStateCreateInfo where
 
 -- ** PipelineTessellationStateCreateFlags
 -- | Opaque flag
-newtype PipelineTessellationStateCreateFlags = PipelineTessellationStateCreateFlags VkFlags
+newtype PipelineTessellationStateCreateFlags = PipelineTessellationStateCreateFlags Flags
   deriving (Eq, Storable)
 
 
@@ -901,7 +901,7 @@ data PipelineInputAssemblyStateCreateInfo =
                                       , pNext :: Ptr Void 
                                       , flags :: PipelineInputAssemblyStateCreateFlags 
                                       , topology :: PrimitiveTopology 
-                                      , primitiveRestartEnable :: VkBool32 
+                                      , primitiveRestartEnable :: Bool32 
                                       }
   deriving (Eq)
 
@@ -925,7 +925,7 @@ data PipelineColorBlendStateCreateInfo =
   PipelineColorBlendStateCreateInfo{ sType :: StructureType 
                                    , pNext :: Ptr Void 
                                    , flags :: PipelineColorBlendStateCreateFlags 
-                                   , logicOpEnable :: VkBool32 
+                                   , logicOpEnable :: Bool32 
                                    , logicOp :: LogicOp 
                                    , attachmentCount :: Word32 
                                    , pAttachments :: Ptr PipelineColorBlendAttachmentState 
@@ -1000,7 +1000,7 @@ instance Storable SpecializationMapEntry where
 
 -- ** PipelineVertexInputStateCreateFlags
 -- | Opaque flag
-newtype PipelineVertexInputStateCreateFlags = PipelineVertexInputStateCreateFlags VkFlags
+newtype PipelineVertexInputStateCreateFlags = PipelineVertexInputStateCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** VertexInputRate
@@ -1031,7 +1031,7 @@ pattern VK_VERTEX_INPUT_RATE_INSTANCE = VertexInputRate 1
 
 -- ** VkPipelineStageFlags
 
-newtype PipelineStageFlags = PipelineStageFlags VkFlags
+newtype PipelineStageFlags = PipelineStageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show PipelineStageFlags where
@@ -1119,7 +1119,7 @@ pattern VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = PipelineStageFlags 0x10000
 
 
 data PipelineColorBlendAttachmentState =
-  PipelineColorBlendAttachmentState{ blendEnable :: VkBool32 
+  PipelineColorBlendAttachmentState{ blendEnable :: Bool32 
                                    , srcColorBlendFactor :: BlendFactor 
                                    , dstColorBlendFactor :: BlendFactor 
                                    , colorBlendOp :: BlendOp 
@@ -1245,12 +1245,12 @@ pattern VK_BLEND_FACTOR_SRC1_ALPHA = BlendFactor 17
 
 pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = BlendFactor 18
 
-newtype VkSampleMask = VkSampleMask Word32
+newtype SampleMask = SampleMask Word32
   deriving (Eq, Storable)
 
 -- ** PipelineMultisampleStateCreateFlags
 -- | Opaque flag
-newtype PipelineMultisampleStateCreateFlags = PipelineMultisampleStateCreateFlags VkFlags
+newtype PipelineMultisampleStateCreateFlags = PipelineMultisampleStateCreateFlags Flags
   deriving (Eq, Storable)
 
 
@@ -1259,11 +1259,11 @@ data PipelineMultisampleStateCreateInfo =
                                     , pNext :: Ptr Void 
                                     , flags :: PipelineMultisampleStateCreateFlags 
                                     , rasterizationSamples :: SampleCountFlags 
-                                    , sampleShadingEnable :: VkBool32 
+                                    , sampleShadingEnable :: Bool32 
                                     , minSampleShading :: CFloat 
-                                    , pSampleMask :: Ptr VkSampleMask 
-                                    , alphaToCoverageEnable :: VkBool32 
-                                    , alphaToOneEnable :: VkBool32 
+                                    , pSampleMask :: Ptr SampleMask 
+                                    , alphaToCoverageEnable :: Bool32 
+                                    , alphaToOneEnable :: Bool32 
                                     }
   deriving (Eq)
 
@@ -1314,11 +1314,11 @@ data PipelineDepthStencilStateCreateInfo =
   PipelineDepthStencilStateCreateInfo{ sType :: StructureType 
                                      , pNext :: Ptr Void 
                                      , flags :: PipelineDepthStencilStateCreateFlags 
-                                     , depthTestEnable :: VkBool32 
-                                     , depthWriteEnable :: VkBool32 
+                                     , depthTestEnable :: Bool32 
+                                     , depthWriteEnable :: Bool32 
                                      , depthCompareOp :: CompareOp 
-                                     , depthBoundsTestEnable :: VkBool32 
-                                     , stencilTestEnable :: VkBool32 
+                                     , depthBoundsTestEnable :: Bool32 
+                                     , stencilTestEnable :: Bool32 
                                      , front :: StencilOpState 
                                      , back :: StencilOpState 
                                      , minDepthBounds :: CFloat 

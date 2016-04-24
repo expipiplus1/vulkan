@@ -33,11 +33,11 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , SharingMode(..)
+import Graphics.Vulkan.Core( SharingMode(..)
                            , StructureType(..)
                            , Result(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
 
 -- ** vkCreateBuffer
@@ -48,7 +48,7 @@ foreign import ccall "vkCreateBuffer" vkCreateBuffer ::
 
 -- ** VkBufferCreateFlags
 
-newtype BufferCreateFlags = BufferCreateFlags VkFlags
+newtype BufferCreateFlags = BufferCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show BufferCreateFlags where
@@ -80,7 +80,7 @@ pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = BufferCreateFlags 0x4
 
 -- ** VkBufferUsageFlags
 
-newtype BufferUsageFlags = BufferUsageFlags VkFlags
+newtype BufferUsageFlags = BufferUsageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show BufferUsageFlags where
@@ -146,7 +146,7 @@ data BufferCreateInfo =
   BufferCreateInfo{ sType :: StructureType 
                   , pNext :: Ptr Void 
                   , flags :: BufferCreateFlags 
-                  , size :: VkDeviceSize 
+                  , size :: DeviceSize 
                   , usage :: BufferUsageFlags 
                   , sharingMode :: SharingMode 
                   , queueFamilyIndexCount :: Word32 

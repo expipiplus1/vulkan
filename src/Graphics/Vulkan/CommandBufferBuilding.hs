@@ -71,12 +71,12 @@ import Graphics.Vulkan.OtherTypes( BufferMemoryBarrier(..)
                                  , MemoryBarrier(..)
                                  )
 import Graphics.Vulkan.Core( Offset3D(..)
-                           , VkFlags(..)
                            , StructureType(..)
                            , Viewport(..)
                            , Rect2D(..)
                            , Extent3D(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CFloat(..)
                       )
@@ -93,7 +93,7 @@ foreign import ccall "vkCmdSetStencilWriteMask" vkCmdSetStencilWriteMask ::
 
 -- ** vkCmdBindIndexBuffer
 foreign import ccall "vkCmdBindIndexBuffer" vkCmdBindIndexBuffer ::
-  CommandBuffer -> Buffer -> VkDeviceSize -> IndexType -> IO ()
+  CommandBuffer -> Buffer -> DeviceSize -> IndexType -> IO ()
 
 -- ** vkCmdResetQueryPool
 foreign import ccall "vkCmdResetQueryPool" vkCmdResetQueryPool ::
@@ -113,7 +113,7 @@ foreign import ccall "vkCmdBindPipeline" vkCmdBindPipeline ::
 -- ** vkCmdBindVertexBuffers
 foreign import ccall "vkCmdBindVertexBuffers" vkCmdBindVertexBuffers ::
   CommandBuffer ->
-  Word32 -> Word32 -> Ptr Buffer -> Ptr VkDeviceSize -> IO ()
+  Word32 -> Word32 -> Ptr Buffer -> Ptr DeviceSize -> IO ()
 
 -- ** vkCmdDraw
 foreign import ccall "vkCmdDraw" vkCmdDraw ::
@@ -168,7 +168,7 @@ foreign import ccall "vkCmdCopyImageToBuffer" vkCmdCopyImageToBuffer ::
 
 -- ** vkCmdDispatchIndirect
 foreign import ccall "vkCmdDispatchIndirect" vkCmdDispatchIndirect ::
-  CommandBuffer -> Buffer -> VkDeviceSize -> IO ()
+  CommandBuffer -> Buffer -> DeviceSize -> IO ()
 
 -- ** vkCmdBeginQuery
 foreign import ccall "vkCmdBeginQuery" vkCmdBeginQuery ::
@@ -181,7 +181,7 @@ foreign import ccall "vkCmdEndRenderPass" vkCmdEndRenderPass ::
 -- ** vkCmdFillBuffer
 foreign import ccall "vkCmdFillBuffer" vkCmdFillBuffer ::
   CommandBuffer ->
-  Buffer -> VkDeviceSize -> VkDeviceSize -> Word32 -> IO ()
+  Buffer -> DeviceSize -> DeviceSize -> Word32 -> IO ()
 
 
 data ClearRect =
@@ -250,7 +250,7 @@ pattern VK_INDEX_TYPE_UINT32 = IndexType 1
 
 
 data BufferImageCopy =
-  BufferImageCopy{ bufferOffset :: VkDeviceSize 
+  BufferImageCopy{ bufferOffset :: DeviceSize 
                  , bufferRowLength :: Word32 
                  , bufferImageHeight :: Word32 
                  , imageSubresource :: ImageSubresourceLayers 
@@ -288,13 +288,12 @@ foreign import ccall "vkCmdCopyBufferToImage" vkCmdCopyBufferToImage ::
 
 -- ** vkCmdDrawIndexedIndirect
 foreign import ccall "vkCmdDrawIndexedIndirect" vkCmdDrawIndexedIndirect ::
-  CommandBuffer ->
-  Buffer -> VkDeviceSize -> Word32 -> Word32 -> IO ()
+  CommandBuffer -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
 -- ** vkCmdUpdateBuffer
 foreign import ccall "vkCmdUpdateBuffer" vkCmdUpdateBuffer ::
   CommandBuffer ->
-  Buffer -> VkDeviceSize -> VkDeviceSize -> Ptr Word32 -> IO ()
+  Buffer -> DeviceSize -> DeviceSize -> Ptr Word32 -> IO ()
 
 -- ** vkCmdCopyImage
 foreign import ccall "vkCmdCopyImage" vkCmdCopyImage ::
@@ -340,8 +339,7 @@ foreign import ccall "vkCmdSetDepthBias" vkCmdSetDepthBias ::
 
 -- ** vkCmdDrawIndirect
 foreign import ccall "vkCmdDrawIndirect" vkCmdDrawIndirect ::
-  CommandBuffer ->
-  Buffer -> VkDeviceSize -> Word32 -> Word32 -> IO ()
+  CommandBuffer -> Buffer -> DeviceSize -> Word32 -> Word32 -> IO ()
 
 
 data ClearDepthStencilValue =
@@ -361,9 +359,9 @@ instance Storable ClearDepthStencilValue where
 
 
 data BufferCopy =
-  BufferCopy{ srcOffset :: VkDeviceSize 
-            , dstOffset :: VkDeviceSize 
-            , size :: VkDeviceSize 
+  BufferCopy{ srcOffset :: DeviceSize 
+            , dstOffset :: DeviceSize 
+            , size :: DeviceSize 
             }
   deriving (Eq)
 
@@ -501,7 +499,7 @@ instance Storable ClearValue where
 
 -- ** VkStencilFaceFlags
 
-newtype StencilFaceFlags = StencilFaceFlags VkFlags
+newtype StencilFaceFlags = StencilFaceFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show StencilFaceFlags where
@@ -578,7 +576,7 @@ foreign import ccall "vkCmdCopyQueryPoolResults" vkCmdCopyQueryPoolResults ::
   QueryPool ->
     Word32 ->
       Word32 ->
-        Buffer -> VkDeviceSize -> VkDeviceSize -> QueryResultFlags -> IO ()
+        Buffer -> DeviceSize -> DeviceSize -> QueryResultFlags -> IO ()
 
 -- ** vkCmdBlitImage
 foreign import ccall "vkCmdBlitImage" vkCmdBlitImage ::

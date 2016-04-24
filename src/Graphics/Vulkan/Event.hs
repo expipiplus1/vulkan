@@ -16,9 +16,9 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Result(..)
+                           , Flags(..)
                            )
 
 -- ** vkDestroyEvent
@@ -67,6 +67,6 @@ newtype Event = Event Word64
 
 -- ** EventCreateFlags
 -- | Opaque flag
-newtype EventCreateFlags = EventCreateFlags VkFlags
+newtype EventCreateFlags = EventCreateFlags Flags
   deriving (Eq, Storable)
 

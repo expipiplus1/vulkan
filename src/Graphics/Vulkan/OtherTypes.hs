@@ -22,7 +22,7 @@ import Graphics.Vulkan.Image( Image(..)
                             , ImageSubresourceRange(..)
                             )
 import Graphics.Vulkan.Core( StructureType(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
                            )
 
 
@@ -34,8 +34,8 @@ data BufferMemoryBarrier =
                      , srcQueueFamilyIndex :: Word32 
                      , dstQueueFamilyIndex :: Word32 
                      , buffer :: Buffer 
-                     , offset :: VkDeviceSize 
-                     , size :: VkDeviceSize 
+                     , offset :: DeviceSize 
+                     , size :: DeviceSize 
                      }
   deriving (Eq)
 

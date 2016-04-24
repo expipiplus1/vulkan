@@ -21,14 +21,14 @@ import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Graphics.Vulkan.Shader( ShaderStageFlags(..)
                              )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Result(..)
+                           , Flags(..)
                            )
 
 -- ** PipelineLayoutCreateFlags
 -- | Opaque flag
-newtype PipelineLayoutCreateFlags = PipelineLayoutCreateFlags VkFlags
+newtype PipelineLayoutCreateFlags = PipelineLayoutCreateFlags Flags
   deriving (Eq, Storable)
 
 newtype PipelineLayout = PipelineLayout Word64

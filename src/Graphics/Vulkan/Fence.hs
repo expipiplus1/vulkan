@@ -33,10 +33,10 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkFlags(..)
+import Graphics.Vulkan.Core( Bool32(..)
                            , StructureType(..)
-                           , VkBool32(..)
                            , Result(..)
+                           , Flags(..)
                            )
 
 
@@ -68,7 +68,7 @@ foreign import ccall "vkDestroyFence" vkDestroyFence ::
 
 -- ** vkWaitForFences
 foreign import ccall "vkWaitForFences" vkWaitForFences ::
-  Device -> Word32 -> Ptr Fence -> VkBool32 -> Word64 -> IO Result
+  Device -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
 
 -- ** vkGetFenceStatus
 foreign import ccall "vkGetFenceStatus" vkGetFenceStatus ::
@@ -76,7 +76,7 @@ foreign import ccall "vkGetFenceStatus" vkGetFenceStatus ::
 
 -- ** VkFenceCreateFlags
 
-newtype FenceCreateFlags = FenceCreateFlags VkFlags
+newtype FenceCreateFlags = FenceCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show FenceCreateFlags where

@@ -55,13 +55,13 @@ import Graphics.Vulkan.Image( ImageUsageFlags(..)
                             , ImageTiling(..)
                             , ImageType(..)
                             )
-import Graphics.Vulkan.Core( VkFlags(..)
+import Graphics.Vulkan.Core( Bool32(..)
                            , StructureType(..)
-                           , VkBool32(..)
                            , Format(..)
                            , Extent3D(..)
                            , Result(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CFloat(..)
                       , CChar(..)
@@ -195,8 +195,8 @@ data PhysicalDeviceLimits =
                       , maxPushConstantsSize :: Word32 
                       , maxMemoryAllocationCount :: Word32 
                       , maxSamplerAllocationCount :: Word32 
-                      , bufferImageGranularity :: VkDeviceSize 
-                      , sparseAddressSpaceSize :: VkDeviceSize 
+                      , bufferImageGranularity :: DeviceSize 
+                      , sparseAddressSpaceSize :: DeviceSize 
                       , maxBoundDescriptorSets :: Word32 
                       , maxPerStageDescriptorSamplers :: Word32 
                       , maxPerStageDescriptorUniformBuffers :: Word32 
@@ -251,9 +251,9 @@ data PhysicalDeviceLimits =
                       , viewportBoundsRange :: Vector 2 CFloat 
                       , viewportSubPixelBits :: Word32 
                       , minMemoryMapAlignment :: CSize 
-                      , minTexelBufferOffsetAlignment :: VkDeviceSize 
-                      , minUniformBufferOffsetAlignment :: VkDeviceSize 
-                      , minStorageBufferOffsetAlignment :: VkDeviceSize 
+                      , minTexelBufferOffsetAlignment :: DeviceSize 
+                      , minUniformBufferOffsetAlignment :: DeviceSize 
+                      , minStorageBufferOffsetAlignment :: DeviceSize 
                       , minTexelOffset :: Int32 
                       , maxTexelOffset :: Word32 
                       , minTexelGatherOffset :: Int32 
@@ -275,7 +275,7 @@ data PhysicalDeviceLimits =
                       , sampledImageStencilSampleCounts :: SampleCountFlags 
                       , storageImageSampleCounts :: SampleCountFlags 
                       , maxSampleMaskWords :: Word32 
-                      , timestampComputeAndGraphics :: VkBool32 
+                      , timestampComputeAndGraphics :: Bool32 
                       , timestampPeriod :: CFloat 
                       , maxClipDistances :: Word32 
                       , maxCullDistances :: Word32 
@@ -285,11 +285,11 @@ data PhysicalDeviceLimits =
                       , lineWidthRange :: Vector 2 CFloat 
                       , pointSizeGranularity :: CFloat 
                       , lineWidthGranularity :: CFloat 
-                      , strictLines :: VkBool32 
-                      , standardSampleLocations :: VkBool32 
-                      , optimalBufferCopyOffsetAlignment :: VkDeviceSize 
-                      , optimalBufferCopyRowPitchAlignment :: VkDeviceSize 
-                      , nonCoherentAtomSize :: VkDeviceSize 
+                      , strictLines :: Bool32 
+                      , standardSampleLocations :: Bool32 
+                      , optimalBufferCopyOffsetAlignment :: DeviceSize 
+                      , optimalBufferCopyRowPitchAlignment :: DeviceSize 
+                      , nonCoherentAtomSize :: DeviceSize 
                       }
   deriving (Eq)
 
@@ -512,7 +512,7 @@ instance Storable PhysicalDeviceLimits where
 
 
 data MemoryHeap =
-  MemoryHeap{ size :: VkDeviceSize 
+  MemoryHeap{ size :: DeviceSize 
             , flags :: MemoryHeapFlags 
             }
   deriving (Eq)
@@ -541,7 +541,7 @@ foreign import ccall "vkCreateInstance" vkCreateInstance ::
 
 -- ** VkFormatFeatureFlags
 
-newtype FormatFeatureFlags = FormatFeatureFlags VkFlags
+newtype FormatFeatureFlags = FormatFeatureFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show FormatFeatureFlags where
@@ -638,7 +638,7 @@ type Instance = Ptr VkInstance_T
 
 -- ** VkMemoryHeapFlags
 
-newtype MemoryHeapFlags = MemoryHeapFlags VkFlags
+newtype MemoryHeapFlags = MemoryHeapFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show MemoryHeapFlags where
@@ -688,7 +688,7 @@ data ImageFormatProperties =
                        , maxMipLevels :: Word32 
                        , maxArrayLayers :: Word32 
                        , sampleCounts :: SampleCountFlags 
-                       , maxResourceSize :: VkDeviceSize 
+                       , maxResourceSize :: DeviceSize 
                        }
   deriving (Eq)
 
@@ -709,11 +709,11 @@ instance Storable ImageFormatProperties where
 
 
 data PhysicalDeviceSparseProperties =
-  PhysicalDeviceSparseProperties{ residencyStandard2DBlockShape :: VkBool32 
-                                , residencyStandard2DMultisampleBlockShape :: VkBool32 
-                                , residencyStandard3DBlockShape :: VkBool32 
-                                , residencyAlignedMipSize :: VkBool32 
-                                , residencyNonResidentStrict :: VkBool32 
+  PhysicalDeviceSparseProperties{ residencyStandard2DBlockShape :: Bool32 
+                                , residencyStandard2DMultisampleBlockShape :: Bool32 
+                                , residencyStandard3DBlockShape :: Bool32 
+                                , residencyAlignedMipSize :: Bool32 
+                                , residencyNonResidentStrict :: Bool32 
                                 }
   deriving (Eq)
 
@@ -803,7 +803,7 @@ foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr ::
 
 -- ** VkMemoryPropertyFlags
 
-newtype MemoryPropertyFlags = MemoryPropertyFlags VkFlags
+newtype MemoryPropertyFlags = MemoryPropertyFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show MemoryPropertyFlags where
@@ -847,7 +847,7 @@ foreign import ccall "vkDestroyInstance" vkDestroyInstance ::
 
 -- ** VkQueueFlags
 
-newtype QueueFlags = QueueFlags VkFlags
+newtype QueueFlags = QueueFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show QueueFlags where
@@ -887,7 +887,7 @@ foreign import ccall "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperti
 
 -- ** InstanceCreateFlags
 -- | Opaque flag
-newtype InstanceCreateFlags = InstanceCreateFlags VkFlags
+newtype InstanceCreateFlags = InstanceCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** vkGetPhysicalDeviceFormatProperties

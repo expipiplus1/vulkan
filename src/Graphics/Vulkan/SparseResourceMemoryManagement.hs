@@ -51,21 +51,21 @@ import Graphics.Vulkan.Image( ImageAspectFlags(..)
 import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
                                      )
 import Graphics.Vulkan.Core( Offset3D(..)
-                           , VkFlags(..)
                            , StructureType(..)
                            , Format(..)
                            , Extent3D(..)
                            , Result(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
 
 
 data SparseImageMemoryRequirements =
   SparseImageMemoryRequirements{ formatProperties :: SparseImageFormatProperties 
                                , imageMipTailFirstLod :: Word32 
-                               , imageMipTailSize :: VkDeviceSize 
-                               , imageMipTailOffset :: VkDeviceSize 
-                               , imageMipTailStride :: VkDeviceSize 
+                               , imageMipTailSize :: DeviceSize 
+                               , imageMipTailOffset :: DeviceSize 
+                               , imageMipTailStride :: DeviceSize 
                                }
   deriving (Eq)
 
@@ -86,10 +86,10 @@ instance Storable SparseImageMemoryRequirements where
 
 
 data SparseMemoryBind =
-  SparseMemoryBind{ resourceOffset :: VkDeviceSize 
-                  , size :: VkDeviceSize 
+  SparseMemoryBind{ resourceOffset :: DeviceSize 
+                  , size :: DeviceSize 
                   , memory :: DeviceMemory 
-                  , memoryOffset :: VkDeviceSize 
+                  , memoryOffset :: DeviceSize 
                   , flags :: SparseMemoryBindFlags 
                   }
   deriving (Eq)
@@ -115,7 +115,7 @@ data SparseImageMemoryBind =
                        , offset :: Offset3D 
                        , extent :: Extent3D 
                        , memory :: DeviceMemory 
-                       , memoryOffset :: VkDeviceSize 
+                       , memoryOffset :: DeviceSize 
                        , flags :: SparseMemoryBindFlags 
                        }
   deriving (Eq)
@@ -232,7 +232,7 @@ instance Storable SparseBufferMemoryBindInfo where
 
 -- ** VkSparseImageFormatFlags
 
-newtype SparseImageFormatFlags = SparseImageFormatFlags VkFlags
+newtype SparseImageFormatFlags = SparseImageFormatFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show SparseImageFormatFlags where
@@ -274,7 +274,7 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
 
 -- ** VkSparseMemoryBindFlags
 
-newtype SparseMemoryBindFlags = SparseMemoryBindFlags VkFlags
+newtype SparseMemoryBindFlags = SparseMemoryBindFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show SparseMemoryBindFlags where

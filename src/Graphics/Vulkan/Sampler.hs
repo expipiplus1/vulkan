@@ -34,10 +34,10 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkFlags(..)
+import Graphics.Vulkan.Core( Bool32(..)
                            , StructureType(..)
-                           , VkBool32(..)
                            , Result(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CFloat(..)
                       )
@@ -213,14 +213,14 @@ data SamplerCreateInfo =
                    , addressModeV :: SamplerAddressMode 
                    , addressModeW :: SamplerAddressMode 
                    , mipLodBias :: CFloat 
-                   , anisotropyEnable :: VkBool32 
+                   , anisotropyEnable :: Bool32 
                    , maxAnisotropy :: CFloat 
-                   , compareEnable :: VkBool32 
+                   , compareEnable :: Bool32 
                    , compareOp :: CompareOp 
                    , minLod :: CFloat 
                    , maxLod :: CFloat 
                    , borderColor :: BorderColor 
-                   , unnormalizedCoordinates :: VkBool32 
+                   , unnormalizedCoordinates :: Bool32 
                    }
   deriving (Eq)
 
@@ -267,7 +267,7 @@ instance Storable SamplerCreateInfo where
 
 -- ** SamplerCreateFlags
 -- | Opaque flag
-newtype SamplerCreateFlags = SamplerCreateFlags VkFlags
+newtype SamplerCreateFlags = SamplerCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** SamplerMipmapMode
@@ -304,7 +304,7 @@ foreign import ccall "vkCreateSampler" vkCreateSampler ::
 
 -- ** VkSampleCountFlags
 
-newtype SampleCountFlags = SampleCountFlags VkFlags
+newtype SampleCountFlags = SampleCountFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show SampleCountFlags where

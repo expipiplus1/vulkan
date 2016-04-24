@@ -31,10 +31,10 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Result(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
@@ -46,8 +46,8 @@ newtype DeviceMemory = DeviceMemory Word64
 foreign import ccall "vkMapMemory" vkMapMemory ::
   Device ->
   DeviceMemory ->
-    VkDeviceSize ->
-      VkDeviceSize -> MemoryMapFlags -> Ptr (Ptr Void) -> IO Result
+    DeviceSize ->
+      DeviceSize -> MemoryMapFlags -> Ptr (Ptr Void) -> IO Result
 
 type PFN_vkInternalFreeNotification = FunPtr
   (Ptr Void ->
@@ -129,7 +129,7 @@ foreign import ccall "vkFlushMappedMemoryRanges" vkFlushMappedMemoryRanges ::
 
 -- ** MemoryMapFlags
 -- | Opaque flag
-newtype MemoryMapFlags = MemoryMapFlags VkFlags
+newtype MemoryMapFlags = MemoryMapFlags Flags
   deriving (Eq, Storable)
 
 type PFN_vkInternalAllocationNotification = FunPtr
@@ -179,7 +179,7 @@ type PFN_vkFreeFunction = FunPtr (Ptr Void -> Ptr Void -> IO ())
 
 -- ** vkGetDeviceMemoryCommitment
 foreign import ccall "vkGetDeviceMemoryCommitment" vkGetDeviceMemoryCommitment ::
-  Device -> DeviceMemory -> Ptr VkDeviceSize -> IO ()
+  Device -> DeviceMemory -> Ptr DeviceSize -> IO ()
 
 -- ** vkAllocateMemory
 foreign import ccall "vkAllocateMemory" vkAllocateMemory ::
@@ -192,8 +192,8 @@ data MappedMemoryRange =
   MappedMemoryRange{ sType :: StructureType 
                    , pNext :: Ptr Void 
                    , memory :: DeviceMemory 
-                   , offset :: VkDeviceSize 
-                   , size :: VkDeviceSize 
+                   , offset :: DeviceSize 
+                   , size :: DeviceSize 
                    }
   deriving (Eq)
 
@@ -216,7 +216,7 @@ instance Storable MappedMemoryRange where
 data MemoryAllocateInfo =
   MemoryAllocateInfo{ sType :: StructureType 
                     , pNext :: Ptr Void 
-                    , allocationSize :: VkDeviceSize 
+                    , allocationSize :: DeviceSize 
                     , memoryTypeIndex :: Word32 
                     }
   deriving (Eq)

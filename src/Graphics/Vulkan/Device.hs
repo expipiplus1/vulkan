@@ -15,10 +15,10 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkFlags(..)
+import Graphics.Vulkan.Core( Bool32(..)
                            , StructureType(..)
-                           , VkBool32(..)
                            , Result(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CFloat(..)
                       , CChar(..)
@@ -32,61 +32,61 @@ foreign import ccall "vkCreateDevice" vkCreateDevice ::
 
 
 data PhysicalDeviceFeatures =
-  PhysicalDeviceFeatures{ robustBufferAccess :: VkBool32 
-                        , fullDrawIndexUint32 :: VkBool32 
-                        , imageCubeArray :: VkBool32 
-                        , independentBlend :: VkBool32 
-                        , geometryShader :: VkBool32 
-                        , tessellationShader :: VkBool32 
-                        , sampleRateShading :: VkBool32 
-                        , dualSrcBlend :: VkBool32 
-                        , logicOp :: VkBool32 
-                        , multiDrawIndirect :: VkBool32 
-                        , drawIndirectFirstInstance :: VkBool32 
-                        , depthClamp :: VkBool32 
-                        , depthBiasClamp :: VkBool32 
-                        , fillModeNonSolid :: VkBool32 
-                        , depthBounds :: VkBool32 
-                        , wideLines :: VkBool32 
-                        , largePoints :: VkBool32 
-                        , alphaToOne :: VkBool32 
-                        , multiViewport :: VkBool32 
-                        , samplerAnisotropy :: VkBool32 
-                        , textureCompressionETC2 :: VkBool32 
-                        , textureCompressionASTC_LDR :: VkBool32 
-                        , textureCompressionBC :: VkBool32 
-                        , occlusionQueryPrecise :: VkBool32 
-                        , pipelineStatisticsQuery :: VkBool32 
-                        , vertexPipelineStoresAndAtomics :: VkBool32 
-                        , fragmentStoresAndAtomics :: VkBool32 
-                        , shaderTessellationAndGeometryPointSize :: VkBool32 
-                        , shaderImageGatherExtended :: VkBool32 
-                        , shaderStorageImageExtendedFormats :: VkBool32 
-                        , shaderStorageImageMultisample :: VkBool32 
-                        , shaderStorageImageReadWithoutFormat :: VkBool32 
-                        , shaderStorageImageWriteWithoutFormat :: VkBool32 
-                        , shaderUniformBufferArrayDynamicIndexing :: VkBool32 
-                        , shaderSampledImageArrayDynamicIndexing :: VkBool32 
-                        , shaderStorageBufferArrayDynamicIndexing :: VkBool32 
-                        , shaderStorageImageArrayDynamicIndexing :: VkBool32 
-                        , shaderClipDistance :: VkBool32 
-                        , shaderCullDistance :: VkBool32 
-                        , shaderFloat64 :: VkBool32 
-                        , shaderInt64 :: VkBool32 
-                        , shaderInt16 :: VkBool32 
-                        , shaderResourceResidency :: VkBool32 
-                        , shaderResourceMinLod :: VkBool32 
-                        , sparseBinding :: VkBool32 
-                        , sparseResidencyBuffer :: VkBool32 
-                        , sparseResidencyImage2D :: VkBool32 
-                        , sparseResidencyImage3D :: VkBool32 
-                        , sparseResidency2Samples :: VkBool32 
-                        , sparseResidency4Samples :: VkBool32 
-                        , sparseResidency8Samples :: VkBool32 
-                        , sparseResidency16Samples :: VkBool32 
-                        , sparseResidencyAliased :: VkBool32 
-                        , variableMultisampleRate :: VkBool32 
-                        , inheritedQueries :: VkBool32 
+  PhysicalDeviceFeatures{ robustBufferAccess :: Bool32 
+                        , fullDrawIndexUint32 :: Bool32 
+                        , imageCubeArray :: Bool32 
+                        , independentBlend :: Bool32 
+                        , geometryShader :: Bool32 
+                        , tessellationShader :: Bool32 
+                        , sampleRateShading :: Bool32 
+                        , dualSrcBlend :: Bool32 
+                        , logicOp :: Bool32 
+                        , multiDrawIndirect :: Bool32 
+                        , drawIndirectFirstInstance :: Bool32 
+                        , depthClamp :: Bool32 
+                        , depthBiasClamp :: Bool32 
+                        , fillModeNonSolid :: Bool32 
+                        , depthBounds :: Bool32 
+                        , wideLines :: Bool32 
+                        , largePoints :: Bool32 
+                        , alphaToOne :: Bool32 
+                        , multiViewport :: Bool32 
+                        , samplerAnisotropy :: Bool32 
+                        , textureCompressionETC2 :: Bool32 
+                        , textureCompressionASTC_LDR :: Bool32 
+                        , textureCompressionBC :: Bool32 
+                        , occlusionQueryPrecise :: Bool32 
+                        , pipelineStatisticsQuery :: Bool32 
+                        , vertexPipelineStoresAndAtomics :: Bool32 
+                        , fragmentStoresAndAtomics :: Bool32 
+                        , shaderTessellationAndGeometryPointSize :: Bool32 
+                        , shaderImageGatherExtended :: Bool32 
+                        , shaderStorageImageExtendedFormats :: Bool32 
+                        , shaderStorageImageMultisample :: Bool32 
+                        , shaderStorageImageReadWithoutFormat :: Bool32 
+                        , shaderStorageImageWriteWithoutFormat :: Bool32 
+                        , shaderUniformBufferArrayDynamicIndexing :: Bool32 
+                        , shaderSampledImageArrayDynamicIndexing :: Bool32 
+                        , shaderStorageBufferArrayDynamicIndexing :: Bool32 
+                        , shaderStorageImageArrayDynamicIndexing :: Bool32 
+                        , shaderClipDistance :: Bool32 
+                        , shaderCullDistance :: Bool32 
+                        , shaderFloat64 :: Bool32 
+                        , shaderInt64 :: Bool32 
+                        , shaderInt16 :: Bool32 
+                        , shaderResourceResidency :: Bool32 
+                        , shaderResourceMinLod :: Bool32 
+                        , sparseBinding :: Bool32 
+                        , sparseResidencyBuffer :: Bool32 
+                        , sparseResidencyImage2D :: Bool32 
+                        , sparseResidencyImage3D :: Bool32 
+                        , sparseResidency2Samples :: Bool32 
+                        , sparseResidency4Samples :: Bool32 
+                        , sparseResidency8Samples :: Bool32 
+                        , sparseResidency16Samples :: Bool32 
+                        , sparseResidencyAliased :: Bool32 
+                        , variableMultisampleRate :: Bool32 
+                        , inheritedQueries :: Bool32 
                         }
   deriving (Eq)
 
@@ -207,7 +207,7 @@ instance Storable PhysicalDeviceFeatures where
 
 -- ** DeviceCreateFlags
 -- | Opaque flag
-newtype DeviceCreateFlags = DeviceCreateFlags VkFlags
+newtype DeviceCreateFlags = DeviceCreateFlags Flags
   deriving (Eq, Storable)
 
 
@@ -240,7 +240,7 @@ instance Storable DeviceQueueCreateInfo where
 
 -- ** DeviceQueueCreateFlags
 -- | Opaque flag
-newtype DeviceQueueCreateFlags = DeviceQueueCreateFlags VkFlags
+newtype DeviceQueueCreateFlags = DeviceQueueCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** vkDestroyDevice

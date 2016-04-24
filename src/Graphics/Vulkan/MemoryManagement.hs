@@ -18,7 +18,7 @@ import Graphics.Vulkan.Memory( DeviceMemory(..)
 import Graphics.Vulkan.Image( Image(..)
                             )
 import Graphics.Vulkan.Core( Result(..)
-                           , VkDeviceSize(..)
+                           , DeviceSize(..)
                            )
 
 -- ** vkGetImageMemoryRequirements
@@ -27,8 +27,8 @@ foreign import ccall "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements
 
 
 data MemoryRequirements =
-  MemoryRequirements{ size :: VkDeviceSize 
-                    , _alignment :: VkDeviceSize 
+  MemoryRequirements{ size :: DeviceSize 
+                    , _alignment :: DeviceSize 
                     , memoryTypeBits :: Word32 
                     }
   deriving (Eq)
@@ -50,9 +50,9 @@ foreign import ccall "vkGetBufferMemoryRequirements" vkGetBufferMemoryRequiremen
 
 -- ** vkBindBufferMemory
 foreign import ccall "vkBindBufferMemory" vkBindBufferMemory ::
-  Device -> Buffer -> DeviceMemory -> VkDeviceSize -> IO Result
+  Device -> Buffer -> DeviceMemory -> DeviceSize -> IO Result
 
 -- ** vkBindImageMemory
 foreign import ccall "vkBindImageMemory" vkBindImageMemory ::
-  Device -> Image -> DeviceMemory -> VkDeviceSize -> IO Result
+  Device -> Image -> DeviceMemory -> DeviceSize -> IO Result
 

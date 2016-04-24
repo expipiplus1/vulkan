@@ -17,9 +17,9 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Result(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
@@ -68,7 +68,7 @@ foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches ::
 
 -- ** PipelineCacheCreateFlags
 -- | Opaque flag
-newtype PipelineCacheCreateFlags = PipelineCacheCreateFlags VkFlags
+newtype PipelineCacheCreateFlags = PipelineCacheCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** vkDestroyPipelineCache

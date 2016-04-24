@@ -34,10 +34,10 @@ import Text.ParserCombinators.ReadPrec( prec
 import Graphics.Vulkan.Image( Image(..)
                             , ImageSubresourceRange(..)
                             )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Format(..)
                            , Result(..)
+                           , Flags(..)
                            )
 
 
@@ -131,7 +131,7 @@ pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = ImageViewType 6
 
 -- ** ImageViewCreateFlags
 -- | Opaque flag
-newtype ImageViewCreateFlags = ImageViewCreateFlags VkFlags
+newtype ImageViewCreateFlags = ImageViewCreateFlags Flags
   deriving (Eq, Storable)
 
 

@@ -41,10 +41,10 @@ import Text.ParserCombinators.ReadPrec( prec
 import Graphics.Vulkan.Query( QueryPipelineStatisticFlags(..)
                             , QueryControlFlags(..)
                             )
-import Graphics.Vulkan.Core( VkFlags(..)
+import Graphics.Vulkan.Core( Bool32(..)
                            , StructureType(..)
-                           , VkBool32(..)
                            , Result(..)
+                           , Flags(..)
                            )
 
 -- ** CommandBufferLevel
@@ -88,7 +88,7 @@ foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers ::
 
 -- ** VkCommandBufferUsageFlags
 
-newtype CommandBufferUsageFlags = CommandBufferUsageFlags VkFlags
+newtype CommandBufferUsageFlags = CommandBufferUsageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CommandBufferUsageFlags where
@@ -147,7 +147,7 @@ data CommandBufferInheritanceInfo =
                               , renderPass :: RenderPass 
                               , subpass :: Word32 
                               , framebuffer :: Framebuffer 
-                              , occlusionQueryEnable :: VkBool32 
+                              , occlusionQueryEnable :: Bool32 
                               , queryFlags :: QueryControlFlags 
                               , pipelineStatistics :: QueryPipelineStatisticFlags 
                               }
@@ -179,7 +179,7 @@ type CommandBuffer = Ptr VkCommandBuffer_T
 
 -- ** VkCommandBufferResetFlags
 
-newtype CommandBufferResetFlags = CommandBufferResetFlags VkFlags
+newtype CommandBufferResetFlags = CommandBufferResetFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CommandBufferResetFlags where

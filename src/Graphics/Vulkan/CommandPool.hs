@@ -33,9 +33,9 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Result(..)
+                           , Flags(..)
                            )
 
 
@@ -70,7 +70,7 @@ foreign import ccall "vkResetCommandPool" vkResetCommandPool ::
 
 -- ** VkCommandPoolCreateFlags
 
-newtype CommandPoolCreateFlags = CommandPoolCreateFlags VkFlags
+newtype CommandPoolCreateFlags = CommandPoolCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CommandPoolCreateFlags where
@@ -104,7 +104,7 @@ foreign import ccall "vkCreateCommandPool" vkCreateCommandPool ::
 
 -- ** VkCommandPoolResetFlags
 
-newtype CommandPoolResetFlags = CommandPoolResetFlags VkFlags
+newtype CommandPoolResetFlags = CommandPoolResetFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CommandPoolResetFlags where

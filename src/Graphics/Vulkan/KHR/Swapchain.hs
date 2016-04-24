@@ -32,12 +32,12 @@ import Graphics.Vulkan.Image( Image(..)
                             )
 import Graphics.Vulkan.QueueSemaphore( Semaphore(..)
                                      )
-import Graphics.Vulkan.Core( VkFlags(..)
+import Graphics.Vulkan.Core( Bool32(..)
                            , SharingMode(..)
                            , StructureType(..)
-                           , VkBool32(..)
                            , Format(..)
                            , Result(..)
+                           , Flags(..)
                            , Extent2D(..)
                            )
 
@@ -59,7 +59,7 @@ data SwapchainCreateInfoKHR =
                         , preTransform :: SurfaceTransformFlagsKHR 
                         , compositeAlpha :: CompositeAlphaFlagsKHR 
                         , presentMode :: PresentModeKHR 
-                        , clipped :: VkBool32 
+                        , clipped :: Bool32 
                         , oldSwapchain :: SwapchainKHR 
                         }
   deriving (Eq)
@@ -119,7 +119,7 @@ foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR ::
 
 -- ** SwapchainCreateFlagsKHR
 -- | Opaque flag
-newtype SwapchainCreateFlagsKHR = SwapchainCreateFlagsKHR VkFlags
+newtype SwapchainCreateFlagsKHR = SwapchainCreateFlagsKHR Flags
   deriving (Eq, Storable)
 
 -- ** vkCreateSwapchainKHR

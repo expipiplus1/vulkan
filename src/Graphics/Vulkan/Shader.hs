@@ -33,9 +33,9 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkFlags(..)
-                           , StructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
                            , Result(..)
+                           , Flags(..)
                            )
 import Foreign.C.Types( CSize(..)
                       )
@@ -71,12 +71,12 @@ foreign import ccall "vkDestroyShaderModule" vkDestroyShaderModule ::
 
 -- ** ShaderModuleCreateFlags
 -- | Opaque flag
-newtype ShaderModuleCreateFlags = ShaderModuleCreateFlags VkFlags
+newtype ShaderModuleCreateFlags = ShaderModuleCreateFlags Flags
   deriving (Eq, Storable)
 
 -- ** VkShaderStageFlags
 
-newtype ShaderStageFlags = ShaderStageFlags VkFlags
+newtype ShaderStageFlags = ShaderStageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ShaderStageFlags where

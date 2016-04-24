@@ -24,6 +24,7 @@ prettifySpec spec = spec { sTypes = nameType <$> sTypes spec
     nameType (AHandleType h) = AHandleType h { htHsName = dropVK $ htHsName h }
     nameType (AnEnumType h) = AnEnumType h { etHsName = dropVK $ etHsName h }
     nameType (ABitmaskType h) = ABitmaskType h { bmtHsName = dropVK $ bmtHsName h }
+    nameType (ABaseType h) = ABaseType h { btHsName = dropVK $ btHsName h }
     nameType t = t
     nameStructMember sm = sm { smHsName = recordName $ smHsName sm
                              }

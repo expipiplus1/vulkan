@@ -29,7 +29,7 @@ import Text.ParserCombinators.ReadPrec( prec
 import Foreign.C.Types( CFloat(..)
                       )
 
-newtype VkDeviceSize = VkDeviceSize Word64
+newtype DeviceSize = DeviceSize Word64
   deriving (Eq, Storable)
 
 -- ** Format
@@ -790,7 +790,7 @@ pattern VK_FORMAT_ASTC_12x12_UNORM_BLOCK = Format 183
 
 pattern VK_FORMAT_ASTC_12x12_SRGB_BLOCK = Format 184
 
-type VkFlags = Word32
+type Flags = Word32
 
 
 data Extent2D =
@@ -1048,7 +1048,7 @@ pattern VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = StructureType 47
 
 pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = StructureType 48
 
-newtype VkBool32 = VkBool32 Word32
+newtype Bool32 = Bool32 Word32
   deriving (Eq, Storable)
 
 

@@ -18,8 +18,8 @@ import Data.Void( Void(..)
                 )
 import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( StructureType(..)
-                           , VkBool32(..)
+import Graphics.Vulkan.Core( Bool32(..)
+                           , StructureType(..)
                            , Rect2D(..)
                            , Result(..)
                            )
@@ -30,7 +30,7 @@ data DisplayPresentInfoKHR =
                        , pNext :: Ptr Void 
                        , srcRect :: Rect2D 
                        , dstRect :: Rect2D 
-                       , persistent :: VkBool32 
+                       , persistent :: Bool32 
                        }
   deriving (Eq)
 
