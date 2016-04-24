@@ -308,24 +308,24 @@ newtype SampleCountFlags = SampleCountFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show SampleCountFlags where
-  showsPrec _ VK_SAMPLE_COUNT_1_BIT = showString "VK_SAMPLE_COUNT_1_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_2_BIT = showString "VK_SAMPLE_COUNT_2_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_4_BIT = showString "VK_SAMPLE_COUNT_4_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_8_BIT = showString "VK_SAMPLE_COUNT_8_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_16_BIT = showString "VK_SAMPLE_COUNT_16_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_32_BIT = showString "VK_SAMPLE_COUNT_32_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_64_BIT = showString "VK_SAMPLE_COUNT_64_BIT"
+  showsPrec _ SampleCount1Bit = showString "SampleCount1Bit"
+  showsPrec _ SampleCount2Bit = showString "SampleCount2Bit"
+  showsPrec _ SampleCount4Bit = showString "SampleCount4Bit"
+  showsPrec _ SampleCount8Bit = showString "SampleCount8Bit"
+  showsPrec _ SampleCount16Bit = showString "SampleCount16Bit"
+  showsPrec _ SampleCount32Bit = showString "SampleCount32Bit"
+  showsPrec _ SampleCount64Bit = showString "SampleCount64Bit"
   
   showsPrec p (SampleCountFlags x) = showParen (p >= 11) (showString "SampleCountFlags " . showsPrec 11 x)
 
 instance Read SampleCountFlags where
-  readPrec = parens ( choose [ ("VK_SAMPLE_COUNT_1_BIT", pure VK_SAMPLE_COUNT_1_BIT)
-                             , ("VK_SAMPLE_COUNT_2_BIT", pure VK_SAMPLE_COUNT_2_BIT)
-                             , ("VK_SAMPLE_COUNT_4_BIT", pure VK_SAMPLE_COUNT_4_BIT)
-                             , ("VK_SAMPLE_COUNT_8_BIT", pure VK_SAMPLE_COUNT_8_BIT)
-                             , ("VK_SAMPLE_COUNT_16_BIT", pure VK_SAMPLE_COUNT_16_BIT)
-                             , ("VK_SAMPLE_COUNT_32_BIT", pure VK_SAMPLE_COUNT_32_BIT)
-                             , ("VK_SAMPLE_COUNT_64_BIT", pure VK_SAMPLE_COUNT_64_BIT)
+  readPrec = parens ( choose [ ("SampleCount1Bit", pure SampleCount1Bit)
+                             , ("SampleCount2Bit", pure SampleCount2Bit)
+                             , ("SampleCount4Bit", pure SampleCount4Bit)
+                             , ("SampleCount8Bit", pure SampleCount8Bit)
+                             , ("SampleCount16Bit", pure SampleCount16Bit)
+                             , ("SampleCount32Bit", pure SampleCount32Bit)
+                             , ("SampleCount64Bit", pure SampleCount64Bit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "SampleCountFlags")
@@ -335,19 +335,19 @@ instance Read SampleCountFlags where
                     )
 
 -- | Sample count 1 supported
-pattern VK_SAMPLE_COUNT_1_BIT = SampleCountFlags 0x1
+pattern SampleCount1Bit = SampleCountFlags 0x1
 -- | Sample count 2 supported
-pattern VK_SAMPLE_COUNT_2_BIT = SampleCountFlags 0x2
+pattern SampleCount2Bit = SampleCountFlags 0x2
 -- | Sample count 4 supported
-pattern VK_SAMPLE_COUNT_4_BIT = SampleCountFlags 0x4
+pattern SampleCount4Bit = SampleCountFlags 0x4
 -- | Sample count 8 supported
-pattern VK_SAMPLE_COUNT_8_BIT = SampleCountFlags 0x8
+pattern SampleCount8Bit = SampleCountFlags 0x8
 -- | Sample count 16 supported
-pattern VK_SAMPLE_COUNT_16_BIT = SampleCountFlags 0x10
+pattern SampleCount16Bit = SampleCountFlags 0x10
 -- | Sample count 32 supported
-pattern VK_SAMPLE_COUNT_32_BIT = SampleCountFlags 0x20
+pattern SampleCount32Bit = SampleCountFlags 0x20
 -- | Sample count 64 supported
-pattern VK_SAMPLE_COUNT_64_BIT = SampleCountFlags 0x40
+pattern SampleCount64Bit = SampleCountFlags 0x40
 
 
 -- ** destroySampler

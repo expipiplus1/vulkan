@@ -58,20 +58,20 @@ newtype ImageCreateFlags = ImageCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ImageCreateFlags where
-  showsPrec _ VK_IMAGE_CREATE_SPARSE_BINDING_BIT = showString "VK_IMAGE_CREATE_SPARSE_BINDING_BIT"
-  showsPrec _ VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = showString "VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT"
-  showsPrec _ VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = showString "VK_IMAGE_CREATE_SPARSE_ALIASED_BIT"
-  showsPrec _ VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = showString "VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT"
-  showsPrec _ VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = showString "VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT"
+  showsPrec _ ImageCreateSparseBindingBit = showString "ImageCreateSparseBindingBit"
+  showsPrec _ ImageCreateSparseResidencyBit = showString "ImageCreateSparseResidencyBit"
+  showsPrec _ ImageCreateSparseAliasedBit = showString "ImageCreateSparseAliasedBit"
+  showsPrec _ ImageCreateMutableFormatBit = showString "ImageCreateMutableFormatBit"
+  showsPrec _ ImageCreateCubeCompatibleBit = showString "ImageCreateCubeCompatibleBit"
   
   showsPrec p (ImageCreateFlags x) = showParen (p >= 11) (showString "ImageCreateFlags " . showsPrec 11 x)
 
 instance Read ImageCreateFlags where
-  readPrec = parens ( choose [ ("VK_IMAGE_CREATE_SPARSE_BINDING_BIT", pure VK_IMAGE_CREATE_SPARSE_BINDING_BIT)
-                             , ("VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT", pure VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT)
-                             , ("VK_IMAGE_CREATE_SPARSE_ALIASED_BIT", pure VK_IMAGE_CREATE_SPARSE_ALIASED_BIT)
-                             , ("VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT", pure VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT)
-                             , ("VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT", pure VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT)
+  readPrec = parens ( choose [ ("ImageCreateSparseBindingBit", pure ImageCreateSparseBindingBit)
+                             , ("ImageCreateSparseResidencyBit", pure ImageCreateSparseResidencyBit)
+                             , ("ImageCreateSparseAliasedBit", pure ImageCreateSparseAliasedBit)
+                             , ("ImageCreateMutableFormatBit", pure ImageCreateMutableFormatBit)
+                             , ("ImageCreateCubeCompatibleBit", pure ImageCreateCubeCompatibleBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ImageCreateFlags")
@@ -81,15 +81,15 @@ instance Read ImageCreateFlags where
                     )
 
 -- | Image should support sparse backing
-pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT = ImageCreateFlags 0x1
+pattern ImageCreateSparseBindingBit = ImageCreateFlags 0x1
 -- | Image should support sparse backing with partial residency
-pattern VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = ImageCreateFlags 0x2
+pattern ImageCreateSparseResidencyBit = ImageCreateFlags 0x2
 -- | Image should support constent data access to physical memory blocks mapped into multiple locations of sparse images
-pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = ImageCreateFlags 0x4
+pattern ImageCreateSparseAliasedBit = ImageCreateFlags 0x4
 -- | Allows image views to have different format than the base image
-pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = ImageCreateFlags 0x8
+pattern ImageCreateMutableFormatBit = ImageCreateFlags 0x8
 -- | Allows creating image views with cube type from the created image
-pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlags 0x10
+pattern ImageCreateCubeCompatibleBit = ImageCreateFlags 0x10
 
 
 -- ** ImageUsageFlags
@@ -98,26 +98,26 @@ newtype ImageUsageFlags = ImageUsageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ImageUsageFlags where
-  showsPrec _ VK_IMAGE_USAGE_TRANSFER_SRC_BIT = showString "VK_IMAGE_USAGE_TRANSFER_SRC_BIT"
-  showsPrec _ VK_IMAGE_USAGE_TRANSFER_DST_BIT = showString "VK_IMAGE_USAGE_TRANSFER_DST_BIT"
-  showsPrec _ VK_IMAGE_USAGE_SAMPLED_BIT = showString "VK_IMAGE_USAGE_SAMPLED_BIT"
-  showsPrec _ VK_IMAGE_USAGE_STORAGE_BIT = showString "VK_IMAGE_USAGE_STORAGE_BIT"
-  showsPrec _ VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT"
-  showsPrec _ VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"
-  showsPrec _ VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT"
-  showsPrec _ VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT"
+  showsPrec _ ImageUsageTransferSrcBit = showString "ImageUsageTransferSrcBit"
+  showsPrec _ ImageUsageTransferDstBit = showString "ImageUsageTransferDstBit"
+  showsPrec _ ImageUsageSampledBit = showString "ImageUsageSampledBit"
+  showsPrec _ ImageUsageStorageBit = showString "ImageUsageStorageBit"
+  showsPrec _ ImageUsageColorAttachmentBit = showString "ImageUsageColorAttachmentBit"
+  showsPrec _ ImageUsageDepthStencilAttachmentBit = showString "ImageUsageDepthStencilAttachmentBit"
+  showsPrec _ ImageUsageTransientAttachmentBit = showString "ImageUsageTransientAttachmentBit"
+  showsPrec _ ImageUsageInputAttachmentBit = showString "ImageUsageInputAttachmentBit"
   
   showsPrec p (ImageUsageFlags x) = showParen (p >= 11) (showString "ImageUsageFlags " . showsPrec 11 x)
 
 instance Read ImageUsageFlags where
-  readPrec = parens ( choose [ ("VK_IMAGE_USAGE_TRANSFER_SRC_BIT", pure VK_IMAGE_USAGE_TRANSFER_SRC_BIT)
-                             , ("VK_IMAGE_USAGE_TRANSFER_DST_BIT", pure VK_IMAGE_USAGE_TRANSFER_DST_BIT)
-                             , ("VK_IMAGE_USAGE_SAMPLED_BIT", pure VK_IMAGE_USAGE_SAMPLED_BIT)
-                             , ("VK_IMAGE_USAGE_STORAGE_BIT", pure VK_IMAGE_USAGE_STORAGE_BIT)
-                             , ("VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
-                             , ("VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
-                             , ("VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT)
-                             , ("VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT)
+  readPrec = parens ( choose [ ("ImageUsageTransferSrcBit", pure ImageUsageTransferSrcBit)
+                             , ("ImageUsageTransferDstBit", pure ImageUsageTransferDstBit)
+                             , ("ImageUsageSampledBit", pure ImageUsageSampledBit)
+                             , ("ImageUsageStorageBit", pure ImageUsageStorageBit)
+                             , ("ImageUsageColorAttachmentBit", pure ImageUsageColorAttachmentBit)
+                             , ("ImageUsageDepthStencilAttachmentBit", pure ImageUsageDepthStencilAttachmentBit)
+                             , ("ImageUsageTransientAttachmentBit", pure ImageUsageTransientAttachmentBit)
+                             , ("ImageUsageInputAttachmentBit", pure ImageUsageInputAttachmentBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ImageUsageFlags")
@@ -127,21 +127,21 @@ instance Read ImageUsageFlags where
                     )
 
 -- | Can be used as a source of transfer operations
-pattern VK_IMAGE_USAGE_TRANSFER_SRC_BIT = ImageUsageFlags 0x1
+pattern ImageUsageTransferSrcBit = ImageUsageFlags 0x1
 -- | Can be used as a destination of transfer operations
-pattern VK_IMAGE_USAGE_TRANSFER_DST_BIT = ImageUsageFlags 0x2
+pattern ImageUsageTransferDstBit = ImageUsageFlags 0x2
 -- | Can be sampled from (SAMPLED_IMAGE and COMBINED_IMAGE_SAMPLER descriptor types)
-pattern VK_IMAGE_USAGE_SAMPLED_BIT = ImageUsageFlags 0x4
+pattern ImageUsageSampledBit = ImageUsageFlags 0x4
 -- | Can be used as storage image (STORAGE_IMAGE descriptor type)
-pattern VK_IMAGE_USAGE_STORAGE_BIT = ImageUsageFlags 0x8
+pattern ImageUsageStorageBit = ImageUsageFlags 0x8
 -- | Can be used as framebuffer color attachment
-pattern VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = ImageUsageFlags 0x10
+pattern ImageUsageColorAttachmentBit = ImageUsageFlags 0x10
 -- | Can be used as framebuffer depth/stencil attachment
-pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = ImageUsageFlags 0x20
+pattern ImageUsageDepthStencilAttachmentBit = ImageUsageFlags 0x20
 -- | Image data not needed outside of rendering
-pattern VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = ImageUsageFlags 0x40
+pattern ImageUsageTransientAttachmentBit = ImageUsageFlags 0x40
 -- | Can be used as framebuffer input attachment
-pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = ImageUsageFlags 0x80
+pattern ImageUsageInputAttachmentBit = ImageUsageFlags 0x80
 
 
 newtype Image = Image Word64
@@ -153,18 +153,18 @@ newtype ImageAspectFlags = ImageAspectFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ImageAspectFlags where
-  showsPrec _ VK_IMAGE_ASPECT_COLOR_BIT = showString "VK_IMAGE_ASPECT_COLOR_BIT"
-  showsPrec _ VK_IMAGE_ASPECT_DEPTH_BIT = showString "VK_IMAGE_ASPECT_DEPTH_BIT"
-  showsPrec _ VK_IMAGE_ASPECT_STENCIL_BIT = showString "VK_IMAGE_ASPECT_STENCIL_BIT"
-  showsPrec _ VK_IMAGE_ASPECT_METADATA_BIT = showString "VK_IMAGE_ASPECT_METADATA_BIT"
+  showsPrec _ ImageAspectColorBit = showString "ImageAspectColorBit"
+  showsPrec _ ImageAspectDepthBit = showString "ImageAspectDepthBit"
+  showsPrec _ ImageAspectStencilBit = showString "ImageAspectStencilBit"
+  showsPrec _ ImageAspectMetadataBit = showString "ImageAspectMetadataBit"
   
   showsPrec p (ImageAspectFlags x) = showParen (p >= 11) (showString "ImageAspectFlags " . showsPrec 11 x)
 
 instance Read ImageAspectFlags where
-  readPrec = parens ( choose [ ("VK_IMAGE_ASPECT_COLOR_BIT", pure VK_IMAGE_ASPECT_COLOR_BIT)
-                             , ("VK_IMAGE_ASPECT_DEPTH_BIT", pure VK_IMAGE_ASPECT_DEPTH_BIT)
-                             , ("VK_IMAGE_ASPECT_STENCIL_BIT", pure VK_IMAGE_ASPECT_STENCIL_BIT)
-                             , ("VK_IMAGE_ASPECT_METADATA_BIT", pure VK_IMAGE_ASPECT_METADATA_BIT)
+  readPrec = parens ( choose [ ("ImageAspectColorBit", pure ImageAspectColorBit)
+                             , ("ImageAspectDepthBit", pure ImageAspectDepthBit)
+                             , ("ImageAspectStencilBit", pure ImageAspectStencilBit)
+                             , ("ImageAspectMetadataBit", pure ImageAspectMetadataBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ImageAspectFlags")
@@ -174,13 +174,13 @@ instance Read ImageAspectFlags where
                     )
 
 
-pattern VK_IMAGE_ASPECT_COLOR_BIT = ImageAspectFlags 0x1
+pattern ImageAspectColorBit = ImageAspectFlags 0x1
 
-pattern VK_IMAGE_ASPECT_DEPTH_BIT = ImageAspectFlags 0x2
+pattern ImageAspectDepthBit = ImageAspectFlags 0x2
 
-pattern VK_IMAGE_ASPECT_STENCIL_BIT = ImageAspectFlags 0x4
+pattern ImageAspectStencilBit = ImageAspectFlags 0x4
 
-pattern VK_IMAGE_ASPECT_METADATA_BIT = ImageAspectFlags 0x8
+pattern ImageAspectMetadataBit = ImageAspectFlags 0x8
 
 
 

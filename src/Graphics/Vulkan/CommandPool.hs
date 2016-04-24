@@ -74,14 +74,14 @@ newtype CommandPoolCreateFlags = CommandPoolCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CommandPoolCreateFlags where
-  showsPrec _ VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = showString "VK_COMMAND_POOL_CREATE_TRANSIENT_BIT"
-  showsPrec _ VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = showString "VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT"
+  showsPrec _ CommandPoolCreateTransientBit = showString "CommandPoolCreateTransientBit"
+  showsPrec _ CommandPoolCreateResetCommandBufferBit = showString "CommandPoolCreateResetCommandBufferBit"
   
   showsPrec p (CommandPoolCreateFlags x) = showParen (p >= 11) (showString "CommandPoolCreateFlags " . showsPrec 11 x)
 
 instance Read CommandPoolCreateFlags where
-  readPrec = parens ( choose [ ("VK_COMMAND_POOL_CREATE_TRANSIENT_BIT", pure VK_COMMAND_POOL_CREATE_TRANSIENT_BIT)
-                             , ("VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT", pure VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT)
+  readPrec = parens ( choose [ ("CommandPoolCreateTransientBit", pure CommandPoolCreateTransientBit)
+                             , ("CommandPoolCreateResetCommandBufferBit", pure CommandPoolCreateResetCommandBufferBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "CommandPoolCreateFlags")
@@ -91,9 +91,9 @@ instance Read CommandPoolCreateFlags where
                     )
 
 -- | Command buffers have a short lifetime
-pattern VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = CommandPoolCreateFlags 0x1
+pattern CommandPoolCreateTransientBit = CommandPoolCreateFlags 0x1
 -- | Command buffers may release their memory individually
-pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = CommandPoolCreateFlags 0x2
+pattern CommandPoolCreateResetCommandBufferBit = CommandPoolCreateFlags 0x2
 
 
 -- ** createCommandPool
@@ -108,12 +108,12 @@ newtype CommandPoolResetFlags = CommandPoolResetFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CommandPoolResetFlags where
-  showsPrec _ VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"
+  showsPrec _ CommandPoolResetReleaseResourcesBit = showString "CommandPoolResetReleaseResourcesBit"
   
   showsPrec p (CommandPoolResetFlags x) = showParen (p >= 11) (showString "CommandPoolResetFlags " . showsPrec 11 x)
 
 instance Read CommandPoolResetFlags where
-  readPrec = parens ( choose [ ("VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT", pure VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT)
+  readPrec = parens ( choose [ ("CommandPoolResetReleaseResourcesBit", pure CommandPoolResetReleaseResourcesBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "CommandPoolResetFlags")
@@ -123,7 +123,7 @@ instance Read CommandPoolResetFlags where
                     )
 
 -- | Release resources owned by the pool
-pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = CommandPoolResetFlags 0x1
+pattern CommandPoolResetReleaseResourcesBit = CommandPoolResetFlags 0x1
 
 
 newtype CommandPool = CommandPool Word64

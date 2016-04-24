@@ -503,15 +503,15 @@ newtype StencilFaceFlags = StencilFaceFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show StencilFaceFlags where
-  showsPrec _ VK_STENCIL_FACE_FRONT_BIT = showString "VK_STENCIL_FACE_FRONT_BIT"
-  showsPrec _ VK_STENCIL_FACE_BACK_BIT = showString "VK_STENCIL_FACE_BACK_BIT"
-  showsPrec _ VK_STENCIL_FRONT_AND_BACK = showString "VK_STENCIL_FRONT_AND_BACK"
+  showsPrec _ StencilFaceFrontBit = showString "StencilFaceFrontBit"
+  showsPrec _ StencilFaceBackBit = showString "StencilFaceBackBit"
+  showsPrec _ StencilFrontAndBack = showString "StencilFrontAndBack"
   showsPrec p (StencilFaceFlags x) = showParen (p >= 11) (showString "StencilFaceFlags " . showsPrec 11 x)
 
 instance Read StencilFaceFlags where
-  readPrec = parens ( choose [ ("VK_STENCIL_FACE_FRONT_BIT", pure VK_STENCIL_FACE_FRONT_BIT)
-                             , ("VK_STENCIL_FACE_BACK_BIT", pure VK_STENCIL_FACE_BACK_BIT)
-                             , ("VK_STENCIL_FRONT_AND_BACK", pure VK_STENCIL_FRONT_AND_BACK)
+  readPrec = parens ( choose [ ("StencilFaceFrontBit", pure StencilFaceFrontBit)
+                             , ("StencilFaceBackBit", pure StencilFaceBackBit)
+                             , ("StencilFrontAndBack", pure StencilFrontAndBack)
                              ] +++
                       prec 10 (do
                         expectP (Ident "StencilFaceFlags")
@@ -521,11 +521,11 @@ instance Read StencilFaceFlags where
                     )
 
 -- | Front face
-pattern VK_STENCIL_FACE_FRONT_BIT = StencilFaceFlags 0x1
+pattern StencilFaceFrontBit = StencilFaceFlags 0x1
 -- | Back face
-pattern VK_STENCIL_FACE_BACK_BIT = StencilFaceFlags 0x2
+pattern StencilFaceBackBit = StencilFaceFlags 0x2
 -- | Front and back faces
-pattern VK_STENCIL_FRONT_AND_BACK = StencilFaceFlags 0x3
+pattern StencilFrontAndBack = StencilFaceFlags 0x3
 
 -- | // Union allowing specification of floating point, integer, or unsigned integer color data. Actual value selected is based on image/attachment being cleared.
 data ClearColorValue = Float32 (Vector 4 CFloat) 

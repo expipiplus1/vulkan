@@ -89,18 +89,18 @@ newtype QueryResultFlags = QueryResultFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show QueryResultFlags where
-  showsPrec _ VK_QUERY_RESULT_64_BIT = showString "VK_QUERY_RESULT_64_BIT"
-  showsPrec _ VK_QUERY_RESULT_WAIT_BIT = showString "VK_QUERY_RESULT_WAIT_BIT"
-  showsPrec _ VK_QUERY_RESULT_WITH_AVAILABILITY_BIT = showString "VK_QUERY_RESULT_WITH_AVAILABILITY_BIT"
-  showsPrec _ VK_QUERY_RESULT_PARTIAL_BIT = showString "VK_QUERY_RESULT_PARTIAL_BIT"
+  showsPrec _ QueryResult64Bit = showString "QueryResult64Bit"
+  showsPrec _ QueryResultWaitBit = showString "QueryResultWaitBit"
+  showsPrec _ QueryResultWithAvailabilityBit = showString "QueryResultWithAvailabilityBit"
+  showsPrec _ QueryResultPartialBit = showString "QueryResultPartialBit"
   
   showsPrec p (QueryResultFlags x) = showParen (p >= 11) (showString "QueryResultFlags " . showsPrec 11 x)
 
 instance Read QueryResultFlags where
-  readPrec = parens ( choose [ ("VK_QUERY_RESULT_64_BIT", pure VK_QUERY_RESULT_64_BIT)
-                             , ("VK_QUERY_RESULT_WAIT_BIT", pure VK_QUERY_RESULT_WAIT_BIT)
-                             , ("VK_QUERY_RESULT_WITH_AVAILABILITY_BIT", pure VK_QUERY_RESULT_WITH_AVAILABILITY_BIT)
-                             , ("VK_QUERY_RESULT_PARTIAL_BIT", pure VK_QUERY_RESULT_PARTIAL_BIT)
+  readPrec = parens ( choose [ ("QueryResult64Bit", pure QueryResult64Bit)
+                             , ("QueryResultWaitBit", pure QueryResultWaitBit)
+                             , ("QueryResultWithAvailabilityBit", pure QueryResultWithAvailabilityBit)
+                             , ("QueryResultPartialBit", pure QueryResultPartialBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "QueryResultFlags")
@@ -110,13 +110,13 @@ instance Read QueryResultFlags where
                     )
 
 -- | Results of the queries are written to the destination buffer as 64-bit values
-pattern VK_QUERY_RESULT_64_BIT = QueryResultFlags 0x1
+pattern QueryResult64Bit = QueryResultFlags 0x1
 -- | Results of the queries are waited on before proceeding with the result copy
-pattern VK_QUERY_RESULT_WAIT_BIT = QueryResultFlags 0x2
+pattern QueryResultWaitBit = QueryResultFlags 0x2
 -- | Besides the results of the query, the availability of the results is also written
-pattern VK_QUERY_RESULT_WITH_AVAILABILITY_BIT = QueryResultFlags 0x4
+pattern QueryResultWithAvailabilityBit = QueryResultFlags 0x4
 -- | Copy the partial results of the query even if the final results aren't available
-pattern VK_QUERY_RESULT_PARTIAL_BIT = QueryResultFlags 0x8
+pattern QueryResultPartialBit = QueryResultFlags 0x8
 
 
 -- ** QueryType
@@ -164,12 +164,12 @@ newtype QueryControlFlags = QueryControlFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show QueryControlFlags where
-  showsPrec _ VK_QUERY_CONTROL_PRECISE_BIT = showString "VK_QUERY_CONTROL_PRECISE_BIT"
+  showsPrec _ QueryControlPreciseBit = showString "QueryControlPreciseBit"
   
   showsPrec p (QueryControlFlags x) = showParen (p >= 11) (showString "QueryControlFlags " . showsPrec 11 x)
 
 instance Read QueryControlFlags where
-  readPrec = parens ( choose [ ("VK_QUERY_CONTROL_PRECISE_BIT", pure VK_QUERY_CONTROL_PRECISE_BIT)
+  readPrec = parens ( choose [ ("QueryControlPreciseBit", pure QueryControlPreciseBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "QueryControlFlags")
@@ -179,7 +179,7 @@ instance Read QueryControlFlags where
                     )
 
 -- | Require precise results to be collected by the query
-pattern VK_QUERY_CONTROL_PRECISE_BIT = QueryControlFlags 0x1
+pattern QueryControlPreciseBit = QueryControlFlags 0x1
 
 
 -- ** QueryPoolCreateFlags
@@ -193,32 +193,32 @@ newtype QueryPipelineStatisticFlags = QueryPipelineStatisticFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show QueryPipelineStatisticFlags where
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT"
-  showsPrec _ VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT"
+  showsPrec _ QueryPipelineStatisticInputAssemblyVerticesBit = showString "QueryPipelineStatisticInputAssemblyVerticesBit"
+  showsPrec _ QueryPipelineStatisticInputAssemblyPrimitivesBit = showString "QueryPipelineStatisticInputAssemblyPrimitivesBit"
+  showsPrec _ QueryPipelineStatisticVertexShaderInvocationsBit = showString "QueryPipelineStatisticVertexShaderInvocationsBit"
+  showsPrec _ QueryPipelineStatisticGeometryShaderInvocationsBit = showString "QueryPipelineStatisticGeometryShaderInvocationsBit"
+  showsPrec _ QueryPipelineStatisticGeometryShaderPrimitivesBit = showString "QueryPipelineStatisticGeometryShaderPrimitivesBit"
+  showsPrec _ QueryPipelineStatisticClippingInvocationsBit = showString "QueryPipelineStatisticClippingInvocationsBit"
+  showsPrec _ QueryPipelineStatisticClippingPrimitivesBit = showString "QueryPipelineStatisticClippingPrimitivesBit"
+  showsPrec _ QueryPipelineStatisticFragmentShaderInvocationsBit = showString "QueryPipelineStatisticFragmentShaderInvocationsBit"
+  showsPrec _ QueryPipelineStatisticTessellationControlShaderPatchesBit = showString "QueryPipelineStatisticTessellationControlShaderPatchesBit"
+  showsPrec _ QueryPipelineStatisticTessellationEvaluationShaderInvocationsBit = showString "QueryPipelineStatisticTessellationEvaluationShaderInvocationsBit"
+  showsPrec _ QueryPipelineStatisticComputeShaderInvocationsBit = showString "QueryPipelineStatisticComputeShaderInvocationsBit"
   
   showsPrec p (QueryPipelineStatisticFlags x) = showParen (p >= 11) (showString "QueryPipelineStatisticFlags " . showsPrec 11 x)
 
 instance Read QueryPipelineStatisticFlags where
-  readPrec = parens ( choose [ ("VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT", pure VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT", pure VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT", pure VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT", pure VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT", pure VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT", pure VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT", pure VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT", pure VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT", pure VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT", pure VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT)
-                             , ("VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT", pure VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT)
+  readPrec = parens ( choose [ ("QueryPipelineStatisticInputAssemblyVerticesBit", pure QueryPipelineStatisticInputAssemblyVerticesBit)
+                             , ("QueryPipelineStatisticInputAssemblyPrimitivesBit", pure QueryPipelineStatisticInputAssemblyPrimitivesBit)
+                             , ("QueryPipelineStatisticVertexShaderInvocationsBit", pure QueryPipelineStatisticVertexShaderInvocationsBit)
+                             , ("QueryPipelineStatisticGeometryShaderInvocationsBit", pure QueryPipelineStatisticGeometryShaderInvocationsBit)
+                             , ("QueryPipelineStatisticGeometryShaderPrimitivesBit", pure QueryPipelineStatisticGeometryShaderPrimitivesBit)
+                             , ("QueryPipelineStatisticClippingInvocationsBit", pure QueryPipelineStatisticClippingInvocationsBit)
+                             , ("QueryPipelineStatisticClippingPrimitivesBit", pure QueryPipelineStatisticClippingPrimitivesBit)
+                             , ("QueryPipelineStatisticFragmentShaderInvocationsBit", pure QueryPipelineStatisticFragmentShaderInvocationsBit)
+                             , ("QueryPipelineStatisticTessellationControlShaderPatchesBit", pure QueryPipelineStatisticTessellationControlShaderPatchesBit)
+                             , ("QueryPipelineStatisticTessellationEvaluationShaderInvocationsBit", pure QueryPipelineStatisticTessellationEvaluationShaderInvocationsBit)
+                             , ("QueryPipelineStatisticComputeShaderInvocationsBit", pure QueryPipelineStatisticComputeShaderInvocationsBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "QueryPipelineStatisticFlags")
@@ -228,26 +228,26 @@ instance Read QueryPipelineStatisticFlags where
                     )
 
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = QueryPipelineStatisticFlags 0x1
+pattern QueryPipelineStatisticInputAssemblyVerticesBit = QueryPipelineStatisticFlags 0x1
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT = QueryPipelineStatisticFlags 0x2
+pattern QueryPipelineStatisticInputAssemblyPrimitivesBit = QueryPipelineStatisticFlags 0x2
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT = QueryPipelineStatisticFlags 0x4
+pattern QueryPipelineStatisticVertexShaderInvocationsBit = QueryPipelineStatisticFlags 0x4
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT = QueryPipelineStatisticFlags 0x8
+pattern QueryPipelineStatisticGeometryShaderInvocationsBit = QueryPipelineStatisticFlags 0x8
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT = QueryPipelineStatisticFlags 0x10
+pattern QueryPipelineStatisticGeometryShaderPrimitivesBit = QueryPipelineStatisticFlags 0x10
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT = QueryPipelineStatisticFlags 0x20
+pattern QueryPipelineStatisticClippingInvocationsBit = QueryPipelineStatisticFlags 0x20
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT = QueryPipelineStatisticFlags 0x40
+pattern QueryPipelineStatisticClippingPrimitivesBit = QueryPipelineStatisticFlags 0x40
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT = QueryPipelineStatisticFlags 0x80
+pattern QueryPipelineStatisticFragmentShaderInvocationsBit = QueryPipelineStatisticFlags 0x80
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT = QueryPipelineStatisticFlags 0x100
+pattern QueryPipelineStatisticTessellationControlShaderPatchesBit = QueryPipelineStatisticFlags 0x100
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT = QueryPipelineStatisticFlags 0x200
+pattern QueryPipelineStatisticTessellationEvaluationShaderInvocationsBit = QueryPipelineStatisticFlags 0x200
 -- | Optional
-pattern VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = QueryPipelineStatisticFlags 0x400
+pattern QueryPipelineStatisticComputeShaderInvocationsBit = QueryPipelineStatisticFlags 0x400
 
 

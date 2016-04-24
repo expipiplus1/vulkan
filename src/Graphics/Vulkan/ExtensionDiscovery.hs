@@ -14,7 +14,7 @@ import Foreign.Ptr( Ptr(..)
                   )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Constants( VK_MAX_EXTENSION_NAME_SIZE
+import Graphics.Vulkan.Constants( MaxExtensionNameSize
                                 )
 import Graphics.Vulkan.Core( Result(..)
                            )
@@ -23,7 +23,7 @@ import Foreign.C.Types( CChar(..)
 
 
 data ExtensionProperties =
-  ExtensionProperties{ extensionName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 
+  ExtensionProperties{ extensionName :: Vector MaxExtensionNameSize CChar 
                      , specVersion :: Word32 
                      }
   deriving (Eq)

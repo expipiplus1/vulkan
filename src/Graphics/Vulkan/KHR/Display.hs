@@ -219,18 +219,18 @@ newtype DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagsKHR Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show DisplayPlaneAlphaFlagsKHR where
-  showsPrec _ VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR"
-  showsPrec _ VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR"
-  showsPrec _ VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR"
-  showsPrec _ VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR"
+  showsPrec _ DisplayPlaneAlphaOpaqueBitKhr = showString "DisplayPlaneAlphaOpaqueBitKhr"
+  showsPrec _ DisplayPlaneAlphaGlobalBitKhr = showString "DisplayPlaneAlphaGlobalBitKhr"
+  showsPrec _ DisplayPlaneAlphaPerPixelBitKhr = showString "DisplayPlaneAlphaPerPixelBitKhr"
+  showsPrec _ DisplayPlaneAlphaPerPixelPremultipliedBitKhr = showString "DisplayPlaneAlphaPerPixelPremultipliedBitKhr"
   
   showsPrec p (DisplayPlaneAlphaFlagsKHR x) = showParen (p >= 11) (showString "DisplayPlaneAlphaFlagsKHR " . showsPrec 11 x)
 
 instance Read DisplayPlaneAlphaFlagsKHR where
-  readPrec = parens ( choose [ ("VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR)
-                             , ("VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR)
-                             , ("VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR)
-                             , ("VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR)
+  readPrec = parens ( choose [ ("DisplayPlaneAlphaOpaqueBitKhr", pure DisplayPlaneAlphaOpaqueBitKhr)
+                             , ("DisplayPlaneAlphaGlobalBitKhr", pure DisplayPlaneAlphaGlobalBitKhr)
+                             , ("DisplayPlaneAlphaPerPixelBitKhr", pure DisplayPlaneAlphaPerPixelBitKhr)
+                             , ("DisplayPlaneAlphaPerPixelPremultipliedBitKhr", pure DisplayPlaneAlphaPerPixelPremultipliedBitKhr)
                              ] +++
                       prec 10 (do
                         expectP (Ident "DisplayPlaneAlphaFlagsKHR")
@@ -240,13 +240,13 @@ instance Read DisplayPlaneAlphaFlagsKHR where
                     )
 
 
-pattern VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = DisplayPlaneAlphaFlagsKHR 0x1
+pattern DisplayPlaneAlphaOpaqueBitKhr = DisplayPlaneAlphaFlagsKHR 0x1
 
-pattern VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = DisplayPlaneAlphaFlagsKHR 0x2
+pattern DisplayPlaneAlphaGlobalBitKhr = DisplayPlaneAlphaFlagsKHR 0x2
 
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = DisplayPlaneAlphaFlagsKHR 0x4
+pattern DisplayPlaneAlphaPerPixelBitKhr = DisplayPlaneAlphaFlagsKHR 0x4
 
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = DisplayPlaneAlphaFlagsKHR 0x8
+pattern DisplayPlaneAlphaPerPixelPremultipliedBitKhr = DisplayPlaneAlphaFlagsKHR 0x8
 
 
 -- ** DisplayModeCreateFlagsKHR

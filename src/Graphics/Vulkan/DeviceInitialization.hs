@@ -32,10 +32,10 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Constants( VK_MAX_PHYSICAL_DEVICE_NAME_SIZE
-                                , VK_UUID_SIZE
-                                , VK_MAX_MEMORY_TYPES
-                                , VK_MAX_MEMORY_HEAPS
+import Graphics.Vulkan.Constants( MaxPhysicalDeviceNameSize
+                                , UuidSize
+                                , MaxMemoryTypes
+                                , MaxMemoryHeaps
                                 )
 import Data.Void( Void(..)
                 )
@@ -545,36 +545,36 @@ newtype FormatFeatureFlags = FormatFeatureFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show FormatFeatureFlags where
-  showsPrec _ VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = showString "VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = showString "VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = showString "VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = showString "VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = showString "VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = showString "VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = showString "VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = showString "VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = showString "VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_BLIT_SRC_BIT = showString "VK_FORMAT_FEATURE_BLIT_SRC_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_BLIT_DST_BIT = showString "VK_FORMAT_FEATURE_BLIT_DST_BIT"
-  showsPrec _ VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT"
+  showsPrec _ FormatFeatureSampledImageBit = showString "FormatFeatureSampledImageBit"
+  showsPrec _ FormatFeatureStorageImageBit = showString "FormatFeatureStorageImageBit"
+  showsPrec _ FormatFeatureStorageImageAtomicBit = showString "FormatFeatureStorageImageAtomicBit"
+  showsPrec _ FormatFeatureUniformTexelBufferBit = showString "FormatFeatureUniformTexelBufferBit"
+  showsPrec _ FormatFeatureStorageTexelBufferBit = showString "FormatFeatureStorageTexelBufferBit"
+  showsPrec _ FormatFeatureStorageTexelBufferAtomicBit = showString "FormatFeatureStorageTexelBufferAtomicBit"
+  showsPrec _ FormatFeatureVertexBufferBit = showString "FormatFeatureVertexBufferBit"
+  showsPrec _ FormatFeatureColorAttachmentBit = showString "FormatFeatureColorAttachmentBit"
+  showsPrec _ FormatFeatureColorAttachmentBlendBit = showString "FormatFeatureColorAttachmentBlendBit"
+  showsPrec _ FormatFeatureDepthStencilAttachmentBit = showString "FormatFeatureDepthStencilAttachmentBit"
+  showsPrec _ FormatFeatureBlitSrcBit = showString "FormatFeatureBlitSrcBit"
+  showsPrec _ FormatFeatureBlitDstBit = showString "FormatFeatureBlitDstBit"
+  showsPrec _ FormatFeatureSampledImageFilterLinearBit = showString "FormatFeatureSampledImageFilterLinearBit"
   
   showsPrec p (FormatFeatureFlags x) = showParen (p >= 11) (showString "FormatFeatureFlags " . showsPrec 11 x)
 
 instance Read FormatFeatureFlags where
-  readPrec = parens ( choose [ ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT", pure VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT)
-                             , ("VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT", pure VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT)
-                             , ("VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT", pure VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT)
-                             , ("VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT", pure VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT)
-                             , ("VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT", pure VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT)
-                             , ("VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT", pure VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT)
-                             , ("VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT", pure VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT)
-                             , ("VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT", pure VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT)
-                             , ("VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT", pure VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT)
-                             , ("VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT", pure VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT)
-                             , ("VK_FORMAT_FEATURE_BLIT_SRC_BIT", pure VK_FORMAT_FEATURE_BLIT_SRC_BIT)
-                             , ("VK_FORMAT_FEATURE_BLIT_DST_BIT", pure VK_FORMAT_FEATURE_BLIT_DST_BIT)
-                             , ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT", pure VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)
+  readPrec = parens ( choose [ ("FormatFeatureSampledImageBit", pure FormatFeatureSampledImageBit)
+                             , ("FormatFeatureStorageImageBit", pure FormatFeatureStorageImageBit)
+                             , ("FormatFeatureStorageImageAtomicBit", pure FormatFeatureStorageImageAtomicBit)
+                             , ("FormatFeatureUniformTexelBufferBit", pure FormatFeatureUniformTexelBufferBit)
+                             , ("FormatFeatureStorageTexelBufferBit", pure FormatFeatureStorageTexelBufferBit)
+                             , ("FormatFeatureStorageTexelBufferAtomicBit", pure FormatFeatureStorageTexelBufferAtomicBit)
+                             , ("FormatFeatureVertexBufferBit", pure FormatFeatureVertexBufferBit)
+                             , ("FormatFeatureColorAttachmentBit", pure FormatFeatureColorAttachmentBit)
+                             , ("FormatFeatureColorAttachmentBlendBit", pure FormatFeatureColorAttachmentBlendBit)
+                             , ("FormatFeatureDepthStencilAttachmentBit", pure FormatFeatureDepthStencilAttachmentBit)
+                             , ("FormatFeatureBlitSrcBit", pure FormatFeatureBlitSrcBit)
+                             , ("FormatFeatureBlitDstBit", pure FormatFeatureBlitDstBit)
+                             , ("FormatFeatureSampledImageFilterLinearBit", pure FormatFeatureSampledImageFilterLinearBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "FormatFeatureFlags")
@@ -584,39 +584,39 @@ instance Read FormatFeatureFlags where
                     )
 
 -- | Format can be used for sampled images (SAMPLED_IMAGE and COMBINED_IMAGE_SAMPLER descriptor types)
-pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = FormatFeatureFlags 0x1
+pattern FormatFeatureSampledImageBit = FormatFeatureFlags 0x1
 -- | Format can be used for storage images (STORAGE_IMAGE descriptor type)
-pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = FormatFeatureFlags 0x2
+pattern FormatFeatureStorageImageBit = FormatFeatureFlags 0x2
 -- | Format supports atomic operations in case it's used for storage images
-pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = FormatFeatureFlags 0x4
+pattern FormatFeatureStorageImageAtomicBit = FormatFeatureFlags 0x4
 -- | Format can be used for uniform texel buffers (TBOs)
-pattern VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = FormatFeatureFlags 0x8
+pattern FormatFeatureUniformTexelBufferBit = FormatFeatureFlags 0x8
 -- | Format can be used for storage texel buffers (IBOs)
-pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = FormatFeatureFlags 0x10
+pattern FormatFeatureStorageTexelBufferBit = FormatFeatureFlags 0x10
 -- | Format supports atomic operations in case it's used for storage texel buffers
-pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = FormatFeatureFlags 0x20
+pattern FormatFeatureStorageTexelBufferAtomicBit = FormatFeatureFlags 0x20
 -- | Format can be used for vertex buffers (VBOs)
-pattern VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = FormatFeatureFlags 0x40
+pattern FormatFeatureVertexBufferBit = FormatFeatureFlags 0x40
 -- | Format can be used for color attachment images
-pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = FormatFeatureFlags 0x80
+pattern FormatFeatureColorAttachmentBit = FormatFeatureFlags 0x80
 -- | Format supports blending in case it's used for color attachment images
-pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = FormatFeatureFlags 0x100
+pattern FormatFeatureColorAttachmentBlendBit = FormatFeatureFlags 0x100
 -- | Format can be used for depth/stencil attachment images
-pattern VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = FormatFeatureFlags 0x200
+pattern FormatFeatureDepthStencilAttachmentBit = FormatFeatureFlags 0x200
 -- | Format can be used as the source image of blits with vkCmdBlitImage
-pattern VK_FORMAT_FEATURE_BLIT_SRC_BIT = FormatFeatureFlags 0x400
+pattern FormatFeatureBlitSrcBit = FormatFeatureFlags 0x400
 -- | Format can be used as the destination image of blits with vkCmdBlitImage
-pattern VK_FORMAT_FEATURE_BLIT_DST_BIT = FormatFeatureFlags 0x800
+pattern FormatFeatureBlitDstBit = FormatFeatureFlags 0x800
 -- | Format can be filtered with VK_FILTER_LINEAR when being sampled
-pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = FormatFeatureFlags 0x1000
+pattern FormatFeatureSampledImageFilterLinearBit = FormatFeatureFlags 0x1000
 
 
 
 data PhysicalDeviceMemoryProperties =
   PhysicalDeviceMemoryProperties{ memoryTypeCount :: Word32 
-                                , memoryTypes :: Vector VK_MAX_MEMORY_TYPES MemoryType 
+                                , memoryTypes :: Vector MaxMemoryTypes MemoryType 
                                 , memoryHeapCount :: Word32 
-                                , memoryHeaps :: Vector VK_MAX_MEMORY_HEAPS MemoryHeap 
+                                , memoryHeaps :: Vector MaxMemoryHeaps MemoryHeap 
                                 }
   deriving (Eq)
 
@@ -642,12 +642,12 @@ newtype MemoryHeapFlags = MemoryHeapFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show MemoryHeapFlags where
-  showsPrec _ VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = showString "VK_MEMORY_HEAP_DEVICE_LOCAL_BIT"
+  showsPrec _ MemoryHeapDeviceLocalBit = showString "MemoryHeapDeviceLocalBit"
   
   showsPrec p (MemoryHeapFlags x) = showParen (p >= 11) (showString "MemoryHeapFlags " . showsPrec 11 x)
 
 instance Read MemoryHeapFlags where
-  readPrec = parens ( choose [ ("VK_MEMORY_HEAP_DEVICE_LOCAL_BIT", pure VK_MEMORY_HEAP_DEVICE_LOCAL_BIT)
+  readPrec = parens ( choose [ ("MemoryHeapDeviceLocalBit", pure MemoryHeapDeviceLocalBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "MemoryHeapFlags")
@@ -657,7 +657,7 @@ instance Read MemoryHeapFlags where
                     )
 
 -- | If set, heap represents device memory
-pattern VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = MemoryHeapFlags 0x1
+pattern MemoryHeapDeviceLocalBit = MemoryHeapFlags 0x1
 
 
 
@@ -747,8 +747,8 @@ data PhysicalDeviceProperties =
                           , vendorID :: Word32 
                           , deviceID :: Word32 
                           , deviceType :: PhysicalDeviceType 
-                          , deviceName :: Vector VK_MAX_PHYSICAL_DEVICE_NAME_SIZE CChar 
-                          , pipelineCacheUUID :: Vector VK_UUID_SIZE Word8 
+                          , deviceName :: Vector MaxPhysicalDeviceNameSize CChar 
+                          , pipelineCacheUUID :: Vector UuidSize Word8 
                           , limits :: PhysicalDeviceLimits 
                           , sparseProperties :: PhysicalDeviceSparseProperties 
                           }
@@ -807,20 +807,20 @@ newtype MemoryPropertyFlags = MemoryPropertyFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show MemoryPropertyFlags where
-  showsPrec _ VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = showString "VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT"
-  showsPrec _ VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = showString "VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT"
-  showsPrec _ VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = showString "VK_MEMORY_PROPERTY_HOST_COHERENT_BIT"
-  showsPrec _ VK_MEMORY_PROPERTY_HOST_CACHED_BIT = showString "VK_MEMORY_PROPERTY_HOST_CACHED_BIT"
-  showsPrec _ VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = showString "VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT"
+  showsPrec _ MemoryPropertyDeviceLocalBit = showString "MemoryPropertyDeviceLocalBit"
+  showsPrec _ MemoryPropertyHostVisibleBit = showString "MemoryPropertyHostVisibleBit"
+  showsPrec _ MemoryPropertyHostCoherentBit = showString "MemoryPropertyHostCoherentBit"
+  showsPrec _ MemoryPropertyHostCachedBit = showString "MemoryPropertyHostCachedBit"
+  showsPrec _ MemoryPropertyLazilyAllocatedBit = showString "MemoryPropertyLazilyAllocatedBit"
   
   showsPrec p (MemoryPropertyFlags x) = showParen (p >= 11) (showString "MemoryPropertyFlags " . showsPrec 11 x)
 
 instance Read MemoryPropertyFlags where
-  readPrec = parens ( choose [ ("VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT", pure VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-                             , ("VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT", pure VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-                             , ("VK_MEMORY_PROPERTY_HOST_COHERENT_BIT", pure VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
-                             , ("VK_MEMORY_PROPERTY_HOST_CACHED_BIT", pure VK_MEMORY_PROPERTY_HOST_CACHED_BIT)
-                             , ("VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT", pure VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT)
+  readPrec = parens ( choose [ ("MemoryPropertyDeviceLocalBit", pure MemoryPropertyDeviceLocalBit)
+                             , ("MemoryPropertyHostVisibleBit", pure MemoryPropertyHostVisibleBit)
+                             , ("MemoryPropertyHostCoherentBit", pure MemoryPropertyHostCoherentBit)
+                             , ("MemoryPropertyHostCachedBit", pure MemoryPropertyHostCachedBit)
+                             , ("MemoryPropertyLazilyAllocatedBit", pure MemoryPropertyLazilyAllocatedBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "MemoryPropertyFlags")
@@ -830,15 +830,15 @@ instance Read MemoryPropertyFlags where
                     )
 
 -- | If otherwise stated, then allocate memory on device
-pattern VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = MemoryPropertyFlags 0x1
+pattern MemoryPropertyDeviceLocalBit = MemoryPropertyFlags 0x1
 -- | Memory is mappable by host
-pattern VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = MemoryPropertyFlags 0x2
+pattern MemoryPropertyHostVisibleBit = MemoryPropertyFlags 0x2
 -- | Memory will have i/o coherency. If not set, application may need to use vkFlushMappedMemoryRanges and vkInvalidateMappedMemoryRanges to flush/invalidate host cache
-pattern VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = MemoryPropertyFlags 0x4
+pattern MemoryPropertyHostCoherentBit = MemoryPropertyFlags 0x4
 -- | Memory will be cached by the host
-pattern VK_MEMORY_PROPERTY_HOST_CACHED_BIT = MemoryPropertyFlags 0x8
+pattern MemoryPropertyHostCachedBit = MemoryPropertyFlags 0x8
 -- | Memory may be allocated by the driver when it is required
-pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = MemoryPropertyFlags 0x10
+pattern MemoryPropertyLazilyAllocatedBit = MemoryPropertyFlags 0x10
 
 
 -- ** destroyInstance
@@ -851,18 +851,18 @@ newtype QueueFlags = QueueFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show QueueFlags where
-  showsPrec _ VK_QUEUE_GRAPHICS_BIT = showString "VK_QUEUE_GRAPHICS_BIT"
-  showsPrec _ VK_QUEUE_COMPUTE_BIT = showString "VK_QUEUE_COMPUTE_BIT"
-  showsPrec _ VK_QUEUE_TRANSFER_BIT = showString "VK_QUEUE_TRANSFER_BIT"
-  showsPrec _ VK_QUEUE_SPARSE_BINDING_BIT = showString "VK_QUEUE_SPARSE_BINDING_BIT"
+  showsPrec _ QueueGraphicsBit = showString "QueueGraphicsBit"
+  showsPrec _ QueueComputeBit = showString "QueueComputeBit"
+  showsPrec _ QueueTransferBit = showString "QueueTransferBit"
+  showsPrec _ QueueSparseBindingBit = showString "QueueSparseBindingBit"
   
   showsPrec p (QueueFlags x) = showParen (p >= 11) (showString "QueueFlags " . showsPrec 11 x)
 
 instance Read QueueFlags where
-  readPrec = parens ( choose [ ("VK_QUEUE_GRAPHICS_BIT", pure VK_QUEUE_GRAPHICS_BIT)
-                             , ("VK_QUEUE_COMPUTE_BIT", pure VK_QUEUE_COMPUTE_BIT)
-                             , ("VK_QUEUE_TRANSFER_BIT", pure VK_QUEUE_TRANSFER_BIT)
-                             , ("VK_QUEUE_SPARSE_BINDING_BIT", pure VK_QUEUE_SPARSE_BINDING_BIT)
+  readPrec = parens ( choose [ ("QueueGraphicsBit", pure QueueGraphicsBit)
+                             , ("QueueComputeBit", pure QueueComputeBit)
+                             , ("QueueTransferBit", pure QueueTransferBit)
+                             , ("QueueSparseBindingBit", pure QueueSparseBindingBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "QueueFlags")
@@ -872,13 +872,13 @@ instance Read QueueFlags where
                     )
 
 -- | Queue supports graphics operations
-pattern VK_QUEUE_GRAPHICS_BIT = QueueFlags 0x1
+pattern QueueGraphicsBit = QueueFlags 0x1
 -- | Queue supports compute operations
-pattern VK_QUEUE_COMPUTE_BIT = QueueFlags 0x2
+pattern QueueComputeBit = QueueFlags 0x2
 -- | Queue supports transfer operations
-pattern VK_QUEUE_TRANSFER_BIT = QueueFlags 0x4
+pattern QueueTransferBit = QueueFlags 0x4
 -- | Queue supports sparse resource memory management operations
-pattern VK_QUEUE_SPARSE_BINDING_BIT = QueueFlags 0x8
+pattern QueueSparseBindingBit = QueueFlags 0x8
 
 
 -- ** getPhysicalDeviceProperties

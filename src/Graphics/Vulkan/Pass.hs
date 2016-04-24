@@ -96,12 +96,12 @@ newtype AttachmentDescriptionFlags = AttachmentDescriptionFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show AttachmentDescriptionFlags where
-  showsPrec _ VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = showString "VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
+  showsPrec _ AttachmentDescriptionMayAliasBit = showString "AttachmentDescriptionMayAliasBit"
   
   showsPrec p (AttachmentDescriptionFlags x) = showParen (p >= 11) (showString "AttachmentDescriptionFlags " . showsPrec 11 x)
 
 instance Read AttachmentDescriptionFlags where
-  readPrec = parens ( choose [ ("VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT", pure VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT)
+  readPrec = parens ( choose [ ("AttachmentDescriptionMayAliasBit", pure AttachmentDescriptionMayAliasBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "AttachmentDescriptionFlags")
@@ -111,7 +111,7 @@ instance Read AttachmentDescriptionFlags where
                     )
 
 -- | The attachment may alias physical memory of another attachment in the same render pass
-pattern VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = AttachmentDescriptionFlags 0x1
+pattern AttachmentDescriptionMayAliasBit = AttachmentDescriptionFlags 0x1
 
 
 -- ** DependencyFlags
@@ -120,12 +120,12 @@ newtype DependencyFlags = DependencyFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show DependencyFlags where
-  showsPrec _ VK_DEPENDENCY_BY_REGION_BIT = showString "VK_DEPENDENCY_BY_REGION_BIT"
+  showsPrec _ DependencyByRegionBit = showString "DependencyByRegionBit"
   
   showsPrec p (DependencyFlags x) = showParen (p >= 11) (showString "DependencyFlags " . showsPrec 11 x)
 
 instance Read DependencyFlags where
-  readPrec = parens ( choose [ ("VK_DEPENDENCY_BY_REGION_BIT", pure VK_DEPENDENCY_BY_REGION_BIT)
+  readPrec = parens ( choose [ ("DependencyByRegionBit", pure DependencyByRegionBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "DependencyFlags")
@@ -135,7 +135,7 @@ instance Read DependencyFlags where
                     )
 
 -- | Dependency is per pixel region 
-pattern VK_DEPENDENCY_BY_REGION_BIT = DependencyFlags 0x1
+pattern DependencyByRegionBit = DependencyFlags 0x1
 
 
 -- ** destroyRenderPass
@@ -251,44 +251,44 @@ newtype AccessFlags = AccessFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show AccessFlags where
-  showsPrec _ VK_ACCESS_INDIRECT_COMMAND_READ_BIT = showString "VK_ACCESS_INDIRECT_COMMAND_READ_BIT"
-  showsPrec _ VK_ACCESS_INDEX_READ_BIT = showString "VK_ACCESS_INDEX_READ_BIT"
-  showsPrec _ VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = showString "VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT"
-  showsPrec _ VK_ACCESS_UNIFORM_READ_BIT = showString "VK_ACCESS_UNIFORM_READ_BIT"
-  showsPrec _ VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = showString "VK_ACCESS_INPUT_ATTACHMENT_READ_BIT"
-  showsPrec _ VK_ACCESS_SHADER_READ_BIT = showString "VK_ACCESS_SHADER_READ_BIT"
-  showsPrec _ VK_ACCESS_SHADER_WRITE_BIT = showString "VK_ACCESS_SHADER_WRITE_BIT"
-  showsPrec _ VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = showString "VK_ACCESS_COLOR_ATTACHMENT_READ_BIT"
-  showsPrec _ VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = showString "VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT"
-  showsPrec _ VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = showString "VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT"
-  showsPrec _ VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = showString "VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"
-  showsPrec _ VK_ACCESS_TRANSFER_READ_BIT = showString "VK_ACCESS_TRANSFER_READ_BIT"
-  showsPrec _ VK_ACCESS_TRANSFER_WRITE_BIT = showString "VK_ACCESS_TRANSFER_WRITE_BIT"
-  showsPrec _ VK_ACCESS_HOST_READ_BIT = showString "VK_ACCESS_HOST_READ_BIT"
-  showsPrec _ VK_ACCESS_HOST_WRITE_BIT = showString "VK_ACCESS_HOST_WRITE_BIT"
-  showsPrec _ VK_ACCESS_MEMORY_READ_BIT = showString "VK_ACCESS_MEMORY_READ_BIT"
-  showsPrec _ VK_ACCESS_MEMORY_WRITE_BIT = showString "VK_ACCESS_MEMORY_WRITE_BIT"
+  showsPrec _ AccessIndirectCommandReadBit = showString "AccessIndirectCommandReadBit"
+  showsPrec _ AccessIndexReadBit = showString "AccessIndexReadBit"
+  showsPrec _ AccessVertexAttributeReadBit = showString "AccessVertexAttributeReadBit"
+  showsPrec _ AccessUniformReadBit = showString "AccessUniformReadBit"
+  showsPrec _ AccessInputAttachmentReadBit = showString "AccessInputAttachmentReadBit"
+  showsPrec _ AccessShaderReadBit = showString "AccessShaderReadBit"
+  showsPrec _ AccessShaderWriteBit = showString "AccessShaderWriteBit"
+  showsPrec _ AccessColorAttachmentReadBit = showString "AccessColorAttachmentReadBit"
+  showsPrec _ AccessColorAttachmentWriteBit = showString "AccessColorAttachmentWriteBit"
+  showsPrec _ AccessDepthStencilAttachmentReadBit = showString "AccessDepthStencilAttachmentReadBit"
+  showsPrec _ AccessDepthStencilAttachmentWriteBit = showString "AccessDepthStencilAttachmentWriteBit"
+  showsPrec _ AccessTransferReadBit = showString "AccessTransferReadBit"
+  showsPrec _ AccessTransferWriteBit = showString "AccessTransferWriteBit"
+  showsPrec _ AccessHostReadBit = showString "AccessHostReadBit"
+  showsPrec _ AccessHostWriteBit = showString "AccessHostWriteBit"
+  showsPrec _ AccessMemoryReadBit = showString "AccessMemoryReadBit"
+  showsPrec _ AccessMemoryWriteBit = showString "AccessMemoryWriteBit"
   
   showsPrec p (AccessFlags x) = showParen (p >= 11) (showString "AccessFlags " . showsPrec 11 x)
 
 instance Read AccessFlags where
-  readPrec = parens ( choose [ ("VK_ACCESS_INDIRECT_COMMAND_READ_BIT", pure VK_ACCESS_INDIRECT_COMMAND_READ_BIT)
-                             , ("VK_ACCESS_INDEX_READ_BIT", pure VK_ACCESS_INDEX_READ_BIT)
-                             , ("VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT", pure VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT)
-                             , ("VK_ACCESS_UNIFORM_READ_BIT", pure VK_ACCESS_UNIFORM_READ_BIT)
-                             , ("VK_ACCESS_INPUT_ATTACHMENT_READ_BIT", pure VK_ACCESS_INPUT_ATTACHMENT_READ_BIT)
-                             , ("VK_ACCESS_SHADER_READ_BIT", pure VK_ACCESS_SHADER_READ_BIT)
-                             , ("VK_ACCESS_SHADER_WRITE_BIT", pure VK_ACCESS_SHADER_WRITE_BIT)
-                             , ("VK_ACCESS_COLOR_ATTACHMENT_READ_BIT", pure VK_ACCESS_COLOR_ATTACHMENT_READ_BIT)
-                             , ("VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT", pure VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
-                             , ("VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT", pure VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT)
-                             , ("VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT", pure VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)
-                             , ("VK_ACCESS_TRANSFER_READ_BIT", pure VK_ACCESS_TRANSFER_READ_BIT)
-                             , ("VK_ACCESS_TRANSFER_WRITE_BIT", pure VK_ACCESS_TRANSFER_WRITE_BIT)
-                             , ("VK_ACCESS_HOST_READ_BIT", pure VK_ACCESS_HOST_READ_BIT)
-                             , ("VK_ACCESS_HOST_WRITE_BIT", pure VK_ACCESS_HOST_WRITE_BIT)
-                             , ("VK_ACCESS_MEMORY_READ_BIT", pure VK_ACCESS_MEMORY_READ_BIT)
-                             , ("VK_ACCESS_MEMORY_WRITE_BIT", pure VK_ACCESS_MEMORY_WRITE_BIT)
+  readPrec = parens ( choose [ ("AccessIndirectCommandReadBit", pure AccessIndirectCommandReadBit)
+                             , ("AccessIndexReadBit", pure AccessIndexReadBit)
+                             , ("AccessVertexAttributeReadBit", pure AccessVertexAttributeReadBit)
+                             , ("AccessUniformReadBit", pure AccessUniformReadBit)
+                             , ("AccessInputAttachmentReadBit", pure AccessInputAttachmentReadBit)
+                             , ("AccessShaderReadBit", pure AccessShaderReadBit)
+                             , ("AccessShaderWriteBit", pure AccessShaderWriteBit)
+                             , ("AccessColorAttachmentReadBit", pure AccessColorAttachmentReadBit)
+                             , ("AccessColorAttachmentWriteBit", pure AccessColorAttachmentWriteBit)
+                             , ("AccessDepthStencilAttachmentReadBit", pure AccessDepthStencilAttachmentReadBit)
+                             , ("AccessDepthStencilAttachmentWriteBit", pure AccessDepthStencilAttachmentWriteBit)
+                             , ("AccessTransferReadBit", pure AccessTransferReadBit)
+                             , ("AccessTransferWriteBit", pure AccessTransferWriteBit)
+                             , ("AccessHostReadBit", pure AccessHostReadBit)
+                             , ("AccessHostWriteBit", pure AccessHostWriteBit)
+                             , ("AccessMemoryReadBit", pure AccessMemoryReadBit)
+                             , ("AccessMemoryWriteBit", pure AccessMemoryWriteBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "AccessFlags")
@@ -298,39 +298,39 @@ instance Read AccessFlags where
                     )
 
 -- | Controls coherency of indirect command reads
-pattern VK_ACCESS_INDIRECT_COMMAND_READ_BIT = AccessFlags 0x1
+pattern AccessIndirectCommandReadBit = AccessFlags 0x1
 -- | Controls coherency of index reads
-pattern VK_ACCESS_INDEX_READ_BIT = AccessFlags 0x2
+pattern AccessIndexReadBit = AccessFlags 0x2
 -- | Controls coherency of vertex attribute reads
-pattern VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = AccessFlags 0x4
+pattern AccessVertexAttributeReadBit = AccessFlags 0x4
 -- | Controls coherency of uniform buffer reads
-pattern VK_ACCESS_UNIFORM_READ_BIT = AccessFlags 0x8
+pattern AccessUniformReadBit = AccessFlags 0x8
 -- | Controls coherency of input attachment reads
-pattern VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = AccessFlags 0x10
+pattern AccessInputAttachmentReadBit = AccessFlags 0x10
 -- | Controls coherency of shader reads
-pattern VK_ACCESS_SHADER_READ_BIT = AccessFlags 0x20
+pattern AccessShaderReadBit = AccessFlags 0x20
 -- | Controls coherency of shader writes
-pattern VK_ACCESS_SHADER_WRITE_BIT = AccessFlags 0x40
+pattern AccessShaderWriteBit = AccessFlags 0x40
 -- | Controls coherency of color attachment reads
-pattern VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = AccessFlags 0x80
+pattern AccessColorAttachmentReadBit = AccessFlags 0x80
 -- | Controls coherency of color attachment writes
-pattern VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = AccessFlags 0x100
+pattern AccessColorAttachmentWriteBit = AccessFlags 0x100
 -- | Controls coherency of depth/stencil attachment reads
-pattern VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = AccessFlags 0x200
+pattern AccessDepthStencilAttachmentReadBit = AccessFlags 0x200
 -- | Controls coherency of depth/stencil attachment writes
-pattern VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = AccessFlags 0x400
+pattern AccessDepthStencilAttachmentWriteBit = AccessFlags 0x400
 -- | Controls coherency of transfer reads
-pattern VK_ACCESS_TRANSFER_READ_BIT = AccessFlags 0x800
+pattern AccessTransferReadBit = AccessFlags 0x800
 -- | Controls coherency of transfer writes
-pattern VK_ACCESS_TRANSFER_WRITE_BIT = AccessFlags 0x1000
+pattern AccessTransferWriteBit = AccessFlags 0x1000
 -- | Controls coherency of host reads
-pattern VK_ACCESS_HOST_READ_BIT = AccessFlags 0x2000
+pattern AccessHostReadBit = AccessFlags 0x2000
 -- | Controls coherency of host writes
-pattern VK_ACCESS_HOST_WRITE_BIT = AccessFlags 0x4000
+pattern AccessHostWriteBit = AccessFlags 0x4000
 -- | Controls coherency of memory reads
-pattern VK_ACCESS_MEMORY_READ_BIT = AccessFlags 0x8000
+pattern AccessMemoryReadBit = AccessFlags 0x8000
 -- | Controls coherency of memory writes
-pattern VK_ACCESS_MEMORY_WRITE_BIT = AccessFlags 0x10000
+pattern AccessMemoryWriteBit = AccessFlags 0x10000
 
 
 newtype RenderPass = RenderPass Word64

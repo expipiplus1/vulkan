@@ -181,17 +181,17 @@ newtype CullModeFlags = CullModeFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CullModeFlags where
-  showsPrec _ VK_CULL_MODE_FRONT_BIT = showString "VK_CULL_MODE_FRONT_BIT"
-  showsPrec _ VK_CULL_MODE_BACK_BIT = showString "VK_CULL_MODE_BACK_BIT"
-  showsPrec _ VK_CULL_MODE_NONE = showString "VK_CULL_MODE_NONE"
-  showsPrec _ VK_CULL_MODE_FRONT_AND_BACK = showString "VK_CULL_MODE_FRONT_AND_BACK"
+  showsPrec _ CullModeFrontBit = showString "CullModeFrontBit"
+  showsPrec _ CullModeBackBit = showString "CullModeBackBit"
+  showsPrec _ CullModeNone = showString "CullModeNone"
+  showsPrec _ CullModeFrontAndBack = showString "CullModeFrontAndBack"
   showsPrec p (CullModeFlags x) = showParen (p >= 11) (showString "CullModeFlags " . showsPrec 11 x)
 
 instance Read CullModeFlags where
-  readPrec = parens ( choose [ ("VK_CULL_MODE_FRONT_BIT", pure VK_CULL_MODE_FRONT_BIT)
-                             , ("VK_CULL_MODE_BACK_BIT", pure VK_CULL_MODE_BACK_BIT)
-                             , ("VK_CULL_MODE_NONE", pure VK_CULL_MODE_NONE)
-                             , ("VK_CULL_MODE_FRONT_AND_BACK", pure VK_CULL_MODE_FRONT_AND_BACK)
+  readPrec = parens ( choose [ ("CullModeFrontBit", pure CullModeFrontBit)
+                             , ("CullModeBackBit", pure CullModeBackBit)
+                             , ("CullModeNone", pure CullModeNone)
+                             , ("CullModeFrontAndBack", pure CullModeFrontAndBack)
                              ] +++
                       prec 10 (do
                         expectP (Ident "CullModeFlags")
@@ -201,13 +201,13 @@ instance Read CullModeFlags where
                     )
 
 
-pattern VK_CULL_MODE_FRONT_BIT = CullModeFlags 0x1
+pattern CullModeFrontBit = CullModeFlags 0x1
 
-pattern VK_CULL_MODE_BACK_BIT = CullModeFlags 0x2
+pattern CullModeBackBit = CullModeFlags 0x2
 
-pattern VK_CULL_MODE_NONE = CullModeFlags 0x0
+pattern CullModeNone = CullModeFlags 0x0
 
-pattern VK_CULL_MODE_FRONT_AND_BACK = CullModeFlags 0x3
+pattern CullModeFrontAndBack = CullModeFlags 0x3
 
 -- ** PipelineDepthStencilStateCreateFlags
 -- | Opaque flag
@@ -251,18 +251,18 @@ newtype ColorComponentFlags = ColorComponentFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ColorComponentFlags where
-  showsPrec _ VK_COLOR_COMPONENT_R_BIT = showString "VK_COLOR_COMPONENT_R_BIT"
-  showsPrec _ VK_COLOR_COMPONENT_G_BIT = showString "VK_COLOR_COMPONENT_G_BIT"
-  showsPrec _ VK_COLOR_COMPONENT_B_BIT = showString "VK_COLOR_COMPONENT_B_BIT"
-  showsPrec _ VK_COLOR_COMPONENT_A_BIT = showString "VK_COLOR_COMPONENT_A_BIT"
+  showsPrec _ ColorComponentRBit = showString "ColorComponentRBit"
+  showsPrec _ ColorComponentGBit = showString "ColorComponentGBit"
+  showsPrec _ ColorComponentBBit = showString "ColorComponentBBit"
+  showsPrec _ ColorComponentABit = showString "ColorComponentABit"
   
   showsPrec p (ColorComponentFlags x) = showParen (p >= 11) (showString "ColorComponentFlags " . showsPrec 11 x)
 
 instance Read ColorComponentFlags where
-  readPrec = parens ( choose [ ("VK_COLOR_COMPONENT_R_BIT", pure VK_COLOR_COMPONENT_R_BIT)
-                             , ("VK_COLOR_COMPONENT_G_BIT", pure VK_COLOR_COMPONENT_G_BIT)
-                             , ("VK_COLOR_COMPONENT_B_BIT", pure VK_COLOR_COMPONENT_B_BIT)
-                             , ("VK_COLOR_COMPONENT_A_BIT", pure VK_COLOR_COMPONENT_A_BIT)
+  readPrec = parens ( choose [ ("ColorComponentRBit", pure ColorComponentRBit)
+                             , ("ColorComponentGBit", pure ColorComponentGBit)
+                             , ("ColorComponentBBit", pure ColorComponentBBit)
+                             , ("ColorComponentABit", pure ColorComponentABit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ColorComponentFlags")
@@ -272,13 +272,13 @@ instance Read ColorComponentFlags where
                     )
 
 
-pattern VK_COLOR_COMPONENT_R_BIT = ColorComponentFlags 0x1
+pattern ColorComponentRBit = ColorComponentFlags 0x1
 
-pattern VK_COLOR_COMPONENT_G_BIT = ColorComponentFlags 0x2
+pattern ColorComponentGBit = ColorComponentFlags 0x2
 
-pattern VK_COLOR_COMPONENT_B_BIT = ColorComponentFlags 0x4
+pattern ColorComponentBBit = ColorComponentFlags 0x4
 
-pattern VK_COLOR_COMPONENT_A_BIT = ColorComponentFlags 0x8
+pattern ColorComponentABit = ColorComponentFlags 0x8
 
 
 
@@ -554,16 +554,16 @@ newtype PipelineCreateFlags = PipelineCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show PipelineCreateFlags where
-  showsPrec _ VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = showString "VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT"
-  showsPrec _ VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = showString "VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT"
-  showsPrec _ VK_PIPELINE_CREATE_DERIVATIVE_BIT = showString "VK_PIPELINE_CREATE_DERIVATIVE_BIT"
+  showsPrec _ PipelineCreateDisableOptimizationBit = showString "PipelineCreateDisableOptimizationBit"
+  showsPrec _ PipelineCreateAllowDerivativesBit = showString "PipelineCreateAllowDerivativesBit"
+  showsPrec _ PipelineCreateDerivativeBit = showString "PipelineCreateDerivativeBit"
   
   showsPrec p (PipelineCreateFlags x) = showParen (p >= 11) (showString "PipelineCreateFlags " . showsPrec 11 x)
 
 instance Read PipelineCreateFlags where
-  readPrec = parens ( choose [ ("VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT", pure VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT)
-                             , ("VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT", pure VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT)
-                             , ("VK_PIPELINE_CREATE_DERIVATIVE_BIT", pure VK_PIPELINE_CREATE_DERIVATIVE_BIT)
+  readPrec = parens ( choose [ ("PipelineCreateDisableOptimizationBit", pure PipelineCreateDisableOptimizationBit)
+                             , ("PipelineCreateAllowDerivativesBit", pure PipelineCreateAllowDerivativesBit)
+                             , ("PipelineCreateDerivativeBit", pure PipelineCreateDerivativeBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "PipelineCreateFlags")
@@ -573,11 +573,11 @@ instance Read PipelineCreateFlags where
                     )
 
 
-pattern VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = PipelineCreateFlags 0x1
+pattern PipelineCreateDisableOptimizationBit = PipelineCreateFlags 0x1
 
-pattern VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT = PipelineCreateFlags 0x2
+pattern PipelineCreateAllowDerivativesBit = PipelineCreateFlags 0x2
 
-pattern VK_PIPELINE_CREATE_DERIVATIVE_BIT = PipelineCreateFlags 0x4
+pattern PipelineCreateDerivativeBit = PipelineCreateFlags 0x4
 
 
 -- ** PipelineRasterizationStateCreateFlags
@@ -1035,44 +1035,44 @@ newtype PipelineStageFlags = PipelineStageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show PipelineStageFlags where
-  showsPrec _ VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = showString "VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT = showString "VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_VERTEX_INPUT_BIT = showString "VK_PIPELINE_STAGE_VERTEX_INPUT_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_VERTEX_SHADER_BIT = showString "VK_PIPELINE_STAGE_VERTEX_SHADER_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT = showString "VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT = showString "VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT = showString "VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT = showString "VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT = showString "VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT = showString "VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT = showString "VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT = showString "VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_TRANSFER_BIT = showString "VK_PIPELINE_STAGE_TRANSFER_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT = showString "VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_HOST_BIT = showString "VK_PIPELINE_STAGE_HOST_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = showString "VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT"
-  showsPrec _ VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = showString "VK_PIPELINE_STAGE_ALL_COMMANDS_BIT"
+  showsPrec _ PipelineStageTopOfPipeBit = showString "PipelineStageTopOfPipeBit"
+  showsPrec _ PipelineStageDrawIndirectBit = showString "PipelineStageDrawIndirectBit"
+  showsPrec _ PipelineStageVertexInputBit = showString "PipelineStageVertexInputBit"
+  showsPrec _ PipelineStageVertexShaderBit = showString "PipelineStageVertexShaderBit"
+  showsPrec _ PipelineStageTessellationControlShaderBit = showString "PipelineStageTessellationControlShaderBit"
+  showsPrec _ PipelineStageTessellationEvaluationShaderBit = showString "PipelineStageTessellationEvaluationShaderBit"
+  showsPrec _ PipelineStageGeometryShaderBit = showString "PipelineStageGeometryShaderBit"
+  showsPrec _ PipelineStageFragmentShaderBit = showString "PipelineStageFragmentShaderBit"
+  showsPrec _ PipelineStageEarlyFragmentTestsBit = showString "PipelineStageEarlyFragmentTestsBit"
+  showsPrec _ PipelineStageLateFragmentTestsBit = showString "PipelineStageLateFragmentTestsBit"
+  showsPrec _ PipelineStageColorAttachmentOutputBit = showString "PipelineStageColorAttachmentOutputBit"
+  showsPrec _ PipelineStageComputeShaderBit = showString "PipelineStageComputeShaderBit"
+  showsPrec _ PipelineStageTransferBit = showString "PipelineStageTransferBit"
+  showsPrec _ PipelineStageBottomOfPipeBit = showString "PipelineStageBottomOfPipeBit"
+  showsPrec _ PipelineStageHostBit = showString "PipelineStageHostBit"
+  showsPrec _ PipelineStageAllGraphicsBit = showString "PipelineStageAllGraphicsBit"
+  showsPrec _ PipelineStageAllCommandsBit = showString "PipelineStageAllCommandsBit"
   
   showsPrec p (PipelineStageFlags x) = showParen (p >= 11) (showString "PipelineStageFlags " . showsPrec 11 x)
 
 instance Read PipelineStageFlags where
-  readPrec = parens ( choose [ ("VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT", pure VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT)
-                             , ("VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT", pure VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT)
-                             , ("VK_PIPELINE_STAGE_VERTEX_INPUT_BIT", pure VK_PIPELINE_STAGE_VERTEX_INPUT_BIT)
-                             , ("VK_PIPELINE_STAGE_VERTEX_SHADER_BIT", pure VK_PIPELINE_STAGE_VERTEX_SHADER_BIT)
-                             , ("VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT", pure VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT)
-                             , ("VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT", pure VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT)
-                             , ("VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT", pure VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT)
-                             , ("VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT", pure VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT)
-                             , ("VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT", pure VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT)
-                             , ("VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT", pure VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT)
-                             , ("VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT", pure VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT)
-                             , ("VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT", pure VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT)
-                             , ("VK_PIPELINE_STAGE_TRANSFER_BIT", pure VK_PIPELINE_STAGE_TRANSFER_BIT)
-                             , ("VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT", pure VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT)
-                             , ("VK_PIPELINE_STAGE_HOST_BIT", pure VK_PIPELINE_STAGE_HOST_BIT)
-                             , ("VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT", pure VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT)
-                             , ("VK_PIPELINE_STAGE_ALL_COMMANDS_BIT", pure VK_PIPELINE_STAGE_ALL_COMMANDS_BIT)
+  readPrec = parens ( choose [ ("PipelineStageTopOfPipeBit", pure PipelineStageTopOfPipeBit)
+                             , ("PipelineStageDrawIndirectBit", pure PipelineStageDrawIndirectBit)
+                             , ("PipelineStageVertexInputBit", pure PipelineStageVertexInputBit)
+                             , ("PipelineStageVertexShaderBit", pure PipelineStageVertexShaderBit)
+                             , ("PipelineStageTessellationControlShaderBit", pure PipelineStageTessellationControlShaderBit)
+                             , ("PipelineStageTessellationEvaluationShaderBit", pure PipelineStageTessellationEvaluationShaderBit)
+                             , ("PipelineStageGeometryShaderBit", pure PipelineStageGeometryShaderBit)
+                             , ("PipelineStageFragmentShaderBit", pure PipelineStageFragmentShaderBit)
+                             , ("PipelineStageEarlyFragmentTestsBit", pure PipelineStageEarlyFragmentTestsBit)
+                             , ("PipelineStageLateFragmentTestsBit", pure PipelineStageLateFragmentTestsBit)
+                             , ("PipelineStageColorAttachmentOutputBit", pure PipelineStageColorAttachmentOutputBit)
+                             , ("PipelineStageComputeShaderBit", pure PipelineStageComputeShaderBit)
+                             , ("PipelineStageTransferBit", pure PipelineStageTransferBit)
+                             , ("PipelineStageBottomOfPipeBit", pure PipelineStageBottomOfPipeBit)
+                             , ("PipelineStageHostBit", pure PipelineStageHostBit)
+                             , ("PipelineStageAllGraphicsBit", pure PipelineStageAllGraphicsBit)
+                             , ("PipelineStageAllCommandsBit", pure PipelineStageAllCommandsBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "PipelineStageFlags")
@@ -1082,39 +1082,39 @@ instance Read PipelineStageFlags where
                     )
 
 -- | Before subsequent commands are processed
-pattern VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = PipelineStageFlags 0x1
+pattern PipelineStageTopOfPipeBit = PipelineStageFlags 0x1
 -- | Draw/DispatchIndirect command fetch
-pattern VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT = PipelineStageFlags 0x2
+pattern PipelineStageDrawIndirectBit = PipelineStageFlags 0x2
 -- | Vertex/index fetch
-pattern VK_PIPELINE_STAGE_VERTEX_INPUT_BIT = PipelineStageFlags 0x4
+pattern PipelineStageVertexInputBit = PipelineStageFlags 0x4
 -- | Vertex shading
-pattern VK_PIPELINE_STAGE_VERTEX_SHADER_BIT = PipelineStageFlags 0x8
+pattern PipelineStageVertexShaderBit = PipelineStageFlags 0x8
 -- | Tessellation control shading
-pattern VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT = PipelineStageFlags 0x10
+pattern PipelineStageTessellationControlShaderBit = PipelineStageFlags 0x10
 -- | Tessellation evaluation shading
-pattern VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT = PipelineStageFlags 0x20
+pattern PipelineStageTessellationEvaluationShaderBit = PipelineStageFlags 0x20
 -- | Geometry shading
-pattern VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT = PipelineStageFlags 0x40
+pattern PipelineStageGeometryShaderBit = PipelineStageFlags 0x40
 -- | Fragment shading
-pattern VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT = PipelineStageFlags 0x80
+pattern PipelineStageFragmentShaderBit = PipelineStageFlags 0x80
 -- | Early fragment (depth and stencil) tests
-pattern VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT = PipelineStageFlags 0x100
+pattern PipelineStageEarlyFragmentTestsBit = PipelineStageFlags 0x100
 -- | Late fragment (depth and stencil) tests
-pattern VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT = PipelineStageFlags 0x200
+pattern PipelineStageLateFragmentTestsBit = PipelineStageFlags 0x200
 -- | Color attachment writes
-pattern VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT = PipelineStageFlags 0x400
+pattern PipelineStageColorAttachmentOutputBit = PipelineStageFlags 0x400
 -- | Compute shading
-pattern VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT = PipelineStageFlags 0x800
+pattern PipelineStageComputeShaderBit = PipelineStageFlags 0x800
 -- | Transfer/copy operations
-pattern VK_PIPELINE_STAGE_TRANSFER_BIT = PipelineStageFlags 0x1000
+pattern PipelineStageTransferBit = PipelineStageFlags 0x1000
 -- | After previous commands have completed
-pattern VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT = PipelineStageFlags 0x2000
+pattern PipelineStageBottomOfPipeBit = PipelineStageFlags 0x2000
 -- | Indicates host (CPU) is a source/sink of the dependency
-pattern VK_PIPELINE_STAGE_HOST_BIT = PipelineStageFlags 0x4000
+pattern PipelineStageHostBit = PipelineStageFlags 0x4000
 -- | All stages of the graphics pipeline
-pattern VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = PipelineStageFlags 0x8000
+pattern PipelineStageAllGraphicsBit = PipelineStageFlags 0x8000
 -- | All stages supported on the queue
-pattern VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = PipelineStageFlags 0x10000
+pattern PipelineStageAllCommandsBit = PipelineStageFlags 0x10000
 
 
 

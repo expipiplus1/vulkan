@@ -233,12 +233,12 @@ newtype DescriptorPoolCreateFlags = DescriptorPoolCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show DescriptorPoolCreateFlags where
-  showsPrec _ VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = showString "VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT"
+  showsPrec _ DescriptorPoolCreateFreeDescriptorSetBit = showString "DescriptorPoolCreateFreeDescriptorSetBit"
   
   showsPrec p (DescriptorPoolCreateFlags x) = showParen (p >= 11) (showString "DescriptorPoolCreateFlags " . showsPrec 11 x)
 
 instance Read DescriptorPoolCreateFlags where
-  readPrec = parens ( choose [ ("VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT", pure VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
+  readPrec = parens ( choose [ ("DescriptorPoolCreateFreeDescriptorSetBit", pure DescriptorPoolCreateFreeDescriptorSetBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "DescriptorPoolCreateFlags")
@@ -248,7 +248,7 @@ instance Read DescriptorPoolCreateFlags where
                     )
 
 -- | Descriptor sets may be freed individually
-pattern VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = DescriptorPoolCreateFlags 0x1
+pattern DescriptorPoolCreateFreeDescriptorSetBit = DescriptorPoolCreateFlags 0x1
 
 
 

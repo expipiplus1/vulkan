@@ -236,16 +236,16 @@ newtype SparseImageFormatFlags = SparseImageFormatFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show SparseImageFormatFlags where
-  showsPrec _ VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = showString "VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"
-  showsPrec _ VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = showString "VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT"
-  showsPrec _ VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = showString "VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT"
+  showsPrec _ SparseImageFormatSingleMiptailBit = showString "SparseImageFormatSingleMiptailBit"
+  showsPrec _ SparseImageFormatAlignedMipSizeBit = showString "SparseImageFormatAlignedMipSizeBit"
+  showsPrec _ SparseImageFormatNonstandardBlockSizeBit = showString "SparseImageFormatNonstandardBlockSizeBit"
   
   showsPrec p (SparseImageFormatFlags x) = showParen (p >= 11) (showString "SparseImageFormatFlags " . showsPrec 11 x)
 
 instance Read SparseImageFormatFlags where
-  readPrec = parens ( choose [ ("VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT", pure VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT)
-                             , ("VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT", pure VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT)
-                             , ("VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT", pure VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT)
+  readPrec = parens ( choose [ ("SparseImageFormatSingleMiptailBit", pure SparseImageFormatSingleMiptailBit)
+                             , ("SparseImageFormatAlignedMipSizeBit", pure SparseImageFormatAlignedMipSizeBit)
+                             , ("SparseImageFormatNonstandardBlockSizeBit", pure SparseImageFormatNonstandardBlockSizeBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "SparseImageFormatFlags")
@@ -255,11 +255,11 @@ instance Read SparseImageFormatFlags where
                     )
 
 -- | Image uses a single miptail region for all array layers
-pattern VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = SparseImageFormatFlags 0x1
+pattern SparseImageFormatSingleMiptailBit = SparseImageFormatFlags 0x1
 -- | Image requires mip levels to be an exact multiple of the sparse image block size for non-miptail levels.
-pattern VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = SparseImageFormatFlags 0x2
+pattern SparseImageFormatAlignedMipSizeBit = SparseImageFormatFlags 0x2
 -- | Image uses a non-standard sparse block size
-pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = SparseImageFormatFlags 0x4
+pattern SparseImageFormatNonstandardBlockSizeBit = SparseImageFormatFlags 0x4
 
 
 -- ** getPhysicalDeviceSparseImageFormatProperties
@@ -278,12 +278,12 @@ newtype SparseMemoryBindFlags = SparseMemoryBindFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show SparseMemoryBindFlags where
-  showsPrec _ VK_SPARSE_MEMORY_BIND_METADATA_BIT = showString "VK_SPARSE_MEMORY_BIND_METADATA_BIT"
+  showsPrec _ SparseMemoryBindMetadataBit = showString "SparseMemoryBindMetadataBit"
   
   showsPrec p (SparseMemoryBindFlags x) = showParen (p >= 11) (showString "SparseMemoryBindFlags " . showsPrec 11 x)
 
 instance Read SparseMemoryBindFlags where
-  readPrec = parens ( choose [ ("VK_SPARSE_MEMORY_BIND_METADATA_BIT", pure VK_SPARSE_MEMORY_BIND_METADATA_BIT)
+  readPrec = parens ( choose [ ("SparseMemoryBindMetadataBit", pure SparseMemoryBindMetadataBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "SparseMemoryBindFlags")
@@ -293,7 +293,7 @@ instance Read SparseMemoryBindFlags where
                     )
 
 -- | Operation binds resource metadata to memory
-pattern VK_SPARSE_MEMORY_BIND_METADATA_BIT = SparseMemoryBindFlags 0x1
+pattern SparseMemoryBindMetadataBit = SparseMemoryBindFlags 0x1
 
 
 

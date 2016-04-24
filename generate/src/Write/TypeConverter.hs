@@ -136,7 +136,7 @@ arraySizeToNat s = case s of
                        sizeName <- case Map.lookup sizeId typeMap of
                          Just (m, n) -> do
                            tellRequiredName (ExternalName m n)
-                           pure sizeId
+                           pure n
                          Nothing ->
                            pure sizeId
                        let typeNat = PromotedCon False (UnQual $ Ident sizeName)

@@ -92,16 +92,16 @@ newtype CommandBufferUsageFlags = CommandBufferUsageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CommandBufferUsageFlags where
-  showsPrec _ VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = showString "VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT"
-  showsPrec _ VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = showString "VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT"
-  showsPrec _ VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = showString "VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT"
+  showsPrec _ CommandBufferUsageOneTimeSubmitBit = showString "CommandBufferUsageOneTimeSubmitBit"
+  showsPrec _ CommandBufferUsageRenderPassContinueBit = showString "CommandBufferUsageRenderPassContinueBit"
+  showsPrec _ CommandBufferUsageSimultaneousUseBit = showString "CommandBufferUsageSimultaneousUseBit"
   
   showsPrec p (CommandBufferUsageFlags x) = showParen (p >= 11) (showString "CommandBufferUsageFlags " . showsPrec 11 x)
 
 instance Read CommandBufferUsageFlags where
-  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT", pure VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT)
-                             , ("VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT", pure VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT)
-                             , ("VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT", pure VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
+  readPrec = parens ( choose [ ("CommandBufferUsageOneTimeSubmitBit", pure CommandBufferUsageOneTimeSubmitBit)
+                             , ("CommandBufferUsageRenderPassContinueBit", pure CommandBufferUsageRenderPassContinueBit)
+                             , ("CommandBufferUsageSimultaneousUseBit", pure CommandBufferUsageSimultaneousUseBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "CommandBufferUsageFlags")
@@ -111,11 +111,11 @@ instance Read CommandBufferUsageFlags where
                     )
 
 
-pattern VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = CommandBufferUsageFlags 0x1
+pattern CommandBufferUsageOneTimeSubmitBit = CommandBufferUsageFlags 0x1
 
-pattern VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = CommandBufferUsageFlags 0x2
+pattern CommandBufferUsageRenderPassContinueBit = CommandBufferUsageFlags 0x2
 -- | Command buffer may be submitted/executed more than once simultaneously
-pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = CommandBufferUsageFlags 0x4
+pattern CommandBufferUsageSimultaneousUseBit = CommandBufferUsageFlags 0x4
 
 
 
@@ -183,12 +183,12 @@ newtype CommandBufferResetFlags = CommandBufferResetFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CommandBufferResetFlags where
-  showsPrec _ VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
+  showsPrec _ CommandBufferResetReleaseResourcesBit = showString "CommandBufferResetReleaseResourcesBit"
   
   showsPrec p (CommandBufferResetFlags x) = showParen (p >= 11) (showString "CommandBufferResetFlags " . showsPrec 11 x)
 
 instance Read CommandBufferResetFlags where
-  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT", pure VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT)
+  readPrec = parens ( choose [ ("CommandBufferResetReleaseResourcesBit", pure CommandBufferResetReleaseResourcesBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "CommandBufferResetFlags")
@@ -198,7 +198,7 @@ instance Read CommandBufferResetFlags where
                     )
 
 -- | Release resources owned by the buffer
-pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = CommandBufferResetFlags 0x1
+pattern CommandBufferResetReleaseResourcesBit = CommandBufferResetFlags 0x1
 
 
 -- ** endCommandBuffer

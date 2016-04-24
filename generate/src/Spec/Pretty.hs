@@ -2,7 +2,9 @@ module Spec.Pretty
   ( prettifySpec
   ) where
 
+import           Spec.Bitmask
 import           Spec.Command
+import           Spec.Constant
 import           Spec.Enum
 import           Spec.Spec
 import           Spec.Type
@@ -11,6 +13,8 @@ import           Write.Utils
 prettifySpec :: Spec -> Spec
 prettifySpec spec = spec { sTypes = nameType <$> sTypes spec
                          , sEnums = nameEnum <$> sEnums spec
+                         , sConstants = nameConstant <$> sConstants spec
+                         , sBitmasks = nameBitmask <$> sBitmasks spec
                          , sCommands = nameCommand <$> sCommands spec
                          }
   where
@@ -38,9 +42,18 @@ prettifySpec spec = spec { sTypes = nameType <$> sTypes spec
                    , eElements = nameEnumElement <$> eElements e
                    }
 
+    nameConstant c = c { Spec.Constant.cHsName = pascalCase_ . dropVK $ Spec.Constant.cHsName c }
+
     nameEnumElement ee = ee { eeHsName = pascalCase_ . dropVK $ eeHsName ee }
 
-    nameCommand c = c { cHsName = lowerFirst . dropVK $ cHsName c
+    nameBitmask bm = bm { bmValues = nameBitmaskValue <$> bmValues bm
+                        , bmBitPositions = nameBitmaskBitPosition <$> bmBitPositions bm
+                        }
+
+    nameBitmaskValue bmv = bmv { bmvHsName = pascalCase_ . dropVK $ bmvHsName bmv }
+    nameBitmaskBitPosition bmbp = bmbp { bmbpHsName = pascalCase_ . dropVK $ bmbpHsName bmbp }
+
+    nameCommand c = c { Spec.Command.cHsName = lowerFirst . dropVK $ Spec.Command.cHsName c
                       , cParameters = nameParameter <$> cParameters c
                       }
     nameParameter p = p

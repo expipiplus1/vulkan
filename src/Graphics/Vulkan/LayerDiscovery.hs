@@ -14,8 +14,8 @@ import Foreign.Ptr( Ptr(..)
                   )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Constants( VK_MAX_DESCRIPTION_SIZE
-                                , VK_MAX_EXTENSION_NAME_SIZE
+import Graphics.Vulkan.Constants( MaxDescriptionSize
+                                , MaxExtensionNameSize
                                 )
 import Graphics.Vulkan.Core( Result(..)
                            )
@@ -24,10 +24,10 @@ import Foreign.C.Types( CChar(..)
 
 
 data LayerProperties =
-  LayerProperties{ layerName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 
+  LayerProperties{ layerName :: Vector MaxExtensionNameSize CChar 
                  , specVersion :: Word32 
                  , implementationVersion :: Word32 
-                 , description :: Vector VK_MAX_DESCRIPTION_SIZE CChar 
+                 , description :: Vector MaxDescriptionSize CChar 
                  }
   deriving (Eq)
 

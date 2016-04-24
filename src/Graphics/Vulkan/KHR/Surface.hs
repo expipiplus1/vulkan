@@ -60,18 +60,18 @@ newtype CompositeAlphaFlagsKHR = CompositeAlphaFlagsKHR Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show CompositeAlphaFlagsKHR where
-  showsPrec _ VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = showString "VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
-  showsPrec _ VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = showString "VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR"
-  showsPrec _ VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = showString "VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR"
-  showsPrec _ VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = showString "VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR"
+  showsPrec _ CompositeAlphaOpaqueBitKhr = showString "CompositeAlphaOpaqueBitKhr"
+  showsPrec _ CompositeAlphaPreMultipliedBitKhr = showString "CompositeAlphaPreMultipliedBitKhr"
+  showsPrec _ CompositeAlphaPostMultipliedBitKhr = showString "CompositeAlphaPostMultipliedBitKhr"
+  showsPrec _ CompositeAlphaInheritBitKhr = showString "CompositeAlphaInheritBitKhr"
   
   showsPrec p (CompositeAlphaFlagsKHR x) = showParen (p >= 11) (showString "CompositeAlphaFlagsKHR " . showsPrec 11 x)
 
 instance Read CompositeAlphaFlagsKHR where
-  readPrec = parens ( choose [ ("VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR", pure VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
-                             , ("VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR", pure VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR)
-                             , ("VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR", pure VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR)
-                             , ("VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR", pure VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR)
+  readPrec = parens ( choose [ ("CompositeAlphaOpaqueBitKhr", pure CompositeAlphaOpaqueBitKhr)
+                             , ("CompositeAlphaPreMultipliedBitKhr", pure CompositeAlphaPreMultipliedBitKhr)
+                             , ("CompositeAlphaPostMultipliedBitKhr", pure CompositeAlphaPostMultipliedBitKhr)
+                             , ("CompositeAlphaInheritBitKhr", pure CompositeAlphaInheritBitKhr)
                              ] +++
                       prec 10 (do
                         expectP (Ident "CompositeAlphaFlagsKHR")
@@ -81,13 +81,13 @@ instance Read CompositeAlphaFlagsKHR where
                     )
 
 
-pattern VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = CompositeAlphaFlagsKHR 0x1
+pattern CompositeAlphaOpaqueBitKhr = CompositeAlphaFlagsKHR 0x1
 
-pattern VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = CompositeAlphaFlagsKHR 0x2
+pattern CompositeAlphaPreMultipliedBitKhr = CompositeAlphaFlagsKHR 0x2
 
-pattern VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = CompositeAlphaFlagsKHR 0x4
+pattern CompositeAlphaPostMultipliedBitKhr = CompositeAlphaFlagsKHR 0x4
 
-pattern VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = CompositeAlphaFlagsKHR 0x8
+pattern CompositeAlphaInheritBitKhr = CompositeAlphaFlagsKHR 0x8
 
 
 -- ** PresentModeKHR
@@ -184,28 +184,28 @@ newtype SurfaceTransformFlagsKHR = SurfaceTransformFlagsKHR Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show SurfaceTransformFlagsKHR where
-  showsPrec _ VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = showString "VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = showString "VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = showString "VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = showString "VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = showString "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = showString "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = showString "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = showString "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = showString "VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR"
+  showsPrec _ SurfaceTransformIdentityBitKhr = showString "SurfaceTransformIdentityBitKhr"
+  showsPrec _ SurfaceTransformRotate90BitKhr = showString "SurfaceTransformRotate90BitKhr"
+  showsPrec _ SurfaceTransformRotate180BitKhr = showString "SurfaceTransformRotate180BitKhr"
+  showsPrec _ SurfaceTransformRotate270BitKhr = showString "SurfaceTransformRotate270BitKhr"
+  showsPrec _ SurfaceTransformHorizontalMirrorBitKhr = showString "SurfaceTransformHorizontalMirrorBitKhr"
+  showsPrec _ SurfaceTransformHorizontalMirrorRotate90BitKhr = showString "SurfaceTransformHorizontalMirrorRotate90BitKhr"
+  showsPrec _ SurfaceTransformHorizontalMirrorRotate180BitKhr = showString "SurfaceTransformHorizontalMirrorRotate180BitKhr"
+  showsPrec _ SurfaceTransformHorizontalMirrorRotate270BitKhr = showString "SurfaceTransformHorizontalMirrorRotate270BitKhr"
+  showsPrec _ SurfaceTransformInheritBitKhr = showString "SurfaceTransformInheritBitKhr"
   
   showsPrec p (SurfaceTransformFlagsKHR x) = showParen (p >= 11) (showString "SurfaceTransformFlagsKHR " . showsPrec 11 x)
 
 instance Read SurfaceTransformFlagsKHR where
-  readPrec = parens ( choose [ ("VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR", pure VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR", pure VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR", pure VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR", pure VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR", pure VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR", pure VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR", pure VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR", pure VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR", pure VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR)
+  readPrec = parens ( choose [ ("SurfaceTransformIdentityBitKhr", pure SurfaceTransformIdentityBitKhr)
+                             , ("SurfaceTransformRotate90BitKhr", pure SurfaceTransformRotate90BitKhr)
+                             , ("SurfaceTransformRotate180BitKhr", pure SurfaceTransformRotate180BitKhr)
+                             , ("SurfaceTransformRotate270BitKhr", pure SurfaceTransformRotate270BitKhr)
+                             , ("SurfaceTransformHorizontalMirrorBitKhr", pure SurfaceTransformHorizontalMirrorBitKhr)
+                             , ("SurfaceTransformHorizontalMirrorRotate90BitKhr", pure SurfaceTransformHorizontalMirrorRotate90BitKhr)
+                             , ("SurfaceTransformHorizontalMirrorRotate180BitKhr", pure SurfaceTransformHorizontalMirrorRotate180BitKhr)
+                             , ("SurfaceTransformHorizontalMirrorRotate270BitKhr", pure SurfaceTransformHorizontalMirrorRotate270BitKhr)
+                             , ("SurfaceTransformInheritBitKhr", pure SurfaceTransformInheritBitKhr)
                              ] +++
                       prec 10 (do
                         expectP (Ident "SurfaceTransformFlagsKHR")
@@ -215,23 +215,23 @@ instance Read SurfaceTransformFlagsKHR where
                     )
 
 
-pattern VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = SurfaceTransformFlagsKHR 0x1
+pattern SurfaceTransformIdentityBitKhr = SurfaceTransformFlagsKHR 0x1
 
-pattern VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = SurfaceTransformFlagsKHR 0x2
+pattern SurfaceTransformRotate90BitKhr = SurfaceTransformFlagsKHR 0x2
 
-pattern VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = SurfaceTransformFlagsKHR 0x4
+pattern SurfaceTransformRotate180BitKhr = SurfaceTransformFlagsKHR 0x4
 
-pattern VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = SurfaceTransformFlagsKHR 0x8
+pattern SurfaceTransformRotate270BitKhr = SurfaceTransformFlagsKHR 0x8
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = SurfaceTransformFlagsKHR 0x10
+pattern SurfaceTransformHorizontalMirrorBitKhr = SurfaceTransformFlagsKHR 0x10
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = SurfaceTransformFlagsKHR 0x20
+pattern SurfaceTransformHorizontalMirrorRotate90BitKhr = SurfaceTransformFlagsKHR 0x20
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = SurfaceTransformFlagsKHR 0x40
+pattern SurfaceTransformHorizontalMirrorRotate180BitKhr = SurfaceTransformFlagsKHR 0x40
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = SurfaceTransformFlagsKHR 0x80
+pattern SurfaceTransformHorizontalMirrorRotate270BitKhr = SurfaceTransformFlagsKHR 0x80
 
-pattern VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = SurfaceTransformFlagsKHR 0x100
+pattern SurfaceTransformInheritBitKhr = SurfaceTransformFlagsKHR 0x100
 
 
 

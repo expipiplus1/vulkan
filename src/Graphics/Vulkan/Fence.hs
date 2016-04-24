@@ -80,12 +80,12 @@ newtype FenceCreateFlags = FenceCreateFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show FenceCreateFlags where
-  showsPrec _ VK_FENCE_CREATE_SIGNALED_BIT = showString "VK_FENCE_CREATE_SIGNALED_BIT"
+  showsPrec _ FenceCreateSignaledBit = showString "FenceCreateSignaledBit"
   
   showsPrec p (FenceCreateFlags x) = showParen (p >= 11) (showString "FenceCreateFlags " . showsPrec 11 x)
 
 instance Read FenceCreateFlags where
-  readPrec = parens ( choose [ ("VK_FENCE_CREATE_SIGNALED_BIT", pure VK_FENCE_CREATE_SIGNALED_BIT)
+  readPrec = parens ( choose [ ("FenceCreateSignaledBit", pure FenceCreateSignaledBit)
                              ] +++
                       prec 10 (do
                         expectP (Ident "FenceCreateFlags")
@@ -95,7 +95,7 @@ instance Read FenceCreateFlags where
                     )
 
 
-pattern VK_FENCE_CREATE_SIGNALED_BIT = FenceCreateFlags 0x1
+pattern FenceCreateSignaledBit = FenceCreateFlags 0x1
 
 
 -- ** createFence

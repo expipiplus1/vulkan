@@ -80,25 +80,25 @@ newtype ShaderStageFlags = ShaderStageFlags Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show ShaderStageFlags where
-  showsPrec _ VK_SHADER_STAGE_VERTEX_BIT = showString "VK_SHADER_STAGE_VERTEX_BIT"
-  showsPrec _ VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = showString "VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT"
-  showsPrec _ VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = showString "VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT"
-  showsPrec _ VK_SHADER_STAGE_GEOMETRY_BIT = showString "VK_SHADER_STAGE_GEOMETRY_BIT"
-  showsPrec _ VK_SHADER_STAGE_FRAGMENT_BIT = showString "VK_SHADER_STAGE_FRAGMENT_BIT"
-  showsPrec _ VK_SHADER_STAGE_COMPUTE_BIT = showString "VK_SHADER_STAGE_COMPUTE_BIT"
-  showsPrec _ VK_SHADER_STAGE_ALL_GRAPHICS = showString "VK_SHADER_STAGE_ALL_GRAPHICS"
-  showsPrec _ VK_SHADER_STAGE_ALL = showString "VK_SHADER_STAGE_ALL"
+  showsPrec _ ShaderStageVertexBit = showString "ShaderStageVertexBit"
+  showsPrec _ ShaderStageTessellationControlBit = showString "ShaderStageTessellationControlBit"
+  showsPrec _ ShaderStageTessellationEvaluationBit = showString "ShaderStageTessellationEvaluationBit"
+  showsPrec _ ShaderStageGeometryBit = showString "ShaderStageGeometryBit"
+  showsPrec _ ShaderStageFragmentBit = showString "ShaderStageFragmentBit"
+  showsPrec _ ShaderStageComputeBit = showString "ShaderStageComputeBit"
+  showsPrec _ ShaderStageAllGraphics = showString "ShaderStageAllGraphics"
+  showsPrec _ ShaderStageAll = showString "ShaderStageAll"
   showsPrec p (ShaderStageFlags x) = showParen (p >= 11) (showString "ShaderStageFlags " . showsPrec 11 x)
 
 instance Read ShaderStageFlags where
-  readPrec = parens ( choose [ ("VK_SHADER_STAGE_VERTEX_BIT", pure VK_SHADER_STAGE_VERTEX_BIT)
-                             , ("VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT", pure VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT)
-                             , ("VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT", pure VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT)
-                             , ("VK_SHADER_STAGE_GEOMETRY_BIT", pure VK_SHADER_STAGE_GEOMETRY_BIT)
-                             , ("VK_SHADER_STAGE_FRAGMENT_BIT", pure VK_SHADER_STAGE_FRAGMENT_BIT)
-                             , ("VK_SHADER_STAGE_COMPUTE_BIT", pure VK_SHADER_STAGE_COMPUTE_BIT)
-                             , ("VK_SHADER_STAGE_ALL_GRAPHICS", pure VK_SHADER_STAGE_ALL_GRAPHICS)
-                             , ("VK_SHADER_STAGE_ALL", pure VK_SHADER_STAGE_ALL)
+  readPrec = parens ( choose [ ("ShaderStageVertexBit", pure ShaderStageVertexBit)
+                             , ("ShaderStageTessellationControlBit", pure ShaderStageTessellationControlBit)
+                             , ("ShaderStageTessellationEvaluationBit", pure ShaderStageTessellationEvaluationBit)
+                             , ("ShaderStageGeometryBit", pure ShaderStageGeometryBit)
+                             , ("ShaderStageFragmentBit", pure ShaderStageFragmentBit)
+                             , ("ShaderStageComputeBit", pure ShaderStageComputeBit)
+                             , ("ShaderStageAllGraphics", pure ShaderStageAllGraphics)
+                             , ("ShaderStageAll", pure ShaderStageAll)
                              ] +++
                       prec 10 (do
                         expectP (Ident "ShaderStageFlags")
@@ -108,21 +108,21 @@ instance Read ShaderStageFlags where
                     )
 
 
-pattern VK_SHADER_STAGE_VERTEX_BIT = ShaderStageFlags 0x1
+pattern ShaderStageVertexBit = ShaderStageFlags 0x1
 
-pattern VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT = ShaderStageFlags 0x2
+pattern ShaderStageTessellationControlBit = ShaderStageFlags 0x2
 
-pattern VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT = ShaderStageFlags 0x4
+pattern ShaderStageTessellationEvaluationBit = ShaderStageFlags 0x4
 
-pattern VK_SHADER_STAGE_GEOMETRY_BIT = ShaderStageFlags 0x8
+pattern ShaderStageGeometryBit = ShaderStageFlags 0x8
 
-pattern VK_SHADER_STAGE_FRAGMENT_BIT = ShaderStageFlags 0x10
+pattern ShaderStageFragmentBit = ShaderStageFlags 0x10
 
-pattern VK_SHADER_STAGE_COMPUTE_BIT = ShaderStageFlags 0x20
+pattern ShaderStageComputeBit = ShaderStageFlags 0x20
 
-pattern VK_SHADER_STAGE_ALL_GRAPHICS = ShaderStageFlags 0x1f
+pattern ShaderStageAllGraphics = ShaderStageFlags 0x1f
 
-pattern VK_SHADER_STAGE_ALL = ShaderStageFlags 0x7fffffff
+pattern ShaderStageAll = ShaderStageFlags 0x7fffffff
 
 newtype ShaderModule = ShaderModule Word64
   deriving (Eq, Storable)

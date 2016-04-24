@@ -251,20 +251,20 @@ newtype DebugReportFlagsEXT = DebugReportFlagsEXT Flags
   deriving (Eq, Storable, Bits, FiniteBits)
 
 instance Show DebugReportFlagsEXT where
-  showsPrec _ VK_DEBUG_REPORT_INFORMATION_BIT_EXT = showString "VK_DEBUG_REPORT_INFORMATION_BIT_EXT"
-  showsPrec _ VK_DEBUG_REPORT_WARNING_BIT_EXT = showString "VK_DEBUG_REPORT_WARNING_BIT_EXT"
-  showsPrec _ VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = showString "VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT"
-  showsPrec _ VK_DEBUG_REPORT_ERROR_BIT_EXT = showString "VK_DEBUG_REPORT_ERROR_BIT_EXT"
-  showsPrec _ VK_DEBUG_REPORT_DEBUG_BIT_EXT = showString "VK_DEBUG_REPORT_DEBUG_BIT_EXT"
+  showsPrec _ DebugReportInformationBitExt = showString "DebugReportInformationBitExt"
+  showsPrec _ DebugReportWarningBitExt = showString "DebugReportWarningBitExt"
+  showsPrec _ DebugReportPerformanceWarningBitExt = showString "DebugReportPerformanceWarningBitExt"
+  showsPrec _ DebugReportErrorBitExt = showString "DebugReportErrorBitExt"
+  showsPrec _ DebugReportDebugBitExt = showString "DebugReportDebugBitExt"
   
   showsPrec p (DebugReportFlagsEXT x) = showParen (p >= 11) (showString "DebugReportFlagsEXT " . showsPrec 11 x)
 
 instance Read DebugReportFlagsEXT where
-  readPrec = parens ( choose [ ("VK_DEBUG_REPORT_INFORMATION_BIT_EXT", pure VK_DEBUG_REPORT_INFORMATION_BIT_EXT)
-                             , ("VK_DEBUG_REPORT_WARNING_BIT_EXT", pure VK_DEBUG_REPORT_WARNING_BIT_EXT)
-                             , ("VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT", pure VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)
-                             , ("VK_DEBUG_REPORT_ERROR_BIT_EXT", pure VK_DEBUG_REPORT_ERROR_BIT_EXT)
-                             , ("VK_DEBUG_REPORT_DEBUG_BIT_EXT", pure VK_DEBUG_REPORT_DEBUG_BIT_EXT)
+  readPrec = parens ( choose [ ("DebugReportInformationBitExt", pure DebugReportInformationBitExt)
+                             , ("DebugReportWarningBitExt", pure DebugReportWarningBitExt)
+                             , ("DebugReportPerformanceWarningBitExt", pure DebugReportPerformanceWarningBitExt)
+                             , ("DebugReportErrorBitExt", pure DebugReportErrorBitExt)
+                             , ("DebugReportDebugBitExt", pure DebugReportDebugBitExt)
                              ] +++
                       prec 10 (do
                         expectP (Ident "DebugReportFlagsEXT")
@@ -274,15 +274,15 @@ instance Read DebugReportFlagsEXT where
                     )
 
 
-pattern VK_DEBUG_REPORT_INFORMATION_BIT_EXT = DebugReportFlagsEXT 0x1
+pattern DebugReportInformationBitExt = DebugReportFlagsEXT 0x1
 
-pattern VK_DEBUG_REPORT_WARNING_BIT_EXT = DebugReportFlagsEXT 0x2
+pattern DebugReportWarningBitExt = DebugReportFlagsEXT 0x2
 
-pattern VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT = DebugReportFlagsEXT 0x4
+pattern DebugReportPerformanceWarningBitExt = DebugReportFlagsEXT 0x4
 
-pattern VK_DEBUG_REPORT_ERROR_BIT_EXT = DebugReportFlagsEXT 0x8
+pattern DebugReportErrorBitExt = DebugReportFlagsEXT 0x8
 
-pattern VK_DEBUG_REPORT_DEBUG_BIT_EXT = DebugReportFlagsEXT 0x10
+pattern DebugReportDebugBitExt = DebugReportFlagsEXT 0x10
 
 
 type PFN_vkDebugReportCallbackEXT = FunPtr
