@@ -30,12 +30,12 @@ import Foreign.C.Types( CFloat
                       )
 
 newtype VkDeviceSize = VkDeviceSize Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** VkFormat
 -- | Vulkan format definitions
 newtype VkFormat = VkFormat Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkFormat where
   showsPrec _ VK_FORMAT_UNDEFINED = showString "VK_FORMAT_UNDEFINED"
@@ -797,7 +797,7 @@ data VkExtent2D =
   VkExtent2D{ vkWidth :: Word32 
             , vkHeight :: Word32 
             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkExtent2D where
   sizeOf ~_ = 8
@@ -811,7 +811,7 @@ instance Storable VkExtent2D where
 -- ** VkSharingMode
 
 newtype VkSharingMode = VkSharingMode Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkSharingMode where
   showsPrec _ VK_SHARING_MODE_EXCLUSIVE = showString "VK_SHARING_MODE_EXCLUSIVE"
@@ -837,7 +837,7 @@ pattern VK_SHARING_MODE_CONCURRENT = VkSharingMode 1
 -- ** VkStructureType
 -- | Structure type enumerant
 newtype VkStructureType = VkStructureType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkStructureType where
   showsPrec _ VK_STRUCTURE_TYPE_APPLICATION_INFO = showString "VK_STRUCTURE_TYPE_APPLICATION_INFO"
@@ -1049,14 +1049,14 @@ pattern VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = VkStructureType 47
 pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = VkStructureType 48
 
 newtype VkBool32 = VkBool32 Word32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data VkOffset2D =
   VkOffset2D{ vkX :: Int32 
             , vkY :: Int32 
             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkOffset2D where
   sizeOf ~_ = 8
@@ -1073,7 +1073,7 @@ data VkOffset3D =
             , vkY :: Int32 
             , vkZ :: Int32 
             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkOffset3D where
   sizeOf ~_ = 12
@@ -1092,7 +1092,7 @@ data VkExtent3D =
             , vkHeight :: Word32 
             , vkDepth :: Word32 
             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkExtent3D where
   sizeOf ~_ = 12
@@ -1110,7 +1110,7 @@ data VkRect3D =
   VkRect3D{ vkOffset :: VkOffset3D 
           , vkExtent :: VkExtent3D 
           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkRect3D where
   sizeOf ~_ = 24
@@ -1124,7 +1124,7 @@ instance Storable VkRect3D where
 -- ** VkResult
 -- | Error and return codes
 newtype VkResult = VkResult Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkResult where
   showsPrec _ VK_SUCCESS = showString "VK_SUCCESS"
@@ -1216,7 +1216,7 @@ data VkViewport =
             , vkMinDepth :: CFloat 
             , vkMaxDepth :: CFloat 
             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkViewport where
   sizeOf ~_ = 24
@@ -1240,7 +1240,7 @@ data VkRect2D =
   VkRect2D{ vkOffset :: VkOffset2D 
           , vkExtent :: VkExtent2D 
           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkRect2D where
   sizeOf ~_ = 16

@@ -56,7 +56,7 @@ import Foreign.C.Types( CFloat
 -- ** VkSamplerAddressMode
 
 newtype VkSamplerAddressMode = VkSamplerAddressMode Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkSamplerAddressMode where
   showsPrec _ VK_SAMPLER_ADDRESS_MODE_REPEAT = showString "VK_SAMPLER_ADDRESS_MODE_REPEAT"
@@ -94,7 +94,7 @@ pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = VkSamplerAddressMode 4
 -- ** VkFilter
 
 newtype VkFilter = VkFilter Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkFilter where
   showsPrec _ VK_FILTER_NEAREST = showString "VK_FILTER_NEAREST"
@@ -120,7 +120,7 @@ pattern VK_FILTER_LINEAR = VkFilter 1
 -- ** VkBorderColor
 
 newtype VkBorderColor = VkBorderColor Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkBorderColor where
   showsPrec _ VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = showString "VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"
@@ -162,7 +162,7 @@ pattern VK_BORDER_COLOR_INT_OPAQUE_WHITE = VkBorderColor 5
 -- ** VkCompareOp
 
 newtype VkCompareOp = VkCompareOp Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkCompareOp where
   showsPrec _ VK_COMPARE_OP_NEVER = showString "VK_COMPARE_OP_NEVER"
@@ -210,7 +210,7 @@ pattern VK_COMPARE_OP_GREATER_OR_EQUAL = VkCompareOp 6
 pattern VK_COMPARE_OP_ALWAYS = VkCompareOp 7
 
 newtype VkSampler = VkSampler Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data VkSamplerCreateInfo =
@@ -233,7 +233,7 @@ data VkSamplerCreateInfo =
                      , vkBorderColor :: VkBorderColor 
                      , vkUnnormalizedCoordinates :: VkBool32 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkSamplerCreateInfo where
   sizeOf ~_ = 80
@@ -279,12 +279,12 @@ instance Storable VkSamplerCreateInfo where
 -- ** VkSamplerCreateFlags
 -- | Opaque flag
 newtype VkSamplerCreateFlags = VkSamplerCreateFlags VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- ** VkSamplerMipmapMode
 
 newtype VkSamplerMipmapMode = VkSamplerMipmapMode Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkSamplerMipmapMode where
   showsPrec _ VK_SAMPLER_MIPMAP_MODE_NEAREST = showString "VK_SAMPLER_MIPMAP_MODE_NEAREST"
@@ -316,7 +316,7 @@ foreign import ccall "vkCreateSampler" vkCreateSampler ::
 -- ** VkSampleCountFlags
 
 newtype VkSampleCountFlagBits = VkSampleCountFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkSampleCountFlagBits
 type VkSampleCountFlags = VkSampleCountFlagBits

@@ -37,14 +37,14 @@ import Foreign.C.Types( CSize(..)
 -- ** VkSemaphoreCreateFlags
 -- | Opaque flag
 newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- ** vkDestroySemaphore
 foreign import ccall "vkDestroySemaphore" vkDestroySemaphore ::
   VkDevice -> VkSemaphore -> Ptr VkAllocationCallbacks -> IO ()
 
 newtype VkSemaphore = VkSemaphore Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data VkSemaphoreCreateInfo =
@@ -52,7 +52,7 @@ data VkSemaphoreCreateInfo =
                        , vkPNext :: Ptr Void 
                        , vkFlags :: VkSemaphoreCreateFlags 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkSemaphoreCreateInfo where
   sizeOf ~_ = 24

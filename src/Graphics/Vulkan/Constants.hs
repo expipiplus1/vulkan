@@ -56,7 +56,7 @@ type VK_FALSE = 0
 -- ** VkPipelineCacheHeaderVersion
 
 newtype VkPipelineCacheHeaderVersion = VkPipelineCacheHeaderVersion Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkPipelineCacheHeaderVersion where
   showsPrec _ VK_PIPELINE_CACHE_HEADER_VERSION_ONE = showString "VK_PIPELINE_CACHE_HEADER_VERSION_ONE"

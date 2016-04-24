@@ -59,7 +59,7 @@ data VkDisplayPresentInfoKHR =
                          , vkDstRect :: VkRect2D 
                          , vkPersistent :: VkBool32 
                          }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkDisplayPresentInfoKHR where
   sizeOf ~_ = 56

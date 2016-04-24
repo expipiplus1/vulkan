@@ -44,7 +44,7 @@ data VkEventCreateInfo =
                    , vkPNext :: Ptr Void 
                    , vkFlags :: VkEventCreateFlags 
                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkEventCreateInfo where
   sizeOf ~_ = 24
@@ -76,10 +76,10 @@ foreign import ccall "vkCreateEvent" vkCreateEvent ::
     Ptr VkAllocationCallbacks -> Ptr VkEvent -> IO VkResult
 
 newtype VkEvent = VkEvent Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** VkEventCreateFlags
 -- | Opaque flag
 newtype VkEventCreateFlags = VkEventCreateFlags VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 

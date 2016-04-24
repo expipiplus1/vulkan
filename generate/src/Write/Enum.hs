@@ -37,7 +37,7 @@ writeEnum e = do
   pure [qc|-- ** {eName e}
 {predocComment $ fromMaybe "" (eComment e)}
 newtype {eName e} = {eName e} Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show {eName e} where
   {indent 0 $ vcat (writeElementShowsPrec <$> eElements e)}

@@ -35,7 +35,7 @@ data {stName st} =
   {stName st}\{ {indent (-2) .  vsep $
                  (intercalateRecordCommas structMemberDocs ++
                   [fromString "\}"])}
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 {writeStructStorableInstance env st}
 |]
@@ -55,7 +55,7 @@ writeUnionType ut = do
   pure [qc|{predocComment unionComment}
 data {utName ut} = {indent (-2) . vsep $
                     intercalatePrepend (fromString "|") unionMemberDocs}
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 {writeUnionStorableInstance env ut}
 |]

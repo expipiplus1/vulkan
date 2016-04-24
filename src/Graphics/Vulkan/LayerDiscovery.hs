@@ -29,7 +29,7 @@ data VkLayerProperties =
                    , vkImplementationVersion :: Word32 
                    , vkDescription :: Vector VK_MAX_DESCRIPTION_SIZE CChar 
                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkLayerProperties where
   sizeOf ~_ = 520

@@ -42,7 +42,7 @@ data VkBufferMemoryBarrier =
                        , vkOffset :: VkDeviceSize 
                        , vkSize :: VkDeviceSize 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkBufferMemoryBarrier where
   sizeOf ~_ = 56
@@ -75,7 +75,7 @@ data VkDrawIndexedIndirectCommand =
                               , vkVertexOffset :: Int32 
                               , vkFirstInstance :: Word32 
                               }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkDrawIndexedIndirectCommand where
   sizeOf ~_ = 20
@@ -105,7 +105,7 @@ data VkImageMemoryBarrier =
                       , vkImage :: VkImage 
                       , vkSubresourceRange :: VkImageSubresourceRange 
                       }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkImageMemoryBarrier where
   sizeOf ~_ = 72
@@ -139,7 +139,7 @@ data VkMemoryBarrier =
                  , vkSrcAccessMask :: VkAccessFlags 
                  , vkDstAccessMask :: VkAccessFlags 
                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkMemoryBarrier where
   sizeOf ~_ = 24
@@ -161,7 +161,7 @@ data VkDrawIndirectCommand =
                        , vkFirstVertex :: Word32 
                        , vkFirstInstance :: Word32 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkDrawIndirectCommand where
   sizeOf ~_ = 16
@@ -182,7 +182,7 @@ data VkDispatchIndirectCommand =
                            , vkY :: Word32 
                            , vkZ :: Word32 
                            }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkDispatchIndirectCommand where
   sizeOf ~_ = 12

@@ -74,7 +74,7 @@ data VkQueryPoolCreateInfo =
                        , vkQueryCount :: Word32 
                        , vkPipelineStatistics :: VkQueryPipelineStatisticFlags 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkQueryPoolCreateInfo where
   sizeOf ~_ = 32
@@ -96,7 +96,7 @@ instance Storable VkQueryPoolCreateInfo where
 -- ** VkQueryResultFlags
 
 newtype VkQueryResultFlagBits = VkQueryResultFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkQueryResultFlagBits
 type VkQueryResultFlags = VkQueryResultFlagBits
@@ -135,7 +135,7 @@ pattern VK_QUERY_RESULT_PARTIAL_BIT = VkQueryResultFlagBits 0x8
 -- ** VkQueryType
 
 newtype VkQueryType = VkQueryType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkQueryType where
   showsPrec _ VK_QUERY_TYPE_OCCLUSION = showString "VK_QUERY_TYPE_OCCLUSION"
@@ -163,7 +163,7 @@ pattern VK_QUERY_TYPE_PIPELINE_STATISTICS = VkQueryType 1
 pattern VK_QUERY_TYPE_TIMESTAMP = VkQueryType 2
 
 newtype VkQueryPool = VkQueryPool Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** vkCreateQueryPool
 foreign import ccall "vkCreateQueryPool" vkCreateQueryPool ::
@@ -174,7 +174,7 @@ foreign import ccall "vkCreateQueryPool" vkCreateQueryPool ::
 -- ** VkQueryControlFlags
 
 newtype VkQueryControlFlagBits = VkQueryControlFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkQueryControlFlagBits
 type VkQueryControlFlags = VkQueryControlFlagBits
@@ -201,12 +201,12 @@ pattern VK_QUERY_CONTROL_PRECISE_BIT = VkQueryControlFlagBits 0x1
 -- ** VkQueryPoolCreateFlags
 -- | Opaque flag
 newtype VkQueryPoolCreateFlags = VkQueryPoolCreateFlags VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- ** VkQueryPipelineStatisticFlags
 
 newtype VkQueryPipelineStatisticFlagBits = VkQueryPipelineStatisticFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkQueryPipelineStatisticFlagBits
 type VkQueryPipelineStatisticFlags = VkQueryPipelineStatisticFlagBits

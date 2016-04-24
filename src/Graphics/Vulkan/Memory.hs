@@ -44,7 +44,7 @@ import Foreign.C.Types( CSize
                       )
 
 newtype VkDeviceMemory = VkDeviceMemory Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** vkMapMemory
 foreign import ccall "vkMapMemory" vkMapMemory ::
@@ -67,7 +67,7 @@ data VkAllocationCallbacks =
                        , vkPfnInternalAllocation :: PFN_vkInternalAllocationNotification 
                        , vkPfnInternalFree :: PFN_vkInternalFreeNotification 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkAllocationCallbacks where
   sizeOf ~_ = 48
@@ -93,7 +93,7 @@ foreign import ccall "vkInvalidateMappedMemoryRanges" vkInvalidateMappedMemoryRa
 -- ** VkSystemAllocationScope
 
 newtype VkSystemAllocationScope = VkSystemAllocationScope Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkSystemAllocationScope where
   showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = showString "VK_SYSTEM_ALLOCATION_SCOPE_COMMAND"
@@ -135,7 +135,7 @@ foreign import ccall "vkFlushMappedMemoryRanges" vkFlushMappedMemoryRanges ::
 -- ** VkMemoryMapFlags
 -- | Opaque flag
 newtype VkMemoryMapFlags = VkMemoryMapFlags VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 type PFN_vkInternalAllocationNotification = FunPtr
   (Ptr Void ->
@@ -162,7 +162,7 @@ type PFN_vkAllocationFunction = FunPtr
 -- ** VkInternalAllocationType
 
 newtype VkInternalAllocationType = VkInternalAllocationType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkInternalAllocationType where
   showsPrec _ VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = showString "VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
@@ -201,7 +201,7 @@ data VkMappedMemoryRange =
                      , vkOffset :: VkDeviceSize 
                      , vkSize :: VkDeviceSize 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkMappedMemoryRange where
   sizeOf ~_ = 40
@@ -225,7 +225,7 @@ data VkMemoryAllocateInfo =
                       , vkAllocationSize :: VkDeviceSize 
                       , vkMemoryTypeIndex :: Word32 
                       }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkMemoryAllocateInfo where
   sizeOf ~_ = 32

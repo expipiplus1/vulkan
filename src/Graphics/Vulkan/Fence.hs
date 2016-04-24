@@ -55,7 +55,7 @@ data VkFenceCreateInfo =
                    , vkPNext :: Ptr Void 
                    , vkFlags :: VkFenceCreateFlags 
                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VkFenceCreateInfo where
   sizeOf ~_ = 24
@@ -88,7 +88,7 @@ foreign import ccall "vkGetFenceStatus" vkGetFenceStatus ::
 -- ** VkFenceCreateFlags
 
 newtype VkFenceCreateFlagBits = VkFenceCreateFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkFenceCreateFlagBits
 type VkFenceCreateFlags = VkFenceCreateFlagBits
@@ -119,5 +119,5 @@ foreign import ccall "vkCreateFence" vkCreateFence ::
     Ptr VkAllocationCallbacks -> Ptr VkFence -> IO VkResult
 
 newtype VkFence = VkFence Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
