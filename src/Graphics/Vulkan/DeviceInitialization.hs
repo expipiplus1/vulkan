@@ -71,7 +71,7 @@ import Foreign.C.Types( CFloat(..)
 -- ** PhysicalDeviceType
 
 newtype PhysicalDeviceType = PhysicalDeviceType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show PhysicalDeviceType where
   showsPrec _ PhysicalDeviceTypeOther = showString "PhysicalDeviceTypeOther"
@@ -117,7 +117,7 @@ data InstanceCreateInfo =
                     , enabledExtensionCount :: Word32 
                     , ppEnabledExtensionNames :: Ptr (Ptr CChar) 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable InstanceCreateInfo where
   sizeOf ~_ = 64
@@ -161,7 +161,7 @@ data ApplicationInfo =
                  , engineVersion :: Word32 
                  , apiVersion :: Word32 
                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ApplicationInfo where
   sizeOf ~_ = 48
@@ -291,7 +291,7 @@ data PhysicalDeviceLimits =
                       , optimalBufferCopyRowPitchAlignment :: DeviceSize 
                       , nonCoherentAtomSize :: DeviceSize 
                       }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PhysicalDeviceLimits where
   sizeOf ~_ = 504
@@ -515,7 +515,7 @@ data MemoryHeap =
   MemoryHeap{ size :: DeviceSize 
             , flags :: MemoryHeapFlags 
             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable MemoryHeap where
   sizeOf ~_ = 16
@@ -542,7 +542,7 @@ foreign import ccall "vkCreateInstance" createInstance ::
 -- ** FormatFeatureFlags
 
 newtype FormatFeatureFlags = FormatFeatureFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show FormatFeatureFlags where
   showsPrec _ FormatFeatureSampledImageBit = showString "FormatFeatureSampledImageBit"
@@ -618,7 +618,7 @@ data PhysicalDeviceMemoryProperties =
                                 , memoryHeapCount :: Word32 
                                 , memoryHeaps :: Vector MaxMemoryHeaps MemoryHeap 
                                 }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PhysicalDeviceMemoryProperties where
   sizeOf ~_ = 520
@@ -639,7 +639,7 @@ type Instance = Ptr VkInstance_T
 -- ** MemoryHeapFlags
 
 newtype MemoryHeapFlags = MemoryHeapFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show MemoryHeapFlags where
   showsPrec _ MemoryHeapDeviceLocalBit = showString "MemoryHeapDeviceLocalBit"
@@ -667,7 +667,7 @@ data QueueFamilyProperties =
                        , timestampValidBits :: Word32 
                        , minImageTransferGranularity :: Extent3D 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable QueueFamilyProperties where
   sizeOf ~_ = 24
@@ -690,7 +690,7 @@ data ImageFormatProperties =
                        , sampleCounts :: SampleCountFlags 
                        , maxResourceSize :: DeviceSize 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageFormatProperties where
   sizeOf ~_ = 32
@@ -715,7 +715,7 @@ data PhysicalDeviceSparseProperties =
                                 , residencyAlignedMipSize :: Bool32 
                                 , residencyNonResidentStrict :: Bool32 
                                 }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PhysicalDeviceSparseProperties where
   sizeOf ~_ = 20
@@ -752,7 +752,7 @@ data PhysicalDeviceProperties =
                           , limits :: PhysicalDeviceLimits 
                           , sparseProperties :: PhysicalDeviceSparseProperties 
                           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PhysicalDeviceProperties where
   sizeOf ~_ = 824
@@ -786,7 +786,7 @@ data MemoryType =
   MemoryType{ propertyFlags :: MemoryPropertyFlags 
             , heapIndex :: Word32 
             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable MemoryType where
   sizeOf ~_ = 8
@@ -804,7 +804,7 @@ foreign import ccall "vkGetInstanceProcAddr" getInstanceProcAddr ::
 -- ** MemoryPropertyFlags
 
 newtype MemoryPropertyFlags = MemoryPropertyFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show MemoryPropertyFlags where
   showsPrec _ MemoryPropertyDeviceLocalBit = showString "MemoryPropertyDeviceLocalBit"
@@ -848,7 +848,7 @@ foreign import ccall "vkDestroyInstance" destroyInstance ::
 -- ** QueueFlags
 
 newtype QueueFlags = QueueFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show QueueFlags where
   showsPrec _ QueueGraphicsBit = showString "QueueGraphicsBit"
@@ -888,7 +888,7 @@ foreign import ccall "vkGetPhysicalDeviceProperties" getPhysicalDeviceProperties
 -- ** InstanceCreateFlags
 -- | Opaque flag
 newtype InstanceCreateFlags = InstanceCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** getPhysicalDeviceFormatProperties
 foreign import ccall "vkGetPhysicalDeviceFormatProperties" getPhysicalDeviceFormatProperties ::
@@ -900,7 +900,7 @@ data FormatProperties =
                   , optimalTilingFeatures :: FormatFeatureFlags 
                   , bufferFeatures :: FormatFeatureFlags 
                   }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable FormatProperties where
   sizeOf ~_ = 12

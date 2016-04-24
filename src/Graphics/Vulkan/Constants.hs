@@ -55,7 +55,7 @@ type False = 0
 -- ** PipelineCacheHeaderVersion
 
 newtype PipelineCacheHeaderVersion = PipelineCacheHeaderVersion Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show PipelineCacheHeaderVersion where
   showsPrec _ PipelineCacheHeaderVersionOne = showString "PipelineCacheHeaderVersionOne"

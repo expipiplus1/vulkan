@@ -24,14 +24,14 @@ import Graphics.Vulkan.Core( StructureType(..)
 -- ** SemaphoreCreateFlags
 -- | Opaque flag
 newtype SemaphoreCreateFlags = SemaphoreCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** destroySemaphore
 foreign import ccall "vkDestroySemaphore" destroySemaphore ::
   Device -> Semaphore -> Ptr AllocationCallbacks -> IO ()
 
 newtype Semaphore = Semaphore Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data SemaphoreCreateInfo =
@@ -39,7 +39,7 @@ data SemaphoreCreateInfo =
                      , pNext :: Ptr Void 
                      , flags :: SemaphoreCreateFlags 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SemaphoreCreateInfo where
   sizeOf ~_ = 24

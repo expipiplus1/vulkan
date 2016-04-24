@@ -30,12 +30,12 @@ import Foreign.C.Types( CFloat(..)
                       )
 
 newtype DeviceSize = DeviceSize Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** Format
 -- | Vulkan format definitions
 newtype Format = Format Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show Format where
   showsPrec _ FormatUndefined = showString "FormatUndefined"
@@ -797,7 +797,7 @@ data Extent2D =
   Extent2D{ width :: Word32 
           , height :: Word32 
           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable Extent2D where
   sizeOf ~_ = 8
@@ -811,7 +811,7 @@ instance Storable Extent2D where
 -- ** SharingMode
 
 newtype SharingMode = SharingMode Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show SharingMode where
   showsPrec _ SharingModeExclusive = showString "SharingModeExclusive"
@@ -837,7 +837,7 @@ pattern SharingModeConcurrent = SharingMode 1
 -- ** StructureType
 -- | Structure type enumerant
 newtype StructureType = StructureType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show StructureType where
   showsPrec _ StructureTypeApplicationInfo = showString "StructureTypeApplicationInfo"
@@ -1049,14 +1049,14 @@ pattern StructureTypeLoaderInstanceCreateInfo = StructureType 47
 pattern StructureTypeLoaderDeviceCreateInfo = StructureType 48
 
 newtype Bool32 = Bool32 Word32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data Offset2D =
   Offset2D{ x :: Int32 
           , y :: Int32 
           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable Offset2D where
   sizeOf ~_ = 8
@@ -1073,7 +1073,7 @@ data Offset3D =
           , y :: Int32 
           , z :: Int32 
           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable Offset3D where
   sizeOf ~_ = 12
@@ -1092,7 +1092,7 @@ data Extent3D =
           , height :: Word32 
           , depth :: Word32 
           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable Extent3D where
   sizeOf ~_ = 12
@@ -1110,7 +1110,7 @@ data Rect3D =
   Rect3D{ offset :: Offset3D 
         , extent :: Extent3D 
         }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable Rect3D where
   sizeOf ~_ = 24
@@ -1124,7 +1124,7 @@ instance Storable Rect3D where
 -- ** Result
 -- | Error and return codes
 newtype Result = Result Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show Result where
   showsPrec _ Success = showString "Success"
@@ -1216,7 +1216,7 @@ data Viewport =
           , minDepth :: CFloat 
           , maxDepth :: CFloat 
           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable Viewport where
   sizeOf ~_ = 24
@@ -1240,7 +1240,7 @@ data Rect2D =
   Rect2D{ offset :: Offset2D 
         , extent :: Extent2D 
         }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable Rect2D where
   sizeOf ~_ = 16

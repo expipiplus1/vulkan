@@ -35,7 +35,7 @@ foreign import ccall "vkGetPipelineCacheData" getPipelineCacheData ::
   Device -> PipelineCache -> Ptr CSize -> Ptr Void -> IO Result
 
 newtype PipelineCache = PipelineCache Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data PipelineCacheCreateInfo =
@@ -45,7 +45,7 @@ data PipelineCacheCreateInfo =
                          , initialDataSize :: CSize 
                          , pInitialData :: Ptr Void 
                          }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineCacheCreateInfo where
   sizeOf ~_ = 40
@@ -69,7 +69,7 @@ foreign import ccall "vkMergePipelineCaches" mergePipelineCaches ::
 -- ** PipelineCacheCreateFlags
 -- | Opaque flag
 newtype PipelineCacheCreateFlags = PipelineCacheCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** destroyPipelineCache
 foreign import ccall "vkDestroyPipelineCache" destroyPipelineCache ::

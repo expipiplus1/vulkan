@@ -57,7 +57,7 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" getPhysicalDevi
 -- ** CompositeAlphaFlagsKHR
 
 newtype CompositeAlphaFlagsKHR = CompositeAlphaFlagsKHR Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show CompositeAlphaFlagsKHR where
   showsPrec _ CompositeAlphaOpaqueBitKhr = showString "CompositeAlphaOpaqueBitKhr"
@@ -93,7 +93,7 @@ pattern CompositeAlphaInheritBitKhr = CompositeAlphaFlagsKHR 0x8
 -- ** PresentModeKHR
 
 newtype PresentModeKHR = PresentModeKHR Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show PresentModeKHR where
   showsPrec _ PresentModeImmediateKhr = showString "PresentModeImmediateKhr"
@@ -125,7 +125,7 @@ pattern PresentModeFifoKhr = PresentModeKHR 2
 pattern PresentModeFifoRelaxedKhr = PresentModeKHR 3
 
 newtype SurfaceKHR = SurfaceKHR Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** getPhysicalDeviceSurfaceSupportKHR
 foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" getPhysicalDeviceSurfaceSupportKHR ::
@@ -136,7 +136,7 @@ data SurfaceFormatKHR =
   SurfaceFormatKHR{ format :: Format 
                   , colorSpace :: ColorSpaceKHR 
                   }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SurfaceFormatKHR where
   sizeOf ~_ = 8
@@ -154,7 +154,7 @@ foreign import ccall "vkDestroySurfaceKHR" destroySurfaceKHR ::
 -- ** ColorSpaceKHR
 
 newtype ColorSpaceKHR = ColorSpaceKHR Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show ColorSpaceKHR where
   showsPrec _ ColorspaceSrgbNonlinearKhr = showString "ColorspaceSrgbNonlinearKhr"
@@ -181,7 +181,7 @@ foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" getPhysicalDevi
 -- ** SurfaceTransformFlagsKHR
 
 newtype SurfaceTransformFlagsKHR = SurfaceTransformFlagsKHR Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show SurfaceTransformFlagsKHR where
   showsPrec _ SurfaceTransformIdentityBitKhr = showString "SurfaceTransformIdentityBitKhr"
@@ -247,7 +247,7 @@ data SurfaceCapabilitiesKHR =
                         , supportedCompositeAlpha :: CompositeAlphaFlagsKHR 
                         , supportedUsageFlags :: ImageUsageFlags 
                         }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SurfaceCapabilitiesKHR where
   sizeOf ~_ = 52

@@ -39,8 +39,9 @@ writeNonDispatchableHandleType ht t = do
       derivingString = if boot
                          then [qc|
 instance Eq {htHsName ht}
+instance Ord {htHsName ht}
 instance Storable {htHsName ht}|]
-                         else fromString "deriving (Eq, Storable)"
+                         else fromString "deriving (Eq, Ord, Storable)"
   pure [qc|newtype {htHsName ht} = {htHsName ht} {hsType}
   {derivingString}
 |]

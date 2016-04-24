@@ -67,7 +67,7 @@ data SparseImageMemoryRequirements =
                                , imageMipTailOffset :: DeviceSize 
                                , imageMipTailStride :: DeviceSize 
                                }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SparseImageMemoryRequirements where
   sizeOf ~_ = 48
@@ -92,7 +92,7 @@ data SparseMemoryBind =
                   , memoryOffset :: DeviceSize 
                   , flags :: SparseMemoryBindFlags 
                   }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SparseMemoryBind where
   sizeOf ~_ = 40
@@ -118,7 +118,7 @@ data SparseImageMemoryBind =
                        , memoryOffset :: DeviceSize 
                        , flags :: SparseMemoryBindFlags 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SparseImageMemoryBind where
   sizeOf ~_ = 64
@@ -143,7 +143,7 @@ data SparseImageMemoryBindInfo =
                            , bindCount :: Word32 
                            , pBinds :: Ptr SparseImageMemoryBind 
                            }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SparseImageMemoryBindInfo where
   sizeOf ~_ = 24
@@ -180,7 +180,7 @@ data BindSparseInfo =
                 , signalSemaphoreCount :: Word32 
                 , pSignalSemaphores :: Ptr Semaphore 
                 }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable BindSparseInfo where
   sizeOf ~_ = 96
@@ -217,7 +217,7 @@ data SparseBufferMemoryBindInfo =
                             , bindCount :: Word32 
                             , pBinds :: Ptr SparseMemoryBind 
                             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SparseBufferMemoryBindInfo where
   sizeOf ~_ = 24
@@ -233,7 +233,7 @@ instance Storable SparseBufferMemoryBindInfo where
 -- ** SparseImageFormatFlags
 
 newtype SparseImageFormatFlags = SparseImageFormatFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show SparseImageFormatFlags where
   showsPrec _ SparseImageFormatSingleMiptailBit = showString "SparseImageFormatSingleMiptailBit"
@@ -275,7 +275,7 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" getPhysica
 -- ** SparseMemoryBindFlags
 
 newtype SparseMemoryBindFlags = SparseMemoryBindFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show SparseMemoryBindFlags where
   showsPrec _ SparseMemoryBindMetadataBit = showString "SparseMemoryBindMetadataBit"
@@ -302,7 +302,7 @@ data SparseImageOpaqueMemoryBindInfo =
                                  , bindCount :: Word32 
                                  , pBinds :: Ptr SparseMemoryBind 
                                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SparseImageOpaqueMemoryBindInfo where
   sizeOf ~_ = 24
@@ -321,7 +321,7 @@ data SparseImageFormatProperties =
                              , imageGranularity :: Extent3D 
                              , flags :: SparseImageFormatFlags 
                              }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SparseImageFormatProperties where
   sizeOf ~_ = 20

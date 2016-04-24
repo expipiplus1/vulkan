@@ -40,7 +40,7 @@ import Foreign.C.Types( CSize(..)
                       )
 
 newtype DeviceMemory = DeviceMemory Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** mapMemory
 foreign import ccall "vkMapMemory" mapMemory ::
@@ -62,7 +62,7 @@ data AllocationCallbacks =
                      , pfnInternalAllocation :: PFN_vkInternalAllocationNotification 
                      , pfnInternalFree :: PFN_vkInternalFreeNotification 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable AllocationCallbacks where
   sizeOf ~_ = 48
@@ -88,7 +88,7 @@ foreign import ccall "vkInvalidateMappedMemoryRanges" invalidateMappedMemoryRang
 -- ** SystemAllocationScope
 
 newtype SystemAllocationScope = SystemAllocationScope Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show SystemAllocationScope where
   showsPrec _ SystemAllocationScopeCommand = showString "SystemAllocationScopeCommand"
@@ -130,7 +130,7 @@ foreign import ccall "vkFlushMappedMemoryRanges" flushMappedMemoryRanges ::
 -- ** MemoryMapFlags
 -- | Opaque flag
 newtype MemoryMapFlags = MemoryMapFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 type PFN_vkInternalAllocationNotification = FunPtr
   (Ptr Void ->
@@ -156,7 +156,7 @@ type PFN_vkAllocationFunction = FunPtr
 -- ** InternalAllocationType
 
 newtype InternalAllocationType = InternalAllocationType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show InternalAllocationType where
   showsPrec _ InternalAllocationTypeExecutable = showString "InternalAllocationTypeExecutable"
@@ -195,7 +195,7 @@ data MappedMemoryRange =
                    , offset :: DeviceSize 
                    , size :: DeviceSize 
                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable MappedMemoryRange where
   sizeOf ~_ = 40
@@ -219,7 +219,7 @@ data MemoryAllocateInfo =
                     , allocationSize :: DeviceSize 
                     , memoryTypeIndex :: Word32 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable MemoryAllocateInfo where
   sizeOf ~_ = 32

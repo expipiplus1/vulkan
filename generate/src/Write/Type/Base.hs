@@ -29,6 +29,6 @@ writeNewBaseType bt = do
   doesDeriveStorable
   hsType <- cTypeToHsTypeString (btCType bt)
   pure [qc|newtype {btHsName bt} = {btHsName bt} {hsType}
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 |]
 

@@ -48,7 +48,7 @@ data ShaderModuleCreateInfo =
                         , codeSize :: CSize 
                         , pCode :: Ptr Word32 
                         }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ShaderModuleCreateInfo where
   sizeOf ~_ = 40
@@ -72,12 +72,12 @@ foreign import ccall "vkDestroyShaderModule" destroyShaderModule ::
 -- ** ShaderModuleCreateFlags
 -- | Opaque flag
 newtype ShaderModuleCreateFlags = ShaderModuleCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** ShaderStageFlags
 
 newtype ShaderStageFlags = ShaderStageFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show ShaderStageFlags where
   showsPrec _ ShaderStageVertexBit = showString "ShaderStageVertexBit"
@@ -125,7 +125,7 @@ pattern ShaderStageAllGraphics = ShaderStageFlags 0x1f
 pattern ShaderStageAll = ShaderStageFlags 0x7fffffff
 
 newtype ShaderModule = ShaderModule Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** createShaderModule
 foreign import ccall "vkCreateShaderModule" createShaderModule ::

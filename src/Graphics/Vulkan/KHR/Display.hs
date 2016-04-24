@@ -62,7 +62,7 @@ data DisplaySurfaceCreateInfoKHR =
                              , alphaMode :: DisplayPlaneAlphaFlagsKHR 
                              , imageExtent :: Extent2D 
                              }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DisplaySurfaceCreateInfoKHR where
   sizeOf ~_ = 64
@@ -101,7 +101,7 @@ data DisplayPlaneCapabilitiesKHR =
                              , minDstExtent :: Extent2D 
                              , maxDstExtent :: Extent2D 
                              }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DisplayPlaneCapabilitiesKHR where
   sizeOf ~_ = 68
@@ -142,7 +142,7 @@ data DisplayPropertiesKHR =
                       , planeReorderPossible :: Bool32 
                       , persistentContent :: Bool32 
                       }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DisplayPropertiesKHR where
   sizeOf ~_ = 48
@@ -180,7 +180,7 @@ data DisplayPlanePropertiesKHR =
   DisplayPlanePropertiesKHR{ currentDisplay :: DisplayKHR 
                            , currentStackIndex :: Word32 
                            }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DisplayPlanePropertiesKHR where
   sizeOf ~_ = 16
@@ -202,7 +202,7 @@ data DisplayModePropertiesKHR =
   DisplayModePropertiesKHR{ displayMode :: DisplayModeKHR 
                           , parameters :: DisplayModeParametersKHR 
                           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DisplayModePropertiesKHR where
   sizeOf ~_ = 24
@@ -216,7 +216,7 @@ instance Storable DisplayModePropertiesKHR where
 -- ** DisplayPlaneAlphaFlagsKHR
 
 newtype DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagsKHR Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show DisplayPlaneAlphaFlagsKHR where
   showsPrec _ DisplayPlaneAlphaOpaqueBitKhr = showString "DisplayPlaneAlphaOpaqueBitKhr"
@@ -252,7 +252,7 @@ pattern DisplayPlaneAlphaPerPixelPremultipliedBitKhr = DisplayPlaneAlphaFlagsKHR
 -- ** DisplayModeCreateFlagsKHR
 -- | Opaque flag
 newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data DisplayModeCreateInfoKHR =
@@ -261,7 +261,7 @@ data DisplayModeCreateInfoKHR =
                           , flags :: DisplayModeCreateFlagsKHR 
                           , parameters :: DisplayModeParametersKHR 
                           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DisplayModeCreateInfoKHR where
   sizeOf ~_ = 32
@@ -282,14 +282,14 @@ foreign import ccall "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" getPhysicalD
   Ptr Word32 -> Ptr DisplayPlanePropertiesKHR -> IO Result
 
 newtype DisplayModeKHR = DisplayModeKHR Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data DisplayModeParametersKHR =
   DisplayModeParametersKHR{ visibleRegion :: Extent2D 
                           , refreshRate :: Word32 
                           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DisplayModeParametersKHR where
   sizeOf ~_ = 12
@@ -303,10 +303,10 @@ instance Storable DisplayModeParametersKHR where
 -- ** DisplaySurfaceCreateFlagsKHR
 -- | Opaque flag
 newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 newtype DisplayKHR = DisplayKHR Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** getPhysicalDeviceDisplayPropertiesKHR
 foreign import ccall "vkGetPhysicalDeviceDisplayPropertiesKHR" getPhysicalDeviceDisplayPropertiesKHR ::

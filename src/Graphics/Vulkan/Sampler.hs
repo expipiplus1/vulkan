@@ -45,7 +45,7 @@ import Foreign.C.Types( CFloat(..)
 -- ** SamplerAddressMode
 
 newtype SamplerAddressMode = SamplerAddressMode Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show SamplerAddressMode where
   showsPrec _ SamplerAddressModeRepeat = showString "SamplerAddressModeRepeat"
@@ -83,7 +83,7 @@ pattern SamplerAddressModeMirrorClampToEdge = SamplerAddressMode 4
 -- ** Filter
 
 newtype Filter = Filter Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show Filter where
   showsPrec _ FilterNearest = showString "FilterNearest"
@@ -109,7 +109,7 @@ pattern FilterLinear = Filter 1
 -- ** BorderColor
 
 newtype BorderColor = BorderColor Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show BorderColor where
   showsPrec _ BorderColorFloatTransparentBlack = showString "BorderColorFloatTransparentBlack"
@@ -151,7 +151,7 @@ pattern BorderColorIntOpaqueWhite = BorderColor 5
 -- ** CompareOp
 
 newtype CompareOp = CompareOp Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show CompareOp where
   showsPrec _ CompareOpNever = showString "CompareOpNever"
@@ -199,7 +199,7 @@ pattern CompareOpGreaterOrEqual = CompareOp 6
 pattern CompareOpAlways = CompareOp 7
 
 newtype Sampler = Sampler Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data SamplerCreateInfo =
@@ -222,7 +222,7 @@ data SamplerCreateInfo =
                    , borderColor :: BorderColor 
                    , unnormalizedCoordinates :: Bool32 
                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SamplerCreateInfo where
   sizeOf ~_ = 80
@@ -268,12 +268,12 @@ instance Storable SamplerCreateInfo where
 -- ** SamplerCreateFlags
 -- | Opaque flag
 newtype SamplerCreateFlags = SamplerCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** SamplerMipmapMode
 
 newtype SamplerMipmapMode = SamplerMipmapMode Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show SamplerMipmapMode where
   showsPrec _ SamplerMipmapModeNearest = showString "SamplerMipmapModeNearest"
@@ -305,7 +305,7 @@ foreign import ccall "vkCreateSampler" createSampler ::
 -- ** SampleCountFlags
 
 newtype SampleCountFlags = SampleCountFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show SampleCountFlags where
   showsPrec _ SampleCount1Bit = showString "SampleCount1Bit"

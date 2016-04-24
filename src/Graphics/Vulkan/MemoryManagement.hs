@@ -31,7 +31,7 @@ data MemoryRequirements =
                     , _alignment :: DeviceSize 
                     , memoryTypeBits :: Word32 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable MemoryRequirements where
   sizeOf ~_ = 24

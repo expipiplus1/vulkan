@@ -26,7 +26,7 @@ data ExtensionProperties =
   ExtensionProperties{ extensionName :: Vector MaxExtensionNameSize CChar 
                      , specVersion :: Word32 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ExtensionProperties where
   sizeOf ~_ = 260

@@ -37,7 +37,7 @@ data BufferMemoryBarrier =
                      , offset :: DeviceSize 
                      , size :: DeviceSize 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable BufferMemoryBarrier where
   sizeOf ~_ = 56
@@ -70,7 +70,7 @@ data DrawIndexedIndirectCommand =
                             , vertexOffset :: Int32 
                             , firstInstance :: Word32 
                             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DrawIndexedIndirectCommand where
   sizeOf ~_ = 20
@@ -100,7 +100,7 @@ data ImageMemoryBarrier =
                     , image :: Image 
                     , subresourceRange :: ImageSubresourceRange 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageMemoryBarrier where
   sizeOf ~_ = 72
@@ -134,7 +134,7 @@ data MemoryBarrier =
                , srcAccessMask :: AccessFlags 
                , dstAccessMask :: AccessFlags 
                }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable MemoryBarrier where
   sizeOf ~_ = 24
@@ -156,7 +156,7 @@ data DrawIndirectCommand =
                      , firstVertex :: Word32 
                      , firstInstance :: Word32 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DrawIndirectCommand where
   sizeOf ~_ = 16
@@ -177,7 +177,7 @@ data DispatchIndirectCommand =
                          , y :: Word32 
                          , z :: Word32 
                          }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DispatchIndirectCommand where
   sizeOf ~_ = 12

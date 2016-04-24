@@ -53,12 +53,12 @@ foreign import ccall "vkDebugReportMessageEXT" debugReportMessageEXT ::
       Word64 -> CSize -> Int32 -> Ptr CChar -> Ptr CChar -> IO ()
 
 newtype DebugReportCallbackEXT = DebugReportCallbackEXT Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** DebugReportObjectTypeEXT
 
 newtype DebugReportObjectTypeEXT = DebugReportObjectTypeEXT Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show DebugReportObjectTypeEXT where
   showsPrec _ DebugReportObjectTypeUnknownExt = showString "DebugReportObjectTypeUnknownExt"
@@ -192,7 +192,7 @@ pattern DebugReportObjectTypeDebugReportExt = DebugReportObjectTypeEXT 28
 -- ** DebugReportErrorEXT
 
 newtype DebugReportErrorEXT = DebugReportErrorEXT Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show DebugReportErrorEXT where
   showsPrec _ DebugReportErrorNoneExt = showString "DebugReportErrorNoneExt"
@@ -223,7 +223,7 @@ data DebugReportCallbackCreateInfoEXT =
                                   , pfnCallback :: PFN_vkDebugReportCallbackEXT 
                                   , pUserData :: Ptr Void 
                                   }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DebugReportCallbackCreateInfoEXT where
   sizeOf ~_ = 40
@@ -248,7 +248,7 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" destroyDebugReportCallbac
 -- ** DebugReportFlagsEXT
 
 newtype DebugReportFlagsEXT = DebugReportFlagsEXT Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show DebugReportFlagsEXT where
   showsPrec _ DebugReportInformationBitExt = showString "DebugReportInformationBitExt"

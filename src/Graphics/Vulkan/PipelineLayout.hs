@@ -29,10 +29,10 @@ import Graphics.Vulkan.Core( StructureType(..)
 -- ** PipelineLayoutCreateFlags
 -- | Opaque flag
 newtype PipelineLayoutCreateFlags = PipelineLayoutCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 newtype PipelineLayout = PipelineLayout Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** destroyPipelineLayout
 foreign import ccall "vkDestroyPipelineLayout" destroyPipelineLayout ::
@@ -44,7 +44,7 @@ data PushConstantRange =
                    , offset :: Word32 
                    , size :: Word32 
                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PushConstantRange where
   sizeOf ~_ = 12
@@ -67,7 +67,7 @@ data PipelineLayoutCreateInfo =
                           , pushConstantRangeCount :: Word32 
                           , pPushConstantRanges :: Ptr PushConstantRange 
                           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineLayoutCreateInfo where
   sizeOf ~_ = 48

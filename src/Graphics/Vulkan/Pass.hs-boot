@@ -9,5 +9,6 @@ import Foreign.Storable( Storable(..)
 newtype RenderPass = RenderPass Word64
   
 instance Eq RenderPass
+instance Ord RenderPass
 instance Storable RenderPass
 

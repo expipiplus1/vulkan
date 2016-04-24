@@ -127,7 +127,7 @@ data ImageCopy =
            , dstOffset :: Offset3D 
            , extent :: Extent3D 
            }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageCopy where
   sizeOf ~_ = 68
@@ -189,7 +189,7 @@ data ClearRect =
            , baseArrayLayer :: Word32 
            , layerCount :: Word32 
            }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ClearRect where
   sizeOf ~_ = 24
@@ -225,7 +225,7 @@ foreign import ccall "vkCmdClearColorImage" cmdClearColorImage ::
 -- ** IndexType
 
 newtype IndexType = IndexType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show IndexType where
   showsPrec _ IndexTypeUint16 = showString "IndexTypeUint16"
@@ -257,7 +257,7 @@ data BufferImageCopy =
                  , imageOffset :: Offset3D 
                  , imageExtent :: Extent3D 
                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable BufferImageCopy where
   sizeOf ~_ = 56
@@ -313,7 +313,7 @@ data ImageSubresourceLayers =
                         , baseArrayLayer :: Word32 
                         , layerCount :: Word32 
                         }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageSubresourceLayers where
   sizeOf ~_ = 16
@@ -346,7 +346,7 @@ data ClearDepthStencilValue =
   ClearDepthStencilValue{ depth :: CFloat 
                         , stencil :: Word32 
                         }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ClearDepthStencilValue where
   sizeOf ~_ = 8
@@ -363,7 +363,7 @@ data BufferCopy =
             , dstOffset :: DeviceSize 
             , size :: DeviceSize 
             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable BufferCopy where
   sizeOf ~_ = 24
@@ -416,7 +416,7 @@ data RenderPassBeginInfo =
                      , clearValueCount :: Word32 
                      , pClearValues :: Ptr ClearValue 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable RenderPassBeginInfo where
   sizeOf ~_ = 64
@@ -448,7 +448,7 @@ data ImageBlit =
            , dstSubresource :: ImageSubresourceLayers 
            , dstOffsets :: Vector 2 Offset3D 
            }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageBlit where
   sizeOf ~_ = 80
@@ -469,7 +469,7 @@ data ClearAttachment =
                  , colorAttachment :: Word32 
                  , clearValue :: ClearValue 
                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ClearAttachment where
   sizeOf ~_ = 24
@@ -485,7 +485,7 @@ instance Storable ClearAttachment where
 -- | // Union allowing specification of color or depth and stencil values. Actual value selected is based on attachment being cleared.
 data ClearValue = Color ClearColorValue 
                 | DepthStencil ClearDepthStencilValue 
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use
 instance Storable ClearValue where
@@ -500,7 +500,7 @@ instance Storable ClearValue where
 -- ** StencilFaceFlags
 
 newtype StencilFaceFlags = StencilFaceFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show StencilFaceFlags where
   showsPrec _ StencilFaceFrontBit = showString "StencilFaceFrontBit"
@@ -531,7 +531,7 @@ pattern StencilFrontAndBack = StencilFaceFlags 0x3
 data ClearColorValue = Float32 (Vector 4 CFloat) 
                      | Int32 (Vector 4 Int32) 
                      | Uint32 (Vector 4 Word32) 
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use
 instance Storable ClearColorValue where
@@ -547,7 +547,7 @@ instance Storable ClearColorValue where
 -- ** SubpassContents
 
 newtype SubpassContents = SubpassContents Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show SubpassContents where
   showsPrec _ SubpassContentsInline = showString "SubpassContentsInline"
@@ -605,7 +605,7 @@ data ImageResolve =
               , dstOffset :: Offset3D 
               , extent :: Extent3D 
               }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageResolve where
   sizeOf ~_ = 68

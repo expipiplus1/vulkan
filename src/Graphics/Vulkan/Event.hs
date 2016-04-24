@@ -31,7 +31,7 @@ data EventCreateInfo =
                  , pNext :: Ptr Void 
                  , flags :: EventCreateFlags 
                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable EventCreateInfo where
   sizeOf ~_ = 24
@@ -63,10 +63,10 @@ foreign import ccall "vkCreateEvent" createEvent ::
     Ptr AllocationCallbacks -> Ptr Event -> IO Result
 
 newtype Event = Event Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** EventCreateFlags
 -- | Opaque flag
 newtype EventCreateFlags = EventCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 

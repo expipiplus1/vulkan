@@ -51,7 +51,7 @@ data ImageViewCreateInfo =
                      , components :: ComponentMapping 
                      , subresourceRange :: ImageSubresourceRange 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageViewCreateInfo where
   sizeOf ~_ = 80
@@ -81,12 +81,12 @@ foreign import ccall "vkCreateImageView" createImageView ::
     Ptr AllocationCallbacks -> Ptr ImageView -> IO Result
 
 newtype ImageView = ImageView Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** ImageViewType
 
 newtype ImageViewType = ImageViewType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show ImageViewType where
   showsPrec _ ImageViewType1d = showString "ImageViewType1d"
@@ -132,7 +132,7 @@ pattern ImageViewTypeCubeArray = ImageViewType 6
 -- ** ImageViewCreateFlags
 -- | Opaque flag
 newtype ImageViewCreateFlags = ImageViewCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data ComponentMapping =
@@ -141,7 +141,7 @@ data ComponentMapping =
                   , b :: ComponentSwizzle 
                   , a :: ComponentSwizzle 
                   }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ComponentMapping where
   sizeOf ~_ = 16
@@ -159,7 +159,7 @@ instance Storable ComponentMapping where
 -- ** ComponentSwizzle
 
 newtype ComponentSwizzle = ComponentSwizzle Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show ComponentSwizzle where
   showsPrec _ ComponentSwizzleIdentity = showString "ComponentSwizzleIdentity"

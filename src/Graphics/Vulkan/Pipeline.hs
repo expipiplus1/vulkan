@@ -71,7 +71,7 @@ data PipelineTessellationStateCreateInfo =
                                      , flags :: PipelineTessellationStateCreateFlags 
                                      , patchControlPoints :: Word32 
                                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineTessellationStateCreateInfo where
   sizeOf ~_ = 24
@@ -93,7 +93,7 @@ data VertexInputAttributeDescription =
                                  , format :: Format 
                                  , offset :: Word32 
                                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VertexInputAttributeDescription where
   sizeOf ~_ = 16
@@ -130,7 +130,7 @@ data GraphicsPipelineCreateInfo =
                             , basePipelineHandle :: Pipeline 
                             , basePipelineIndex :: Int32 
                             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable GraphicsPipelineCreateInfo where
   sizeOf ~_ = 144
@@ -178,7 +178,7 @@ instance Storable GraphicsPipelineCreateInfo where
 -- ** CullModeFlags
 
 newtype CullModeFlags = CullModeFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show CullModeFlags where
   showsPrec _ CullModeFrontBit = showString "CullModeFrontBit"
@@ -212,7 +212,7 @@ pattern CullModeFrontAndBack = CullModeFlags 0x3
 -- ** PipelineDepthStencilStateCreateFlags
 -- | Opaque flag
 newtype PipelineDepthStencilStateCreateFlags = PipelineDepthStencilStateCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data PipelineShaderStageCreateInfo =
@@ -224,7 +224,7 @@ data PipelineShaderStageCreateInfo =
                                , pName :: Ptr CChar 
                                , pSpecializationInfo :: Ptr SpecializationInfo 
                                }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineShaderStageCreateInfo where
   sizeOf ~_ = 48
@@ -248,7 +248,7 @@ instance Storable PipelineShaderStageCreateInfo where
 -- ** ColorComponentFlags
 
 newtype ColorComponentFlags = ColorComponentFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show ColorComponentFlags where
   showsPrec _ ColorComponentRBit = showString "ColorComponentRBit"
@@ -291,7 +291,7 @@ data ComputePipelineCreateInfo =
                            , basePipelineHandle :: Pipeline 
                            , basePipelineIndex :: Int32 
                            }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ComputePipelineCreateInfo where
   sizeOf ~_ = 96
@@ -315,7 +315,7 @@ instance Storable ComputePipelineCreateInfo where
 -- ** StencilOp
 
 newtype StencilOp = StencilOp Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show StencilOp where
   showsPrec _ StencilOpKeep = showString "StencilOpKeep"
@@ -369,7 +369,7 @@ data SpecializationInfo =
                     , dataSize :: CSize 
                     , pData :: Ptr Void 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SpecializationInfo where
   sizeOf ~_ = 32
@@ -387,15 +387,15 @@ instance Storable SpecializationInfo where
 -- ** PipelineColorBlendStateCreateFlags
 -- | Opaque flag
 newtype PipelineColorBlendStateCreateFlags = PipelineColorBlendStateCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 newtype Pipeline = Pipeline Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** PipelineInputAssemblyStateCreateFlags
 -- | Opaque flag
 newtype PipelineInputAssemblyStateCreateFlags = PipelineInputAssemblyStateCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** createGraphicsPipelines
 foreign import ccall "vkCreateGraphicsPipelines" createGraphicsPipelines ::
@@ -408,7 +408,7 @@ foreign import ccall "vkCreateGraphicsPipelines" createGraphicsPipelines ::
 -- ** FrontFace
 
 newtype FrontFace = FrontFace Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show FrontFace where
   showsPrec _ FrontFaceCounterClockwise = showString "FrontFaceCounterClockwise"
@@ -434,7 +434,7 @@ pattern FrontFaceClockwise = FrontFace 1
 -- ** PolygonMode
 
 newtype PolygonMode = PolygonMode Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show PolygonMode where
   showsPrec _ PolygonModeFill = showString "PolygonModeFill"
@@ -464,12 +464,12 @@ pattern PolygonModePoint = PolygonMode 2
 -- ** PipelineViewportStateCreateFlags
 -- | Opaque flag
 newtype PipelineViewportStateCreateFlags = PipelineViewportStateCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** LogicOp
 
 newtype LogicOp = LogicOp Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show LogicOp where
   showsPrec _ LogicOpClear = showString "LogicOpClear"
@@ -551,7 +551,7 @@ pattern LogicOpSet = LogicOp 15
 -- ** PipelineCreateFlags
 
 newtype PipelineCreateFlags = PipelineCreateFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show PipelineCreateFlags where
   showsPrec _ PipelineCreateDisableOptimizationBit = showString "PipelineCreateDisableOptimizationBit"
@@ -583,12 +583,12 @@ pattern PipelineCreateDerivativeBit = PipelineCreateFlags 0x4
 -- ** PipelineRasterizationStateCreateFlags
 -- | Opaque flag
 newtype PipelineRasterizationStateCreateFlags = PipelineRasterizationStateCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** DynamicState
 
 newtype DynamicState = DynamicState Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show DynamicState where
   showsPrec _ DynamicStateViewport = showString "DynamicStateViewport"
@@ -642,7 +642,7 @@ pattern DynamicStateStencilReference = DynamicState 8
 -- ** PipelineBindPoint
 
 newtype PipelineBindPoint = PipelineBindPoint Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show PipelineBindPoint where
   showsPrec _ PipelineBindPointGraphics = showString "PipelineBindPointGraphics"
@@ -668,7 +668,7 @@ pattern PipelineBindPointCompute = PipelineBindPoint 1
 -- ** PipelineDynamicStateCreateFlags
 -- | Opaque flag
 newtype PipelineDynamicStateCreateFlags = PipelineDynamicStateCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data PipelineRasterizationStateCreateInfo =
@@ -686,7 +686,7 @@ data PipelineRasterizationStateCreateInfo =
                                       , depthBiasSlopeFactor :: CFloat 
                                       , lineWidth :: CFloat 
                                       }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineRasterizationStateCreateInfo where
   sizeOf ~_ = 64
@@ -722,7 +722,7 @@ instance Storable PipelineRasterizationStateCreateInfo where
 -- ** BlendOp
 
 newtype BlendOp = BlendOp Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show BlendOp where
   showsPrec _ BlendOpAdd = showString "BlendOpAdd"
@@ -764,7 +764,7 @@ foreign import ccall "vkDestroyPipeline" destroyPipeline ::
 -- ** PipelineShaderStageCreateFlags
 -- | Opaque flag
 newtype PipelineShaderStageCreateFlags = PipelineShaderStageCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data PipelineViewportStateCreateInfo =
@@ -776,7 +776,7 @@ data PipelineViewportStateCreateInfo =
                                  , scissorCount :: Word32 
                                  , pScissors :: Ptr Rect2D 
                                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineViewportStateCreateInfo where
   sizeOf ~_ = 48
@@ -800,7 +800,7 @@ instance Storable PipelineViewportStateCreateInfo where
 -- ** PipelineTessellationStateCreateFlags
 -- | Opaque flag
 newtype PipelineTessellationStateCreateFlags = PipelineTessellationStateCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data PipelineVertexInputStateCreateInfo =
@@ -812,7 +812,7 @@ data PipelineVertexInputStateCreateInfo =
                                     , vertexAttributeDescriptionCount :: Word32 
                                     , pVertexAttributeDescriptions :: Ptr VertexInputAttributeDescription 
                                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineVertexInputStateCreateInfo where
   sizeOf ~_ = 48
@@ -836,7 +836,7 @@ instance Storable PipelineVertexInputStateCreateInfo where
 -- ** PrimitiveTopology
 
 newtype PrimitiveTopology = PrimitiveTopology Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show PrimitiveTopology where
   showsPrec _ PrimitiveTopologyPointList = showString "PrimitiveTopologyPointList"
@@ -903,7 +903,7 @@ data PipelineInputAssemblyStateCreateInfo =
                                       , topology :: PrimitiveTopology 
                                       , primitiveRestartEnable :: Bool32 
                                       }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineInputAssemblyStateCreateInfo where
   sizeOf ~_ = 32
@@ -931,7 +931,7 @@ data PipelineColorBlendStateCreateInfo =
                                    , pAttachments :: Ptr PipelineColorBlendAttachmentState 
                                    , blendConstants :: Vector 4 CFloat 
                                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineColorBlendStateCreateInfo where
   sizeOf ~_ = 56
@@ -962,7 +962,7 @@ data PipelineDynamicStateCreateInfo =
                                 , dynamicStateCount :: Word32 
                                 , pDynamicStates :: Ptr DynamicState 
                                 }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineDynamicStateCreateInfo where
   sizeOf ~_ = 32
@@ -985,7 +985,7 @@ data SpecializationMapEntry =
                         , offset :: Word32 
                         , size :: CSize 
                         }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SpecializationMapEntry where
   sizeOf ~_ = 16
@@ -1001,12 +1001,12 @@ instance Storable SpecializationMapEntry where
 -- ** PipelineVertexInputStateCreateFlags
 -- | Opaque flag
 newtype PipelineVertexInputStateCreateFlags = PipelineVertexInputStateCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** VertexInputRate
 
 newtype VertexInputRate = VertexInputRate Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VertexInputRate where
   showsPrec _ VertexInputRateVertex = showString "VertexInputRateVertex"
@@ -1032,7 +1032,7 @@ pattern VertexInputRateInstance = VertexInputRate 1
 -- ** PipelineStageFlags
 
 newtype PipelineStageFlags = PipelineStageFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show PipelineStageFlags where
   showsPrec _ PipelineStageTopOfPipeBit = showString "PipelineStageTopOfPipeBit"
@@ -1128,7 +1128,7 @@ data PipelineColorBlendAttachmentState =
                                    , alphaBlendOp :: BlendOp 
                                    , colorWriteMask :: ColorComponentFlags 
                                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineColorBlendAttachmentState where
   sizeOf ~_ = 32
@@ -1154,7 +1154,7 @@ instance Storable PipelineColorBlendAttachmentState where
 -- ** BlendFactor
 
 newtype BlendFactor = BlendFactor Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show BlendFactor where
   showsPrec _ BlendFactorZero = showString "BlendFactorZero"
@@ -1246,12 +1246,12 @@ pattern BlendFactorSrc1Alpha = BlendFactor 17
 pattern BlendFactorOneMinusSrc1Alpha = BlendFactor 18
 
 newtype SampleMask = SampleMask Word32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** PipelineMultisampleStateCreateFlags
 -- | Opaque flag
 newtype PipelineMultisampleStateCreateFlags = PipelineMultisampleStateCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data PipelineMultisampleStateCreateInfo =
@@ -1265,7 +1265,7 @@ data PipelineMultisampleStateCreateInfo =
                                     , alphaToCoverageEnable :: Bool32 
                                     , alphaToOneEnable :: Bool32 
                                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineMultisampleStateCreateInfo where
   sizeOf ~_ = 48
@@ -1296,7 +1296,7 @@ data VertexInputBindingDescription =
                                , stride :: Word32 
                                , inputRate :: VertexInputRate 
                                }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable VertexInputBindingDescription where
   sizeOf ~_ = 12
@@ -1324,7 +1324,7 @@ data PipelineDepthStencilStateCreateInfo =
                                      , minDepthBounds :: CFloat 
                                      , maxDepthBounds :: CFloat 
                                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable PipelineDepthStencilStateCreateInfo where
   sizeOf ~_ = 104
@@ -1373,7 +1373,7 @@ data StencilOpState =
                 , writeMask :: Word32 
                 , reference :: Word32 
                 }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable StencilOpState where
   sizeOf ~_ = 28

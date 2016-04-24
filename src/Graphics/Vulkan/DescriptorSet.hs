@@ -62,7 +62,7 @@ foreign import ccall "vkUpdateDescriptorSets" updateDescriptorSets ::
 -- ** DescriptorPoolResetFlags
 -- | Opaque flag
 newtype DescriptorPoolResetFlags = DescriptorPoolResetFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** allocateDescriptorSets
 foreign import ccall "vkAllocateDescriptorSets" allocateDescriptorSets ::
@@ -75,7 +75,7 @@ data DescriptorBufferInfo =
                       , offset :: DeviceSize 
                       , range :: DeviceSize 
                       }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DescriptorBufferInfo where
   sizeOf ~_ = 24
@@ -94,7 +94,7 @@ data DescriptorImageInfo =
                      , imageView :: ImageView 
                      , imageLayout :: ImageLayout 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DescriptorImageInfo where
   sizeOf ~_ = 24
@@ -119,7 +119,7 @@ data CopyDescriptorSet =
                    , dstArrayElement :: Word32 
                    , descriptorCount :: Word32 
                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable CopyDescriptorSet where
   sizeOf ~_ = 56
@@ -155,14 +155,14 @@ foreign import ccall "vkCreateDescriptorSetLayout" createDescriptorSetLayout ::
     Ptr AllocationCallbacks -> Ptr DescriptorSetLayout -> IO Result
 
 newtype DescriptorPool = DescriptorPool Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** resetDescriptorPool
 foreign import ccall "vkResetDescriptorPool" resetDescriptorPool ::
   Device -> DescriptorPool -> DescriptorPoolResetFlags -> IO Result
 
 newtype DescriptorSetLayout = DescriptorSetLayout Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** freeDescriptorSets
 foreign import ccall "vkFreeDescriptorSets" freeDescriptorSets ::
@@ -178,7 +178,7 @@ data DescriptorPoolCreateInfo =
                           , poolSizeCount :: Word32 
                           , pPoolSizes :: Ptr DescriptorPoolSize 
                           }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DescriptorPoolCreateInfo where
   sizeOf ~_ = 40
@@ -200,7 +200,7 @@ instance Storable DescriptorPoolCreateInfo where
 -- ** DescriptorSetLayoutCreateFlags
 -- | Opaque flag
 newtype DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data DescriptorSetLayoutCreateInfo =
@@ -210,7 +210,7 @@ data DescriptorSetLayoutCreateInfo =
                                , bindingCount :: Word32 
                                , pBindings :: Ptr DescriptorSetLayoutBinding 
                                }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DescriptorSetLayoutCreateInfo where
   sizeOf ~_ = 32
@@ -230,7 +230,7 @@ instance Storable DescriptorSetLayoutCreateInfo where
 -- ** DescriptorPoolCreateFlags
 
 newtype DescriptorPoolCreateFlags = DescriptorPoolCreateFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show DescriptorPoolCreateFlags where
   showsPrec _ DescriptorPoolCreateFreeDescriptorSetBit = showString "DescriptorPoolCreateFreeDescriptorSetBit"
@@ -256,7 +256,7 @@ data DescriptorPoolSize =
   DescriptorPoolSize{ _type :: DescriptorType 
                     , descriptorCount :: Word32 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DescriptorPoolSize where
   sizeOf ~_ = 8
@@ -268,7 +268,7 @@ instance Storable DescriptorPoolSize where
 
 
 newtype DescriptorSet = DescriptorSet Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data WriteDescriptorSet =
@@ -283,7 +283,7 @@ data WriteDescriptorSet =
                     , pBufferInfo :: Ptr DescriptorBufferInfo 
                     , pTexelBufferView :: Ptr BufferView 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable WriteDescriptorSet where
   sizeOf ~_ = 64
@@ -328,7 +328,7 @@ data DescriptorSetLayoutBinding =
                             , stageFlags :: ShaderStageFlags 
                             , pImmutableSamplers :: Ptr Sampler 
                             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DescriptorSetLayoutBinding where
   sizeOf ~_ = 24
@@ -348,7 +348,7 @@ instance Storable DescriptorSetLayoutBinding where
 -- ** DescriptorType
 
 newtype DescriptorType = DescriptorType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show DescriptorType where
   showsPrec _ DescriptorTypeSampler = showString "DescriptorTypeSampler"
@@ -415,7 +415,7 @@ data DescriptorSetAllocateInfo =
                            , descriptorSetCount :: Word32 
                            , pSetLayouts :: Ptr DescriptorSetLayout 
                            }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DescriptorSetAllocateInfo where
   sizeOf ~_ = 40

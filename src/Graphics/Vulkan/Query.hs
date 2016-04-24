@@ -64,7 +64,7 @@ data QueryPoolCreateInfo =
                      , queryCount :: Word32 
                      , pipelineStatistics :: QueryPipelineStatisticFlags 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable QueryPoolCreateInfo where
   sizeOf ~_ = 32
@@ -86,7 +86,7 @@ instance Storable QueryPoolCreateInfo where
 -- ** QueryResultFlags
 
 newtype QueryResultFlags = QueryResultFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show QueryResultFlags where
   showsPrec _ QueryResult64Bit = showString "QueryResult64Bit"
@@ -122,7 +122,7 @@ pattern QueryResultPartialBit = QueryResultFlags 0x8
 -- ** QueryType
 
 newtype QueryType = QueryType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show QueryType where
   showsPrec _ QueryTypeOcclusion = showString "QueryTypeOcclusion"
@@ -150,7 +150,7 @@ pattern QueryTypePipelineStatistics = QueryType 1
 pattern QueryTypeTimestamp = QueryType 2
 
 newtype QueryPool = QueryPool Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** createQueryPool
 foreign import ccall "vkCreateQueryPool" createQueryPool ::
@@ -161,7 +161,7 @@ foreign import ccall "vkCreateQueryPool" createQueryPool ::
 -- ** QueryControlFlags
 
 newtype QueryControlFlags = QueryControlFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show QueryControlFlags where
   showsPrec _ QueryControlPreciseBit = showString "QueryControlPreciseBit"
@@ -185,12 +185,12 @@ pattern QueryControlPreciseBit = QueryControlFlags 0x1
 -- ** QueryPoolCreateFlags
 -- | Opaque flag
 newtype QueryPoolCreateFlags = QueryPoolCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** QueryPipelineStatisticFlags
 
 newtype QueryPipelineStatisticFlags = QueryPipelineStatisticFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show QueryPipelineStatisticFlags where
   showsPrec _ QueryPipelineStatisticInputAssemblyVerticesBit = showString "QueryPipelineStatisticInputAssemblyVerticesBit"

@@ -29,7 +29,7 @@ data LayerProperties =
                  , implementationVersion :: Word32 
                  , description :: Vector MaxDescriptionSize CChar 
                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable LayerProperties where
   sizeOf ~_ = 520

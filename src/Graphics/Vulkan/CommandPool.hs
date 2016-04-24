@@ -45,7 +45,7 @@ data CommandPoolCreateInfo =
                        , flags :: CommandPoolCreateFlags 
                        , queueFamilyIndex :: Word32 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable CommandPoolCreateInfo where
   sizeOf ~_ = 24
@@ -71,7 +71,7 @@ foreign import ccall "vkResetCommandPool" resetCommandPool ::
 -- ** CommandPoolCreateFlags
 
 newtype CommandPoolCreateFlags = CommandPoolCreateFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show CommandPoolCreateFlags where
   showsPrec _ CommandPoolCreateTransientBit = showString "CommandPoolCreateTransientBit"
@@ -105,7 +105,7 @@ foreign import ccall "vkCreateCommandPool" createCommandPool ::
 -- ** CommandPoolResetFlags
 
 newtype CommandPoolResetFlags = CommandPoolResetFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show CommandPoolResetFlags where
   showsPrec _ CommandPoolResetReleaseResourcesBit = showString "CommandPoolResetReleaseResourcesBit"
@@ -127,5 +127,5 @@ pattern CommandPoolResetReleaseResourcesBit = CommandPoolResetFlags 0x1
 
 
 newtype CommandPool = CommandPool Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 

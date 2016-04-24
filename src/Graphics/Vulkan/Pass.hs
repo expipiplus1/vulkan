@@ -61,7 +61,7 @@ data SubpassDependency =
                    , dstAccessMask :: AccessFlags 
                    , dependencyFlags :: DependencyFlags 
                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SubpassDependency where
   sizeOf ~_ = 28
@@ -85,15 +85,15 @@ instance Storable SubpassDependency where
 -- ** SubpassDescriptionFlags
 -- | Opaque flag
 newtype SubpassDescriptionFlags = SubpassDescriptionFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 newtype Framebuffer = Framebuffer Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** AttachmentDescriptionFlags
 
 newtype AttachmentDescriptionFlags = AttachmentDescriptionFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show AttachmentDescriptionFlags where
   showsPrec _ AttachmentDescriptionMayAliasBit = showString "AttachmentDescriptionMayAliasBit"
@@ -117,7 +117,7 @@ pattern AttachmentDescriptionMayAliasBit = AttachmentDescriptionFlags 0x1
 -- ** DependencyFlags
 
 newtype DependencyFlags = DependencyFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show DependencyFlags where
   showsPrec _ DependencyByRegionBit = showString "DependencyByRegionBit"
@@ -160,7 +160,7 @@ data FramebufferCreateInfo =
                        , height :: Word32 
                        , layers :: Word32 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable FramebufferCreateInfo where
   sizeOf ~_ = 64
@@ -192,7 +192,7 @@ foreign import ccall "vkGetRenderAreaGranularity" getRenderAreaGranularity ::
 -- ** AttachmentLoadOp
 
 newtype AttachmentLoadOp = AttachmentLoadOp Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show AttachmentLoadOp where
   showsPrec _ AttachmentLoadOpLoad = showString "AttachmentLoadOpLoad"
@@ -222,7 +222,7 @@ pattern AttachmentLoadOpDontCare = AttachmentLoadOp 2
 -- ** AttachmentStoreOp
 
 newtype AttachmentStoreOp = AttachmentStoreOp Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show AttachmentStoreOp where
   showsPrec _ AttachmentStoreOpStore = showString "AttachmentStoreOpStore"
@@ -248,7 +248,7 @@ pattern AttachmentStoreOpDontCare = AttachmentStoreOp 1
 -- ** AccessFlags
 
 newtype AccessFlags = AccessFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show AccessFlags where
   showsPrec _ AccessIndirectCommandReadBit = showString "AccessIndirectCommandReadBit"
@@ -334,7 +334,7 @@ pattern AccessMemoryWriteBit = AccessFlags 0x10000
 
 
 newtype RenderPass = RenderPass Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** destroyFramebuffer
 foreign import ccall "vkDestroyFramebuffer" destroyFramebuffer ::
@@ -345,7 +345,7 @@ data AttachmentReference =
   AttachmentReference{ attachment :: Word32 
                      , layout :: ImageLayout 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable AttachmentReference where
   sizeOf ~_ = 8
@@ -359,7 +359,7 @@ instance Storable AttachmentReference where
 -- ** RenderPassCreateFlags
 -- | Opaque flag
 newtype RenderPassCreateFlags = RenderPassCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data AttachmentDescription =
@@ -373,7 +373,7 @@ data AttachmentDescription =
                        , initialLayout :: ImageLayout 
                        , finalLayout :: ImageLayout 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable AttachmentDescription where
   sizeOf ~_ = 36
@@ -411,7 +411,7 @@ data SubpassDescription =
                     , preserveAttachmentCount :: Word32 
                     , pPreserveAttachments :: Ptr Word32 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SubpassDescription where
   sizeOf ~_ = 72
@@ -456,7 +456,7 @@ data RenderPassCreateInfo =
                       , dependencyCount :: Word32 
                       , pDependencies :: Ptr SubpassDependency 
                       }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable RenderPassCreateInfo where
   sizeOf ~_ = 64
@@ -484,5 +484,5 @@ instance Storable RenderPassCreateInfo where
 -- ** FramebufferCreateFlags
 -- | Opaque flag
 newtype FramebufferCreateFlags = FramebufferCreateFlags Flags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 

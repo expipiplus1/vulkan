@@ -57,7 +57,7 @@ data SubmitInfo =
             , signalSemaphoreCount :: Word32 
             , pSignalSemaphores :: Ptr Semaphore 
             }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SubmitInfo where
   sizeOf ~_ = 72

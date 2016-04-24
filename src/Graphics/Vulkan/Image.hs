@@ -55,7 +55,7 @@ foreign import ccall "vkCreateImage" createImage ::
 -- ** ImageCreateFlags
 
 newtype ImageCreateFlags = ImageCreateFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show ImageCreateFlags where
   showsPrec _ ImageCreateSparseBindingBit = showString "ImageCreateSparseBindingBit"
@@ -95,7 +95,7 @@ pattern ImageCreateCubeCompatibleBit = ImageCreateFlags 0x10
 -- ** ImageUsageFlags
 
 newtype ImageUsageFlags = ImageUsageFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show ImageUsageFlags where
   showsPrec _ ImageUsageTransferSrcBit = showString "ImageUsageTransferSrcBit"
@@ -145,12 +145,12 @@ pattern ImageUsageInputAttachmentBit = ImageUsageFlags 0x80
 
 
 newtype Image = Image Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 -- ** ImageAspectFlags
 
 newtype ImageAspectFlags = ImageAspectFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show ImageAspectFlags where
   showsPrec _ ImageAspectColorBit = showString "ImageAspectColorBit"
@@ -191,7 +191,7 @@ data SubresourceLayout =
                    , arrayPitch :: DeviceSize 
                    , depthPitch :: DeviceSize 
                    }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable SubresourceLayout where
   sizeOf ~_ = 40
@@ -211,7 +211,7 @@ instance Storable SubresourceLayout where
 -- ** ImageTiling
 
 newtype ImageTiling = ImageTiling Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show ImageTiling where
   showsPrec _ ImageTilingOptimal = showString "ImageTilingOptimal"
@@ -237,7 +237,7 @@ pattern ImageTilingLinear = ImageTiling 1
 -- ** ImageLayout
 
 newtype ImageLayout = ImageLayout Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show ImageLayout where
   showsPrec _ ImageLayoutUndefined = showString "ImageLayoutUndefined"
@@ -291,7 +291,7 @@ pattern ImageLayoutPreinitialized = ImageLayout 8
 -- ** ImageType
 
 newtype ImageType = ImageType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show ImageType where
   showsPrec _ ImageType1d = showString "ImageType1d"
@@ -328,7 +328,7 @@ data ImageSubresource =
                   , mipLevel :: Word32 
                   , arrayLayer :: Word32 
                   }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageSubresource where
   sizeOf ~_ = 12
@@ -349,7 +349,7 @@ data ImageSubresourceRange =
                        , baseArrayLayer :: Word32 
                        , layerCount :: Word32 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageSubresourceRange where
   sizeOf ~_ = 20
@@ -389,7 +389,7 @@ data ImageCreateInfo =
                  , pQueueFamilyIndices :: Ptr Word32 
                  , initialLayout :: ImageLayout 
                  }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable ImageCreateInfo where
   sizeOf ~_ = 88

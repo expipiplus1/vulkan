@@ -32,7 +32,7 @@ data DisplayPresentInfoKHR =
                        , dstRect :: Rect2D 
                        , persistent :: Bool32 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable DisplayPresentInfoKHR where
   sizeOf ~_ = 56

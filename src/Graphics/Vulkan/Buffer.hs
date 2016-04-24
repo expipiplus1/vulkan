@@ -49,7 +49,7 @@ foreign import ccall "vkCreateBuffer" createBuffer ::
 -- ** BufferCreateFlags
 
 newtype BufferCreateFlags = BufferCreateFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show BufferCreateFlags where
   showsPrec _ BufferCreateSparseBindingBit = showString "BufferCreateSparseBindingBit"
@@ -81,7 +81,7 @@ pattern BufferCreateSparseAliasedBit = BufferCreateFlags 0x4
 -- ** BufferUsageFlags
 
 newtype BufferUsageFlags = BufferUsageFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show BufferUsageFlags where
   showsPrec _ BufferUsageTransferSrcBit = showString "BufferUsageTransferSrcBit"
@@ -139,7 +139,7 @@ foreign import ccall "vkDestroyBuffer" destroyBuffer ::
   Device -> Buffer -> Ptr AllocationCallbacks -> IO ()
 
 newtype Buffer = Buffer Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 
 data BufferCreateInfo =
@@ -152,7 +152,7 @@ data BufferCreateInfo =
                   , queueFamilyIndexCount :: Word32 
                   , pQueueFamilyIndices :: Ptr Word32 
                   }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable BufferCreateInfo where
   sizeOf ~_ = 56

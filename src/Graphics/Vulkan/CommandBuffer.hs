@@ -50,7 +50,7 @@ import Graphics.Vulkan.Core( Bool32(..)
 -- ** CommandBufferLevel
 
 newtype CommandBufferLevel = CommandBufferLevel Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show CommandBufferLevel where
   showsPrec _ CommandBufferLevelPrimary = showString "CommandBufferLevelPrimary"
@@ -89,7 +89,7 @@ foreign import ccall "vkFreeCommandBuffers" freeCommandBuffers ::
 -- ** CommandBufferUsageFlags
 
 newtype CommandBufferUsageFlags = CommandBufferUsageFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show CommandBufferUsageFlags where
   showsPrec _ CommandBufferUsageOneTimeSubmitBit = showString "CommandBufferUsageOneTimeSubmitBit"
@@ -125,7 +125,7 @@ data CommandBufferBeginInfo =
                         , flags :: CommandBufferUsageFlags 
                         , pInheritanceInfo :: Ptr CommandBufferInheritanceInfo 
                         }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable CommandBufferBeginInfo where
   sizeOf ~_ = 32
@@ -151,7 +151,7 @@ data CommandBufferInheritanceInfo =
                               , queryFlags :: QueryControlFlags 
                               , pipelineStatistics :: QueryPipelineStatisticFlags 
                               }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable CommandBufferInheritanceInfo where
   sizeOf ~_ = 56
@@ -180,7 +180,7 @@ type CommandBuffer = Ptr VkCommandBuffer_T
 -- ** CommandBufferResetFlags
 
 newtype CommandBufferResetFlags = CommandBufferResetFlags Flags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 instance Show CommandBufferResetFlags where
   showsPrec _ CommandBufferResetReleaseResourcesBit = showString "CommandBufferResetReleaseResourcesBit"
@@ -217,7 +217,7 @@ data CommandBufferAllocateInfo =
                            , level :: CommandBufferLevel 
                            , commandBufferCount :: Word32 
                            }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 instance Storable CommandBufferAllocateInfo where
   sizeOf ~_ = 32
