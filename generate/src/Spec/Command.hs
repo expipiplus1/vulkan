@@ -1,14 +1,12 @@
 module Spec.Command where
 
-import           Language.C.Types             (CIdentifier)
-import           Language.Haskell.Exts.Syntax as HS
+import           Language.C.Types (CIdentifier)
 import           Spec.Type
 
 data Command = Command { cName                     :: String
                        , cSymbol                   :: CIdentifier
                        , cHsName                   :: String
                        , cReturnType               :: CType
-                       , cHsReturnType             :: HS.Type
                        , cParameters               :: [Parameter]
                        , cImplicitExternSyncParams :: Maybe [String]
                        , cQueues                   :: Maybe [String]

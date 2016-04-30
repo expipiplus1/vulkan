@@ -21,8 +21,6 @@ parseCommand = hasName "command" >>>
           cReturnType <- parseCType <<<
             getAllText <<< processChildren (neg (hasName "name")) -< proto
 
-          let cHsReturnType = undefined
-
           cParameters <- listA (parseParam <<< getChildren) -< command
 
           cImplicitExternSyncParams <- oneRequired
