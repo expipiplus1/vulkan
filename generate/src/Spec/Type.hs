@@ -1,5 +1,6 @@
 module Spec.Type where
 
+import           Control.Arrow    ((&&&))
 import           Language.C.Types (CIdentifier, Type)
 
 type CType = Type CIdentifier
@@ -22,12 +23,14 @@ data Include = Include { iName     :: String
   deriving (Show, Eq)
 
 data Define = Define { dName   :: String
+                     , dHsName :: String
                      , dText   :: String
                      , dSymTab :: [(String, String)]
                      }
   deriving (Show, Eq)
 
 data BaseType = BaseType { btName       :: String
+                         , btHsName     :: String
                          , btTypeString :: String
                          , btCType      :: CType
                          }
@@ -39,6 +42,7 @@ data PlatformType = PlatformType { ptName     :: String
   deriving (Show, Eq)
 
 data BitmaskType = BitmaskType { bmtName       :: String
+                               , bmtHsName     :: String
                                , bmtTypeString :: String
                                , bmtRequires   :: Maybe String
                                , bmtCType      :: CType
@@ -46,23 +50,27 @@ data BitmaskType = BitmaskType { bmtName       :: String
   deriving (Show, Eq)
 
 data HandleType = HandleType { htName       :: String
+                             , htHsName     :: String
                              , htParents    :: [String]
                              , htTypeString :: String
                              , htCType      :: CType
                              }
   deriving (Show, Eq)
 
-data EnumType = EnumType { etName :: String
+data EnumType = EnumType { etName   :: String
+                         , etHsName :: String
                          }
   deriving (Show, Eq)
 
 data FuncPointerType = FuncPointerType { fptName       :: String
+                                       , fptHsName     :: String
                                        , fptTypeString :: String
                                        , fptCType      :: CType
                                        }
   deriving (Show, Eq)
 
 data StructType = StructType { stName           :: String
+                             , stHsName         :: String
                              , stComment        :: Maybe String
                              , stMembers        :: [StructMember]
                              , stUsage          :: [String]
@@ -71,6 +79,7 @@ data StructType = StructType { stName           :: String
   deriving (Show, Eq)
 
 data StructMember = StructMember { smName           :: String
+                                 , smHsName         :: String
                                  , smTypeString     :: String
                                  , smCType          :: CType
                                  , smNoAutoValidity :: Bool
@@ -81,6 +90,7 @@ data StructMember = StructMember { smName           :: String
   deriving (Show, Eq)
 
 data UnionType = UnionType { utName           :: String
+                           , utHsName         :: String
                            , utComment        :: Maybe String
                            , utMembers        :: [StructMember]
                            , utUsage          :: [String]
@@ -99,6 +109,18 @@ typeDeclTypeName (AnEnumType et)        = Just $ etName et
 typeDeclTypeName (AFuncPointerType fpt) = Just $ fptName fpt
 typeDeclTypeName (AStructType st)       = Just $ stName st
 typeDeclTypeName (AUnionType ut)        = Just $ utName ut
+
+typeDeclTypeNameMap :: TypeDecl -> Maybe (String, String)
+typeDeclTypeNameMap (AnInclude _)          = Nothing
+typeDeclTypeNameMap (ADefine _)            = Nothing
+typeDeclTypeNameMap (ABaseType bt)         = Just $ (btName &&& btHsName) bt
+typeDeclTypeNameMap (APlatformType _)     = Nothing
+typeDeclTypeNameMap (ABitmaskType bmt)     = Just $ (bmtName &&& bmtHsName) bmt
+typeDeclTypeNameMap (AHandleType ht)       = Just $ (htName &&& htHsName) ht
+typeDeclTypeNameMap (AnEnumType et)        = Just $ (etName &&& etHsName) et
+typeDeclTypeNameMap (AFuncPointerType fpt) = Just $ (fptName &&& fptHsName) fpt
+typeDeclTypeNameMap (AStructType st)       = Just $ (stName &&& stHsName) st
+typeDeclTypeNameMap (AUnionType ut)        = Just $ (utName &&& utHsName) ut
 
 typeDeclCType :: TypeDecl -> Maybe CType
 typeDeclCType (AnInclude _)          = Nothing

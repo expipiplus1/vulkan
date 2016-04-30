@@ -4,20 +4,20 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.CommandBuffer where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
-import Graphics.Vulkan.Pass( VkFramebuffer(..)
-                           , VkRenderPass(..)
+import Graphics.Vulkan.Pass( RenderPass(..)
+                           , Framebuffer(..)
                            )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
+                  , Ptr
                   , plusPtr
                   )
 import Data.Int( Int32
@@ -27,9 +27,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.CommandPool( VkCommandPool(..)
+import Graphics.Vulkan.CommandPool( CommandPool(..)
                                   )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
 import Text.Read( Read(..)
                 , parens
@@ -38,208 +38,199 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Query( VkQueryPipelineStatisticFlags(..)
-                            , VkQueryControlFlagBits(..)
-                            , VkQueryControlFlags(..)
-                            , VkQueryPipelineStatisticFlagBits(..)
+import Graphics.Vulkan.Query( QueryPipelineStatisticFlags(..)
+                            , QueryControlFlags(..)
                             )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkBool32(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
+import Graphics.Vulkan.Core( Bool32(..)
+                           , StructureType(..)
+                           , Result(..)
+                           , Flags(..)
                            )
 
--- ** VkCommandBufferLevel
+-- ** CommandBufferLevel
 
-newtype VkCommandBufferLevel = VkCommandBufferLevel Int32
-  deriving (Eq, Storable)
+newtype CommandBufferLevel = CommandBufferLevel Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkCommandBufferLevel where
-  showsPrec _ VK_COMMAND_BUFFER_LEVEL_PRIMARY = showString "VK_COMMAND_BUFFER_LEVEL_PRIMARY"
-  showsPrec _ VK_COMMAND_BUFFER_LEVEL_SECONDARY = showString "VK_COMMAND_BUFFER_LEVEL_SECONDARY"
-  showsPrec p (VkCommandBufferLevel x) = showParen (p >= 11) (showString "VkCommandBufferLevel " . showsPrec 11 x)
+instance Show CommandBufferLevel where
+  showsPrec _ CommandBufferLevelPrimary = showString "CommandBufferLevelPrimary"
+  showsPrec _ CommandBufferLevelSecondary = showString "CommandBufferLevelSecondary"
+  showsPrec p (CommandBufferLevel x) = showParen (p >= 11) (showString "CommandBufferLevel " . showsPrec 11 x)
 
-instance Read VkCommandBufferLevel where
-  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_LEVEL_PRIMARY", pure VK_COMMAND_BUFFER_LEVEL_PRIMARY)
-                             , ("VK_COMMAND_BUFFER_LEVEL_SECONDARY", pure VK_COMMAND_BUFFER_LEVEL_SECONDARY)
+instance Read CommandBufferLevel where
+  readPrec = parens ( choose [ ("CommandBufferLevelPrimary", pure CommandBufferLevelPrimary)
+                             , ("CommandBufferLevelSecondary", pure CommandBufferLevelSecondary)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCommandBufferLevel")
+                        expectP (Ident "CommandBufferLevel")
                         v <- step readPrec
-                        pure (VkCommandBufferLevel v)
+                        pure (CommandBufferLevel v)
                         )
                     )
 
 
-pattern VK_COMMAND_BUFFER_LEVEL_PRIMARY = VkCommandBufferLevel 0
+pattern CommandBufferLevelPrimary = CommandBufferLevel 0
 
-pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY = VkCommandBufferLevel 1
+pattern CommandBufferLevelSecondary = CommandBufferLevel 1
 
--- ** vkAllocateCommandBuffers
-foreign import ccall "vkAllocateCommandBuffers" vkAllocateCommandBuffers ::
-  VkDevice ->
-  Ptr VkCommandBufferAllocateInfo ->
-    Ptr VkCommandBuffer -> IO VkResult
+-- ** allocateCommandBuffers
+foreign import ccall "vkAllocateCommandBuffers" allocateCommandBuffers ::
+  Device ->
+  Ptr CommandBufferAllocateInfo -> Ptr CommandBuffer -> IO Result
 
--- ** vkResetCommandBuffer
-foreign import ccall "vkResetCommandBuffer" vkResetCommandBuffer ::
-  VkCommandBuffer -> VkCommandBufferResetFlags -> IO VkResult
+-- ** resetCommandBuffer
+foreign import ccall "vkResetCommandBuffer" resetCommandBuffer ::
+  CommandBuffer -> CommandBufferResetFlags -> IO Result
 
--- ** vkFreeCommandBuffers
-foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers ::
-  VkDevice -> VkCommandPool -> Word32 -> Ptr VkCommandBuffer -> IO ()
+-- ** freeCommandBuffers
+foreign import ccall "vkFreeCommandBuffers" freeCommandBuffers ::
+  Device -> CommandPool -> Word32 -> Ptr CommandBuffer -> IO ()
 
--- ** VkCommandBufferUsageFlags
+-- ** CommandBufferUsageFlags
 
-newtype VkCommandBufferUsageFlagBits = VkCommandBufferUsageFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype CommandBufferUsageFlags = CommandBufferUsageFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkCommandBufferUsageFlagBits
-type VkCommandBufferUsageFlags = VkCommandBufferUsageFlagBits
-
-instance Show VkCommandBufferUsageFlagBits where
-  showsPrec _ VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = showString "VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT"
-  showsPrec _ VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = showString "VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT"
-  showsPrec _ VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = showString "VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT"
+instance Show CommandBufferUsageFlags where
+  showsPrec _ CommandBufferUsageOneTimeSubmitBit = showString "CommandBufferUsageOneTimeSubmitBit"
+  showsPrec _ CommandBufferUsageRenderPassContinueBit = showString "CommandBufferUsageRenderPassContinueBit"
+  showsPrec _ CommandBufferUsageSimultaneousUseBit = showString "CommandBufferUsageSimultaneousUseBit"
   
-  showsPrec p (VkCommandBufferUsageFlagBits x) = showParen (p >= 11) (showString "VkCommandBufferUsageFlagBits " . showsPrec 11 x)
+  showsPrec p (CommandBufferUsageFlags x) = showParen (p >= 11) (showString "CommandBufferUsageFlags " . showsPrec 11 x)
 
-instance Read VkCommandBufferUsageFlagBits where
-  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT", pure VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT)
-                             , ("VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT", pure VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT)
-                             , ("VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT", pure VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
+instance Read CommandBufferUsageFlags where
+  readPrec = parens ( choose [ ("CommandBufferUsageOneTimeSubmitBit", pure CommandBufferUsageOneTimeSubmitBit)
+                             , ("CommandBufferUsageRenderPassContinueBit", pure CommandBufferUsageRenderPassContinueBit)
+                             , ("CommandBufferUsageSimultaneousUseBit", pure CommandBufferUsageSimultaneousUseBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCommandBufferUsageFlagBits")
+                        expectP (Ident "CommandBufferUsageFlags")
                         v <- step readPrec
-                        pure (VkCommandBufferUsageFlagBits v)
+                        pure (CommandBufferUsageFlags v)
                         )
                     )
 
 
-pattern VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = VkCommandBufferUsageFlagBits 0x1
+pattern CommandBufferUsageOneTimeSubmitBit = CommandBufferUsageFlags 0x1
 
-pattern VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = VkCommandBufferUsageFlagBits 0x2
+pattern CommandBufferUsageRenderPassContinueBit = CommandBufferUsageFlags 0x2
 -- | Command buffer may be submitted/executed more than once simultaneously
-pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = VkCommandBufferUsageFlagBits 0x4
+pattern CommandBufferUsageSimultaneousUseBit = CommandBufferUsageFlags 0x4
 
 
 
-data VkCommandBufferBeginInfo =
-  VkCommandBufferBeginInfo{ vkSType :: VkStructureType 
-                          , vkPNext :: Ptr Void 
-                          , vkFlags :: VkCommandBufferUsageFlags 
-                          , vkPInheritanceInfo :: Ptr VkCommandBufferInheritanceInfo 
-                          }
-  deriving (Eq)
+data CommandBufferBeginInfo =
+  CommandBufferBeginInfo{ sType :: StructureType 
+                        , pNext :: Ptr Void 
+                        , flags :: CommandBufferUsageFlags 
+                        , pInheritanceInfo :: Ptr CommandBufferInheritanceInfo 
+                        }
+  deriving (Eq, Ord)
 
-instance Storable VkCommandBufferBeginInfo where
+instance Storable CommandBufferBeginInfo where
   sizeOf ~_ = 32
   alignment ~_ = 8
-  peek ptr = VkCommandBufferBeginInfo <$> peek (ptr `plusPtr` 0)
-                                      <*> peek (ptr `plusPtr` 8)
-                                      <*> peek (ptr `plusPtr` 16)
-                                      <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferBeginInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferBeginInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkCommandBufferBeginInfo))
-                *> poke (ptr `plusPtr` 24) (vkPInheritanceInfo (poked :: VkCommandBufferBeginInfo))
+  peek ptr = CommandBufferBeginInfo <$> peek (ptr `plusPtr` 0)
+                                    <*> peek (ptr `plusPtr` 8)
+                                    <*> peek (ptr `plusPtr` 16)
+                                    <*> peek (ptr `plusPtr` 24)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: CommandBufferBeginInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: CommandBufferBeginInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: CommandBufferBeginInfo))
+                *> poke (ptr `plusPtr` 24) (pInheritanceInfo (poked :: CommandBufferBeginInfo))
 
 
 
-data VkCommandBufferInheritanceInfo =
-  VkCommandBufferInheritanceInfo{ vkSType :: VkStructureType 
-                                , vkPNext :: Ptr Void 
-                                , vkRenderPass :: VkRenderPass 
-                                , vkSubpass :: Word32 
-                                , vkFramebuffer :: VkFramebuffer 
-                                , vkOcclusionQueryEnable :: VkBool32 
-                                , vkQueryFlags :: VkQueryControlFlags 
-                                , vkPipelineStatistics :: VkQueryPipelineStatisticFlags 
-                                }
-  deriving (Eq)
+data CommandBufferInheritanceInfo =
+  CommandBufferInheritanceInfo{ sType :: StructureType 
+                              , pNext :: Ptr Void 
+                              , renderPass :: RenderPass 
+                              , subpass :: Word32 
+                              , framebuffer :: Framebuffer 
+                              , occlusionQueryEnable :: Bool32 
+                              , queryFlags :: QueryControlFlags 
+                              , pipelineStatistics :: QueryPipelineStatisticFlags 
+                              }
+  deriving (Eq, Ord)
 
-instance Storable VkCommandBufferInheritanceInfo where
+instance Storable CommandBufferInheritanceInfo where
   sizeOf ~_ = 56
   alignment ~_ = 8
-  peek ptr = VkCommandBufferInheritanceInfo <$> peek (ptr `plusPtr` 0)
-                                            <*> peek (ptr `plusPtr` 8)
-                                            <*> peek (ptr `plusPtr` 16)
-                                            <*> peek (ptr `plusPtr` 24)
-                                            <*> peek (ptr `plusPtr` 32)
-                                            <*> peek (ptr `plusPtr` 40)
-                                            <*> peek (ptr `plusPtr` 44)
-                                            <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 16) (vkRenderPass (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 24) (vkSubpass (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 32) (vkFramebuffer (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 40) (vkOcclusionQueryEnable (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 44) (vkQueryFlags (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 48) (vkPipelineStatistics (poked :: VkCommandBufferInheritanceInfo))
+  peek ptr = CommandBufferInheritanceInfo <$> peek (ptr `plusPtr` 0)
+                                          <*> peek (ptr `plusPtr` 8)
+                                          <*> peek (ptr `plusPtr` 16)
+                                          <*> peek (ptr `plusPtr` 24)
+                                          <*> peek (ptr `plusPtr` 32)
+                                          <*> peek (ptr `plusPtr` 40)
+                                          <*> peek (ptr `plusPtr` 44)
+                                          <*> peek (ptr `plusPtr` 48)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: CommandBufferInheritanceInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: CommandBufferInheritanceInfo))
+                *> poke (ptr `plusPtr` 16) (renderPass (poked :: CommandBufferInheritanceInfo))
+                *> poke (ptr `plusPtr` 24) (subpass (poked :: CommandBufferInheritanceInfo))
+                *> poke (ptr `plusPtr` 32) (framebuffer (poked :: CommandBufferInheritanceInfo))
+                *> poke (ptr `plusPtr` 40) (occlusionQueryEnable (poked :: CommandBufferInheritanceInfo))
+                *> poke (ptr `plusPtr` 44) (queryFlags (poked :: CommandBufferInheritanceInfo))
+                *> poke (ptr `plusPtr` 48) (pipelineStatistics (poked :: CommandBufferInheritanceInfo))
 
 
 data VkCommandBuffer_T
-type VkCommandBuffer = Ptr VkCommandBuffer_T
+type CommandBuffer = Ptr VkCommandBuffer_T
 
--- ** VkCommandBufferResetFlags
+-- ** CommandBufferResetFlags
 
-newtype VkCommandBufferResetFlagBits = VkCommandBufferResetFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype CommandBufferResetFlags = CommandBufferResetFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkCommandBufferResetFlagBits
-type VkCommandBufferResetFlags = VkCommandBufferResetFlagBits
-
-instance Show VkCommandBufferResetFlagBits where
-  showsPrec _ VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
+instance Show CommandBufferResetFlags where
+  showsPrec _ CommandBufferResetReleaseResourcesBit = showString "CommandBufferResetReleaseResourcesBit"
   
-  showsPrec p (VkCommandBufferResetFlagBits x) = showParen (p >= 11) (showString "VkCommandBufferResetFlagBits " . showsPrec 11 x)
+  showsPrec p (CommandBufferResetFlags x) = showParen (p >= 11) (showString "CommandBufferResetFlags " . showsPrec 11 x)
 
-instance Read VkCommandBufferResetFlagBits where
-  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT", pure VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT)
+instance Read CommandBufferResetFlags where
+  readPrec = parens ( choose [ ("CommandBufferResetReleaseResourcesBit", pure CommandBufferResetReleaseResourcesBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCommandBufferResetFlagBits")
+                        expectP (Ident "CommandBufferResetFlags")
                         v <- step readPrec
-                        pure (VkCommandBufferResetFlagBits v)
+                        pure (CommandBufferResetFlags v)
                         )
                     )
 
 -- | Release resources owned by the buffer
-pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = VkCommandBufferResetFlagBits 0x1
+pattern CommandBufferResetReleaseResourcesBit = CommandBufferResetFlags 0x1
 
 
--- ** vkEndCommandBuffer
-foreign import ccall "vkEndCommandBuffer" vkEndCommandBuffer ::
-  VkCommandBuffer -> IO VkResult
+-- ** endCommandBuffer
+foreign import ccall "vkEndCommandBuffer" endCommandBuffer ::
+  CommandBuffer -> IO Result
 
--- ** vkBeginCommandBuffer
-foreign import ccall "vkBeginCommandBuffer" vkBeginCommandBuffer ::
-  VkCommandBuffer -> Ptr VkCommandBufferBeginInfo -> IO VkResult
+-- ** beginCommandBuffer
+foreign import ccall "vkBeginCommandBuffer" beginCommandBuffer ::
+  CommandBuffer -> Ptr CommandBufferBeginInfo -> IO Result
 
 
-data VkCommandBufferAllocateInfo =
-  VkCommandBufferAllocateInfo{ vkSType :: VkStructureType 
-                             , vkPNext :: Ptr Void 
-                             , vkCommandPool :: VkCommandPool 
-                             , vkLevel :: VkCommandBufferLevel 
-                             , vkCommandBufferCount :: Word32 
-                             }
-  deriving (Eq)
+data CommandBufferAllocateInfo =
+  CommandBufferAllocateInfo{ sType :: StructureType 
+                           , pNext :: Ptr Void 
+                           , commandPool :: CommandPool 
+                           , level :: CommandBufferLevel 
+                           , commandBufferCount :: Word32 
+                           }
+  deriving (Eq, Ord)
 
-instance Storable VkCommandBufferAllocateInfo where
+instance Storable CommandBufferAllocateInfo where
   sizeOf ~_ = 32
   alignment ~_ = 8
-  peek ptr = VkCommandBufferAllocateInfo <$> peek (ptr `plusPtr` 0)
-                                         <*> peek (ptr `plusPtr` 8)
-                                         <*> peek (ptr `plusPtr` 16)
-                                         <*> peek (ptr `plusPtr` 24)
-                                         <*> peek (ptr `plusPtr` 28)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferAllocateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferAllocateInfo))
-                *> poke (ptr `plusPtr` 16) (vkCommandPool (poked :: VkCommandBufferAllocateInfo))
-                *> poke (ptr `plusPtr` 24) (vkLevel (poked :: VkCommandBufferAllocateInfo))
-                *> poke (ptr `plusPtr` 28) (vkCommandBufferCount (poked :: VkCommandBufferAllocateInfo))
+  peek ptr = CommandBufferAllocateInfo <$> peek (ptr `plusPtr` 0)
+                                       <*> peek (ptr `plusPtr` 8)
+                                       <*> peek (ptr `plusPtr` 16)
+                                       <*> peek (ptr `plusPtr` 24)
+                                       <*> peek (ptr `plusPtr` 28)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: CommandBufferAllocateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: CommandBufferAllocateInfo))
+                *> poke (ptr `plusPtr` 16) (commandPool (poked :: CommandBufferAllocateInfo))
+                *> poke (ptr `plusPtr` 24) (level (poked :: CommandBufferAllocateInfo))
+                *> poke (ptr `plusPtr` 28) (commandBufferCount (poked :: CommandBufferAllocateInfo))
 
 

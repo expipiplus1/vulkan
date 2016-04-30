@@ -4,6 +4,7 @@ import           Data.Int (Int32)
 
 -- TODO: Parse the XML comments into here
 data Enum = Enum { eName      :: String
+                 , eHsName    :: String
                  , eNamespace :: Maybe String
                  , eExpand    :: Maybe String
                  , eComment   :: Maybe String
@@ -12,6 +13,7 @@ data Enum = Enum { eName      :: String
   deriving (Show)
 
 data EnumElement = EnumElement { eeName    :: String
+                               , eeHsName  :: String
                                , eeValue   :: !Int32
                                , eeComment :: Maybe String
                                }

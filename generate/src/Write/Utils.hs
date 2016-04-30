@@ -19,7 +19,7 @@ import           Text.PrettyPrint.Leijen.Text hiding (string, (<$>), (</>))
 newtype ModuleName = ModuleName{ unModuleName :: String }
   deriving(Eq, Show, Hashable)
 
-type NameLocations = HashMap String ModuleName
+type NameLocations = HashMap String (ModuleName, String)
 
 comment :: String -> String
 comment "" = ""
@@ -50,6 +50,11 @@ showHex' n = sign ++ "0x" ++ showHex n ""
   where sign = if n < 0
                  then "-"
                  else ""
+
+-- | Mame the first letter of the word lowercase
+lowerFirst :: String -> String
+lowerFirst "" = ""
+lowerFirst (x:xs) = toLower x : xs
 
 -- | Mame the first letter of the word uppercase
 upperFirst :: String -> String
@@ -111,14 +116,14 @@ pascalCase = concatMap upperFirst . words
 -- | Concatenate words separated by underscores in the string and make the
 -- first letter of each one uppercase.
 pascalCase_ :: String -> String
-pascalCase_ = concatMap upperFirst . splitOn "_"
+pascalCase_ = concatMap word . splitOn "_"
+  where word "" = ""
+        word (x:xs) = toUpper x : (toLower <$> xs)
 
 -- | Concatenate words separated by underscores in the string and make the
 -- first letter of each one but the first uppercase.
 camelCase_ :: String -> String
-camelCase_ "" = ""
-camelCase_ s = let w:ws = splitOn "_" . fmap toLower $ s
-               in w ++ concatMap upperFirst ws
+camelCase_ = lowerFirst . pascalCase_
 
 getModuleBaseName :: ModuleName -> String
 getModuleBaseName (ModuleName moduleName) =

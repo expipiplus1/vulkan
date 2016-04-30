@@ -28,6 +28,7 @@ parseConstant = extractFields "Constant"
                               extract
   where extract = proc constant -> do
           cName    <- requiredAttrValue "name" -< constant
+          let cHsName = cName
           cValueString <- requiredAttrValue "value" -< constant
           cValue   <- (arrF parseConstantValue) `orElse`
                       failA "Failed to read constant value" -< cValueString

@@ -7,6 +7,7 @@ module Parse.State
   , getSymbolTable
   , getSymbolTableFromDefineText
   , SpecParseState
+  , parseIdentifier
   , addTypeName
   , addDefines
   , preProcessorBoolOptions
@@ -14,7 +15,7 @@ module Parse.State
   ) where
 
 import qualified Data.HashSet                as HashSet
-import           Language.C.Types
+import           Language.C.Types            (CIdentifier, TypeNames)
 import           Language.Preprocessor.Cpphs
 import           Parse.Utils
 import           Spec.Type
@@ -95,14 +96,5 @@ getSymbolTableFromDefineText = fmap snd .
                                      }
 
 addTypeName :: ParseArrow String CIdentifier
-addTypeName = (not . isReservedIdentifier) `guardsP`
-              (cIdentifierFromString ^>> fromRightA >>>
-               changeUserState insertTypeName)
-
-isReservedIdentifier :: String -> Bool
-isReservedIdentifier i = i `elem` reservedIdentifiers
-  where reservedIdentifiers = [ "void"
-                              , "char"
-                              , "float"
-                              ]
+addTypeName = parseIdentifier >>> changeUserState insertTypeName
 

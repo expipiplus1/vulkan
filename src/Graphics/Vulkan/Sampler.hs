@@ -4,17 +4,16 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Sampler where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Int( Int32
@@ -24,16 +23,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -42,328 +34,323 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkBool32(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
+import Graphics.Vulkan.Core( Bool32(..)
+                           , StructureType(..)
+                           , Result(..)
+                           , Flags(..)
                            )
-import Foreign.C.Types( CFloat
-                      , CFloat(..)
-                      , CSize(..)
+import Foreign.C.Types( CFloat(..)
                       )
 
--- ** VkSamplerAddressMode
+-- ** SamplerAddressMode
 
-newtype VkSamplerAddressMode = VkSamplerAddressMode Int32
-  deriving (Eq, Storable)
+newtype SamplerAddressMode = SamplerAddressMode Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkSamplerAddressMode where
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_REPEAT = showString "VK_SAMPLER_ADDRESS_MODE_REPEAT"
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = showString "VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT"
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = showString "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE"
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = showString "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER"
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = showString "VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE"
-  showsPrec p (VkSamplerAddressMode x) = showParen (p >= 11) (showString "VkSamplerAddressMode " . showsPrec 11 x)
+instance Show SamplerAddressMode where
+  showsPrec _ SamplerAddressModeRepeat = showString "SamplerAddressModeRepeat"
+  showsPrec _ SamplerAddressModeMirroredRepeat = showString "SamplerAddressModeMirroredRepeat"
+  showsPrec _ SamplerAddressModeClampToEdge = showString "SamplerAddressModeClampToEdge"
+  showsPrec _ SamplerAddressModeClampToBorder = showString "SamplerAddressModeClampToBorder"
+  showsPrec _ SamplerAddressModeMirrorClampToEdge = showString "SamplerAddressModeMirrorClampToEdge"
+  showsPrec p (SamplerAddressMode x) = showParen (p >= 11) (showString "SamplerAddressMode " . showsPrec 11 x)
 
-instance Read VkSamplerAddressMode where
-  readPrec = parens ( choose [ ("VK_SAMPLER_ADDRESS_MODE_REPEAT", pure VK_SAMPLER_ADDRESS_MODE_REPEAT)
-                             , ("VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT", pure VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT)
-                             , ("VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE", pure VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
-                             , ("VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER", pure VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER)
-                             , ("VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE", pure VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE)
+instance Read SamplerAddressMode where
+  readPrec = parens ( choose [ ("SamplerAddressModeRepeat", pure SamplerAddressModeRepeat)
+                             , ("SamplerAddressModeMirroredRepeat", pure SamplerAddressModeMirroredRepeat)
+                             , ("SamplerAddressModeClampToEdge", pure SamplerAddressModeClampToEdge)
+                             , ("SamplerAddressModeClampToBorder", pure SamplerAddressModeClampToBorder)
+                             , ("SamplerAddressModeMirrorClampToEdge", pure SamplerAddressModeMirrorClampToEdge)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSamplerAddressMode")
+                        expectP (Ident "SamplerAddressMode")
                         v <- step readPrec
-                        pure (VkSamplerAddressMode v)
+                        pure (SamplerAddressMode v)
                         )
                     )
 
 
-pattern VK_SAMPLER_ADDRESS_MODE_REPEAT = VkSamplerAddressMode 0
+pattern SamplerAddressModeRepeat = SamplerAddressMode 0
 
-pattern VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = VkSamplerAddressMode 1
+pattern SamplerAddressModeMirroredRepeat = SamplerAddressMode 1
 
-pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = VkSamplerAddressMode 2
+pattern SamplerAddressModeClampToEdge = SamplerAddressMode 2
 
-pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = VkSamplerAddressMode 3
+pattern SamplerAddressModeClampToBorder = SamplerAddressMode 3
 
-pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = VkSamplerAddressMode 4
+pattern SamplerAddressModeMirrorClampToEdge = SamplerAddressMode 4
 
--- ** VkFilter
+-- ** Filter
 
-newtype VkFilter = VkFilter Int32
-  deriving (Eq, Storable)
+newtype Filter = Filter Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkFilter where
-  showsPrec _ VK_FILTER_NEAREST = showString "VK_FILTER_NEAREST"
-  showsPrec _ VK_FILTER_LINEAR = showString "VK_FILTER_LINEAR"
-  showsPrec p (VkFilter x) = showParen (p >= 11) (showString "VkFilter " . showsPrec 11 x)
+instance Show Filter where
+  showsPrec _ FilterNearest = showString "FilterNearest"
+  showsPrec _ FilterLinear = showString "FilterLinear"
+  showsPrec p (Filter x) = showParen (p >= 11) (showString "Filter " . showsPrec 11 x)
 
-instance Read VkFilter where
-  readPrec = parens ( choose [ ("VK_FILTER_NEAREST", pure VK_FILTER_NEAREST)
-                             , ("VK_FILTER_LINEAR", pure VK_FILTER_LINEAR)
+instance Read Filter where
+  readPrec = parens ( choose [ ("FilterNearest", pure FilterNearest)
+                             , ("FilterLinear", pure FilterLinear)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkFilter")
+                        expectP (Ident "Filter")
                         v <- step readPrec
-                        pure (VkFilter v)
+                        pure (Filter v)
                         )
                     )
 
 
-pattern VK_FILTER_NEAREST = VkFilter 0
+pattern FilterNearest = Filter 0
 
-pattern VK_FILTER_LINEAR = VkFilter 1
+pattern FilterLinear = Filter 1
 
--- ** VkBorderColor
+-- ** BorderColor
 
-newtype VkBorderColor = VkBorderColor Int32
-  deriving (Eq, Storable)
+newtype BorderColor = BorderColor Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkBorderColor where
-  showsPrec _ VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = showString "VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"
-  showsPrec _ VK_BORDER_COLOR_INT_TRANSPARENT_BLACK = showString "VK_BORDER_COLOR_INT_TRANSPARENT_BLACK"
-  showsPrec _ VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK = showString "VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK"
-  showsPrec _ VK_BORDER_COLOR_INT_OPAQUE_BLACK = showString "VK_BORDER_COLOR_INT_OPAQUE_BLACK"
-  showsPrec _ VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE = showString "VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE"
-  showsPrec _ VK_BORDER_COLOR_INT_OPAQUE_WHITE = showString "VK_BORDER_COLOR_INT_OPAQUE_WHITE"
-  showsPrec p (VkBorderColor x) = showParen (p >= 11) (showString "VkBorderColor " . showsPrec 11 x)
+instance Show BorderColor where
+  showsPrec _ BorderColorFloatTransparentBlack = showString "BorderColorFloatTransparentBlack"
+  showsPrec _ BorderColorIntTransparentBlack = showString "BorderColorIntTransparentBlack"
+  showsPrec _ BorderColorFloatOpaqueBlack = showString "BorderColorFloatOpaqueBlack"
+  showsPrec _ BorderColorIntOpaqueBlack = showString "BorderColorIntOpaqueBlack"
+  showsPrec _ BorderColorFloatOpaqueWhite = showString "BorderColorFloatOpaqueWhite"
+  showsPrec _ BorderColorIntOpaqueWhite = showString "BorderColorIntOpaqueWhite"
+  showsPrec p (BorderColor x) = showParen (p >= 11) (showString "BorderColor " . showsPrec 11 x)
 
-instance Read VkBorderColor where
-  readPrec = parens ( choose [ ("VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK", pure VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK)
-                             , ("VK_BORDER_COLOR_INT_TRANSPARENT_BLACK", pure VK_BORDER_COLOR_INT_TRANSPARENT_BLACK)
-                             , ("VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK", pure VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK)
-                             , ("VK_BORDER_COLOR_INT_OPAQUE_BLACK", pure VK_BORDER_COLOR_INT_OPAQUE_BLACK)
-                             , ("VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE", pure VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE)
-                             , ("VK_BORDER_COLOR_INT_OPAQUE_WHITE", pure VK_BORDER_COLOR_INT_OPAQUE_WHITE)
+instance Read BorderColor where
+  readPrec = parens ( choose [ ("BorderColorFloatTransparentBlack", pure BorderColorFloatTransparentBlack)
+                             , ("BorderColorIntTransparentBlack", pure BorderColorIntTransparentBlack)
+                             , ("BorderColorFloatOpaqueBlack", pure BorderColorFloatOpaqueBlack)
+                             , ("BorderColorIntOpaqueBlack", pure BorderColorIntOpaqueBlack)
+                             , ("BorderColorFloatOpaqueWhite", pure BorderColorFloatOpaqueWhite)
+                             , ("BorderColorIntOpaqueWhite", pure BorderColorIntOpaqueWhite)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkBorderColor")
+                        expectP (Ident "BorderColor")
                         v <- step readPrec
-                        pure (VkBorderColor v)
+                        pure (BorderColor v)
                         )
                     )
 
 
-pattern VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = VkBorderColor 0
+pattern BorderColorFloatTransparentBlack = BorderColor 0
 
-pattern VK_BORDER_COLOR_INT_TRANSPARENT_BLACK = VkBorderColor 1
+pattern BorderColorIntTransparentBlack = BorderColor 1
 
-pattern VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK = VkBorderColor 2
+pattern BorderColorFloatOpaqueBlack = BorderColor 2
 
-pattern VK_BORDER_COLOR_INT_OPAQUE_BLACK = VkBorderColor 3
+pattern BorderColorIntOpaqueBlack = BorderColor 3
 
-pattern VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE = VkBorderColor 4
+pattern BorderColorFloatOpaqueWhite = BorderColor 4
 
-pattern VK_BORDER_COLOR_INT_OPAQUE_WHITE = VkBorderColor 5
+pattern BorderColorIntOpaqueWhite = BorderColor 5
 
--- ** VkCompareOp
+-- ** CompareOp
 
-newtype VkCompareOp = VkCompareOp Int32
-  deriving (Eq, Storable)
+newtype CompareOp = CompareOp Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkCompareOp where
-  showsPrec _ VK_COMPARE_OP_NEVER = showString "VK_COMPARE_OP_NEVER"
-  showsPrec _ VK_COMPARE_OP_LESS = showString "VK_COMPARE_OP_LESS"
-  showsPrec _ VK_COMPARE_OP_EQUAL = showString "VK_COMPARE_OP_EQUAL"
-  showsPrec _ VK_COMPARE_OP_LESS_OR_EQUAL = showString "VK_COMPARE_OP_LESS_OR_EQUAL"
-  showsPrec _ VK_COMPARE_OP_GREATER = showString "VK_COMPARE_OP_GREATER"
-  showsPrec _ VK_COMPARE_OP_NOT_EQUAL = showString "VK_COMPARE_OP_NOT_EQUAL"
-  showsPrec _ VK_COMPARE_OP_GREATER_OR_EQUAL = showString "VK_COMPARE_OP_GREATER_OR_EQUAL"
-  showsPrec _ VK_COMPARE_OP_ALWAYS = showString "VK_COMPARE_OP_ALWAYS"
-  showsPrec p (VkCompareOp x) = showParen (p >= 11) (showString "VkCompareOp " . showsPrec 11 x)
+instance Show CompareOp where
+  showsPrec _ CompareOpNever = showString "CompareOpNever"
+  showsPrec _ CompareOpLess = showString "CompareOpLess"
+  showsPrec _ CompareOpEqual = showString "CompareOpEqual"
+  showsPrec _ CompareOpLessOrEqual = showString "CompareOpLessOrEqual"
+  showsPrec _ CompareOpGreater = showString "CompareOpGreater"
+  showsPrec _ CompareOpNotEqual = showString "CompareOpNotEqual"
+  showsPrec _ CompareOpGreaterOrEqual = showString "CompareOpGreaterOrEqual"
+  showsPrec _ CompareOpAlways = showString "CompareOpAlways"
+  showsPrec p (CompareOp x) = showParen (p >= 11) (showString "CompareOp " . showsPrec 11 x)
 
-instance Read VkCompareOp where
-  readPrec = parens ( choose [ ("VK_COMPARE_OP_NEVER", pure VK_COMPARE_OP_NEVER)
-                             , ("VK_COMPARE_OP_LESS", pure VK_COMPARE_OP_LESS)
-                             , ("VK_COMPARE_OP_EQUAL", pure VK_COMPARE_OP_EQUAL)
-                             , ("VK_COMPARE_OP_LESS_OR_EQUAL", pure VK_COMPARE_OP_LESS_OR_EQUAL)
-                             , ("VK_COMPARE_OP_GREATER", pure VK_COMPARE_OP_GREATER)
-                             , ("VK_COMPARE_OP_NOT_EQUAL", pure VK_COMPARE_OP_NOT_EQUAL)
-                             , ("VK_COMPARE_OP_GREATER_OR_EQUAL", pure VK_COMPARE_OP_GREATER_OR_EQUAL)
-                             , ("VK_COMPARE_OP_ALWAYS", pure VK_COMPARE_OP_ALWAYS)
+instance Read CompareOp where
+  readPrec = parens ( choose [ ("CompareOpNever", pure CompareOpNever)
+                             , ("CompareOpLess", pure CompareOpLess)
+                             , ("CompareOpEqual", pure CompareOpEqual)
+                             , ("CompareOpLessOrEqual", pure CompareOpLessOrEqual)
+                             , ("CompareOpGreater", pure CompareOpGreater)
+                             , ("CompareOpNotEqual", pure CompareOpNotEqual)
+                             , ("CompareOpGreaterOrEqual", pure CompareOpGreaterOrEqual)
+                             , ("CompareOpAlways", pure CompareOpAlways)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCompareOp")
+                        expectP (Ident "CompareOp")
                         v <- step readPrec
-                        pure (VkCompareOp v)
+                        pure (CompareOp v)
                         )
                     )
 
 
-pattern VK_COMPARE_OP_NEVER = VkCompareOp 0
+pattern CompareOpNever = CompareOp 0
 
-pattern VK_COMPARE_OP_LESS = VkCompareOp 1
+pattern CompareOpLess = CompareOp 1
 
-pattern VK_COMPARE_OP_EQUAL = VkCompareOp 2
+pattern CompareOpEqual = CompareOp 2
 
-pattern VK_COMPARE_OP_LESS_OR_EQUAL = VkCompareOp 3
+pattern CompareOpLessOrEqual = CompareOp 3
 
-pattern VK_COMPARE_OP_GREATER = VkCompareOp 4
+pattern CompareOpGreater = CompareOp 4
 
-pattern VK_COMPARE_OP_NOT_EQUAL = VkCompareOp 5
+pattern CompareOpNotEqual = CompareOp 5
 
-pattern VK_COMPARE_OP_GREATER_OR_EQUAL = VkCompareOp 6
+pattern CompareOpGreaterOrEqual = CompareOp 6
 
-pattern VK_COMPARE_OP_ALWAYS = VkCompareOp 7
+pattern CompareOpAlways = CompareOp 7
 
-newtype VkSampler = VkSampler Word64
-  deriving (Eq, Storable)
+newtype Sampler = Sampler Word64
+  deriving (Eq, Ord, Storable)
 
 
-data VkSamplerCreateInfo =
-  VkSamplerCreateInfo{ vkSType :: VkStructureType 
-                     , vkPNext :: Ptr Void 
-                     , vkFlags :: VkSamplerCreateFlags 
-                     , vkMagFilter :: VkFilter 
-                     , vkMinFilter :: VkFilter 
-                     , vkMipmapMode :: VkSamplerMipmapMode 
-                     , vkAddressModeU :: VkSamplerAddressMode 
-                     , vkAddressModeV :: VkSamplerAddressMode 
-                     , vkAddressModeW :: VkSamplerAddressMode 
-                     , vkMipLodBias :: CFloat 
-                     , vkAnisotropyEnable :: VkBool32 
-                     , vkMaxAnisotropy :: CFloat 
-                     , vkCompareEnable :: VkBool32 
-                     , vkCompareOp :: VkCompareOp 
-                     , vkMinLod :: CFloat 
-                     , vkMaxLod :: CFloat 
-                     , vkBorderColor :: VkBorderColor 
-                     , vkUnnormalizedCoordinates :: VkBool32 
-                     }
-  deriving (Eq)
+data SamplerCreateInfo =
+  SamplerCreateInfo{ sType :: StructureType 
+                   , pNext :: Ptr Void 
+                   , flags :: SamplerCreateFlags 
+                   , magFilter :: Filter 
+                   , minFilter :: Filter 
+                   , mipmapMode :: SamplerMipmapMode 
+                   , addressModeU :: SamplerAddressMode 
+                   , addressModeV :: SamplerAddressMode 
+                   , addressModeW :: SamplerAddressMode 
+                   , mipLodBias :: CFloat 
+                   , anisotropyEnable :: Bool32 
+                   , maxAnisotropy :: CFloat 
+                   , compareEnable :: Bool32 
+                   , compareOp :: CompareOp 
+                   , minLod :: CFloat 
+                   , maxLod :: CFloat 
+                   , borderColor :: BorderColor 
+                   , unnormalizedCoordinates :: Bool32 
+                   }
+  deriving (Eq, Ord)
 
-instance Storable VkSamplerCreateInfo where
+instance Storable SamplerCreateInfo where
   sizeOf ~_ = 80
   alignment ~_ = 8
-  peek ptr = VkSamplerCreateInfo <$> peek (ptr `plusPtr` 0)
-                                 <*> peek (ptr `plusPtr` 8)
-                                 <*> peek (ptr `plusPtr` 16)
-                                 <*> peek (ptr `plusPtr` 20)
-                                 <*> peek (ptr `plusPtr` 24)
-                                 <*> peek (ptr `plusPtr` 28)
-                                 <*> peek (ptr `plusPtr` 32)
-                                 <*> peek (ptr `plusPtr` 36)
-                                 <*> peek (ptr `plusPtr` 40)
-                                 <*> peek (ptr `plusPtr` 44)
-                                 <*> peek (ptr `plusPtr` 48)
-                                 <*> peek (ptr `plusPtr` 52)
-                                 <*> peek (ptr `plusPtr` 56)
-                                 <*> peek (ptr `plusPtr` 60)
-                                 <*> peek (ptr `plusPtr` 64)
-                                 <*> peek (ptr `plusPtr` 68)
-                                 <*> peek (ptr `plusPtr` 72)
-                                 <*> peek (ptr `plusPtr` 76)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkMagFilter (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkMinFilter (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 28) (vkMipmapMode (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkAddressModeU (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 36) (vkAddressModeV (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkAddressModeW (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 44) (vkMipLodBias (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkAnisotropyEnable (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 52) (vkMaxAnisotropy (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkCompareEnable (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 60) (vkCompareOp (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 64) (vkMinLod (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 68) (vkMaxLod (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 72) (vkBorderColor (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 76) (vkUnnormalizedCoordinates (poked :: VkSamplerCreateInfo))
+  peek ptr = SamplerCreateInfo <$> peek (ptr `plusPtr` 0)
+                               <*> peek (ptr `plusPtr` 8)
+                               <*> peek (ptr `plusPtr` 16)
+                               <*> peek (ptr `plusPtr` 20)
+                               <*> peek (ptr `plusPtr` 24)
+                               <*> peek (ptr `plusPtr` 28)
+                               <*> peek (ptr `plusPtr` 32)
+                               <*> peek (ptr `plusPtr` 36)
+                               <*> peek (ptr `plusPtr` 40)
+                               <*> peek (ptr `plusPtr` 44)
+                               <*> peek (ptr `plusPtr` 48)
+                               <*> peek (ptr `plusPtr` 52)
+                               <*> peek (ptr `plusPtr` 56)
+                               <*> peek (ptr `plusPtr` 60)
+                               <*> peek (ptr `plusPtr` 64)
+                               <*> peek (ptr `plusPtr` 68)
+                               <*> peek (ptr `plusPtr` 72)
+                               <*> peek (ptr `plusPtr` 76)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 20) (magFilter (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 24) (minFilter (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 28) (mipmapMode (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 32) (addressModeU (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 36) (addressModeV (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 40) (addressModeW (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 44) (mipLodBias (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 48) (anisotropyEnable (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 52) (maxAnisotropy (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 56) (compareEnable (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 60) (compareOp (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 64) (minLod (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 68) (maxLod (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 72) (borderColor (poked :: SamplerCreateInfo))
+                *> poke (ptr `plusPtr` 76) (unnormalizedCoordinates (poked :: SamplerCreateInfo))
 
 
--- ** VkSamplerCreateFlags
+-- ** SamplerCreateFlags
 -- | Opaque flag
-newtype VkSamplerCreateFlags = VkSamplerCreateFlags VkFlags
-  deriving (Eq, Storable)
+newtype SamplerCreateFlags = SamplerCreateFlags Flags
+  deriving (Eq, Ord, Storable)
 
--- ** VkSamplerMipmapMode
+-- ** SamplerMipmapMode
 
-newtype VkSamplerMipmapMode = VkSamplerMipmapMode Int32
-  deriving (Eq, Storable)
+newtype SamplerMipmapMode = SamplerMipmapMode Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkSamplerMipmapMode where
-  showsPrec _ VK_SAMPLER_MIPMAP_MODE_NEAREST = showString "VK_SAMPLER_MIPMAP_MODE_NEAREST"
-  showsPrec _ VK_SAMPLER_MIPMAP_MODE_LINEAR = showString "VK_SAMPLER_MIPMAP_MODE_LINEAR"
-  showsPrec p (VkSamplerMipmapMode x) = showParen (p >= 11) (showString "VkSamplerMipmapMode " . showsPrec 11 x)
+instance Show SamplerMipmapMode where
+  showsPrec _ SamplerMipmapModeNearest = showString "SamplerMipmapModeNearest"
+  showsPrec _ SamplerMipmapModeLinear = showString "SamplerMipmapModeLinear"
+  showsPrec p (SamplerMipmapMode x) = showParen (p >= 11) (showString "SamplerMipmapMode " . showsPrec 11 x)
 
-instance Read VkSamplerMipmapMode where
-  readPrec = parens ( choose [ ("VK_SAMPLER_MIPMAP_MODE_NEAREST", pure VK_SAMPLER_MIPMAP_MODE_NEAREST)
-                             , ("VK_SAMPLER_MIPMAP_MODE_LINEAR", pure VK_SAMPLER_MIPMAP_MODE_LINEAR)
+instance Read SamplerMipmapMode where
+  readPrec = parens ( choose [ ("SamplerMipmapModeNearest", pure SamplerMipmapModeNearest)
+                             , ("SamplerMipmapModeLinear", pure SamplerMipmapModeLinear)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSamplerMipmapMode")
+                        expectP (Ident "SamplerMipmapMode")
                         v <- step readPrec
-                        pure (VkSamplerMipmapMode v)
+                        pure (SamplerMipmapMode v)
                         )
                     )
 
 -- | Choose nearest mip level
-pattern VK_SAMPLER_MIPMAP_MODE_NEAREST = VkSamplerMipmapMode 0
+pattern SamplerMipmapModeNearest = SamplerMipmapMode 0
 -- | Linear filter between mip levels
-pattern VK_SAMPLER_MIPMAP_MODE_LINEAR = VkSamplerMipmapMode 1
+pattern SamplerMipmapModeLinear = SamplerMipmapMode 1
 
--- ** vkCreateSampler
-foreign import ccall "vkCreateSampler" vkCreateSampler ::
-  VkDevice ->
-  Ptr VkSamplerCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkSampler -> IO VkResult
+-- ** createSampler
+foreign import ccall "vkCreateSampler" createSampler ::
+  Device ->
+  Ptr SamplerCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Sampler -> IO Result
 
--- ** VkSampleCountFlags
+-- ** SampleCountFlags
 
-newtype VkSampleCountFlagBits = VkSampleCountFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype SampleCountFlags = SampleCountFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkSampleCountFlagBits
-type VkSampleCountFlags = VkSampleCountFlagBits
-
-instance Show VkSampleCountFlagBits where
-  showsPrec _ VK_SAMPLE_COUNT_1_BIT = showString "VK_SAMPLE_COUNT_1_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_2_BIT = showString "VK_SAMPLE_COUNT_2_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_4_BIT = showString "VK_SAMPLE_COUNT_4_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_8_BIT = showString "VK_SAMPLE_COUNT_8_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_16_BIT = showString "VK_SAMPLE_COUNT_16_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_32_BIT = showString "VK_SAMPLE_COUNT_32_BIT"
-  showsPrec _ VK_SAMPLE_COUNT_64_BIT = showString "VK_SAMPLE_COUNT_64_BIT"
+instance Show SampleCountFlags where
+  showsPrec _ SampleCount1Bit = showString "SampleCount1Bit"
+  showsPrec _ SampleCount2Bit = showString "SampleCount2Bit"
+  showsPrec _ SampleCount4Bit = showString "SampleCount4Bit"
+  showsPrec _ SampleCount8Bit = showString "SampleCount8Bit"
+  showsPrec _ SampleCount16Bit = showString "SampleCount16Bit"
+  showsPrec _ SampleCount32Bit = showString "SampleCount32Bit"
+  showsPrec _ SampleCount64Bit = showString "SampleCount64Bit"
   
-  showsPrec p (VkSampleCountFlagBits x) = showParen (p >= 11) (showString "VkSampleCountFlagBits " . showsPrec 11 x)
+  showsPrec p (SampleCountFlags x) = showParen (p >= 11) (showString "SampleCountFlags " . showsPrec 11 x)
 
-instance Read VkSampleCountFlagBits where
-  readPrec = parens ( choose [ ("VK_SAMPLE_COUNT_1_BIT", pure VK_SAMPLE_COUNT_1_BIT)
-                             , ("VK_SAMPLE_COUNT_2_BIT", pure VK_SAMPLE_COUNT_2_BIT)
-                             , ("VK_SAMPLE_COUNT_4_BIT", pure VK_SAMPLE_COUNT_4_BIT)
-                             , ("VK_SAMPLE_COUNT_8_BIT", pure VK_SAMPLE_COUNT_8_BIT)
-                             , ("VK_SAMPLE_COUNT_16_BIT", pure VK_SAMPLE_COUNT_16_BIT)
-                             , ("VK_SAMPLE_COUNT_32_BIT", pure VK_SAMPLE_COUNT_32_BIT)
-                             , ("VK_SAMPLE_COUNT_64_BIT", pure VK_SAMPLE_COUNT_64_BIT)
+instance Read SampleCountFlags where
+  readPrec = parens ( choose [ ("SampleCount1Bit", pure SampleCount1Bit)
+                             , ("SampleCount2Bit", pure SampleCount2Bit)
+                             , ("SampleCount4Bit", pure SampleCount4Bit)
+                             , ("SampleCount8Bit", pure SampleCount8Bit)
+                             , ("SampleCount16Bit", pure SampleCount16Bit)
+                             , ("SampleCount32Bit", pure SampleCount32Bit)
+                             , ("SampleCount64Bit", pure SampleCount64Bit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSampleCountFlagBits")
+                        expectP (Ident "SampleCountFlags")
                         v <- step readPrec
-                        pure (VkSampleCountFlagBits v)
+                        pure (SampleCountFlags v)
                         )
                     )
 
 -- | Sample count 1 supported
-pattern VK_SAMPLE_COUNT_1_BIT = VkSampleCountFlagBits 0x1
+pattern SampleCount1Bit = SampleCountFlags 0x1
 -- | Sample count 2 supported
-pattern VK_SAMPLE_COUNT_2_BIT = VkSampleCountFlagBits 0x2
+pattern SampleCount2Bit = SampleCountFlags 0x2
 -- | Sample count 4 supported
-pattern VK_SAMPLE_COUNT_4_BIT = VkSampleCountFlagBits 0x4
+pattern SampleCount4Bit = SampleCountFlags 0x4
 -- | Sample count 8 supported
-pattern VK_SAMPLE_COUNT_8_BIT = VkSampleCountFlagBits 0x8
+pattern SampleCount8Bit = SampleCountFlags 0x8
 -- | Sample count 16 supported
-pattern VK_SAMPLE_COUNT_16_BIT = VkSampleCountFlagBits 0x10
+pattern SampleCount16Bit = SampleCountFlags 0x10
 -- | Sample count 32 supported
-pattern VK_SAMPLE_COUNT_32_BIT = VkSampleCountFlagBits 0x20
+pattern SampleCount32Bit = SampleCountFlags 0x20
 -- | Sample count 64 supported
-pattern VK_SAMPLE_COUNT_64_BIT = VkSampleCountFlagBits 0x40
+pattern SampleCount64Bit = SampleCountFlags 0x40
 
 
--- ** vkDestroySampler
-foreign import ccall "vkDestroySampler" vkDestroySampler ::
-  VkDevice -> VkSampler -> Ptr VkAllocationCallbacks -> IO ()
+-- ** destroySampler
+foreign import ccall "vkDestroySampler" destroySampler ::
+  Device -> Sampler -> Ptr AllocationCallbacks -> IO ()
 

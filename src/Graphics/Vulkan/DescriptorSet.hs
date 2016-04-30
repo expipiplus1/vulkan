@@ -4,19 +4,19 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.DescriptorSet where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
-import Graphics.Vulkan.Buffer( VkBuffer(..)
+import Graphics.Vulkan.Buffer( Buffer(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Int( Int32
@@ -26,16 +26,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -44,409 +37,398 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Shader( VkShaderStageFlagBits(..)
-                             , VkShaderStageFlags(..)
+import Graphics.Vulkan.Shader( ShaderStageFlags(..)
                              )
-import Graphics.Vulkan.Sampler( VkSampler(..)
+import Graphics.Vulkan.Sampler( Sampler(..)
                               )
-import Graphics.Vulkan.Image( VkImageLayout(..)
+import Graphics.Vulkan.Image( ImageLayout(..)
                             )
-import Graphics.Vulkan.ImageView( VkImageView(..)
+import Graphics.Vulkan.ImageView( ImageView(..)
                                 )
-import Graphics.Vulkan.BufferView( VkBufferView(..)
+import Graphics.Vulkan.BufferView( BufferView(..)
                                  )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkDeviceSize(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
+                           , Result(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
-import Foreign.C.Types( CSize(..)
-                      )
 
--- ** vkUpdateDescriptorSets
-foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets ::
-  VkDevice ->
+-- ** updateDescriptorSets
+foreign import ccall "vkUpdateDescriptorSets" updateDescriptorSets ::
+  Device ->
   Word32 ->
-    Ptr VkWriteDescriptorSet ->
-      Word32 -> Ptr VkCopyDescriptorSet -> IO ()
+    Ptr WriteDescriptorSet -> Word32 -> Ptr CopyDescriptorSet -> IO ()
 
--- ** VkDescriptorPoolResetFlags
+-- ** DescriptorPoolResetFlags
 -- | Opaque flag
-newtype VkDescriptorPoolResetFlags = VkDescriptorPoolResetFlags VkFlags
-  deriving (Eq, Storable)
+newtype DescriptorPoolResetFlags = DescriptorPoolResetFlags Flags
+  deriving (Eq, Ord, Storable)
 
--- ** vkAllocateDescriptorSets
-foreign import ccall "vkAllocateDescriptorSets" vkAllocateDescriptorSets ::
-  VkDevice ->
-  Ptr VkDescriptorSetAllocateInfo ->
-    Ptr VkDescriptorSet -> IO VkResult
+-- ** allocateDescriptorSets
+foreign import ccall "vkAllocateDescriptorSets" allocateDescriptorSets ::
+  Device ->
+  Ptr DescriptorSetAllocateInfo -> Ptr DescriptorSet -> IO Result
 
 
-data VkDescriptorBufferInfo =
-  VkDescriptorBufferInfo{ vkBuffer :: VkBuffer 
-                        , vkOffset :: VkDeviceSize 
-                        , vkRange :: VkDeviceSize 
-                        }
-  deriving (Eq)
+data DescriptorBufferInfo =
+  DescriptorBufferInfo{ buffer :: Buffer 
+                      , offset :: DeviceSize 
+                      , range :: DeviceSize 
+                      }
+  deriving (Eq, Ord)
 
-instance Storable VkDescriptorBufferInfo where
+instance Storable DescriptorBufferInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkDescriptorBufferInfo <$> peek (ptr `plusPtr` 0)
-                                    <*> peek (ptr `plusPtr` 8)
-                                    <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkBuffer (poked :: VkDescriptorBufferInfo))
-                *> poke (ptr `plusPtr` 8) (vkOffset (poked :: VkDescriptorBufferInfo))
-                *> poke (ptr `plusPtr` 16) (vkRange (poked :: VkDescriptorBufferInfo))
+  peek ptr = DescriptorBufferInfo <$> peek (ptr `plusPtr` 0)
+                                  <*> peek (ptr `plusPtr` 8)
+                                  <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (buffer (poked :: DescriptorBufferInfo))
+                *> poke (ptr `plusPtr` 8) (offset (poked :: DescriptorBufferInfo))
+                *> poke (ptr `plusPtr` 16) (range (poked :: DescriptorBufferInfo))
 
 
 
-data VkDescriptorImageInfo =
-  VkDescriptorImageInfo{ vkSampler :: VkSampler 
-                       , vkImageView :: VkImageView 
-                       , vkImageLayout :: VkImageLayout 
-                       }
-  deriving (Eq)
-
-instance Storable VkDescriptorImageInfo where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek ptr = VkDescriptorImageInfo <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 8)
-                                   <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSampler (poked :: VkDescriptorImageInfo))
-                *> poke (ptr `plusPtr` 8) (vkImageView (poked :: VkDescriptorImageInfo))
-                *> poke (ptr `plusPtr` 16) (vkImageLayout (poked :: VkDescriptorImageInfo))
-
-
-
-data VkCopyDescriptorSet =
-  VkCopyDescriptorSet{ vkSType :: VkStructureType 
-                     , vkPNext :: Ptr Void 
-                     , vkSrcSet :: VkDescriptorSet 
-                     , vkSrcBinding :: Word32 
-                     , vkSrcArrayElement :: Word32 
-                     , vkDstSet :: VkDescriptorSet 
-                     , vkDstBinding :: Word32 
-                     , vkDstArrayElement :: Word32 
-                     , vkDescriptorCount :: Word32 
+data DescriptorImageInfo =
+  DescriptorImageInfo{ sampler :: Sampler 
+                     , imageView :: ImageView 
+                     , imageLayout :: ImageLayout 
                      }
-  deriving (Eq)
+  deriving (Eq, Ord)
 
-instance Storable VkCopyDescriptorSet where
-  sizeOf ~_ = 56
+instance Storable DescriptorImageInfo where
+  sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkCopyDescriptorSet <$> peek (ptr `plusPtr` 0)
+  peek ptr = DescriptorImageInfo <$> peek (ptr `plusPtr` 0)
                                  <*> peek (ptr `plusPtr` 8)
                                  <*> peek (ptr `plusPtr` 16)
-                                 <*> peek (ptr `plusPtr` 24)
-                                 <*> peek (ptr `plusPtr` 28)
-                                 <*> peek (ptr `plusPtr` 32)
-                                 <*> peek (ptr `plusPtr` 40)
-                                 <*> peek (ptr `plusPtr` 44)
-                                 <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCopyDescriptorSet))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCopyDescriptorSet))
-                *> poke (ptr `plusPtr` 16) (vkSrcSet (poked :: VkCopyDescriptorSet))
-                *> poke (ptr `plusPtr` 24) (vkSrcBinding (poked :: VkCopyDescriptorSet))
-                *> poke (ptr `plusPtr` 28) (vkSrcArrayElement (poked :: VkCopyDescriptorSet))
-                *> poke (ptr `plusPtr` 32) (vkDstSet (poked :: VkCopyDescriptorSet))
-                *> poke (ptr `plusPtr` 40) (vkDstBinding (poked :: VkCopyDescriptorSet))
-                *> poke (ptr `plusPtr` 44) (vkDstArrayElement (poked :: VkCopyDescriptorSet))
-                *> poke (ptr `plusPtr` 48) (vkDescriptorCount (poked :: VkCopyDescriptorSet))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sampler (poked :: DescriptorImageInfo))
+                *> poke (ptr `plusPtr` 8) (imageView (poked :: DescriptorImageInfo))
+                *> poke (ptr `plusPtr` 16) (imageLayout (poked :: DescriptorImageInfo))
 
 
--- ** vkDestroyDescriptorPool
-foreign import ccall "vkDestroyDescriptorPool" vkDestroyDescriptorPool ::
-  VkDevice -> VkDescriptorPool -> Ptr VkAllocationCallbacks -> IO ()
 
--- ** vkCreateDescriptorSetLayout
-foreign import ccall "vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout ::
-  VkDevice ->
-  Ptr VkDescriptorSetLayoutCreateInfo ->
-    Ptr VkAllocationCallbacks ->
-      Ptr VkDescriptorSetLayout -> IO VkResult
+data CopyDescriptorSet =
+  CopyDescriptorSet{ sType :: StructureType 
+                   , pNext :: Ptr Void 
+                   , srcSet :: DescriptorSet 
+                   , srcBinding :: Word32 
+                   , srcArrayElement :: Word32 
+                   , dstSet :: DescriptorSet 
+                   , dstBinding :: Word32 
+                   , dstArrayElement :: Word32 
+                   , descriptorCount :: Word32 
+                   }
+  deriving (Eq, Ord)
 
-newtype VkDescriptorPool = VkDescriptorPool Word64
-  deriving (Eq, Storable)
+instance Storable CopyDescriptorSet where
+  sizeOf ~_ = 56
+  alignment ~_ = 8
+  peek ptr = CopyDescriptorSet <$> peek (ptr `plusPtr` 0)
+                               <*> peek (ptr `plusPtr` 8)
+                               <*> peek (ptr `plusPtr` 16)
+                               <*> peek (ptr `plusPtr` 24)
+                               <*> peek (ptr `plusPtr` 28)
+                               <*> peek (ptr `plusPtr` 32)
+                               <*> peek (ptr `plusPtr` 40)
+                               <*> peek (ptr `plusPtr` 44)
+                               <*> peek (ptr `plusPtr` 48)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: CopyDescriptorSet))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: CopyDescriptorSet))
+                *> poke (ptr `plusPtr` 16) (srcSet (poked :: CopyDescriptorSet))
+                *> poke (ptr `plusPtr` 24) (srcBinding (poked :: CopyDescriptorSet))
+                *> poke (ptr `plusPtr` 28) (srcArrayElement (poked :: CopyDescriptorSet))
+                *> poke (ptr `plusPtr` 32) (dstSet (poked :: CopyDescriptorSet))
+                *> poke (ptr `plusPtr` 40) (dstBinding (poked :: CopyDescriptorSet))
+                *> poke (ptr `plusPtr` 44) (dstArrayElement (poked :: CopyDescriptorSet))
+                *> poke (ptr `plusPtr` 48) (descriptorCount (poked :: CopyDescriptorSet))
 
--- ** vkResetDescriptorPool
-foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool ::
-  VkDevice ->
-  VkDescriptorPool -> VkDescriptorPoolResetFlags -> IO VkResult
 
-newtype VkDescriptorSetLayout = VkDescriptorSetLayout Word64
-  deriving (Eq, Storable)
+-- ** destroyDescriptorPool
+foreign import ccall "vkDestroyDescriptorPool" destroyDescriptorPool ::
+  Device -> DescriptorPool -> Ptr AllocationCallbacks -> IO ()
 
--- ** vkFreeDescriptorSets
-foreign import ccall "vkFreeDescriptorSets" vkFreeDescriptorSets ::
-  VkDevice ->
-  VkDescriptorPool -> Word32 -> Ptr VkDescriptorSet -> IO VkResult
+-- ** createDescriptorSetLayout
+foreign import ccall "vkCreateDescriptorSetLayout" createDescriptorSetLayout ::
+  Device ->
+  Ptr DescriptorSetLayoutCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr DescriptorSetLayout -> IO Result
+
+newtype DescriptorPool = DescriptorPool Word64
+  deriving (Eq, Ord, Storable)
+
+-- ** resetDescriptorPool
+foreign import ccall "vkResetDescriptorPool" resetDescriptorPool ::
+  Device -> DescriptorPool -> DescriptorPoolResetFlags -> IO Result
+
+newtype DescriptorSetLayout = DescriptorSetLayout Word64
+  deriving (Eq, Ord, Storable)
+
+-- ** freeDescriptorSets
+foreign import ccall "vkFreeDescriptorSets" freeDescriptorSets ::
+  Device ->
+  DescriptorPool -> Word32 -> Ptr DescriptorSet -> IO Result
 
 
-data VkDescriptorPoolCreateInfo =
-  VkDescriptorPoolCreateInfo{ vkSType :: VkStructureType 
-                            , vkPNext :: Ptr Void 
-                            , vkFlags :: VkDescriptorPoolCreateFlags 
-                            , vkMaxSets :: Word32 
-                            , vkPoolSizeCount :: Word32 
-                            , vkPPoolSizes :: Ptr VkDescriptorPoolSize 
-                            }
-  deriving (Eq)
+data DescriptorPoolCreateInfo =
+  DescriptorPoolCreateInfo{ sType :: StructureType 
+                          , pNext :: Ptr Void 
+                          , flags :: DescriptorPoolCreateFlags 
+                          , maxSets :: Word32 
+                          , poolSizeCount :: Word32 
+                          , pPoolSizes :: Ptr DescriptorPoolSize 
+                          }
+  deriving (Eq, Ord)
 
-instance Storable VkDescriptorPoolCreateInfo where
+instance Storable DescriptorPoolCreateInfo where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkDescriptorPoolCreateInfo <$> peek (ptr `plusPtr` 0)
-                                        <*> peek (ptr `plusPtr` 8)
-                                        <*> peek (ptr `plusPtr` 16)
-                                        <*> peek (ptr `plusPtr` 20)
-                                        <*> peek (ptr `plusPtr` 24)
-                                        <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorPoolCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorPoolCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDescriptorPoolCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkMaxSets (poked :: VkDescriptorPoolCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPoolSizeCount (poked :: VkDescriptorPoolCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPPoolSizes (poked :: VkDescriptorPoolCreateInfo))
+  peek ptr = DescriptorPoolCreateInfo <$> peek (ptr `plusPtr` 0)
+                                      <*> peek (ptr `plusPtr` 8)
+                                      <*> peek (ptr `plusPtr` 16)
+                                      <*> peek (ptr `plusPtr` 20)
+                                      <*> peek (ptr `plusPtr` 24)
+                                      <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DescriptorPoolCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: DescriptorPoolCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: DescriptorPoolCreateInfo))
+                *> poke (ptr `plusPtr` 20) (maxSets (poked :: DescriptorPoolCreateInfo))
+                *> poke (ptr `plusPtr` 24) (poolSizeCount (poked :: DescriptorPoolCreateInfo))
+                *> poke (ptr `plusPtr` 32) (pPoolSizes (poked :: DescriptorPoolCreateInfo))
 
 
--- ** VkDescriptorSetLayoutCreateFlags
+-- ** DescriptorSetLayoutCreateFlags
 -- | Opaque flag
-newtype VkDescriptorSetLayoutCreateFlags = VkDescriptorSetLayoutCreateFlags VkFlags
-  deriving (Eq, Storable)
+newtype DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlags Flags
+  deriving (Eq, Ord, Storable)
 
 
-data VkDescriptorSetLayoutCreateInfo =
-  VkDescriptorSetLayoutCreateInfo{ vkSType :: VkStructureType 
-                                 , vkPNext :: Ptr Void 
-                                 , vkFlags :: VkDescriptorSetLayoutCreateFlags 
-                                 , vkBindingCount :: Word32 
-                                 , vkPBindings :: Ptr VkDescriptorSetLayoutBinding 
-                                 }
-  deriving (Eq)
+data DescriptorSetLayoutCreateInfo =
+  DescriptorSetLayoutCreateInfo{ sType :: StructureType 
+                               , pNext :: Ptr Void 
+                               , flags :: DescriptorSetLayoutCreateFlags 
+                               , bindingCount :: Word32 
+                               , pBindings :: Ptr DescriptorSetLayoutBinding 
+                               }
+  deriving (Eq, Ord)
 
-instance Storable VkDescriptorSetLayoutCreateInfo where
+instance Storable DescriptorSetLayoutCreateInfo where
   sizeOf ~_ = 32
   alignment ~_ = 8
-  peek ptr = VkDescriptorSetLayoutCreateInfo <$> peek (ptr `plusPtr` 0)
-                                             <*> peek (ptr `plusPtr` 8)
-                                             <*> peek (ptr `plusPtr` 16)
-                                             <*> peek (ptr `plusPtr` 20)
-                                             <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorSetLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDescriptorSetLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkBindingCount (poked :: VkDescriptorSetLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPBindings (poked :: VkDescriptorSetLayoutCreateInfo))
+  peek ptr = DescriptorSetLayoutCreateInfo <$> peek (ptr `plusPtr` 0)
+                                           <*> peek (ptr `plusPtr` 8)
+                                           <*> peek (ptr `plusPtr` 16)
+                                           <*> peek (ptr `plusPtr` 20)
+                                           <*> peek (ptr `plusPtr` 24)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DescriptorSetLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: DescriptorSetLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: DescriptorSetLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 20) (bindingCount (poked :: DescriptorSetLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pBindings (poked :: DescriptorSetLayoutCreateInfo))
 
 
--- ** VkDescriptorPoolCreateFlags
+-- ** DescriptorPoolCreateFlags
 
-newtype VkDescriptorPoolCreateFlagBits = VkDescriptorPoolCreateFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype DescriptorPoolCreateFlags = DescriptorPoolCreateFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkDescriptorPoolCreateFlagBits
-type VkDescriptorPoolCreateFlags = VkDescriptorPoolCreateFlagBits
-
-instance Show VkDescriptorPoolCreateFlagBits where
-  showsPrec _ VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = showString "VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT"
+instance Show DescriptorPoolCreateFlags where
+  showsPrec _ DescriptorPoolCreateFreeDescriptorSetBit = showString "DescriptorPoolCreateFreeDescriptorSetBit"
   
-  showsPrec p (VkDescriptorPoolCreateFlagBits x) = showParen (p >= 11) (showString "VkDescriptorPoolCreateFlagBits " . showsPrec 11 x)
+  showsPrec p (DescriptorPoolCreateFlags x) = showParen (p >= 11) (showString "DescriptorPoolCreateFlags " . showsPrec 11 x)
 
-instance Read VkDescriptorPoolCreateFlagBits where
-  readPrec = parens ( choose [ ("VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT", pure VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT)
+instance Read DescriptorPoolCreateFlags where
+  readPrec = parens ( choose [ ("DescriptorPoolCreateFreeDescriptorSetBit", pure DescriptorPoolCreateFreeDescriptorSetBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDescriptorPoolCreateFlagBits")
+                        expectP (Ident "DescriptorPoolCreateFlags")
                         v <- step readPrec
-                        pure (VkDescriptorPoolCreateFlagBits v)
+                        pure (DescriptorPoolCreateFlags v)
                         )
                     )
 
 -- | Descriptor sets may be freed individually
-pattern VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = VkDescriptorPoolCreateFlagBits 0x1
+pattern DescriptorPoolCreateFreeDescriptorSetBit = DescriptorPoolCreateFlags 0x1
 
 
 
-data VkDescriptorPoolSize =
-  VkDescriptorPoolSize{ vkType :: VkDescriptorType 
-                      , vkDescriptorCount :: Word32 
-                      }
-  deriving (Eq)
+data DescriptorPoolSize =
+  DescriptorPoolSize{ _type :: DescriptorType 
+                    , descriptorCount :: Word32 
+                    }
+  deriving (Eq, Ord)
 
-instance Storable VkDescriptorPoolSize where
+instance Storable DescriptorPoolSize where
   sizeOf ~_ = 8
   alignment ~_ = 4
-  peek ptr = VkDescriptorPoolSize <$> peek (ptr `plusPtr` 0)
-                                  <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkDescriptorPoolSize))
-                *> poke (ptr `plusPtr` 4) (vkDescriptorCount (poked :: VkDescriptorPoolSize))
+  peek ptr = DescriptorPoolSize <$> peek (ptr `plusPtr` 0)
+                                <*> peek (ptr `plusPtr` 4)
+  poke ptr poked = poke (ptr `plusPtr` 0) (_type (poked :: DescriptorPoolSize))
+                *> poke (ptr `plusPtr` 4) (descriptorCount (poked :: DescriptorPoolSize))
 
 
-newtype VkDescriptorSet = VkDescriptorSet Word64
-  deriving (Eq, Storable)
+newtype DescriptorSet = DescriptorSet Word64
+  deriving (Eq, Ord, Storable)
 
 
-data VkWriteDescriptorSet =
-  VkWriteDescriptorSet{ vkSType :: VkStructureType 
-                      , vkPNext :: Ptr Void 
-                      , vkDstSet :: VkDescriptorSet 
-                      , vkDstBinding :: Word32 
-                      , vkDstArrayElement :: Word32 
-                      , vkDescriptorCount :: Word32 
-                      , vkDescriptorType :: VkDescriptorType 
-                      , vkPImageInfo :: Ptr VkDescriptorImageInfo 
-                      , vkPBufferInfo :: Ptr VkDescriptorBufferInfo 
-                      , vkPTexelBufferView :: Ptr VkBufferView 
-                      }
-  deriving (Eq)
+data WriteDescriptorSet =
+  WriteDescriptorSet{ sType :: StructureType 
+                    , pNext :: Ptr Void 
+                    , dstSet :: DescriptorSet 
+                    , dstBinding :: Word32 
+                    , dstArrayElement :: Word32 
+                    , descriptorCount :: Word32 
+                    , descriptorType :: DescriptorType 
+                    , pImageInfo :: Ptr DescriptorImageInfo 
+                    , pBufferInfo :: Ptr DescriptorBufferInfo 
+                    , pTexelBufferView :: Ptr BufferView 
+                    }
+  deriving (Eq, Ord)
 
-instance Storable VkWriteDescriptorSet where
+instance Storable WriteDescriptorSet where
   sizeOf ~_ = 64
   alignment ~_ = 8
-  peek ptr = VkWriteDescriptorSet <$> peek (ptr `plusPtr` 0)
-                                  <*> peek (ptr `plusPtr` 8)
-                                  <*> peek (ptr `plusPtr` 16)
-                                  <*> peek (ptr `plusPtr` 24)
-                                  <*> peek (ptr `plusPtr` 28)
-                                  <*> peek (ptr `plusPtr` 32)
-                                  <*> peek (ptr `plusPtr` 36)
-                                  <*> peek (ptr `plusPtr` 40)
-                                  <*> peek (ptr `plusPtr` 48)
-                                  <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkWriteDescriptorSet))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkWriteDescriptorSet))
-                *> poke (ptr `plusPtr` 16) (vkDstSet (poked :: VkWriteDescriptorSet))
-                *> poke (ptr `plusPtr` 24) (vkDstBinding (poked :: VkWriteDescriptorSet))
-                *> poke (ptr `plusPtr` 28) (vkDstArrayElement (poked :: VkWriteDescriptorSet))
-                *> poke (ptr `plusPtr` 32) (vkDescriptorCount (poked :: VkWriteDescriptorSet))
-                *> poke (ptr `plusPtr` 36) (vkDescriptorType (poked :: VkWriteDescriptorSet))
-                *> poke (ptr `plusPtr` 40) (vkPImageInfo (poked :: VkWriteDescriptorSet))
-                *> poke (ptr `plusPtr` 48) (vkPBufferInfo (poked :: VkWriteDescriptorSet))
-                *> poke (ptr `plusPtr` 56) (vkPTexelBufferView (poked :: VkWriteDescriptorSet))
+  peek ptr = WriteDescriptorSet <$> peek (ptr `plusPtr` 0)
+                                <*> peek (ptr `plusPtr` 8)
+                                <*> peek (ptr `plusPtr` 16)
+                                <*> peek (ptr `plusPtr` 24)
+                                <*> peek (ptr `plusPtr` 28)
+                                <*> peek (ptr `plusPtr` 32)
+                                <*> peek (ptr `plusPtr` 36)
+                                <*> peek (ptr `plusPtr` 40)
+                                <*> peek (ptr `plusPtr` 48)
+                                <*> peek (ptr `plusPtr` 56)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: WriteDescriptorSet))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: WriteDescriptorSet))
+                *> poke (ptr `plusPtr` 16) (dstSet (poked :: WriteDescriptorSet))
+                *> poke (ptr `plusPtr` 24) (dstBinding (poked :: WriteDescriptorSet))
+                *> poke (ptr `plusPtr` 28) (dstArrayElement (poked :: WriteDescriptorSet))
+                *> poke (ptr `plusPtr` 32) (descriptorCount (poked :: WriteDescriptorSet))
+                *> poke (ptr `plusPtr` 36) (descriptorType (poked :: WriteDescriptorSet))
+                *> poke (ptr `plusPtr` 40) (pImageInfo (poked :: WriteDescriptorSet))
+                *> poke (ptr `plusPtr` 48) (pBufferInfo (poked :: WriteDescriptorSet))
+                *> poke (ptr `plusPtr` 56) (pTexelBufferView (poked :: WriteDescriptorSet))
 
 
--- ** vkCreateDescriptorPool
-foreign import ccall "vkCreateDescriptorPool" vkCreateDescriptorPool ::
-  VkDevice ->
-  Ptr VkDescriptorPoolCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkDescriptorPool -> IO VkResult
+-- ** createDescriptorPool
+foreign import ccall "vkCreateDescriptorPool" createDescriptorPool ::
+  Device ->
+  Ptr DescriptorPoolCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr DescriptorPool -> IO Result
 
--- ** vkDestroyDescriptorSetLayout
-foreign import ccall "vkDestroyDescriptorSetLayout" vkDestroyDescriptorSetLayout ::
-  VkDevice ->
-  VkDescriptorSetLayout -> Ptr VkAllocationCallbacks -> IO ()
+-- ** destroyDescriptorSetLayout
+foreign import ccall "vkDestroyDescriptorSetLayout" destroyDescriptorSetLayout ::
+  Device -> DescriptorSetLayout -> Ptr AllocationCallbacks -> IO ()
 
 
-data VkDescriptorSetLayoutBinding =
-  VkDescriptorSetLayoutBinding{ vkBinding :: Word32 
-                              , vkDescriptorType :: VkDescriptorType 
-                              , vkDescriptorCount :: Word32 
-                              , vkStageFlags :: VkShaderStageFlags 
-                              , vkPImmutableSamplers :: Ptr VkSampler 
-                              }
-  deriving (Eq)
+data DescriptorSetLayoutBinding =
+  DescriptorSetLayoutBinding{ binding :: Word32 
+                            , descriptorType :: DescriptorType 
+                            , descriptorCount :: Word32 
+                            , stageFlags :: ShaderStageFlags 
+                            , pImmutableSamplers :: Ptr Sampler 
+                            }
+  deriving (Eq, Ord)
 
-instance Storable VkDescriptorSetLayoutBinding where
+instance Storable DescriptorSetLayoutBinding where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkDescriptorSetLayoutBinding <$> peek (ptr `plusPtr` 0)
-                                          <*> peek (ptr `plusPtr` 4)
-                                          <*> peek (ptr `plusPtr` 8)
-                                          <*> peek (ptr `plusPtr` 12)
-                                          <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkBinding (poked :: VkDescriptorSetLayoutBinding))
-                *> poke (ptr `plusPtr` 4) (vkDescriptorType (poked :: VkDescriptorSetLayoutBinding))
-                *> poke (ptr `plusPtr` 8) (vkDescriptorCount (poked :: VkDescriptorSetLayoutBinding))
-                *> poke (ptr `plusPtr` 12) (vkStageFlags (poked :: VkDescriptorSetLayoutBinding))
-                *> poke (ptr `plusPtr` 16) (vkPImmutableSamplers (poked :: VkDescriptorSetLayoutBinding))
+  peek ptr = DescriptorSetLayoutBinding <$> peek (ptr `plusPtr` 0)
+                                        <*> peek (ptr `plusPtr` 4)
+                                        <*> peek (ptr `plusPtr` 8)
+                                        <*> peek (ptr `plusPtr` 12)
+                                        <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (binding (poked :: DescriptorSetLayoutBinding))
+                *> poke (ptr `plusPtr` 4) (descriptorType (poked :: DescriptorSetLayoutBinding))
+                *> poke (ptr `plusPtr` 8) (descriptorCount (poked :: DescriptorSetLayoutBinding))
+                *> poke (ptr `plusPtr` 12) (stageFlags (poked :: DescriptorSetLayoutBinding))
+                *> poke (ptr `plusPtr` 16) (pImmutableSamplers (poked :: DescriptorSetLayoutBinding))
 
 
--- ** VkDescriptorType
+-- ** DescriptorType
 
-newtype VkDescriptorType = VkDescriptorType Int32
-  deriving (Eq, Storable)
+newtype DescriptorType = DescriptorType Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkDescriptorType where
-  showsPrec _ VK_DESCRIPTOR_TYPE_SAMPLER = showString "VK_DESCRIPTOR_TYPE_SAMPLER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = showString "VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE = showString "VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE"
-  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE = showString "VK_DESCRIPTOR_TYPE_STORAGE_IMAGE"
-  showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER = showString "VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER = showString "VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER = showString "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER = showString "VK_DESCRIPTOR_TYPE_STORAGE_BUFFER"
-  showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = showString "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC"
-  showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = showString "VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC"
-  showsPrec _ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = showString "VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT"
-  showsPrec p (VkDescriptorType x) = showParen (p >= 11) (showString "VkDescriptorType " . showsPrec 11 x)
+instance Show DescriptorType where
+  showsPrec _ DescriptorTypeSampler = showString "DescriptorTypeSampler"
+  showsPrec _ DescriptorTypeCombinedImageSampler = showString "DescriptorTypeCombinedImageSampler"
+  showsPrec _ DescriptorTypeSampledImage = showString "DescriptorTypeSampledImage"
+  showsPrec _ DescriptorTypeStorageImage = showString "DescriptorTypeStorageImage"
+  showsPrec _ DescriptorTypeUniformTexelBuffer = showString "DescriptorTypeUniformTexelBuffer"
+  showsPrec _ DescriptorTypeStorageTexelBuffer = showString "DescriptorTypeStorageTexelBuffer"
+  showsPrec _ DescriptorTypeUniformBuffer = showString "DescriptorTypeUniformBuffer"
+  showsPrec _ DescriptorTypeStorageBuffer = showString "DescriptorTypeStorageBuffer"
+  showsPrec _ DescriptorTypeUniformBufferDynamic = showString "DescriptorTypeUniformBufferDynamic"
+  showsPrec _ DescriptorTypeStorageBufferDynamic = showString "DescriptorTypeStorageBufferDynamic"
+  showsPrec _ DescriptorTypeInputAttachment = showString "DescriptorTypeInputAttachment"
+  showsPrec p (DescriptorType x) = showParen (p >= 11) (showString "DescriptorType " . showsPrec 11 x)
 
-instance Read VkDescriptorType where
-  readPrec = parens ( choose [ ("VK_DESCRIPTOR_TYPE_SAMPLER", pure VK_DESCRIPTOR_TYPE_SAMPLER)
-                             , ("VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER", pure VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER)
-                             , ("VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE", pure VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE)
-                             , ("VK_DESCRIPTOR_TYPE_STORAGE_IMAGE", pure VK_DESCRIPTOR_TYPE_STORAGE_IMAGE)
-                             , ("VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER", pure VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER)
-                             , ("VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER", pure VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER)
-                             , ("VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER", pure VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER)
-                             , ("VK_DESCRIPTOR_TYPE_STORAGE_BUFFER", pure VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)
-                             , ("VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC", pure VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC)
-                             , ("VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC", pure VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC)
-                             , ("VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT", pure VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+instance Read DescriptorType where
+  readPrec = parens ( choose [ ("DescriptorTypeSampler", pure DescriptorTypeSampler)
+                             , ("DescriptorTypeCombinedImageSampler", pure DescriptorTypeCombinedImageSampler)
+                             , ("DescriptorTypeSampledImage", pure DescriptorTypeSampledImage)
+                             , ("DescriptorTypeStorageImage", pure DescriptorTypeStorageImage)
+                             , ("DescriptorTypeUniformTexelBuffer", pure DescriptorTypeUniformTexelBuffer)
+                             , ("DescriptorTypeStorageTexelBuffer", pure DescriptorTypeStorageTexelBuffer)
+                             , ("DescriptorTypeUniformBuffer", pure DescriptorTypeUniformBuffer)
+                             , ("DescriptorTypeStorageBuffer", pure DescriptorTypeStorageBuffer)
+                             , ("DescriptorTypeUniformBufferDynamic", pure DescriptorTypeUniformBufferDynamic)
+                             , ("DescriptorTypeStorageBufferDynamic", pure DescriptorTypeStorageBufferDynamic)
+                             , ("DescriptorTypeInputAttachment", pure DescriptorTypeInputAttachment)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDescriptorType")
+                        expectP (Ident "DescriptorType")
                         v <- step readPrec
-                        pure (VkDescriptorType v)
+                        pure (DescriptorType v)
                         )
                     )
 
 
-pattern VK_DESCRIPTOR_TYPE_SAMPLER = VkDescriptorType 0
+pattern DescriptorTypeSampler = DescriptorType 0
 
-pattern VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER = VkDescriptorType 1
+pattern DescriptorTypeCombinedImageSampler = DescriptorType 1
 
-pattern VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE = VkDescriptorType 2
+pattern DescriptorTypeSampledImage = DescriptorType 2
 
-pattern VK_DESCRIPTOR_TYPE_STORAGE_IMAGE = VkDescriptorType 3
+pattern DescriptorTypeStorageImage = DescriptorType 3
 
-pattern VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER = VkDescriptorType 4
+pattern DescriptorTypeUniformTexelBuffer = DescriptorType 4
 
-pattern VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER = VkDescriptorType 5
+pattern DescriptorTypeStorageTexelBuffer = DescriptorType 5
 
-pattern VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER = VkDescriptorType 6
+pattern DescriptorTypeUniformBuffer = DescriptorType 6
 
-pattern VK_DESCRIPTOR_TYPE_STORAGE_BUFFER = VkDescriptorType 7
+pattern DescriptorTypeStorageBuffer = DescriptorType 7
 
-pattern VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = VkDescriptorType 8
+pattern DescriptorTypeUniformBufferDynamic = DescriptorType 8
 
-pattern VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = VkDescriptorType 9
+pattern DescriptorTypeStorageBufferDynamic = DescriptorType 9
 
-pattern VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = VkDescriptorType 10
+pattern DescriptorTypeInputAttachment = DescriptorType 10
 
 
-data VkDescriptorSetAllocateInfo =
-  VkDescriptorSetAllocateInfo{ vkSType :: VkStructureType 
-                             , vkPNext :: Ptr Void 
-                             , vkDescriptorPool :: VkDescriptorPool 
-                             , vkDescriptorSetCount :: Word32 
-                             , vkPSetLayouts :: Ptr VkDescriptorSetLayout 
-                             }
-  deriving (Eq)
+data DescriptorSetAllocateInfo =
+  DescriptorSetAllocateInfo{ sType :: StructureType 
+                           , pNext :: Ptr Void 
+                           , descriptorPool :: DescriptorPool 
+                           , descriptorSetCount :: Word32 
+                           , pSetLayouts :: Ptr DescriptorSetLayout 
+                           }
+  deriving (Eq, Ord)
 
-instance Storable VkDescriptorSetAllocateInfo where
+instance Storable DescriptorSetAllocateInfo where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkDescriptorSetAllocateInfo <$> peek (ptr `plusPtr` 0)
-                                         <*> peek (ptr `plusPtr` 8)
-                                         <*> peek (ptr `plusPtr` 16)
-                                         <*> peek (ptr `plusPtr` 24)
-                                         <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorSetAllocateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetAllocateInfo))
-                *> poke (ptr `plusPtr` 16) (vkDescriptorPool (poked :: VkDescriptorSetAllocateInfo))
-                *> poke (ptr `plusPtr` 24) (vkDescriptorSetCount (poked :: VkDescriptorSetAllocateInfo))
-                *> poke (ptr `plusPtr` 32) (vkPSetLayouts (poked :: VkDescriptorSetAllocateInfo))
+  peek ptr = DescriptorSetAllocateInfo <$> peek (ptr `plusPtr` 0)
+                                       <*> peek (ptr `plusPtr` 8)
+                                       <*> peek (ptr `plusPtr` 16)
+                                       <*> peek (ptr `plusPtr` 24)
+                                       <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: DescriptorSetAllocateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: DescriptorSetAllocateInfo))
+                *> poke (ptr `plusPtr` 16) (descriptorPool (poked :: DescriptorSetAllocateInfo))
+                *> poke (ptr `plusPtr` 24) (descriptorSetCount (poked :: DescriptorSetAllocateInfo))
+                *> poke (ptr `plusPtr` 32) (pSetLayouts (poked :: DescriptorSetAllocateInfo))
 
 

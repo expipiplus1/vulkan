@@ -4,17 +4,17 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Fence where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Bits( Bits
@@ -22,16 +22,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -40,83 +33,77 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkBool32(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
+import Graphics.Vulkan.Core( Bool32(..)
+                           , StructureType(..)
+                           , Result(..)
+                           , Flags(..)
                            )
-import Foreign.C.Types( CSize(..)
-                      )
 
 
-data VkFenceCreateInfo =
-  VkFenceCreateInfo{ vkSType :: VkStructureType 
-                   , vkPNext :: Ptr Void 
-                   , vkFlags :: VkFenceCreateFlags 
-                   }
-  deriving (Eq)
+data FenceCreateInfo =
+  FenceCreateInfo{ sType :: StructureType 
+                 , pNext :: Ptr Void 
+                 , flags :: FenceCreateFlags 
+                 }
+  deriving (Eq, Ord)
 
-instance Storable VkFenceCreateInfo where
+instance Storable FenceCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkFenceCreateInfo <$> peek (ptr `plusPtr` 0)
-                               <*> peek (ptr `plusPtr` 8)
-                               <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFenceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFenceCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkFenceCreateInfo))
+  peek ptr = FenceCreateInfo <$> peek (ptr `plusPtr` 0)
+                             <*> peek (ptr `plusPtr` 8)
+                             <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: FenceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: FenceCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: FenceCreateInfo))
 
 
--- ** vkResetFences
-foreign import ccall "vkResetFences" vkResetFences ::
-  VkDevice -> Word32 -> Ptr VkFence -> IO VkResult
+-- ** resetFences
+foreign import ccall "vkResetFences" resetFences ::
+  Device -> Word32 -> Ptr Fence -> IO Result
 
--- ** vkDestroyFence
-foreign import ccall "vkDestroyFence" vkDestroyFence ::
-  VkDevice -> VkFence -> Ptr VkAllocationCallbacks -> IO ()
+-- ** destroyFence
+foreign import ccall "vkDestroyFence" destroyFence ::
+  Device -> Fence -> Ptr AllocationCallbacks -> IO ()
 
--- ** vkWaitForFences
-foreign import ccall "vkWaitForFences" vkWaitForFences ::
-  VkDevice ->
-  Word32 -> Ptr VkFence -> VkBool32 -> Word64 -> IO VkResult
+-- ** waitForFences
+foreign import ccall "vkWaitForFences" waitForFences ::
+  Device -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
 
--- ** vkGetFenceStatus
-foreign import ccall "vkGetFenceStatus" vkGetFenceStatus ::
-  VkDevice -> VkFence -> IO VkResult
+-- ** getFenceStatus
+foreign import ccall "vkGetFenceStatus" getFenceStatus ::
+  Device -> Fence -> IO Result
 
--- ** VkFenceCreateFlags
+-- ** FenceCreateFlags
 
-newtype VkFenceCreateFlagBits = VkFenceCreateFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype FenceCreateFlags = FenceCreateFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkFenceCreateFlagBits
-type VkFenceCreateFlags = VkFenceCreateFlagBits
-
-instance Show VkFenceCreateFlagBits where
-  showsPrec _ VK_FENCE_CREATE_SIGNALED_BIT = showString "VK_FENCE_CREATE_SIGNALED_BIT"
+instance Show FenceCreateFlags where
+  showsPrec _ FenceCreateSignaledBit = showString "FenceCreateSignaledBit"
   
-  showsPrec p (VkFenceCreateFlagBits x) = showParen (p >= 11) (showString "VkFenceCreateFlagBits " . showsPrec 11 x)
+  showsPrec p (FenceCreateFlags x) = showParen (p >= 11) (showString "FenceCreateFlags " . showsPrec 11 x)
 
-instance Read VkFenceCreateFlagBits where
-  readPrec = parens ( choose [ ("VK_FENCE_CREATE_SIGNALED_BIT", pure VK_FENCE_CREATE_SIGNALED_BIT)
+instance Read FenceCreateFlags where
+  readPrec = parens ( choose [ ("FenceCreateSignaledBit", pure FenceCreateSignaledBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkFenceCreateFlagBits")
+                        expectP (Ident "FenceCreateFlags")
                         v <- step readPrec
-                        pure (VkFenceCreateFlagBits v)
+                        pure (FenceCreateFlags v)
                         )
                     )
 
 
-pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlagBits 0x1
+pattern FenceCreateSignaledBit = FenceCreateFlags 0x1
 
 
--- ** vkCreateFence
-foreign import ccall "vkCreateFence" vkCreateFence ::
-  VkDevice ->
-  Ptr VkFenceCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkFence -> IO VkResult
+-- ** createFence
+foreign import ccall "vkCreateFence" createFence ::
+  Device ->
+  Ptr FenceCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Fence -> IO Result
 
-newtype VkFence = VkFence Word64
-  deriving (Eq, Storable)
+newtype Fence = Fence Word64
+  deriving (Eq, Ord, Storable)
 

@@ -31,11 +31,11 @@ writeStructType st = do
   tellExtension "DuplicateRecordFields"
   structMemberDocs <- traverse writeStructMember (stMembers st)
   pure [qc|{predocComment structComment}
-data {stName st} =
-  {stName st}\{ {indent (-2) .  vsep $
+data {stHsName st} =
+  {stHsName st}\{ {indent (-2) .  vsep $
                  (intercalateRecordCommas structMemberDocs ++
                   [fromString "\}"])}
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 {writeStructStorableInstance env st}
 |]
@@ -53,9 +53,9 @@ writeUnionType ut = do
     (ExternalName (ModuleName "Foreign.Ptr") "castPtr")
   tellExtension "Strict"
   pure [qc|{predocComment unionComment}
-data {utName ut} = {indent (-2) . vsep $
+data {utHsName ut} = {indent (-2) . vsep $
                     intercalatePrepend (fromString "|") unionMemberDocs}
-  deriving (Eq)
+  deriving (Eq, Ord)
 
 {writeUnionStorableInstance env ut}
 |]
@@ -75,10 +75,10 @@ writeUnionStorableInstance env ut
                     TypeInfo unionSize unionAlignment = getTypeInfo env (utName ut)
                 in [qc|{predocComment
 "_Note_: peek is undefined as we wouldn't know which constructor to use"}
-instance Storable {utName ut} where
+instance Storable {utHsName ut} where
   sizeOf ~_ = {unionSize}
   alignment ~_ = {unionAlignment}
-  peek ~_ = error "peek@{utName ut}"
+  peek ~_ = error "peek@{utHsName ut}"
   poke ptr poked = case poked of
                      {indent 0 .vsep $ writeMatchAndPokeMember <$> memberPacking}
 |]
@@ -105,17 +105,17 @@ writeStructMember sm = do
 
 -- | The namespace gets super polluted without these "vk" prefixes
 sanitizedName :: StructMember -> String
-sanitizedName sm = "vk" ++ upperFirst (smName sm)
+sanitizedName = smHsName
 
 writeStructStorableInstance :: TypeEnv -> StructType -> Doc
 writeStructStorableInstance env st
   | null (stMembers st) = error "zero member struct...?"
   | otherwise = let memberPacking = calculateMemberPacking env (stMembers st)
                     TypeInfo structSize structAlignment = getTypeInfo env (stName st)
-                in [qc|instance Storable {stName st} where
+                in [qc|instance Storable {stHsName st} where
   sizeOf ~_ = {structSize}
   alignment ~_ = {structAlignment}
-  peek ptr = {stName st} <$> {indent (-4) . vsep $
+  peek ptr = {stHsName st} <$> {indent (-4) . vsep $
                               ((intercalateInfixAp $
                                 writePeekMember <$> memberPacking))}
   poke ptr poked = {indent (-3) . vsep $
@@ -128,5 +128,5 @@ writePeekMember mi = [qc|peek (ptr `plusPtr` {miOffset mi})|]
 
 writePokeMember :: StructType -> MemberInfo -> Doc
 writePokeMember st mi =
-  [qc|poke (ptr `plusPtr` {miOffset mi}) ({sanitizedName (miMember mi)} (poked :: {stName st}))|]
+  [qc|poke (ptr `plusPtr` {miOffset mi}) ({sanitizedName (miMember mi)} (poked :: {stHsName st}))|]
 

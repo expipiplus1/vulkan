@@ -27,7 +27,7 @@ writeDispatchableHandleType ht t = do
   tellRequiredName (ExternalName (ModuleName "Foreign.Ptr") "Ptr")
   hsType <- cTypeToHsTypeString t
   pure [qc|data {hsType}
-type {htName ht} = Ptr {hsType}
+type {htHsName ht} = Ptr {hsType}
 |]
 
 writeNonDispatchableHandleType :: HandleType -> CType -> Write Doc
@@ -38,9 +38,10 @@ writeNonDispatchableHandleType ht t = do
   let derivingString :: Doc
       derivingString = if boot
                          then [qc|
-instance Eq {htName ht}
-instance Storable {htName ht}|]
-                         else fromString "deriving (Eq, Storable)"
-  pure [qc|newtype {htName ht} = {htName ht} {hsType}
+instance Eq {htHsName ht}
+instance Ord {htHsName ht}
+instance Storable {htHsName ht}|]
+                         else fromString "deriving (Eq, Ord, Storable)"
+  pure [qc|newtype {htHsName ht} = {htHsName ht} {hsType}
   {derivingString}
 |]

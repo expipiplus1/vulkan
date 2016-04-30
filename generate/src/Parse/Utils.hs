@@ -30,11 +30,13 @@ module Parse.Utils
   , stripL
   , stripR
   , stripLines
+  , parseIdentifier
   ) where
 
 import           Data.Char         (isSpace)
 import           Data.Foldable     (foldr', toList)
 import           Data.List.Split   (splitOn)
+import           Language.C.Types  (CIdentifier, cIdentifierFromString)
 import           Safe              (readMay)
 import           Text.XML.HXT.Core
 
@@ -165,3 +167,14 @@ stripR = reverse . stripL . reverse
 
 stripLines :: String -> String
 stripLines = unlines . fmap strip . lines
+
+parseIdentifier :: IOStateArrow s String CIdentifier
+parseIdentifier = (not . isReservedIdentifier) `guardsP`
+                   (cIdentifierFromString ^>> fromRightA)
+
+isReservedIdentifier :: String -> Bool
+isReservedIdentifier i = i `elem` reservedIdentifiers
+  where reservedIdentifiers = [ "void"
+                              , "char"
+                              , "float"
+                              ]

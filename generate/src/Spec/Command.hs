@@ -1,8 +1,11 @@
 module Spec.Command where
 
+import           Language.C.Types (CIdentifier)
 import           Spec.Type
 
 data Command = Command { cName                     :: String
+                       , cSymbol                   :: CIdentifier
+                       , cHsName                   :: String
                        , cReturnType               :: CType
                        , cParameters               :: [Parameter]
                        , cImplicitExternSyncParams :: Maybe [String]
@@ -16,6 +19,7 @@ data Command = Command { cName                     :: String
   deriving (Show)
 
 data Parameter = Parameter { pName           :: String
+                           , pHsName         :: String
                            , pType           :: CType
                            , pIsOptional     :: Maybe [Bool]
                              -- ^ Values further into the list represent the

@@ -4,21 +4,20 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Pass where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Graphics.Vulkan.Pipeline( VkPipelineStageFlagBits(..)
-                               , VkPipelineStageFlags(..)
-                               , VkPipelineBindPoint(..)
+import Graphics.Vulkan.Pipeline( PipelineBindPoint(..)
+                               , PipelineStageFlags(..)
                                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Int( Int32
@@ -28,16 +27,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -46,462 +38,451 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
+import Graphics.Vulkan.Sampler( SampleCountFlags(..)
                               )
-import Graphics.Vulkan.Image( VkImageLayout(..)
+import Graphics.Vulkan.Image( ImageLayout(..)
                             )
-import Graphics.Vulkan.ImageView( VkImageView(..)
+import Graphics.Vulkan.ImageView( ImageView(..)
                                 )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkExtent2D(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkStructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
+                           , Format(..)
+                           , Result(..)
+                           , Flags(..)
+                           , Extent2D(..)
                            )
-import Foreign.C.Types( CSize(..)
-                      )
 
 
-data VkSubpassDependency =
-  VkSubpassDependency{ vkSrcSubpass :: Word32 
-                     , vkDstSubpass :: Word32 
-                     , vkSrcStageMask :: VkPipelineStageFlags 
-                     , vkDstStageMask :: VkPipelineStageFlags 
-                     , vkSrcAccessMask :: VkAccessFlags 
-                     , vkDstAccessMask :: VkAccessFlags 
-                     , vkDependencyFlags :: VkDependencyFlags 
-                     }
-  deriving (Eq)
+data SubpassDependency =
+  SubpassDependency{ srcSubpass :: Word32 
+                   , dstSubpass :: Word32 
+                   , srcStageMask :: PipelineStageFlags 
+                   , dstStageMask :: PipelineStageFlags 
+                   , srcAccessMask :: AccessFlags 
+                   , dstAccessMask :: AccessFlags 
+                   , dependencyFlags :: DependencyFlags 
+                   }
+  deriving (Eq, Ord)
 
-instance Storable VkSubpassDependency where
+instance Storable SubpassDependency where
   sizeOf ~_ = 28
   alignment ~_ = 4
-  peek ptr = VkSubpassDependency <$> peek (ptr `plusPtr` 0)
-                                 <*> peek (ptr `plusPtr` 4)
-                                 <*> peek (ptr `plusPtr` 8)
-                                 <*> peek (ptr `plusPtr` 12)
-                                 <*> peek (ptr `plusPtr` 16)
-                                 <*> peek (ptr `plusPtr` 20)
-                                 <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSrcSubpass (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 4) (vkDstSubpass (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 8) (vkSrcStageMask (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 12) (vkDstStageMask (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 16) (vkSrcAccessMask (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkSubpassDependency))
-                *> poke (ptr `plusPtr` 24) (vkDependencyFlags (poked :: VkSubpassDependency))
+  peek ptr = SubpassDependency <$> peek (ptr `plusPtr` 0)
+                               <*> peek (ptr `plusPtr` 4)
+                               <*> peek (ptr `plusPtr` 8)
+                               <*> peek (ptr `plusPtr` 12)
+                               <*> peek (ptr `plusPtr` 16)
+                               <*> peek (ptr `plusPtr` 20)
+                               <*> peek (ptr `plusPtr` 24)
+  poke ptr poked = poke (ptr `plusPtr` 0) (srcSubpass (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 4) (dstSubpass (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 8) (srcStageMask (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 12) (dstStageMask (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 16) (srcAccessMask (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 20) (dstAccessMask (poked :: SubpassDependency))
+                *> poke (ptr `plusPtr` 24) (dependencyFlags (poked :: SubpassDependency))
 
 
--- ** VkSubpassDescriptionFlags
+-- ** SubpassDescriptionFlags
 -- | Opaque flag
-newtype VkSubpassDescriptionFlags = VkSubpassDescriptionFlags VkFlags
-  deriving (Eq, Storable)
+newtype SubpassDescriptionFlags = SubpassDescriptionFlags Flags
+  deriving (Eq, Ord, Storable)
 
-newtype VkFramebuffer = VkFramebuffer Word64
-  deriving (Eq, Storable)
+newtype Framebuffer = Framebuffer Word64
+  deriving (Eq, Ord, Storable)
 
--- ** VkAttachmentDescriptionFlags
+-- ** AttachmentDescriptionFlags
 
-newtype VkAttachmentDescriptionFlagBits = VkAttachmentDescriptionFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype AttachmentDescriptionFlags = AttachmentDescriptionFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkAttachmentDescriptionFlagBits
-type VkAttachmentDescriptionFlags = VkAttachmentDescriptionFlagBits
-
-instance Show VkAttachmentDescriptionFlagBits where
-  showsPrec _ VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = showString "VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
+instance Show AttachmentDescriptionFlags where
+  showsPrec _ AttachmentDescriptionMayAliasBit = showString "AttachmentDescriptionMayAliasBit"
   
-  showsPrec p (VkAttachmentDescriptionFlagBits x) = showParen (p >= 11) (showString "VkAttachmentDescriptionFlagBits " . showsPrec 11 x)
+  showsPrec p (AttachmentDescriptionFlags x) = showParen (p >= 11) (showString "AttachmentDescriptionFlags " . showsPrec 11 x)
 
-instance Read VkAttachmentDescriptionFlagBits where
-  readPrec = parens ( choose [ ("VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT", pure VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT)
+instance Read AttachmentDescriptionFlags where
+  readPrec = parens ( choose [ ("AttachmentDescriptionMayAliasBit", pure AttachmentDescriptionMayAliasBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkAttachmentDescriptionFlagBits")
+                        expectP (Ident "AttachmentDescriptionFlags")
                         v <- step readPrec
-                        pure (VkAttachmentDescriptionFlagBits v)
+                        pure (AttachmentDescriptionFlags v)
                         )
                     )
 
 -- | The attachment may alias physical memory of another attachment in the same render pass
-pattern VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = VkAttachmentDescriptionFlagBits 0x1
+pattern AttachmentDescriptionMayAliasBit = AttachmentDescriptionFlags 0x1
 
 
--- ** VkDependencyFlags
+-- ** DependencyFlags
 
-newtype VkDependencyFlagBits = VkDependencyFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype DependencyFlags = DependencyFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkDependencyFlagBits
-type VkDependencyFlags = VkDependencyFlagBits
-
-instance Show VkDependencyFlagBits where
-  showsPrec _ VK_DEPENDENCY_BY_REGION_BIT = showString "VK_DEPENDENCY_BY_REGION_BIT"
+instance Show DependencyFlags where
+  showsPrec _ DependencyByRegionBit = showString "DependencyByRegionBit"
   
-  showsPrec p (VkDependencyFlagBits x) = showParen (p >= 11) (showString "VkDependencyFlagBits " . showsPrec 11 x)
+  showsPrec p (DependencyFlags x) = showParen (p >= 11) (showString "DependencyFlags " . showsPrec 11 x)
 
-instance Read VkDependencyFlagBits where
-  readPrec = parens ( choose [ ("VK_DEPENDENCY_BY_REGION_BIT", pure VK_DEPENDENCY_BY_REGION_BIT)
+instance Read DependencyFlags where
+  readPrec = parens ( choose [ ("DependencyByRegionBit", pure DependencyByRegionBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkDependencyFlagBits")
+                        expectP (Ident "DependencyFlags")
                         v <- step readPrec
-                        pure (VkDependencyFlagBits v)
+                        pure (DependencyFlags v)
                         )
                     )
 
 -- | Dependency is per pixel region 
-pattern VK_DEPENDENCY_BY_REGION_BIT = VkDependencyFlagBits 0x1
+pattern DependencyByRegionBit = DependencyFlags 0x1
 
 
--- ** vkDestroyRenderPass
-foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass ::
-  VkDevice -> VkRenderPass -> Ptr VkAllocationCallbacks -> IO ()
+-- ** destroyRenderPass
+foreign import ccall "vkDestroyRenderPass" destroyRenderPass ::
+  Device -> RenderPass -> Ptr AllocationCallbacks -> IO ()
 
--- ** vkCreateFramebuffer
-foreign import ccall "vkCreateFramebuffer" vkCreateFramebuffer ::
-  VkDevice ->
-  Ptr VkFramebufferCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkFramebuffer -> IO VkResult
+-- ** createFramebuffer
+foreign import ccall "vkCreateFramebuffer" createFramebuffer ::
+  Device ->
+  Ptr FramebufferCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Framebuffer -> IO Result
 
 
-data VkFramebufferCreateInfo =
-  VkFramebufferCreateInfo{ vkSType :: VkStructureType 
-                         , vkPNext :: Ptr Void 
-                         , vkFlags :: VkFramebufferCreateFlags 
-                         , vkRenderPass :: VkRenderPass 
-                         , vkAttachmentCount :: Word32 
-                         , vkPAttachments :: Ptr VkImageView 
-                         , vkWidth :: Word32 
-                         , vkHeight :: Word32 
-                         , vkLayers :: Word32 
-                         }
-  deriving (Eq)
+data FramebufferCreateInfo =
+  FramebufferCreateInfo{ sType :: StructureType 
+                       , pNext :: Ptr Void 
+                       , flags :: FramebufferCreateFlags 
+                       , renderPass :: RenderPass 
+                       , attachmentCount :: Word32 
+                       , pAttachments :: Ptr ImageView 
+                       , width :: Word32 
+                       , height :: Word32 
+                       , layers :: Word32 
+                       }
+  deriving (Eq, Ord)
 
-instance Storable VkFramebufferCreateInfo where
+instance Storable FramebufferCreateInfo where
   sizeOf ~_ = 64
   alignment ~_ = 8
-  peek ptr = VkFramebufferCreateInfo <$> peek (ptr `plusPtr` 0)
-                                     <*> peek (ptr `plusPtr` 8)
-                                     <*> peek (ptr `plusPtr` 16)
-                                     <*> peek (ptr `plusPtr` 24)
-                                     <*> peek (ptr `plusPtr` 32)
-                                     <*> peek (ptr `plusPtr` 40)
-                                     <*> peek (ptr `plusPtr` 48)
-                                     <*> peek (ptr `plusPtr` 52)
-                                     <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkRenderPass (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkAttachmentCount (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPAttachments (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkWidth (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 52) (vkHeight (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkLayers (poked :: VkFramebufferCreateInfo))
+  peek ptr = FramebufferCreateInfo <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 8)
+                                   <*> peek (ptr `plusPtr` 16)
+                                   <*> peek (ptr `plusPtr` 24)
+                                   <*> peek (ptr `plusPtr` 32)
+                                   <*> peek (ptr `plusPtr` 40)
+                                   <*> peek (ptr `plusPtr` 48)
+                                   <*> peek (ptr `plusPtr` 52)
+                                   <*> peek (ptr `plusPtr` 56)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 24) (renderPass (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 32) (attachmentCount (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 40) (pAttachments (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 48) (width (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 52) (height (poked :: FramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 56) (layers (poked :: FramebufferCreateInfo))
 
 
--- ** vkGetRenderAreaGranularity
-foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity ::
-  VkDevice -> VkRenderPass -> Ptr VkExtent2D -> IO ()
+-- ** getRenderAreaGranularity
+foreign import ccall "vkGetRenderAreaGranularity" getRenderAreaGranularity ::
+  Device -> RenderPass -> Ptr Extent2D -> IO ()
 
--- ** VkAttachmentLoadOp
+-- ** AttachmentLoadOp
 
-newtype VkAttachmentLoadOp = VkAttachmentLoadOp Int32
-  deriving (Eq, Storable)
+newtype AttachmentLoadOp = AttachmentLoadOp Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkAttachmentLoadOp where
-  showsPrec _ VK_ATTACHMENT_LOAD_OP_LOAD = showString "VK_ATTACHMENT_LOAD_OP_LOAD"
-  showsPrec _ VK_ATTACHMENT_LOAD_OP_CLEAR = showString "VK_ATTACHMENT_LOAD_OP_CLEAR"
-  showsPrec _ VK_ATTACHMENT_LOAD_OP_DONT_CARE = showString "VK_ATTACHMENT_LOAD_OP_DONT_CARE"
-  showsPrec p (VkAttachmentLoadOp x) = showParen (p >= 11) (showString "VkAttachmentLoadOp " . showsPrec 11 x)
+instance Show AttachmentLoadOp where
+  showsPrec _ AttachmentLoadOpLoad = showString "AttachmentLoadOpLoad"
+  showsPrec _ AttachmentLoadOpClear = showString "AttachmentLoadOpClear"
+  showsPrec _ AttachmentLoadOpDontCare = showString "AttachmentLoadOpDontCare"
+  showsPrec p (AttachmentLoadOp x) = showParen (p >= 11) (showString "AttachmentLoadOp " . showsPrec 11 x)
 
-instance Read VkAttachmentLoadOp where
-  readPrec = parens ( choose [ ("VK_ATTACHMENT_LOAD_OP_LOAD", pure VK_ATTACHMENT_LOAD_OP_LOAD)
-                             , ("VK_ATTACHMENT_LOAD_OP_CLEAR", pure VK_ATTACHMENT_LOAD_OP_CLEAR)
-                             , ("VK_ATTACHMENT_LOAD_OP_DONT_CARE", pure VK_ATTACHMENT_LOAD_OP_DONT_CARE)
+instance Read AttachmentLoadOp where
+  readPrec = parens ( choose [ ("AttachmentLoadOpLoad", pure AttachmentLoadOpLoad)
+                             , ("AttachmentLoadOpClear", pure AttachmentLoadOpClear)
+                             , ("AttachmentLoadOpDontCare", pure AttachmentLoadOpDontCare)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkAttachmentLoadOp")
+                        expectP (Ident "AttachmentLoadOp")
                         v <- step readPrec
-                        pure (VkAttachmentLoadOp v)
+                        pure (AttachmentLoadOp v)
                         )
                     )
 
 
-pattern VK_ATTACHMENT_LOAD_OP_LOAD = VkAttachmentLoadOp 0
+pattern AttachmentLoadOpLoad = AttachmentLoadOp 0
 
-pattern VK_ATTACHMENT_LOAD_OP_CLEAR = VkAttachmentLoadOp 1
+pattern AttachmentLoadOpClear = AttachmentLoadOp 1
 
-pattern VK_ATTACHMENT_LOAD_OP_DONT_CARE = VkAttachmentLoadOp 2
+pattern AttachmentLoadOpDontCare = AttachmentLoadOp 2
 
--- ** VkAttachmentStoreOp
+-- ** AttachmentStoreOp
 
-newtype VkAttachmentStoreOp = VkAttachmentStoreOp Int32
-  deriving (Eq, Storable)
+newtype AttachmentStoreOp = AttachmentStoreOp Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkAttachmentStoreOp where
-  showsPrec _ VK_ATTACHMENT_STORE_OP_STORE = showString "VK_ATTACHMENT_STORE_OP_STORE"
-  showsPrec _ VK_ATTACHMENT_STORE_OP_DONT_CARE = showString "VK_ATTACHMENT_STORE_OP_DONT_CARE"
-  showsPrec p (VkAttachmentStoreOp x) = showParen (p >= 11) (showString "VkAttachmentStoreOp " . showsPrec 11 x)
+instance Show AttachmentStoreOp where
+  showsPrec _ AttachmentStoreOpStore = showString "AttachmentStoreOpStore"
+  showsPrec _ AttachmentStoreOpDontCare = showString "AttachmentStoreOpDontCare"
+  showsPrec p (AttachmentStoreOp x) = showParen (p >= 11) (showString "AttachmentStoreOp " . showsPrec 11 x)
 
-instance Read VkAttachmentStoreOp where
-  readPrec = parens ( choose [ ("VK_ATTACHMENT_STORE_OP_STORE", pure VK_ATTACHMENT_STORE_OP_STORE)
-                             , ("VK_ATTACHMENT_STORE_OP_DONT_CARE", pure VK_ATTACHMENT_STORE_OP_DONT_CARE)
+instance Read AttachmentStoreOp where
+  readPrec = parens ( choose [ ("AttachmentStoreOpStore", pure AttachmentStoreOpStore)
+                             , ("AttachmentStoreOpDontCare", pure AttachmentStoreOpDontCare)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkAttachmentStoreOp")
+                        expectP (Ident "AttachmentStoreOp")
                         v <- step readPrec
-                        pure (VkAttachmentStoreOp v)
+                        pure (AttachmentStoreOp v)
                         )
                     )
 
 
-pattern VK_ATTACHMENT_STORE_OP_STORE = VkAttachmentStoreOp 0
+pattern AttachmentStoreOpStore = AttachmentStoreOp 0
 
-pattern VK_ATTACHMENT_STORE_OP_DONT_CARE = VkAttachmentStoreOp 1
+pattern AttachmentStoreOpDontCare = AttachmentStoreOp 1
 
--- ** VkAccessFlags
+-- ** AccessFlags
 
-newtype VkAccessFlagBits = VkAccessFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype AccessFlags = AccessFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkAccessFlagBits
-type VkAccessFlags = VkAccessFlagBits
-
-instance Show VkAccessFlagBits where
-  showsPrec _ VK_ACCESS_INDIRECT_COMMAND_READ_BIT = showString "VK_ACCESS_INDIRECT_COMMAND_READ_BIT"
-  showsPrec _ VK_ACCESS_INDEX_READ_BIT = showString "VK_ACCESS_INDEX_READ_BIT"
-  showsPrec _ VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = showString "VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT"
-  showsPrec _ VK_ACCESS_UNIFORM_READ_BIT = showString "VK_ACCESS_UNIFORM_READ_BIT"
-  showsPrec _ VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = showString "VK_ACCESS_INPUT_ATTACHMENT_READ_BIT"
-  showsPrec _ VK_ACCESS_SHADER_READ_BIT = showString "VK_ACCESS_SHADER_READ_BIT"
-  showsPrec _ VK_ACCESS_SHADER_WRITE_BIT = showString "VK_ACCESS_SHADER_WRITE_BIT"
-  showsPrec _ VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = showString "VK_ACCESS_COLOR_ATTACHMENT_READ_BIT"
-  showsPrec _ VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = showString "VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT"
-  showsPrec _ VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = showString "VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT"
-  showsPrec _ VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = showString "VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"
-  showsPrec _ VK_ACCESS_TRANSFER_READ_BIT = showString "VK_ACCESS_TRANSFER_READ_BIT"
-  showsPrec _ VK_ACCESS_TRANSFER_WRITE_BIT = showString "VK_ACCESS_TRANSFER_WRITE_BIT"
-  showsPrec _ VK_ACCESS_HOST_READ_BIT = showString "VK_ACCESS_HOST_READ_BIT"
-  showsPrec _ VK_ACCESS_HOST_WRITE_BIT = showString "VK_ACCESS_HOST_WRITE_BIT"
-  showsPrec _ VK_ACCESS_MEMORY_READ_BIT = showString "VK_ACCESS_MEMORY_READ_BIT"
-  showsPrec _ VK_ACCESS_MEMORY_WRITE_BIT = showString "VK_ACCESS_MEMORY_WRITE_BIT"
+instance Show AccessFlags where
+  showsPrec _ AccessIndirectCommandReadBit = showString "AccessIndirectCommandReadBit"
+  showsPrec _ AccessIndexReadBit = showString "AccessIndexReadBit"
+  showsPrec _ AccessVertexAttributeReadBit = showString "AccessVertexAttributeReadBit"
+  showsPrec _ AccessUniformReadBit = showString "AccessUniformReadBit"
+  showsPrec _ AccessInputAttachmentReadBit = showString "AccessInputAttachmentReadBit"
+  showsPrec _ AccessShaderReadBit = showString "AccessShaderReadBit"
+  showsPrec _ AccessShaderWriteBit = showString "AccessShaderWriteBit"
+  showsPrec _ AccessColorAttachmentReadBit = showString "AccessColorAttachmentReadBit"
+  showsPrec _ AccessColorAttachmentWriteBit = showString "AccessColorAttachmentWriteBit"
+  showsPrec _ AccessDepthStencilAttachmentReadBit = showString "AccessDepthStencilAttachmentReadBit"
+  showsPrec _ AccessDepthStencilAttachmentWriteBit = showString "AccessDepthStencilAttachmentWriteBit"
+  showsPrec _ AccessTransferReadBit = showString "AccessTransferReadBit"
+  showsPrec _ AccessTransferWriteBit = showString "AccessTransferWriteBit"
+  showsPrec _ AccessHostReadBit = showString "AccessHostReadBit"
+  showsPrec _ AccessHostWriteBit = showString "AccessHostWriteBit"
+  showsPrec _ AccessMemoryReadBit = showString "AccessMemoryReadBit"
+  showsPrec _ AccessMemoryWriteBit = showString "AccessMemoryWriteBit"
   
-  showsPrec p (VkAccessFlagBits x) = showParen (p >= 11) (showString "VkAccessFlagBits " . showsPrec 11 x)
+  showsPrec p (AccessFlags x) = showParen (p >= 11) (showString "AccessFlags " . showsPrec 11 x)
 
-instance Read VkAccessFlagBits where
-  readPrec = parens ( choose [ ("VK_ACCESS_INDIRECT_COMMAND_READ_BIT", pure VK_ACCESS_INDIRECT_COMMAND_READ_BIT)
-                             , ("VK_ACCESS_INDEX_READ_BIT", pure VK_ACCESS_INDEX_READ_BIT)
-                             , ("VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT", pure VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT)
-                             , ("VK_ACCESS_UNIFORM_READ_BIT", pure VK_ACCESS_UNIFORM_READ_BIT)
-                             , ("VK_ACCESS_INPUT_ATTACHMENT_READ_BIT", pure VK_ACCESS_INPUT_ATTACHMENT_READ_BIT)
-                             , ("VK_ACCESS_SHADER_READ_BIT", pure VK_ACCESS_SHADER_READ_BIT)
-                             , ("VK_ACCESS_SHADER_WRITE_BIT", pure VK_ACCESS_SHADER_WRITE_BIT)
-                             , ("VK_ACCESS_COLOR_ATTACHMENT_READ_BIT", pure VK_ACCESS_COLOR_ATTACHMENT_READ_BIT)
-                             , ("VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT", pure VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT)
-                             , ("VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT", pure VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT)
-                             , ("VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT", pure VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)
-                             , ("VK_ACCESS_TRANSFER_READ_BIT", pure VK_ACCESS_TRANSFER_READ_BIT)
-                             , ("VK_ACCESS_TRANSFER_WRITE_BIT", pure VK_ACCESS_TRANSFER_WRITE_BIT)
-                             , ("VK_ACCESS_HOST_READ_BIT", pure VK_ACCESS_HOST_READ_BIT)
-                             , ("VK_ACCESS_HOST_WRITE_BIT", pure VK_ACCESS_HOST_WRITE_BIT)
-                             , ("VK_ACCESS_MEMORY_READ_BIT", pure VK_ACCESS_MEMORY_READ_BIT)
-                             , ("VK_ACCESS_MEMORY_WRITE_BIT", pure VK_ACCESS_MEMORY_WRITE_BIT)
+instance Read AccessFlags where
+  readPrec = parens ( choose [ ("AccessIndirectCommandReadBit", pure AccessIndirectCommandReadBit)
+                             , ("AccessIndexReadBit", pure AccessIndexReadBit)
+                             , ("AccessVertexAttributeReadBit", pure AccessVertexAttributeReadBit)
+                             , ("AccessUniformReadBit", pure AccessUniformReadBit)
+                             , ("AccessInputAttachmentReadBit", pure AccessInputAttachmentReadBit)
+                             , ("AccessShaderReadBit", pure AccessShaderReadBit)
+                             , ("AccessShaderWriteBit", pure AccessShaderWriteBit)
+                             , ("AccessColorAttachmentReadBit", pure AccessColorAttachmentReadBit)
+                             , ("AccessColorAttachmentWriteBit", pure AccessColorAttachmentWriteBit)
+                             , ("AccessDepthStencilAttachmentReadBit", pure AccessDepthStencilAttachmentReadBit)
+                             , ("AccessDepthStencilAttachmentWriteBit", pure AccessDepthStencilAttachmentWriteBit)
+                             , ("AccessTransferReadBit", pure AccessTransferReadBit)
+                             , ("AccessTransferWriteBit", pure AccessTransferWriteBit)
+                             , ("AccessHostReadBit", pure AccessHostReadBit)
+                             , ("AccessHostWriteBit", pure AccessHostWriteBit)
+                             , ("AccessMemoryReadBit", pure AccessMemoryReadBit)
+                             , ("AccessMemoryWriteBit", pure AccessMemoryWriteBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkAccessFlagBits")
+                        expectP (Ident "AccessFlags")
                         v <- step readPrec
-                        pure (VkAccessFlagBits v)
+                        pure (AccessFlags v)
                         )
                     )
 
 -- | Controls coherency of indirect command reads
-pattern VK_ACCESS_INDIRECT_COMMAND_READ_BIT = VkAccessFlagBits 0x1
+pattern AccessIndirectCommandReadBit = AccessFlags 0x1
 -- | Controls coherency of index reads
-pattern VK_ACCESS_INDEX_READ_BIT = VkAccessFlagBits 0x2
+pattern AccessIndexReadBit = AccessFlags 0x2
 -- | Controls coherency of vertex attribute reads
-pattern VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT = VkAccessFlagBits 0x4
+pattern AccessVertexAttributeReadBit = AccessFlags 0x4
 -- | Controls coherency of uniform buffer reads
-pattern VK_ACCESS_UNIFORM_READ_BIT = VkAccessFlagBits 0x8
+pattern AccessUniformReadBit = AccessFlags 0x8
 -- | Controls coherency of input attachment reads
-pattern VK_ACCESS_INPUT_ATTACHMENT_READ_BIT = VkAccessFlagBits 0x10
+pattern AccessInputAttachmentReadBit = AccessFlags 0x10
 -- | Controls coherency of shader reads
-pattern VK_ACCESS_SHADER_READ_BIT = VkAccessFlagBits 0x20
+pattern AccessShaderReadBit = AccessFlags 0x20
 -- | Controls coherency of shader writes
-pattern VK_ACCESS_SHADER_WRITE_BIT = VkAccessFlagBits 0x40
+pattern AccessShaderWriteBit = AccessFlags 0x40
 -- | Controls coherency of color attachment reads
-pattern VK_ACCESS_COLOR_ATTACHMENT_READ_BIT = VkAccessFlagBits 0x80
+pattern AccessColorAttachmentReadBit = AccessFlags 0x80
 -- | Controls coherency of color attachment writes
-pattern VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT = VkAccessFlagBits 0x100
+pattern AccessColorAttachmentWriteBit = AccessFlags 0x100
 -- | Controls coherency of depth/stencil attachment reads
-pattern VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT = VkAccessFlagBits 0x200
+pattern AccessDepthStencilAttachmentReadBit = AccessFlags 0x200
 -- | Controls coherency of depth/stencil attachment writes
-pattern VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = VkAccessFlagBits 0x400
+pattern AccessDepthStencilAttachmentWriteBit = AccessFlags 0x400
 -- | Controls coherency of transfer reads
-pattern VK_ACCESS_TRANSFER_READ_BIT = VkAccessFlagBits 0x800
+pattern AccessTransferReadBit = AccessFlags 0x800
 -- | Controls coherency of transfer writes
-pattern VK_ACCESS_TRANSFER_WRITE_BIT = VkAccessFlagBits 0x1000
+pattern AccessTransferWriteBit = AccessFlags 0x1000
 -- | Controls coherency of host reads
-pattern VK_ACCESS_HOST_READ_BIT = VkAccessFlagBits 0x2000
+pattern AccessHostReadBit = AccessFlags 0x2000
 -- | Controls coherency of host writes
-pattern VK_ACCESS_HOST_WRITE_BIT = VkAccessFlagBits 0x4000
+pattern AccessHostWriteBit = AccessFlags 0x4000
 -- | Controls coherency of memory reads
-pattern VK_ACCESS_MEMORY_READ_BIT = VkAccessFlagBits 0x8000
+pattern AccessMemoryReadBit = AccessFlags 0x8000
 -- | Controls coherency of memory writes
-pattern VK_ACCESS_MEMORY_WRITE_BIT = VkAccessFlagBits 0x10000
+pattern AccessMemoryWriteBit = AccessFlags 0x10000
 
 
-newtype VkRenderPass = VkRenderPass Word64
-  deriving (Eq, Storable)
+newtype RenderPass = RenderPass Word64
+  deriving (Eq, Ord, Storable)
 
--- ** vkDestroyFramebuffer
-foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer ::
-  VkDevice -> VkFramebuffer -> Ptr VkAllocationCallbacks -> IO ()
+-- ** destroyFramebuffer
+foreign import ccall "vkDestroyFramebuffer" destroyFramebuffer ::
+  Device -> Framebuffer -> Ptr AllocationCallbacks -> IO ()
 
 
-data VkAttachmentReference =
-  VkAttachmentReference{ vkAttachment :: Word32 
-                       , vkLayout :: VkImageLayout 
-                       }
-  deriving (Eq)
+data AttachmentReference =
+  AttachmentReference{ attachment :: Word32 
+                     , layout :: ImageLayout 
+                     }
+  deriving (Eq, Ord)
 
-instance Storable VkAttachmentReference where
+instance Storable AttachmentReference where
   sizeOf ~_ = 8
   alignment ~_ = 4
-  peek ptr = VkAttachmentReference <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkAttachment (poked :: VkAttachmentReference))
-                *> poke (ptr `plusPtr` 4) (vkLayout (poked :: VkAttachmentReference))
+  peek ptr = AttachmentReference <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 4)
+  poke ptr poked = poke (ptr `plusPtr` 0) (attachment (poked :: AttachmentReference))
+                *> poke (ptr `plusPtr` 4) (layout (poked :: AttachmentReference))
 
 
--- ** VkRenderPassCreateFlags
+-- ** RenderPassCreateFlags
 -- | Opaque flag
-newtype VkRenderPassCreateFlags = VkRenderPassCreateFlags VkFlags
-  deriving (Eq, Storable)
+newtype RenderPassCreateFlags = RenderPassCreateFlags Flags
+  deriving (Eq, Ord, Storable)
 
 
-data VkAttachmentDescription =
-  VkAttachmentDescription{ vkFlags :: VkAttachmentDescriptionFlags 
-                         , vkFormat :: VkFormat 
-                         , vkSamples :: VkSampleCountFlagBits 
-                         , vkLoadOp :: VkAttachmentLoadOp 
-                         , vkStoreOp :: VkAttachmentStoreOp 
-                         , vkStencilLoadOp :: VkAttachmentLoadOp 
-                         , vkStencilStoreOp :: VkAttachmentStoreOp 
-                         , vkInitialLayout :: VkImageLayout 
-                         , vkFinalLayout :: VkImageLayout 
-                         }
-  deriving (Eq)
+data AttachmentDescription =
+  AttachmentDescription{ flags :: AttachmentDescriptionFlags 
+                       , format :: Format 
+                       , samples :: SampleCountFlags 
+                       , loadOp :: AttachmentLoadOp 
+                       , storeOp :: AttachmentStoreOp 
+                       , stencilLoadOp :: AttachmentLoadOp 
+                       , stencilStoreOp :: AttachmentStoreOp 
+                       , initialLayout :: ImageLayout 
+                       , finalLayout :: ImageLayout 
+                       }
+  deriving (Eq, Ord)
 
-instance Storable VkAttachmentDescription where
+instance Storable AttachmentDescription where
   sizeOf ~_ = 36
   alignment ~_ = 4
-  peek ptr = VkAttachmentDescription <$> peek (ptr `plusPtr` 0)
-                                     <*> peek (ptr `plusPtr` 4)
-                                     <*> peek (ptr `plusPtr` 8)
-                                     <*> peek (ptr `plusPtr` 12)
-                                     <*> peek (ptr `plusPtr` 16)
-                                     <*> peek (ptr `plusPtr` 20)
-                                     <*> peek (ptr `plusPtr` 24)
-                                     <*> peek (ptr `plusPtr` 28)
-                                     <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkFlags (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 4) (vkFormat (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 8) (vkSamples (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 12) (vkLoadOp (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 16) (vkStoreOp (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 20) (vkStencilLoadOp (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 24) (vkStencilStoreOp (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 28) (vkInitialLayout (poked :: VkAttachmentDescription))
-                *> poke (ptr `plusPtr` 32) (vkFinalLayout (poked :: VkAttachmentDescription))
+  peek ptr = AttachmentDescription <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 4)
+                                   <*> peek (ptr `plusPtr` 8)
+                                   <*> peek (ptr `plusPtr` 12)
+                                   <*> peek (ptr `plusPtr` 16)
+                                   <*> peek (ptr `plusPtr` 20)
+                                   <*> peek (ptr `plusPtr` 24)
+                                   <*> peek (ptr `plusPtr` 28)
+                                   <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (flags (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 4) (format (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 8) (samples (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 12) (loadOp (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 16) (storeOp (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 20) (stencilLoadOp (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 24) (stencilStoreOp (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 28) (initialLayout (poked :: AttachmentDescription))
+                *> poke (ptr `plusPtr` 32) (finalLayout (poked :: AttachmentDescription))
 
 
 
-data VkSubpassDescription =
-  VkSubpassDescription{ vkFlags :: VkSubpassDescriptionFlags 
-                      , vkPipelineBindPoint :: VkPipelineBindPoint 
-                      , vkInputAttachmentCount :: Word32 
-                      , vkPInputAttachments :: Ptr VkAttachmentReference 
-                      , vkColorAttachmentCount :: Word32 
-                      , vkPColorAttachments :: Ptr VkAttachmentReference 
-                      , vkPResolveAttachments :: Ptr VkAttachmentReference 
-                      , vkPDepthStencilAttachment :: Ptr VkAttachmentReference 
-                      , vkPreserveAttachmentCount :: Word32 
-                      , vkPPreserveAttachments :: Ptr Word32 
-                      }
-  deriving (Eq)
+data SubpassDescription =
+  SubpassDescription{ flags :: SubpassDescriptionFlags 
+                    , pipelineBindPoint :: PipelineBindPoint 
+                    , inputAttachmentCount :: Word32 
+                    , pInputAttachments :: Ptr AttachmentReference 
+                    , colorAttachmentCount :: Word32 
+                    , pColorAttachments :: Ptr AttachmentReference 
+                    , pResolveAttachments :: Ptr AttachmentReference 
+                    , pDepthStencilAttachment :: Ptr AttachmentReference 
+                    , preserveAttachmentCount :: Word32 
+                    , pPreserveAttachments :: Ptr Word32 
+                    }
+  deriving (Eq, Ord)
 
-instance Storable VkSubpassDescription where
+instance Storable SubpassDescription where
   sizeOf ~_ = 72
   alignment ~_ = 8
-  peek ptr = VkSubpassDescription <$> peek (ptr `plusPtr` 0)
-                                  <*> peek (ptr `plusPtr` 4)
+  peek ptr = SubpassDescription <$> peek (ptr `plusPtr` 0)
+                                <*> peek (ptr `plusPtr` 4)
+                                <*> peek (ptr `plusPtr` 8)
+                                <*> peek (ptr `plusPtr` 16)
+                                <*> peek (ptr `plusPtr` 24)
+                                <*> peek (ptr `plusPtr` 32)
+                                <*> peek (ptr `plusPtr` 40)
+                                <*> peek (ptr `plusPtr` 48)
+                                <*> peek (ptr `plusPtr` 56)
+                                <*> peek (ptr `plusPtr` 64)
+  poke ptr poked = poke (ptr `plusPtr` 0) (flags (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 4) (pipelineBindPoint (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 8) (inputAttachmentCount (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 16) (pInputAttachments (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 24) (colorAttachmentCount (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 32) (pColorAttachments (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 40) (pResolveAttachments (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 48) (pDepthStencilAttachment (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 56) (preserveAttachmentCount (poked :: SubpassDescription))
+                *> poke (ptr `plusPtr` 64) (pPreserveAttachments (poked :: SubpassDescription))
+
+
+-- ** createRenderPass
+foreign import ccall "vkCreateRenderPass" createRenderPass ::
+  Device ->
+  Ptr RenderPassCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr RenderPass -> IO Result
+
+
+data RenderPassCreateInfo =
+  RenderPassCreateInfo{ sType :: StructureType 
+                      , pNext :: Ptr Void 
+                      , flags :: RenderPassCreateFlags 
+                      , attachmentCount :: Word32 
+                      , pAttachments :: Ptr AttachmentDescription 
+                      , subpassCount :: Word32 
+                      , pSubpasses :: Ptr SubpassDescription 
+                      , dependencyCount :: Word32 
+                      , pDependencies :: Ptr SubpassDependency 
+                      }
+  deriving (Eq, Ord)
+
+instance Storable RenderPassCreateInfo where
+  sizeOf ~_ = 64
+  alignment ~_ = 8
+  peek ptr = RenderPassCreateInfo <$> peek (ptr `plusPtr` 0)
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
+                                  <*> peek (ptr `plusPtr` 20)
                                   <*> peek (ptr `plusPtr` 24)
                                   <*> peek (ptr `plusPtr` 32)
                                   <*> peek (ptr `plusPtr` 40)
                                   <*> peek (ptr `plusPtr` 48)
                                   <*> peek (ptr `plusPtr` 56)
-                                  <*> peek (ptr `plusPtr` 64)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkFlags (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 4) (vkPipelineBindPoint (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 8) (vkInputAttachmentCount (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 16) (vkPInputAttachments (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 24) (vkColorAttachmentCount (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 32) (vkPColorAttachments (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 40) (vkPResolveAttachments (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 48) (vkPDepthStencilAttachment (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 56) (vkPreserveAttachmentCount (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 64) (vkPPreserveAttachments (poked :: VkSubpassDescription))
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 20) (attachmentCount (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 24) (pAttachments (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 32) (subpassCount (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 40) (pSubpasses (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 48) (dependencyCount (poked :: RenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 56) (pDependencies (poked :: RenderPassCreateInfo))
 
 
--- ** vkCreateRenderPass
-foreign import ccall "vkCreateRenderPass" vkCreateRenderPass ::
-  VkDevice ->
-  Ptr VkRenderPassCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkRenderPass -> IO VkResult
-
-
-data VkRenderPassCreateInfo =
-  VkRenderPassCreateInfo{ vkSType :: VkStructureType 
-                        , vkPNext :: Ptr Void 
-                        , vkFlags :: VkRenderPassCreateFlags 
-                        , vkAttachmentCount :: Word32 
-                        , vkPAttachments :: Ptr VkAttachmentDescription 
-                        , vkSubpassCount :: Word32 
-                        , vkPSubpasses :: Ptr VkSubpassDescription 
-                        , vkDependencyCount :: Word32 
-                        , vkPDependencies :: Ptr VkSubpassDependency 
-                        }
-  deriving (Eq)
-
-instance Storable VkRenderPassCreateInfo where
-  sizeOf ~_ = 64
-  alignment ~_ = 8
-  peek ptr = VkRenderPassCreateInfo <$> peek (ptr `plusPtr` 0)
-                                    <*> peek (ptr `plusPtr` 8)
-                                    <*> peek (ptr `plusPtr` 16)
-                                    <*> peek (ptr `plusPtr` 20)
-                                    <*> peek (ptr `plusPtr` 24)
-                                    <*> peek (ptr `plusPtr` 32)
-                                    <*> peek (ptr `plusPtr` 40)
-                                    <*> peek (ptr `plusPtr` 48)
-                                    <*> peek (ptr `plusPtr` 56)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkAttachmentCount (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPAttachments (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkSubpassCount (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPSubpasses (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkDependencyCount (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkPDependencies (poked :: VkRenderPassCreateInfo))
-
-
--- ** VkFramebufferCreateFlags
+-- ** FramebufferCreateFlags
 -- | Opaque flag
-newtype VkFramebufferCreateFlags = VkFramebufferCreateFlags VkFlags
-  deriving (Eq, Storable)
+newtype FramebufferCreateFlags = FramebufferCreateFlags Flags
+  deriving (Eq, Ord, Storable)
 

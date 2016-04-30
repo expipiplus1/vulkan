@@ -3,68 +3,58 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.QueueSemaphore where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkFlags(..)
-                           , VkStructureType(..)
+import Graphics.Vulkan.Core( StructureType(..)
+                           , Result(..)
+                           , Flags(..)
                            )
-import Foreign.C.Types( CSize(..)
-                      )
 
--- ** VkSemaphoreCreateFlags
+-- ** SemaphoreCreateFlags
 -- | Opaque flag
-newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
-  deriving (Eq, Storable)
+newtype SemaphoreCreateFlags = SemaphoreCreateFlags Flags
+  deriving (Eq, Ord, Storable)
 
--- ** vkDestroySemaphore
-foreign import ccall "vkDestroySemaphore" vkDestroySemaphore ::
-  VkDevice -> VkSemaphore -> Ptr VkAllocationCallbacks -> IO ()
+-- ** destroySemaphore
+foreign import ccall "vkDestroySemaphore" destroySemaphore ::
+  Device -> Semaphore -> Ptr AllocationCallbacks -> IO ()
 
-newtype VkSemaphore = VkSemaphore Word64
-  deriving (Eq, Storable)
+newtype Semaphore = Semaphore Word64
+  deriving (Eq, Ord, Storable)
 
 
-data VkSemaphoreCreateInfo =
-  VkSemaphoreCreateInfo{ vkSType :: VkStructureType 
-                       , vkPNext :: Ptr Void 
-                       , vkFlags :: VkSemaphoreCreateFlags 
-                       }
-  deriving (Eq)
+data SemaphoreCreateInfo =
+  SemaphoreCreateInfo{ sType :: StructureType 
+                     , pNext :: Ptr Void 
+                     , flags :: SemaphoreCreateFlags 
+                     }
+  deriving (Eq, Ord)
 
-instance Storable VkSemaphoreCreateInfo where
+instance Storable SemaphoreCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkSemaphoreCreateInfo <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 8)
-                                   <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSemaphoreCreateInfo))
+  peek ptr = SemaphoreCreateInfo <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 8)
+                                 <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: SemaphoreCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: SemaphoreCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: SemaphoreCreateInfo))
 
 
--- ** vkCreateSemaphore
-foreign import ccall "vkCreateSemaphore" vkCreateSemaphore ::
-  VkDevice ->
-  Ptr VkSemaphoreCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkSemaphore -> IO VkResult
+-- ** createSemaphore
+foreign import ccall "vkCreateSemaphore" createSemaphore ::
+  Device ->
+  Ptr SemaphoreCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Semaphore -> IO Result
 

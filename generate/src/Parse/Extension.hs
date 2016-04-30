@@ -46,6 +46,7 @@ parseEnumExtension = extractFields "enum extension"
                                    extract
   where extract = proc enumExtension -> do
           eeName <- requiredAttrValue "name" -< enumExtension
+          let eeHsName = eeName
           eeExtends <- requiredAttrValue "extends" -< enumExtension
           eeOffset <- requiredRead <<<
                       requiredAttrValue "offset" -< enumExtension
@@ -66,6 +67,7 @@ parseExtensionConstant = extractFields "extension constant"
                                        extract
   where extract = proc extensionConstant -> do
           ecName <- requiredAttrValue "name" -< extensionConstant
+          let ecHsName = ecName
           ecValue <- ((Right ^<< arrF readMay) `orElse`
                       (Left  ^<< arrF readMay) `orElse`
                       (failString <<^

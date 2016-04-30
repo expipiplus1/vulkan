@@ -4,17 +4,17 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.Image where
 
-import Graphics.Vulkan.Device( VkDevice(..)
+import Graphics.Vulkan.Device( Device(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Int( Int32
@@ -24,16 +24,9 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
+import Data.Void( Void(..)
                 )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -42,406 +35,394 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Sampler( VkSampleCountFlagBits(..)
+import Graphics.Vulkan.Sampler( SampleCountFlags(..)
                               )
-import Graphics.Vulkan.Core( VkExtent3D(..)
-                           , VkResult(..)
-                           , VkDeviceSize(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
-                           , VkStructureType(..)
-                           , VkSharingMode(..)
+import Graphics.Vulkan.Core( SharingMode(..)
+                           , StructureType(..)
+                           , Format(..)
+                           , Extent3D(..)
+                           , Result(..)
+                           , DeviceSize(..)
+                           , Flags(..)
                            )
-import Foreign.C.Types( CSize(..)
-                      )
 
--- ** vkCreateImage
-foreign import ccall "vkCreateImage" vkCreateImage ::
-  VkDevice ->
-  Ptr VkImageCreateInfo ->
-    Ptr VkAllocationCallbacks -> Ptr VkImage -> IO VkResult
+-- ** createImage
+foreign import ccall "vkCreateImage" createImage ::
+  Device ->
+  Ptr ImageCreateInfo ->
+    Ptr AllocationCallbacks -> Ptr Image -> IO Result
 
--- ** VkImageCreateFlags
+-- ** ImageCreateFlags
 
-newtype VkImageCreateFlagBits = VkImageCreateFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype ImageCreateFlags = ImageCreateFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkImageCreateFlagBits
-type VkImageCreateFlags = VkImageCreateFlagBits
-
-instance Show VkImageCreateFlagBits where
-  showsPrec _ VK_IMAGE_CREATE_SPARSE_BINDING_BIT = showString "VK_IMAGE_CREATE_SPARSE_BINDING_BIT"
-  showsPrec _ VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = showString "VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT"
-  showsPrec _ VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = showString "VK_IMAGE_CREATE_SPARSE_ALIASED_BIT"
-  showsPrec _ VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = showString "VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT"
-  showsPrec _ VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = showString "VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT"
+instance Show ImageCreateFlags where
+  showsPrec _ ImageCreateSparseBindingBit = showString "ImageCreateSparseBindingBit"
+  showsPrec _ ImageCreateSparseResidencyBit = showString "ImageCreateSparseResidencyBit"
+  showsPrec _ ImageCreateSparseAliasedBit = showString "ImageCreateSparseAliasedBit"
+  showsPrec _ ImageCreateMutableFormatBit = showString "ImageCreateMutableFormatBit"
+  showsPrec _ ImageCreateCubeCompatibleBit = showString "ImageCreateCubeCompatibleBit"
   
-  showsPrec p (VkImageCreateFlagBits x) = showParen (p >= 11) (showString "VkImageCreateFlagBits " . showsPrec 11 x)
+  showsPrec p (ImageCreateFlags x) = showParen (p >= 11) (showString "ImageCreateFlags " . showsPrec 11 x)
 
-instance Read VkImageCreateFlagBits where
-  readPrec = parens ( choose [ ("VK_IMAGE_CREATE_SPARSE_BINDING_BIT", pure VK_IMAGE_CREATE_SPARSE_BINDING_BIT)
-                             , ("VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT", pure VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT)
-                             , ("VK_IMAGE_CREATE_SPARSE_ALIASED_BIT", pure VK_IMAGE_CREATE_SPARSE_ALIASED_BIT)
-                             , ("VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT", pure VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT)
-                             , ("VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT", pure VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT)
+instance Read ImageCreateFlags where
+  readPrec = parens ( choose [ ("ImageCreateSparseBindingBit", pure ImageCreateSparseBindingBit)
+                             , ("ImageCreateSparseResidencyBit", pure ImageCreateSparseResidencyBit)
+                             , ("ImageCreateSparseAliasedBit", pure ImageCreateSparseAliasedBit)
+                             , ("ImageCreateMutableFormatBit", pure ImageCreateMutableFormatBit)
+                             , ("ImageCreateCubeCompatibleBit", pure ImageCreateCubeCompatibleBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageCreateFlagBits")
+                        expectP (Ident "ImageCreateFlags")
                         v <- step readPrec
-                        pure (VkImageCreateFlagBits v)
+                        pure (ImageCreateFlags v)
                         )
                     )
 
 -- | Image should support sparse backing
-pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT = VkImageCreateFlagBits 0x1
+pattern ImageCreateSparseBindingBit = ImageCreateFlags 0x1
 -- | Image should support sparse backing with partial residency
-pattern VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = VkImageCreateFlagBits 0x2
+pattern ImageCreateSparseResidencyBit = ImageCreateFlags 0x2
 -- | Image should support constent data access to physical memory blocks mapped into multiple locations of sparse images
-pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = VkImageCreateFlagBits 0x4
+pattern ImageCreateSparseAliasedBit = ImageCreateFlags 0x4
 -- | Allows image views to have different format than the base image
-pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = VkImageCreateFlagBits 0x8
+pattern ImageCreateMutableFormatBit = ImageCreateFlags 0x8
 -- | Allows creating image views with cube type from the created image
-pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VkImageCreateFlagBits 0x10
+pattern ImageCreateCubeCompatibleBit = ImageCreateFlags 0x10
 
 
--- ** VkImageUsageFlags
+-- ** ImageUsageFlags
 
-newtype VkImageUsageFlagBits = VkImageUsageFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype ImageUsageFlags = ImageUsageFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkImageUsageFlagBits
-type VkImageUsageFlags = VkImageUsageFlagBits
-
-instance Show VkImageUsageFlagBits where
-  showsPrec _ VK_IMAGE_USAGE_TRANSFER_SRC_BIT = showString "VK_IMAGE_USAGE_TRANSFER_SRC_BIT"
-  showsPrec _ VK_IMAGE_USAGE_TRANSFER_DST_BIT = showString "VK_IMAGE_USAGE_TRANSFER_DST_BIT"
-  showsPrec _ VK_IMAGE_USAGE_SAMPLED_BIT = showString "VK_IMAGE_USAGE_SAMPLED_BIT"
-  showsPrec _ VK_IMAGE_USAGE_STORAGE_BIT = showString "VK_IMAGE_USAGE_STORAGE_BIT"
-  showsPrec _ VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT"
-  showsPrec _ VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"
-  showsPrec _ VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT"
-  showsPrec _ VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT"
+instance Show ImageUsageFlags where
+  showsPrec _ ImageUsageTransferSrcBit = showString "ImageUsageTransferSrcBit"
+  showsPrec _ ImageUsageTransferDstBit = showString "ImageUsageTransferDstBit"
+  showsPrec _ ImageUsageSampledBit = showString "ImageUsageSampledBit"
+  showsPrec _ ImageUsageStorageBit = showString "ImageUsageStorageBit"
+  showsPrec _ ImageUsageColorAttachmentBit = showString "ImageUsageColorAttachmentBit"
+  showsPrec _ ImageUsageDepthStencilAttachmentBit = showString "ImageUsageDepthStencilAttachmentBit"
+  showsPrec _ ImageUsageTransientAttachmentBit = showString "ImageUsageTransientAttachmentBit"
+  showsPrec _ ImageUsageInputAttachmentBit = showString "ImageUsageInputAttachmentBit"
   
-  showsPrec p (VkImageUsageFlagBits x) = showParen (p >= 11) (showString "VkImageUsageFlagBits " . showsPrec 11 x)
+  showsPrec p (ImageUsageFlags x) = showParen (p >= 11) (showString "ImageUsageFlags " . showsPrec 11 x)
 
-instance Read VkImageUsageFlagBits where
-  readPrec = parens ( choose [ ("VK_IMAGE_USAGE_TRANSFER_SRC_BIT", pure VK_IMAGE_USAGE_TRANSFER_SRC_BIT)
-                             , ("VK_IMAGE_USAGE_TRANSFER_DST_BIT", pure VK_IMAGE_USAGE_TRANSFER_DST_BIT)
-                             , ("VK_IMAGE_USAGE_SAMPLED_BIT", pure VK_IMAGE_USAGE_SAMPLED_BIT)
-                             , ("VK_IMAGE_USAGE_STORAGE_BIT", pure VK_IMAGE_USAGE_STORAGE_BIT)
-                             , ("VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
-                             , ("VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
-                             , ("VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT)
-                             , ("VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT)
+instance Read ImageUsageFlags where
+  readPrec = parens ( choose [ ("ImageUsageTransferSrcBit", pure ImageUsageTransferSrcBit)
+                             , ("ImageUsageTransferDstBit", pure ImageUsageTransferDstBit)
+                             , ("ImageUsageSampledBit", pure ImageUsageSampledBit)
+                             , ("ImageUsageStorageBit", pure ImageUsageStorageBit)
+                             , ("ImageUsageColorAttachmentBit", pure ImageUsageColorAttachmentBit)
+                             , ("ImageUsageDepthStencilAttachmentBit", pure ImageUsageDepthStencilAttachmentBit)
+                             , ("ImageUsageTransientAttachmentBit", pure ImageUsageTransientAttachmentBit)
+                             , ("ImageUsageInputAttachmentBit", pure ImageUsageInputAttachmentBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageUsageFlagBits")
+                        expectP (Ident "ImageUsageFlags")
                         v <- step readPrec
-                        pure (VkImageUsageFlagBits v)
+                        pure (ImageUsageFlags v)
                         )
                     )
 
 -- | Can be used as a source of transfer operations
-pattern VK_IMAGE_USAGE_TRANSFER_SRC_BIT = VkImageUsageFlagBits 0x1
+pattern ImageUsageTransferSrcBit = ImageUsageFlags 0x1
 -- | Can be used as a destination of transfer operations
-pattern VK_IMAGE_USAGE_TRANSFER_DST_BIT = VkImageUsageFlagBits 0x2
+pattern ImageUsageTransferDstBit = ImageUsageFlags 0x2
 -- | Can be sampled from (SAMPLED_IMAGE and COMBINED_IMAGE_SAMPLER descriptor types)
-pattern VK_IMAGE_USAGE_SAMPLED_BIT = VkImageUsageFlagBits 0x4
+pattern ImageUsageSampledBit = ImageUsageFlags 0x4
 -- | Can be used as storage image (STORAGE_IMAGE descriptor type)
-pattern VK_IMAGE_USAGE_STORAGE_BIT = VkImageUsageFlagBits 0x8
+pattern ImageUsageStorageBit = ImageUsageFlags 0x8
 -- | Can be used as framebuffer color attachment
-pattern VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = VkImageUsageFlagBits 0x10
+pattern ImageUsageColorAttachmentBit = ImageUsageFlags 0x10
 -- | Can be used as framebuffer depth/stencil attachment
-pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = VkImageUsageFlagBits 0x20
+pattern ImageUsageDepthStencilAttachmentBit = ImageUsageFlags 0x20
 -- | Image data not needed outside of rendering
-pattern VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x40
+pattern ImageUsageTransientAttachmentBit = ImageUsageFlags 0x40
 -- | Can be used as framebuffer input attachment
-pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x80
+pattern ImageUsageInputAttachmentBit = ImageUsageFlags 0x80
 
 
-newtype VkImage = VkImage Word64
-  deriving (Eq, Storable)
+newtype Image = Image Word64
+  deriving (Eq, Ord, Storable)
 
--- ** VkImageAspectFlags
+-- ** ImageAspectFlags
 
-newtype VkImageAspectFlagBits = VkImageAspectFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype ImageAspectFlags = ImageAspectFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkImageAspectFlagBits
-type VkImageAspectFlags = VkImageAspectFlagBits
-
-instance Show VkImageAspectFlagBits where
-  showsPrec _ VK_IMAGE_ASPECT_COLOR_BIT = showString "VK_IMAGE_ASPECT_COLOR_BIT"
-  showsPrec _ VK_IMAGE_ASPECT_DEPTH_BIT = showString "VK_IMAGE_ASPECT_DEPTH_BIT"
-  showsPrec _ VK_IMAGE_ASPECT_STENCIL_BIT = showString "VK_IMAGE_ASPECT_STENCIL_BIT"
-  showsPrec _ VK_IMAGE_ASPECT_METADATA_BIT = showString "VK_IMAGE_ASPECT_METADATA_BIT"
+instance Show ImageAspectFlags where
+  showsPrec _ ImageAspectColorBit = showString "ImageAspectColorBit"
+  showsPrec _ ImageAspectDepthBit = showString "ImageAspectDepthBit"
+  showsPrec _ ImageAspectStencilBit = showString "ImageAspectStencilBit"
+  showsPrec _ ImageAspectMetadataBit = showString "ImageAspectMetadataBit"
   
-  showsPrec p (VkImageAspectFlagBits x) = showParen (p >= 11) (showString "VkImageAspectFlagBits " . showsPrec 11 x)
+  showsPrec p (ImageAspectFlags x) = showParen (p >= 11) (showString "ImageAspectFlags " . showsPrec 11 x)
 
-instance Read VkImageAspectFlagBits where
-  readPrec = parens ( choose [ ("VK_IMAGE_ASPECT_COLOR_BIT", pure VK_IMAGE_ASPECT_COLOR_BIT)
-                             , ("VK_IMAGE_ASPECT_DEPTH_BIT", pure VK_IMAGE_ASPECT_DEPTH_BIT)
-                             , ("VK_IMAGE_ASPECT_STENCIL_BIT", pure VK_IMAGE_ASPECT_STENCIL_BIT)
-                             , ("VK_IMAGE_ASPECT_METADATA_BIT", pure VK_IMAGE_ASPECT_METADATA_BIT)
+instance Read ImageAspectFlags where
+  readPrec = parens ( choose [ ("ImageAspectColorBit", pure ImageAspectColorBit)
+                             , ("ImageAspectDepthBit", pure ImageAspectDepthBit)
+                             , ("ImageAspectStencilBit", pure ImageAspectStencilBit)
+                             , ("ImageAspectMetadataBit", pure ImageAspectMetadataBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageAspectFlagBits")
+                        expectP (Ident "ImageAspectFlags")
                         v <- step readPrec
-                        pure (VkImageAspectFlagBits v)
+                        pure (ImageAspectFlags v)
                         )
                     )
 
 
-pattern VK_IMAGE_ASPECT_COLOR_BIT = VkImageAspectFlagBits 0x1
+pattern ImageAspectColorBit = ImageAspectFlags 0x1
 
-pattern VK_IMAGE_ASPECT_DEPTH_BIT = VkImageAspectFlagBits 0x2
+pattern ImageAspectDepthBit = ImageAspectFlags 0x2
 
-pattern VK_IMAGE_ASPECT_STENCIL_BIT = VkImageAspectFlagBits 0x4
+pattern ImageAspectStencilBit = ImageAspectFlags 0x4
 
-pattern VK_IMAGE_ASPECT_METADATA_BIT = VkImageAspectFlagBits 0x8
+pattern ImageAspectMetadataBit = ImageAspectFlags 0x8
 
 
 
-data VkSubresourceLayout =
-  VkSubresourceLayout{ vkOffset :: VkDeviceSize 
-                     , vkSize :: VkDeviceSize 
-                     , vkRowPitch :: VkDeviceSize 
-                     , vkArrayPitch :: VkDeviceSize 
-                     , vkDepthPitch :: VkDeviceSize 
-                     }
-  deriving (Eq)
+data SubresourceLayout =
+  SubresourceLayout{ offset :: DeviceSize 
+                   , size :: DeviceSize 
+                   , rowPitch :: DeviceSize 
+                   , arrayPitch :: DeviceSize 
+                   , depthPitch :: DeviceSize 
+                   }
+  deriving (Eq, Ord)
 
-instance Storable VkSubresourceLayout where
+instance Storable SubresourceLayout where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkSubresourceLayout <$> peek (ptr `plusPtr` 0)
-                                 <*> peek (ptr `plusPtr` 8)
-                                 <*> peek (ptr `plusPtr` 16)
-                                 <*> peek (ptr `plusPtr` 24)
-                                 <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkOffset (poked :: VkSubresourceLayout))
-                *> poke (ptr `plusPtr` 8) (vkSize (poked :: VkSubresourceLayout))
-                *> poke (ptr `plusPtr` 16) (vkRowPitch (poked :: VkSubresourceLayout))
-                *> poke (ptr `plusPtr` 24) (vkArrayPitch (poked :: VkSubresourceLayout))
-                *> poke (ptr `plusPtr` 32) (vkDepthPitch (poked :: VkSubresourceLayout))
+  peek ptr = SubresourceLayout <$> peek (ptr `plusPtr` 0)
+                               <*> peek (ptr `plusPtr` 8)
+                               <*> peek (ptr `plusPtr` 16)
+                               <*> peek (ptr `plusPtr` 24)
+                               <*> peek (ptr `plusPtr` 32)
+  poke ptr poked = poke (ptr `plusPtr` 0) (offset (poked :: SubresourceLayout))
+                *> poke (ptr `plusPtr` 8) (size (poked :: SubresourceLayout))
+                *> poke (ptr `plusPtr` 16) (rowPitch (poked :: SubresourceLayout))
+                *> poke (ptr `plusPtr` 24) (arrayPitch (poked :: SubresourceLayout))
+                *> poke (ptr `plusPtr` 32) (depthPitch (poked :: SubresourceLayout))
 
 
--- ** VkImageTiling
+-- ** ImageTiling
 
-newtype VkImageTiling = VkImageTiling Int32
-  deriving (Eq, Storable)
+newtype ImageTiling = ImageTiling Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkImageTiling where
-  showsPrec _ VK_IMAGE_TILING_OPTIMAL = showString "VK_IMAGE_TILING_OPTIMAL"
-  showsPrec _ VK_IMAGE_TILING_LINEAR = showString "VK_IMAGE_TILING_LINEAR"
-  showsPrec p (VkImageTiling x) = showParen (p >= 11) (showString "VkImageTiling " . showsPrec 11 x)
+instance Show ImageTiling where
+  showsPrec _ ImageTilingOptimal = showString "ImageTilingOptimal"
+  showsPrec _ ImageTilingLinear = showString "ImageTilingLinear"
+  showsPrec p (ImageTiling x) = showParen (p >= 11) (showString "ImageTiling " . showsPrec 11 x)
 
-instance Read VkImageTiling where
-  readPrec = parens ( choose [ ("VK_IMAGE_TILING_OPTIMAL", pure VK_IMAGE_TILING_OPTIMAL)
-                             , ("VK_IMAGE_TILING_LINEAR", pure VK_IMAGE_TILING_LINEAR)
+instance Read ImageTiling where
+  readPrec = parens ( choose [ ("ImageTilingOptimal", pure ImageTilingOptimal)
+                             , ("ImageTilingLinear", pure ImageTilingLinear)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageTiling")
+                        expectP (Ident "ImageTiling")
                         v <- step readPrec
-                        pure (VkImageTiling v)
+                        pure (ImageTiling v)
                         )
                     )
 
 
-pattern VK_IMAGE_TILING_OPTIMAL = VkImageTiling 0
+pattern ImageTilingOptimal = ImageTiling 0
 
-pattern VK_IMAGE_TILING_LINEAR = VkImageTiling 1
+pattern ImageTilingLinear = ImageTiling 1
 
--- ** VkImageLayout
+-- ** ImageLayout
 
-newtype VkImageLayout = VkImageLayout Int32
-  deriving (Eq, Storable)
+newtype ImageLayout = ImageLayout Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkImageLayout where
-  showsPrec _ VK_IMAGE_LAYOUT_UNDEFINED = showString "VK_IMAGE_LAYOUT_UNDEFINED"
-  showsPrec _ VK_IMAGE_LAYOUT_GENERAL = showString "VK_IMAGE_LAYOUT_GENERAL"
-  showsPrec _ VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = showString "VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = showString "VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL = showString "VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = showString "VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = showString "VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = showString "VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL"
-  showsPrec _ VK_IMAGE_LAYOUT_PREINITIALIZED = showString "VK_IMAGE_LAYOUT_PREINITIALIZED"
-  showsPrec p (VkImageLayout x) = showParen (p >= 11) (showString "VkImageLayout " . showsPrec 11 x)
+instance Show ImageLayout where
+  showsPrec _ ImageLayoutUndefined = showString "ImageLayoutUndefined"
+  showsPrec _ ImageLayoutGeneral = showString "ImageLayoutGeneral"
+  showsPrec _ ImageLayoutColorAttachmentOptimal = showString "ImageLayoutColorAttachmentOptimal"
+  showsPrec _ ImageLayoutDepthStencilAttachmentOptimal = showString "ImageLayoutDepthStencilAttachmentOptimal"
+  showsPrec _ ImageLayoutDepthStencilReadOnlyOptimal = showString "ImageLayoutDepthStencilReadOnlyOptimal"
+  showsPrec _ ImageLayoutShaderReadOnlyOptimal = showString "ImageLayoutShaderReadOnlyOptimal"
+  showsPrec _ ImageLayoutTransferSrcOptimal = showString "ImageLayoutTransferSrcOptimal"
+  showsPrec _ ImageLayoutTransferDstOptimal = showString "ImageLayoutTransferDstOptimal"
+  showsPrec _ ImageLayoutPreinitialized = showString "ImageLayoutPreinitialized"
+  showsPrec p (ImageLayout x) = showParen (p >= 11) (showString "ImageLayout " . showsPrec 11 x)
 
-instance Read VkImageLayout where
-  readPrec = parens ( choose [ ("VK_IMAGE_LAYOUT_UNDEFINED", pure VK_IMAGE_LAYOUT_UNDEFINED)
-                             , ("VK_IMAGE_LAYOUT_GENERAL", pure VK_IMAGE_LAYOUT_GENERAL)
-                             , ("VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL", pure VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL", pure VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL", pure VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL", pure VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL", pure VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL", pure VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
-                             , ("VK_IMAGE_LAYOUT_PREINITIALIZED", pure VK_IMAGE_LAYOUT_PREINITIALIZED)
+instance Read ImageLayout where
+  readPrec = parens ( choose [ ("ImageLayoutUndefined", pure ImageLayoutUndefined)
+                             , ("ImageLayoutGeneral", pure ImageLayoutGeneral)
+                             , ("ImageLayoutColorAttachmentOptimal", pure ImageLayoutColorAttachmentOptimal)
+                             , ("ImageLayoutDepthStencilAttachmentOptimal", pure ImageLayoutDepthStencilAttachmentOptimal)
+                             , ("ImageLayoutDepthStencilReadOnlyOptimal", pure ImageLayoutDepthStencilReadOnlyOptimal)
+                             , ("ImageLayoutShaderReadOnlyOptimal", pure ImageLayoutShaderReadOnlyOptimal)
+                             , ("ImageLayoutTransferSrcOptimal", pure ImageLayoutTransferSrcOptimal)
+                             , ("ImageLayoutTransferDstOptimal", pure ImageLayoutTransferDstOptimal)
+                             , ("ImageLayoutPreinitialized", pure ImageLayoutPreinitialized)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageLayout")
+                        expectP (Ident "ImageLayout")
                         v <- step readPrec
-                        pure (VkImageLayout v)
+                        pure (ImageLayout v)
                         )
                     )
 
 -- | Implicit layout an image is when its contents are undefined due to various reasons (e.g. right after creation)
-pattern VK_IMAGE_LAYOUT_UNDEFINED = VkImageLayout 0
+pattern ImageLayoutUndefined = ImageLayout 0
 -- | General layout when image can be used for any kind of access
-pattern VK_IMAGE_LAYOUT_GENERAL = VkImageLayout 1
+pattern ImageLayoutGeneral = ImageLayout 1
 -- | Optimal layout when image is only used for color attachment read/write
-pattern VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL = VkImageLayout 2
+pattern ImageLayoutColorAttachmentOptimal = ImageLayout 2
 -- | Optimal layout when image is only used for depth/stencil attachment read/write
-pattern VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL = VkImageLayout 3
+pattern ImageLayoutDepthStencilAttachmentOptimal = ImageLayout 3
 -- | Optimal layout when image is used for read only depth/stencil attachment and shader access
-pattern VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL = VkImageLayout 4
+pattern ImageLayoutDepthStencilReadOnlyOptimal = ImageLayout 4
 -- | Optimal layout when image is used for read only shader access
-pattern VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL = VkImageLayout 5
+pattern ImageLayoutShaderReadOnlyOptimal = ImageLayout 5
 -- | Optimal layout when image is used only as source of transfer operations
-pattern VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL = VkImageLayout 6
+pattern ImageLayoutTransferSrcOptimal = ImageLayout 6
 -- | Optimal layout when image is used only as destination of transfer operations
-pattern VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL = VkImageLayout 7
+pattern ImageLayoutTransferDstOptimal = ImageLayout 7
 -- | Initial layout used when the data is populated by the CPU
-pattern VK_IMAGE_LAYOUT_PREINITIALIZED = VkImageLayout 8
+pattern ImageLayoutPreinitialized = ImageLayout 8
 
--- ** VkImageType
+-- ** ImageType
 
-newtype VkImageType = VkImageType Int32
-  deriving (Eq, Storable)
+newtype ImageType = ImageType Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkImageType where
-  showsPrec _ VK_IMAGE_TYPE_1D = showString "VK_IMAGE_TYPE_1D"
-  showsPrec _ VK_IMAGE_TYPE_2D = showString "VK_IMAGE_TYPE_2D"
-  showsPrec _ VK_IMAGE_TYPE_3D = showString "VK_IMAGE_TYPE_3D"
-  showsPrec p (VkImageType x) = showParen (p >= 11) (showString "VkImageType " . showsPrec 11 x)
+instance Show ImageType where
+  showsPrec _ ImageType1d = showString "ImageType1d"
+  showsPrec _ ImageType2d = showString "ImageType2d"
+  showsPrec _ ImageType3d = showString "ImageType3d"
+  showsPrec p (ImageType x) = showParen (p >= 11) (showString "ImageType " . showsPrec 11 x)
 
-instance Read VkImageType where
-  readPrec = parens ( choose [ ("VK_IMAGE_TYPE_1D", pure VK_IMAGE_TYPE_1D)
-                             , ("VK_IMAGE_TYPE_2D", pure VK_IMAGE_TYPE_2D)
-                             , ("VK_IMAGE_TYPE_3D", pure VK_IMAGE_TYPE_3D)
+instance Read ImageType where
+  readPrec = parens ( choose [ ("ImageType1d", pure ImageType1d)
+                             , ("ImageType2d", pure ImageType2d)
+                             , ("ImageType3d", pure ImageType3d)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageType")
+                        expectP (Ident "ImageType")
                         v <- step readPrec
-                        pure (VkImageType v)
+                        pure (ImageType v)
                         )
                     )
 
 
-pattern VK_IMAGE_TYPE_1D = VkImageType 0
+pattern ImageType1d = ImageType 0
 
-pattern VK_IMAGE_TYPE_2D = VkImageType 1
+pattern ImageType2d = ImageType 1
 
-pattern VK_IMAGE_TYPE_3D = VkImageType 2
+pattern ImageType3d = ImageType 2
 
--- ** vkDestroyImage
-foreign import ccall "vkDestroyImage" vkDestroyImage ::
-  VkDevice -> VkImage -> Ptr VkAllocationCallbacks -> IO ()
+-- ** destroyImage
+foreign import ccall "vkDestroyImage" destroyImage ::
+  Device -> Image -> Ptr AllocationCallbacks -> IO ()
 
 
-data VkImageSubresource =
-  VkImageSubresource{ vkAspectMask :: VkImageAspectFlags 
-                    , vkMipLevel :: Word32 
-                    , vkArrayLayer :: Word32 
-                    }
-  deriving (Eq)
+data ImageSubresource =
+  ImageSubresource{ aspectMask :: ImageAspectFlags 
+                  , mipLevel :: Word32 
+                  , arrayLayer :: Word32 
+                  }
+  deriving (Eq, Ord)
 
-instance Storable VkImageSubresource where
+instance Storable ImageSubresource where
   sizeOf ~_ = 12
   alignment ~_ = 4
-  peek ptr = VkImageSubresource <$> peek (ptr `plusPtr` 0)
-                                <*> peek (ptr `plusPtr` 4)
-                                <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkAspectMask (poked :: VkImageSubresource))
-                *> poke (ptr `plusPtr` 4) (vkMipLevel (poked :: VkImageSubresource))
-                *> poke (ptr `plusPtr` 8) (vkArrayLayer (poked :: VkImageSubresource))
+  peek ptr = ImageSubresource <$> peek (ptr `plusPtr` 0)
+                              <*> peek (ptr `plusPtr` 4)
+                              <*> peek (ptr `plusPtr` 8)
+  poke ptr poked = poke (ptr `plusPtr` 0) (aspectMask (poked :: ImageSubresource))
+                *> poke (ptr `plusPtr` 4) (mipLevel (poked :: ImageSubresource))
+                *> poke (ptr `plusPtr` 8) (arrayLayer (poked :: ImageSubresource))
 
 
 
-data VkImageSubresourceRange =
-  VkImageSubresourceRange{ vkAspectMask :: VkImageAspectFlags 
-                         , vkBaseMipLevel :: Word32 
-                         , vkLevelCount :: Word32 
-                         , vkBaseArrayLayer :: Word32 
-                         , vkLayerCount :: Word32 
-                         }
-  deriving (Eq)
+data ImageSubresourceRange =
+  ImageSubresourceRange{ aspectMask :: ImageAspectFlags 
+                       , baseMipLevel :: Word32 
+                       , levelCount :: Word32 
+                       , baseArrayLayer :: Word32 
+                       , layerCount :: Word32 
+                       }
+  deriving (Eq, Ord)
 
-instance Storable VkImageSubresourceRange where
+instance Storable ImageSubresourceRange where
   sizeOf ~_ = 20
   alignment ~_ = 4
-  peek ptr = VkImageSubresourceRange <$> peek (ptr `plusPtr` 0)
-                                     <*> peek (ptr `plusPtr` 4)
-                                     <*> peek (ptr `plusPtr` 8)
-                                     <*> peek (ptr `plusPtr` 12)
-                                     <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkAspectMask (poked :: VkImageSubresourceRange))
-                *> poke (ptr `plusPtr` 4) (vkBaseMipLevel (poked :: VkImageSubresourceRange))
-                *> poke (ptr `plusPtr` 8) (vkLevelCount (poked :: VkImageSubresourceRange))
-                *> poke (ptr `plusPtr` 12) (vkBaseArrayLayer (poked :: VkImageSubresourceRange))
-                *> poke (ptr `plusPtr` 16) (vkLayerCount (poked :: VkImageSubresourceRange))
+  peek ptr = ImageSubresourceRange <$> peek (ptr `plusPtr` 0)
+                                   <*> peek (ptr `plusPtr` 4)
+                                   <*> peek (ptr `plusPtr` 8)
+                                   <*> peek (ptr `plusPtr` 12)
+                                   <*> peek (ptr `plusPtr` 16)
+  poke ptr poked = poke (ptr `plusPtr` 0) (aspectMask (poked :: ImageSubresourceRange))
+                *> poke (ptr `plusPtr` 4) (baseMipLevel (poked :: ImageSubresourceRange))
+                *> poke (ptr `plusPtr` 8) (levelCount (poked :: ImageSubresourceRange))
+                *> poke (ptr `plusPtr` 12) (baseArrayLayer (poked :: ImageSubresourceRange))
+                *> poke (ptr `plusPtr` 16) (layerCount (poked :: ImageSubresourceRange))
 
 
--- ** vkGetImageSubresourceLayout
-foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout ::
-  VkDevice ->
-  VkImage ->
-    Ptr VkImageSubresource -> Ptr VkSubresourceLayout -> IO ()
+-- ** getImageSubresourceLayout
+foreign import ccall "vkGetImageSubresourceLayout" getImageSubresourceLayout ::
+  Device ->
+  Image -> Ptr ImageSubresource -> Ptr SubresourceLayout -> IO ()
 
 
-data VkImageCreateInfo =
-  VkImageCreateInfo{ vkSType :: VkStructureType 
-                   , vkPNext :: Ptr Void 
-                   , vkFlags :: VkImageCreateFlags 
-                   , vkImageType :: VkImageType 
-                   , vkFormat :: VkFormat 
-                   , vkExtent :: VkExtent3D 
-                   , vkMipLevels :: Word32 
-                   , vkArrayLayers :: Word32 
-                   , vkSamples :: VkSampleCountFlagBits 
-                   , vkTiling :: VkImageTiling 
-                   , vkUsage :: VkImageUsageFlags 
-                   , vkSharingMode :: VkSharingMode 
-                   , vkQueueFamilyIndexCount :: Word32 
-                   , vkPQueueFamilyIndices :: Ptr Word32 
-                   , vkInitialLayout :: VkImageLayout 
-                   }
-  deriving (Eq)
+data ImageCreateInfo =
+  ImageCreateInfo{ sType :: StructureType 
+                 , pNext :: Ptr Void 
+                 , flags :: ImageCreateFlags 
+                 , imageType :: ImageType 
+                 , format :: Format 
+                 , extent :: Extent3D 
+                 , mipLevels :: Word32 
+                 , arrayLayers :: Word32 
+                 , samples :: SampleCountFlags 
+                 , tiling :: ImageTiling 
+                 , usage :: ImageUsageFlags 
+                 , sharingMode :: SharingMode 
+                 , queueFamilyIndexCount :: Word32 
+                 , pQueueFamilyIndices :: Ptr Word32 
+                 , initialLayout :: ImageLayout 
+                 }
+  deriving (Eq, Ord)
 
-instance Storable VkImageCreateInfo where
+instance Storable ImageCreateInfo where
   sizeOf ~_ = 88
   alignment ~_ = 8
-  peek ptr = VkImageCreateInfo <$> peek (ptr `plusPtr` 0)
-                               <*> peek (ptr `plusPtr` 8)
-                               <*> peek (ptr `plusPtr` 16)
-                               <*> peek (ptr `plusPtr` 20)
-                               <*> peek (ptr `plusPtr` 24)
-                               <*> peek (ptr `plusPtr` 28)
-                               <*> peek (ptr `plusPtr` 40)
-                               <*> peek (ptr `plusPtr` 44)
-                               <*> peek (ptr `plusPtr` 48)
-                               <*> peek (ptr `plusPtr` 52)
-                               <*> peek (ptr `plusPtr` 56)
-                               <*> peek (ptr `plusPtr` 60)
-                               <*> peek (ptr `plusPtr` 64)
-                               <*> peek (ptr `plusPtr` 72)
-                               <*> peek (ptr `plusPtr` 80)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkImageType (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkFormat (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 28) (vkExtent (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkMipLevels (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 44) (vkArrayLayers (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkSamples (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 52) (vkTiling (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkUsage (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 60) (vkSharingMode (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 64) (vkQueueFamilyIndexCount (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 72) (vkPQueueFamilyIndices (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 80) (vkInitialLayout (poked :: VkImageCreateInfo))
+  peek ptr = ImageCreateInfo <$> peek (ptr `plusPtr` 0)
+                             <*> peek (ptr `plusPtr` 8)
+                             <*> peek (ptr `plusPtr` 16)
+                             <*> peek (ptr `plusPtr` 20)
+                             <*> peek (ptr `plusPtr` 24)
+                             <*> peek (ptr `plusPtr` 28)
+                             <*> peek (ptr `plusPtr` 40)
+                             <*> peek (ptr `plusPtr` 44)
+                             <*> peek (ptr `plusPtr` 48)
+                             <*> peek (ptr `plusPtr` 52)
+                             <*> peek (ptr `plusPtr` 56)
+                             <*> peek (ptr `plusPtr` 60)
+                             <*> peek (ptr `plusPtr` 64)
+                             <*> peek (ptr `plusPtr` 72)
+                             <*> peek (ptr `plusPtr` 80)
+  poke ptr poked = poke (ptr `plusPtr` 0) (sType (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 8) (pNext (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 16) (flags (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 20) (imageType (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 24) (format (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 28) (extent (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 40) (mipLevels (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 44) (arrayLayers (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 48) (samples (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 52) (tiling (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 56) (usage (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 60) (sharingMode (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 64) (queueFamilyIndexCount (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 72) (pQueueFamilyIndices (poked :: ImageCreateInfo))
+                *> poke (ptr `plusPtr` 80) (initialLayout (poked :: ImageCreateInfo))
 
 

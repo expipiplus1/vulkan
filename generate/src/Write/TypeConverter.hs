@@ -10,7 +10,6 @@ module Write.TypeConverter
   , cTypeToHsType
   , cTypeDependencyNames
   , cTypeInfo
-  , buildTypeEnvFromSpec
   , buildTypeEnvFromSpecGraph
   , getTypeInfo
   , MemberInfo(..)
@@ -34,7 +33,7 @@ import           Spec.Graph                   (SpecGraph, getGraphCTypes,
                                                getGraphEnumTypes,
                                                getGraphStructTypes,
                                                getGraphUnionTypes)
-import           Spec.Spec
+import           Spec.Partition
 import           Spec.Type
 import           Spec.TypeEnv
 import           Write.Utils
@@ -62,7 +61,7 @@ cTypeToHsTypeString cType = prettyPrint <$> cTypeToHsType cType
 
 conFromModule :: String -> String -> Write HS.Type
 conFromModule moduleName constructor = do
-  tellRequiredName (ExternalName (ModuleName moduleName) constructor)
+  tellRequiredName (ExternalName (ModuleName moduleName) $ constructor ++ "(..)")
   pure (simpleCon constructor)
 
 cTypeToHsType :: CType -> Write HS.Type
@@ -111,7 +110,14 @@ cIdToHsType i = do
   platformTypeMay <- platformType s
   case platformTypeMay of
     Just pt -> pure pt
-    Nothing -> pure $ simpleCon s
+    Nothing -> do
+      typeMap <- teNameLocations <$> askTypeEnv
+      case Map.lookup s typeMap of
+        Just (m, n) -> do
+          tellRequiredName (ExternalName m $ n ++ "(..)")
+          pure $ simpleCon n
+        Nothing ->
+          pure $ simpleCon s
 
 simpleCon :: String -> HS.Type
 simpleCon = TyCon . UnQual . Ident
@@ -125,8 +131,15 @@ arraySizeToNat s = case s of
                        pure $ TyPromoted (PromotedInteger i)
                      SizedByIdentifier i -> do
                        tellExtension "DataKinds"
-                       let typeName = Ident (unCIdentifier i)
-                           typeNat = PromotedCon False (UnQual typeName)
+                       typeMap <- teNameLocations <$> askTypeEnv
+                       let sizeId = unCIdentifier i
+                       sizeName <- case Map.lookup sizeId typeMap of
+                         Just (m, n) -> do
+                           tellRequiredName (ExternalName m n)
+                           pure n
+                         Nothing ->
+                           pure sizeId
+                       let typeNat = PromotedCon False (UnQual $ Ident sizeName)
                        pure $ TyPromoted typeNat
 
 makeFunctionType :: CType -> [ParameterDeclaration CIdentifier]
@@ -166,35 +179,23 @@ getTypeInfo :: TypeEnv -> String -> TypeInfo
 getTypeInfo env s = Map.lookupDefault err s (teTypeInfo env)
   where err = error ("Type missing from environment: " ++ s)
 
--- TODO: Remove
-buildTypeEnvFromSpec :: Spec -> TypeEnv
-buildTypeEnvFromSpec spec =
-  let constants = sConstants spec
-      nameAndTypes = catMaybes . fmap getNameAndType $ sTypes spec
-      getNameAndType typeDecl =
-        do name <- typeDeclTypeName typeDecl
-           cType <- typeDeclCType typeDecl
-           pure (name, cType)
-      unions = catMaybes . fmap typeDeclToUnionType $ sTypes spec
-      structs = catMaybes . fmap typeDeclToStructType $ sTypes spec
-      enums = catMaybes . fmap typeDeclToEnumType $ sTypes spec
-  in buildTypeEnv constants enums unions structs nameAndTypes
-
-buildTypeEnvFromSpecGraph :: SpecGraph -> TypeEnv
-buildTypeEnvFromSpecGraph graph =
+buildTypeEnvFromSpecGraph :: SpecGraph -> PartitionedSpec -> TypeEnv
+buildTypeEnvFromSpecGraph graph part =
   let constants = getGraphConstants graph
       nameAndTypes = getGraphCTypes graph
+      typeMap = Map.toList $ nameLocations part
       unions = getGraphUnionTypes graph
       structs = getGraphStructTypes graph
       enums = getGraphEnumTypes graph
-  in buildTypeEnv constants enums unions structs nameAndTypes
+  in buildTypeEnv constants enums unions structs nameAndTypes typeMap
 
 buildTypeEnv :: [Constant] -> [EnumType] -> [UnionType] -> [StructType]
-             -> [(String, CType)]
+             -> [(String, CType)] -> [(String, (ModuleName, String))]
              -> TypeEnv
-buildTypeEnv constants enums unions structs typeDecls = env
+buildTypeEnv constants enums unions structs typeDecls typeMap = env
   where -- Notice the recursive definition of env
         env = TypeEnv{..}
+        teNameLocations = Map.fromList typeMap
         teIntegralConstants = Map.fromList . catMaybes . fmap getIntConstant $ constants
         teTypeInfo = Map.fromList ((second (cTypeInfo env) <$> typeDecls) ++
                                    structTypeInfos ++ unionTypeInfos ++

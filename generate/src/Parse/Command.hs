@@ -15,6 +15,8 @@ parseCommand = hasName "command" >>>
           proto <- onlyChildWithName "proto" -< command
 
           cName <- getAllText <<< onlyChildWithName "name" -< proto
+          cSymbol <- parseIdentifier -< cName
+          let cHsName = cName
 
           cReturnType <- parseCType <<<
             getAllText <<< processChildren (neg (hasName "name")) -< proto
@@ -52,6 +54,7 @@ parseParam = hasName "param" >>>
              (extract `orElse` failA "Failed to extract param fields")
   where extract = proc param -> do
           pName <- getAllText <<< onlyChildWithName "name" -< param
+          let pHsName = pName
           pType <- parseCType <<<
                    getAllText <<< processChildren (neg (hasName "name"))
                    -< param
@@ -68,4 +71,3 @@ parseParam = hasName "param" >>>
 parseExternSync :: String -> ExternSync
 parseExternSync "true" = ExternSyncTrue
 parseExternSync ss     = ExternSyncParams (commaSepList ss)
-

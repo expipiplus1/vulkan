@@ -6,7 +6,9 @@ module Write.Type.Define
   ) where
 
 import           Control.Applicative           ((<|>))
+import           Control.Monad.Reader
 import           Control.Monad.Writer
+import qualified Data.HashMap.Lazy             as M
 import qualified Data.HashSet                  as S
 import           Data.String
 import qualified Language.C.Types              as C
@@ -14,6 +16,7 @@ import           Language.Haskell.Exts.Pretty  (prettyPrint)
 import           Language.Haskell.Exts.Syntax  hiding (Assoc (..), ModuleName)
 import           Prelude                       hiding (exp)
 import           Spec.Type
+import           Spec.TypeEnv
 import           Text.InterpolatedString.Perl6
 import           Text.Parser.Combinators
 import           Text.Parser.Expression
@@ -30,12 +33,12 @@ writeDefine :: Define -> Write Doc
 writeDefine d =
   let (header, value) = head . dSymTab $ d
       boundNames = boundVariablesFromDefine header
-      (expression, requiredNames) =
-        parseCExpressionToHsExpression value
-      hsName = camelCase_ $ dName d
+      hsName = dHsName d
       -- TODO: This assumes the defines are of type uint32_t
       Right uint32_t = C.cIdentifierFromString "uint32_t"
-  in do tellRequiredNames (S.toList requiredNames)
+  in do (expression, requiredNames) <-
+          parseCExpressionToHsExpression value
+        tellRequiredNames (S.toList requiredNames)
         hsElemType <- cTypeToHsType (C.TypeSpecifier (C.Specifiers [] [] [])
                                     (C.TypeName uint32_t))
         let hsType = foldr TyFun hsElemType (hsElemType <$ boundNames)
@@ -62,11 +65,12 @@ identifierStyle = IdentifierStyle{ _styleName = "ident"
                                  , _styleReservedHighlight = ReservedIdentifier
                                  }
 
-type ExpressionParser = WriterT (S.HashSet RequiredName) Parser
+type ExpressionParser = ReaderT TypeEnv (WriterT (S.HashSet RequiredName) Parser)
 
-parseCExpressionToHsExpression :: String -> (Exp, S.HashSet RequiredName)
-parseCExpressionToHsExpression s =
-  case parseString (runWriterT (exp <* eof)) mempty s of
+parseCExpressionToHsExpression :: String -> Write (Exp, S.HashSet RequiredName)
+parseCExpressionToHsExpression s = do
+  te <- askTypeEnv
+  return $ case parseString (runWriterT $ runReaderT (exp <* eof) te) mempty s of
     Failure e -> error ("Failed to parse C expression\n" ++ show e)
     Success e -> e
 
@@ -106,13 +110,19 @@ functionCall =
      pure $ foldl App functionName arguments
 
 nameExp :: ExpressionParser Exp
-nameExp = Var . UnQual . Ident . camelCase_ <$> name
+nameExp = do
+  typeMap <- teNameLocations <$> ask
+  cName <- name
+  hsName <- case M.lookup cName typeMap of
+    Just (m, n) -> do
+      tell (S.singleton $ ExternalName m n)
+      pure n
+    Nothing ->
+      pure cName
+  return $ Var $ UnQual $ Ident hsName
 
 litExp :: ExpressionParser Exp
 litExp = Lit . Int <$> natural
 
 castExp :: ExpressionParser Exp
 castExp = parens name *> parens exp
-
-
-

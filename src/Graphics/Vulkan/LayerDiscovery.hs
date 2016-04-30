@@ -3,53 +3,52 @@
 {-# LANGUAGE Strict #-}
 module Graphics.Vulkan.LayerDiscovery where
 
-import Data.Vector.Storable.Sized( Vector
+import Data.Vector.Storable.Sized( Vector(..)
                                  )
-import Graphics.Vulkan.Device( VkPhysicalDevice(..)
+import Graphics.Vulkan.Device( PhysicalDevice(..)
                              )
-import Data.Word( Word32
+import Data.Word( Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Foreign.Storable( Storable(..)
                        )
-import Graphics.Vulkan.Constants( VK_MAX_EXTENSION_NAME_SIZE
-                                , VK_MAX_DESCRIPTION_SIZE
+import Graphics.Vulkan.Constants( MaxDescriptionSize
+                                , MaxExtensionNameSize
                                 )
-import Graphics.Vulkan.Core( VkResult(..)
+import Graphics.Vulkan.Core( Result(..)
                            )
-import Foreign.C.Types( CChar
+import Foreign.C.Types( CChar(..)
                       )
 
 
-data VkLayerProperties =
-  VkLayerProperties{ vkLayerName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar 
-                   , vkSpecVersion :: Word32 
-                   , vkImplementationVersion :: Word32 
-                   , vkDescription :: Vector VK_MAX_DESCRIPTION_SIZE CChar 
-                   }
-  deriving (Eq)
+data LayerProperties =
+  LayerProperties{ layerName :: Vector MaxExtensionNameSize CChar 
+                 , specVersion :: Word32 
+                 , implementationVersion :: Word32 
+                 , description :: Vector MaxDescriptionSize CChar 
+                 }
+  deriving (Eq, Ord)
 
-instance Storable VkLayerProperties where
+instance Storable LayerProperties where
   sizeOf ~_ = 520
   alignment ~_ = 4
-  peek ptr = VkLayerProperties <$> peek (ptr `plusPtr` 0)
-                               <*> peek (ptr `plusPtr` 256)
-                               <*> peek (ptr `plusPtr` 260)
-                               <*> peek (ptr `plusPtr` 264)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkLayerName (poked :: VkLayerProperties))
-                *> poke (ptr `plusPtr` 256) (vkSpecVersion (poked :: VkLayerProperties))
-                *> poke (ptr `plusPtr` 260) (vkImplementationVersion (poked :: VkLayerProperties))
-                *> poke (ptr `plusPtr` 264) (vkDescription (poked :: VkLayerProperties))
+  peek ptr = LayerProperties <$> peek (ptr `plusPtr` 0)
+                             <*> peek (ptr `plusPtr` 256)
+                             <*> peek (ptr `plusPtr` 260)
+                             <*> peek (ptr `plusPtr` 264)
+  poke ptr poked = poke (ptr `plusPtr` 0) (layerName (poked :: LayerProperties))
+                *> poke (ptr `plusPtr` 256) (specVersion (poked :: LayerProperties))
+                *> poke (ptr `plusPtr` 260) (implementationVersion (poked :: LayerProperties))
+                *> poke (ptr `plusPtr` 264) (description (poked :: LayerProperties))
 
 
--- ** vkEnumerateInstanceLayerProperties
-foreign import ccall "vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLayerProperties ::
-  Ptr Word32 -> Ptr VkLayerProperties -> IO VkResult
+-- ** enumerateInstanceLayerProperties
+foreign import ccall "vkEnumerateInstanceLayerProperties" enumerateInstanceLayerProperties ::
+  Ptr Word32 -> Ptr LayerProperties -> IO Result
 
--- ** vkEnumerateDeviceLayerProperties
-foreign import ccall "vkEnumerateDeviceLayerProperties" vkEnumerateDeviceLayerProperties ::
-  VkPhysicalDevice ->
-  Ptr Word32 -> Ptr VkLayerProperties -> IO VkResult
+-- ** enumerateDeviceLayerProperties
+foreign import ccall "vkEnumerateDeviceLayerProperties" enumerateDeviceLayerProperties ::
+  PhysicalDevice -> Ptr Word32 -> Ptr LayerProperties -> IO Result
 

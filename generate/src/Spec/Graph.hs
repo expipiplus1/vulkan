@@ -13,14 +13,12 @@ import           Spec.Bitmask
 import           Spec.Command      as Command
 import           Spec.Constant     as Constant
 import           Spec.Enum
-import           Spec.ExtensionTag
 import           Spec.Spec
 import           Spec.Type         hiding (ABaseType, ABitmaskType, ADefine,
                                     AFuncPointerType, AHandleType,
                                     APlatformType, AStructType, AUnionType,
                                     AnEnumType, AnInclude)
 import qualified Spec.Type         as T
-import           Write.Utils
 
 -- | Info is a more useful representation of the specification
 data SpecGraph = SpecGraph{ gVertices      :: [Vertex]
@@ -72,21 +70,20 @@ allReachable vs = go (S.fromList (vName <$> vs)) (concatMap vDependencies vs)
 
 getSpecGraph :: Spec -> SpecGraph
 getSpecGraph spec = graph
-  where gVertices = (typeDeclToVertex graph tags <$> sTypes spec) ++
+  where gVertices = (typeDeclToVertex graph <$> sTypes spec) ++
                     (constantToVertex graph <$> sConstants spec) ++
                     (enumToVertex <$> sEnums spec) ++
                     (bitmaskToVertex graph <$> sBitmasks spec) ++
                     (commandToVertex graph <$> sCommands spec)
         gNameVertexMap = M.fromList ((vName &&& id) <$> gVertices)
-        tags = getSpecExtensionTags spec
         graph = SpecGraph{..}
 
 --------------------------------------------------------------------------------
 -- Boring boilerplate conversions
 --------------------------------------------------------------------------------
 
-typeDeclToVertex :: SpecGraph -> [ExtensionTag] -> TypeDecl -> Vertex
-typeDeclToVertex graph tags td =
+typeDeclToVertex :: SpecGraph -> TypeDecl -> Vertex
+typeDeclToVertex graph td =
   let lookupNameMay name = M.lookup name (gNameVertexMap graph)
       lookupName name = fromMaybe (error ("Depended upon name not in spec: " ++ name)) (lookupNameMay name)
   in case td of
@@ -113,11 +110,10 @@ typeDeclToVertex graph tags td =
                , vSourceEntity = APlatformType pt
                }
        T.ABitmaskType bmt ->
-         let bm = (lookupNameMay =<< swapSuffixUnderTag tags "Flags" "FlagBits" (bmtName bmt))
+         let bm = (lookupNameMay =<< bmtRequires bmt)
          in Vertex{ vName = bmtName bmt
                   , vDependencies = (lookupName <$>
-                                     (cTypeDependencyNames (bmtCType bmt) ++
-                                      maybeToList (bmtRequires bmt)))
+                                     cTypeDependencyNames (bmtCType bmt))
                                    ++ maybeToList bm
                   , vSourceEntity = ABitmaskType bmt (bm >>= vertexToBitmask)
                   }
@@ -201,13 +197,16 @@ vertexToConstant v = case vSourceEntity v of
 getGraphConstants :: SpecGraph -> [Constant]
 getGraphConstants graph = catMaybes (vertexToConstant <$> gVertices graph)
 
-vertexCType :: Vertex -> Maybe CType
-vertexCType v = case vSourceEntity v of
+entityCType :: SourceEntity -> Maybe CType
+entityCType e = case e of
                   ABaseType bt -> Just $ btCType bt
                   ABitmaskType bmt _ -> Just $ bmtCType bmt
                   AHandleType ht -> Just $ htCType ht
                   AFuncPointerType fpt -> Just $ fptCType fpt
                   _ -> Nothing
+
+vertexCType :: Vertex -> Maybe CType
+vertexCType = entityCType . vSourceEntity
 
 getGraphCTypes :: SpecGraph -> [(String, CType)]
 getGraphCTypes graph =
@@ -236,6 +235,46 @@ vertexToEnumType v = case vSourceEntity v of
 
 getGraphEnumTypes :: SpecGraph -> [EnumType]
 getGraphEnumTypes graph = catMaybes (vertexToEnumType <$> gVertices graph)
+
+entityNames :: SourceEntity -> [String]
+entityNames e =
+  case e of
+    ABaseType bt -> [btName bt]
+    ABitmaskType bmt bm -> [bmtName bmt] ++ maybeToList (bmName <$> bm)
+    AHandleType ht -> [htName ht]
+    AnEnumType et -> [etName et]
+    AFuncPointerType fpt -> [fptName fpt]
+    AStructType st -> [stName st]
+    AUnionType ut -> [utName ut]
+    ACommand co -> [Command.cName co]
+    AnEnum en -> [eName en]
+    ABitmask bm -> [bmName bm]
+    AConstant c -> [Constant.cName c]
+    ADefine d -> [dName d]
+    _ -> []
+
+entityExportName :: SourceEntity -> Maybe String
+entityExportName e =
+  case e of
+    ABaseType bt -> Just $ btHsName bt
+    ABitmaskType bmt _ -> Just $ bmtHsName bmt
+    AHandleType ht -> Just $ htHsName ht
+    AnEnumType et -> Just $ etHsName et
+    AFuncPointerType fpt -> Just $ fptHsName fpt
+    AStructType st -> Just $ stHsName st
+    AUnionType ut -> Just $ utHsName ut
+    ACommand co -> Just $ Command.cHsName co
+    AnEnum en -> Just $ eHsName en
+    AConstant c -> Just $ Constant.cHsName c
+    ADefine d -> Just $ dHsName d
+    _ -> Nothing
+
+vertexExportName :: Vertex -> Maybe String
+vertexExportName = entityExportName . vSourceEntity
+
+getGraphTypeMap :: SpecGraph -> [(String, String)]
+getGraphTypeMap graph =
+  catMaybes $ (\v -> (vName v,) <$> vertexExportName v) <$> gVertices graph
 
 
 ------------------------------------------------------------------------------

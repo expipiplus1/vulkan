@@ -33,6 +33,7 @@ parseBitmaskValue = hasName "enum" >>> hasAttr "value" >>>
           value   <- requiredRead <<< requiredAttrValue "value" -< elem
           comment <- optionalAttrValue "comment" -< elem
           returnA -< BitmaskValue{ bmvName = name
+                                 , bmvHsName = name
                                  , bmvValue = value
                                  , bmvComment = comment
                                  }
@@ -46,6 +47,7 @@ parseBitmaskBitPos = hasName "enum" >>> hasAttr "bitpos" >>>
           bitpos  <- requiredRead <<< requiredAttrValue "bitpos" -< elem
           comment <- optionalAttrValue "comment" -< elem
           returnA -< BitmaskBitPosition{ bmbpName = name
+                                       , bmbpHsName = name
                                        , bmbpBitPos = bitpos
                                        , bmbpComment = comment
                                        }

@@ -4,17 +4,17 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Surface where
 
-import Graphics.Vulkan.Device( VkPhysicalDevice(..)
+import Graphics.Vulkan.Device( PhysicalDevice(..)
                              )
 import Text.Read.Lex( Lexeme(Ident)
                     )
 import GHC.Read( expectP
                , choose
                )
-import Data.Word( Word64
-                , Word32
+import Data.Word( Word64(..)
+                , Word32(..)
                 )
-import Foreign.Ptr( Ptr
+import Foreign.Ptr( Ptr(..)
                   , plusPtr
                   )
 import Data.Int( Int32
@@ -24,16 +24,7 @@ import Data.Bits( Bits
                 )
 import Foreign.Storable( Storable(..)
                        )
-import Data.Void( Void
-                )
-import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
-                             , PFN_vkAllocationFunction
-                             , PFN_vkReallocationFunction
-                             , PFN_vkInternalAllocationNotification
-                             , VkAllocationCallbacks(..)
-                             , VkSystemAllocationScope(..)
-                             , PFN_vkFreeFunction
-                             , PFN_vkInternalFreeNotification
+import Graphics.Vulkan.Memory( AllocationCallbacks(..)
                              )
 import Text.Read( Read(..)
                 , parens
@@ -42,254 +33,243 @@ import Text.ParserCombinators.ReadPrec( prec
                                       , (+++)
                                       , step
                                       )
-import Graphics.Vulkan.Image( VkImageUsageFlags(..)
-                            , VkImageUsageFlagBits(..)
+import Graphics.Vulkan.Image( ImageUsageFlags(..)
                             )
-import Graphics.Vulkan.DeviceInitialization( VkInstance(..)
+import Graphics.Vulkan.DeviceInitialization( Instance(..)
                                            )
-import Graphics.Vulkan.Core( VkResult(..)
-                           , VkBool32(..)
-                           , VkExtent2D(..)
-                           , VkFlags(..)
-                           , VkFormat(..)
+import Graphics.Vulkan.Core( Bool32(..)
+                           , Format(..)
+                           , Result(..)
+                           , Flags(..)
+                           , Extent2D(..)
                            )
-import Foreign.C.Types( CSize(..)
-                      )
 
--- ** vkGetPhysicalDeviceSurfaceFormatsKHR
-foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceSurfaceFormatsKHR ::
-  VkPhysicalDevice ->
-  VkSurfaceKHR -> Ptr Word32 -> Ptr VkSurfaceFormatKHR -> IO VkResult
+-- ** getPhysicalDeviceSurfaceFormats
+foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" getPhysicalDeviceSurfaceFormats ::
+  PhysicalDevice ->
+  Surface -> Ptr Word32 -> Ptr SurfaceFormat -> IO Result
 
--- ** vkGetPhysicalDeviceSurfaceCapabilitiesKHR
-foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDeviceSurfaceCapabilitiesKHR ::
-  VkPhysicalDevice ->
-  VkSurfaceKHR -> Ptr VkSurfaceCapabilitiesKHR -> IO VkResult
+-- ** getPhysicalDeviceSurfaceCapabilities
+foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" getPhysicalDeviceSurfaceCapabilities ::
+  PhysicalDevice -> Surface -> Ptr SurfaceCapabilities -> IO Result
 
--- ** VkCompositeAlphaFlagsKHR
+-- ** CompositeAlphaFlags
 
-newtype VkCompositeAlphaFlagBitsKHR = VkCompositeAlphaFlagBitsKHR VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype CompositeAlphaFlags = CompositeAlphaFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkCompositeAlphaFlagBitsKHR
-type VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagBitsKHR
-
-instance Show VkCompositeAlphaFlagBitsKHR where
-  showsPrec _ VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = showString "VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
-  showsPrec _ VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = showString "VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR"
-  showsPrec _ VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = showString "VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR"
-  showsPrec _ VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = showString "VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR"
+instance Show CompositeAlphaFlags where
+  showsPrec _ CompositeAlphaOpaqueBit = showString "CompositeAlphaOpaqueBit"
+  showsPrec _ CompositeAlphaPreMultipliedBit = showString "CompositeAlphaPreMultipliedBit"
+  showsPrec _ CompositeAlphaPostMultipliedBit = showString "CompositeAlphaPostMultipliedBit"
+  showsPrec _ CompositeAlphaInheritBit = showString "CompositeAlphaInheritBit"
   
-  showsPrec p (VkCompositeAlphaFlagBitsKHR x) = showParen (p >= 11) (showString "VkCompositeAlphaFlagBitsKHR " . showsPrec 11 x)
+  showsPrec p (CompositeAlphaFlags x) = showParen (p >= 11) (showString "CompositeAlphaFlags " . showsPrec 11 x)
 
-instance Read VkCompositeAlphaFlagBitsKHR where
-  readPrec = parens ( choose [ ("VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR", pure VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR)
-                             , ("VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR", pure VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR)
-                             , ("VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR", pure VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR)
-                             , ("VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR", pure VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR)
+instance Read CompositeAlphaFlags where
+  readPrec = parens ( choose [ ("CompositeAlphaOpaqueBit", pure CompositeAlphaOpaqueBit)
+                             , ("CompositeAlphaPreMultipliedBit", pure CompositeAlphaPreMultipliedBit)
+                             , ("CompositeAlphaPostMultipliedBit", pure CompositeAlphaPostMultipliedBit)
+                             , ("CompositeAlphaInheritBit", pure CompositeAlphaInheritBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkCompositeAlphaFlagBitsKHR")
+                        expectP (Ident "CompositeAlphaFlags")
                         v <- step readPrec
-                        pure (VkCompositeAlphaFlagBitsKHR v)
+                        pure (CompositeAlphaFlags v)
                         )
                     )
 
 
-pattern VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x1
+pattern CompositeAlphaOpaqueBit = CompositeAlphaFlags 0x1
 
-pattern VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x2
+pattern CompositeAlphaPreMultipliedBit = CompositeAlphaFlags 0x2
 
-pattern VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x4
+pattern CompositeAlphaPostMultipliedBit = CompositeAlphaFlags 0x4
 
-pattern VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x8
+pattern CompositeAlphaInheritBit = CompositeAlphaFlags 0x8
 
 
--- ** VkPresentModeKHR
+-- ** PresentMode
 
-newtype VkPresentModeKHR = VkPresentModeKHR Int32
-  deriving (Eq, Storable)
+newtype PresentMode = PresentMode Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkPresentModeKHR where
-  showsPrec _ VK_PRESENT_MODE_IMMEDIATE_KHR = showString "VK_PRESENT_MODE_IMMEDIATE_KHR"
-  showsPrec _ VK_PRESENT_MODE_MAILBOX_KHR = showString "VK_PRESENT_MODE_MAILBOX_KHR"
-  showsPrec _ VK_PRESENT_MODE_FIFO_KHR = showString "VK_PRESENT_MODE_FIFO_KHR"
-  showsPrec _ VK_PRESENT_MODE_FIFO_RELAXED_KHR = showString "VK_PRESENT_MODE_FIFO_RELAXED_KHR"
-  showsPrec p (VkPresentModeKHR x) = showParen (p >= 11) (showString "VkPresentModeKHR " . showsPrec 11 x)
+instance Show PresentMode where
+  showsPrec _ PresentModeImmediate = showString "PresentModeImmediate"
+  showsPrec _ PresentModeMailbox = showString "PresentModeMailbox"
+  showsPrec _ PresentModeFifo = showString "PresentModeFifo"
+  showsPrec _ PresentModeFifoRelaxed = showString "PresentModeFifoRelaxed"
+  showsPrec p (PresentMode x) = showParen (p >= 11) (showString "PresentMode " . showsPrec 11 x)
 
-instance Read VkPresentModeKHR where
-  readPrec = parens ( choose [ ("VK_PRESENT_MODE_IMMEDIATE_KHR", pure VK_PRESENT_MODE_IMMEDIATE_KHR)
-                             , ("VK_PRESENT_MODE_MAILBOX_KHR", pure VK_PRESENT_MODE_MAILBOX_KHR)
-                             , ("VK_PRESENT_MODE_FIFO_KHR", pure VK_PRESENT_MODE_FIFO_KHR)
-                             , ("VK_PRESENT_MODE_FIFO_RELAXED_KHR", pure VK_PRESENT_MODE_FIFO_RELAXED_KHR)
+instance Read PresentMode where
+  readPrec = parens ( choose [ ("PresentModeImmediate", pure PresentModeImmediate)
+                             , ("PresentModeMailbox", pure PresentModeMailbox)
+                             , ("PresentModeFifo", pure PresentModeFifo)
+                             , ("PresentModeFifoRelaxed", pure PresentModeFifoRelaxed)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkPresentModeKHR")
+                        expectP (Ident "PresentMode")
                         v <- step readPrec
-                        pure (VkPresentModeKHR v)
+                        pure (PresentMode v)
                         )
                     )
 
 
-pattern VK_PRESENT_MODE_IMMEDIATE_KHR = VkPresentModeKHR 0
+pattern PresentModeImmediate = PresentMode 0
 
-pattern VK_PRESENT_MODE_MAILBOX_KHR = VkPresentModeKHR 1
+pattern PresentModeMailbox = PresentMode 1
 
-pattern VK_PRESENT_MODE_FIFO_KHR = VkPresentModeKHR 2
+pattern PresentModeFifo = PresentMode 2
 
-pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR = VkPresentModeKHR 3
+pattern PresentModeFifoRelaxed = PresentMode 3
 
-newtype VkSurfaceKHR = VkSurfaceKHR Word64
-  deriving (Eq, Storable)
+newtype Surface = Surface Word64
+  deriving (Eq, Ord, Storable)
 
--- ** vkGetPhysicalDeviceSurfaceSupportKHR
-foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceSurfaceSupportKHR ::
-  VkPhysicalDevice ->
-  Word32 -> VkSurfaceKHR -> Ptr VkBool32 -> IO VkResult
+-- ** getPhysicalDeviceSurfaceSupport
+foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" getPhysicalDeviceSurfaceSupport ::
+  PhysicalDevice -> Word32 -> Surface -> Ptr Bool32 -> IO Result
 
 
-data VkSurfaceFormatKHR =
-  VkSurfaceFormatKHR{ vkFormat :: VkFormat 
-                    , vkColorSpace :: VkColorSpaceKHR 
-                    }
-  deriving (Eq)
+data SurfaceFormat =
+  SurfaceFormat{ format :: Format 
+               , colorSpace :: ColorSpace 
+               }
+  deriving (Eq, Ord)
 
-instance Storable VkSurfaceFormatKHR where
+instance Storable SurfaceFormat where
   sizeOf ~_ = 8
   alignment ~_ = 4
-  peek ptr = VkSurfaceFormatKHR <$> peek (ptr `plusPtr` 0)
-                                <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkFormat (poked :: VkSurfaceFormatKHR))
-                *> poke (ptr `plusPtr` 4) (vkColorSpace (poked :: VkSurfaceFormatKHR))
+  peek ptr = SurfaceFormat <$> peek (ptr `plusPtr` 0)
+                           <*> peek (ptr `plusPtr` 4)
+  poke ptr poked = poke (ptr `plusPtr` 0) (format (poked :: SurfaceFormat))
+                *> poke (ptr `plusPtr` 4) (colorSpace (poked :: SurfaceFormat))
 
 
--- ** vkDestroySurfaceKHR
-foreign import ccall "vkDestroySurfaceKHR" vkDestroySurfaceKHR ::
-  VkInstance -> VkSurfaceKHR -> Ptr VkAllocationCallbacks -> IO ()
+-- ** destroySurface
+foreign import ccall "vkDestroySurfaceKHR" destroySurface ::
+  Instance -> Surface -> Ptr AllocationCallbacks -> IO ()
 
--- ** VkColorSpaceKHR
+-- ** ColorSpace
 
-newtype VkColorSpaceKHR = VkColorSpaceKHR Int32
-  deriving (Eq, Storable)
+newtype ColorSpace = ColorSpace Int32
+  deriving (Eq, Ord, Storable)
 
-instance Show VkColorSpaceKHR where
-  showsPrec _ VK_COLORSPACE_SRGB_NONLINEAR_KHR = showString "VK_COLORSPACE_SRGB_NONLINEAR_KHR"
-  showsPrec p (VkColorSpaceKHR x) = showParen (p >= 11) (showString "VkColorSpaceKHR " . showsPrec 11 x)
+instance Show ColorSpace where
+  showsPrec _ ColorspaceSrgbNonlinear = showString "ColorspaceSrgbNonlinear"
+  showsPrec p (ColorSpace x) = showParen (p >= 11) (showString "ColorSpace " . showsPrec 11 x)
 
-instance Read VkColorSpaceKHR where
-  readPrec = parens ( choose [ ("VK_COLORSPACE_SRGB_NONLINEAR_KHR", pure VK_COLORSPACE_SRGB_NONLINEAR_KHR)
+instance Read ColorSpace where
+  readPrec = parens ( choose [ ("ColorspaceSrgbNonlinear", pure ColorspaceSrgbNonlinear)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkColorSpaceKHR")
+                        expectP (Ident "ColorSpace")
                         v <- step readPrec
-                        pure (VkColorSpaceKHR v)
+                        pure (ColorSpace v)
                         )
                     )
 
 
-pattern VK_COLORSPACE_SRGB_NONLINEAR_KHR = VkColorSpaceKHR 0
+pattern ColorspaceSrgbNonlinear = ColorSpace 0
 
--- ** vkGetPhysicalDeviceSurfacePresentModesKHR
-foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDeviceSurfacePresentModesKHR ::
-  VkPhysicalDevice ->
-  VkSurfaceKHR -> Ptr Word32 -> Ptr VkPresentModeKHR -> IO VkResult
+-- ** getPhysicalDeviceSurfacePresentModes
+foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" getPhysicalDeviceSurfacePresentModes ::
+  PhysicalDevice ->
+  Surface -> Ptr Word32 -> Ptr PresentMode -> IO Result
 
--- ** VkSurfaceTransformFlagsKHR
+-- ** SurfaceTransformFlags
 
-newtype VkSurfaceTransformFlagBitsKHR = VkSurfaceTransformFlagBitsKHR VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+newtype SurfaceTransformFlags = SurfaceTransformFlags Flags
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
--- | Alias for VkSurfaceTransformFlagBitsKHR
-type VkSurfaceTransformFlagsKHR = VkSurfaceTransformFlagBitsKHR
-
-instance Show VkSurfaceTransformFlagBitsKHR where
-  showsPrec _ VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = showString "VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = showString "VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = showString "VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = showString "VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = showString "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = showString "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = showString "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = showString "VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR"
-  showsPrec _ VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = showString "VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR"
+instance Show SurfaceTransformFlags where
+  showsPrec _ SurfaceTransformIdentityBit = showString "SurfaceTransformIdentityBit"
+  showsPrec _ SurfaceTransformRotate90Bit = showString "SurfaceTransformRotate90Bit"
+  showsPrec _ SurfaceTransformRotate180Bit = showString "SurfaceTransformRotate180Bit"
+  showsPrec _ SurfaceTransformRotate270Bit = showString "SurfaceTransformRotate270Bit"
+  showsPrec _ SurfaceTransformHorizontalMirrorBit = showString "SurfaceTransformHorizontalMirrorBit"
+  showsPrec _ SurfaceTransformHorizontalMirrorRotate90Bit = showString "SurfaceTransformHorizontalMirrorRotate90Bit"
+  showsPrec _ SurfaceTransformHorizontalMirrorRotate180Bit = showString "SurfaceTransformHorizontalMirrorRotate180Bit"
+  showsPrec _ SurfaceTransformHorizontalMirrorRotate270Bit = showString "SurfaceTransformHorizontalMirrorRotate270Bit"
+  showsPrec _ SurfaceTransformInheritBit = showString "SurfaceTransformInheritBit"
   
-  showsPrec p (VkSurfaceTransformFlagBitsKHR x) = showParen (p >= 11) (showString "VkSurfaceTransformFlagBitsKHR " . showsPrec 11 x)
+  showsPrec p (SurfaceTransformFlags x) = showParen (p >= 11) (showString "SurfaceTransformFlags " . showsPrec 11 x)
 
-instance Read VkSurfaceTransformFlagBitsKHR where
-  readPrec = parens ( choose [ ("VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR", pure VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR", pure VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR", pure VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR", pure VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR", pure VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR", pure VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR", pure VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR", pure VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR)
-                             , ("VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR", pure VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR)
+instance Read SurfaceTransformFlags where
+  readPrec = parens ( choose [ ("SurfaceTransformIdentityBit", pure SurfaceTransformIdentityBit)
+                             , ("SurfaceTransformRotate90Bit", pure SurfaceTransformRotate90Bit)
+                             , ("SurfaceTransformRotate180Bit", pure SurfaceTransformRotate180Bit)
+                             , ("SurfaceTransformRotate270Bit", pure SurfaceTransformRotate270Bit)
+                             , ("SurfaceTransformHorizontalMirrorBit", pure SurfaceTransformHorizontalMirrorBit)
+                             , ("SurfaceTransformHorizontalMirrorRotate90Bit", pure SurfaceTransformHorizontalMirrorRotate90Bit)
+                             , ("SurfaceTransformHorizontalMirrorRotate180Bit", pure SurfaceTransformHorizontalMirrorRotate180Bit)
+                             , ("SurfaceTransformHorizontalMirrorRotate270Bit", pure SurfaceTransformHorizontalMirrorRotate270Bit)
+                             , ("SurfaceTransformInheritBit", pure SurfaceTransformInheritBit)
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSurfaceTransformFlagBitsKHR")
+                        expectP (Ident "SurfaceTransformFlags")
                         v <- step readPrec
-                        pure (VkSurfaceTransformFlagBitsKHR v)
+                        pure (SurfaceTransformFlags v)
                         )
                     )
 
 
-pattern VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x1
+pattern SurfaceTransformIdentityBit = SurfaceTransformFlags 0x1
 
-pattern VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x2
+pattern SurfaceTransformRotate90Bit = SurfaceTransformFlags 0x2
 
-pattern VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x4
+pattern SurfaceTransformRotate180Bit = SurfaceTransformFlags 0x4
 
-pattern VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x8
+pattern SurfaceTransformRotate270Bit = SurfaceTransformFlags 0x8
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x10
+pattern SurfaceTransformHorizontalMirrorBit = SurfaceTransformFlags 0x10
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x20
+pattern SurfaceTransformHorizontalMirrorRotate90Bit = SurfaceTransformFlags 0x20
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x40
+pattern SurfaceTransformHorizontalMirrorRotate180Bit = SurfaceTransformFlags 0x40
 
-pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x80
+pattern SurfaceTransformHorizontalMirrorRotate270Bit = SurfaceTransformFlags 0x80
 
-pattern VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x100
+pattern SurfaceTransformInheritBit = SurfaceTransformFlags 0x100
 
 
 
-data VkSurfaceCapabilitiesKHR =
-  VkSurfaceCapabilitiesKHR{ vkMinImageCount :: Word32 
-                          , vkMaxImageCount :: Word32 
-                          , vkCurrentExtent :: VkExtent2D 
-                          , vkMinImageExtent :: VkExtent2D 
-                          , vkMaxImageExtent :: VkExtent2D 
-                          , vkMaxImageArrayLayers :: Word32 
-                          , vkSupportedTransforms :: VkSurfaceTransformFlagsKHR 
-                          , vkCurrentTransform :: VkSurfaceTransformFlagBitsKHR 
-                          , vkSupportedCompositeAlpha :: VkCompositeAlphaFlagsKHR 
-                          , vkSupportedUsageFlags :: VkImageUsageFlags 
-                          }
-  deriving (Eq)
+data SurfaceCapabilities =
+  SurfaceCapabilities{ minImageCount :: Word32 
+                     , maxImageCount :: Word32 
+                     , currentExtent :: Extent2D 
+                     , minImageExtent :: Extent2D 
+                     , maxImageExtent :: Extent2D 
+                     , maxImageArrayLayers :: Word32 
+                     , supportedTransforms :: SurfaceTransformFlags 
+                     , currentTransform :: SurfaceTransformFlags 
+                     , supportedCompositeAlpha :: CompositeAlphaFlags 
+                     , supportedUsageFlags :: ImageUsageFlags 
+                     }
+  deriving (Eq, Ord)
 
-instance Storable VkSurfaceCapabilitiesKHR where
+instance Storable SurfaceCapabilities where
   sizeOf ~_ = 52
   alignment ~_ = 4
-  peek ptr = VkSurfaceCapabilitiesKHR <$> peek (ptr `plusPtr` 0)
-                                      <*> peek (ptr `plusPtr` 4)
-                                      <*> peek (ptr `plusPtr` 8)
-                                      <*> peek (ptr `plusPtr` 16)
-                                      <*> peek (ptr `plusPtr` 24)
-                                      <*> peek (ptr `plusPtr` 32)
-                                      <*> peek (ptr `plusPtr` 36)
-                                      <*> peek (ptr `plusPtr` 40)
-                                      <*> peek (ptr `plusPtr` 44)
-                                      <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkMinImageCount (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 4) (vkMaxImageCount (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 8) (vkCurrentExtent (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 16) (vkMinImageExtent (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 24) (vkMaxImageExtent (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 32) (vkMaxImageArrayLayers (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 36) (vkSupportedTransforms (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 40) (vkCurrentTransform (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 44) (vkSupportedCompositeAlpha (poked :: VkSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 48) (vkSupportedUsageFlags (poked :: VkSurfaceCapabilitiesKHR))
+  peek ptr = SurfaceCapabilities <$> peek (ptr `plusPtr` 0)
+                                 <*> peek (ptr `plusPtr` 4)
+                                 <*> peek (ptr `plusPtr` 8)
+                                 <*> peek (ptr `plusPtr` 16)
+                                 <*> peek (ptr `plusPtr` 24)
+                                 <*> peek (ptr `plusPtr` 32)
+                                 <*> peek (ptr `plusPtr` 36)
+                                 <*> peek (ptr `plusPtr` 40)
+                                 <*> peek (ptr `plusPtr` 44)
+                                 <*> peek (ptr `plusPtr` 48)
+  poke ptr poked = poke (ptr `plusPtr` 0) (minImageCount (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 4) (maxImageCount (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 8) (currentExtent (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 16) (minImageExtent (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 24) (maxImageExtent (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 32) (maxImageArrayLayers (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 36) (supportedTransforms (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 40) (currentTransform (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 44) (supportedCompositeAlpha (poked :: SurfaceCapabilities))
+                *> poke (ptr `plusPtr` 48) (supportedUsageFlags (poked :: SurfaceCapabilities))
 
 

@@ -20,14 +20,16 @@ data Direction = Negative
   deriving(Show)
 
 data EnumExtension = EnumExtension{ eeName      :: String
+                                  , eeHsName    :: String
                                   , eeExtends   :: String
                                   , eeOffset    :: Int32
                                   , eeDirection :: Direction
                                   }
   deriving(Show)
 
-data ExtensionConstant = ExtensionConstant{ ecName  :: String
-                                          , ecValue :: Either String Integer
+data ExtensionConstant = ExtensionConstant{ ecName   :: String
+                                          , ecHsName :: String
+                                          , ecValue  :: Either String Integer
                                           }
   deriving(Show)
 
