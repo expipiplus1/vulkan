@@ -12,7 +12,7 @@ import           Text.XML.HXT.Core
 
 parseSections :: IOStateArrow s XmlTree [Section]
 parseSections = extractFields "API Sections"
-                              (hasName "feature")
+                              (hasName "feature" >>> hasAttrValue "api" (== "vulkan"))
                               extract
   where extract = listA (parseSection <<< getChildren)
 

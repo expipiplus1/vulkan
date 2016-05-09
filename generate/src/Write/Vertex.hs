@@ -29,7 +29,7 @@ writeVertex v =
     AFuncPointerType funcPointerType -> writeFuncPointerType funcPointerType
     AStructType structType -> writeStructType structType
     AUnionType unionType -> writeUnionType unionType
-    ACommand command -> writeCommand command
+    ACommand command builtin -> writeCommand command builtin
     AnEnum enum -> writeEnum enum
     ABitmask _ -> pure empty -- Handled by bitmasktype
     AConstant constant -> writeConstant constant
