@@ -13,6 +13,9 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -78,7 +81,7 @@ instance Storable VkBufferViewCreateInfo where
 -- ** VkBufferViewCreateFlags
 -- | Opaque flag
 newtype VkBufferViewCreateFlags = VkBufferViewCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 -- ** vkDestroyBufferView
 foreign import ccall "vkDestroyBufferView" vkDestroyBufferView ::

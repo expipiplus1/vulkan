@@ -20,6 +20,9 @@ import Foreign.Ptr( Ptr
                   )
 import Data.Int( Int32
                )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -132,7 +135,7 @@ foreign import ccall "vkFlushMappedMemoryRanges" vkFlushMappedMemoryRanges ::
 -- ** VkMemoryMapFlags
 -- | Opaque flag
 newtype VkMemoryMapFlags = VkMemoryMapFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 type PFN_vkInternalAllocationNotification = FunPtr
   (Ptr Void ->

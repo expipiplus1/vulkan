@@ -13,6 +13,9 @@ import Foreign.Ptr( Ptr
                   )
 import Graphics.Vulkan.DescriptorSet( VkDescriptorSetLayout(..)
                                     )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -39,7 +42,7 @@ import Foreign.C.Types( CSize(..)
 -- ** VkPipelineLayoutCreateFlags
 -- | Opaque flag
 newtype VkPipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 newtype VkPipelineLayout = VkPipelineLayout Word64
   deriving (Eq, Storable)

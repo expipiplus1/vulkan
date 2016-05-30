@@ -8,6 +8,9 @@ import Data.Word( Word32
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -216,7 +219,7 @@ instance Storable VkPhysicalDeviceFeatures where
 -- ** VkDeviceCreateFlags
 -- | Opaque flag
 newtype VkDeviceCreateFlags = VkDeviceCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 
 data VkDeviceQueueCreateInfo =
@@ -249,7 +252,7 @@ instance Storable VkDeviceQueueCreateInfo where
 -- ** VkDeviceQueueCreateFlags
 -- | Opaque flag
 newtype VkDeviceQueueCreateFlags = VkDeviceQueueCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 -- ** vkDestroyDevice
 foreign import ccall "vkDestroyDevice" vkDestroyDevice ::

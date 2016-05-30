@@ -19,6 +19,9 @@ import Foreign.Ptr( Ptr
                   )
 import Data.Int( Int32
                )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -144,7 +147,7 @@ pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = VkImageViewType 6
 -- ** VkImageViewCreateFlags
 -- | Opaque flag
 newtype VkImageViewCreateFlags = VkImageViewCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 
 data VkComponentMapping =

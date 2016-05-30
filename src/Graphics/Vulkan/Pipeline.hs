@@ -226,7 +226,7 @@ pattern VK_CULL_MODE_FRONT_AND_BACK = VkCullModeFlagBits 0x3
 -- ** VkPipelineDepthStencilStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineDepthStencilStateCreateFlags = VkPipelineDepthStencilStateCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 
 data VkPipelineShaderStageCreateInfo =
@@ -404,7 +404,7 @@ instance Storable VkSpecializationInfo where
 -- ** VkPipelineColorBlendStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineColorBlendStateCreateFlags = VkPipelineColorBlendStateCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 newtype VkPipeline = VkPipeline Word64
   deriving (Eq, Storable)
@@ -412,7 +412,7 @@ newtype VkPipeline = VkPipeline Word64
 -- ** VkPipelineInputAssemblyStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineInputAssemblyStateCreateFlags = VkPipelineInputAssemblyStateCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 -- ** vkCreateGraphicsPipelines
 foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines ::
@@ -481,7 +481,7 @@ pattern VK_POLYGON_MODE_POINT = VkPolygonMode 2
 -- ** VkPipelineViewportStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineViewportStateCreateFlags = VkPipelineViewportStateCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 -- ** VkLogicOp
 
@@ -603,7 +603,7 @@ pattern VK_PIPELINE_CREATE_DERIVATIVE_BIT = VkPipelineCreateFlagBits 0x4
 -- ** VkPipelineRasterizationStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineRasterizationStateCreateFlags = VkPipelineRasterizationStateCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 -- ** VkDynamicState
 
@@ -688,7 +688,7 @@ pattern VK_PIPELINE_BIND_POINT_COMPUTE = VkPipelineBindPoint 1
 -- ** VkPipelineDynamicStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineDynamicStateCreateFlags = VkPipelineDynamicStateCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 
 data VkPipelineRasterizationStateCreateInfo =
@@ -784,7 +784,7 @@ foreign import ccall "vkDestroyPipeline" vkDestroyPipeline ::
 -- ** VkPipelineShaderStageCreateFlags
 -- | Opaque flag
 newtype VkPipelineShaderStageCreateFlags = VkPipelineShaderStageCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 
 data VkPipelineViewportStateCreateInfo =
@@ -820,7 +820,7 @@ instance Storable VkPipelineViewportStateCreateInfo where
 -- ** VkPipelineTessellationStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineTessellationStateCreateFlags = VkPipelineTessellationStateCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 
 data VkPipelineVertexInputStateCreateInfo =
@@ -1021,7 +1021,7 @@ instance Storable VkSpecializationMapEntry where
 -- ** VkPipelineVertexInputStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineVertexInputStateCreateFlags = VkPipelineVertexInputStateCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 -- ** VkVertexInputRate
 
@@ -1274,7 +1274,7 @@ newtype VkSampleMask = VkSampleMask Word32
 -- ** VkPipelineMultisampleStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineMultisampleStateCreateFlags = VkPipelineMultisampleStateCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 
 data VkPipelineMultisampleStateCreateInfo =

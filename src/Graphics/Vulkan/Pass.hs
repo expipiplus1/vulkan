@@ -96,7 +96,7 @@ instance Storable VkSubpassDependency where
 -- ** VkSubpassDescriptionFlags
 -- | Opaque flag
 newtype VkSubpassDescriptionFlags = VkSubpassDescriptionFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 newtype VkFramebuffer = VkFramebuffer Word64
   deriving (Eq, Storable)
@@ -379,7 +379,7 @@ instance Storable VkAttachmentReference where
 -- ** VkRenderPassCreateFlags
 -- | Opaque flag
 newtype VkRenderPassCreateFlags = VkRenderPassCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 
 data VkAttachmentDescription =
@@ -504,5 +504,5 @@ instance Storable VkRenderPassCreateInfo where
 -- ** VkFramebufferCreateFlags
 -- | Opaque flag
 newtype VkFramebufferCreateFlags = VkFramebufferCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 

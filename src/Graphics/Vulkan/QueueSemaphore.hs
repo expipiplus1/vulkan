@@ -11,6 +11,9 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -34,7 +37,7 @@ import Foreign.C.Types( CSize(..)
 -- ** VkSemaphoreCreateFlags
 -- | Opaque flag
 newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 -- ** vkDestroySemaphore
 foreign import ccall "vkDestroySemaphore" vkDestroySemaphore ::

@@ -25,11 +25,14 @@ writeBitmaskType bmt (Just bm) = writeBitmaskTypeWithBits bmt bm
 writeOpaqueBitmaskType :: BitmaskType -> Write Doc
 writeOpaqueBitmaskType bmt = do
   doesDeriveStorable
+  tellExtension "GeneralizedNewtypeDeriving"
+  tellRequiredName (ExternalName (ModuleName "Data.Bits") "Bits")
+  tellRequiredName (ExternalName (ModuleName "Data.Bits") "FiniteBits")
   bmtHsType <- cTypeToHsTypeString (bmtCType bmt)
   pure $ [qc|-- ** {bmtName bmt}
 {predocComment "Opaque flag"}
 newtype {bmtName bmt} = {bmtName bmt} {bmtHsType}
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 |]
 
 writeBitmaskTypeWithBits :: BitmaskType -> Bitmask -> Write Doc

@@ -19,6 +19,9 @@ import Graphics.Vulkan.KHR.Surface( VkColorSpaceKHR(..)
                                   )
 import Graphics.Vulkan.Queue( VkQueue(..)
                             )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Graphics.Vulkan.Fence( VkFence(..)
@@ -131,7 +134,7 @@ foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR ::
 -- ** VkSwapchainCreateFlagsKHR
 -- | Opaque flag
 newtype VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagsKHR VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Storable, Bits, FiniteBits)
 
 -- ** vkCreateSwapchainKHR
 foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR ::
