@@ -23,7 +23,8 @@ install:
   - pushd ~/.vulkan
   - curl https://vulkan.lunarg.com/pub/sdks/linux/latest -L -o vulkan.run
   - chmod +x vulkan.run
-  - sudo ./vulkan.run
+  - ./vulkan.run
+  - export VULKAN_SDK=$(pwd)/VulkanSDK/*/x86_64
   - popd
   - export STACK_NAME=stack-$STACK_VER-linux-x86_64
   - mkdir -p ~/.stack-bin
@@ -42,5 +43,5 @@ install:
 script:
   - find generate/src -name "*.hs" | xargs stylish-haskell -i
   - 'if [ -n "$(git status --porcelain)" ]; then echo Error: changes found after stylish-haskell; git status; exit 1; fi'
-  - ./build.sh
+  - ./build.sh --extra-lib-dirs $VULKAN_SDK/lib
   - 'if [ -n "$(git status --porcelain)" ]; then echo Error: changes found after generate; git status; exit 1; fi'
