@@ -74,7 +74,7 @@ foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets ::
 -- ** VkDescriptorPoolResetFlags
 -- | Opaque flag
 newtype VkDescriptorPoolResetFlags = VkDescriptorPoolResetFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** vkAllocateDescriptorSets
 foreign import ccall "vkAllocateDescriptorSets" vkAllocateDescriptorSets ::
@@ -88,7 +88,7 @@ data VkDescriptorBufferInfo =
                         , vkOffset :: VkDeviceSize 
                         , vkRange :: VkDeviceSize 
                         }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDescriptorBufferInfo where
   sizeOf ~_ = 24
@@ -107,7 +107,7 @@ data VkDescriptorImageInfo =
                        , vkImageView :: VkImageView 
                        , vkImageLayout :: VkImageLayout 
                        }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDescriptorImageInfo where
   sizeOf ~_ = 24
@@ -132,7 +132,7 @@ data VkCopyDescriptorSet =
                      , vkDstArrayElement :: Word32 
                      , vkDescriptorCount :: Word32 
                      }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkCopyDescriptorSet where
   sizeOf ~_ = 56
@@ -169,7 +169,7 @@ foreign import ccall "vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout :
       Ptr VkDescriptorSetLayout -> IO VkResult
 
 newtype VkDescriptorPool = VkDescriptorPool Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** vkResetDescriptorPool
 foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool ::
@@ -177,7 +177,7 @@ foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool ::
   VkDescriptorPool -> VkDescriptorPoolResetFlags -> IO VkResult
 
 newtype VkDescriptorSetLayout = VkDescriptorSetLayout Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** vkFreeDescriptorSets
 foreign import ccall "vkFreeDescriptorSets" vkFreeDescriptorSets ::
@@ -193,7 +193,7 @@ data VkDescriptorPoolCreateInfo =
                             , vkPoolSizeCount :: Word32 
                             , vkPPoolSizes :: Ptr VkDescriptorPoolSize 
                             }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDescriptorPoolCreateInfo where
   sizeOf ~_ = 40
@@ -215,7 +215,7 @@ instance Storable VkDescriptorPoolCreateInfo where
 -- ** VkDescriptorSetLayoutCreateFlags
 -- | Opaque flag
 newtype VkDescriptorSetLayoutCreateFlags = VkDescriptorSetLayoutCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkDescriptorSetLayoutCreateInfo =
@@ -225,7 +225,7 @@ data VkDescriptorSetLayoutCreateInfo =
                                  , vkBindingCount :: Word32 
                                  , vkPBindings :: Ptr VkDescriptorSetLayoutBinding 
                                  }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDescriptorSetLayoutCreateInfo where
   sizeOf ~_ = 32
@@ -274,7 +274,7 @@ data VkDescriptorPoolSize =
   VkDescriptorPoolSize{ vkType :: VkDescriptorType 
                       , vkDescriptorCount :: Word32 
                       }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDescriptorPoolSize where
   sizeOf ~_ = 8
@@ -286,7 +286,7 @@ instance Storable VkDescriptorPoolSize where
 
 
 newtype VkDescriptorSet = VkDescriptorSet Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 
 data VkWriteDescriptorSet =
@@ -301,7 +301,7 @@ data VkWriteDescriptorSet =
                       , vkPBufferInfo :: Ptr VkDescriptorBufferInfo 
                       , vkPTexelBufferView :: Ptr VkBufferView 
                       }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkWriteDescriptorSet where
   sizeOf ~_ = 64
@@ -347,7 +347,7 @@ data VkDescriptorSetLayoutBinding =
                               , vkStageFlags :: VkShaderStageFlags 
                               , vkPImmutableSamplers :: Ptr VkSampler 
                               }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDescriptorSetLayoutBinding where
   sizeOf ~_ = 24
@@ -434,7 +434,7 @@ data VkDescriptorSetAllocateInfo =
                              , vkDescriptorSetCount :: Word32 
                              , vkPSetLayouts :: Ptr VkDescriptorSetLayout 
                              }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDescriptorSetAllocateInfo where
   sizeOf ~_ = 40

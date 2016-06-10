@@ -141,7 +141,7 @@ pattern VK_PRESENT_MODE_FIFO_KHR = VkPresentModeKHR 2
 pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR = VkPresentModeKHR 3
 
 newtype VkSurfaceKHR = VkSurfaceKHR Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** vkGetPhysicalDeviceSurfaceSupportKHR
 foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceSurfaceSupportKHR ::
@@ -153,7 +153,7 @@ data VkSurfaceFormatKHR =
   VkSurfaceFormatKHR{ vkFormat :: VkFormat 
                     , vkColorSpace :: VkColorSpaceKHR 
                     }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSurfaceFormatKHR where
   sizeOf ~_ = 8
@@ -267,7 +267,7 @@ data VkSurfaceCapabilitiesKHR =
                           , vkSupportedCompositeAlpha :: VkCompositeAlphaFlagsKHR 
                           , vkSupportedUsageFlags :: VkImageUsageFlags 
                           }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSurfaceCapabilitiesKHR where
   sizeOf ~_ = 52

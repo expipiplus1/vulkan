@@ -74,7 +74,7 @@ data VkQueryPoolCreateInfo =
                        , vkQueryCount :: Word32 
                        , vkPipelineStatistics :: VkQueryPipelineStatisticFlags 
                        }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkQueryPoolCreateInfo where
   sizeOf ~_ = 32
@@ -163,7 +163,7 @@ pattern VK_QUERY_TYPE_PIPELINE_STATISTICS = VkQueryType 1
 pattern VK_QUERY_TYPE_TIMESTAMP = VkQueryType 2
 
 newtype VkQueryPool = VkQueryPool Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** vkCreateQueryPool
 foreign import ccall "vkCreateQueryPool" vkCreateQueryPool ::
@@ -201,7 +201,7 @@ pattern VK_QUERY_CONTROL_PRECISE_BIT = VkQueryControlFlagBits 0x1
 -- ** VkQueryPoolCreateFlags
 -- | Opaque flag
 newtype VkQueryPoolCreateFlags = VkQueryPoolCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** VkQueryPipelineStatisticFlags
 

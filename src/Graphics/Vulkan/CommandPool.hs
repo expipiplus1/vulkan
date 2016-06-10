@@ -55,7 +55,7 @@ data VkCommandPoolCreateInfo =
                          , vkFlags :: VkCommandPoolCreateFlags 
                          , vkQueueFamilyIndex :: Word32 
                          }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkCommandPoolCreateInfo where
   sizeOf ~_ = 24
@@ -143,5 +143,5 @@ pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = VkCommandPoolResetFlagBits
 
 
 newtype VkCommandPool = VkCommandPool Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 

@@ -45,7 +45,7 @@ foreign import ccall "vkCreateBufferView" vkCreateBufferView ::
     Ptr VkAllocationCallbacks -> Ptr VkBufferView -> IO VkResult
 
 newtype VkBufferView = VkBufferView Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 
 data VkBufferViewCreateInfo =
@@ -57,7 +57,7 @@ data VkBufferViewCreateInfo =
                         , vkOffset :: VkDeviceSize 
                         , vkRange :: VkDeviceSize 
                         }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkBufferViewCreateInfo where
   sizeOf ~_ = 56
@@ -81,7 +81,7 @@ instance Storable VkBufferViewCreateInfo where
 -- ** VkBufferViewCreateFlags
 -- | Opaque flag
 newtype VkBufferViewCreateFlags = VkBufferViewCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** vkDestroyBufferView
 foreign import ccall "vkDestroyBufferView" vkDestroyBufferView ::

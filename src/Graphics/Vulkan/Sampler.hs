@@ -210,7 +210,7 @@ pattern VK_COMPARE_OP_GREATER_OR_EQUAL = VkCompareOp 6
 pattern VK_COMPARE_OP_ALWAYS = VkCompareOp 7
 
 newtype VkSampler = VkSampler Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 
 data VkSamplerCreateInfo =
@@ -233,7 +233,7 @@ data VkSamplerCreateInfo =
                      , vkBorderColor :: VkBorderColor 
                      , vkUnnormalizedCoordinates :: VkBool32 
                      }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSamplerCreateInfo where
   sizeOf ~_ = 80
@@ -279,7 +279,7 @@ instance Storable VkSamplerCreateInfo where
 -- ** VkSamplerCreateFlags
 -- | Opaque flag
 newtype VkSamplerCreateFlags = VkSamplerCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** VkSamplerMipmapMode
 

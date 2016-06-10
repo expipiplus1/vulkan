@@ -55,7 +55,7 @@ data VkFenceCreateInfo =
                    , vkPNext :: Ptr Void 
                    , vkFlags :: VkFenceCreateFlags 
                    }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkFenceCreateInfo where
   sizeOf ~_ = 24
@@ -119,5 +119,5 @@ foreign import ccall "vkCreateFence" vkCreateFence ::
     Ptr VkAllocationCallbacks -> Ptr VkFence -> IO VkResult
 
 newtype VkFence = VkFence Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 

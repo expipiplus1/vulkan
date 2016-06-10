@@ -161,7 +161,7 @@ pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x80
 
 
 newtype VkImage = VkImage Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** VkImageAspectFlags
 
@@ -210,7 +210,7 @@ data VkSubresourceLayout =
                      , vkArrayPitch :: VkDeviceSize 
                      , vkDepthPitch :: VkDeviceSize 
                      }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSubresourceLayout where
   sizeOf ~_ = 40
@@ -347,7 +347,7 @@ data VkImageSubresource =
                     , vkMipLevel :: Word32 
                     , vkArrayLayer :: Word32 
                     }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkImageSubresource where
   sizeOf ~_ = 12
@@ -368,7 +368,7 @@ data VkImageSubresourceRange =
                          , vkBaseArrayLayer :: Word32 
                          , vkLayerCount :: Word32 
                          }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkImageSubresourceRange where
   sizeOf ~_ = 20
@@ -409,7 +409,7 @@ data VkImageCreateInfo =
                    , vkPQueueFamilyIndices :: Ptr Word32 
                    , vkInitialLayout :: VkImageLayout 
                    }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkImageCreateInfo where
   sizeOf ~_ = 88

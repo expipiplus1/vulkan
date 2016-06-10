@@ -75,7 +75,7 @@ data VkSwapchainCreateInfoKHR =
                           , vkClipped :: VkBool32 
                           , vkOldSwapchain :: VkSwapchainKHR 
                           }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSwapchainCreateInfoKHR where
   sizeOf ~_ = 104
@@ -134,7 +134,7 @@ foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR ::
 -- ** VkSwapchainCreateFlagsKHR
 -- | Opaque flag
 newtype VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** vkCreateSwapchainKHR
 foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR ::
@@ -159,7 +159,7 @@ data VkPresentInfoKHR =
                   , vkPImageIndices :: Ptr Word32 
                   , vkPResults :: Ptr VkResult 
                   }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPresentInfoKHR where
   sizeOf ~_ = 64
@@ -183,5 +183,5 @@ instance Storable VkPresentInfoKHR where
 
 
 newtype VkSwapchainKHR = VkSwapchainKHR Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 

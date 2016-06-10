@@ -132,7 +132,7 @@ data VkCommandBufferBeginInfo =
                           , vkFlags :: VkCommandBufferUsageFlags 
                           , vkPInheritanceInfo :: Ptr VkCommandBufferInheritanceInfo 
                           }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkCommandBufferBeginInfo where
   sizeOf ~_ = 32
@@ -158,7 +158,7 @@ data VkCommandBufferInheritanceInfo =
                                 , vkQueryFlags :: VkQueryControlFlags 
                                 , vkPipelineStatistics :: VkQueryPipelineStatisticFlags 
                                 }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkCommandBufferInheritanceInfo where
   sizeOf ~_ = 56
@@ -227,7 +227,7 @@ data VkCommandBufferAllocateInfo =
                              , vkLevel :: VkCommandBufferLevel 
                              , vkCommandBufferCount :: Word32 
                              }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkCommandBufferAllocateInfo where
   sizeOf ~_ = 32

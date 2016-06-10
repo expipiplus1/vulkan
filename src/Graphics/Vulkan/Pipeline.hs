@@ -82,7 +82,7 @@ data VkPipelineTessellationStateCreateInfo =
                                        , vkFlags :: VkPipelineTessellationStateCreateFlags 
                                        , vkPatchControlPoints :: Word32 
                                        }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineTessellationStateCreateInfo where
   sizeOf ~_ = 24
@@ -104,7 +104,7 @@ data VkVertexInputAttributeDescription =
                                    , vkFormat :: VkFormat 
                                    , vkOffset :: Word32 
                                    }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkVertexInputAttributeDescription where
   sizeOf ~_ = 16
@@ -141,7 +141,7 @@ data VkGraphicsPipelineCreateInfo =
                               , vkBasePipelineHandle :: VkPipeline 
                               , vkBasePipelineIndex :: Int32 
                               }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkGraphicsPipelineCreateInfo where
   sizeOf ~_ = 144
@@ -226,7 +226,7 @@ pattern VK_CULL_MODE_FRONT_AND_BACK = VkCullModeFlagBits 0x3
 -- ** VkPipelineDepthStencilStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineDepthStencilStateCreateFlags = VkPipelineDepthStencilStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkPipelineShaderStageCreateInfo =
@@ -238,7 +238,7 @@ data VkPipelineShaderStageCreateInfo =
                                  , vkPName :: Ptr CChar 
                                  , vkPSpecializationInfo :: Ptr VkSpecializationInfo 
                                  }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineShaderStageCreateInfo where
   sizeOf ~_ = 48
@@ -308,7 +308,7 @@ data VkComputePipelineCreateInfo =
                              , vkBasePipelineHandle :: VkPipeline 
                              , vkBasePipelineIndex :: Int32 
                              }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkComputePipelineCreateInfo where
   sizeOf ~_ = 96
@@ -386,7 +386,7 @@ data VkSpecializationInfo =
                       , vkDataSize :: CSize 
                       , vkPData :: Ptr Void 
                       }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSpecializationInfo where
   sizeOf ~_ = 32
@@ -404,15 +404,15 @@ instance Storable VkSpecializationInfo where
 -- ** VkPipelineColorBlendStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineColorBlendStateCreateFlags = VkPipelineColorBlendStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 newtype VkPipeline = VkPipeline Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** VkPipelineInputAssemblyStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineInputAssemblyStateCreateFlags = VkPipelineInputAssemblyStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** vkCreateGraphicsPipelines
 foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines ::
@@ -481,7 +481,7 @@ pattern VK_POLYGON_MODE_POINT = VkPolygonMode 2
 -- ** VkPipelineViewportStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineViewportStateCreateFlags = VkPipelineViewportStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** VkLogicOp
 
@@ -603,7 +603,7 @@ pattern VK_PIPELINE_CREATE_DERIVATIVE_BIT = VkPipelineCreateFlagBits 0x4
 -- ** VkPipelineRasterizationStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineRasterizationStateCreateFlags = VkPipelineRasterizationStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** VkDynamicState
 
@@ -688,7 +688,7 @@ pattern VK_PIPELINE_BIND_POINT_COMPUTE = VkPipelineBindPoint 1
 -- ** VkPipelineDynamicStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineDynamicStateCreateFlags = VkPipelineDynamicStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkPipelineRasterizationStateCreateInfo =
@@ -706,7 +706,7 @@ data VkPipelineRasterizationStateCreateInfo =
                                         , vkDepthBiasSlopeFactor :: CFloat 
                                         , vkLineWidth :: CFloat 
                                         }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineRasterizationStateCreateInfo where
   sizeOf ~_ = 64
@@ -784,7 +784,7 @@ foreign import ccall "vkDestroyPipeline" vkDestroyPipeline ::
 -- ** VkPipelineShaderStageCreateFlags
 -- | Opaque flag
 newtype VkPipelineShaderStageCreateFlags = VkPipelineShaderStageCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkPipelineViewportStateCreateInfo =
@@ -796,7 +796,7 @@ data VkPipelineViewportStateCreateInfo =
                                    , vkScissorCount :: Word32 
                                    , vkPScissors :: Ptr VkRect2D 
                                    }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineViewportStateCreateInfo where
   sizeOf ~_ = 48
@@ -820,7 +820,7 @@ instance Storable VkPipelineViewportStateCreateInfo where
 -- ** VkPipelineTessellationStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineTessellationStateCreateFlags = VkPipelineTessellationStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkPipelineVertexInputStateCreateInfo =
@@ -832,7 +832,7 @@ data VkPipelineVertexInputStateCreateInfo =
                                       , vkVertexAttributeDescriptionCount :: Word32 
                                       , vkPVertexAttributeDescriptions :: Ptr VkVertexInputAttributeDescription 
                                       }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineVertexInputStateCreateInfo where
   sizeOf ~_ = 48
@@ -923,7 +923,7 @@ data VkPipelineInputAssemblyStateCreateInfo =
                                         , vkTopology :: VkPrimitiveTopology 
                                         , vkPrimitiveRestartEnable :: VkBool32 
                                         }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineInputAssemblyStateCreateInfo where
   sizeOf ~_ = 32
@@ -951,7 +951,7 @@ data VkPipelineColorBlendStateCreateInfo =
                                      , vkPAttachments :: Ptr VkPipelineColorBlendAttachmentState 
                                      , vkBlendConstants :: Vector 4 CFloat 
                                      }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineColorBlendStateCreateInfo where
   sizeOf ~_ = 56
@@ -982,7 +982,7 @@ data VkPipelineDynamicStateCreateInfo =
                                   , vkDynamicStateCount :: Word32 
                                   , vkPDynamicStates :: Ptr VkDynamicState 
                                   }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineDynamicStateCreateInfo where
   sizeOf ~_ = 32
@@ -1005,7 +1005,7 @@ data VkSpecializationMapEntry =
                           , vkOffset :: Word32 
                           , vkSize :: CSize 
                           }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSpecializationMapEntry where
   sizeOf ~_ = 16
@@ -1021,7 +1021,7 @@ instance Storable VkSpecializationMapEntry where
 -- ** VkPipelineVertexInputStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineVertexInputStateCreateFlags = VkPipelineVertexInputStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** VkVertexInputRate
 
@@ -1151,7 +1151,7 @@ data VkPipelineColorBlendAttachmentState =
                                      , vkAlphaBlendOp :: VkBlendOp 
                                      , vkColorWriteMask :: VkColorComponentFlags 
                                      }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineColorBlendAttachmentState where
   sizeOf ~_ = 32
@@ -1269,12 +1269,12 @@ pattern VK_BLEND_FACTOR_SRC1_ALPHA = VkBlendFactor 17
 pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = VkBlendFactor 18
 
 newtype VkSampleMask = VkSampleMask Word32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** VkPipelineMultisampleStateCreateFlags
 -- | Opaque flag
 newtype VkPipelineMultisampleStateCreateFlags = VkPipelineMultisampleStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkPipelineMultisampleStateCreateInfo =
@@ -1288,7 +1288,7 @@ data VkPipelineMultisampleStateCreateInfo =
                                       , vkAlphaToCoverageEnable :: VkBool32 
                                       , vkAlphaToOneEnable :: VkBool32 
                                       }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineMultisampleStateCreateInfo where
   sizeOf ~_ = 48
@@ -1319,7 +1319,7 @@ data VkVertexInputBindingDescription =
                                  , vkStride :: Word32 
                                  , vkInputRate :: VkVertexInputRate 
                                  }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkVertexInputBindingDescription where
   sizeOf ~_ = 12
@@ -1347,7 +1347,7 @@ data VkPipelineDepthStencilStateCreateInfo =
                                        , vkMinDepthBounds :: CFloat 
                                        , vkMaxDepthBounds :: CFloat 
                                        }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineDepthStencilStateCreateInfo where
   sizeOf ~_ = 104
@@ -1396,7 +1396,7 @@ data VkStencilOpState =
                   , vkWriteMask :: Word32 
                   , vkReference :: Word32 
                   }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkStencilOpState where
   sizeOf ~_ = 28

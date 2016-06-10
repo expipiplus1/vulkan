@@ -72,7 +72,7 @@ data VkSubpassDependency =
                      , vkDstAccessMask :: VkAccessFlags 
                      , vkDependencyFlags :: VkDependencyFlags 
                      }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSubpassDependency where
   sizeOf ~_ = 28
@@ -96,10 +96,10 @@ instance Storable VkSubpassDependency where
 -- ** VkSubpassDescriptionFlags
 -- | Opaque flag
 newtype VkSubpassDescriptionFlags = VkSubpassDescriptionFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 newtype VkFramebuffer = VkFramebuffer Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** VkAttachmentDescriptionFlags
 
@@ -177,7 +177,7 @@ data VkFramebufferCreateInfo =
                          , vkHeight :: Word32 
                          , vkLayers :: Word32 
                          }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkFramebufferCreateInfo where
   sizeOf ~_ = 64
@@ -354,7 +354,7 @@ pattern VK_ACCESS_MEMORY_WRITE_BIT = VkAccessFlagBits 0x10000
 
 
 newtype VkRenderPass = VkRenderPass Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** vkDestroyFramebuffer
 foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer ::
@@ -365,7 +365,7 @@ data VkAttachmentReference =
   VkAttachmentReference{ vkAttachment :: Word32 
                        , vkLayout :: VkImageLayout 
                        }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkAttachmentReference where
   sizeOf ~_ = 8
@@ -379,7 +379,7 @@ instance Storable VkAttachmentReference where
 -- ** VkRenderPassCreateFlags
 -- | Opaque flag
 newtype VkRenderPassCreateFlags = VkRenderPassCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkAttachmentDescription =
@@ -393,7 +393,7 @@ data VkAttachmentDescription =
                          , vkInitialLayout :: VkImageLayout 
                          , vkFinalLayout :: VkImageLayout 
                          }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkAttachmentDescription where
   sizeOf ~_ = 36
@@ -431,7 +431,7 @@ data VkSubpassDescription =
                       , vkPreserveAttachmentCount :: Word32 
                       , vkPPreserveAttachments :: Ptr Word32 
                       }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSubpassDescription where
   sizeOf ~_ = 72
@@ -476,7 +476,7 @@ data VkRenderPassCreateInfo =
                         , vkDependencyCount :: Word32 
                         , vkPDependencies :: Ptr VkSubpassDependency 
                         }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkRenderPassCreateInfo where
   sizeOf ~_ = 64
@@ -504,5 +504,5 @@ instance Storable VkRenderPassCreateInfo where
 -- ** VkFramebufferCreateFlags
 -- | Opaque flag
 newtype VkFramebufferCreateFlags = VkFramebufferCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 

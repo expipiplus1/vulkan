@@ -59,7 +59,7 @@ data VkSubmitInfo =
               , vkSignalSemaphoreCount :: Word32 
               , vkPSignalSemaphores :: Ptr VkSemaphore 
               }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSubmitInfo where
   sizeOf ~_ = 72

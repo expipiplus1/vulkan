@@ -66,7 +66,7 @@ data VkImageViewCreateInfo =
                        , vkComponents :: VkComponentMapping 
                        , vkSubresourceRange :: VkImageSubresourceRange 
                        }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkImageViewCreateInfo where
   sizeOf ~_ = 80
@@ -96,7 +96,7 @@ foreign import ccall "vkCreateImageView" vkCreateImageView ::
     Ptr VkAllocationCallbacks -> Ptr VkImageView -> IO VkResult
 
 newtype VkImageView = VkImageView Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** VkImageViewType
 
@@ -147,7 +147,7 @@ pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = VkImageViewType 6
 -- ** VkImageViewCreateFlags
 -- | Opaque flag
 newtype VkImageViewCreateFlags = VkImageViewCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkComponentMapping =
@@ -156,7 +156,7 @@ data VkComponentMapping =
                     , vkB :: VkComponentSwizzle 
                     , vkA :: VkComponentSwizzle 
                     }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkComponentMapping where
   sizeOf ~_ = 16

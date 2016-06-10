@@ -139,7 +139,7 @@ data VkImageCopy =
              , vkDstOffset :: VkOffset3D 
              , vkExtent :: VkExtent3D 
              }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkImageCopy where
   sizeOf ~_ = 68
@@ -203,7 +203,7 @@ data VkClearRect =
              , vkBaseArrayLayer :: Word32 
              , vkLayerCount :: Word32 
              }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkClearRect where
   sizeOf ~_ = 24
@@ -272,7 +272,7 @@ data VkBufferImageCopy =
                    , vkImageOffset :: VkOffset3D 
                    , vkImageExtent :: VkExtent3D 
                    }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkBufferImageCopy where
   sizeOf ~_ = 56
@@ -331,7 +331,7 @@ data VkImageSubresourceLayers =
                           , vkBaseArrayLayer :: Word32 
                           , vkLayerCount :: Word32 
                           }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkImageSubresourceLayers where
   sizeOf ~_ = 16
@@ -365,7 +365,7 @@ data VkClearDepthStencilValue =
   VkClearDepthStencilValue{ vkDepth :: CFloat 
                           , vkStencil :: Word32 
                           }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkClearDepthStencilValue where
   sizeOf ~_ = 8
@@ -382,7 +382,7 @@ data VkBufferCopy =
               , vkDstOffset :: VkDeviceSize 
               , vkSize :: VkDeviceSize 
               }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkBufferCopy where
   sizeOf ~_ = 24
@@ -436,7 +436,7 @@ data VkRenderPassBeginInfo =
                        , vkClearValueCount :: Word32 
                        , vkPClearValues :: Ptr VkClearValue 
                        }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkRenderPassBeginInfo where
   sizeOf ~_ = 64
@@ -468,7 +468,7 @@ data VkImageBlit =
              , vkDstSubresource :: VkImageSubresourceLayers 
              , vkDstOffsets :: Vector 2 VkOffset3D 
              }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkImageBlit where
   sizeOf ~_ = 80
@@ -489,7 +489,7 @@ data VkClearAttachment =
                    , vkColorAttachment :: Word32 
                    , vkClearValue :: VkClearValue 
                    }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkClearAttachment where
   sizeOf ~_ = 24
@@ -505,7 +505,7 @@ instance Storable VkClearAttachment where
 -- | // Union allowing specification of color or depth and stencil values. Actual value selected is based on attachment being cleared.
 data VkClearValue = VkColor VkClearColorValue 
                   | VkDepthStencil VkClearDepthStencilValue 
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use
 instance Storable VkClearValue where
@@ -554,7 +554,7 @@ pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlagBits 0x3
 data VkClearColorValue = VkFloat32 (Vector 4 CFloat) 
                        | VkInt32 (Vector 4 Int32) 
                        | VkUint32 (Vector 4 Word32) 
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 -- | _Note_: peek is undefined as we wouldn't know which constructor to use
 instance Storable VkClearColorValue where
@@ -630,7 +630,7 @@ data VkImageResolve =
                 , vkDstOffset :: VkOffset3D 
                 , vkExtent :: VkExtent3D 
                 }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkImageResolve where
   sizeOf ~_ = 68

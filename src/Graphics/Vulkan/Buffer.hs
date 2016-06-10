@@ -155,7 +155,7 @@ foreign import ccall "vkDestroyBuffer" vkDestroyBuffer ::
   VkDevice -> VkBuffer -> Ptr VkAllocationCallbacks -> IO ()
 
 newtype VkBuffer = VkBuffer Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 
 data VkBufferCreateInfo =
@@ -168,7 +168,7 @@ data VkBufferCreateInfo =
                     , vkQueueFamilyIndexCount :: Word32 
                     , vkPQueueFamilyIndices :: Ptr Word32 
                     }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkBufferCreateInfo where
   sizeOf ~_ = 56

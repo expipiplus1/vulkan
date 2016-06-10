@@ -62,7 +62,7 @@ foreign import ccall "vkDebugReportMessageEXT" vkDebugReportMessageEXT ::
       Word64 -> CSize -> Int32 -> Ptr CChar -> Ptr CChar -> IO ()
 
 newtype VkDebugReportCallbackEXT = VkDebugReportCallbackEXT Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** VkDebugReportObjectTypeEXT
 
@@ -232,7 +232,7 @@ data VkDebugReportCallbackCreateInfoEXT =
                                     , vkPfnCallback :: PFN_vkDebugReportCallbackEXT 
                                     , vkPUserData :: Ptr Void 
                                     }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDebugReportCallbackCreateInfoEXT where
   sizeOf ~_ = 40

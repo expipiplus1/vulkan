@@ -30,7 +30,7 @@ import Foreign.C.Types( CFloat
                       )
 
 newtype VkDeviceSize = VkDeviceSize Word64
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** VkFormat
 -- | Vulkan format definitions
@@ -797,7 +797,7 @@ data VkExtent2D =
   VkExtent2D{ vkWidth :: Word32 
             , vkHeight :: Word32 
             }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkExtent2D where
   sizeOf ~_ = 8
@@ -1049,14 +1049,14 @@ pattern VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = VkStructureType 47
 pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = VkStructureType 48
 
 newtype VkBool32 = VkBool32 Word32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 
 data VkOffset2D =
   VkOffset2D{ vkX :: Int32 
             , vkY :: Int32 
             }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkOffset2D where
   sizeOf ~_ = 8
@@ -1073,7 +1073,7 @@ data VkOffset3D =
             , vkY :: Int32 
             , vkZ :: Int32 
             }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkOffset3D where
   sizeOf ~_ = 12
@@ -1092,7 +1092,7 @@ data VkExtent3D =
             , vkHeight :: Word32 
             , vkDepth :: Word32 
             }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkExtent3D where
   sizeOf ~_ = 12
@@ -1110,7 +1110,7 @@ data VkRect3D =
   VkRect3D{ vkOffset :: VkOffset3D 
           , vkExtent :: VkExtent3D 
           }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkRect3D where
   sizeOf ~_ = 24
@@ -1216,7 +1216,7 @@ data VkViewport =
             , vkMinDepth :: CFloat 
             , vkMaxDepth :: CFloat 
             }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkViewport where
   sizeOf ~_ = 24
@@ -1240,7 +1240,7 @@ data VkRect2D =
   VkRect2D{ vkOffset :: VkOffset2D 
           , vkExtent :: VkExtent2D 
           }
-  deriving (Eq, Ord)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkRect2D where
   sizeOf ~_ = 16
