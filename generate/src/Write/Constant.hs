@@ -15,6 +15,7 @@ import           Write.WriteMonad
 writeConstant :: Constant -> Write Doc
 writeConstant c = do
   tellExtension "PatternSynonyms"
+  tellExtension "ScopedTypeVariables"
   typeStringMay <- maybeWriteConstantType c
   let typeString = fromMaybe mempty typeStringMay
   patternString <- writeConstantPattern c

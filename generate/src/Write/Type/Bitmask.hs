@@ -38,6 +38,7 @@ writeBitmaskTypeWithBits bmt bm = do
   doesDeriveStorable
   tellExtension "GeneralizedNewtypeDeriving"
   tellExtension "PatternSynonyms"
+  tellExtension "ScopedTypeVariables"
   tellRequiredName (ExternalName (ModuleName "Data.Bits") "Bits")
   tellRequiredName (ExternalName (ModuleName "Data.Bits") "FiniteBits")
   tellRequiredNames

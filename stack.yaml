@@ -1,14 +1,8 @@
-setup-info:
-  ghc:
-    linux64:
-      8.0.0.20160204:
-        url: "https://downloads.haskell.org/~ghc/8.0.1-rc2/ghc-8.0.0.20160204-x86_64-deb8-linux.tar.xz"
-        sha1: 2e67c6f4680304848ca9d44f2e888b1754da4abe
 flags: {}
 packages:
-    - .
+- '.'
 extra-deps:
-    - vector-sized-0.1.0.0
-    - vector-0.11.0.0
-    - primitive-0.6.1.0
-resolver: ghc-8.0.0.20160204
+- primitive-0.6.1.0
+- vector-0.11.0.0
+- vector-sized-0.3.2.0
+resolver: ghc-8.0.1
