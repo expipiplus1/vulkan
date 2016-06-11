@@ -30,8 +30,8 @@ parseExtension = extractFields "Extension"
           eContact <- optionalAttrValue "contact" -< extension
           require <- oneRequired "require"
                        (hasName "require" <<< getChildren) -< extension
-          eEnumExtensions <-
-            listA (parseEnumExtension <<< getChildren) -< require
+          eEnums <-
+            listA (parseExtensionEnum <<< getChildren) -< require
           eConstants <-
             listA (parseExtensionConstant <<< getChildren) -< require
           eCommandNames <-
@@ -40,19 +40,19 @@ parseExtension = extractFields "Extension"
             listA (parseTypeName <<< getChildren) -< require
           returnA -< Extension{..}
 
-parseEnumExtension :: IOStateArrow s XmlTree EnumExtension
-parseEnumExtension = extractFields "enum extension"
+parseExtensionEnum :: IOStateArrow s XmlTree ExtensionEnum
+parseExtensionEnum = extractFields "enum extension"
                                    (hasName "enum" >>> hasAttr "extends")
                                    extract
-  where extract = proc enumExtension -> do
-          eeName <- requiredAttrValue "name" -< enumExtension
-          eeExtends <- requiredAttrValue "extends" -< enumExtension
+  where extract = proc extensionEnum -> do
+          eeName <- requiredAttrValue "name" -< extensionEnum
+          eeExtends <- requiredAttrValue "extends" -< extensionEnum
           eeOffset <- requiredRead <<<
-                      requiredAttrValue "offset" -< enumExtension
+                      requiredAttrValue "offset" -< extensionEnum
           eeDirection <- fromMaybe Positive ^<<
                          traverseMaybeA parseDirection <<<
-                         optionalAttrValue "dir" -< enumExtension
-          returnA -< EnumExtension{..}
+                         optionalAttrValue "dir" -< extensionEnum
+          returnA -< ExtensionEnum{..}
 
 parseDirection :: IOStateArrow s String Direction
 parseDirection = arrF p `orElse`
