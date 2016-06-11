@@ -10,6 +10,7 @@ data Extension = Extension{ eName         :: String
                           , eContact      :: Maybe String
                           , eEnums        :: [ExtensionEnum]
                           , eConstants    :: [ExtensionConstant]
+                          , eBitmasks     :: [ExtensionBitmask]
                           , eCommandNames :: [String]
                           , eTypeNames    :: [String]
                           }
@@ -26,9 +27,16 @@ data ExtensionEnum = ExtensionEnum{ eeName      :: String
                                   }
   deriving(Show)
 
-data ExtensionConstant = ExtensionConstant{ ecName  :: String
-                                          , ecValue :: Either String Integer
+data ExtensionConstant = ExtensionConstant{ ecName    :: String
+                                          , ecValue   :: Either String Integer
+                                          , ecExtends :: Maybe String
                                           }
+  deriving(Show)
+
+data ExtensionBitmask = ExtensionBitmask{ ebmName    :: String
+                                        , ebmBitpos  :: Integer
+                                        , ebmExtends :: Maybe String
+                                        }
   deriving(Show)
 
 allExtensionNames :: Extension -> [String]
