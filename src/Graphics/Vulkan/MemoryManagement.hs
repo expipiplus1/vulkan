@@ -34,7 +34,7 @@ data VkMemoryRequirements =
                       , vkAlignment :: VkDeviceSize 
                       , vkMemoryTypeBits :: Word32 
                       }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkMemoryRequirements where
   sizeOf ~_ = 24

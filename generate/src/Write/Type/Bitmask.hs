@@ -25,11 +25,14 @@ writeBitmaskType bmt (Just bm) = writeBitmaskTypeWithBits bmt bm
 writeOpaqueBitmaskType :: BitmaskType -> Write Doc
 writeOpaqueBitmaskType bmt = do
   doesDeriveStorable
+  tellExtension "GeneralizedNewtypeDeriving"
+  tellRequiredName (ExternalName (ModuleName "Data.Bits") "Bits")
+  tellRequiredName (ExternalName (ModuleName "Data.Bits") "FiniteBits")
   bmtHsType <- cTypeToHsTypeString (bmtCType bmt)
   pure $ [qc|-- ** {bmtName bmt}
 {predocComment "Opaque flag"}
 newtype {bmtName bmt} = {bmtName bmt} {bmtHsType}
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 |]
 
 writeBitmaskTypeWithBits :: BitmaskType -> Bitmask -> Write Doc
@@ -38,6 +41,7 @@ writeBitmaskTypeWithBits bmt bm = do
   doesDeriveStorable
   tellExtension "GeneralizedNewtypeDeriving"
   tellExtension "PatternSynonyms"
+  tellExtension "ScopedTypeVariables"
   tellRequiredName (ExternalName (ModuleName "Data.Bits") "Bits")
   tellRequiredName (ExternalName (ModuleName "Data.Bits") "FiniteBits")
   tellRequiredNames
@@ -58,7 +62,7 @@ writeBitmaskTypeWithBits bmt bm = do
   pure [qc|-- ** {bmtName bmt}
 {predocComment $ fromMaybe "" (bmComment bm)}
 newtype {bmName bm} = {bmName bm} {bmtHsType}
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for {bmName bm}
 type {bmtName bmt} = {bmName bm}

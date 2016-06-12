@@ -1,4 +1,5 @@
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -54,7 +55,7 @@ data VkCommandPoolCreateInfo =
                          , vkFlags :: VkCommandPoolCreateFlags 
                          , vkQueueFamilyIndex :: Word32 
                          }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkCommandPoolCreateInfo where
   sizeOf ~_ = 24
@@ -80,7 +81,7 @@ foreign import ccall "vkResetCommandPool" vkResetCommandPool ::
 -- ** VkCommandPoolCreateFlags
 
 newtype VkCommandPoolCreateFlagBits = VkCommandPoolCreateFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkCommandPoolCreateFlagBits
 type VkCommandPoolCreateFlags = VkCommandPoolCreateFlagBits
@@ -117,7 +118,7 @@ foreign import ccall "vkCreateCommandPool" vkCreateCommandPool ::
 -- ** VkCommandPoolResetFlags
 
 newtype VkCommandPoolResetFlagBits = VkCommandPoolResetFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkCommandPoolResetFlagBits
 type VkCommandPoolResetFlags = VkCommandPoolResetFlagBits
@@ -142,5 +143,5 @@ pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = VkCommandPoolResetFlagBits
 
 
 newtype VkCommandPool = VkCommandPool Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Show)
 

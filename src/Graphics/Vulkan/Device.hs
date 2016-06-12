@@ -8,6 +8,9 @@ import Data.Word( Word32
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -96,7 +99,7 @@ data VkPhysicalDeviceFeatures =
                           , vkVariableMultisampleRate :: VkBool32 
                           , vkInheritedQueries :: VkBool32 
                           }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPhysicalDeviceFeatures where
   sizeOf ~_ = 220
@@ -216,7 +219,7 @@ instance Storable VkPhysicalDeviceFeatures where
 -- ** VkDeviceCreateFlags
 -- | Opaque flag
 newtype VkDeviceCreateFlags = VkDeviceCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkDeviceQueueCreateInfo =
@@ -227,7 +230,7 @@ data VkDeviceQueueCreateInfo =
                          , vkQueueCount :: Word32 
                          , vkPQueuePriorities :: Ptr CFloat 
                          }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDeviceQueueCreateInfo where
   sizeOf ~_ = 40
@@ -249,7 +252,7 @@ instance Storable VkDeviceQueueCreateInfo where
 -- ** VkDeviceQueueCreateFlags
 -- | Opaque flag
 newtype VkDeviceQueueCreateFlags = VkDeviceQueueCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** vkDestroyDevice
 foreign import ccall "vkDestroyDevice" vkDestroyDevice ::
@@ -274,7 +277,7 @@ data VkDeviceCreateInfo =
                     , vkPpEnabledExtensionNames :: Ptr (Ptr CChar) 
                     , vkPEnabledFeatures :: Ptr VkPhysicalDeviceFeatures 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDeviceCreateInfo where
   sizeOf ~_ = 72

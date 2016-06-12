@@ -16,39 +16,52 @@ cabal-version:       >=1.10
 executable generate
   hs-source-dirs:      src
   main-is:             Main.hs
-  other-modules:       Spec.Spec
-                     , Spec.Bitmask
-                     , Spec.Command
-                     , Spec.Enum
-                     , Spec.Extension
-                     , Spec.ExtensionTag
-                     , Spec.Graph
-                     , Spec.Partition
-                     , Spec.Type
-                     , Spec.Section
-                     , Spec.StripExtensions
-                     , Parse.Bitmask
+  other-modules:       Parse.Bitmask
                      , Parse.CType
                      , Parse.Command
                      , Parse.Constant
                      , Parse.Enum
                      , Parse.Extension
+                     , Parse.Section
                      , Parse.Spec
                      , Parse.State
-                     , Parse.Section
+                     , Parse.Tag
                      , Parse.Type
                      , Parse.Utils
+                     , Parse.VendorID
+                     , Spec.Bitmask
+                     , Spec.Command
+                     , Spec.Constant
+                     , Spec.Enum
+                     , Spec.Extension
+                     , Spec.ExtensionTag
+                     , Spec.Graph
+                     , Spec.Partition
+                     , Spec.Section
+                     , Spec.Spec
+                     , Spec.StripExtensions
+                     , Spec.Tag
+                     , Spec.Type
+                     , Spec.TypeEnv
+                     , Spec.VendorID
                      , Write.Command
                      , Write.Constant
+                     , Write.CycleBreak
                      , Write.Enum
                      , Write.Header
                      , Write.Module
+                     , Write.Quirks
                      , Write.Spec
                      , Write.Type.Base
                      , Write.Type.Bitmask
+                     , Write.Type.Define
                      , Write.Type.FuncPointer
                      , Write.Type.Handle
+                     , Write.Type.Struct
                      , Write.TypeConverter
+                     , Write.Utils
+                     , Write.Vertex
+                     , Write.WriteMonad
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:       base >= 4.8 && < 4.9
                      , cpphs >= 1.19 && < 1.21

@@ -1,4 +1,5 @@
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -52,7 +53,7 @@ import Graphics.Vulkan.Core( VkResult(..)
 -- ** VkCommandBufferLevel
 
 newtype VkCommandBufferLevel = VkCommandBufferLevel Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkCommandBufferLevel where
   showsPrec _ VK_COMMAND_BUFFER_LEVEL_PRIMARY = showString "VK_COMMAND_BUFFER_LEVEL_PRIMARY"
@@ -92,7 +93,7 @@ foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers ::
 -- ** VkCommandBufferUsageFlags
 
 newtype VkCommandBufferUsageFlagBits = VkCommandBufferUsageFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkCommandBufferUsageFlagBits
 type VkCommandBufferUsageFlags = VkCommandBufferUsageFlagBits
@@ -131,7 +132,7 @@ data VkCommandBufferBeginInfo =
                           , vkFlags :: VkCommandBufferUsageFlags 
                           , vkPInheritanceInfo :: Ptr VkCommandBufferInheritanceInfo 
                           }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkCommandBufferBeginInfo where
   sizeOf ~_ = 32
@@ -157,7 +158,7 @@ data VkCommandBufferInheritanceInfo =
                                 , vkQueryFlags :: VkQueryControlFlags 
                                 , vkPipelineStatistics :: VkQueryPipelineStatisticFlags 
                                 }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkCommandBufferInheritanceInfo where
   sizeOf ~_ = 56
@@ -186,7 +187,7 @@ type VkCommandBuffer = Ptr VkCommandBuffer_T
 -- ** VkCommandBufferResetFlags
 
 newtype VkCommandBufferResetFlagBits = VkCommandBufferResetFlagBits VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkCommandBufferResetFlagBits
 type VkCommandBufferResetFlags = VkCommandBufferResetFlagBits
@@ -226,7 +227,7 @@ data VkCommandBufferAllocateInfo =
                              , vkLevel :: VkCommandBufferLevel 
                              , vkCommandBufferCount :: Word32 
                              }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkCommandBufferAllocateInfo where
   sizeOf ~_ = 32

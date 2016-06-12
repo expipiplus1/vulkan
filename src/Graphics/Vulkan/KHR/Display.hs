@@ -1,4 +1,5 @@
 {-# LANGUAGE DuplicateRecordFields #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -74,7 +75,7 @@ data VkDisplaySurfaceCreateInfoKHR =
                                , vkAlphaMode :: VkDisplayPlaneAlphaFlagBitsKHR 
                                , vkImageExtent :: VkExtent2D 
                                }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDisplaySurfaceCreateInfoKHR where
   sizeOf ~_ = 64
@@ -113,7 +114,7 @@ data VkDisplayPlaneCapabilitiesKHR =
                                , vkMinDstExtent :: VkExtent2D 
                                , vkMaxDstExtent :: VkExtent2D 
                                }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDisplayPlaneCapabilitiesKHR where
   sizeOf ~_ = 68
@@ -154,7 +155,7 @@ data VkDisplayPropertiesKHR =
                         , vkPlaneReorderPossible :: VkBool32 
                         , vkPersistentContent :: VkBool32 
                         }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDisplayPropertiesKHR where
   sizeOf ~_ = 48
@@ -192,7 +193,7 @@ data VkDisplayPlanePropertiesKHR =
   VkDisplayPlanePropertiesKHR{ vkCurrentDisplay :: VkDisplayKHR 
                              , vkCurrentStackIndex :: Word32 
                              }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDisplayPlanePropertiesKHR where
   sizeOf ~_ = 16
@@ -214,7 +215,7 @@ data VkDisplayModePropertiesKHR =
   VkDisplayModePropertiesKHR{ vkDisplayMode :: VkDisplayModeKHR 
                             , vkParameters :: VkDisplayModeParametersKHR 
                             }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDisplayModePropertiesKHR where
   sizeOf ~_ = 24
@@ -228,7 +229,7 @@ instance Storable VkDisplayModePropertiesKHR where
 -- ** VkDisplayPlaneAlphaFlagsKHR
 
 newtype VkDisplayPlaneAlphaFlagBitsKHR = VkDisplayPlaneAlphaFlagBitsKHR VkFlags
-  deriving (Eq, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
 -- | Alias for VkDisplayPlaneAlphaFlagBitsKHR
 type VkDisplayPlaneAlphaFlagsKHR = VkDisplayPlaneAlphaFlagBitsKHR
@@ -267,7 +268,7 @@ pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = VkDisplayPlaneA
 -- ** VkDisplayModeCreateFlagsKHR
 -- | Opaque flag
 newtype VkDisplayModeCreateFlagsKHR = VkDisplayModeCreateFlagsKHR VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkDisplayModeCreateInfoKHR =
@@ -276,7 +277,7 @@ data VkDisplayModeCreateInfoKHR =
                             , vkFlags :: VkDisplayModeCreateFlagsKHR 
                             , vkParameters :: VkDisplayModeParametersKHR 
                             }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDisplayModeCreateInfoKHR where
   sizeOf ~_ = 32
@@ -297,14 +298,14 @@ foreign import ccall "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" vkGetPhysica
   Ptr Word32 -> Ptr VkDisplayPlanePropertiesKHR -> IO VkResult
 
 newtype VkDisplayModeKHR = VkDisplayModeKHR Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 
 data VkDisplayModeParametersKHR =
   VkDisplayModeParametersKHR{ vkVisibleRegion :: VkExtent2D 
                             , vkRefreshRate :: Word32 
                             }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkDisplayModeParametersKHR where
   sizeOf ~_ = 12
@@ -318,10 +319,10 @@ instance Storable VkDisplayModeParametersKHR where
 -- ** VkDisplaySurfaceCreateFlagsKHR
 -- | Opaque flag
 newtype VkDisplaySurfaceCreateFlagsKHR = VkDisplaySurfaceCreateFlagsKHR VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 newtype VkDisplayKHR = VkDisplayKHR Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** vkGetPhysicalDeviceDisplayPropertiesKHR
 foreign import ccall "vkGetPhysicalDeviceDisplayPropertiesKHR" vkGetPhysicalDeviceDisplayPropertiesKHR ::

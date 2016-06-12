@@ -19,6 +19,9 @@ import Foreign.Ptr( Ptr
                   )
 import Data.Int( Int32
                )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -63,7 +66,7 @@ data VkImageViewCreateInfo =
                        , vkComponents :: VkComponentMapping 
                        , vkSubresourceRange :: VkImageSubresourceRange 
                        }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkImageViewCreateInfo where
   sizeOf ~_ = 80
@@ -93,12 +96,12 @@ foreign import ccall "vkCreateImageView" vkCreateImageView ::
     Ptr VkAllocationCallbacks -> Ptr VkImageView -> IO VkResult
 
 newtype VkImageView = VkImageView Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 -- ** VkImageViewType
 
 newtype VkImageViewType = VkImageViewType Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkImageViewType where
   showsPrec _ VK_IMAGE_VIEW_TYPE_1D = showString "VK_IMAGE_VIEW_TYPE_1D"
@@ -144,7 +147,7 @@ pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = VkImageViewType 6
 -- ** VkImageViewCreateFlags
 -- | Opaque flag
 newtype VkImageViewCreateFlags = VkImageViewCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 
 data VkComponentMapping =
@@ -153,7 +156,7 @@ data VkComponentMapping =
                     , vkB :: VkComponentSwizzle 
                     , vkA :: VkComponentSwizzle 
                     }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkComponentMapping where
   sizeOf ~_ = 16
@@ -171,7 +174,7 @@ instance Storable VkComponentMapping where
 -- ** VkComponentSwizzle
 
 newtype VkComponentSwizzle = VkComponentSwizzle Int32
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable)
 
 instance Show VkComponentSwizzle where
   showsPrec _ VK_COMPONENT_SWIZZLE_IDENTITY = showString "VK_COMPONENT_SWIZZLE_IDENTITY"

@@ -11,6 +11,9 @@ import Data.Word( Word64
 import Foreign.Ptr( Ptr
                   , plusPtr
                   )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Data.Void( Void
@@ -43,7 +46,7 @@ foreign import ccall "vkGetPipelineCacheData" vkGetPipelineCacheData ::
   VkDevice -> VkPipelineCache -> Ptr CSize -> Ptr Void -> IO VkResult
 
 newtype VkPipelineCache = VkPipelineCache Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
 
 data VkPipelineCacheCreateInfo =
@@ -53,7 +56,7 @@ data VkPipelineCacheCreateInfo =
                            , vkInitialDataSize :: CSize 
                            , vkPInitialData :: Ptr Void 
                            }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPipelineCacheCreateInfo where
   sizeOf ~_ = 40
@@ -78,7 +81,7 @@ foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches ::
 -- ** VkPipelineCacheCreateFlags
 -- | Opaque flag
 newtype VkPipelineCacheCreateFlags = VkPipelineCacheCreateFlags VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** vkDestroyPipelineCache
 foreign import ccall "vkDestroyPipelineCache" vkDestroyPipelineCache ::

@@ -19,6 +19,9 @@ import Graphics.Vulkan.KHR.Surface( VkColorSpaceKHR(..)
                                   )
 import Graphics.Vulkan.Queue( VkQueue(..)
                             )
+import Data.Bits( Bits
+                , FiniteBits
+                )
 import Foreign.Storable( Storable(..)
                        )
 import Graphics.Vulkan.Fence( VkFence(..)
@@ -72,7 +75,7 @@ data VkSwapchainCreateInfoKHR =
                           , vkClipped :: VkBool32 
                           , vkOldSwapchain :: VkSwapchainKHR 
                           }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkSwapchainCreateInfoKHR where
   sizeOf ~_ = 104
@@ -131,7 +134,7 @@ foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR ::
 -- ** VkSwapchainCreateFlagsKHR
 -- | Opaque flag
 newtype VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagsKHR VkFlags
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
 -- ** vkCreateSwapchainKHR
 foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR ::
@@ -156,7 +159,7 @@ data VkPresentInfoKHR =
                   , vkPImageIndices :: Ptr Word32 
                   , vkPResults :: Ptr VkResult 
                   }
-  deriving (Eq)
+  deriving (Eq, Ord, Show)
 
 instance Storable VkPresentInfoKHR where
   sizeOf ~_ = 64
@@ -180,5 +183,5 @@ instance Storable VkPresentInfoKHR where
 
 
 newtype VkSwapchainKHR = VkSwapchainKHR Word64
-  deriving (Eq, Storable)
+  deriving (Eq, Ord, Storable, Show)
 
