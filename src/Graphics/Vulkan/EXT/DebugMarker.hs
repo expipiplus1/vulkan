@@ -1,6 +1,7 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE Strict #-}
+{-# LANGUAGE PatternSynonyms #-}
 module Graphics.Vulkan.EXT.DebugMarker where
 
 import Data.Vector.Storable.Sized( Vector
@@ -55,6 +56,7 @@ instance Storable VkDebugMarkerObjectNameInfoEXT where
                 *> poke (ptr `plusPtr` 32) (vkPObjectName (poked :: VkDebugMarkerObjectNameInfoEXT))
 
 
+pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT = VkStructureType 1000022000
 
 data VkDebugMarkerMarkerInfoEXT =
   VkDebugMarkerMarkerInfoEXT{ vkSType :: VkStructureType 
@@ -81,6 +83,7 @@ instance Storable VkDebugMarkerMarkerInfoEXT where
 foreign import ccall "vkCmdDebugMarkerInsertEXT" vkCmdDebugMarkerInsertEXT ::
   VkCommandBuffer -> Ptr VkDebugMarkerMarkerInfoEXT -> IO ()
 
+pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT = VkStructureType 1000022001
 -- ** vkCmdDebugMarkerBeginEXT
 foreign import ccall "vkCmdDebugMarkerBeginEXT" vkCmdDebugMarkerBeginEXT ::
   VkCommandBuffer -> Ptr VkDebugMarkerMarkerInfoEXT -> IO ()
@@ -128,3 +131,4 @@ instance Storable VkDebugMarkerObjectTagInfoEXT where
 foreign import ccall "vkDebugMarkerSetObjectNameEXT" vkDebugMarkerSetObjectNameEXT ::
   VkDevice -> Ptr VkDebugMarkerObjectNameInfoEXT -> IO VkResult
 
+pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT = VkStructureType 1000022002

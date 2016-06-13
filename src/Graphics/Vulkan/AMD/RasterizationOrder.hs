@@ -54,6 +54,7 @@ pattern VK_RASTERIZATION_ORDER_STRICT_AMD = VkRasterizationOrderAMD 0
 
 pattern VK_RASTERIZATION_ORDER_RELAXED_AMD = VkRasterizationOrderAMD 1
 
+pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD = VkStructureType 1000018000
 
 data VkPipelineRasterizationStateRasterizationOrderAMD =
   VkPipelineRasterizationStateRasterizationOrderAMD{ vkSType :: VkStructureType 

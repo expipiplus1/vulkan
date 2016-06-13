@@ -1,7 +1,5 @@
 module Spec.Extension where
 
-import           Data.Int (Int32)
-
 data Extension = Extension{ eName         :: String
                           , eNumber       :: Int
                           , eSupported    :: String
@@ -22,7 +20,7 @@ data Direction = Negative
 
 data ExtensionEnum = ExtensionEnum{ eeName      :: String
                                   , eeExtends   :: String
-                                  , eeOffset    :: Int32
+                                  , eeOffset    :: Int
                                   , eeDirection :: Direction
                                   }
   deriving(Show)
@@ -41,8 +39,7 @@ data ExtensionBitmask = ExtensionBitmask{ ebmName    :: String
 
 allExtensionNames :: Extension -> [String]
 allExtensionNames e =
-  -- TODO: Uncomment
-  -- eeName <$> eExtensionEnums e ++
+  (eeName <$> eEnums e) ++
   -- evName <$> eConstants e ++
   eCommandNames e ++
   eTypeNames e

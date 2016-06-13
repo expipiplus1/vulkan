@@ -33,3 +33,6 @@ writeVertex v =
     AnEnum enum -> writeEnum enum
     ABitmask _ -> pure empty -- Handled by bitmasktype
     AConstant constant -> writeConstant constant
+    AnExtensionEnum enum extnumber -> writeExtensionEnum enum extnumber
+    AnExtensionConstant _ -> pure empty --writeExtensionConstant constant
+    AnExtensionBitmask _ -> pure empty --writeExtensionBitmask bitmask

@@ -140,6 +140,7 @@ pattern VK_PRESENT_MODE_FIFO_KHR = VkPresentModeKHR 2
 
 pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR = VkPresentModeKHR 3
 
+pattern VK_ERROR_NATIVE_WINDOW_IN_USE_KHR = VkResult (-1000000001)
 newtype VkSurfaceKHR = VkSurfaceKHR Word64
   deriving (Eq, Ord, Storable, Show)
 
@@ -148,6 +149,7 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceS
   VkPhysicalDevice ->
   Word32 -> VkSurfaceKHR -> Ptr VkBool32 -> IO VkResult
 
+pattern VK_ERROR_SURFACE_LOST_KHR = VkResult (-1000000000)
 
 data VkSurfaceFormatKHR =
   VkSurfaceFormatKHR{ vkFormat :: VkFormat 

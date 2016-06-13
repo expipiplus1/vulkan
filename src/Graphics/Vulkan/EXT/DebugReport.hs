@@ -304,6 +304,8 @@ type PFN_vkDebugReportCallbackEXT = FunPtr
          CSize ->
            Int32 -> Ptr CChar -> Ptr CChar -> Ptr Void -> IO VkBool32)
 
+pattern VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT = VkStructureType 1000011000
+pattern VK_ERROR_VALIDATION_FAILED_EXT = VkResult (-1000011001)
 -- ** vkCreateDebugReportCallbackEXT
 foreign import ccall "vkCreateDebugReportCallbackEXT" vkCreateDebugReportCallbackEXT ::
   VkInstance ->
