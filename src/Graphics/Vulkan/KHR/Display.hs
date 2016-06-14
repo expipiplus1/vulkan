@@ -140,6 +140,7 @@ instance Storable VkDisplayPlaneCapabilitiesKHR where
                 *> poke (ptr `plusPtr` 60) (vkMaxDstExtent (poked :: VkDisplayPlaneCapabilitiesKHR))
 
 
+pattern VK_KHR_DISPLAY_EXTENSION_NAME =  "VK_KHR_display"
 -- ** vkGetDisplayModePropertiesKHR
 foreign import ccall "vkGetDisplayModePropertiesKHR" vkGetDisplayModePropertiesKHR ::
   VkPhysicalDevice ->
@@ -182,6 +183,7 @@ foreign import ccall "vkGetDisplayPlaneSupportedDisplaysKHR" vkGetDisplayPlaneSu
   VkPhysicalDevice ->
   Word32 -> Ptr Word32 -> Ptr VkDisplayKHR -> IO VkResult
 
+pattern VK_KHR_DISPLAY_SPEC_VERSION =  0x15
 -- ** vkCreateDisplayModeKHR
 foreign import ccall "vkCreateDisplayModeKHR" vkCreateDisplayModeKHR ::
   VkPhysicalDevice ->

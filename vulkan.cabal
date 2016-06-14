@@ -17,6 +17,10 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Graphics.Vulkan
+                     , Graphics.Vulkan.AMD.GcnShader
+                     , Graphics.Vulkan.AMD.RasterizationOrder
+                     , Graphics.Vulkan.AMD.ShaderExplicitVertexParameter
+                     , Graphics.Vulkan.AMD.ShaderTrinaryMinmax
                      , Graphics.Vulkan.Buffer
                      , Graphics.Vulkan.BufferView
                      , Graphics.Vulkan.CommandBuffer
@@ -27,19 +31,23 @@ library
                      , Graphics.Vulkan.DescriptorSet
                      , Graphics.Vulkan.Device
                      , Graphics.Vulkan.DeviceInitialization
+                     , Graphics.Vulkan.EXT.DebugMarker
                      , Graphics.Vulkan.EXT.DebugReport
                      , Graphics.Vulkan.Event
                      , Graphics.Vulkan.ExtensionDiscovery
                      , Graphics.Vulkan.Fence
+                     , Graphics.Vulkan.IMG.FilterCubic
                      , Graphics.Vulkan.Image
                      , Graphics.Vulkan.ImageView
                      , Graphics.Vulkan.KHR.Display
                      , Graphics.Vulkan.KHR.DisplaySwapchain
+                     , Graphics.Vulkan.KHR.SamplerMirrorClampToEdge
                      , Graphics.Vulkan.KHR.Surface
                      , Graphics.Vulkan.KHR.Swapchain
                      , Graphics.Vulkan.LayerDiscovery
                      , Graphics.Vulkan.Memory
                      , Graphics.Vulkan.MemoryManagement
+                     , Graphics.Vulkan.NV.GlslShader
                      , Graphics.Vulkan.OtherTypes
                      , Graphics.Vulkan.Pass
                      , Graphics.Vulkan.Pipeline

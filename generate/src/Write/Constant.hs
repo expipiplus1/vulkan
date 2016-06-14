@@ -3,10 +3,12 @@
 
 module Write.Constant
   ( writeConstant
+  , writeExtensionConstant
   ) where
 
 import           Data.Maybe                    (fromMaybe)
 import           Spec.Constant
+import           Spec.Extension
 import           Text.InterpolatedString.Perl6
 import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
 import           Write.Utils
@@ -45,3 +47,9 @@ type {cName c} = {i}|]
   | otherwise
   = pure Nothing
 
+writeExtensionConstant :: ExtensionConstant -> Write Doc
+writeExtensionConstant ec = do
+  tellExtension "PatternSynonyms"
+  pure [qc|pattern {ecName ec} = {fromMaybe "" $ ecExtends ec} {value}|]
+  where value = case ecValue ec of Left sv -> sv
+                                   Right iv -> showHex' iv

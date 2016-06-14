@@ -83,11 +83,13 @@ instance Storable VkDebugMarkerMarkerInfoEXT where
 foreign import ccall "vkCmdDebugMarkerInsertEXT" vkCmdDebugMarkerInsertEXT ::
   VkCommandBuffer -> Ptr VkDebugMarkerMarkerInfoEXT -> IO ()
 
+pattern VK_EXT_DEBUG_MARKER_EXTENSION_NAME =  "VK_EXT_debug_marker"
 pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT = VkStructureType 1000022001
 -- ** vkCmdDebugMarkerBeginEXT
 foreign import ccall "vkCmdDebugMarkerBeginEXT" vkCmdDebugMarkerBeginEXT ::
   VkCommandBuffer -> Ptr VkDebugMarkerMarkerInfoEXT -> IO ()
 
+pattern VK_EXT_DEBUG_MARKER_SPEC_VERSION =  0x3
 -- ** vkDebugMarkerSetObjectTagEXT
 foreign import ccall "vkDebugMarkerSetObjectTagEXT" vkDebugMarkerSetObjectTagEXT ::
   VkDevice -> Ptr VkDebugMarkerObjectTagInfoEXT -> IO VkResult

@@ -32,7 +32,7 @@ data ExtensionConstant = ExtensionConstant{ ecName    :: String
   deriving(Show)
 
 data ExtensionBitmask = ExtensionBitmask{ ebmName    :: String
-                                        , ebmBitpos  :: Integer
+                                        , ebmBitpos  :: Int
                                         , ebmExtends :: Maybe String
                                         }
   deriving(Show)
@@ -40,6 +40,7 @@ data ExtensionBitmask = ExtensionBitmask{ ebmName    :: String
 allExtensionNames :: Extension -> [String]
 allExtensionNames e =
   (eeName <$> eEnums e) ++
-  -- evName <$> eConstants e ++
+  (ecName <$> eConstants e) ++
+  (ebmName <$> eBitmasks e) ++
   eCommandNames e ++
   eTypeNames e

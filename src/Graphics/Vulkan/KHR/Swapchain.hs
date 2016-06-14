@@ -142,6 +142,7 @@ pattern VK_SUBOPTIMAL_KHR = VkResult 1000001003
 newtype VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagsKHR VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
+pattern VK_KHR_SWAPCHAIN_SPEC_VERSION =  0x44
 -- ** vkCreateSwapchainKHR
 foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR ::
   VkDevice ->
@@ -192,3 +193,4 @@ instance Storable VkPresentInfoKHR where
 newtype VkSwapchainKHR = VkSwapchainKHR Word64
   deriving (Eq, Ord, Storable, Show)
 
+pattern VK_KHR_SWAPCHAIN_EXTENSION_NAME =  "VK_KHR_swapchain"

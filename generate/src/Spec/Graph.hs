@@ -30,6 +30,7 @@ data Vertex = Vertex{ vName         :: String
                     , vDependencies :: [Vertex]
                     , vSourceEntity :: SourceEntity
                     }
+  deriving (Show)
 
 data SourceEntity = AnInclude Include
                   | ADefine Define

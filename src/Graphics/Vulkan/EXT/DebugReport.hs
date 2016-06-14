@@ -54,6 +54,7 @@ import Foreign.C.Types( CSize
                       , CSize(..)
                       )
 
+pattern VK_EXT_DEBUG_REPORT_EXTENSION_NAME =  "VK_EXT_debug_report"
 -- ** vkDebugReportMessageEXT
 foreign import ccall "vkDebugReportMessageEXT" vkDebugReportMessageEXT ::
   VkInstance ->
@@ -64,6 +65,7 @@ foreign import ccall "vkDebugReportMessageEXT" vkDebugReportMessageEXT ::
 newtype VkDebugReportCallbackEXT = VkDebugReportCallbackEXT Word64
   deriving (Eq, Ord, Storable, Show)
 
+pattern VK_EXT_DEBUG_REPORT_SPEC_VERSION =  0x2
 -- ** VkDebugReportObjectTypeEXT
 
 newtype VkDebugReportObjectTypeEXT = VkDebugReportObjectTypeEXT Int32
@@ -249,6 +251,7 @@ instance Storable VkDebugReportCallbackCreateInfoEXT where
                 *> poke (ptr `plusPtr` 32) (vkPUserData (poked :: VkDebugReportCallbackCreateInfoEXT))
 
 
+pattern VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT =  VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
 -- ** vkDestroyDebugReportCallbackEXT
 foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallbackEXT ::
   VkInstance ->

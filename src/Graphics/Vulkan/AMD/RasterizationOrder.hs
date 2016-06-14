@@ -28,6 +28,7 @@ import Text.ParserCombinators.ReadPrec( prec
 import Graphics.Vulkan.Core( VkStructureType(..)
                            )
 
+pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME =  "VK_AMD_rasterization_order"
 -- ** VkRasterizationOrderAMD
 
 newtype VkRasterizationOrderAMD = VkRasterizationOrderAMD Int32
@@ -55,6 +56,7 @@ pattern VK_RASTERIZATION_ORDER_STRICT_AMD = VkRasterizationOrderAMD 0
 pattern VK_RASTERIZATION_ORDER_RELAXED_AMD = VkRasterizationOrderAMD 1
 
 pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD = VkStructureType 1000018000
+pattern VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION =  0x1
 
 data VkPipelineRasterizationStateRasterizationOrderAMD =
   VkPipelineRasterizationStateRasterizationOrderAMD{ vkSType :: VkStructureType 

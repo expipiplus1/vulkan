@@ -57,11 +57,14 @@ import Graphics.Vulkan.Core( VkResult(..)
 import Foreign.C.Types( CSize(..)
                       )
 
+pattern VK_KHR_SURFACE_EXTENSION_NAME =  "VK_KHR_surface"
+pattern VK_COLORSPACE_SRGB_NONLINEAR_KHR =  VK_COLOR_SPACE_SRGB_NONLINEAR_KHR
 -- ** vkGetPhysicalDeviceSurfaceFormatsKHR
 foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceSurfaceFormatsKHR ::
   VkPhysicalDevice ->
   VkSurfaceKHR -> Ptr Word32 -> Ptr VkSurfaceFormatKHR -> IO VkResult
 
+pattern VK_KHR_SURFACE_SPEC_VERSION =  0x19
 -- ** vkGetPhysicalDeviceSurfaceCapabilitiesKHR
 foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDeviceSurfaceCapabilitiesKHR ::
   VkPhysicalDevice ->
