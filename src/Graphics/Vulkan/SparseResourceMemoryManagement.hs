@@ -266,9 +266,9 @@ instance Read VkSparseImageFormatFlagBits where
 
 -- | Image uses a single miptail region for all array layers
 pattern VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = VkSparseImageFormatFlagBits 0x1
--- | Image requires mip levels to be an exact multiple of the sparse image block size for non-miptail levels.
+-- | Image requires mip level dimensions to be an integer multiple of the sparse image block dimensions for non-miptail levels.
 pattern VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT = VkSparseImageFormatFlagBits 0x2
--- | Image uses a non-standard sparse block size
+-- | Image uses a non-standard sparse image block dimensions
 pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = VkSparseImageFormatFlagBits 0x4
 
 

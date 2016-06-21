@@ -6,13 +6,16 @@ module Spec.Graph where
 import           Control.Arrow     ((&&&))
 import           Data.HashMap.Lazy as M
 import           Data.HashSet      as S
+import           Data.List
 import           Data.Maybe        (catMaybes, fromMaybe, maybeToList)
 import           Language.C.Types
 import           Prelude           hiding (Enum)
 import           Spec.Bitmask
 import           Spec.Command      as Command
 import           Spec.Constant     as Constant
-import           Spec.Enum
+import           Spec.Enum         as Enum
+import           Spec.Extension    as Extension
+import           Spec.Section
 import           Spec.Spec
 import           Spec.Type         hiding (ABaseType, ABitmaskType, ADefine,
                                     AFuncPointerType, AHandleType,
@@ -29,6 +32,7 @@ data Vertex = Vertex{ vName         :: String
                     , vDependencies :: [Vertex]
                     , vSourceEntity :: SourceEntity
                     }
+  deriving (Show)
 
 data SourceEntity = AnInclude Include
                   | ADefine Define
@@ -40,10 +44,13 @@ data SourceEntity = AnInclude Include
                   | AFuncPointerType FuncPointerType
                   | AStructType StructType
                   | AUnionType UnionType
-                  | ACommand Command
+                  | ACommand Command Bool
                   | AnEnum Enum
                   | ABitmask Bitmask
                   | AConstant Constant
+                  | AnExtensionEnum ExtensionEnum Int
+                  | AnExtensionConstant ExtensionConstant
+                  | AnExtensionBitmask ExtensionBitmask
   deriving (Show)
 
 -- | Look up the name in the graph, error if it's not there
@@ -64,17 +71,27 @@ allReachable vs = go (S.fromList (vName <$> vs)) (concatMap vDependencies vs)
                         then go s xs
                         else go (S.insert (vName x) s) (xs ++ vDependencies x)
 
+builtinCommandNames :: Spec -> HashSet String
+builtinCommandNames spec =
+  let sectionCommands = concatMap sCommandNames $ sSections spec
+      khrExtensions = Prelude.filter (("VK_KHR_" `isPrefixOf`) . Extension.eName) $ sExtensions spec
+      khrCommands = concatMap eCommandNames khrExtensions
+      builtinCommands = sectionCommands ++ khrCommands
+  in S.fromList builtinCommands
+
 --------------------------------------------------------------------------------
 -- Converting a spec
 --------------------------------------------------------------------------------
 
 getSpecGraph :: Spec -> SpecGraph
 getSpecGraph spec = graph
-  where gVertices = (typeDeclToVertex graph <$> sTypes spec) ++
+  where builtinCommands = builtinCommandNames spec
+        gVertices = (typeDeclToVertex graph <$> sTypes spec) ++
                     (constantToVertex graph <$> sConstants spec) ++
                     (enumToVertex <$> sEnums spec) ++
                     (bitmaskToVertex graph <$> sBitmasks spec) ++
-                    (commandToVertex graph <$> sCommands spec)
+                    (commandToVertex graph builtinCommands <$> sCommands spec) ++
+                    concatMap (extensionToVertices graph) (sExtensions spec)
         gNameVertexMap = M.fromList ((vName &&& id) <$> gVertices)
         graph = SpecGraph{..}
 
@@ -146,22 +163,44 @@ typeDeclToVertex graph td =
                , vSourceEntity = AUnionType ut
                }
 
-commandToVertex :: SpecGraph -> Command -> Vertex
-commandToVertex graph command =
+commandToVertex :: SpecGraph -> HashSet String -> Command -> Vertex
+commandToVertex graph builtin command =
   let lookupName name = fromMaybe
                           (error ("Depended upon name not in spec: " ++ name))
                           (M.lookup name (gNameVertexMap graph))
-  in Vertex{ vName = Command.cName command
+      n = Command.cName command
+  in Vertex{ vName = n
            , vDependencies = let parameterTypes = pType <$> cParameters command
                                  allTypes = cReturnType command : parameterTypes
                              in lookupName <$>
                                 concatMap cTypeDependencyNames allTypes
-           , vSourceEntity = ACommand command
+           , vSourceEntity = ACommand command $ S.member n builtin
            }
+
+extensionToVertices :: SpecGraph -> Extension -> [Vertex]
+extensionToVertices graph extension =
+  let lookupName name = fromMaybe
+                          (error ("Depended upon name not in spec: " ++ name))
+                          (M.lookup name (gNameVertexMap graph))
+      eeVertex ee = Vertex { vName = Extension.eeName ee
+                           , vDependencies = [lookupName $ eeExtends ee]
+                           , vSourceEntity = AnExtensionEnum ee (eNumber extension)
+                           }
+      ecVertex ec = Vertex { vName = ecName ec
+                           , vDependencies = maybeToList $ lookupName <$> ecExtends ec
+                           , vSourceEntity = AnExtensionConstant ec
+                           }
+      ebmVertex ebm = Vertex { vName = ebmName ebm
+                             , vDependencies = maybeToList $ lookupName <$> ebmExtends ebm
+                             , vSourceEntity = AnExtensionBitmask ebm
+                             }
+  in (eeVertex <$> eEnums extension) ++
+     (ecVertex <$> eConstants extension) ++
+     (ebmVertex <$> eBitmasks extension)
 
 enumToVertex :: Enum -> Vertex
 enumToVertex enum =
-  Vertex{ vName = eName enum
+  Vertex{ vName = Enum.eName enum
         , vDependencies = []
         , vSourceEntity = AnEnum enum
         }
@@ -246,20 +285,15 @@ isIncludeVertex vertex
 isTypeConstructor :: Vertex -> Bool
 isTypeConstructor v =
   case vSourceEntity v of
-    AnInclude _ -> False
-    ADefine _ -> False
     ABaseType _ -> True
-    APlatformType _ -> False
     ABitmaskType _ _ -> True
     AHandleType _ -> True
     AnEnumType _ -> True
-    AFuncPointerType _ -> False
     AStructType _ -> True
     AUnionType _ -> True
-    ACommand _ -> False
     AnEnum _ -> True
     ABitmask _ -> True
-    AConstant _ -> False
+    _ -> False
 
 ------------------------------------------------------------------------------
 -- Dependency utils

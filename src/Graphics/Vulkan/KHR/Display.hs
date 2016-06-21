@@ -102,6 +102,7 @@ instance Storable VkDisplaySurfaceCreateInfoKHR where
                 *> poke (ptr `plusPtr` 52) (vkImageExtent (poked :: VkDisplaySurfaceCreateInfoKHR))
 
 
+pattern VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = VkStructureType 1000002001
 
 data VkDisplayPlaneCapabilitiesKHR =
   VkDisplayPlaneCapabilitiesKHR{ vkSupportedAlpha :: VkDisplayPlaneAlphaFlagsKHR 
@@ -139,6 +140,7 @@ instance Storable VkDisplayPlaneCapabilitiesKHR where
                 *> poke (ptr `plusPtr` 60) (vkMaxDstExtent (poked :: VkDisplayPlaneCapabilitiesKHR))
 
 
+pattern VK_KHR_DISPLAY_EXTENSION_NAME =  "VK_KHR_display"
 -- ** vkGetDisplayModePropertiesKHR
 foreign import ccall "vkGetDisplayModePropertiesKHR" vkGetDisplayModePropertiesKHR ::
   VkPhysicalDevice ->
@@ -181,6 +183,7 @@ foreign import ccall "vkGetDisplayPlaneSupportedDisplaysKHR" vkGetDisplayPlaneSu
   VkPhysicalDevice ->
   Word32 -> Ptr Word32 -> Ptr VkDisplayKHR -> IO VkResult
 
+pattern VK_KHR_DISPLAY_SPEC_VERSION =  0x15
 -- ** vkCreateDisplayModeKHR
 foreign import ccall "vkCreateDisplayModeKHR" vkCreateDisplayModeKHR ::
   VkPhysicalDevice ->
@@ -226,6 +229,7 @@ instance Storable VkDisplayModePropertiesKHR where
                 *> poke (ptr `plusPtr` 8) (vkParameters (poked :: VkDisplayModePropertiesKHR))
 
 
+pattern VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR = VkStructureType 1000002000
 -- ** VkDisplayPlaneAlphaFlagsKHR
 
 newtype VkDisplayPlaneAlphaFlagBitsKHR = VkDisplayPlaneAlphaFlagBitsKHR VkFlags
