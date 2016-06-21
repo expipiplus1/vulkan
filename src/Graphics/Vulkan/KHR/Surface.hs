@@ -174,11 +174,11 @@ newtype VkColorSpaceKHR = VkColorSpaceKHR Int32
   deriving (Eq, Ord, Storable)
 
 instance Show VkColorSpaceKHR where
-  showsPrec _ VK_COLORSPACE_SRGB_NONLINEAR_KHR = showString "VK_COLORSPACE_SRGB_NONLINEAR_KHR"
+  showsPrec _ VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = showString "VK_COLOR_SPACE_SRGB_NONLINEAR_KHR"
   showsPrec p (VkColorSpaceKHR x) = showParen (p >= 11) (showString "VkColorSpaceKHR " . showsPrec 11 x)
 
 instance Read VkColorSpaceKHR where
-  readPrec = parens ( choose [ ("VK_COLORSPACE_SRGB_NONLINEAR_KHR", pure VK_COLORSPACE_SRGB_NONLINEAR_KHR)
+  readPrec = parens ( choose [ ("VK_COLOR_SPACE_SRGB_NONLINEAR_KHR", pure VK_COLOR_SPACE_SRGB_NONLINEAR_KHR)
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkColorSpaceKHR")
@@ -188,7 +188,7 @@ instance Read VkColorSpaceKHR where
                     )
 
 
-pattern VK_COLORSPACE_SRGB_NONLINEAR_KHR = VkColorSpaceKHR 0
+pattern VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = VkColorSpaceKHR 0
 
 -- ** vkGetPhysicalDeviceSurfacePresentModesKHR
 foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDeviceSurfacePresentModesKHR ::

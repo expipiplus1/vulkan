@@ -97,7 +97,7 @@ instance Read VkImageCreateFlagBits where
 pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT = VkImageCreateFlagBits 0x1
 -- | Image should support sparse backing with partial residency
 pattern VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = VkImageCreateFlagBits 0x2
--- | Image should support constent data access to physical memory blocks mapped into multiple locations of sparse images
+-- | Image should support constent data access to physical memory ranges mapped into multiple locations of sparse images
 pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = VkImageCreateFlagBits 0x4
 -- | Allows image views to have different format than the base image
 pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = VkImageCreateFlagBits 0x8

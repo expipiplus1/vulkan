@@ -87,7 +87,7 @@ instance Read VkBufferCreateFlagBits where
 pattern VK_BUFFER_CREATE_SPARSE_BINDING_BIT = VkBufferCreateFlagBits 0x1
 -- | Buffer should support sparse backing with partial residency
 pattern VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = VkBufferCreateFlagBits 0x2
--- | Buffer should support constent data access to physical memory blocks mapped into multiple locations of sparse buffers
+-- | Buffer should support constent data access to physical memory ranges mapped into multiple locations of sparse buffers
 pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = VkBufferCreateFlagBits 0x4
 
 

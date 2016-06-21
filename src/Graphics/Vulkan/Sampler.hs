@@ -63,7 +63,6 @@ instance Show VkSamplerAddressMode where
   showsPrec _ VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = showString "VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT"
   showsPrec _ VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = showString "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE"
   showsPrec _ VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = showString "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER"
-  showsPrec _ VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = showString "VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE"
   showsPrec p (VkSamplerAddressMode x) = showParen (p >= 11) (showString "VkSamplerAddressMode " . showsPrec 11 x)
 
 instance Read VkSamplerAddressMode where
@@ -71,7 +70,6 @@ instance Read VkSamplerAddressMode where
                              , ("VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT", pure VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT)
                              , ("VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE", pure VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE)
                              , ("VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER", pure VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER)
-                             , ("VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE", pure VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE)
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkSamplerAddressMode")
@@ -88,8 +86,6 @@ pattern VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = VkSamplerAddressMode 1
 pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = VkSamplerAddressMode 2
 
 pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = VkSamplerAddressMode 3
-
-pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = VkSamplerAddressMode 4
 
 -- ** VkFilter
 
