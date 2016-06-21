@@ -28,20 +28,22 @@ import           Write.WriteMonad
 
 writeDefine :: Define -> Write Doc
 writeDefine d =
-  let (header, value) = head . dSymTab $ d
-      boundNames = boundVariablesFromDefine header
-      (expression, requiredNames) =
-        parseCExpressionToHsExpression value
-      hsName = camelCase_ $ dName d
-      -- TODO: This assumes the defines are of type uint32_t
-      Right uint32_t = C.cIdentifierFromString "uint32_t"
-  in do tellRequiredNames (S.toList requiredNames)
-        hsElemType <- cTypeToHsType (C.TypeSpecifier (C.Specifiers [] [] [])
-                                    (C.TypeName uint32_t))
-        let hsType = foldr TyFun hsElemType (hsElemType <$ boundNames)
-        pure [qc|{hsName} :: {prettyPrint hsType}
+  case dSymTab d of
+    [(header, value)] ->
+      let boundNames = boundVariablesFromDefine header
+          (expression, requiredNames) =
+            parseCExpressionToHsExpression value
+          hsName = camelCase_ $ dName d
+          -- TODO: This assumes the defines are of type uint32_t
+          Right uint32_t = C.cIdentifierFromString "uint32_t"
+      in do tellRequiredNames (S.toList requiredNames)
+            hsElemType <- cTypeToHsType (C.TypeSpecifier (C.Specifiers [] [] [])
+                                         (C.TypeName uint32_t))
+            let hsType = foldr TyFun hsElemType (hsElemType <$ boundNames)
+            pure [qc|{hsName} :: {prettyPrint hsType}
 {hsName} {hsep (fromString <$> boundNames)} = {prettyPrint expression}
 |]
+    _ -> pure mempty
 
 boundVariablesFromDefine :: String -> [String]
 boundVariablesFromDefine d =

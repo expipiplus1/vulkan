@@ -1180,17 +1180,17 @@ pattern VK_NOT_READY = VkResult 1
 pattern VK_TIMEOUT = VkResult 2
 -- | An event is signaled
 pattern VK_EVENT_SET = VkResult 3
--- | An event is unsignalled
+-- | An event is unsignaled
 pattern VK_EVENT_RESET = VkResult 4
--- | A return array was too small for the resul
+-- | A return array was too small for the result
 pattern VK_INCOMPLETE = VkResult 5
 -- | A host memory allocation has failed
 pattern VK_ERROR_OUT_OF_HOST_MEMORY = VkResult (-1)
 -- | A device memory allocation has failed
 pattern VK_ERROR_OUT_OF_DEVICE_MEMORY = VkResult (-2)
--- | The logical device has been lost. See <<devsandqueues-lost-device>>
-pattern VK_ERROR_INITIALIZATION_FAILED = VkResult (-3)
 -- | Initialization of a object has failed
+pattern VK_ERROR_INITIALIZATION_FAILED = VkResult (-3)
+-- | The logical device has been lost. See <<devsandqueues-lost-device>>
 pattern VK_ERROR_DEVICE_LOST = VkResult (-4)
 -- | Mapping of a memory object has failed
 pattern VK_ERROR_MEMORY_MAP_FAILED = VkResult (-5)

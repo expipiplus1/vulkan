@@ -3,12 +3,14 @@
 
 module Write.Type.Bitmask
   ( writeBitmaskType
+  , writeExtensionBitmask
   ) where
 
 import           Data.Bits                     (shiftL)
 import           Data.Maybe                    (fromMaybe)
 import           Data.Word                     (Word32)
 import           Spec.Bitmask
+import           Spec.Extension
 import           Spec.Type
 import           Text.InterpolatedString.Perl6
 import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
@@ -109,3 +111,9 @@ writeBitPositionReadTuple bp = [qc|("{bmbpName bp}", pure {bmbpName bp})|]
 
 writeValueReadTuple :: BitmaskValue -> Doc
 writeValueReadTuple v = [qc|("{bmvName v}", pure {bmvName v})|]
+
+writeExtensionBitmask :: ExtensionBitmask -> Write Doc
+writeExtensionBitmask bm = do
+  tellExtension "PatternSynonyms"
+  tellExtension "ScopedTypeVariables"
+  pure [qc|pattern {ebmName bm} = {fromMaybe "" $ ebmExtends bm} {showHex' $ (1 `shiftL` ebmBitpos bm :: Word32)}|]

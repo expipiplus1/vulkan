@@ -3,11 +3,13 @@
 
 module Write.Enum
   ( writeEnum
+  , writeExtensionEnum
   ) where
 
 import           Data.Maybe                    (fromMaybe)
 import           Prelude                       hiding (Enum)
 import           Spec.Enum
+import qualified Spec.Extension                as Ex
 import           Text.InterpolatedString.Perl6
 import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
 import           Write.Utils
@@ -55,6 +57,16 @@ instance Read {eName e} where
 
 {vcat $ writeElement e <$> eElements e}
 |]
+
+writeExtensionEnum :: Ex.ExtensionEnum -> Int -> Write Doc
+writeExtensionEnum ee extnumber = do
+  tellExtension "PatternSynonyms"
+  pure [qc|pattern {Ex.eeName ee} = {Ex.eeExtends ee} {showsPrec 10 (value) ""}|]
+  where extBase = 1000000000
+        extBlockSize = 1000
+        value = dir * (extBase + (extnumber - 1) * extBlockSize + Ex.eeOffset ee)
+        dir = case Ex.eeDirection ee of Ex.Negative -> -1
+                                        Ex.Positive -> 1
 
 writeElement :: Enum -> EnumElement -> Doc
 writeElement e el =

@@ -1,5 +1,6 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE Strict #-}
+{-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Graphics.Vulkan.KHR.Swapchain where
 
@@ -39,6 +40,7 @@ import Graphics.Vulkan.Memory( VkInternalAllocationType(..)
                              )
 import Graphics.Vulkan.Image( VkImageUsageFlags(..)
                             , VkImage(..)
+                            , VkImageLayout(..)
                             , VkImageUsageFlagBits(..)
                             )
 import Graphics.Vulkan.QueueSemaphore( VkSemaphore(..)
@@ -54,6 +56,7 @@ import Graphics.Vulkan.Core( VkResult(..)
 import Foreign.C.Types( CSize(..)
                       )
 
+pattern VK_ERROR_OUT_OF_DATE_KHR = VkResult (-1000001004)
 
 data VkSwapchainCreateInfoKHR =
   VkSwapchainCreateInfoKHR{ vkSType :: VkStructureType 
@@ -118,6 +121,7 @@ instance Storable VkSwapchainCreateInfoKHR where
                 *> poke (ptr `plusPtr` 96) (vkOldSwapchain (poked :: VkSwapchainCreateInfoKHR))
 
 
+pattern VK_IMAGE_LAYOUT_PRESENT_SRC_KHR = VkImageLayout 1000001002
 -- ** vkGetSwapchainImagesKHR
 foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR ::
   VkDevice ->
@@ -127,21 +131,25 @@ foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR ::
 foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR ::
   VkDevice -> VkSwapchainKHR -> Ptr VkAllocationCallbacks -> IO ()
 
+pattern VK_STRUCTURE_TYPE_PRESENT_INFO_KHR = VkStructureType 1000001001
 -- ** vkQueuePresentKHR
 foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR ::
   VkQueue -> Ptr VkPresentInfoKHR -> IO VkResult
 
+pattern VK_SUBOPTIMAL_KHR = VkResult 1000001003
 -- ** VkSwapchainCreateFlagsKHR
 -- | Opaque flag
 newtype VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagsKHR VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Show)
 
+pattern VK_KHR_SWAPCHAIN_SPEC_VERSION =  0x44
 -- ** vkCreateSwapchainKHR
 foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR ::
   VkDevice ->
   Ptr VkSwapchainCreateInfoKHR ->
     Ptr VkAllocationCallbacks -> Ptr VkSwapchainKHR -> IO VkResult
 
+pattern VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR = VkStructureType 1000001000
 -- ** vkAcquireNextImageKHR
 foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR ::
   VkDevice ->
@@ -185,3 +193,4 @@ instance Storable VkPresentInfoKHR where
 newtype VkSwapchainKHR = VkSwapchainKHR Word64
   deriving (Eq, Ord, Storable, Show)
 
+pattern VK_KHR_SWAPCHAIN_EXTENSION_NAME =  "VK_KHR_swapchain"
