@@ -187,23 +187,23 @@ constantToVertex _ constant =
 vertexToBitmask :: Vertex -> Maybe Bitmask
 vertexToBitmask v = case vSourceEntity v of
                       ABitmask bm -> Just bm
-                      _ -> Nothing
+                      _           -> Nothing
 
 vertexToConstant :: Vertex -> Maybe Constant
 vertexToConstant v = case vSourceEntity v of
                        AConstant c -> Just c
-                       _ -> Nothing
+                       _           -> Nothing
 
 getGraphConstants :: SpecGraph -> [Constant]
 getGraphConstants graph = catMaybes (vertexToConstant <$> gVertices graph)
 
 vertexCType :: Vertex -> Maybe CType
 vertexCType v = case vSourceEntity v of
-                  ABaseType bt -> Just $ btCType bt
-                  ABitmaskType bmt _ -> Just $ bmtCType bmt
-                  AHandleType ht -> Just $ htCType ht
+                  ABaseType bt         -> Just $ btCType bt
+                  ABitmaskType bmt _   -> Just $ bmtCType bmt
+                  AHandleType ht       -> Just $ htCType ht
                   AFuncPointerType fpt -> Just $ fptCType fpt
-                  _ -> Nothing
+                  _                    -> Nothing
 
 getGraphCTypes :: SpecGraph -> [(String, CType)]
 getGraphCTypes graph =
@@ -212,7 +212,7 @@ getGraphCTypes graph =
 vertexToUnionType :: Vertex -> Maybe UnionType
 vertexToUnionType v = case vSourceEntity v of
                     AUnionType u -> Just u
-                    _ -> Nothing
+                    _            -> Nothing
 
 getGraphUnionTypes :: SpecGraph -> [UnionType]
 getGraphUnionTypes graph = catMaybes (vertexToUnionType <$> gVertices graph)
@@ -220,7 +220,7 @@ getGraphUnionTypes graph = catMaybes (vertexToUnionType <$> gVertices graph)
 vertexToStructType :: Vertex -> Maybe StructType
 vertexToStructType v = case vSourceEntity v of
                     AStructType s -> Just s
-                    _ -> Nothing
+                    _             -> Nothing
 
 getGraphStructTypes :: SpecGraph -> [StructType]
 getGraphStructTypes graph = catMaybes (vertexToStructType <$> gVertices graph)
@@ -228,7 +228,7 @@ getGraphStructTypes graph = catMaybes (vertexToStructType <$> gVertices graph)
 vertexToEnumType :: Vertex -> Maybe EnumType
 vertexToEnumType v = case vSourceEntity v of
                     AnEnumType et -> Just et
-                    _ -> Nothing
+                    _             -> Nothing
 
 getGraphEnumTypes :: SpecGraph -> [EnumType]
 getGraphEnumTypes graph = catMaybes (vertexToEnumType <$> gVertices graph)
@@ -246,20 +246,20 @@ isIncludeVertex vertex
 isTypeConstructor :: Vertex -> Bool
 isTypeConstructor v =
   case vSourceEntity v of
-    AnInclude _ -> False
-    ADefine _ -> False
-    ABaseType _ -> True
-    APlatformType _ -> False
-    ABitmaskType _ _ -> True
-    AHandleType _ -> True
-    AnEnumType _ -> True
+    AnInclude _        -> False
+    ADefine _          -> False
+    ABaseType _        -> True
+    APlatformType _    -> False
+    ABitmaskType _ _   -> True
+    AHandleType _      -> True
+    AnEnumType _       -> True
     AFuncPointerType _ -> False
-    AStructType _ -> True
-    AUnionType _ -> True
-    ACommand _ -> False
-    AnEnum _ -> True
-    ABitmask _ -> True
-    AConstant _ -> False
+    AStructType _      -> True
+    AUnionType _       -> True
+    ACommand _         -> False
+    AnEnum _           -> True
+    ABitmask _         -> True
+    AConstant _        -> False
 
 ------------------------------------------------------------------------------
 -- Dependency utils
@@ -289,9 +289,9 @@ cTypeDependencyNames cType =
 arraySizeDependencyNames :: ArrayType CIdentifier -> [String]
 arraySizeDependencyNames arraySize =
   case arraySize of
-    VariablySized -> []
-    Unsized -> []
-    SizedByInteger _ -> []
+    VariablySized       -> []
+    Unsized             -> []
+    SizedByInteger _    -> []
     SizedByIdentifier i -> [unCIdentifier i]
 
 parameterTypeNames :: ParameterDeclaration CIdentifier -> [String]

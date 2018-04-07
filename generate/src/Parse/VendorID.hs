@@ -21,7 +21,7 @@ parseVendorID = extractFields "VendorID"
                               (hasName "vendorid")
                               extract
   where extract = proc vendorid -> do
-          viName <- arrF stringToExtensionTag <<<
+          viName <- required "stringToExtensionTag" stringToExtensionTag <<<
                     requiredAttrValue "name" -< vendorid
           viID <- requiredRead <<< requiredAttrValue "id" -< vendorid
           viComment <- requiredAttrValue "comment" -< vendorid

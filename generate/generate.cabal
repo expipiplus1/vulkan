@@ -20,6 +20,8 @@ executable generate
                      , Parse.CType
                      , Parse.Command
                      , Parse.Constant
+                     , Parse.Platform
+                     , Parse.Copyright
                      , Parse.Enum
                      , Parse.Extension
                      , Parse.Section
@@ -37,6 +39,7 @@ executable generate
                      , Spec.ExtensionTag
                      , Spec.Graph
                      , Spec.Partition
+                     , Spec.Platform
                      , Spec.Section
                      , Spec.Spec
                      , Spec.StripExtensions
@@ -63,15 +66,17 @@ executable generate
                      , Write.Vertex
                      , Write.WriteMonad
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
-  build-depends:       base >= 4.8 && < 4.9
-                     , cpphs >= 1.19 && < 1.21
+  build-depends:       base >= 4.8 && < 4.11
                      , control-bool >= 0.2.1
-                     , directory >= 1.2 && < 1.3
+                     , cpphs >= 1.19 && < 1.21
+                     , directory >= 1.2 && < 1.4
+                     , extra 
                      , filepath >= 1.4 && < 1.5
                      , hashable >= 1.2 && < 1.3
-                     , haskell-src-exts >= 1.17 && < 1.18
+                     , haskell-src-exts 
+                     , haskell-src-exts-simple 
                      , hxt >= 9.3 && < 9.4
-                     , inline-c >= 0.5 && < 0.6
+                     , inline-c >= 0.5 && < 0.7
                      , interpolatedstring-perl6 >= 1.0 && < 1.1
                      , mtl >= 2.2.1 && < 2.3
                      , parsers >= 0.12 && < 0.13
@@ -79,9 +84,10 @@ executable generate
                      , safe >= 0.3 && < 0.4
                      , split >= 0.2 && < 0.3
                      , transformers >= 0.4.2 && < 0.6
-                     , trifecta >= 1.5 && < 1.6
+                     , trifecta >= 1.5 && < 1.8
                      , unordered-containers >= 0.2 && < 0.3
                      , wl-pprint-text >= 1.1 && < 1.2
+                     , pretty-show
   default-language:    Haskell2010
 
 source-repository head

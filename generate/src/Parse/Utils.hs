@@ -8,6 +8,7 @@ module Parse.Utils
   , optionalCommaSepListAttr
   , commaSepListAttr
   , requiredRead
+  , required
   , failA
   , failString
   , arrF
@@ -15,10 +16,13 @@ module Parse.Utils
   , oneRequired
   , onlyChildWithName
   , getAllText
+  , getAllNonCommentText
   , oneOf
+  , oneOf'
+  , allChildren
   , extractFields
-  , getNameAttrOrChildText
-  , getNameChildText
+  , getAttrOrChildText
+  , getChildText
   , parseValidityBlock
   , traverseMaybeA
   , mapA
@@ -49,7 +53,16 @@ requiredAttrValue s = getAttrValue0 s `orElse`
                       failA ("Missing required attribute: " ++ s)
 
 requiredRead :: Read a => IOStateArrow s String a
-requiredRead = arrF readMay `orElse` failA "Failed to read "
+requiredRead = required "parse with Read" readMay
+
+-- | Try to process input with the given function, fail if Nothing is returned
+required
+  :: String
+  -- ^ What is required to succeed, used in diagnostics
+  -> (a -> Maybe b)
+  -- ^ The predicate
+  -> IOStateArrow s a b
+required s p = arrF p `orElse` failA ("Failed with requirement: " ++ s)
 
 arrF :: (ArrowList a, Foldable t) => (b -> t c) -> a b c
 arrF f = arrL (toList . f)
@@ -63,7 +76,12 @@ failString = applyA (arr issueErr) >>> none
 traceShowA :: Show a => IOStateArrow s a a
 traceShowA = traceValue 0 show
 
-oneRequired :: String -> IOStateArrow s a c -> IOStateArrow s a c
+-- | Succeed only if the given arrow returns exactly one match
+oneRequired
+  :: String
+  -- ^ What are we trying to get one of (Used for error messages)
+  -> IOStateArrow s a c
+  -> IOStateArrow s a c
 oneRequired e a = listA a
                   >>>
                   (isA (not . null) `orElse`
@@ -72,7 +90,7 @@ oneRequired e a = listA a
                   ((isA isSingleton >>> arr head) `orElse`
                     failA ("Arrow returned more than one result: " ++ e))
   where isSingleton [_] = True
-        isSingleton _ = False
+        isSingleton _   = False
 
 onlyChildWithName :: String -> IOStateArrow s XmlTree XmlTree
 onlyChildWithName s = oneRequired s (hasName s <<< getChildren)
@@ -90,11 +108,36 @@ optionalCommaSepListAttr n = fmap commaSepList ^<< optionalAttrValue n
 getAllText :: ArrowXml a => a XmlTree String
 getAllText = deep getText >. concat
 
+getAllNonCommentText :: ArrowXml a => a XmlTree String
+-- getAllNonCommentText = deepest (neg (hasName "comment") >>> getText) >. concat
+getAllNonCommentText = processTopDown (neg (hasName "comment")) >>> getAllText
+
 -- | Try each option in turn until one of them succeeds. State altering arrows
 -- should be handled with care.
 oneOf :: (Show b, Foldable f) => f (IOStateArrow s b c) -> IOStateArrow s b c
 oneOf = foldr' orElse
         ((failA "None of the choices matched" &&& traceShowA) >>> arr fst)
+
+-- | The same as 'oneOf' but with error message customization
+oneOf'
+  :: (Show b, Foldable f)
+  => IOStateArrow s b String
+  -- ^ Generate an error string
+  -> f (IOStateArrow s b c)
+  -> IOStateArrow s b c
+oneOf' matchDiag = foldr'
+  orElse
+  (matchDiag >>> failString)
+
+-- | Parse all children of a tree with the given parsers, raising an error
+-- should a child fail to parse
+allChildren
+  :: IOStateArrow s XmlTree String
+  -- ^ Generate an erorr string
+  -> [IOStateArrow s XmlTree b]
+  -> IOStateArrow s XmlTree [b]
+allChildren matchDiag parsers =
+  listA (oneOf' matchDiag parsers <<< neg isText <<< getChildren)
 
 -- | 'extractFields name predicate extract' runs extract if the predicate
 -- holds and fails if extract doesn't return exactly one value
@@ -104,17 +147,18 @@ extractFields name predicate extract =
   oneRequired name
     (extract `orElse` failA ("Failed to extract fields for " ++ name))
 
--- | Get either the attribute called "name" or the text between the "name"
--- tags.
-getNameAttrOrChildText :: IOStateArrow s XmlTree String
-getNameAttrOrChildText =
-  oneOf [ getAttrValue0 "name"
-        , getNameChildText
-        ]
+getAttrOrChildText
+  :: String
+  -- ^ The attribute or child name to get
+  -> IOStateArrow s XmlTree String
+getAttrOrChildText s = oneOf [getAttrValue0 s, getChildText s]
 
--- | Get all the text between the child with name "name"
-getNameChildText :: IOStateArrow s XmlTree String
-getNameChildText = getAllText <<< hasName "name" <<< getChildren
+-- | Get all the text between the child with the given name
+getChildText
+  :: String
+  -- ^ The name of the child to get the text of
+  -> IOStateArrow s XmlTree String
+getChildText s = getAllText <<< hasName s <<< getChildren
 
 parseValidityBlock :: ArrowXml a => a XmlTree [String]
 parseValidityBlock = hasName "validity" >>>

@@ -5,12 +5,12 @@ module Write.Command
   ) where
 
 import           Language.C.Types
-import           Language.Haskell.Exts.Pretty
-import           Language.Haskell.Exts.Syntax
+import           Language.Haskell.Exts.Simple.Pretty
+import           Language.Haskell.Exts.Simple.Syntax
 import           Spec.Command
-import           Spec.Type                     (CType)
+import           Spec.Type                           (CType)
 import           Text.InterpolatedString.Perl6
-import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
+import           Text.PrettyPrint.Leijen.Text        hiding ((<$>))
 import           Write.TypeConverter
 import           Write.WriteMonad
 
@@ -34,4 +34,4 @@ lowerArrayToPointer :: CType -> CType
 lowerArrayToPointer cType =
   case cType of
     Array _ t -> Ptr [] t
-    t -> t
+    t         -> t

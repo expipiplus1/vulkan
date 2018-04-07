@@ -21,19 +21,19 @@ module Write.TypeConverter
 
 -- This file is gross TODO: clean
 
-import           Control.Arrow                (second, (&&&))
-import qualified Data.HashMap.Lazy            as Map
-import           Data.List                    (foldl1')
-import           Data.Maybe                   (catMaybes, fromMaybe)
-import           Language.C.Types             as C
-import           Language.Haskell.Exts.Pretty (prettyPrint)
-import           Language.Haskell.Exts.Syntax as HS hiding (ModuleName)
+import           Control.Arrow                       (second, (&&&))
+import qualified Data.HashMap.Lazy                   as Map
+import           Data.List                           (foldl1')
+import           Data.Maybe                          (catMaybes, fromMaybe)
+import           Language.C.Types                    as C
+import           Language.Haskell.Exts.Simple.Pretty (prettyPrint)
+import           Language.Haskell.Exts.Simple.Syntax as HS hiding (ModuleName)
 import           Spec.Constant
-import           Spec.Graph                   (SpecGraph, getGraphCTypes,
-                                               getGraphConstants,
-                                               getGraphEnumTypes,
-                                               getGraphStructTypes,
-                                               getGraphUnionTypes)
+import           Spec.Graph                          (SpecGraph, getGraphCTypes,
+                                                      getGraphConstants,
+                                                      getGraphEnumTypes,
+                                                      getGraphStructTypes,
+                                                      getGraphUnionTypes)
 import           Spec.Spec
 import           Spec.Type
 import           Spec.TypeEnv
@@ -42,6 +42,7 @@ import           Write.WriteMonad
 
 type TypeConverter = CType -> String
 
+pattern TypeDef :: TypeSpecifier -> C.Type i
 pattern TypeDef t = TypeSpecifier (Specifiers [TYPEDEF] [] []) t
 
 platformType :: String -> Write (Maybe HS.Type)
@@ -122,7 +123,7 @@ arraySizeToNat s = case s of
                      Unsized -> error "Unsized arrays not handled"
                      SizedByInteger i -> do
                        tellExtension "DataKinds"
-                       pure $ TyPromoted (PromotedInteger i)
+                       pure $ TyPromoted (PromotedInteger i (show i))
                      SizedByIdentifier i -> do
                        tellExtension "DataKinds"
                        let typeName = Ident (unCIdentifier i)

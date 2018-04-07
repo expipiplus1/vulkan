@@ -1,17 +1,19 @@
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE QuasiQuotes     #-}
 
 module Write.Type.Struct
   ( writeStructType
   , writeUnionType
   ) where
 
-import           Data.Maybe                    (fromMaybe, maybeToList)
+import           Data.Maybe                          (fromMaybe, maybeToList)
 import           Data.String
-import           Language.Haskell.Exts.Pretty
-import           Language.Haskell.Exts.Syntax  (ConDecl (..), Name (..))
+import           Language.Haskell.Exts.Simple.Pretty
+import           Language.Haskell.Exts.Simple.Syntax (pattern ConDecl,
+                                                      pattern Ident)
 import           Spec.Type
 import           Text.InterpolatedString.Perl6
-import           Text.PrettyPrint.Leijen.Text  hiding ((<$>))
+import           Text.PrettyPrint.Leijen.Text        hiding ((<$>))
 import           Write.TypeConverter
 import           Write.Utils
 import           Write.WriteMonad

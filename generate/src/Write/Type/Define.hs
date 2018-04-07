@@ -1,26 +1,32 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE PatternSynonyms  #-}
 {-# LANGUAGE QuasiQuotes      #-}
 
 module Write.Type.Define
   ( writeDefine
   ) where
 
-import           Control.Applicative           ((<|>))
+import           Control.Applicative                 ((<|>))
 import           Control.Monad.Writer
-import qualified Data.HashSet                  as S
+import           Data.Functor
+import qualified Data.HashSet                        as S
 import           Data.String
-import qualified Language.C.Types              as C
-import           Language.Haskell.Exts.Pretty  (prettyPrint)
-import           Language.Haskell.Exts.Syntax  hiding (Assoc (..), ModuleName)
-import           Prelude                       hiding (exp)
+import qualified Language.C.Types                    as C
+import           Language.Haskell.Exts.Simple.Pretty (prettyPrint)
+import           Language.Haskell.Exts.Simple.Syntax hiding (Assoc,
+                                                      pattern AssocLeft,
+                                                      pattern AssocRight,
+                                                      ModuleName)
+import           Prelude                             hiding (exp)
 import           Spec.Type
 import           Text.InterpolatedString.Perl6
 import           Text.Parser.Combinators
 import           Text.Parser.Expression
 import           Text.Parser.Token
 import           Text.Parser.Token.Highlight
-import           Text.Parser.Token.Style       (emptyOps)
-import           Text.PrettyPrint.Leijen.Text  hiding (char, parens, (<$>))
+import           Text.Parser.Token.Style             (emptyOps)
+import           Text.PrettyPrint.Leijen.Text        hiding (char, parens,
+                                                      (<$>))
 import           Text.Trifecta
 import           Write.TypeConverter
 import           Write.Utils
@@ -46,7 +52,7 @@ writeDefine d =
 boundVariablesFromDefine :: String -> [String]
 boundVariablesFromDefine d =
   case parseString (p <* eof) mempty d of
-    Failure e -> error ("Failed to parse define header\n" ++ show e)
+    Failure e  -> error ("Failed to parse define header\n" ++ show e)
     Success bs -> bs
   where p = name *> (parens (commaSep name) <|> pure [])
 
@@ -81,13 +87,15 @@ opTable = [ [ binary ">>" (ModuleName "Data.Bits") "shiftR" AssocLeft
           , [binary "|" (ModuleName "Data.Bits") "(.|.)" AssocLeft]
           ]
 
-binary :: String -> ModuleName -> String -> Assoc
-       -> Operator ExpressionParser Exp
+binary
+  :: String -> ModuleName -> String -> Assoc -> Operator ExpressionParser Exp
 binary cName moduleName hsName = Infix p
-  where hsOp = Var (UnQual (Ident hsName))
-        p = reservedOp cName *>
-            tell (S.singleton $ ExternalName moduleName hsName) *>
-            pure (\x y -> hsOp `App` x `App` y)
+  where
+    hsOp = Var (UnQual (Ident hsName))
+    p =
+      reservedOp cName
+        *> tell (S.singleton $ ExternalName moduleName hsName)
+        $> (\x y -> hsOp `App` x `App` y)
 
 reservedOp :: String -> ExpressionParser ()
 reservedOp = reserve emptyOps

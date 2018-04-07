@@ -4,51 +4,58 @@ import           Language.C.Types (CIdentifier, Type)
 
 type CType = Type CIdentifier
 
-data TypeDecl = AnInclude Include
-              | ADefine Define
-              | ABaseType BaseType
-              | APlatformType PlatformType
-              | ABitmaskType BitmaskType
-              | AHandleType HandleType
-              | AnEnumType EnumType
-              | AFuncPointerType FuncPointerType
-              | AStructType StructType
-              | AUnionType UnionType
+data TypeDecl
+  = -- | These aren't really types, they are #includes too
+    APlatformHeader PlatformHeader
+  | ARequirement Requirement
+  | ADefine Define
+  | ABaseType BaseType
+  | APlatformType PlatformType
+  | ABitmaskType BitmaskType
+  | AHandleType HandleType
+  | AnEnumType EnumType
+  | AFuncPointerType FuncPointerType
+  | AStructType StructType
+  | AUnionType UnionType
+  | -- | A comment separating type sections
+    ASectionComment SectionComment
+  | AnAlias TypeAlias
+
+  | AnInclude Include
   deriving (Show, Eq)
 
-data Include = Include { iName     :: String
-                       , iFilename :: String
-                       }
+
+data PlatformHeader = PlatformHeader { phName :: String }
   deriving (Show, Eq)
 
-data Define = Define { dName   :: String
-                     , dText   :: String
-                     , dSymTab :: [(String, String)]
+data Requirement = Requirement
+  { rName   :: String
+    -- ^ The name of the type requiring the header
+  , rHeader :: String
+    -- ^ The required header for this type
+  }
+  deriving (Show, Eq)
+
+
+data Define = Define { dName :: String
+                     , dText :: String
                      }
   deriving (Show, Eq)
 
-data BaseType = BaseType { btName       :: String
-                         , btTypeString :: String
-                         , btCType      :: CType
+data BaseType = BaseType { btName :: String
+                         , btType :: String
                          }
   deriving (Show, Eq)
 
-data PlatformType = PlatformType { ptName     :: String
-                                 , ptRequires :: String
-                                 }
-  deriving (Show, Eq)
-
-data BitmaskType = BitmaskType { bmtName       :: String
-                               , bmtTypeString :: String
-                               , bmtRequires   :: Maybe String
-                               , bmtCType      :: CType
+data BitmaskType = BitmaskType { bmtName     :: String
+                               , bmtType     :: String
+                               , bmtRequires :: Maybe String
                                }
   deriving (Show, Eq)
 
-data HandleType = HandleType { htName       :: String
-                             , htParents    :: [String]
-                             , htTypeString :: String
-                             , htCType      :: CType
+data HandleType = HandleType { htName    :: String
+                             , htParents :: [String]
+                             , htType    :: String
                              }
   deriving (Show, Eq)
 
@@ -58,24 +65,23 @@ data EnumType = EnumType { etName :: String
 
 data FuncPointerType = FuncPointerType { fptName       :: String
                                        , fptTypeString :: String
-                                       , fptCType      :: CType
                                        }
   deriving (Show, Eq)
 
 data StructType = StructType { stName           :: String
                              , stComment        :: Maybe String
                              , stMembers        :: [StructMember]
-                             , stUsage          :: [String]
                              , stIsReturnedOnly :: Bool
                              }
   deriving (Show, Eq)
 
 data StructMember = StructMember { smName           :: String
-                                 , smTypeString     :: String
-                                 , smCType          :: CType
-                                 , smNoAutoValidity :: Bool
+                                 , smType           :: String
+                                 , smValues         :: Maybe String
+                                 , smNoAutoValidity :: Maybe Bool
                                  , smIsOptional     :: Maybe [Bool]
                                  , smLengths        :: Maybe [String]
+                                 , smAltLengths     :: Maybe [String]
                                  , smComment        :: Maybe String
                                  }
   deriving (Show, Eq)
@@ -83,11 +89,39 @@ data StructMember = StructMember { smName           :: String
 data UnionType = UnionType { utName           :: String
                            , utComment        :: Maybe String
                            , utMembers        :: [StructMember]
-                           , utUsage          :: [String]
                            , utIsReturnedOnly :: Bool
                            }
   deriving (Show, Eq)
 
+newtype SectionComment = SectionComment { scText :: String }
+  deriving (Show, Eq)
+
+data TypeAlias = TypeAlias
+  { taName     :: String
+  , taAlias    :: String
+  , taCategory :: String
+  }
+  deriving (Show, Eq)
+
+----------------------------------------------------------------
+-- old stuff
+----------------------------------------------------------------
+
+-- TODO: Remove
+data Include = Include { iName     :: String
+                       , iFilename :: String
+                       }
+  deriving (Show, Eq)
+
+
+data PlatformType = PlatformType { ptName     :: String
+                                 , ptRequires :: String
+                                 }
+  deriving (Show, Eq)
+
+
+
+{-
 typeDeclTypeName :: TypeDecl -> Maybe String
 typeDeclTypeName (AnInclude _)          = Nothing
 typeDeclTypeName (ADefine _)            = Nothing
@@ -104,50 +138,51 @@ typeDeclCType :: TypeDecl -> Maybe CType
 typeDeclCType (AnInclude _)          = Nothing
 typeDeclCType (ADefine _)            = Nothing
 typeDeclCType (ABaseType bt)         = Just $ btCType bt
-typeDeclCType (APlatformType _)     = Nothing
+typeDeclCType (APlatformType _)      = Nothing
 typeDeclCType (ABitmaskType bmt)     = Just $ bmtCType bmt
 typeDeclCType (AHandleType ht)       = Just $ htCType ht
-typeDeclCType (AnEnumType _)        = Nothing
+typeDeclCType (AnEnumType _)         = Nothing
 typeDeclCType (AFuncPointerType fpt) = Just $ fptCType fpt
-typeDeclCType (AStructType _)       = Nothing
-typeDeclCType (AUnionType _)        = Nothing
+typeDeclCType (AStructType _)        = Nothing
+typeDeclCType (AUnionType _)         = Nothing
 
 typeDeclToInclude :: TypeDecl -> Maybe Include
 typeDeclToInclude (AnInclude x) = Just x
-typeDeclToInclude _ = Nothing
+typeDeclToInclude _             = Nothing
 
 typeDeclToDefine :: TypeDecl -> Maybe Define
 typeDeclToDefine (ADefine x) = Just x
-typeDeclToDefine _ = Nothing
+typeDeclToDefine _           = Nothing
 
 typeDeclToBaseType :: TypeDecl -> Maybe BaseType
 typeDeclToBaseType (ABaseType x) = Just x
-typeDeclToBaseType _ = Nothing
+typeDeclToBaseType _             = Nothing
 
 typeDeclToPlatformType :: TypeDecl -> Maybe PlatformType
 typeDeclToPlatformType (APlatformType x) = Just x
-typeDeclToPlatformType _ = Nothing
+typeDeclToPlatformType _                 = Nothing
 
 typeDeclToBitmaskType :: TypeDecl -> Maybe BitmaskType
 typeDeclToBitmaskType (ABitmaskType x) = Just x
-typeDeclToBitmaskType _ = Nothing
+typeDeclToBitmaskType _                = Nothing
 
 typeDeclToHandleType :: TypeDecl -> Maybe HandleType
 typeDeclToHandleType (AHandleType x) = Just x
-typeDeclToHandleType _ = Nothing
+typeDeclToHandleType _               = Nothing
 
 typeDeclToEnumType :: TypeDecl -> Maybe EnumType
 typeDeclToEnumType (AnEnumType x) = Just x
-typeDeclToEnumType _ = Nothing
+typeDeclToEnumType _              = Nothing
 
 typeDeclToFuncPointerType :: TypeDecl -> Maybe FuncPointerType
 typeDeclToFuncPointerType (AFuncPointerType x) = Just x
-typeDeclToFuncPointerType _ = Nothing
+typeDeclToFuncPointerType _                    = Nothing
 
 typeDeclToStructType :: TypeDecl -> Maybe StructType
 typeDeclToStructType (AStructType x) = Just x
-typeDeclToStructType _ = Nothing
+typeDeclToStructType _               = Nothing
 
 typeDeclToUnionType :: TypeDecl -> Maybe UnionType
 typeDeclToUnionType (AUnionType x) = Just x
-typeDeclToUnionType _ = Nothing
+typeDeclToUnionType _              = Nothing
+-}
