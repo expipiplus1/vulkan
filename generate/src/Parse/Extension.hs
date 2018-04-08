@@ -52,7 +52,7 @@ requirement = proc r -> do
   erAPI <- optionalAttrValue "api" -< r
   erProfile <- optionalAttrValue "profile" -< r
   erExtension <- optionalAttrValue "extension" -< r
-  erFeature <- optionalAttrValue "extension" -< r
+  erFeature <- optionalAttrValue "feature" -< r
   erComment <- optionalAttrValue "comment" -< r
   erInterfaceElements <- app -< (interfaces (fromMaybe "no comment" erComment), r)
   returnA -< ExtensionRequirement{..}
