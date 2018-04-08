@@ -2,11 +2,14 @@ module Spec.Constant where
 
 import           Data.Word (Word32, Word64)
 
-data Constant = Constant { cName        :: String
-                         , cValueString :: String
-                         , cValue       :: ConstantValue
-                         , cComment     :: Maybe String
+data Constant = Constant { cName    :: String
+                         , cValue   :: Either ConstantAlias String
+                         , cComment :: Maybe String
                          }
+  deriving (Show)
+
+newtype ConstantAlias
+  = ConstantAlias { unConstantAlias :: String }
   deriving (Show)
 
 data ConstantValue = -- | An integral value with no specific size

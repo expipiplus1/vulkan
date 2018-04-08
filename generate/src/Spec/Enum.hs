@@ -3,11 +3,10 @@ module Spec.Enum where
 import           Data.Int (Int32)
 
 -- TODO: Parse the XML comments into here
-data Enum = Enum { eName      :: String
-                 , eNamespace :: Maybe String
-                 , eExpand    :: Maybe String
-                 , eComment   :: Maybe String
-                 , eElements  :: [EnumElement]
+data Enum = Enum { eName        :: String
+                 , eComment     :: Maybe String
+                 , eElements    :: [EnumElement]
+                 , eUnusedStart :: Maybe String
                  }
   deriving (Show)
 

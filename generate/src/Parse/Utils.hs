@@ -34,11 +34,14 @@ module Parse.Utils
   , stripL
   , stripR
   , stripLines
+  , readRational
   ) where
 
 import           Data.Char         (isSpace)
 import           Data.Foldable     (foldr', toList)
 import           Data.List.Split   (splitOn)
+import           Data.Maybe        (listToMaybe)
+import           Numeric           (readFloat, readSigned)
 import           Safe              (readMay)
 import           Text.XML.HXT.Core
 
@@ -209,3 +212,6 @@ stripR = reverse . stripL . reverse
 
 stripLines :: String -> String
 stripLines = unlines . fmap strip . lines
+
+readRational :: String -> Maybe Rational
+readRational = fmap fst . listToMaybe . readSigned readFloat

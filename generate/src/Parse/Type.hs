@@ -170,7 +170,6 @@ struct = proc t -> do
   stIsReturnedOnly <- boolAttrDefault "returnedonly" False -< t
   returnA -< StructType{..}
 
--- TODO: better location info
 structMemberFail
   :: String
   --- ^ Struct name

@@ -3,7 +3,6 @@ module Spec.Bitmask where
 import           Data.Word (Word32)
 
 data Bitmask = Bitmask { bmName         :: String
-                       , bmNamespace    :: Maybe String
                        , bmComment      :: Maybe String
                        , bmValues       :: [BitmaskValue]
                        , bmBitPositions :: [BitmaskBitPosition]
@@ -21,4 +20,3 @@ data BitmaskBitPosition = BitmaskBitPosition { bmbpName    :: String
                                              , bmbpComment :: Maybe String
                                              }
   deriving (Show)
-

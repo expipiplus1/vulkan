@@ -9,30 +9,41 @@ module Parse.Constant
 import           Control.Applicative     ((<|>))
 import           Data.Bits               (complement)
 import           Parse.Utils
-import           Prelude                 hiding (elem)
 import           Spec.Constant
-import           Text.Parser.Combinators
+import           Text.Parser.Combinators hiding (optional)
 import           Text.Parser.Token
-import           Text.Trifecta
+import           Text.Trifecta           hiding (optional)
 import           Text.XML.HXT.Core
 
 parseConstants :: IOStateArrow s XmlTree [Constant]
-parseConstants = extractFields "API Constants"
-                              (hasAttrValue "name" (=="API Constants"))
-                              extract
-  where extract = listA (parseConstant <<< getChildren)
+parseConstants = extractFields
+  "API Constants"
+  (hasAttrValue "name" (== "API Constants"))
+  (allChildren constantFailDiag [constantAlias, constant])
 
-parseConstant :: IOStateArrow s XmlTree Constant
-parseConstant = extractFields "Constant"
-                              (hasName "enum")
-                              extract
-  where extract = proc constant -> do
-          cName    <- requiredAttrValue "name" -< constant
-          cValueString <- requiredAttrValue "value" -< constant
-          cValue   <- (arrF parseConstantValue) `orElse`
-                      failA "Failed to read constant value" -< cValueString
-          cComment <- constA Nothing -< constant -- TODO
-          returnA -< Constant{..}
+constantAlias :: IOStateArrow s XmlTree Constant
+constantAlias = proc c -> do
+  cName <- requiredAttrValue "name" -< c
+  cValue <- Left . ConstantAlias ^<< getAttrValue0 "alias" -< c
+  let cComment = Nothing
+  returnA -< Constant{..}
+
+constant :: IOStateArrow s XmlTree Constant
+constant = proc c -> do
+  cName <- requiredAttrValue "name" -< c
+  cValue <- Right ^<< requiredAttrValue "value" -< c
+  cComment <- optionalAttrValue "comment" -< c
+  returnA -< Constant{..}
+
+constantFailDiag :: IOStateArrow s XmlTree String
+constantFailDiag = proc t -> do
+  name <- optional (getAttrOrChildText "name") -< t
+  returnA -< "Failed to parse constant"
+          ++ maybe "" (" named " ++) name
+
+----------------------------------------------------------------
+-- Parsing values
+----------------------------------------------------------------
 
 parseConstantValue :: String -> Result ConstantValue
 parseConstantValue = parseString (atom <* eof) mempty
@@ -50,7 +61,7 @@ literal = try (FloatValue  . realToFrac   <$> double  <* string "f")
 
 bitWiseNot :: ConstantValue -> ConstantValue
 bitWiseNot (IntegralValue _) = error "can only invert explicitly sized values"
-bitWiseNot (FloatValue _)  = error "can only invert explicitly sized values"
-bitWiseNot (Word32Value x) = Word32Value (complement x)
-bitWiseNot (Word64Value x) = Word64Value (complement x)
+bitWiseNot (FloatValue _)    = error "can only invert explicitly sized values"
+bitWiseNot (Word32Value x)   = Word32Value (complement x)
+bitWiseNot (Word64Value x)   = Word64Value (complement x)
 

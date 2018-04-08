@@ -4,7 +4,7 @@ import           Spec.ExtensionTag
 
 data VendorID = VendorID{ viName    :: ExtensionTag
                         , viID      :: Integer
-                        , viComment :: String
+                        , viComment :: Maybe String
                         }
   deriving(Show)
 

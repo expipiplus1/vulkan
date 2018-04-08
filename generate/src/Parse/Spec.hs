@@ -14,6 +14,7 @@ import           Parse.Copyright
 import           Parse.CType
 import           Parse.Enum
 import           Parse.Extension
+import           Parse.Feature
 import           Parse.Platform
 import           Parse.Section
 import           Parse.Tag
@@ -33,27 +34,20 @@ parseSpec s = liftIO $ let doc = readString [withWarnings yes] s
 parseSpecXML :: ParseArrow XmlTree Spec
 parseSpecXML = isRoot /> hasName "registry" >>> extract
   where extract = proc registry -> do
-          let sConstants = []
-              sEnums = []
-              sBitmasks = []
-              sCommands = []
-              sSections = []
-              sExtensions = []
           setTraceLevel 9 -< ()
           sCopyright <- oneRequired "Copyright" (parseCopyright <<< getChildren) -< registry
           sVendorIDs <- oneRequired "vendorids" (parseVendorIDs <<< getChildren) -< registry
           sPlatforms <- oneRequired "platforms" (parsePlatforms <<< getChildren) -< registry
           sTags <- oneRequired "tags" (parseTags <<< getChildren) -< registry
-          sTypes <- parseTypes <<< getChildren -< registry
-          -- sConstants <- oneRequired "constants" (deep parseConstants) -< registry
-          -- sEnums <- listA (deep parseEnum) -< registry
-          -- sBitmasks <- listA (deep parseBitmask) -< registry
-          -- sCommands <- listA (deep parseCommand) <<<
-          --             onlyChildWithName "commands" -< registry
-          -- _ <- traceSource <<< hasName "comment" <<< getChildren -< registry
-          -- sCopyright <- isA (`isPrefixOf`) <<< getAllText <<< onlyChildWithName "comment" -< registry
-          -- sSections <- oneRequired "sections" (deep parseSections) -< registry
-          -- sExtensions <- oneRequired "extensions" (deep parseExtensions) -< registry
+          sTypes <- oneRequired "types" (parseTypes <<< getChildren) -< registry
+          sConstants <- oneRequired "constants" (parseConstants <<< getChildren) -< registry
+          -- Enums, bitmasks and commands are a little different, each of them
+          -- is at the top level
+          sEnums <- listA (parseEnum <<< getChildren) -< registry
+          sBitmasks <- listA (deep parseBitmask <<< getChildren) -< registry
+          sCommands <- oneRequired "Commands" (parseCommands <<< getChildren) -< registry
+          sFeatures <- listA (parseFeature <<< getChildren) -< registry
+          sExtensions <- oneRequired "extensions" (parseExtensions <<< getChildren) -< registry
           returnA -< Spec{..}
 
 

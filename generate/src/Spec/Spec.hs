@@ -7,8 +7,8 @@ import           Spec.Constant
 import           Spec.Enum
 import           Spec.Extension
 import           Spec.ExtensionTag
+import           Spec.Feature
 import           Spec.Platform
-import           Spec.Section
 import           Spec.Tag
 import           Spec.Type
 import           Spec.VendorID
@@ -23,7 +23,7 @@ data Spec = Spec { sCopyright  :: String
                  , sEnums      :: [Enum]
                  , sBitmasks   :: [Bitmask]
                  , sCommands   :: [Command]
-                 , sSections   :: [Section]
+                 , sFeatures   :: [Feature]
                  , sExtensions :: [Extension]
                  }
   deriving (Show)
