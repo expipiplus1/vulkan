@@ -1,13 +1,16 @@
-{-# LANGUAGE Arrows          #-}
-{-# LANGUAGE LambdaCase      #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE Arrows            #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Parse.Feature
   ( parseFeature
   , interfaces
   ) where
 
-import           Data.Maybe        (fromMaybe, listToMaybe)
+import           Data.Maybe        (fromMaybe)
+import           Data.Text         (Text)
+import qualified Data.Text         as T
 import           Parse.Utils
 import           Spec.Feature
 import           Text.XML.HXT.Core
@@ -15,36 +18,36 @@ import           Text.XML.HXT.Core
 parseFeature :: IOStateArrow s XmlTree Feature
 parseFeature = proc f -> do
   hasName "feature" -< f
-  fAPI <- requiredAttrValue "api" -< f
-  fName <- requiredAttrValue "name" -< f
+  fAPI <- requiredAttrValueT "api" -< f
+  fName <- requiredAttrValueT "name" -< f
   fNumber <- required "read feature number" readRational <<< requiredAttrValue "number" -< f
-  fProtect <- optionalAttrValue "protect" -< f
-  fComment <- optionalAttrValue "comment" -< f
+  fProtect <- optionalAttrValueT "protect" -< f
+  fComment <- optionalAttrValueT "comment" -< f
   fElements <- app
             -< (allChildren (featureElemFail fName) [ARequirement ^<< requirement], f)
   returnA -< Feature{..}
 
 featureElemFail
-  :: String
+  :: Text
   --- ^ feature name
   -> IOStateArrow s XmlTree String
 featureElemFail n = proc t -> do
   comment <- optional (getAttrOrChildText "comment") -< t
-  returnA -< ("Failed to parse value of feature " ++ n)
+  returnA -< ("Failed to parse value of feature " ++ T.unpack n)
           ++ maybe "" (" with comment " ++) comment
 
 requirement
   :: IOStateArrow s XmlTree FeatureRequirement
 requirement = proc r -> do
   hasName "require" -< r
-  frComment <- optionalAttrValue "comment" -< r
-  frProfile <- optionalAttrValue "profile" -< r
-  frExtension <- optionalAttrValue "extension" -< r
+  frComment <- optionalAttrValueT "comment" -< r
+  frProfile <- optionalAttrValueT "profile" -< r
+  frExtension <- optionalAttrValueT "extension" -< r
   frInterfaces <- app -< (interfaces (fromMaybe "no comment" frComment), r)
   returnA -< FeatureRequirement{..}
 
 interfaces
-  :: String
+  :: Text
   -- ^ Parent Name
   -> IOStateArrow s XmlTree [InterfaceElement]
 interfaces p = allChildren
@@ -55,6 +58,7 @@ interfaces p = allChildren
   , ABitmaskExtension ^<< bitmaskExtension
   , AnEnumAlias ^<< enumAlias
   , AnEnumExtensionAbsolute ^<< enumExtensionAbsolute
+  , AnEnumExtensionString ^<< enumExtensionString
   , AnEnumName ^<< simpleName "enum" EnumName
   , ATypeName ^<< simpleName "type" TypeName
   , ACommandName ^<< simpleName "command" CommandName
@@ -62,16 +66,16 @@ interfaces p = allChildren
   ]
 
 interfaceElemFail
-  :: String
+  :: Text
   --- ^ requirement comment
   -> IOStateArrow s XmlTree String
 interfaceElemFail n = proc t -> do
   name <- optional (getAttrOrChildText "name") -< t
-  returnA -< ("Failed to parse value of requirement with comment  " ++ n)
+  returnA -< ("Failed to parse value of requirement with comment  " ++ T.unpack n)
           ++ maybe "" (" with name " ++) name
 
-simpleName :: String -> (String -> a) -> IOStateArrow s XmlTree a
-simpleName t c = c ^<< getAttrValue0 "name" <<< hasName t
+simpleName :: Text -> (Text -> a) -> IOStateArrow s XmlTree a
+simpleName t c = c ^<< getAttrValue0T "name" <<< hasName (T.unpack t)
 
 enumExtension :: IOStateArrow s XmlTree EnumExtension
 enumExtension = proc e -> do
@@ -80,10 +84,10 @@ enumExtension = proc e -> do
   -- Because it has the offset attribute we know it's an enumeration
   -- extension and can start failing better.
   eexExtNumber <- optional (requiredRead <<< getAttrValue0 "extnumber") -< e
-  eexExtends <- requiredAttrValue "extends" -< e
+  eexName <- requiredAttrValueT "name" -< e
+  eexExtends <- requiredAttrValueT "extends" -< e
   eexDirection <- optional (required "direction parsing" parseDir <<< getAttrValue0 "dir") -< e
-  eexName <- requiredAttrValue "name" -< e
-  eexComment <- optionalAttrValue "comment" -< e
+  eexComment <- optionalAttrValueT "comment" -< e
   returnA -< EnumExtension{..}
 
 parseDir :: String -> Maybe Direction
@@ -97,28 +101,37 @@ bitmaskExtension = proc e -> do
   bmxBitPos <- requiredRead <<< getAttrValue0 "bitpos" -< e
   -- Because it has the bitpos attribute we know it's an bitmask
   -- extension and can start failing better.
-  bmxExtends <- requiredAttrValue "extends" -< e
-  bmxName <- requiredAttrValue "name" -< e
-  bmxComment <- optionalAttrValue "comment" -< e
+  bmxExtends <- requiredAttrValueT "extends" -< e
+  bmxName <- requiredAttrValueT "name" -< e
+  bmxComment <- optionalAttrValueT "comment" -< e
   returnA -< BitmaskExtension{..}
 
 enumAlias :: IOStateArrow s XmlTree EnumAlias
 enumAlias = proc e -> do
   hasName "enum" -< e
-  eaAlias <- getAttrValue0 "alias" -< e
-  eaName <- requiredAttrValue "name" -< e
-  eaExtends <- requiredAttrValue "extends" -< e
-  eaComment <- optionalAttrValue "comment" -< e
+  eaAlias <- getAttrValue0T "alias" -< e
+  eaName <- requiredAttrValueT "name" -< e
+  eaExtends <- requiredAttrValueT "extends" -< e
+  eaComment <- optionalAttrValueT "comment" -< e
   returnA -< EnumAlias{..}
 
 enumExtensionAbsolute :: IOStateArrow s XmlTree EnumExtensionAbsolute
 enumExtensionAbsolute = proc e -> do
   hasName "enum" -< e
-  eexaValue <- getAttrValue0 "value" -< e
-  eexaName <- requiredAttrValue "name" -< e
-  eexaExtends <- optionalAttrValue "extends" -< e
-  eexaComment <- optionalAttrValue "comment" -< e
+  eexaExtends <- getAttrValue0T "extends" -< e
+  eexaName <- requiredAttrValueT "name" -< e
+  eexaValue <- (requiredRead <<< requiredAttrValue "value") `orElse` failA "hello" -< e
+  eexaComment <- optionalAttrValueT "comment" -< e
+  eexaExtNumber <- optional (requiredRead <<< getAttrValue0 "extnumber") -< e
   returnA -< EnumExtensionAbsolute{..}
 
-comment :: IOStateArrow s XmlTree String
-comment = getAllText <<< hasName "comment"
+enumExtensionString :: IOStateArrow s XmlTree EnumExtensionString
+enumExtensionString = proc e -> do
+  hasName "enum" -< e
+  eexsValue <- getAttrValue0T "value" -< e
+  eexsName <- requiredAttrValueT "name" -< e
+  eexsComment <- optionalAttrValueT "comment" -< e
+  returnA -< EnumExtensionString{..}
+
+comment :: IOStateArrow s XmlTree Text
+comment = getAllTextT <<< hasName "comment"

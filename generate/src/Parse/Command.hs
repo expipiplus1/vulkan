@@ -4,7 +4,6 @@
 module Parse.Command where
 
 import           Data.Either
-import           Parse.CType
 import           Parse.Utils
 import           Spec.Command
 import           Text.XML.HXT.Core

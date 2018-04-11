@@ -1,12 +1,18 @@
+{-# LANGUAGE Arrows                    #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
+{-# LANGUAGE OverloadedStrings         #-}
 
 module Parse.Utils
   ( optional
   , optionalAttrValue
+  , optionalAttrValueT
   , requiredAttrValue
+  , requiredAttrValueT
   , commaSepList
   , optionalCommaSepListAttr
+  , optionalCommaSepListAttrT
   , commaSepListAttr
+  , commaSepListAttrT
   , requiredRead
   , required
   , failA
@@ -16,17 +22,21 @@ module Parse.Utils
   , oneRequired
   , onlyChildWithName
   , getAllText
+  , getAllTextT
   , getAllNonCommentText
   , oneOf
   , oneOf'
   , allChildren
   , extractFields
   , getAttrOrChildText
+  , getAttrOrChildTextT
   , getChildText
+  , getChildTextT
   , parseValidityBlock
   , traverseMaybeA
   , mapA
   , parseBool
+  , parseBoolT
   , boolAttrDefault
   , fromRightA
   , fromRightShowA
@@ -35,18 +45,24 @@ module Parse.Utils
   , stripR
   , stripLines
   , readRational
+  , getAttrValue0T
   ) where
 
 import           Data.Char         (isSpace)
 import           Data.Foldable     (foldr', toList)
 import           Data.List.Split   (splitOn)
 import           Data.Maybe        (listToMaybe)
+import           Data.Text         (Text)
+import qualified Data.Text         as T
 import           Numeric           (readFloat, readSigned)
 import           Safe              (readMay)
 import           Text.XML.HXT.Core
 
 optionalAttrValue :: ArrowXml a => String -> a XmlTree (Maybe String)
 optionalAttrValue s = optional (getAttrValue0 s)
+
+optionalAttrValueT :: ArrowXml a => String -> a XmlTree (Maybe Text)
+optionalAttrValueT s = fmap T.pack ^<< optionalAttrValue s
 
 optional :: ArrowIf a => a b a1 -> a b (Maybe a1)
 optional x = (x >>^ Just) `orElse` constA Nothing
@@ -55,8 +71,12 @@ requiredAttrValue :: String -> IOStateArrow s XmlTree String
 requiredAttrValue s = getAttrValue0 s `orElse`
                       failA ("Missing required attribute: " ++ s)
 
+requiredAttrValueT :: Text -> IOStateArrow s XmlTree Text
+requiredAttrValueT s = T.pack ^<< requiredAttrValue (T.unpack s)
+
 requiredRead :: Read a => IOStateArrow s String a
-requiredRead = required "parse with Read" readMay
+requiredRead = proc s ->
+  app -< (required ("parse with Read: " ++ s) readMay, s)
 
 -- | Try to process input with the given function, fail if Nothing is returned
 required
@@ -105,15 +125,25 @@ commaSepList = splitOn ","
 commaSepListAttr :: ArrowXml a => String -> a XmlTree [String]
 commaSepListAttr n = commaSepList ^<< getAttrValue n
 
+-- | When the attribute is not present this returns the empty list
+commaSepListAttrT :: ArrowXml a => String -> a XmlTree [Text]
+commaSepListAttrT n = fmap T.pack ^<< commaSepListAttr n
+
 optionalCommaSepListAttr :: ArrowXml a => String -> a XmlTree (Maybe [String])
 optionalCommaSepListAttr n = fmap commaSepList ^<< optionalAttrValue n
+
+optionalCommaSepListAttrT :: ArrowXml a => String -> a XmlTree (Maybe [Text])
+optionalCommaSepListAttrT n = fmap (fmap T.pack) ^<< optionalCommaSepListAttr n
 
 getAllText :: ArrowXml a => a XmlTree String
 getAllText = deep getText >. concat
 
-getAllNonCommentText :: ArrowXml a => a XmlTree String
+getAllTextT :: ArrowXml a => a XmlTree Text
+getAllTextT = T.pack ^<< getAllText
+
+getAllNonCommentText :: ArrowXml a => a XmlTree Text
 -- getAllNonCommentText = deepest (neg (hasName "comment") >>> getText) >. concat
-getAllNonCommentText = processTopDown (neg (hasName "comment")) >>> getAllText
+getAllNonCommentText = processTopDown (neg (hasName "comment")) >>> getAllTextT
 
 -- | Try each option in turn until one of them succeeds. State altering arrows
 -- should be handled with care.
@@ -156,12 +186,25 @@ getAttrOrChildText
   -> IOStateArrow s XmlTree String
 getAttrOrChildText s = oneOf [getAttrValue0 s, getChildText s]
 
+getAttrOrChildTextT
+  :: String
+  -- ^ The attribute or child name to get
+  -> IOStateArrow s XmlTree Text
+getAttrOrChildTextT s = T.pack ^<< getAttrOrChildText s
+
 -- | Get all the text between the child with the given name
 getChildText
   :: String
   -- ^ The name of the child to get the text of
   -> IOStateArrow s XmlTree String
 getChildText s = getAllText <<< hasName s <<< getChildren
+
+-- | Get all the text between the child with the given name
+getChildTextT
+  :: String
+  -- ^ The name of the child to get the text of
+  -> IOStateArrow s XmlTree Text
+getChildTextT s = T.pack ^<< getChildText s
 
 parseValidityBlock :: ArrowXml a => a XmlTree [String]
 parseValidityBlock = hasName "validity" >>>
@@ -176,6 +219,12 @@ mapA a = listA (a <<< unlistA)
 
 parseBool :: IOStateArrow s String Bool
 parseBool = arrF go `orElse` failA "Failed to parse bool"
+  where go "true"  = Just True
+        go "false" = Just False
+        go _       = Nothing
+
+parseBoolT :: IOStateArrow s Text Bool
+parseBoolT = arrF go `orElse` failA "Failed to parse bool"
   where go "true"  = Just True
         go "false" = Just False
         go _       = Nothing
@@ -215,3 +264,6 @@ stripLines = unlines . fmap strip . lines
 
 readRational :: String -> Maybe Rational
 readRational = fmap fst . listToMaybe . readSigned readFloat
+
+getAttrValue0T :: ArrowXml a => String -> a XmlTree Text
+getAttrValue0T s = T.pack ^<< getAttrValue0 s
