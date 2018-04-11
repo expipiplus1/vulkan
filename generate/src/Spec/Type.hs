@@ -1,3 +1,5 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Spec.Type where
 
 import           Data.Text
@@ -73,14 +75,15 @@ data StructType = StructType { stName           :: Text
                              }
   deriving (Show, Eq)
 
-data StructMember = StructMember { smName           :: Text
-                                 , smType           :: Text
-                                 , smValues         :: Maybe Text
-                                 , smNoAutoValidity :: Maybe Bool
-                                 , smIsOptional     :: Maybe [Bool]
-                                 , smLengths        :: Maybe [Text]
-                                 , smAltLengths     :: Maybe [Text]
-                                 , smComment        :: Maybe Text
+data StructMember = StructMember { smName            :: Text
+                                 , smType            :: Text
+                                 , smTypeWithoutName :: Text
+                                 , smValues          :: Maybe Text
+                                 , smNoAutoValidity  :: Maybe Bool
+                                 , smIsOptional      :: Maybe [Bool]
+                                 , smLengths         :: Maybe [Text]
+                                 , smAltLengths      :: Maybe [Text]
+                                 , smComment         :: Maybe Text
                                  }
   deriving (Show, Eq)
 
@@ -108,20 +111,37 @@ data TypeAlias = TypeAlias
 ----------------------------------------------------------------
 
 
+typeDeclTypeName :: TypeDecl -> Maybe Text
+typeDeclTypeName = \case
+  (APlatformHeader _)    -> Nothing
+  (ARequirement r)       -> Just $ rName r
+  (ADefine d)            -> Just $ dName d
+  (ABaseType bt)         -> Just $ btName bt
+  (ABitmaskType bmt)     -> Just $ bmtName bmt
+  (AHandleType ht)       -> Just $ htName ht
+  (AnEnumType et)        -> Just $ etName et
+  (AFuncPointerType fpt) -> Just $ fptName fpt
+  (AStructType st)       -> Just $ stName st
+  (AUnionType ut)        -> Just $ utName ut
+  (ASectionComment _)    -> Nothing
+  (AnAlias ta)           -> Just $ taName ta
+
+--    APlatformHeader PlatformHeader
+--  | ARequirement Requirement
+--  | ADefine Define
+--  | ABaseType BaseType
+--  | ABitmaskType BitmaskType
+--  | AHandleType HandleType
+--  | AnEnumType EnumType
+--  | AFuncPointerType FuncPointerType
+--  | AStructType StructType
+--  | AUnionType UnionType
+--  | -- | A comment separating type sections
+--    ASectionComment SectionComment
+--  | AnAlias TypeAlias
+
 
 {-
-typeDeclTypeName :: TypeDecl -> Maybe String
-typeDeclTypeName (AnInclude _)          = Nothing
-typeDeclTypeName (ADefine _)            = Nothing
-typeDeclTypeName (ABaseType bt)         = Just $ btName bt
-typeDeclTypeName (APlatformType pt)     = Just $ ptName pt
-typeDeclTypeName (ABitmaskType bmt)     = Just $ bmtName bmt
-typeDeclTypeName (AHandleType ht)       = Just $ htName ht
-typeDeclTypeName (AnEnumType et)        = Just $ etName et
-typeDeclTypeName (AFuncPointerType fpt) = Just $ fptName fpt
-typeDeclTypeName (AStructType st)       = Just $ stName st
-typeDeclTypeName (AUnionType ut)        = Just $ utName ut
-
 typeDeclCType :: TypeDecl -> Maybe CType
 typeDeclCType (AnInclude _)          = Nothing
 typeDeclCType (ADefine _)            = Nothing

@@ -9,6 +9,7 @@ module Parse.Utils
   , requiredAttrValue
   , requiredAttrValueT
   , commaSepList
+  , commaSepListT
   , optionalCommaSepListAttr
   , optionalCommaSepListAttrT
   , commaSepListAttr
@@ -24,6 +25,7 @@ module Parse.Utils
   , getAllText
   , getAllTextT
   , getAllNonCommentText
+  , getAllNonCommentNonNameText
   , oneOf
   , oneOf'
   , allChildren
@@ -121,6 +123,9 @@ onlyChildWithName s = oneRequired s (hasName s <<< getChildren)
 commaSepList :: String -> [String]
 commaSepList = splitOn ","
 
+commaSepListT :: Text -> [Text]
+commaSepListT = T.splitOn ","
+
 -- | When the attribute is not present this returns the empty list
 commaSepListAttr :: ArrowXml a => String -> a XmlTree [String]
 commaSepListAttr n = commaSepList ^<< getAttrValue n
@@ -142,8 +147,11 @@ getAllTextT :: ArrowXml a => a XmlTree Text
 getAllTextT = T.pack ^<< getAllText
 
 getAllNonCommentText :: ArrowXml a => a XmlTree Text
--- getAllNonCommentText = deepest (neg (hasName "comment") >>> getText) >. concat
 getAllNonCommentText = processTopDown (neg (hasName "comment")) >>> getAllTextT
+
+getAllNonCommentNonNameText :: ArrowXml a => a XmlTree Text
+getAllNonCommentNonNameText =
+  processTopDown (neg (hasName "comment" `orElse` hasName "name")) >>> getAllTextT
 
 -- | Try each option in turn until one of them succeeds. State altering arrows
 -- should be handled with care.

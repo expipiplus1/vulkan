@@ -25,8 +25,11 @@ import           Say
 import           Spec.Bitmask
 import           Spec.Constant
 import           Spec.Enum
+import           Spec.Savvy.Command
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
+import           Spec.Savvy.Struct
+import           Spec.Savvy.Type
 import           Spec.Spec
 import           Spec.Type
 -- import           Write.Bitmask
@@ -36,11 +39,27 @@ import           Write.Type.Enum
 
 writeSpec :: Spec -> IO ()
 writeSpec spec = do
-  case genWriteElements spec of
+  case specParserContext spec of
     Left es ->
-      traverse_ (sayErr . prettySpecError) es
-    Right ws ->
-      traverse_ sayShow ws
+     traverse_ (sayErr . prettySpecError) es
+    Right pc ->
+     case specCommands pc spec of
+       Failure es ->
+        traverse_ (sayErr . prettySpecError) es
+       Success cs -> print cs
+  -- case specParserContext spec of
+  --   Left es ->
+  --    traverse_ (sayErr . prettySpecError) es
+  --   Right pc ->
+  --    case specStructs pc spec of
+  --      Failure es ->
+  --       traverse_ (sayErr . prettySpecError) es
+  --      Success ss -> print ss
+  -- case genWriteElements spec of
+  --   Left es ->
+  --     traverse_ (sayErr . prettySpecError) es
+  --   Right ws ->
+  --     traverse_ sayShow ws
 
 genWriteElements :: Spec -> Either [SpecError] [WriteElement]
 genWriteElements s
@@ -48,35 +67,36 @@ genWriteElements s
       es <- specEnums s
       pure (writeEnum <$> es)
 
--- | Pairs types with bitmasks
-pairBitmasks :: Spec -> Validation [Text] [(BitmaskType, Bitmask)]
-pairBitmasks Spec {..} = do
-  let bmts    = [ bmt | ABitmaskType bmt <- sTypes ]
-      bmtRequiresL = catMaybes (bmtRequires <$> bmts)
-      bms     = sBitmasks
-      numBmtRequires = length bmtRequiresL
-      numBms  = length bms
-  _ <- unless (numBmtRequires == numBms) $ Failure
-    [ "Number of bitmask type requires does not equal the number of bitmask declarations: "
-      <> T.pack (show numBmtRequires)
-      <> " and "
-      <> T.pack (show numBms)
-      <> " respectively"
-    ]
-  let bmNames         = Set.fromList (bmName <$> bms)
-      bmtNames        = Set.fromList (bmtName <$> bmts)
-      bmtRequires     = Set.fromList bmtRequiresL
-      missingBmNames  = bmNames Set.\\ bmtRequires
-      missingBmtNames = bmtNames Set.\\ bmNames
-  _ <- unless (missingBmNames == Set.empty) $ Failure
-    [ "Missing Bitmask Names (without a bitmask type): "
-        <> T.pack (show missingBmNames)
-    ]
-  _ <- unless (missingBmtNames == Set.empty) $ Failure
-    [ "Missing Bitmask Type Names (without a bitmask declaration): "
-        <> T.pack (show missingBmtNames)
-    ]
-  return []
+
+-- -- | Pairs types with bitmasks
+-- pairBitmasks :: Spec -> Validation [Text] [(BitmaskType, Bitmask)]
+-- pairBitmasks Spec {..} = do
+--   let bmts    = [ bmt | ABitmaskType bmt <- sTypes ]
+--       bmtRequiresL = catMaybes (bmtRequires <$> bmts)
+--       bms     = sBitmasks
+--       numBmtRequires = length bmtRequiresL
+--       numBms  = length bms
+--   _ <- unless (numBmtRequires == numBms) $ Failure
+--     [ "Number of bitmask type requires does not equal the number of bitmask declarations: "
+--       <> T.pack (show numBmtRequires)
+--       <> " and "
+--       <> T.pack (show numBms)
+--       <> " respectively"
+--     ]
+--   let bmNames         = Set.fromList (bmName <$> bms)
+--       bmtNames        = Set.fromList (bmtName <$> bmts)
+--       bmtRequires     = Set.fromList bmtRequiresL
+--       missingBmNames  = bmNames Set.\\ bmtRequires
+--       missingBmtNames = bmtNames Set.\\ bmNames
+--   _ <- unless (missingBmNames == Set.empty) $ Failure
+--     [ "Missing Bitmask Names (without a bitmask type): "
+--         <> T.pack (show missingBmNames)
+--     ]
+--   _ <- unless (missingBmtNames == Set.empty) $ Failure
+--     [ "Missing Bitmask Type Names (without a bitmask declaration): "
+--         <> T.pack (show missingBmtNames)
+--     ]
+--   return []
 
 {-
 specNames :: Spec -> [String]

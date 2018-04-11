@@ -181,7 +181,13 @@ structMember :: IOStateArrow s XmlTree StructMember
 structMember = proc m -> do
   hasName "member" -< m
   smName <- oneRequired "struct member name" (getChildTextT "name") -< m
-  smType <- oneRequired "struct member type text" getAllNonCommentText -< m
+  -- smType <- oneRequired "struct member type text" getAllNonCommentText -< m
+  smType <-
+    oneRequired "struct member type text" getAllNonCommentText <<<
+    -- Insert a space between the "type" and "name" it doesn't exist sometimes
+    (insertChildrenAt 1 (txt " "))
+    -< m
+  smTypeWithoutName <- oneRequired "struct member type text" getAllNonCommentNonNameText -< m
   smValues <- optionalAttrValueT "values" -< m
   smNoAutoValidity <- optional (parseBool <<< getAttrValue0 "noautovalidity") -< m
   smIsOptional <-
