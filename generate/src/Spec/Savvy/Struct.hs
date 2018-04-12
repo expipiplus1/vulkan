@@ -36,7 +36,7 @@ specStructs pc P.Spec{..} =
        let sName = stName
            sComment = stComment
        sMembers <- for stMembers $ \P.StructMember{..} -> do
-         smType <- eitherToValidation $ stringToType pc smType
+         smType <- eitherToValidation $ stringToTypeExpected pc smName smType
          pure StructMember{..}
        pure Struct{..}
 

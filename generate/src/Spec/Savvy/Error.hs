@@ -20,6 +20,7 @@ data SpecError
   | UnhandledCTypeSpecifier Text
   | UnhandledCArraySize Text
   | NegativeCArraySize Integer
+  | MismatchTypeName Text Text
   | Other Text
     -- ^ Used for testing in development
 
@@ -38,10 +39,11 @@ prettySpecError = \case
       <+> t
   TypeParseError s e -> "Failed to parse `" <> s <> "`: \n" <> e
   TypeNameParseError s e -> "Failed to create C identifier from `" <> s <> "`: \n" <> e
-  UnhandledCType c -> "Unhandled C Type: " <> c
-  UnhandledCTypeSpecifier c -> "Unhandled C Type specifier: " <> c
-  UnhandledCArraySize c -> "Unhandled C array size: " <> c
-  NegativeCArraySize c -> "Negative C array size: " <> showText c
+  UnhandledCType c -> "Unhandled C Type:" <+> c
+  UnhandledCTypeSpecifier c -> "Unhandled C Type specifier:" <+> c
+  UnhandledCArraySize c -> "Unhandled C array size:" <+> c
+  NegativeCArraySize c -> "Negative C array size:" <+> showText c
+  MismatchTypeName cId sName -> "C Identifier and Spec name mismatch:" <+> cId <+> "vs" <+> sName
   Other e -> e
 
 (<+>) :: Text -> Text -> Text

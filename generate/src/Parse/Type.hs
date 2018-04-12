@@ -151,6 +151,7 @@ funcPointer = proc t -> do
   inCategory "funcpointer" -< t
   fptName <- getChildTextT "name" -< t
   fptType <- getAllTextT -< t
+  fptTypeWithoutName <- oneRequired "funcPointer type text" getAllNonCommentNonNameText -< t
   returnA -< FuncPointerType{..}
 
 struct :: IOStateArrow s XmlTree StructType

@@ -28,14 +28,17 @@ import           Spec.Enum
 import           Spec.Savvy.Command
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
+import           Spec.Savvy.FuncPointer
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 import           Spec.Spec
 import           Spec.Type
 -- import           Write.Bitmask
+import           Write.Command
 import           Write.Element
 import           Write.Error
 import           Write.Type.Enum
+import           Write.Type.FuncPointer
 
 writeSpec :: Spec -> IO ()
 writeSpec spec = do
@@ -43,10 +46,28 @@ writeSpec spec = do
     Left es ->
      traverse_ (sayErr . prettySpecError) es
     Right pc ->
+     -- case specFuncPointers pc spec of
+     --   Failure es ->
+     --    traverse_ (sayErr . prettySpecError) es
+     --   Success fs -> do
+     --     sayShow fs
+     --     case traverse (eitherToValidation . writeFuncPointerType) fs of
+     --       Failure es ->
+     --         traverse_ (sayErr . prettySpecError) es
+     --       Success es ->
+     --         traverse_ sayShow es
+
      case specCommands pc spec of
        Failure es ->
         traverse_ (sayErr . prettySpecError) es
-       Success cs -> print cs
+       Success fs -> do
+         sayShow fs
+         case traverse (eitherToValidation . writeCommand) fs of
+           Failure es ->
+             traverse_ (sayErr . prettySpecError) es
+           Success es ->
+             traverse_ sayShow es
+
   -- case specParserContext spec of
   --   Left es ->
   --    traverse_ (sayErr . prettySpecError) es

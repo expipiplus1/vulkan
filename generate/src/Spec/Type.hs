@@ -63,8 +63,9 @@ newtype EnumType = EnumType { etName :: Text
                             }
   deriving (Show, Eq)
 
-data FuncPointerType = FuncPointerType { fptName :: Text
-                                       , fptType :: Text
+data FuncPointerType = FuncPointerType { fptName            :: Text
+                                       , fptType            :: Text
+                                       , fptTypeWithoutName :: Text
                                        }
   deriving (Show, Eq)
 

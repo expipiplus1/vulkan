@@ -3,6 +3,7 @@
 
 module Spec.Savvy.Command
   ( Command(..)
+  , Parameter(..)
   , specCommands
   ) where
 
@@ -30,8 +31,8 @@ data Parameter = Parameter
 
 specCommands :: TypeParseContext -> P.Spec -> Validation [SpecError] [Command]
 specCommands pc P.Spec {..} = for sCommands $ \P.Command {..} -> do
-  cReturnType <- eitherToValidation $ stringToType pc cReturnType
+  cReturnType <- eitherToValidation $ stringToTypeExpected pc cName cReturnType
   cParameters <- for cParameters $ \P.Parameter {..} -> do
-    pType <- eitherToValidation $ stringToType pc pType
+    pType <- eitherToValidation $ stringToTypeExpected pc pName pType
     pure Parameter {..}
   pure Command {..}
