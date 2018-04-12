@@ -87,7 +87,13 @@ executable generate
                      , trifecta >= 1.5 && < 1.8
                      , unordered-containers >= 0.2 && < 0.3
                      , wl-pprint-text >= 1.1 && < 1.2
+                     , text
+                     , say
+                     , either
                      , pretty-show
+                     , pandoc
+                     , typed-process
+                     , data-default
   default-language:    Haskell2010
 
 source-repository head
