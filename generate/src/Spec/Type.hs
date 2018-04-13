@@ -1,5 +1,8 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Spec.Type where
 
+import           Data.Text
 import           Language.C.Types (CIdentifier, Type)
 
 type CType = Type CIdentifier
@@ -10,7 +13,6 @@ data TypeDecl
   | ARequirement Requirement
   | ADefine Define
   | ABaseType BaseType
-  | APlatformType PlatformType
   | ABitmaskType BitmaskType
   | AHandleType HandleType
   | AnEnumType EnumType
@@ -20,86 +22,88 @@ data TypeDecl
   | -- | A comment separating type sections
     ASectionComment SectionComment
   | AnAlias TypeAlias
-
-  | AnInclude Include
   deriving (Show, Eq)
 
 
-data PlatformHeader = PlatformHeader { phName :: String }
+newtype PlatformHeader = PlatformHeader { phName :: Text }
   deriving (Show, Eq)
 
 data Requirement = Requirement
-  { rName   :: String
+  { rName   :: Text
     -- ^ The name of the type requiring the header
-  , rHeader :: String
+  , rHeader :: Text
     -- ^ The required header for this type
   }
   deriving (Show, Eq)
 
 
-data Define = Define { dName :: String
-                     , dText :: String
+data Define = Define { dName :: Text
+                     , dText :: Text
                      }
   deriving (Show, Eq)
 
-data BaseType = BaseType { btName :: String
-                         , btType :: String
+data BaseType = BaseType { btName :: Text
+                         , btType :: Text
                          }
   deriving (Show, Eq)
 
-data BitmaskType = BitmaskType { bmtName     :: String
-                               , bmtType     :: String
-                               , bmtRequires :: Maybe String
+data BitmaskType = BitmaskType { bmtName     :: Text
+                               , bmtType     :: Text
+                               , bmtRequires :: Maybe Text
                                }
   deriving (Show, Eq)
 
-data HandleType = HandleType { htName    :: String
-                             , htParents :: [String]
-                             , htType    :: String
+data HandleType = HandleType { htName    :: Text
+                             , htParents :: [Text]
+                             , htType    :: Text
                              }
   deriving (Show, Eq)
 
-data EnumType = EnumType { etName :: String
-                         }
+newtype EnumType = EnumType { etName :: Text
+                            }
   deriving (Show, Eq)
 
-data FuncPointerType = FuncPointerType { fptName       :: String
-                                       , fptTypeString :: String
+data FuncPointerType = FuncPointerType { fptName            :: Text
+                                       , fptType            :: Text
+                                       , fptTypeWithoutName :: Text
                                        }
   deriving (Show, Eq)
 
-data StructType = StructType { stName           :: String
-                             , stComment        :: Maybe String
+data StructType = StructType { stName           :: Text
+                             , stComment        :: Maybe Text
                              , stMembers        :: [StructMember]
                              , stIsReturnedOnly :: Bool
                              }
   deriving (Show, Eq)
 
-data StructMember = StructMember { smName           :: String
-                                 , smType           :: String
-                                 , smValues         :: Maybe String
-                                 , smNoAutoValidity :: Maybe Bool
-                                 , smIsOptional     :: Maybe [Bool]
-                                 , smLengths        :: Maybe [String]
-                                 , smAltLengths     :: Maybe [String]
-                                 , smComment        :: Maybe String
+data StructMember = StructMember { smName            :: Text
+                                 , smType            :: Text
+                                 , smTypeWithoutName :: Text
+                                 , smValues          :: Maybe Text
+                                 , smNoAutoValidity  :: Maybe Bool
+                                 , smIsOptional      :: Maybe [Bool]
+                                 , smLengths         :: Maybe [Text]
+                                 , smAltLengths      :: Maybe [Text]
+                                 , smComment         :: Maybe Text
                                  }
   deriving (Show, Eq)
 
-data UnionType = UnionType { utName           :: String
-                           , utComment        :: Maybe String
+data UnionType = UnionType { utName           :: Text
+                           , utComment        :: Maybe Text
                            , utMembers        :: [StructMember]
                            , utIsReturnedOnly :: Bool
                            }
   deriving (Show, Eq)
 
-newtype SectionComment = SectionComment { scText :: String }
+newtype SectionComment = SectionComment { scText :: Text }
   deriving (Show, Eq)
 
 data TypeAlias = TypeAlias
-  { taName     :: String
-  , taAlias    :: String
-  , taCategory :: String
+  { taName     :: Text
+    -- ^ The new type name
+  , taAlias    :: Text
+    -- ^ What it is an alias of
+  , taCategory :: Text
   }
   deriving (Show, Eq)
 
@@ -107,33 +111,38 @@ data TypeAlias = TypeAlias
 -- old stuff
 ----------------------------------------------------------------
 
--- TODO: Remove
-data Include = Include { iName     :: String
-                       , iFilename :: String
-                       }
-  deriving (Show, Eq)
 
+typeDeclTypeName :: TypeDecl -> Maybe Text
+typeDeclTypeName = \case
+  (APlatformHeader _)    -> Nothing
+  (ARequirement r)       -> Just $ rName r
+  (ADefine d)            -> Just $ dName d
+  (ABaseType bt)         -> Just $ btName bt
+  (ABitmaskType bmt)     -> Just $ bmtName bmt
+  (AHandleType ht)       -> Just $ htName ht
+  (AnEnumType et)        -> Just $ etName et
+  (AFuncPointerType fpt) -> Just $ fptName fpt
+  (AStructType st)       -> Just $ stName st
+  (AUnionType ut)        -> Just $ utName ut
+  (ASectionComment _)    -> Nothing
+  (AnAlias ta)           -> Just $ taName ta
 
-data PlatformType = PlatformType { ptName     :: String
-                                 , ptRequires :: String
-                                 }
-  deriving (Show, Eq)
-
+--    APlatformHeader PlatformHeader
+--  | ARequirement Requirement
+--  | ADefine Define
+--  | ABaseType BaseType
+--  | ABitmaskType BitmaskType
+--  | AHandleType HandleType
+--  | AnEnumType EnumType
+--  | AFuncPointerType FuncPointerType
+--  | AStructType StructType
+--  | AUnionType UnionType
+--  | -- | A comment separating type sections
+--    ASectionComment SectionComment
+--  | AnAlias TypeAlias
 
 
 {-
-typeDeclTypeName :: TypeDecl -> Maybe String
-typeDeclTypeName (AnInclude _)          = Nothing
-typeDeclTypeName (ADefine _)            = Nothing
-typeDeclTypeName (ABaseType bt)         = Just $ btName bt
-typeDeclTypeName (APlatformType pt)     = Just $ ptName pt
-typeDeclTypeName (ABitmaskType bmt)     = Just $ bmtName bmt
-typeDeclTypeName (AHandleType ht)       = Just $ htName ht
-typeDeclTypeName (AnEnumType et)        = Just $ etName et
-typeDeclTypeName (AFuncPointerType fpt) = Just $ fptName fpt
-typeDeclTypeName (AStructType st)       = Just $ stName st
-typeDeclTypeName (AUnionType ut)        = Just $ utName ut
-
 typeDeclCType :: TypeDecl -> Maybe CType
 typeDeclCType (AnInclude _)          = Nothing
 typeDeclCType (ADefine _)            = Nothing

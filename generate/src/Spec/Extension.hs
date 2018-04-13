@@ -1,23 +1,24 @@
 module Spec.Extension where
 
 import           Data.Int     (Int32)
+import           Data.Text
 import           Spec.Feature
 
 data Extension = Extension
-  { extName      :: String
+  { extName      :: Text
     -- ^ extension name string
   , extNumber    :: Word
     -- ^ extension number (positive integer, should be unique)
-  , extProtect   :: Maybe String
+  , extProtect   :: Maybe Text
     -- ^ C preprocessor symbol to conditionally define the interface
-  , extPlatform  :: Maybe String
-  , extAuthor    :: Maybe String
+  , extPlatform  :: Maybe Text
+  , extAuthor    :: Maybe Text
     -- ^ name of the author (usually a company or project name)
-  , extContact   :: Maybe String
+  , extContact   :: Maybe Text
     -- ^ contact responsible for the tag (name and contact information)
   , extType      :: Maybe ExtensionType
     -- ^ 'device' or 'instance', if present
-  , extRequires  :: Maybe [String]
+  , extRequires  :: Maybe [Text]
     -- ^ commas-separated list of extension names required by this
     --     extension
   , extSupported :: ExtensionSupport
@@ -30,7 +31,7 @@ data Extension = Extension
 data ExtensionType = Device | Instance
   deriving(Show)
 
-data ExtensionSupport = Disabled | Profile String
+data ExtensionSupport = Disabled | Profile Text
   deriving(Show)
 
 data ExtensionElement
@@ -40,12 +41,12 @@ data ExtensionElement
   deriving(Show)
 
 data ExtensionRequirement = ExtensionRequirement
-  { erAPI               :: Maybe String
-  , erProfile           :: Maybe String
-  , erExtension         :: Maybe String
-  , erFeature           :: Maybe String
-  , erComment           :: Maybe String
-  , erInterfaceElements :: [InterfaceElement]
+  { erAPI        :: Maybe Text
+  , erProfile    :: Maybe Text
+  , erExtension  :: Maybe Text
+  , erFeature    :: Maybe Text
+  , erComment    :: Maybe Text
+  , erInterfaces :: [InterfaceElement]
   }
   deriving(Show)
 

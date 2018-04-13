@@ -11,7 +11,6 @@ import           Parse.Bitmask
 import           Parse.Command
 import           Parse.Constant
 import           Parse.Copyright
-import           Parse.CType
 import           Parse.Enum
 import           Parse.Extension
 import           Parse.Feature
@@ -28,10 +27,10 @@ import           Text.XML.HXT.Core
 parseSpec :: MonadIO m => String -> m (Maybe Spec)
 parseSpec s = liftIO $ let doc = readString [withWarnings yes] s
                        in headMay <$>
-                          runX (withOtherUserState initialSpecParseState
+                          runX (withOtherUserState ()
                                 (doc >>> oneRequired "spec" parseSpecXML))
 
-parseSpecXML :: ParseArrow XmlTree Spec
+parseSpecXML :: IOStateArrow s XmlTree Spec
 parseSpecXML = isRoot /> hasName "registry" >>> extract
   where extract = proc registry -> do
           setTraceLevel 9 -< ()

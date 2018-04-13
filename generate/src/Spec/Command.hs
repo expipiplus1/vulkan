@@ -1,25 +1,26 @@
 module Spec.Command where
 
+import           Data.Text
 import           Spec.Type
 
-data Command = Command { cName                     :: String
-                       , cReturnType               :: String
+data Command = Command { cName                     :: Text
+                       , cReturnType               :: Text
                        , cParameters               :: [Parameter]
-                       , cImplicitExternSyncParams :: [String]
-                       , cQueues                   :: Maybe [String]
-                       , cSuccessCodes             :: Maybe [String]
-                       , cErrorCodes               :: Maybe [String]
-                       , cRenderPass               :: Maybe String
-                       , cCommandBufferLevels      :: Maybe [String]
-                       , cPipeline                 :: Maybe [String]
-                       , cComment                  :: Maybe String
+                       , cImplicitExternSyncParams :: [Text]
+                       , cQueues                   :: Maybe [Text]
+                       , cSuccessCodes             :: Maybe [Text]
+                       , cErrorCodes               :: Maybe [Text]
+                       , cRenderPass               :: Maybe Text
+                       , cCommandBufferLevels      :: Maybe [Text]
+                       , cPipeline                 :: Maybe [Text]
+                       , cComment                  :: Maybe Text
                        }
   deriving (Show)
 
-data Parameter = Parameter { pName           :: String
-                           , pType           :: String
-                           , pLengths        :: Maybe [String]
-                           , pAltLengths     :: Maybe [String]
+data Parameter = Parameter { pName           :: Text
+                           , pType           :: Text
+                           , pLengths        :: Maybe [Text]
+                           , pAltLengths     :: Maybe [Text]
                            , pIsExternSync   :: Maybe ExternSync
                            , pIsOptional     :: Maybe [Bool]
                              -- ^ Values further into the list represent the
@@ -34,7 +35,7 @@ data Parameter = Parameter { pName           :: String
   deriving (Show)
 
 data ExternSync = ExternSyncTrue
-                | ExternSyncParams [String]
+                | ExternSyncParams [Text]
   deriving (Show)
 
 

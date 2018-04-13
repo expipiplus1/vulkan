@@ -1,12 +1,15 @@
-{-# LANGUAGE Arrows          #-}
-{-# LANGUAGE LambdaCase      #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE Arrows            #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Parse.Extension
   ( parseExtensions
   ) where
 
 import           Data.Maybe        (fromMaybe, listToMaybe)
+import           Data.Text         (Text)
+import qualified Data.Text         as T
 import           Numeric           (readFloat, readSigned)
 import           Parse.Feature
 import           Parse.Utils
@@ -23,42 +26,42 @@ parseExtensions = extractFields "Extensions"
 parseExtension :: IOStateArrow s XmlTree Extension
 parseExtension = proc f -> do
   hasName "extension" -< f
-  extName <- requiredAttrValue "name" -< f
-  extNumber <- requiredRead <<< requiredAttrValue "number" -< f
-  extProtect <- optionalAttrValue "protect" -< f
-  extPlatform <- optionalAttrValue "platform" -< f
-  extAuthor <- optionalAttrValue "author" -< f
-  extContact <- optionalAttrValue "contact" -< f
-  extType <- optional (required "read extension type" readExtType <<< getAttrValue0 "type") -< f
-  extRequires <- optionalCommaSepListAttr "requires" -< f
-  extSupported <- required "read ext support" readExtensionSupport <<< requiredAttrValue "supported" -< f
-  extElements <- app
+  extName      <- requiredAttrValueT "name" -< f
+  extNumber    <- requiredRead <<< requiredAttrValue "number" -< f
+  extProtect   <- optionalAttrValueT "protect" -< f
+  extPlatform  <- optionalAttrValueT "platform" -< f
+  extAuthor    <- optionalAttrValueT "author" -< f
+  extContact   <- optionalAttrValueT "contact" -< f
+  extType      <- optional (required "read extension type" readExtType <<< getAttrValue0 "type") -< f
+  extRequires  <- optionalCommaSepListAttrT "requires" -< f
+  extSupported <- required "read ext support" readExtensionSupport <<< requiredAttrValueT "supported" -< f
+  extElements  <- app
               -< (allChildren (extensionElemFail extName) [AnExtensionRequirement ^<< requirement], f)
   returnA -< Extension{..}
 
 extensionElemFail
-  :: String
+  :: Text
   --- ^ extension name
   -> IOStateArrow s XmlTree String
 extensionElemFail n = proc t -> do
   comment <- optional (getAttrOrChildText "comment") -< t
-  returnA -< ("Failed to parse value of extension " ++ n)
+  returnA -< ("Failed to parse value of extension " ++ T.unpack n)
           ++ maybe "" (" with comment " ++) comment
 
 requirement
   :: IOStateArrow s XmlTree ExtensionRequirement
 requirement = proc r -> do
   hasName "require" -< r
-  erAPI <- optionalAttrValue "api" -< r
-  erProfile <- optionalAttrValue "profile" -< r
-  erExtension <- optionalAttrValue "extension" -< r
-  erFeature <- optionalAttrValue "feature" -< r
-  erComment <- optionalAttrValue "comment" -< r
-  erInterfaceElements <- app -< (interfaces (fromMaybe "no comment" erComment), r)
+  erAPI        <- optionalAttrValueT "api" -< r
+  erProfile    <- optionalAttrValueT "profile" -< r
+  erExtension  <- optionalAttrValueT "extension" -< r
+  erFeature    <- optionalAttrValueT "feature" -< r
+  erComment    <- optionalAttrValueT "comment" -< r
+  erInterfaces <- app -< (interfaces (fromMaybe "no comment" erComment), r)
   returnA -< ExtensionRequirement{..}
 
-comment :: IOStateArrow s XmlTree String
-comment = getAllText <<< hasName "comment"
+comment :: IOStateArrow s XmlTree Text
+comment = getAllTextT <<< hasName "comment"
 
 readExtType :: String -> Maybe ExtensionType
 readExtType = \case
@@ -66,7 +69,7 @@ readExtType = \case
   "instance" -> Just Instance
   _ -> Nothing
 
-readExtensionSupport :: String -> Maybe ExtensionSupport
+readExtensionSupport :: Text -> Maybe ExtensionSupport
 readExtensionSupport = \case
   "disabled" -> Just Disabled
   s -> Just (Profile s)

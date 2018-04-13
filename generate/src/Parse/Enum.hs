@@ -1,9 +1,11 @@
-{-# LANGUAGE Arrows          #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE Arrows            #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Parse.Enum where
 
 import           Data.Maybe        (listToMaybe)
+import           Data.Text
 import           Parse.Utils
 import           Prelude           hiding (Enum, elem)
 import           Spec.Enum
@@ -13,8 +15,8 @@ parseEnum :: IOStateArrow s XmlTree Spec.Enum.Enum
 parseEnum = hasName "enums" >>> hasAttrValue "type" (== "enum") >>>
             (extract `orElse` failA "Failed to extract enum fields")
   where extract = proc e -> do
-          eName      <- requiredAttrValue "name" -< e
-          eComment   <- optionalAttrValue "comment" -< e
+          eName      <- requiredAttrValueT "name" -< e
+          eComment   <- optionalAttrValueT "comment" -< e
           es <- app -<
             (allChildren (enumElemFail eName) [
               AComment ^<< enumComment
@@ -27,32 +29,32 @@ parseEnum = hasName "enums" >>> hasAttrValue "type" (== "enum") >>>
 
 data EnumListMember
   = AnEnumElement EnumElement
-  | AnUnusedStart String
-  | AComment String
+  | AnUnusedStart Text
+  | AComment Text
 
 enumElemFail
-  :: String
+  :: Text
   --- ^ Enum name
   -> IOStateArrow s XmlTree String
 enumElemFail n = proc t -> do
   name <- optional (getAttrOrChildText "name") -< t
   value <- optional (getAttrOrChildText "type") -< t
-  returnA -< ("Failed to parse value of enumeration " ++ n)
+  returnA -< ("Failed to parse value of enumeration " ++ unpack n)
           ++ maybe "" (" named " ++) name
           ++ maybe "" (" with value " ++) value
 
 enumElem :: IOStateArrow s XmlTree EnumElement
 enumElem = proc e -> do
-  eeName    <- requiredAttrValue "name" -< e
+  eeName    <- requiredAttrValueT "name" -< e
   eeValue   <- requiredRead <<< requiredAttrValue "value" -< e
-  eeComment <- optionalAttrValue "comment" -< e
+  eeComment <- optionalAttrValueT "comment" -< e
   returnA -< EnumElement{..}
 
 --- | Comments which group the values (discarded at the moment)
-enumComment :: IOStateArrow s XmlTree String
-enumComment = getAllText <<< hasName "comment"
+enumComment :: IOStateArrow s XmlTree Text
+enumComment = getAllTextT <<< hasName "comment"
 
-enumUnusedStart :: IOStateArrow s XmlTree String
+enumUnusedStart :: IOStateArrow s XmlTree Text
 enumUnusedStart = proc e -> do
   hasName "unused" -< e
-  requiredAttrValue "start" -< e
+  requiredAttrValueT "start" -< e

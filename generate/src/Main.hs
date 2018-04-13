@@ -7,7 +7,7 @@ import           Parse.Spec
 import           System.Exit
 import           System.IO        (hPutStr, stderr)
 import           Text.Show.Pretty
--- import           Write.Spec
+import           Write.Spec
 
 main :: IO ()
 main = do specString <- getContents
@@ -16,7 +16,7 @@ main = do specString <- getContents
             Nothing -> do hPutStr stderr "Failed to parse spec"
                           exitFailure
             Just spec ->
-              putStrLn (ppShow spec)
+              -- putStrLn (ppShow spec)
+              writeSpec spec
               -- let strippedSpec = stripExtensions spec
               --            in writeSpecModules "out" strippedSpec
-

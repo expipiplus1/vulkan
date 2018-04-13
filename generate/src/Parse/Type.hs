@@ -1,23 +1,20 @@
-{-# LANGUAGE Arrows           #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE RecordWildCards  #-}
+{-# LANGUAGE Arrows            #-}
+{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Parse.Type
   ( parseTypes
   ) where
 
-import           Control.Bool      ((<||>))
-import           Data.Char         (isAlpha, isDigit)
-import           Data.List         (isPrefixOf)
-import           Data.Maybe        (fromMaybe, isNothing)
-import           Parse.CType
-import           Parse.State
+import           Data.Maybe        (isNothing)
+import           Data.Text         (Text)
+import qualified Data.Text         as T
 import           Parse.Utils
 import           Spec.Type
-import           Text.Regex.TDFA   ((=~))
 import           Text.XML.HXT.Core
 
-parseTypes :: ParseArrow XmlTree [TypeDecl]
+parseTypes :: IOStateArrow s XmlTree [TypeDecl]
 parseTypes = extractFields "type decls" (hasName "types") extract
   where extract = proc typeDeclBlock -> do
           -- Annoyingly although platform types appear after base types in the
@@ -86,38 +83,38 @@ typeFailDiag = proc t -> do
 platformHeader :: IOStateArrow s XmlTree PlatformHeader
 platformHeader = proc t -> do
   inCategory "include" -< t
-  phName <- requiredAttrValue "name" -< t
+  phName <- requiredAttrValueT "name" -< t
   returnA -< PlatformHeader{..}
 
 requirement :: IOStateArrow s XmlTree Requirement
 requirement = proc t -> do
   -- There is no guard for requirements, the only thing to do is fail silently
-  rHeader <- getAttrValue0 "requires" -< t
-  rName <- getAttrValue0 "name" -< t
+  rHeader <- getAttrValue0T "requires" -< t
+  rName <- getAttrValue0T "name" -< t
   returnA -< Requirement{..}
 
 -- | Parse a preprocessor define
 define :: IOStateArrow s XmlTree Define
 define = proc t -> do
   inCategory "define" -< t
-  dName <- getAttrOrChildText "name" -< t
+  dName <- getAttrOrChildTextT "name" -< t
   -- TODO: Figure out what to do with deprecated and conditional defines
   -- dText <- isA ("#define" `isPrefixOf`) <<< getAllText -< t
-  dText <- getAllText -< t
+  dText <- getAllTextT -< t
   returnA -< Define{..}
 
 -- | Parse a type in the "basetype" category
 baseType :: IOStateArrow s XmlTree BaseType
 baseType = proc t -> do
   inCategory "basetype" -< t
-  btName <- getChildText "name" -< t
-  btType <- getChildText "type" -< t
+  btName <- getChildTextT "name" -< t
+  btType <- getChildTextT "type" -< t
   returnA -< BaseType{..}
 
 -- | Parse the "int" declaration
 intType :: IOStateArrow s XmlTree BaseType
 intType = proc t -> do
-  btName <- isA (== "int") <<< getAttrValue0 "name" -< t
+  btName <- isA (== "int") <<< getAttrValue0T "name" -< t
   let btType = btName
   returnA -< BaseType{..}
 
@@ -125,43 +122,43 @@ intType = proc t -> do
 bitmask :: IOStateArrow s XmlTree BitmaskType
 bitmask = proc t -> do
   inCategory "bitmask" -< t
-  isA ("typedef " `isPrefixOf`) <<< getAllText -< t
-  bmtName <- getChildText "name" -< t
-  bmtType <- getChildText "type" -< t
-  bmtRequires <- optionalAttrValue "requires" -< t
+  isA ("typedef " `T.isPrefixOf`) <<< getAllTextT -< t
+  bmtName <- getChildTextT "name" -< t
+  bmtType <- getChildTextT "type" -< t
+  bmtRequires <- optionalAttrValueT "requires" -< t
   returnA -< BitmaskType{..}
 
 -- | Parse a type in the "handle" category
 handle :: IOStateArrow s XmlTree HandleType
 handle = proc t -> do
   inCategory "handle" -< t
-  htParents <- commaSepListAttr "parent" -< t
-  htName <- getChildText "name" -< t
-  htType <- getChildText "type" -< t
+  htParents <- commaSepListAttrT "parent" -< t
+  htName <- getChildTextT "name" -< t
+  htType <- getChildTextT "type" -< t
   returnA -< HandleType{..}
 
 -- | Parse an enum type declaration
 enum :: IOStateArrow s XmlTree EnumType
 enum = proc t -> do
   inCategory "enum" -< t
-  etName <- getAttrValue0 "name" -< t
-  isA isNothing <<< optionalAttrValue "alias" -< t
+  etName <- getAttrValue0T "name" -< t
+  isA isNothing <<< optionalAttrValueT "alias" -< t
   returnA -< EnumType{..}
 
 -- | Parse a function pointer type declaration
 funcPointer :: IOStateArrow s XmlTree FuncPointerType
 funcPointer = proc t -> do
   inCategory "funcpointer" -< t
-  fptName <- getChildText "name" -< t
-  fptTypeString <- getAllText -< t
+  fptName <- getChildTextT "name" -< t
+  fptType <- getAllTextT -< t
+  fptTypeWithoutName <- oneRequired "funcPointer type text" getAllNonCommentNonNameText -< t
   returnA -< FuncPointerType{..}
 
 struct :: IOStateArrow s XmlTree StructType
 struct = proc t -> do
   inCategory "struct" -< t
-  stName <- getAttrValue0 "name" -< t
-  stComment <- optionalAttrValue "comment" -< t
-  -- stMembers <- allChildren (structMemberFail a) [structMember] -< t
+  stName <- getAttrValue0T "name" -< t
+  stComment <- optionalAttrValueT "comment" -< t
   (_metaMemberComments, stMembers) <-
     partitionEither ^<< app
     -< (allChildren (structMemberFail stName) [
@@ -171,30 +168,36 @@ struct = proc t -> do
   returnA -< StructType{..}
 
 structMemberFail
-  :: String
+  :: Text
   --- ^ Struct name
   -> IOStateArrow s XmlTree String
 structMemberFail n = proc t -> do
   name <- optional (getAttrOrChildText "name") -< t
   type' <- optional (getAttrOrChildText "type") -< t
-  returnA -< ("Failed to parse member of struct " ++ n)
+  returnA -< ("Failed to parse member of struct " ++ T.unpack n)
           ++ maybe "" (" named " ++) name
           ++ maybe "" (" : " ++) type'
 
 structMember :: IOStateArrow s XmlTree StructMember
 structMember = proc m -> do
   hasName "member" -< m
-  smName <- oneRequired "struct member name" (getChildText "name") -< m
-  smType <- oneRequired "struct member type text" getAllNonCommentText -< m
-  smValues <- optionalAttrValue "values" -< m
+  smName <- oneRequired "struct member name" (getChildTextT "name") -< m
+  -- smType <- oneRequired "struct member type text" getAllNonCommentText -< m
+  smType <-
+    oneRequired "struct member type text" getAllNonCommentText <<<
+    -- Insert a space between the "type" and "name" it doesn't exist sometimes
+    (insertChildrenAt 1 (txt " "))
+    -< m
+  smTypeWithoutName <- oneRequired "struct member type text" getAllNonCommentNonNameText -< m
+  smValues <- optionalAttrValueT "values" -< m
   smNoAutoValidity <- optional (parseBool <<< getAttrValue0 "noautovalidity") -< m
   smIsOptional <-
-    traverseMaybeA (mapA parseBool) <<<
-    optionalCommaSepListAttr "optional" -< m
+    traverseMaybeA (mapA parseBoolT) <<<
+    optionalCommaSepListAttrT "optional" -< m
   -- TODO: comma separation might be too basic here
-  smLengths <- optionalCommaSepListAttr "len" -< m
-  smAltLengths <- optionalCommaSepListAttr "altlen" -< m
-  smComment <- optional (getChildText "comment") -< m
+  smLengths <- optionalCommaSepListAttrT "len" -< m
+  smAltLengths <- optionalCommaSepListAttrT "altlen" -< m
+  smComment <- optional (getChildTextT "comment") -< m
   returnA -< StructMember{..}
 
 --- | Comments which group the members (discarded at the moment)
@@ -204,8 +207,8 @@ metaMemberComment = sectionComment
 union :: IOStateArrow s XmlTree UnionType
 union = proc t -> do
   inCategory "union" -< t
-  utName <- getAttrValue0 "name" -< t
-  utComment <- optionalAttrValue "comment" -< t
+  utName <- getAttrValue0T "name" -< t
+  utComment <- optionalAttrValueT "comment" -< t
   (_metaMemberComments, utMembers) <-
     partitionEither ^<< app
     -< (allChildren (structMemberFail utName) [
@@ -216,13 +219,13 @@ union = proc t -> do
 
 typeAlias :: IOStateArrow s XmlTree TypeAlias
 typeAlias = proc t -> do
-  taName <- getAttrValue0 "name" -< t
-  taAlias <- getAttrValue0 "alias" -< t
-  taCategory <- getAttrValue0 "category" -< t
+  taName <- getAttrValue0T "name" -< t
+  taAlias <- getAttrValue0T "alias" -< t
+  taCategory <- getAttrValue0T "category" -< t
   returnA -< TypeAlias{..}
 
 sectionComment :: IOStateArrow s XmlTree SectionComment
-sectionComment = SectionComment ^<< getAllText <<< hasName "comment"
+sectionComment = SectionComment ^<< getAllTextT <<< hasName "comment"
 
 -- parseMember :: ParseArrow XmlTree StructMember
 -- parseMember = extractFields "struct member"

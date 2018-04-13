@@ -1,20 +1,22 @@
 module Spec.Feature
   where
 
+import           Data.Text
+
 data Feature = Feature
-  { fAPI      :: String
+  { fAPI      :: Text
     -- ^ API tag (e.g. 'gl', 'gles2', etc. - used internally, not
     -- necessarily an actual API name
-  , fName     :: String
+  , fName     :: Text
     -- ^ version name (C preprocessor name, e.g. GL_VERSION_4_2)
   , fNumber   :: Rational
     -- ^ The schema says float here, but the spec has values such as "1.1"
     -- which is not representable as a Float
     --
     -- version number, e.g. 4.2
-  , fProtect  :: Maybe String
+  , fProtect  :: Maybe Text
     -- ^ additional #ifdef symbol to place around the feature
-  , fComment  :: Maybe String
+  , fComment  :: Maybe Text
   , fElements :: [FeatureElement]
   }
   deriving(Show)
@@ -25,9 +27,9 @@ data FeatureElement
   deriving(Show)
 
 data FeatureRequirement = FeatureRequirement
-  { frProfile    :: Maybe String
-  , frExtension  :: Maybe String
-  , frComment    :: Maybe String
+  { frProfile    :: Maybe Text
+  , frExtension  :: Maybe Text
+  , frComment    :: Maybe Text
   , frInterfaces :: [InterfaceElement]
   }
   deriving(Show)
@@ -40,23 +42,24 @@ data InterfaceElement
   | ABitmaskExtension BitmaskExtension
   | AnEnumAlias EnumAlias
   | AnEnumExtensionAbsolute EnumExtensionAbsolute
-  | AComment String
+  | AnEnumExtensionString EnumExtensionString
+  | AComment Text
   deriving(Show)
 
-newtype EnumName = EnumName { unEnumName :: String }
+newtype EnumName = EnumName { unEnumName :: Text }
   deriving(Show)
-newtype TypeName = TypeName { unTypeName :: String }
+newtype TypeName = TypeName { unTypeName :: Text }
   deriving(Show)
-newtype CommandName = CommandName { unCommandName :: String }
+newtype CommandName = CommandName { unCommandName :: Text }
   deriving(Show)
 
 data EnumExtension = EnumExtension
-  { eexExtends   :: String
+  { eexExtends   :: Text
   , eexExtNumber :: Maybe Int
   , eexOffset    :: Int
   , eexDirection :: Maybe Direction
-  , eexName      :: String
-  , eexComment   :: Maybe String
+  , eexName      :: Text
+  , eexComment   :: Maybe Text
   }
   deriving(Show)
 
@@ -65,25 +68,33 @@ data Direction = Positive | Negative
 
 data BitmaskExtension = BitmaskExtension
   { bmxBitPos  :: Int
-  , bmxExtends :: String
-  , bmxName    :: String
-  , bmxComment :: Maybe String
+  , bmxExtends :: Text
+  , bmxName    :: Text
+  , bmxComment :: Maybe Text
   }
   deriving(Show)
 
 data EnumAlias = EnumAlias
-  { eaExtends :: String
-  , eaName    :: String
-  , eaAlias   :: String
-  , eaComment :: Maybe String
+  { eaExtends :: Text
+  , eaName    :: Text
+  , eaAlias   :: Text
+  , eaComment :: Maybe Text
   }
   deriving(Show)
 
 data EnumExtensionAbsolute = EnumExtensionAbsolute
-  { eexaValue   :: String
-  , eexaName    :: String
-  , eexaExtends :: Maybe String
-  , eexaComment :: Maybe String
+  { eexaValue     :: Int
+  , eexaName      :: Text
+  , eexaExtends   :: Text
+  , eexaExtNumber :: Maybe Int
+  , eexaComment   :: Maybe Text
+  }
+  deriving(Show)
+
+data EnumExtensionString = EnumExtensionString
+  { eexsValue   :: Text
+  , eexsName    :: Text
+  , eexsComment :: Maybe Text
   }
   deriving(Show)
 
