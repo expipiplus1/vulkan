@@ -1,7 +1,9 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Spec.Type where
 
+import           Data.Semigroup
 import           Data.Text
 import           Language.C.Types (CIdentifier, Type)
 
@@ -55,6 +57,7 @@ data BitmaskType = BitmaskType { bmtName     :: Text
 
 data HandleType = HandleType { htName    :: Text
                              , htParents :: [Text]
+                             , htMacro   :: Text
                              , htType    :: Text
                              }
   deriving (Show, Eq)
@@ -119,7 +122,7 @@ typeDeclTypeName = \case
   (ADefine d)            -> Just $ dName d
   (ABaseType bt)         -> Just $ btName bt
   (ABitmaskType bmt)     -> Just $ bmtName bmt
-  (AHandleType ht)       -> Just $ htName ht
+  (AHandleType ht)       -> Just $ htName ht <> "_T"
   (AnEnumType et)        -> Just $ etName et
   (AFuncPointerType fpt) -> Just $ fptName fpt
   (AStructType st)       -> Just $ stName st

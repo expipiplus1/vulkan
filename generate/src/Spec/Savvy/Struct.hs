@@ -9,8 +9,6 @@ module Spec.Savvy.Struct
   , specStructs
   ) where
 
-import           Debug.Trace
-
 import           Control.Monad.Fix.Extra
 import           Data.Either.Validation
 import           Data.List               (find)
@@ -45,7 +43,7 @@ data StructMember = StructMember
 specStructs :: TypeContext -> P.Spec -> Validation [SpecError] [Struct]
 specStructs tc P.Spec {..} =
   let specStructs     = [ s | P.AStructType s <- sTypes ]
-      specStructNames = traceShowId (P.stName <$> specStructs)
+      specStructNames = P.stName <$> specStructs
   in  eitherToValidation $ fixLookupM specStructNames sName $ \getStruct ->
         let structTypeContext =
               extendTypeContext getStructSize getStructAlignment tc

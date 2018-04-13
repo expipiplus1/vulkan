@@ -29,8 +29,11 @@ data SpecError
   | UnknownConstantValue Text
   | UnableToReadValue Text
   | UnhandledSubtraction Text
+  | DefineError Text
+  | PreprocessorError Text
   | Other Text
     -- ^ Used for testing in development
+  deriving (Show)
 
 prettySpecError :: SpecError -> Text
 prettySpecError = \case
@@ -64,6 +67,8 @@ prettySpecError = \case
     "Trying to get the value of an unknown constant named:" <+> c
   UnableToReadValue    c -> "Unable to read value: " <+> c
   UnhandledSubtraction d -> "Unable to subtract (extend 'subtracted'): " <+> d
+  DefineError          e -> "Error parsing preprocessor defines:" <+> e
+  PreprocessorError    e -> "Error running preprocessor:" <+> e
   Other                e -> e
 
 (<+>) :: Text -> Text -> Text

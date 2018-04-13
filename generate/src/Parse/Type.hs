@@ -134,7 +134,8 @@ handle = proc t -> do
   inCategory "handle" -< t
   htParents <- commaSepListAttrT "parent" -< t
   htName <- getChildTextT "name" -< t
-  htType <- getChildTextT "type" -< t
+  htMacro <- getChildTextT "type" -< t
+  htType <- getAllTextT -< t
   returnA -< HandleType{..}
 
 -- | Parse an enum type declaration

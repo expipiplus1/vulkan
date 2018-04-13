@@ -18,6 +18,8 @@ module Spec.Savvy.Type
   , typeDepends
   ) where
 
+import           Debug.Trace
+
 import           Control.Applicative
 import           Control.Monad.Fix.Extra
 import           Control.Monad.Trans.Reader               (ReaderT (..))
@@ -65,6 +67,7 @@ data TypeContext = TypeContext
   { tcParseContext  :: TypeParseContext
   , tcTypeSize      :: Endo (Type -> Either [SpecError] Word)
   , tcTypeAlignment :: Endo (Type -> Either [SpecError] Word)
+  , tcPreprocessor  :: Text -> Either [SpecError] Text
   }
 
 getTypeSize :: TypeContext -> Type -> Either [SpecError] Word
@@ -88,24 +91,9 @@ extendTypeContext
   -> TypeContext
 extendTypeContext typeSize typeAlignment TypeContext{..} = TypeContext
   tcParseContext
-  (Endo (\l -> (liftA2 (<>) typeSize (appEndo tcTypeSize l))))
-  (Endo (\l -> (liftA2 (<>) typeAlignment (appEndo tcTypeAlignment l))))
-  -- (Endo (\l -> (bar typeSize (appEndo tcTypeSize l))))
-  -- (Endo (\l -> (bar typeAlignment (appEndo tcTypeAlignment l))))
-  -- (liftA2 (<>) typeAlignment (tcTypeAlignment tc))
-
-  -- ((<>) (tcTypeSize tc) typeSize)
-  -- ((<>) (tcTypeAlignment tc) typeAlignment)
-
--- bar a b k = case a k of
---               Left es -> case b k of
---                            Right r  -> Right r
---                            Left es' -> Left (es ++ es')
---               x      -> x
-
--- foo a b k = case a k of
---               Left _ -> b k
---               x      -> x
+  (Endo (liftA2 (<>) typeSize . appEndo tcTypeSize))
+  (Endo (liftA2 (<>) typeAlignment . appEndo tcTypeAlignment))
+  tcPreprocessor
 
 ----------------------------------------------------------------
 -- Converting types
@@ -189,6 +177,7 @@ specParserContext P.Spec {..} = validationToEither $ do
   let disallowedNames = ["int", "void", "char", "float"]
   let specTypeNames = filter (`notElem` disallowedNames)
         $ catMaybes (P.typeDeclTypeName <$> sTypes)
+        ++ [htName | P.AHandleType P.HandleType{..} <- sTypes]
   specCTypeNames <- for specTypeNames $ \tn ->
     case C.cIdentifierFromString (T.unpack tn) of
       Left  e -> Failure [TypeNameParseError tn (T.pack e)]

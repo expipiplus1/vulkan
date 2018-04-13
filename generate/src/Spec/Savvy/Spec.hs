@@ -15,20 +15,26 @@ import           Data.Text               (Text)
 import           Prelude                 hiding (Enum)
 import           Spec.Savvy.APIConstant
 import           Spec.Savvy.Command
+import           Spec.Savvy.Define
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.FuncPointer
+import           Spec.Savvy.Handle
+import           Spec.Savvy.Preprocess
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Packing
 import           Spec.Savvy.TypeAlias
 import qualified Spec.Spec               as P
 
+import           Debug.Trace
+
 data Spec = Spec
   { sEnums        :: [Enum]
   , sTypeAliases  :: [TypeAlias]
   , sConstants    :: [APIConstant]
   , sFuncPointers :: [FuncPointer]
+  , sHandles      :: [Handle]
   , sCommands     :: [Command]
   , sStructs      :: [Struct]
   }
@@ -36,23 +42,30 @@ data Spec = Spec
 
 spec :: P.Spec -> Either [SpecError] Spec
 spec s = do
-  pc <- specParserContext s
-  (enums, aliases, constants, funcPointers) <-
+  let defines = specDefines s
+  preprocess <- createPreprocessor defines
+  pc         <- specParserContext s
+  (enums, aliases, constants, funcPointers, handles) <-
     validationToEither
-    $   (,,,)
+    $   (,,,,)
     <$> specEnums s
     <*> specTypeAliases s
     <*> specConstants s
     <*> specFuncPointers pc s
+    <*> specHandles preprocess pc s
+  traceShowM handles
   let getType t =
         (TypeName <$> getAlias1 aliases t)
           <|> getFuncPointer funcPointers t
-          <|> getEnum enums t
+          <|> getEnum        enums        t
+          <|> getHandle      handles      t
       tc = TypeContext pc
                        (Endo (typeSize getType (getConstantValue constants)))
                        (Endo (typeAlignment getType))
+                       preprocess
+
   validationToEither
-    $   Spec enums aliases constants funcPointers
+    $   Spec enums aliases constants funcPointers handles
     <$> specCommands pc s
     <*> specStructs  tc s
 
@@ -71,6 +84,10 @@ farthest f = go where
 
 getAlias :: [TypeAlias] -> Text -> Text
 getAlias = farthest . getAlias1
+
+getHandle :: [Handle] -> Text -> Maybe Type
+getHandle hs = (`Map.lookup` m)
+  where m = Map.fromList [ (hName, hType) | Handle {..} <- hs ]
 
 getAlias1 :: [TypeAlias] -> Text -> Maybe Text
 getAlias1 as = (`Map.lookup` m)
