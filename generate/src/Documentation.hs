@@ -1,35 +1,35 @@
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE PatternSynonyms #-}
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase          #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE PatternSynonyms     #-}
+{-# LANGUAGE RecordWildCards     #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ViewPatterns        #-}
 
 module Documentation
   ( main
   ) where
 
-import Text.Pandoc
-import Text.Pandoc.Class
-import Say
-import Data.Semigroup
-import Control.Monad
-import Prelude hiding(rem)
-import Data.Either.Validation
-import Data.Maybe
-import Data.List
-import Data.Bifunctor
-import System.Environment
-import Data.Default
-import Data.Foldable
-import Text.Pandoc.Readers
-import Data.Text(Text)
-import qualified Data.Text as T
-import qualified Data.Text.IO as T
-import Documentation.RunAsciiDoctor
+import           Control.Monad
+import           Data.Bifunctor
+import           Data.Default
+import           Data.Either.Validation
+import           Data.Foldable
+import           Data.List
+import           Data.Maybe
+import           Data.Semigroup
+import           Data.Text                    (Text)
+import qualified Data.Text                    as T
+import qualified Data.Text.IO                 as T
+import           Documentation.RunAsciiDoctor
+import           Prelude                      hiding (rem)
+import           Say
+import           System.Environment
+import           Text.Pandoc
+import           Text.Pandoc.Class
+import           Text.Pandoc.Readers
 
 data Documentation = Documentation
-  { dDocumentee :: Text
+  { dDocumentee    :: Text
     -- ^ The name of the thing being documented
   , dDocumentation :: Pandoc
     -- ^ The documentation itself
@@ -154,10 +154,9 @@ main = do
           for_ ds sayShow
           for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
             Right t -> do
-              say "()"
-              -- say t
-              -- say
-              --   "\n\n--------------------------------------------------------------------------------\n\n"
+              say t
+              say
+                "\n\n--------------------------------------------------------------------------------\n\n"
             Left e -> sayErrShow e
 
 -- extractMatches

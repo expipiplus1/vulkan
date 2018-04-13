@@ -48,12 +48,14 @@ data Enum = Enum
   , eExtensions :: [EnumExtension]
     -- ^ Any extensions to this enumeration from features or extensions
   }
+  deriving (Show)
 
 data EnumType
   = EnumTypeBitmask
     -- ^ Bitmask enums are backed by the VkFlags type (Word32)
   | EnumTypeEnum
     -- ^ Enum enums are backed by Int32
+  deriving (Show)
 
 data EnumElement = EnumElement
   { eeName    :: Text
@@ -63,6 +65,7 @@ data EnumElement = EnumElement
   , eeComment :: Maybe Text
     -- ^ A comment from the XML specification
   }
+  deriving (Show)
 
 -- | Bitmasks and Enumerations
 specEnums :: P.Spec -> Validation [SpecError] [Enum]

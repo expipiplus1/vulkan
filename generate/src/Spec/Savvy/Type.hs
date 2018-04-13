@@ -7,6 +7,10 @@
 module Spec.Savvy.Type
   ( Type(..)
   , ArraySize(..)
+  , TypeContext(..)
+  , extendTypeContext
+  , getTypeSize
+  , getTypeAlignment
   , TypeParseContext
   , stringToType
   , stringToTypeExpected
@@ -14,10 +18,14 @@ module Spec.Savvy.Type
   , typeDepends
   ) where
 
+import           Control.Applicative
+import           Control.Monad.Fix.Extra
 import           Control.Monad.Trans.Reader               (ReaderT (..))
 import           Data.Either.Validation
 import qualified Data.HashSet                             as HashSet
 import           Data.Maybe
+import           Data.Monoid                              hiding ((<>))
+import           Data.Semigroup
 import           Data.Text                                (Text)
 import qualified Data.Text                                as T
 import           Data.Traversable
@@ -46,9 +54,64 @@ data ArraySize
   | SymbolicArraySize Text
   deriving (Show)
 
-type CType = C.Type C.CIdentifier
+
+----------------------------------------------------------------
+-- Type context
+----------------------------------------------------------------
 
 type TypeParseContext = C.CParserContext C.CIdentifier
+
+data TypeContext = TypeContext
+  { tcParseContext  :: TypeParseContext
+  , tcTypeSize      :: Endo (Type -> Either [SpecError] Word)
+  , tcTypeAlignment :: Endo (Type -> Either [SpecError] Word)
+  }
+
+getTypeSize :: TypeContext -> Type -> Either [SpecError] Word
+getTypeSize TypeContext{..} = fixEndo tcTypeSize
+
+getTypeAlignment :: TypeContext -> Type -> Either [SpecError] Word
+getTypeAlignment TypeContext{..} = fixEndo tcTypeAlignment
+
+-- instance Semigroup TypeContext where
+--   tc1 <> tc2 =
+--     TypeContext (tcParseContext tc1) --  <> tcParseContext tc2)
+--                 (liftA2 (<>) (tcTypeSize tc1) (tcTypeSize tc2))
+--                 (liftA2 (<>) (tcTypeAlignment tc1) (tcTypeAlignment tc2))
+
+extendTypeContext
+  :: (Type -> Either [SpecError] Word)
+  -- ^ TypeSize
+  -> (Type -> Either [SpecError] Word)
+  -- ^ TypeAlignment
+  -> TypeContext
+  -> TypeContext
+extendTypeContext typeSize typeAlignment TypeContext{..} = TypeContext
+  tcParseContext
+  (Endo (\l -> (liftA2 (<>) typeSize (appEndo tcTypeSize l))))
+  (Endo (\l -> (liftA2 (<>) typeAlignment (appEndo tcTypeAlignment l))))
+  -- (Endo (\l -> (bar typeSize (appEndo tcTypeSize l))))
+  -- (Endo (\l -> (bar typeAlignment (appEndo tcTypeAlignment l))))
+  -- (liftA2 (<>) typeAlignment (tcTypeAlignment tc))
+
+  -- ((<>) (tcTypeSize tc) typeSize)
+  -- ((<>) (tcTypeAlignment tc) typeAlignment)
+
+-- bar a b k = case a k of
+--               Left es -> case b k of
+--                            Right r  -> Right r
+--                            Left es' -> Left (es ++ es')
+--               x      -> x
+
+-- foo a b k = case a k of
+--               Left _ -> b k
+--               x      -> x
+
+----------------------------------------------------------------
+-- Converting types
+----------------------------------------------------------------
+
+type CType = C.Type C.CIdentifier
 
 stringToTypeExpected
   :: TypeParseContext

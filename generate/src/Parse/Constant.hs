@@ -23,16 +23,16 @@ parseConstants = extractFields
 
 constantAlias :: IOStateArrow s XmlTree Constant
 constantAlias = proc c -> do
-  cName <- requiredAttrValue "name" -< c
-  cValue <- Left . ConstantAlias ^<< getAttrValue0 "alias" -< c
+  cName <- requiredAttrValueT "name" -< c
+  cValue <- Left . ConstantAlias ^<< getAttrValue0T "alias" -< c
   let cComment = Nothing
   returnA -< Constant{..}
 
 constant :: IOStateArrow s XmlTree Constant
 constant = proc c -> do
-  cName <- requiredAttrValue "name" -< c
-  cValue <- Right ^<< requiredAttrValue "value" -< c
-  cComment <- optionalAttrValue "comment" -< c
+  cName <- requiredAttrValueT "name" -< c
+  cValue <- Right ^<< requiredAttrValueT "value" -< c
+  cComment <- optionalAttrValueT "comment" -< c
   returnA -< Constant{..}
 
 constantFailDiag :: IOStateArrow s XmlTree String
@@ -45,23 +45,23 @@ constantFailDiag = proc t -> do
 -- Parsing values
 ----------------------------------------------------------------
 
-parseConstantValue :: String -> Result ConstantValue
-parseConstantValue = parseString (atom <* eof) mempty
+-- parseConstantValue :: String -> Result ConstantValue
+-- parseConstantValue = parseString (atom <* eof) mempty
 
-atom :: Parser ConstantValue
-atom = literal
-   <|> (string "~" *> (bitWiseNot <$> atom))
-   <|> parens atom
+-- atom :: Parser ConstantValue
+-- atom = literal
+--    <|> (string "~" *> (bitWiseNot <$> atom))
+--    <|> parens atom
 
-literal :: Parser ConstantValue
-literal = try (FloatValue  . realToFrac   <$> double  <* string "f")
-      <|> try (Word64Value . fromIntegral <$> natural <* string "ULL")
-      <|> try (Word32Value . fromIntegral <$> natural <* string "U")
-      <|> try (IntegralValue              <$> natural)
+-- literal :: Parser ConstantValue
+-- literal = try (FloatValue  . realToFrac   <$> double  <* string "f")
+--       <|> try (Word64Value . fromIntegral <$> natural <* string "ULL")
+--       <|> try (Word32Value . fromIntegral <$> natural <* string "U")
+--       <|> try (IntegralValue              <$> natural)
 
-bitWiseNot :: ConstantValue -> ConstantValue
-bitWiseNot (IntegralValue _) = error "can only invert explicitly sized values"
-bitWiseNot (FloatValue _)    = error "can only invert explicitly sized values"
-bitWiseNot (Word32Value x)   = Word32Value (complement x)
-bitWiseNot (Word64Value x)   = Word64Value (complement x)
+-- bitWiseNot :: ConstantValue -> ConstantValue
+-- bitWiseNot (IntegralValue _) = error "can only invert explicitly sized values"
+-- bitWiseNot (FloatValue _)    = error "can only invert explicitly sized values"
+-- bitWiseNot (Word32Value x)   = Word32Value (complement x)
+-- bitWiseNot (Word64Value x)   = Word64Value (complement x)
 

@@ -1,23 +1,15 @@
 module Spec.Constant where
 
+import           Data.Text
 import           Data.Word (Word32, Word64)
 
-data Constant = Constant { cName    :: String
-                         , cValue   :: Either ConstantAlias String
-                         , cComment :: Maybe String
+data Constant = Constant { cName    :: Text
+                         , cValue   :: Either ConstantAlias Text
+                         , cComment :: Maybe Text
                          }
   deriving (Show)
 
 newtype ConstantAlias
-  = ConstantAlias { unConstantAlias :: String }
+  = ConstantAlias { unConstantAlias :: Text }
   deriving (Show)
 
-data ConstantValue = -- | An integral value with no specific size
-                     IntegralValue Integer
-                   | -- | A value ending in 'f'
-                     FloatValue Float
-                   | -- A value sized with 'U'
-                     Word32Value Word32
-                   | -- A value sized with 'ULL'
-                     Word64Value Word64
-  deriving (Show)

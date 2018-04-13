@@ -29,23 +29,26 @@ import           Spec.Savvy.Command
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.FuncPointer
+import           Spec.Savvy.Spec
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
-import           Spec.Spec
+import qualified Spec.Spec                             as P
 import           Spec.Type
 -- import           Write.Bitmask
 import           Write.Command
 import           Write.Element
 import           Write.Error
+import           Write.Struct
 import           Write.Type.Enum
 import           Write.Type.FuncPointer
 
-writeSpec :: Spec -> IO ()
-writeSpec spec = do
-  case specParserContext spec of
+writeSpec :: P.Spec -> IO ()
+writeSpec s = do
+  case spec s of
     Left es ->
      traverse_ (sayErr . prettySpecError) es
-    Right pc ->
+    Right s ->
+      sayShow s
      -- case specFuncPointers pc spec of
      --   Failure es ->
      --    traverse_ (sayErr . prettySpecError) es
@@ -57,16 +60,16 @@ writeSpec spec = do
      --       Success es ->
      --         traverse_ sayShow es
 
-     case specCommands pc spec of
-       Failure es ->
-        traverse_ (sayErr . prettySpecError) es
-       Success fs -> do
-         sayShow fs
-         case traverse (eitherToValidation . writeCommand) fs of
-           Failure es ->
-             traverse_ (sayErr . prettySpecError) es
-           Success es ->
-             traverse_ sayShow es
+     -- case specStructs pc spec of
+     --   Failure es ->
+     --    traverse_ (sayErr . prettySpecError) es
+     --   Success fs -> do
+     --     sayShow fs
+     --     case traverse (eitherToValidation . writeStruct) fs of
+     --       Failure es ->
+     --         traverse_ (sayErr . prettySpecError) es
+     --       Success es ->
+     --         traverse_ sayShow es
 
   -- case specParserContext spec of
   --   Left es ->
@@ -82,11 +85,11 @@ writeSpec spec = do
   --   Right ws ->
   --     traverse_ sayShow ws
 
-genWriteElements :: Spec -> Either [SpecError] [WriteElement]
-genWriteElements s
-  = validationToEither $ do
-      es <- specEnums s
-      pure (writeEnum <$> es)
+-- genWriteElements :: Spec -> Either [SpecError] [WriteElement]
+-- genWriteElements s
+--   = validationToEither $ do
+--       es <- specEnums s
+--       pure (writeEnum <$> es)
 
 
 -- -- | Pairs types with bitmasks

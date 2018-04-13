@@ -22,7 +22,11 @@ import           Spec.Savvy.Error
 import           Spec.Savvy.Type
 import           Write.Element
 
-toHsType :: Type -> Either [SpecError] (Doc (), ([Import], [Text]))
+toHsType
+  :: Type
+  -- ^ The type to convert to a Haskell string
+  -> Either [SpecError] (Doc (), ([Import], [Text]))
+  -- ^ (The type string, (Any imports it requires, Any language extensions it requires))
 toHsType = runWriterT . runPop allLowercaseWords . toHsType' (-1) Positive
 
 data Pos = Negative | Positive
