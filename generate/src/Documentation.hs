@@ -26,6 +26,7 @@ import Text.Pandoc.Readers
 import Data.Text(Text)
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
+import Documentation.RunAsciiDoctor
 
 data Documentation = Documentation
   { dDocumentee :: Text
@@ -142,19 +143,22 @@ enumBullets m = \case
 
 main :: IO ()
 main = do
-  [n] <- getArgs
-  i   <- T.readFile n
-  case docBookToDocumentation (T.pack n) i of
-    Left  e -> sayErrShow e
-    Right d -> case splitDocumentation d of
-      Left  e  -> sayErr e
-      Right ds -> do
-        for_ ds sayShow
-        for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
-          Right t -> do
-            say t
-            say "\n\n--------------------------------------------------------------------------------\n\n"
-          Left e -> sayErrShow e
+  [d, m] <- getArgs
+  manTxtToDocbook d m >>= \case
+    Left  e -> sayErr e
+    Right d -> case docBookToDocumentation (T.pack m) d of
+      Left  e -> sayErrShow e
+      Right d -> case splitDocumentation d of
+        Left  e  -> sayErr e
+        Right ds -> do
+          for_ ds sayShow
+          for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
+            Right t -> do
+              say "()"
+              -- say t
+              -- say
+              --   "\n\n--------------------------------------------------------------------------------\n\n"
+            Left e -> sayErrShow e
 
 -- extractMatches
 --   :: ([a] -> Int)

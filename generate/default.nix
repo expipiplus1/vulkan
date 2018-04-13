@@ -21,7 +21,10 @@ let
 
   drv = haskellPackages.callPackage (haskellPackageGen {} ./.) {};
 
-  extraEnvPackages = with haskellPackages; [];
+  extraEnvPackages = with pkgs; [
+    asciidoctor
+    python3
+  ];
 
   envWithExtras = pkgs.lib.overrideDerivation drv.env (attrs: {
     buildInputs = attrs.buildInputs ++ extraEnvPackages;
