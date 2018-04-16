@@ -56,7 +56,7 @@ requirement = proc r -> do
   erProfile    <- optionalAttrValueT "profile" -< r
   erExtension  <- optionalAttrValueT "extension" -< r
   erFeature    <- optionalAttrValueT "feature" -< r
-  erComment    <- optionalAttrValueT "comment" -< r
+  erComment    <- getOptionalAttrOrChildTextT "comment" -< r
   erInterfaces <- app -< (interfaces (fromMaybe "no comment" erComment), r)
   returnA -< ExtensionRequirement{..}
 

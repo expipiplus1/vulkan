@@ -8,12 +8,15 @@ module Spec.Savvy.Enum
   , EnumElement(..)
   , EnumExtension(..)
   , specEnums
+  , guessBitmaskRequirement
   ) where
 
 import           Control.Applicative
 import           Control.Monad
 import           Data.Bits
+import           Data.Closure
 import           Data.Either.Validation
+import           Data.Foldable
 import           Data.Int
 import qualified Data.Map                  as Map
 import           Data.Maybe
@@ -27,6 +30,7 @@ import           Data.Word
 import           Prelude                   hiding (Enum)
 import qualified Spec.Bitmask              as P
 import qualified Spec.Enum                 as P
+import qualified Spec.ExtensionTag         as P
 import qualified Spec.Feature              as P
 import qualified Spec.Feature              as PF
 import           Spec.Savvy.Enum.Extension
@@ -40,7 +44,8 @@ data Enum = Enum
   , eType       :: EnumType
     -- ^ Is this enumeration a bitmask or not
   , eAliases    :: [Text]
-    -- ^ A set of aliases for the enumeration type
+    -- ^ The closure of the aliases to this type, doesn't include aliases from
+    -- extensions.
   , eComment    :: Maybe Text
     -- ^ A comment from the XML specification
   , eElements   :: [EnumElement]
@@ -80,7 +85,8 @@ specEnumEnums spec@P.Spec {..} =
       bitmaskEnumTypes = Set.fromList
         [ req
         | P.ABitmaskType bmt <- sTypes
-        , Just           req <- [guessBitmaskRequirement bmt]
+        , Just           req <-
+          [guessBitmaskRequirement (P.getSpecExtensionTags spec) bmt]
         ]
       enumTypes =
         [ et
@@ -91,7 +97,7 @@ specEnumEnums spec@P.Spec {..} =
       enumAliases :: [(Text, Text)]
       enumAliases =
         [ (taAlias, taName)
-        | P.AnAlias P.TypeAlias{..} <- sTypes
+        | P.AnAlias P.TypeAlias {..} <- sTypes
         , taCategory == "enum"
         , Set.notMember taAlias bitmaskEnumTypes
         ]
@@ -122,49 +128,54 @@ specEnumEnums spec@P.Spec {..} =
                     | el@P.EnumElement {..} <- P.eElements ee
                     , let eeValue = Left (P.eeValue el)
                     ]
-                  eAliases    = MultiMap.lookup etName aliasMap
+                  eAliases    = closeNonReflexive (`MultiMap.lookup` aliasMap) [etName]
                   eComment    = P.eComment ee
                   eExtensions = MultiMap.lookup eName allExtensionEnums
-                  eType = EnumTypeEnum
+                  eType       = EnumTypeEnum
               in  Enum {..}
         pure r
 
 specBitmasks :: P.Spec -> Validation [SpecError] [Enum]
-specBitmasks spec@P.Spec {..} =
-  let --
-      -- First, filter out the relevant info from the spec
-      --
+specBitmasks spec@P.Spec {..}
+  = let --
+        -- First, filter out the relevant info from the spec
+        --
       bitmaskTypes     = [ bmt | P.ABitmaskType bmt <- sTypes ]
       bitmaskEnumTypes = Set.fromList
-        [ req | bmt <- bitmaskTypes, Just req <- [guessBitmaskRequirement bmt] ]
+        [ req
+        | bmt      <- bitmaskTypes
+        , Just req <-
+          [guessBitmaskRequirement (P.getSpecExtensionTags spec) bmt]
+        ]
       --- | A list of (target, name) pairs
       bitmaskAliases :: [(Text, Text)]
       bitmaskAliases =
         [ (taAlias, taName)
-        | P.AnAlias P.TypeAlias{..} <- sTypes
-        , taCategory == "enum"
-          && Set.member taAlias bitmaskEnumTypes
-          || taCategory == "bitmask"
-        ] ++
-        [ (req, bmtName)
-        | P.BitmaskType{..} <- bitmaskTypes
-        , Just req <- [bmtRequires]
-        ]
-      bitmasks = sBitmasks
-      bitmaskMap = Map.fromList [ (P.bmName b, b) | b <- bitmasks ]
-      aliasMap = MultiMap.fromList bitmaskAliases
+          | P.AnAlias P.TypeAlias {..} <- sTypes
+          , taCategory
+            == "enum"
+            && Set.member taAlias bitmaskEnumTypes
+            || taCategory
+            == "bitmask"
+          ]
+          ++ [ (req, bmtName)
+             | P.BitmaskType {..} <- bitmaskTypes
+             , Just req           <- [bmtRequires]
+             ]
+      bitmasks          = sBitmasks
+      bitmaskMap        = Map.fromList [ (P.bmName b, b) | b <- bitmasks ]
+      aliasMap          = MultiMap.fromList bitmaskAliases
 
-      (extensionFailures, allExtensionEnums) = specBitmaskExtensions spec
-  in  do
-      -- Sanity check what we have in the parsed spec
+      allExtensionEnums = specBitmaskExtensions spec
+    in
+      do
+        -- Sanity check what we have in the parsed spec
         _ <- enumSanityCheck
           (  (P.bmtName <$> bitmaskTypes)
           ++ [ r | Just r <- P.bmtRequires <$> bitmaskTypes ]
           )
           (fst <$> bitmaskAliases)
           (P.bmName <$> bitmasks)
-
-        _ <- unless (Prelude.null extensionFailures) $ Failure extensionFailures
 
         -- ApplicativeDo makes me do this :(
         r <-
@@ -176,7 +187,7 @@ specBitmasks spec@P.Spec {..} =
             pure $ case bmtRequires of
               Nothing -> emptyEnum
                 bmt
-                (MultiMap.lookup bmtName aliasMap)
+                (closeNonReflexive (`MultiMap.lookup` aliasMap) [bmtName])
                 (MultiMap.lookup bmtName allExtensionEnums)
               Just bitmaskRequirement ->
                 case Map.lookup bitmaskRequirement bitmaskMap of
@@ -185,25 +196,28 @@ specBitmasks spec@P.Spec {..} =
                     (MultiMap.lookup bmtName aliasMap)
                     (MultiMap.lookup bmtName allExtensionEnums)
                   Just bm@P.Bitmask {..} ->
-                    let eName = bmName
-                        eElements =
-                          [ EnumElement {..}
-                            | P.BitmaskBitPosition {..} <- bmBitPositions
-                            , let eeName    = bmbpName
-                                  eeValue   = Right (0x1 `shiftL` bmbpBitPos)
-                                  eeComment = bmbpComment
-                            ]
-                            ++ [ EnumElement {..}
-                               | P.BitmaskValue {..} <- bmValues
-                               , let eeName    = bmvName
-                                     eeValue   = Right bmvValue
-                                     eeComment = bmvComment
-                               ]
-                        eAliases = MultiMap.lookup bmName aliasMap
-                        eComment    = P.bmComment bm
-                        eExtensions = MultiMap.lookup bmName allExtensionEnums
-                        eType       = EnumTypeBitmask
-                    in  Enum {..}
+                    let
+                      eName = bmName
+                      eElements =
+                        [ EnumElement {..}
+                          | P.BitmaskBitPosition {..} <- bmBitPositions
+                          , let eeName    = bmbpName
+                                eeValue   = Right (0x1 `shiftL` bmbpBitPos)
+                                eeComment = bmbpComment
+                          ]
+                          ++ [ EnumElement {..}
+                             | P.BitmaskValue {..} <- bmValues
+                             , let eeName    = bmvName
+                                   eeValue   = Right bmvValue
+                                   eeComment = bmvComment
+                             ]
+                      eAliases =
+                        closeNonReflexive (`MultiMap.lookup` aliasMap) [bmName]
+                      eComment    = P.bmComment bm
+                      eExtensions = MultiMap.lookup bmName allExtensionEnums
+                      eType       = EnumTypeBitmask
+                    in
+                      Enum {..}
         pure r
 
 emptyEnum
@@ -254,11 +268,19 @@ enumSanityCheck tNamesL aliases dNamesL = do
 -- If the bitmask type already has a requirement, use that.
 --
 -- If we don't know how to generate a requirement name then return Nothing
-guessBitmaskRequirement :: P.BitmaskType -> Maybe Text
-guessBitmaskRequirement P.BitmaskType {..} = bmtRequires <|> guess bmtName
+guessBitmaskRequirement
+  :: [P.ExtensionTag]
+  -- ^ The list of vendor tags
+  -> P.BitmaskType
+  -> Maybe Text
+guessBitmaskRequirement vendorTags P.BitmaskType {..} = asum
+  (bmtRequires : (flip guessTag bmtName <$> (nullExtensionTag : vendorTags)))
   where
-    guess :: Text -> Maybe Text
-    guess = replaceSuffix "Flags" "FlagBits"
+    nullExtensionTag = P.ExtensionTag ""
+
+    guessTag :: P.ExtensionTag -> Text -> Maybe Text
+    guessTag P.ExtensionTag {..} =
+      replaceSuffix ("Flags" <> unExtensionTag) ("FlagBits" <> unExtensionTag)
 
     replaceSuffix :: Text -> Text -> Text -> Maybe Text
     replaceSuffix from to s = do

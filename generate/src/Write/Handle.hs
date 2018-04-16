@@ -2,8 +2,8 @@
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
 
-module Write.Type.FuncPointer
-  ( writeFuncPointer
+module Write.Handle
+  ( writeHandle
   ) where
 
 import           Data.Text                                (Text)
@@ -12,26 +12,25 @@ import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Error
-import           Spec.Savvy.FuncPointer
+import           Spec.Savvy.Handle
 import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
 
 import           Write.Element
 
-writeFuncPointer :: FuncPointer -> Either [SpecError] WriteElement
-writeFuncPointer fp@FuncPointer {..} = do
-  (weDoc, weImports, weExtensions) <- fpDoc fp
-  let weName     = "FuncPointer: " <> fpName
-      weProvides = [Type fpName]
-      weDepends  = typeDepends fpType
+writeHandle :: Handle -> Either [SpecError] WriteElement
+writeHandle h@Handle {..} = do
+  (weDoc, weImports, weExtensions) <- hDoc h
+  let weName     = "Handle: " <> hName
+      weProvides = [Type hName]
+      weDepends  = typeDepends hType
   pure WriteElement {..}
 
-fpDoc :: FuncPointer -> Either [SpecError] (Doc (), [Import], [Text])
-fpDoc FuncPointer{..} = do
-  (t, (is, es)) <- toHsType fpType
+hDoc :: Handle -> Either [SpecError] (Doc (), [Import], [Text])
+hDoc Handle{..} = do
+  (t, (is, es)) <- toHsType hType
   let d = [qci|
   -- |
-  type {fpName} = {t}
+  type {hName} = {t}
 |]
   pure (d, is, es)
-

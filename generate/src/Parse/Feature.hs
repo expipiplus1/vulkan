@@ -8,11 +8,14 @@ module Parse.Feature
   , interfaces
   ) where
 
-import           Data.Maybe        (fromMaybe)
-import           Data.Text         (Text)
-import qualified Data.Text         as T
+import           Control.Applicative ((<|>))
+import           Data.List
+import           Data.Maybe          (fromMaybe)
+import           Data.Text           (Text)
+import qualified Data.Text           as T
 import           Parse.Utils
 import           Spec.Feature
+import           Text.Read
 import           Text.XML.HXT.Core
 
 parseFeature :: IOStateArrow s XmlTree Feature
@@ -58,7 +61,7 @@ interfaces p = allChildren
   , ABitmaskExtension ^<< bitmaskExtension
   , AnEnumAlias ^<< enumAlias
   , AnEnumExtensionAbsolute ^<< enumExtensionAbsolute
-  , AnEnumExtensionString ^<< enumExtensionString
+  , AnEnumValue ^<< enumValue
   , AnEnumName ^<< simpleName "enum" EnumName
   , ATypeName ^<< simpleName "type" TypeName
   , ACommandName ^<< simpleName "command" CommandName
@@ -125,13 +128,30 @@ enumExtensionAbsolute = proc e -> do
   eexaExtNumber <- optional (requiredRead <<< getAttrValue0 "extnumber") -< e
   returnA -< EnumExtensionAbsolute{..}
 
-enumExtensionString :: IOStateArrow s XmlTree EnumExtensionString
-enumExtensionString = proc e -> do
+enumValue :: IOStateArrow s XmlTree EnumValue
+enumValue = proc e -> do
   hasName "enum" -< e
-  eexsValue <- getAttrValue0T "value" -< e
-  eexsName <- requiredAttrValueT "name" -< e
-  eexsComment <- optionalAttrValueT "comment" -< e
-  returnA -< EnumExtensionString{..}
+  evValue <- parseEnumValue ^<< getAttrValue0 "value" -< e
+  evName <- requiredAttrValueT "name" -< e
+  evComment <- optionalAttrValueT "comment" -< e
+  returnA -< EnumValue{..}
+
+parseEnumValue :: String -> EnumValueType
+parseEnumValue t = fromMaybe
+  (EnumValueAlias (T.pack t))
+  (   (EnumValueString . T.pack <$> (dropPrefix "\"" =<< dropSuffix "\"" t))
+  <|> (EnumValueInt <$> readMaybe t)
+  )
+
+dropPrefix :: String -> String -> Maybe String
+dropPrefix prefix s = if prefix `isPrefixOf` s
+                        then Just (drop (length prefix) s)
+                        else Nothing
+
+dropSuffix :: String -> String -> Maybe String
+dropSuffix suffix s = if suffix `isSuffixOf` s
+                        then Just (take (length s - length suffix) s)
+                        else Nothing
 
 comment :: IOStateArrow s XmlTree Text
 comment = getAllTextT <<< hasName "comment"

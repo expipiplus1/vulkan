@@ -42,7 +42,7 @@ data InterfaceElement
   | ABitmaskExtension BitmaskExtension
   | AnEnumAlias EnumAlias
   | AnEnumExtensionAbsolute EnumExtensionAbsolute
-  | AnEnumExtensionString EnumExtensionString
+  | AnEnumValue EnumValue
   | AComment Text
   deriving(Show)
 
@@ -91,11 +91,17 @@ data EnumExtensionAbsolute = EnumExtensionAbsolute
   }
   deriving(Show)
 
-data EnumExtensionString = EnumExtensionString
-  { eexsValue   :: Text
-  , eexsName    :: Text
-  , eexsComment :: Maybe Text
+data EnumValue = EnumValue
+  { evValue   :: EnumValueType
+  , evName    :: Text
+  , evComment :: Maybe Text
   }
+  deriving(Show)
+
+data EnumValueType
+  = EnumValueString Text
+  | EnumValueInt Int
+  | EnumValueAlias Text
   deriving(Show)
 
 -- From the API schema

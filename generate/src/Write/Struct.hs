@@ -1,20 +1,26 @@
 {-# LANGUAGE ApplicativeDo     #-}
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE ViewPatterns      #-}
 
 module Write.Struct
   ( writeStruct
+  , fixMemberName
   ) where
 
+import           Control.Bool
+import           Data.Char
+import           Data.List.Extra
 import           Data.Maybe
 import           Data.Text                                (Text)
+import qualified Data.Text                                as T
 import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
-import           Spec.Savvy.Command
 import           Spec.Savvy.Error
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
@@ -24,17 +30,35 @@ import           Write.Element
 import           Write.Util
 
 writeStruct :: Struct -> Either [SpecError] WriteElement
-writeStruct s@Struct {..} = do
-  (weDoc, imports, extensions) <- structDoc s
-  let weExtensions = extensions ++ ["DuplicateRecordFields"]
-      weImports    = imports
-      weProvides   = []
-      weDepends    = []
-  pure $ WriteElement {..}
+writeStruct s@Struct {..} = case sStructOrUnion of
+  AStruct -> do
+    (weDoc, imports, extensions) <- structDoc s
+    let weName = "Struct: " <> sName
+        weExtensions =
+          extensions
+            ++ ["DuplicateRecordFields"]
+        weImports  = imports
+        weProvides = [Type sName, Term sName]
+        weDepends  = nubOrd $ concatMap (typeDepends . smType) sMembers
+    pure WriteElement {..}
+  AUnion -> do
+    (weDoc, imports, extensions) <- unionDoc s
+    let smNames      = toConstructorName <$> (smName <$> sMembers)
+        weName       = "Union: " <> sName
+        weExtensions = extensions
+        weImports    = imports
+        weProvides   = Type sName : (Term <$> smNames)
+        weDepends    = nubOrd $ concatMap (typeDepends . smType) sMembers
+    pure WriteElement {..}
+
+----------------------------------------------------------------
+-- Struct
+----------------------------------------------------------------
 
 structDoc :: Struct -> Either [SpecError] (Doc (), [Import], [Text])
 structDoc s@Struct{..} = do
-  (memberDocs, imports, extensions) <- unzip3 <$> traverse memberDoc sMembers
+  let membersFixedNames = fixMemberName <$> sMembers
+  (memberDocs, imports, extensions) <- unzip3 <$> traverse memberDoc membersFixedNames
   pure ([qci|
   -- | TODO: Struct comments
   data {sName} = {sName}
@@ -53,12 +77,12 @@ structDoc s@Struct{..} = do
     poke ptr poked = {indent (-3) . vsep $
                       (intercalatePrepend "*>" $
                        memberPokeDoc s <$> sMembers)}
-|], concat imports, concat extensions)
+|], concat imports ++ [Import "Foreign.Storable" ["Storable"]], concat extensions)
 
 memberDoc :: StructMember -> Either [SpecError] (Doc (), [Import], [Text])
 memberDoc StructMember{..} = do
   (t, (is, es)) <- toHsType smType
-  pure $ ([qci|
+  pure ([qci|
   {smName} :: {t}
 |], is, es)
 
@@ -71,6 +95,116 @@ memberPokeDoc :: Struct -> StructMember -> Doc ()
 memberPokeDoc Struct{..} StructMember{..} = [qci|
   poke (ptr `plusPtr` {smOffset}) ({smName} (poked :: {sName}))
 |]
+
+----------------------------------------------------------------
+-- Unions
+----------------------------------------------------------------
+
+unionDoc :: Struct -> Either [SpecError] (Doc (), [Import], [Text])
+unionDoc s@Struct{..} = do
+  let membersFixedNames = fixUnionMemberName <$> sMembers
+  (memberDocs, imports, extensions ) <- unzip3 <$> traverse unionMemberDoc membersFixedNames
+  pure ([qci|
+  -- | TODO: Union comments
+  data {sName}
+    = {indent (-2) . vsep $
+       intercalatePrepend "|" memberDocs}
+    deriving (Eq, Show)
+
+  -- | _Note_: peek is undefined as we wouldn't know which constructor to use
+  instance Storable {sName} where
+    sizeOf ~_ = {sSize}
+    alignment ~_ = {sAlignment}
+    peek ptr = error "peek @{sName}"
+    poke ptr = \case
+      {indent 0 . vcat $ unionMemberPokeDoc <$> membersFixedNames}
+|], concat imports ++ [Import "Foreign.Storable" ["Storable"]], concat extensions ++ ["LambdaCase"])
+
+unionMemberDoc :: StructMember -> Either [SpecError] (Doc (), [Import], [Text])
+unionMemberDoc StructMember{..} = do
+  (t, (is, es)) <- toHsTypePrec 10 smType
+  pure ([qci|
+  {smName} {t}
+|], is, es)
+
+unionMemberPokeDoc :: StructMember -> Doc ()
+unionMemberPokeDoc StructMember{..} = [qci|
+  {smName} e -> poke (castPtr ptr) e
+|]
+
+
+----------------------------------------------------------------
+-- Name utils
+----------------------------------------------------------------
+
+fixMemberName :: StructMember -> StructMember
+fixMemberName StructMember {..} =
+  StructMember {smName = toRecordMemberName smName, ..}
+
+fixUnionMemberName :: StructMember -> StructMember
+fixUnionMemberName s@StructMember {..} =
+  StructMember {smName = toConstructorName smName, ..}
+
+-- | Prefix with "vk", drop hungarian notation
+toRecordMemberName :: Text -> Text
+toRecordMemberName = ("vk" <>) . upperCaseFirst . stripHungarian
+
+-- | Prefix with "Vk", drop hungarian
+toConstructorName :: Text -> Text
+toConstructorName = ("Vk" <>) . upperCaseFirst . stripHungarian
+
+-- | drop the first word if it is just @p@s and @s@s
+stripHungarian :: Text -> Text
+stripHungarian t = case T.break isUpper t of
+  (firstWord, remainder) | T.all ((== 'p') <||> (== 's')) firstWord ->
+    lowerCaseFirst remainder
+  _ -> t
+
+upperCaseFirst :: Text -> Text
+upperCaseFirst = onFirst toUpper
+
+lowerCaseFirst :: Text -> Text
+lowerCaseFirst = onFirst toLower
+
+onFirst :: (Char -> Char) -> Text -> Text
+onFirst f = \case
+  Cons c cs -> Cons (f c) cs
+  t         -> t
+
+pattern Cons :: Char -> Text -> Text
+pattern Cons c cs <- (T.uncons -> Just (c, cs))
+  where Cons c cs = T.cons c cs
+
+-- toRecordMemberName :: Text -> Either [SpecError] Text
+-- toRecordMemberName t = do
+--   vk <- mkWord' "vk"
+--   astc_ldr <- mkAcronym' "ASTC_LDR"
+--   p <- parseCamelCase' [astc_ldr] t
+--   pure $ camelizeCustom False (vk : p)
+
+-- toConstructorName :: Text -> Either [SpecError] Text
+-- toConstructorName t = do
+--   vk <- mkWord' "vk"
+--   p <- parseCamelCase' [] t
+--   pure $ camelize (vk : p)
+
+-- parseCamelCase'
+--   :: [Text.Inflections.Word Acronym] -> Text -> Either [SpecError] [SomeWord]
+-- parseCamelCase' as t =
+--   first (const [InflectionParseError t]) $ parseCamelCase as t
+
+-- mkWord' :: Text -> Either [SpecError] SomeWord
+-- mkWord' t =
+--   case SomeWord <$> mkWord t of
+--           Left _  -> Left [InflectionParseError t]
+--           Right w -> pure w
+
+-- mkAcronym' :: Text -> Either [SpecError] (Text.Inflections.Word Acronym)
+-- mkAcronym' t =
+--   case mkAcronym t of
+--           Left _  -> Left [InflectionParseError t]
+--           Right w -> pure w
+
 
 {-
 ----------------------------------------------------------------

@@ -32,6 +32,7 @@ module Parse.Utils
   , extractFields
   , getAttrOrChildText
   , getAttrOrChildTextT
+  , getOptionalAttrOrChildTextT
   , getChildText
   , getChildTextT
   , parseValidityBlock
@@ -199,6 +200,15 @@ getAttrOrChildTextT
   -- ^ The attribute or child name to get
   -> IOStateArrow s XmlTree Text
 getAttrOrChildTextT s = T.pack ^<< getAttrOrChildText s
+
+getOptionalAttrOrChildTextT
+  :: String
+  -- ^ The attribute or child name to get
+  -> IOStateArrow s XmlTree (Maybe Text)
+getOptionalAttrOrChildTextT s = optional
+  (        (getAttrValue0T s)
+  `orElse` (getChildTextT s)
+  )
 
 -- | Get all the text between the child with the given name
 getChildText

@@ -38,4 +38,9 @@ data ExternSync = ExternSyncTrue
                 | ExternSyncParams [Text]
   deriving (Show)
 
-
+data CommandAlias = CommandAlias
+  { caName    :: Text
+  , caAlias   :: Text
+  , caComment :: Maybe Text
+  }
+  deriving (Show)

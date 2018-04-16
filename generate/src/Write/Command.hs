@@ -23,25 +23,18 @@ import           Write.Element
 writeCommand :: Command -> Either [SpecError] WriteElement
 writeCommand fp@Command {..} = do
   (weDoc, weImports, weExtensions) <- commandDoc fp
-  let weProvides = [Type cName]
+  let weName     = "Command: " <> cName
+      weProvides = [Term cName]
       weDepends  = typeDepends $ Proto
         cReturnType
         [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
   pure WriteElement {..}
 
 commandDoc :: Command -> Either [SpecError] (Doc (), [Import], [Text])
-commandDoc Command {..} = do
-  let proto = Proto
-        cReturnType
-        [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
-  (t, (is, es)) <- toHsType proto
+commandDoc c@Command {..} = do
+  (t, (is, es)) <- toHsType (commandType c)
   let d = [qci|
   -- | {fromMaybe "" cComment}
   foreign import ccall "{cName}" {cName} :: {t}
 |]
   pure (d, is, es)
-
-lowerArrayToPointer :: Type -> Type
-lowerArrayToPointer = \case
-    Array _ t -> Ptr t
-    t         -> t

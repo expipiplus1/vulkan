@@ -18,8 +18,6 @@ import           Foreign.Storable
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
 
-import           Debug.Trace
-
 -- | Get the size of a type in bytes
 typeSize
   :: (Text -> Maybe Type)
@@ -70,12 +68,22 @@ typeAlignment namedType lookupSub = \case
 
 knownNames :: Text -> Maybe SomeStorable
 knownNames = \case
-  "uint8_t"  -> Just (SomeStorable (0 :: Word8))
-  "uint32_t" -> Just (SomeStorable (0 :: Word32))
-  "uint64_t" -> Just (SomeStorable (0 :: Word64))
-  "int32_t"  -> Just (SomeStorable (0 :: Int32))
-  "size_t"   -> Just (SomeStorable (0 :: CSize))
-  _          -> Nothing
+  "uint8_t"      -> Just (SomeStorable (0 :: Word8))
+  "uint32_t"     -> Just (SomeStorable (0 :: Word32))
+  "uint64_t"     -> Just (SomeStorable (0 :: Word64))
+  "int32_t"      -> Just (SomeStorable (0 :: Int32))
+  "size_t"       -> Just (SomeStorable (0 :: CSize))
+  -- Windows
+  "HWND"         -> Just (SomeStorable (nullPtr :: Ptr ()))
+  "HINSTANCE"    -> Just (SomeStorable (nullPtr :: Ptr ()))
+  "HANDLE"       -> Just (SomeStorable (nullPtr :: Ptr ()))
+  "LPCWSTR"      -> Just (SomeStorable (nullPtr :: Ptr Word16))
+  "DWORD"        -> Just (SomeStorable (0 :: Word32))
+  -- Xlib
+  "Window"       -> Just (SomeStorable (0 :: Word32))
+  -- xcb
+  "xcb_window_t" -> Just (SomeStorable (0 :: Word32))
+  _              -> Nothing
 
 data SomeStorable where
   SomeStorable :: Storable a => a -> SomeStorable

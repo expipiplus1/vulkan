@@ -10,6 +10,8 @@
 
 module Spec.Savvy.Type.Haskell
   ( toHsType
+  , toHsTypePrec
+  , protoToHsTypeNonIO
   ) where
 
 import           Control.Monad.Trans.State.Strict
@@ -27,7 +29,28 @@ toHsType
   -- ^ The type to convert to a Haskell string
   -> Either [SpecError] (Doc (), ([Import], [Text]))
   -- ^ (The type string, (Any imports it requires, Any language extensions it requires))
-toHsType = runWriterT . runPop allLowercaseWords . toHsType' (-1) Positive
+toHsType = toHsTypePrec (-1)
+
+toHsTypePrec
+  :: Int
+  -- ^ The precendence of the sorrounding context
+  -> Type
+  -- ^ The type to convert to a Haskell string
+  -> Either [SpecError] (Doc (), ([Import], [Text]))
+  -- ^ (The type string, (Any imports it requires, Any language extensions it requires))
+toHsTypePrec prec = runWriterT . runPop allLowercaseWords . toHsType' prec Positive
+
+protoToHsTypeNonIO
+  :: Type
+  -> [(Maybe Text, Type)]
+  -> Either [SpecError] (Doc (), ([Import], [Text]))
+protoToHsTypeNonIO ret ps = runWriterT . runPop allLowercaseWords $ do
+  ret' <- toHsType' 10 Positive ret
+  -- Although '->' has a precedence of 0, it looks weird to leave the
+  -- arguments naked.
+  ps'  <- traverse (paramToHsType 10 (Negative)) ps
+  pure . parens' False $ foldr (\p r -> p <+> "->" <+> r) ret' ps'
+
 
 data Pos = Negative | Positive
 

@@ -32,7 +32,7 @@ data ExtensionType = Device | Instance
   deriving(Show)
 
 data ExtensionSupport = Disabled | Profile Text
-  deriving(Show)
+  deriving(Show, Eq)
 
 data ExtensionElement
   = AnExtensionRequirement ExtensionRequirement

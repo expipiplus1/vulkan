@@ -1,43 +1,42 @@
 {-# LANGUAGE ApplicativeDo     #-}
-{-# LANGUAGE LambdaCase        #-}
+
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes       #-}
+
 {-# LANGUAGE RecordWildCards   #-}
-{-# LANGUAGE TupleSections     #-}
+
 
 module Write.Spec
   ( writeSpec
   ) where
 
-import           Control.Applicative
-import           Control.Monad
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.Maybe
-import qualified Data.Set                              as Set
-import           Data.Text                             (Text)
-import qualified Data.Text                             as T
-import qualified Data.Text.IO                          as T
+import           Data.Text                 (Text)
+import qualified Data.Text                 as T
 import           Data.Text.Prettyprint.Doc
-import           Data.Text.Prettyprint.Doc.Render.Text
 
 import           Say
-import           Spec.Bitmask
-import           Spec.Constant
-import           Spec.Enum
-import           Spec.Savvy.Command
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
-import           Spec.Savvy.FuncPointer
+import           Spec.Savvy.Extension
+import           Spec.Savvy.Feature
 import           Spec.Savvy.Spec
-import           Spec.Savvy.Struct
-import           Spec.Savvy.Type
-import qualified Spec.Spec                             as P
-import           Spec.Type
+-- import           Spec.Savvy.Type
+import qualified Spec.Spec                 as P
+-- import           Spec.Type
 -- import           Write.Bitmask
+import           Write.Alias
+import           Write.Bespoke
 import           Write.Command
+import           Write.Constant
+import           Write.ConstantExtension
 import           Write.Element
-import           Write.Error
+import           Write.Extension
+import           Write.Feature
+import           Write.Handle
+import           Write.HeaderVersion
+import           Write.Partition
 import           Write.Struct
 import           Write.Type.Enum
 import           Write.Type.FuncPointer
@@ -45,167 +44,89 @@ import           Write.Type.FuncPointer
 writeSpec :: P.Spec -> IO ()
 writeSpec s = do
   case spec s of
-    Left es ->
-     traverse_ (sayErr . prettySpecError) es
-    Right s ->
-      sayShow s
-     -- case specFuncPointers pc spec of
-     --   Failure es ->
-     --    traverse_ (sayErr . prettySpecError) es
-     --   Success fs -> do
-     --     sayShow fs
-     --     case traverse (eitherToValidation . writeFuncPointerType) fs of
-     --       Failure es ->
-     --         traverse_ (sayErr . prettySpecError) es
-     --       Success es ->
-     --         traverse_ sayShow es
+    Left  es -> traverse_ (sayErr . prettySpecError) es
+    Right s  -> case specWriteElements s of
+      Failure es -> do
+        sayErr "Failed to generate write elements:"
+        traverse_ (sayErr . prettySpecError) es
+      Success ws -> do
+        let seeds =
+              -- Put the extensions before the 1.1 release so they grab names
+              -- with priority
+              bespokeSeeds
+                ++ featureToSeeds (vulkan10Feature (sFeatures s))
+                ++ (extensionToSeed <$> sExtensions s)
+                ++ featureToSeeds (vulkan11Feature (sFeatures s))
+        case partitionElements ws seeds of
+          Left es -> do
+            sayErr "Failed to partition write elements:"
+            traverse_ (sayErr . prettySpecError) es
+          -- Right ps -> traverse_ (say . moduleSummary) ps
+          Right ps -> traverse_ sayShow ps
 
-     -- case specStructs pc spec of
-     --   Failure es ->
-     --    traverse_ (sayErr . prettySpecError) es
-     --   Success fs -> do
-     --     sayShow fs
-     --     case traverse (eitherToValidation . writeStruct) fs of
-     --       Failure es ->
-     --         traverse_ (sayErr . prettySpecError) es
-     --       Success es ->
-     --         traverse_ sayShow es
+bespokeSeeds :: [ModuleSeed]
+bespokeSeeds =
+  [ ModuleSeed
+      "Core"
+      [ Type "VkResult"
+      , Type "VkStructureType"
+      , Pattern "VK_TRUE"
+      , Pattern "VK_FALSE"
+      ]
+  ]
 
-  -- case specParserContext spec of
-  --   Left es ->
-  --    traverse_ (sayErr . prettySpecError) es
-  --   Right pc ->
-  --    case specStructs pc spec of
-  --      Failure es ->
-  --       traverse_ (sayErr . prettySpecError) es
-  --      Success ss -> print ss
-  -- case genWriteElements spec of
-  --   Left es ->
-  --     traverse_ (sayErr . prettySpecError) es
-  --   Right ws ->
-  --     traverse_ sayShow ws
+featureToSeeds :: Feature -> [ModuleSeed]
+featureToSeeds Feature {..} =
+  [ ModuleSeed name rRequiredNames
+  | Requirement {..} <- fRequirements
+  , Just name <- [rComment]
+  , name /= "Header boilerplate"
+  , not ("has no API" `T.isSuffixOf` name)
+  ]
 
--- genWriteElements :: Spec -> Either [SpecError] [WriteElement]
--- genWriteElements s
---   = validationToEither $ do
---       es <- specEnums s
---       pure (writeEnum <$> es)
+extensionToSeed :: Extension -> ModuleSeed
+extensionToSeed Extension {..} = ModuleSeed extName
+                                            (requiredNames <> providedValues)
+  where
+    requiredNames = rRequiredNames =<< extRequirements
+    providedValues =
+      Pattern . exName . snd <$> (rEnumExtensions =<< extRequirements)
 
 
--- -- | Pairs types with bitmasks
--- pairBitmasks :: Spec -> Validation [Text] [(BitmaskType, Bitmask)]
--- pairBitmasks Spec {..} = do
---   let bmts    = [ bmt | ABitmaskType bmt <- sTypes ]
---       bmtRequiresL = catMaybes (bmtRequires <$> bmts)
---       bms     = sBitmasks
---       numBmtRequires = length bmtRequiresL
---       numBms  = length bms
---   _ <- unless (numBmtRequires == numBms) $ Failure
---     [ "Number of bitmask type requires does not equal the number of bitmask declarations: "
---       <> T.pack (show numBmtRequires)
---       <> " and "
---       <> T.pack (show numBms)
---       <> " respectively"
---     ]
---   let bmNames         = Set.fromList (bmName <$> bms)
---       bmtNames        = Set.fromList (bmtName <$> bmts)
---       bmtRequires     = Set.fromList bmtRequiresL
---       missingBmNames  = bmNames Set.\\ bmtRequires
---       missingBmtNames = bmtNames Set.\\ bmNames
---   _ <- unless (missingBmNames == Set.empty) $ Failure
---     [ "Missing Bitmask Names (without a bitmask type): "
---         <> T.pack (show missingBmNames)
---     ]
---   _ <- unless (missingBmtNames == Set.empty) $ Failure
---     [ "Missing Bitmask Type Names (without a bitmask declaration): "
---         <> T.pack (show missingBmtNames)
---     ]
---   return []
+tShow :: Show a => a -> Text
+tShow = T.pack . show
 
-{-
-specNames :: Spec -> [String]
-Data.Text.Prettyprint.Doc.Render.Text
-
-specNames = do
-  ts <- concatMap typeNames . sTypes
-  cs <- concatMap constantNames . sConstants
-  es <- concatMap enumNames . sEnums
-  bs <- concatMap bitmaskNames . sBitmasks
-  pure (concat [ts, cs, es, bs])
-
-typeNames :: TypeDecl -> [String]
-typeNames = \case
-  APlatformHeader _ -> []
-  ARequirement _ -> []
-  ADefine Define{..} -> [dName]
-  ABaseType BaseType{..} -> [btName]
-  ABitmaskType BitmaskType{..} -> [bmtName]
-  AHandleType HandleType{..} -> [htName]
-  AnEnumType EnumType{..} -> [etName]
-  AFuncPointerType FuncPointerType{..} -> [fptName]
-  AStructType StructType{..} -> [stName]
-  AUnionType UnionType{..} -> [utName]
-  ASectionComment SectionComment{..} -> []
-  AnAlias TypeAlias{..} -> [taName]
-
-constantNames :: Constant -> [String]
-constantNames Constant{..} = [cName]
-
-enumNames :: Spec.Enum.Enum -> [String]
-enumNames Enum{..} = [eName]
-
-bitmaskNames :: Bitmask -> [String]
-bitmaskNames Bitmask{..} = [bmName]
--}
-
-{-
-import           Spec.Spec
-import           Text.InterpolatedString.Perl6
-import           Text.PrettyPrint.Leijen.Text  (Doc, indent, vcat, (<+>))
-
-import           Control.Arrow                 (second)
-import           Data.Foldable                 (traverse_)
-import qualified Data.HashMap.Strict           as M
-import qualified Data.HashSet                  as S
-import           Data.List                     (sort)
-import           Data.String
-import           Spec.Graph
-import           Spec.Partition
-import           Write.CycleBreak
-import           Write.Module
-import           Write.Utils
-import           Write.WriteMonad
-
-writeSpecModules :: FilePath -> Spec -> IO ()
-writeSpecModules root spec = do
-  let graph = getSpecGraph spec
-      partitions = second S.toList <$> M.toList (moduleExports (partitionSpec spec graph))
-      locations = M.unions (uncurry exportMap <$> partitions)
-      moduleNames = fst <$> partitions
-      moduleStrings = uncurry (writeModule graph locations Normal) <$>
-                      partitions
-      modules = zip moduleNames moduleStrings
-  traverse_ (createModuleDirectory root) (fst <$> modules)
-  mapM_ (uncurry (writeModuleFile root)) modules
-  writeHsBootFiles root graph locations
-  writeModuleFile root (ModuleName "Graphics.Vulkan")
-                       (writeParentModule moduleNames)
-
-writeModuleFile :: FilePath -> ModuleName -> String -> IO ()
-writeModuleFile root moduleName =
-  writeFile (moduleNameToFile root moduleName)
-
-exportMap :: ModuleName -> [String] -> M.HashMap String ModuleName
-exportMap moduleName exports = M.fromList ((,moduleName) <$> exports)
-
-writeParentModule :: [ModuleName] -> String
-writeParentModule names = show moduleDoc
-  where nameStrings = fmap fromString . sort . fmap unModuleName $ names
-        moduleDoc :: Doc
-        moduleDoc = [qc|module Graphics.Vulkan
-  ( {indent (-2) . vcat $ intercalatePrepend (fromString ",") ((fromString "module" <+>) <$> nameStrings)}
-  ) where
-
-{vcat $ (fromString "import" <+>) <$> nameStrings}|]
-
--}
+specWriteElements :: Spec -> Validation [SpecError] [WriteElement]
+specWriteElements Spec {..} = do
+  let
+    wHeaderVersion = writeHeaderVersion sHeaderVersion
+    wEnums         = writeEnum <$> sEnums
+    wExtensions    = writeExtension <$> sExtensions
+    wFeatures =
+      writeFeature <$> [vulkan10Feature sFeatures, vulkan11Feature sFeatures]
+    wConstants = writeAPIConstant <$> sConstants
+    reqs =
+      (extRequirements =<< sExtensions)
+        ++ (   fRequirements
+           =<< [vulkan10Feature sFeatures, vulkan11Feature sFeatures]
+           )
+    wConstantExtensions = (fmap writeConstantExtension . rConstants =<< reqs)
+  wFuncPointers <- eitherToValidation $ traverse writeFuncPointer sFuncPointers
+  wHandles      <- eitherToValidation $ traverse writeHandle sHandles
+  wCommands     <- eitherToValidation $ traverse writeCommand sCommands
+  wStructs      <- eitherToValidation $ traverse writeStruct sStructs
+  wAliases      <- writeAliases sAliases
+  pure $ concat
+    [ [wHeaderVersion]
+    , bespokeWriteElements
+    , wEnums
+    , wExtensions
+    , wConstants
+    , wConstantExtensions
+    , wFuncPointers
+    , wHandles
+    , wCommands
+    , wStructs
+    , wFeatures
+    , wAliases
+    ]

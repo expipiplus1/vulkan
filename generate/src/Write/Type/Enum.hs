@@ -32,7 +32,8 @@ import           Write.Util
 
 writeEnum :: Enum -> WriteElement
 writeEnum e@Enum {..} =
-  let weDoc        = enumDoc e
+  let weName       = "Enum: " <> eName
+      weDoc        = enumDoc e
       weExtensions = ["GeneralizedNewtypeDeriving", "PatternSynonyms"]
       weImports =
         [ Import "Foreign.Storable"                ["Storable(..)"]
@@ -50,7 +51,6 @@ writeEnum e@Enum {..} =
 
       weProvides =
         [Type eName, Term eName]
-          ++ [ Type a | a <- eAliases ]
           ++ [ Pattern eeName | EnumElement {..} <- eElements ]
       weDepends = []
   in  WriteElement {..}
@@ -62,7 +62,7 @@ enumDoc e@Enum{..} = [qci|
   -- | {fromMaybe "" (eComment)}
   newtype {eName} = {eName} {enumBackingType e}
     deriving ({hcat $ intercalatePrepend "," (enumDerivedClasses e)})
-  {vcatPara (writeAlias eName <$> eAliases)}
+
   instance Show {eName} where
     {indent 0 . vcat $
       (writeElementShowsPrec <$> eElements) ++

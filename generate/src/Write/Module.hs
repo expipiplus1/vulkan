@@ -6,6 +6,8 @@ module Write.Module
   ( writeModule
   )where
 
+
+{-
 import           Data.HashMap.Strict           as M
 import           Data.HashSet                  as S
 import           Data.Maybe                    (catMaybes)
@@ -116,3 +118,4 @@ makeImportSourcy importingModule (Import source moduleName names)
   = Import Source moduleName names
   | otherwise
   = Import source moduleName names
+  -}

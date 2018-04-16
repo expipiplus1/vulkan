@@ -10,16 +10,15 @@ module Spec.Savvy.APIConstant
 
 import           Data.Bits
 import           Data.Char
+import           Data.Closure
 import           Data.Either.Validation
 import           Data.Maybe
+import qualified Data.MultiMap          as MultiMap
 import           Data.Text              (Text)
 import qualified Data.Text              as T
-import           Data.Traversable
 import           Data.Word
-import qualified Spec.Command           as P
 import qualified Spec.Constant          as P
 import           Spec.Savvy.Error
-import           Spec.Savvy.Type
 import qualified Spec.Spec              as P
 import           Text.Read              hiding (parens)
 import           Text.Regex.Applicative
@@ -28,6 +27,7 @@ data APIConstant = APIConstant
   { acName    :: Text
   , acValue   :: ConstantValue
   , acComment :: Maybe Text
+  , acAliases :: [Text]
   }
   deriving (Show)
 
@@ -42,10 +42,23 @@ data ConstantValue = -- | An integral value with no specific size
   deriving (Show)
 
 specConstants :: P.Spec -> Validation [SpecError] [APIConstant]
-specConstants P.Spec {..} = sequenceA
-  [ APIConstant name <$> parseValue value <*> pure comment
-  | P.Constant name (Right value) comment <- sConstants
-  ]
+specConstants P.Spec {..} =
+  let --- | A map of (target, name) pairs
+      constantAliases :: [(Text, Text)]
+      constantAliases =
+        [ (P.unConstantAlias name, alias)
+          -- TODO: stop this being backwards...
+        | P.Constant alias (Left name) _ <- sConstants
+        ]
+      aliasMap = MultiMap.fromList constantAliases
+  in  sequenceA
+        [ APIConstant name
+          <$> parseValue value
+          <*> pure comment
+          <*> pure aliases
+        | P.Constant name (Right value) comment <- sConstants
+        , let aliases = closeNonReflexive (`MultiMap.lookup` aliasMap) [name]
+        ]
 
 parseValue :: Text -> Validation [SpecError] ConstantValue
 parseValue s =
@@ -90,10 +103,8 @@ float = readSpec <$> (fmap concat . sequenceA $ [digits, ".", digits]) <* "f"
 digits :: RE Char String
 digits = many (psym isDigit)
 
-
 parens :: RE Char a -> RE Char a
 parens a = "(" *> a <* ")" <|> a
-
 
 readSpec :: Read a => String -> Validation [SpecError] a
 readSpec s = case readMaybe s of

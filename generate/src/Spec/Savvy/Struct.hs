@@ -1,18 +1,25 @@
-{-# LANGUAGE ApplicativeDo   #-}
-{-# LANGUAGE LambdaCase      #-}
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE RecursiveDo     #-}
+{-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE RecursiveDo       #-}
 
 module Spec.Savvy.Struct
   ( Struct(..)
   , StructMember(..)
+  , StructOrUnion(..)
   , specStructs
+  , makeStructConstructorType
   ) where
 
+import           Control.Arrow           ((&&&))
 import           Control.Monad.Fix.Extra
+import           Data.Closure
 import           Data.Either.Validation
 import           Data.List               (find)
 import           Data.Monoid             (Endo (..))
+import qualified Data.MultiMap           as MultiMap
+import           Data.Semigroup
 import           Data.Text               (Text)
 import qualified Data.Text               as T
 import           Data.Traversable
@@ -22,11 +29,14 @@ import qualified Spec.Spec               as P
 import qualified Spec.Type               as P
 
 data Struct = Struct
-  { sName      :: Text
-  , sMembers   :: [StructMember]
-  , sSize      :: Word -- Keep this lazy
-  , sAlignment :: Word -- Keep this lazy
-  , sComment   :: Maybe Text
+  { sName          :: Text
+  , sMembers       :: [StructMember]
+  , sSize          :: Word -- Keep this lazy
+  , sAlignment     :: Word -- Keep this lazy
+  , sComment       :: Maybe Text
+  , sAliases       :: [Text]
+    -- ^ The closure of struct aliases, doesn't include aliases from extensions
+  , sStructOrUnion :: StructOrUnion
   }
   deriving (Show)
 
@@ -40,11 +50,28 @@ data StructMember = StructMember
   }
   deriving (Show)
 
+data StructOrUnion
+  = AStruct
+  | AUnion
+  deriving (Show)
+
 specStructs :: TypeContext -> P.Spec -> Validation [SpecError] [Struct]
-specStructs tc P.Spec {..} =
-  let specStructs     = [ s | P.AStructType s <- sTypes ]
-      specStructNames = P.stName <$> specStructs
-  in  eitherToValidation $ fixLookupM specStructNames sName $ \getStruct ->
+specStructs tc P.Spec {..}
+  = let
+      specStructs     = [ s | P.AStructType s <- sTypes ]
+      specUnions      = [ u | P.AUnionType u <- sTypes ]
+      specStructNames = (P.stName <$> specStructs) ++ (P.utName <$> specUnions)
+
+      structAliases :: [(Text, Text)]
+      structAliases =
+        [ (taAlias, taName)
+        | P.AnAlias P.TypeAlias {..} <- sTypes
+        , taCategory == "struct"
+        ]
+      aliasMap = MultiMap.fromList structAliases
+      getAliases s = closeNonReflexive (`MultiMap.lookup` aliasMap) [s]
+    in
+      eitherToValidation $ fixLookupM specStructNames sName $ \getStruct ->
         let structTypeContext =
               extendTypeContext getStructSize getStructAlignment tc
             getField f = \case
@@ -53,19 +80,32 @@ specStructs tc P.Spec {..} =
 
             getStructSize      = getField sSize
             getStructAlignment = getField sAlignment
-        in  for specStructs (specStruct structTypeContext)
+        in  (<>)
+            <$> (for specStructs (specStruct getAliases structTypeContext))
+            <*> validationToEither
+                  (for specUnions (specUnion getAliases structTypeContext))
 
-specStruct :: TypeContext -> P.StructType -> Either [SpecError] Struct
-specStruct tc@TypeContext {..} P.StructType {..} = do
+----------------------------------------------------------------
+-- Structs
+----------------------------------------------------------------
+
+specStruct
+  :: (Text -> [Text])
+  -> TypeContext
+  -> P.StructType
+  -> Either [SpecError] Struct
+specStruct getAliases tc@TypeContext {..} P.StructType {..} = do
   rec sMembers <- validationToEither $ do
         let offsets = memberOffsets sMembers
         for (zipSameLength stMembers offsets) (uncurry (specStructMember tc))
   let
-    sName      = stName
-    sComment   = stComment
-    sAlignment = foldl1 lcm (smAlignment <$> sMembers)
-    lastMember = last sMembers
+    sName          = stName
+    sAliases       = getAliases sName
+    sComment       = stComment
+    sAlignment     = foldl1 lcm (smAlignment <$> sMembers)
+    lastMember     = last sMembers
     sSize = nextAlignment sAlignment (smOffset lastMember + smSize lastMember)
+    sStructOrUnion = AStruct
   pure Struct {..}
 
 specStructMember
@@ -79,6 +119,33 @@ specStructMember tc P.StructMember {..} smOffset = eitherToValidation $ do
   smAlignment <- getTypeAlignment tc smType
   smSize      <- getTypeSize tc smType
   pure StructMember {..}
+
+----------------------------------------------------------------
+-- Unions
+----------------------------------------------------------------
+
+specUnion
+  :: (Text -> [Text])
+  -> TypeContext
+  -> P.UnionType
+  -> Validation [SpecError] Struct
+specUnion getAliases tc@TypeContext {..} P.UnionType {..} = do
+  sMembers <- for utMembers (\m -> specStructMember tc m 0)
+  -- ApplicativeDo for this weirdness
+  pure
+    $ let
+        sName          = utName
+        sAliases       = getAliases sName
+        sComment       = utComment
+        sAlignment     = foldl1 lcm (smAlignment <$> sMembers)
+        sSize = nextAlignment sAlignment (maximum (0 : (smSize <$> sMembers)))
+        sStructOrUnion = AUnion
+      in
+        Struct {..}
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
 
 memberOffsets :: [StructMember] -> [Word]
 memberOffsets = tail . fmap fst . scanl go (0, 0)
@@ -109,3 +176,10 @@ zipSameLength :: [a] -> [b] -> [(a,b)]
 zipSameLength []     _bs     = []
 zipSameLength (a:as) ~(b:bs) = (a,b) : zipSameLength as bs
 
+makeStructConstructorType
+  :: Text
+  -- ^ Constructor name
+  -> [StructMember]
+  -> Type
+makeStructConstructorType structName members =
+  Proto (TypeName structName) (((Just . smName) &&& smType) <$> members)

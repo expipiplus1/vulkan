@@ -10,11 +10,11 @@ import           Parse.Utils
 import           Spec.Command
 import           Text.XML.HXT.Core
 
-parseCommands :: IOStateArrow s XmlTree [Command]
+parseCommands :: IOStateArrow s XmlTree ([CommandAlias], [Command])
 parseCommands = extractFields
   "command decls"
   (hasName "commands")
-  (   rights
+  (   partitionEithers
   ^<< allChildren commandFailDiag [Left ^<< commandAlias, Right ^<< command]
   )
 
@@ -25,12 +25,13 @@ commandFailDiag = proc c -> do
   returnA -< "Failed to parse command named " ++ name
 
 -- TODO: Handle
-commandAlias :: IOStateArrow s XmlTree (String, String)
+commandAlias :: IOStateArrow s XmlTree CommandAlias
 commandAlias = proc c -> do
   hasName "command" -< c
-  name <- getAttrValue0 "name" -< c
-  alias <- getAttrValue0 "alias" -< c
-  returnA -< (name, alias)
+  caName <- getAttrValue0T "name" -< c
+  caAlias <- getAttrValue0T "alias" -< c
+  caComment <- optionalAttrValueT "comment" -< c
+  returnA -< CommandAlias{..}
 
 command :: IOStateArrow s XmlTree Command
 command = proc c -> do

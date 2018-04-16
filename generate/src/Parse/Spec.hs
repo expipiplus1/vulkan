@@ -44,7 +44,7 @@ parseSpecXML = isRoot /> hasName "registry" >>> extract
           -- is at the top level
           sEnums <- listA (parseEnum <<< getChildren) -< registry
           sBitmasks <- listA (deep parseBitmask <<< getChildren) -< registry
-          sCommands <- oneRequired "Commands" (parseCommands <<< getChildren) -< registry
+          (sCommandAliases, sCommands) <- oneRequired "Commands" (parseCommands <<< getChildren) -< registry
           sFeatures <- listA (parseFeature <<< getChildren) -< registry
           sExtensions <- oneRequired "extensions" (parseExtensions <<< getChildren) -< registry
           returnA -< Spec{..}

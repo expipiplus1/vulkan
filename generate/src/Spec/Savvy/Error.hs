@@ -31,6 +31,16 @@ data SpecError
   | UnhandledSubtraction Text
   | DefineError Text
   | PreprocessorError Text
+  | MultipleExportError1 Text [Text]
+  | MultipleExportError2 Text [(Text,Text)]
+  | UnexportedNameWriteElement Text Text
+  | UnexportedName Text
+  | UnknownFeature Text
+  | UnableToParseHeaderVersion Text
+  | ModuleWithoutExports Text
+  | UnknownAliasTarget Text Text
+  | AliasLoop [Text]
+  | UnknownExtendedEnum Text
   | Other Text
     -- ^ Used for testing in development
   deriving (Show)
@@ -69,7 +79,31 @@ prettySpecError = \case
   UnhandledSubtraction d -> "Unable to subtract (extend 'subtracted'): " <+> d
   DefineError          e -> "Error parsing preprocessor defines:" <+> e
   PreprocessorError    e -> "Error running preprocessor:" <+> e
-  Other                e -> e
+  MultipleExportError1 e ms ->
+    "Symbol provided by more than one WriteElement: "
+      <+> e
+      <+> "from"
+      <+> showText ms
+  MultipleExportError2 e ms ->
+    "Symbol exported from more than one module: "
+      <+> e
+      <+> "from"
+      <+> showText ms
+  UnexportedNameWriteElement e s ->
+    "Symbol exported from no WriteElement: "
+      <+> e
+      <+> "(Required by ModuleSeed: "
+      <+> s
+      <>  ")"
+  UnexportedName             e -> "Symbol exported from no module: " <+> e
+  UnknownFeature             e -> "Couldn't find feature named:" <+> e
+  UnableToParseHeaderVersion t -> "Unable to parse VK_HEADER_VERSION:" <+> t
+  ModuleWithoutExports       m -> "Module has no exports:" <+> m
+  UnknownAliasTarget a t ->
+    "Unable to find target for alias: name: " <+> a <+> " alias target:" <+> t
+  AliasLoop           as -> "Loop in alias definitions:" <+> showText as
+  UnknownExtendedEnum e  -> "Can't find enum to extend:" <+> e
+  Other               e  -> e
 
 (<+>) :: Text -> Text -> Text
 a <+> b = a <> " " <> b

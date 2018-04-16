@@ -18,8 +18,6 @@ module Spec.Savvy.Type
   , typeDepends
   ) where
 
-import           Debug.Trace
-
 import           Control.Applicative
 import           Control.Monad.Fix.Extra
 import           Control.Monad.Trans.Reader               (ReaderT (..))
