@@ -25,6 +25,7 @@ import           Prelude                      hiding (rem)
 import           Say
 import           System.Environment
 import           Text.Pandoc
+import           Text.Pandoc.Generic
 import           Text.Pandoc.Class
 import           Text.Pandoc.Readers
 
@@ -63,37 +64,48 @@ splitDocumentation Documentation {..} = case dDocumentation of
   where
     splitPrefix m = \case
       -- Remove the "Document Notes" section
-      Section "_document_notes"  _ rem -> pure (Nothing, rem)
+      Section "_document_notes"  _  rem -> pure (Nothing, rem)
 
       -- Remove the "C Specification" section
-      Section "_c_specification" _ rem -> pure (Nothing, rem)
+      Section "_c_specification" _  rem -> pure (Nothing, rem)
 
       -- Remove the "Name" header
       Section "_name"            bs rem -> pure (Nothing, bs ++ rem)
 
       -- If the description section is a list of documentation for enumeration
       -- values, split them into separate documentation elements
-      xs@(Section "_description"     bs rem) -> case enumBullets m bs of
-        Left  err -> pure (Nothing, xs)
-        Right ds  -> pure (Just ds, rem)
+      xs@(Section sectionTag bs rem)
+        | sectionTag `elem` ["_description", "_members"] -> case
+            memberDocs m bs
+          of
+            Left  err -> pure (Nothing, xs)
+            Right ds  -> pure (Just ds, rem)
 
       -- Leave everything else alone
       xs -> pure (Nothing, xs)
 
 --
 fixupDocumentation :: Documentation -> Documentation
-fixupDocumentation (Documentation dDocumentee (Pandoc m blocks)) =
-  let blocks'        = fixupBlock <$> blocks
-      dDocumentation = Pandoc m blocks'
-  in  Documentation {..}
+fixupDocumentation (Documentation dDocumentee p) = Documentation
+  { dDocumentation = fixup p
+  , ..
+  }
   where
+    fixup :: Pandoc -> Pandoc
+    fixup = topDown fixupBlock . topDown fixupInline
+
+    fixupBlock :: Block -> Block
     fixupBlock = \case
-      Para is                  -> Para (fixupInline <$> is)
       -- Remove idents from headers
       Header n (_, cs, kvs) is -> Header n ("", cs, kvs) is
-      b                        -> b
+      DefinitionList ds | all (null . fst) ds, all ((== 1) . length . snd) ds ->
+        BulletList (head . snd <$> ds)
+      b -> b
+    fixupInline :: Inline -> Inline
     fixupInline = \case
-      i                              -> i
+      Link ("", [], []) [Str name] (tag, "") | tag == "#" <> name ->
+        RawInline "haddock" ("'" <> name <> "'")
+      i -> i
 
 dropPrefix :: String -> String -> Maybe String
 dropPrefix prefix s = if prefix `isPrefixOf` s
@@ -105,7 +117,6 @@ dropSuffix suffix s = if suffix `isSuffixOf` s
                         then Just (take (length s - length suffix) s)
                         else Nothing
 
-
 pattern Section :: String -> [Block] -> [Block] -> [Block]
 pattern Section ref blocks remainder
   <- Header headerLevel (ref, _, _) _
@@ -116,16 +127,17 @@ isHeaderLE n = \case
   Header n' _ _ -> n' <= n
   _             -> False
 
-enumBullets :: Meta -> [Block] -> Either Text [Documentation]
-enumBullets m = \case
+-- Handle struct members, enum docs and function parameter documentation
+memberDocs :: Meta -> [Block] -> Either Text [Documentation]
+memberDocs m = \case
   [BulletList bs] ->
     let enumDoc :: [Block] -> Either Text Documentation
         enumDoc = \case
-          [p@(Para (Str s1 : _))] | "ename:" `isPrefixOf` s1 ->
-            pure Documentation {dDocumentee = T.pack s1, dDocumentation = Pandoc m [p]}
-          _ -> Left "Unhandled enum documentation declaration"
+          [p@(Para (Code ("",[],[]) memberName:_))] ->
+            pure Documentation {dDocumentee = T.pack memberName, dDocumentation = Pandoc m [p]}
+          _ -> Left "Unhandled member documentation declaration"
     in  traverse enumDoc bs
-  _ -> Left "Trying to extract enum documentation from an unhandled desscription"
+  _ -> Left "Trying to extract member documentation from an unhandled desscription"
 
 --
 -- runhaskell -isrc src/Documentation.hs \
@@ -154,9 +166,10 @@ main = do
           for_ ds sayShow
           for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
             Right t -> do
-              say t
-              say
-                "\n\n--------------------------------------------------------------------------------\n\n"
+              sayShow ()
+              -- say t
+              -- say
+              --   "\n\n--------------------------------------------------------------------------------\n\n"
             Left e -> sayErrShow e
 
 -- extractMatches

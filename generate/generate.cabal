@@ -95,6 +95,7 @@ executable generate
                      , either
                      , multimap
                      , pandoc
+                     , pandoc-types
                      , parsec
                      , pretty-show
                      , say
