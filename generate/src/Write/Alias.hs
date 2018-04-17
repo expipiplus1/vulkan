@@ -7,8 +7,6 @@ module Write.Alias
   ( writeAliases
   ) where
 
-import           Debug.Trace
-
 import           Control.Applicative
 import           Control.Arrow                            ((&&&))
 import           Data.Either.Validation
@@ -118,7 +116,8 @@ writeStructPatternAlias alias@Alias{..} = eitherToValidation $ do
       weExtensions = "PatternSynonyms" : es
       weName       = "Struct Pattern Alias: " <> aName
       weProvides   = [Pattern aName]
-      weDepends    = [PatternName aAliasName]
+      -- This is not correct if we have a struct alias of a struct alias
+      weDepends    = [WE.TypeName aAliasName]
   pure WriteElement {..}
 
 writeConstantAlias :: Alias APIConstant -> Validation [SpecError] WriteElement

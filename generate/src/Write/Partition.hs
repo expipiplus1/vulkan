@@ -18,6 +18,7 @@ import           Data.Either
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.Function
+import           Data.Functor.Extra
 import           Data.List.Extra
 import           Data.Maybe
 import qualified Data.MultiMap          as MultiMap
@@ -53,7 +54,14 @@ partitionElements wes ss = validationToEither $ do
                 -- Don't allow other modules to grab exports from another seed
               , d `notElem` allSeedNames
               ]
-        in  close step msSeeds
+        in  close
+              step
+              (  msSeeds
+              ++ [ export
+                 | (moduleName, export) <- explicitlyPlacedNames
+                 , moduleName == msName
+                 ]
+              )
 
       providingElements :: [HaskellName] -> [WriteElement]
       providingElements names =
@@ -69,6 +77,7 @@ partitionElements wes ss = validationToEither $ do
   _ <- assertExactlyOneSeeds wes ss
   _ <- assertExactlyOneExport wes prioritizedModules
   _ <- assertNoEmptyModules prioritizedModules
+  _ <- assertAllDependenciesSatisfied prioritizedModules
   pure prioritizedModules
 
 -- | Make sure there are no duplicate exports, if something is exported in an
@@ -104,18 +113,35 @@ moduleExportedNames Module {..} =
   Set.fromList [ n | we@WriteElement {..} <- mWriteElements, n <- weProvidesHN we ]
 
 ----------------------------------------------------------------
--- Checks
+-- Quirks
 ----------------------------------------------------------------
 
--- | These are in a "disabled" extension:
 ignoredUnexportedNames :: [HaskellName]
 ignoredUnexportedNames =
+  -- These are in a "disabled" extension:
   [ TermName "vkGetSwapchainGrallocUsageANDROID"
   , TermName "vkAcquireImageANDROID"
   , TermName "vkQueueSignalReleaseImageANDROID"
   , TypeName "VkNativeBufferANDROID"
   , TermName "VkNativeBufferANDROID"
   ]
+
+explicitlyPlacedNames :: [(Text, HaskellName)]
+explicitlyPlacedNames =
+  [ ( "Graphics.Vulkan.Version10.CommandBufferBuilding"
+    , TypeName "VkDrawIndirectCommand"
+    )
+  , ( "Graphics.Vulkan.Version10.CommandBufferBuilding"
+    , TypeName "VkDrawIndexedIndirectCommand"
+    )
+  , ( "Graphics.Vulkan.Version10.CommandBufferBuilding"
+    , TypeName "VkDispatchIndirectCommand"
+    )
+  ]
+
+----------------------------------------------------------------
+-- Checks
+----------------------------------------------------------------
 
 -- | Make sure the values required by seeds occur exacly once in the write elements
 assertExactlyOneSeeds
@@ -153,6 +179,29 @@ assertNoEmptyModules :: [Module] -> Validation [SpecError] ()
 assertNoEmptyModules = traverse_ $ \Module {..} -> case mWriteElements of
   [] -> Failure [ModuleWithoutExports mName]
   _  -> Success ()
+
+assertAllDependenciesSatisfied :: [Module] -> Validation [SpecError] ()
+assertAllDependenciesSatisfied ms
+  = let
+      allDepends :: [HaskellName]
+      allDepends = nubOrd $ weDepends =<< mWriteElements =<< ms
+      allExports :: [HaskellName]
+      allExports =
+        nubOrd . fmap unExport $ weProvides =<< mWriteElements =<< ms
+      dependsMap :: HaskellName -> [Text]
+      dependsMap =
+        let m = MultiMap.fromList
+              [ (d, weName we)
+              | we <- mWriteElements =<< ms
+              , d  <- weDepends we
+              ]
+        in  (`MultiMap.lookup` m)
+    in
+      case allDepends \\ allExports of
+        [] -> pure ()
+        xs -> Failure
+          (xs <&> (\x -> RequiredExportMissing (tShow x) (dependsMap x)))
+
 
 -- assertNoDuplicates :: [Module] -> Validation [SpecError] ()
 -- assertNoDuplicates modules =

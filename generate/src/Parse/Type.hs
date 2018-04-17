@@ -54,7 +54,7 @@ typeParsers =
   , ARequirement ^<< requirement
   , ADefine ^<< define
   , ABaseType ^<< baseType
-  , ABaseType ^<< intType
+  , ARequirement ^<< intType
   , ABitmaskType ^<< bitmask
   , AHandleType ^<< handle
   , AnEnumType ^<< enum
@@ -111,12 +111,10 @@ baseType = proc t -> do
   btType <- getChildTextT "type" -< t
   returnA -< BaseType{..}
 
--- | Parse the "int" declaration
-intType :: IOStateArrow s XmlTree BaseType
+intType :: IOStateArrow s XmlTree Requirement
 intType = proc t -> do
-  btName <- isA (== "int") <<< getAttrValue0T "name" -< t
-  let btType = btName
-  returnA -< BaseType{..}
+  rName <- isA (== "int") <<< getAttrValue0T "name" -< t
+  returnA -< Requirement{rHeader="builtin", ..}
 
 -- | Parse a type in the "basetype" category
 bitmask :: IOStateArrow s XmlTree BitmaskType

@@ -61,15 +61,15 @@ neg = \case
 
 toHsType' :: Int -> Pos -> Type -> TypeM (Doc ())
 toHsType' prec pos = \case
-  Float -> use "Foreign.C.Types" "CFloat"
+  Float -> useWithConstructors "Foreign.C.Types" "CFloat"
   Void  -> case pos of
     Negative ->
       pure "()"
       -- n <- pop
       -- pure $ pretty n
     Positive -> pure "()"
-  Char  -> use "Foreign.C.Types" "CChar"
-  Int   -> use "Foreign.C.Types" "CInt"
+  Char  -> useWithConstructors "Foreign.C.Types" "CChar"
+  Int   -> useWithConstructors "Foreign.C.Types" "CInt"
   Ptr t -> do
     tellImport "Foreign.Ptr" "Ptr"
     t' <- toHsType' 10 pos t
@@ -88,19 +88,23 @@ toHsType' prec pos = \case
     ps' <- traverse (paramToHsType 10 (neg pos)) ps
     pure . parens' (prec >= 0) $ foldr (\p r -> p <+> "->" <+> r) ioRet ps'
 
-cIdToHsType
-  :: Text
-  -> TypeM (Doc ())
+cIdToHsType :: Text -> TypeM (Doc ())
 cIdToHsType = \case
-  "void"     -> pure "()"
-  "char"     -> use "Foreign.C.Types" "CChar"
-  "float"    -> use "Foreign.C.Types" "CFloat"
-  "uint8_t"  -> use "Data.Word" "Word8"
-  "uint32_t" -> use "Data.Word" "Word32"
-  "uint64_t" -> use "Data.Word" "Word64"
-  "int32_t"  -> use "Data.Int" "Int32"
-  "size_t"   -> use "Foreign.C.Types" "CSize"
-  t          -> pure $ pretty t
+  "void"             -> pure "()"
+  "int"              -> useWithConstructors "Foreign.C.Types" "CInt"
+  "char"             -> useWithConstructors "Foreign.C.Types" "CChar"
+  "float"            -> useWithConstructors "Foreign.C.Types" "CFloat"
+  "uint8_t"          -> use "Data.Word" "Word8"
+  "uint32_t"         -> use "Data.Word" "Word32"
+  "uint64_t"         -> use "Data.Word" "Word64"
+  "int32_t"          -> use "Data.Int" "Int32"
+  "size_t"           -> useWithConstructors "Foreign.C.Types" "CSize"
+  "xcb_connection_t" -> pure "Xcb_connection_t"
+  "xcb_visualid_t"   -> pure "Xcb_visualid_t"
+  "xcb_window_t"     -> pure "Xcb_window_t"
+  "wl_display"       -> pure "Wl_display"
+  "wl_surface"       -> pure "Wl_surface"
+  t                  -> pure $ pretty t
 
 parens' :: Bool -> Doc () -> Doc ()
 parens' = \case
@@ -113,6 +117,7 @@ paramToHsType prec pos = \case
     t' <- toHsType' 9 pos t
     tellImport "Graphics.Vulkan.NamedType" "(:::)"
     tellExtension "DataKinds"
+    tellExtension "TypeOperators"
     pure . parens' (prec >= 9) $ "\"" <> pretty n <> "\"" <+> ":::" <+> t'
   (Nothing, t) -> toHsType' prec pos t
 
@@ -134,6 +139,16 @@ use
   -> TypeM (Doc ())
 use m name = do
   tellImport m name
+  pure (pretty name)
+
+useWithConstructors
+  :: Text
+  -- ^ Modue name
+  -> Text
+  -- ^ Type name
+  -> TypeM (Doc ())
+useWithConstructors m name = do
+  tellImport m (name <> "(..)")
   pure (pretty name)
 
 tellImport :: Text -> Text

@@ -6,6 +6,7 @@ module Write.Spec
   ( writeSpec
   ) where
 
+import           Data.Either.Extra
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.Maybe
@@ -14,6 +15,7 @@ import qualified Data.Text                 as T
 import           Data.Text.Prettyprint.Doc
 import           Say
 
+import           Spec.Savvy.Alias
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
@@ -21,6 +23,7 @@ import           Spec.Savvy.Feature
 import           Spec.Savvy.Spec
 import qualified Spec.Spec                 as P
 import           Write.Alias
+import           Write.BaseType
 import           Write.Bespoke
 import           Write.Command
 import           Write.Constant
@@ -52,9 +55,9 @@ writeSpec s = do
             sayErr "Failed to partition write elements:"
             traverse_ (sayErr . prettySpecError) es
           -- Right ps -> traverse_ (say . moduleSummary) ps
-          Right ms ->
-            for_ (zip ms (writeModules ms)) $ \(m, s) -> do
-              writeFile (T.unpack ((<> ".hs") . T.replace "." "/" $ mName m)) (show s)
+          Right ms -> for_ (zip ms (writeModules ms)) $ \(m, s) -> do
+            writeFile (T.unpack ((<> ".hs") . T.replace "." "/" $ mName m))
+                      (show s)
 
 tShow :: Show a => a -> Text
 tShow = T.pack . show
@@ -76,9 +79,15 @@ specWriteElements Spec {..} = do
     wConstantExtensions = (fmap writeConstantExtension . rConstants =<< reqs)
   wFuncPointers <- eitherToValidation $ traverse writeFuncPointer sFuncPointers
   wHandles      <- eitherToValidation $ traverse writeHandle sHandles
-  wCommands     <- eitherToValidation $ traverse writeCommand sCommands
-  wStructs      <- eitherToValidation $ traverse writeStruct sStructs
-  wAliases      <- writeAliases sAliases
+  let getEnumAliasTarget :: Text -> Maybe Text
+      getEnumAliasTarget n = do
+        a <- find ((== n) . aName) (enumAliases sAliases)
+        eitherToMaybe (eName <$> aliasTarget a)
+  wCommands <- eitherToValidation
+    $ traverse (writeCommand getEnumAliasTarget) sCommands
+  wStructs   <- eitherToValidation $ traverse writeStruct sStructs
+  wAliases   <- writeAliases sAliases
+  wBaseTypes <- eitherToValidation $ traverse writeBaseType sBaseTypes
   pure $ concat
     [ [wHeaderVersion]
     , bespokeWriteElements
@@ -92,4 +101,5 @@ specWriteElements Spec {..} = do
     , wStructs
     , wFeatures
     , wAliases
+    , wBaseTypes
     ]

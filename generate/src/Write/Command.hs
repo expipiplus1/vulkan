@@ -15,19 +15,31 @@ import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Command
 import           Spec.Savvy.Error
-import           Spec.Savvy.Type
+import           Spec.Savvy.Type                          hiding (TypeName)
 import           Spec.Savvy.Type.Haskell
 
 import           Write.Element
 
-writeCommand :: Command -> Either [SpecError] WriteElement
-writeCommand fp@Command {..} = do
+writeCommand
+  :: (Text -> Maybe Text)
+  -- ^ A function to get the target of an enum alias
+  -> Command
+  -> Either [SpecError] WriteElement
+writeCommand getEnumName fp@Command {..} = do
   (weDoc, weImports, weExtensions) <- commandDoc fp
-  let weName     = "Command: " <> cName
-      weProvides = [Term cName]
-      weDepends  = typeDepends $ Proto
-        cReturnType
-        [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
+  let
+    weName       = "Command: " <> cName
+    weProvides   = [Term cName]
+    protoDepends = typeDepends $ Proto
+      cReturnType
+      [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
+    weDepends =
+      protoDepends
+        <> -- The constructors for an enum type need to be in scope
+           [ TypeName e
+           | TypeName n <- protoDepends
+           , Just     e <- [getEnumName n]
+           ]
   pure WriteElement {..}
 
 commandDoc :: Command -> Either [SpecError] (Doc (), [Import], [Text])

@@ -27,7 +27,7 @@ writeFeature e@Feature {..} =
         (Pattern . exName . snd <$> (rEnumExtensions =<< fRequirements))
           ++ (Pattern . eaName <$> (rEnumAliases =<< fRequirements))
       weDepends =
-        ([TypeName, TermName] <*> (rEnumNames =<< fRequirements))
+        (PatternName <$> (rEnumNames =<< fRequirements))
           ++ (TermName <$> (rCommandNames =<< fRequirements))
   in  WriteElement {..}
 

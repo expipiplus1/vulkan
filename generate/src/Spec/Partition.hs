@@ -77,11 +77,11 @@ partitionSpec spec graph =
        [ "Error, some ignored names are being exported"
        , "Ignored names exported:"
        ] ++ show exportedIgnoredNames) (S.null exportedIgnoredNames)
-     -- assertNote (unlines
-     --   [ "Error, some entites are not exported by any module."
-     --   , "Manually place them in a module by updating 'bespokeModuleExports'"
-     --   , "Unexported names:"
-     --   ] ++ show unexportedEntities) (S.null unexportedEntities) $
+     assertNote (unlines
+       [ "Error, some entites are not exported by any module."
+       , "Manually place them in a module by updating 'bespokeModuleExports'"
+       , "Unexported names:"
+       ] ++ show unexportedEntities) (S.null unexportedEntities) $
      PartitionedSpec{..}
 
 inferModuleExports :: Spec

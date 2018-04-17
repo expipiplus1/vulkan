@@ -15,6 +15,7 @@ import           Data.Text                (Text)
 import           Prelude                  hiding (Enum)
 import           Spec.Savvy.Alias
 import           Spec.Savvy.APIConstant
+import           Spec.Savvy.BaseType
 import           Spec.Savvy.Command
 import           Spec.Savvy.Define
 import           Spec.Savvy.Enum
@@ -43,6 +44,7 @@ data Spec = Spec
   , sCommands      :: [Command]
   , sStructs       :: [Struct]
   , sAliases       :: Aliases
+  , sBaseTypes     :: [BaseType]
   }
   deriving (Show)
 
@@ -51,9 +53,9 @@ spec s = do
   let defines = specDefines s
   preprocess <- createPreprocessor defines
   pc         <- specParserContext s
-  (sHeaderVersion, sEnums, sTypeAliases, sConstants, sFuncPointers, sHandles, sFeatures, allExtensions) <-
+  (sHeaderVersion, sEnums, sTypeAliases, sConstants, sFuncPointers, sHandles, sFeatures, allExtensions, sBaseTypes) <-
     validationToEither
-    $   (,,,,,,,)
+    $   (,,,,,,,,)
     <$> specHeaderVersion preprocess
     <*> specEnums s
     <*> specTypeAliases s
@@ -62,6 +64,7 @@ spec s = do
     <*> specHandles preprocess pc s
     <*> specFeatures s
     <*> specExtensions s
+    <*> specBaseTypes pc s
   let
     getType t =
       (TypeName <$> getAlias1 sTypeAliases t)

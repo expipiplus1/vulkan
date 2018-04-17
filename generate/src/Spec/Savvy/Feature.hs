@@ -99,10 +99,8 @@ extractRequirement P.FeatureRequirement {..} = do
 
 interfaceRequiredNames :: P.InterfaceElement -> [HaskellName]
 interfaceRequiredNames = filter (`notElem` ignoredTypeNames) . \case
-  -- P.AnEnumName              (P.EnumName    n)    -> [Type n, Term n]
-  P.AnEnumName (P.EnumName n) -> [PatternName n]
-  P.ATypeName (P.TypeName n) ->
-    if n `elem` patternsNotTypes then [PatternName n] else [TypeName n]
+  P.AnEnumName        (P.EnumName    n)       -> [PatternName n]
+  P.ATypeName         (P.TypeName    n)       -> [fixTypeDomain n]
   P.ACommandName      (P.CommandName n)       -> [TermName n]
   P.AnEnumExtension   P.EnumExtension {..}    -> [PatternName eexName]
   P.ABitmaskExtension P.BitmaskExtension {..} -> [PatternName bmxName]
@@ -117,17 +115,18 @@ ignoredTypeNames :: [HaskellName]
 ignoredTypeNames = [PatternName "VK_API_VERSION"]
 
 -- | Things which should be handled as a Pattern and not a type
-patternsNotTypes :: [Text]
-patternsNotTypes =
-  [ "VK_API_VERSION"
-  , "VK_API_VERSION_1_0"
-  , "VK_VERSION_MAJOR"
-  , "VK_VERSION_MINOR"
-  , "VK_VERSION_PATCH"
-  , "VK_HEADER_VERSION"
-  , "VK_NULL_HANDLE"
-  , "VK_API_VERSION_1_1"
-  ]
+fixTypeDomain :: Text -> HaskellName
+fixTypeDomain = \case
+  "VK_API_VERSION"     -> PatternName "VK_API_VERSION"
+  "VK_API_VERSION_1_0" -> PatternName "VK_API_VERSION_1_0"
+  "VK_HEADER_VERSION"  -> PatternName "VK_HEADER_VERSION"
+  "VK_NULL_HANDLE"     -> PatternName "VK_NULL_HANDLE"
+  "VK_API_VERSION_1_1" -> PatternName "VK_API_VERSION_1_1"
+  "VK_VERSION_MAJOR"   -> TermName "_VK_VERSION_MAJOR"
+  "VK_VERSION_MINOR"   -> TermName "_VK_VERSION_MINOR"
+  "VK_VERSION_PATCH"   -> TermName "_VK_VERSION_PATCH"
+  t -> TypeName t
+
 
 extractEnumExtensions
   :: Maybe Int

@@ -20,22 +20,21 @@ import           Write.Element                            hiding (TypeName)
 
 writeHandle :: Handle -> Either [SpecError] WriteElement
 writeHandle h@Handle {..} = do
-  (weDoc, weImports, weExtensions) <- hDoc h
-  let weName     = "Handle: " <> hName
-      weProvides = [TypeAlias hName]
-      weDepends  = typeDepends hType
+  weDoc <- hDoc h
+  let weName       = "Handle: " <> hName
+      weProvides   = [TypeAlias hName]
+      weExtensions = []
+      weImports    = [Import "Foreign.Ptr" ["Ptr"]]
+      weDepends    = []
   pure WriteElement {..}
 
-hDoc :: Handle -> Either [SpecError] (Doc (), [Import], [Text])
+hDoc :: Handle -> Either [SpecError] (Doc ())
 hDoc Handle{..} = do
-  (t, (is, es)) <- toHsType hType
   p <- case hType of
     Ptr (TypeName p) -> pure p
-    _                -> error "TODO"
-  (t, (is', es)) <- toHsType hType
-  let d = [qci|
-  -- |
-  data {p}
-  type {hName} = {t}
+    _                -> Left [HandleToNonPointerType hName]
+  pure [qci|
+    -- |
+    data {p}
+    type {hName} = Ptr {p}
 |]
-  pure (d, is, es)

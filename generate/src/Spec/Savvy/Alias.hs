@@ -10,9 +10,6 @@ module Spec.Savvy.Alias
   , specAliases
   ) where
 
-
-import           Debug.Trace
-
 import           Control.Applicative
 import           Control.Arrow            ((&&&))
 import           Control.Monad.Fix.Extra

@@ -53,7 +53,7 @@ data StructMember = StructMember
 data StructOrUnion
   = AStruct
   | AUnion
-  deriving (Show)
+  deriving (Show, Eq)
 
 specStructs :: TypeContext -> P.Spec -> Validation [SpecError] [Struct]
 specStructs tc P.Spec {..}

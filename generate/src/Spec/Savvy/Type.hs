@@ -203,5 +203,20 @@ typeDepends = \case
   Ptr t                         -> typeDepends t
   Array (NumericArraySize  _) t -> typeDepends t
   Array (SymbolicArraySize s) t -> WE.TypeName s : typeDepends t
+  TypeName "void"               -> []
+  TypeName "int"                -> []
+  TypeName "char"               -> []
+  TypeName "float"              -> []
+  TypeName "uint8_t"            -> []
+  TypeName "uint32_t"           -> []
+  TypeName "uint64_t"           -> []
+  TypeName "int32_t"            -> []
+  TypeName "size_t"             -> []
+  -- TODO: This mapping is replicated in several places!
+  TypeName "xcb_connection_t"   -> [WE.TypeName "Xcb_connection_t"]
+  TypeName "xcb_visualid_t"     -> [WE.TypeName "Xcb_visualid_t"]
+  TypeName "xcb_window_t"       -> [WE.TypeName "Xcb_window_t"]
+  TypeName "wl_display"         -> [WE.TypeName "Wl_display"]
+  TypeName "wl_surface"         -> [WE.TypeName "Wl_surface"]
   TypeName t                    -> [WE.TypeName t]
   Proto t ps -> typeDepends t ++ [ p | (_, pt) <- ps, p <- typeDepends pt ]

@@ -46,7 +46,9 @@ writeEnum e@Enum {..} =
       weProvides =
         [TypeConstructor eName, Term eName]
           ++ [ Pattern eeName | EnumElement {..} <- eElements ]
-      weDepends = []
+      weDepends = case eType of
+        EnumTypeEnum    -> []
+        EnumTypeBitmask -> [TypeName "VkFlags"]
   in  WriteElement {..}
 
 enumDoc :: Enum -> Doc ()
@@ -131,7 +133,7 @@ writeValue = \case
 enumBackingType :: Enum -> Doc ()
 enumBackingType Enum {..} = case eType of
   EnumTypeEnum    -> "Int32"
-  EnumTypeBitmask -> "Word32"
+  EnumTypeBitmask -> "VkFlags"
 
 enumDerivedClasses :: Enum -> [Doc ()]
 enumDerivedClasses Enum{..} = case eType of

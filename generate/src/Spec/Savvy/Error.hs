@@ -41,6 +41,8 @@ data SpecError
   | UnknownAliasTarget Text Text
   | AliasLoop [Text]
   | UnknownExtendedEnum Text
+  | HandleToNonPointerType Text
+  | RequiredExportMissing Text [Text]
   | Other Text
     -- ^ Used for testing in development
   deriving (Show)
@@ -101,9 +103,15 @@ prettySpecError = \case
   ModuleWithoutExports       m -> "Module has no exports:" <+> m
   UnknownAliasTarget a t ->
     "Unable to find target for alias: name: " <+> a <+> " alias target:" <+> t
-  AliasLoop           as -> "Loop in alias definitions:" <+> showText as
-  UnknownExtendedEnum e  -> "Can't find enum to extend:" <+> e
-  Other               e  -> e
+  AliasLoop              as -> "Loop in alias definitions:" <+> showText as
+  UnknownExtendedEnum    e  -> "Can't find enum to extend:" <+> e
+  HandleToNonPointerType h  -> "Handle to non pointer type" <+> h
+  RequiredExportMissing e ns ->
+    "Required Symbol exported by no modules:"
+      <+> e
+      <+> "Required by WriteElements: "
+      <+> showText ns
+  Other e -> e
 
 (<+>) :: Text -> Text -> Text
 a <+> b = a <> " " <> b
