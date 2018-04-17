@@ -13,8 +13,6 @@ import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.APIConstant
-import           Spec.Savvy.Enum
-import           Spec.Savvy.Feature
 import           Write.Element
 
 writeAPIConstant :: APIConstant -> WriteElement
@@ -27,7 +25,7 @@ writeAPIConstant ac@APIConstant {..} =
           let weExtensions = ["PatternSynonyms", "DataKinds"]
               weImports    = []
               weProvides =
-                [Pattern acName, Type acName]
+                [Pattern acName, TypeAlias acName]
           in  WriteElement {..}
         FloatValue _ ->
           let weExtensions = ["PatternSynonyms"]
@@ -49,7 +47,7 @@ constantDoc :: APIConstant -> Doc ()
 constantDoc APIConstant{..} = case acValue of
   IntegralValue w -> [qci|
     type {acName} = {w}
-|] <> patterns acName "Integral a => a" w
+|] <> line <> patterns acName "Integral a => a" w
   FloatValue f ->  patterns acName "CFloat" f
   Word32Value w -> patterns acName "Word32" w
   Word64Value w -> patterns acName "Word32" w

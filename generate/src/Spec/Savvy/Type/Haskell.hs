@@ -1,10 +1,10 @@
+{-# LANGUAGE DataKinds                  #-}
 {-# LANGUAGE DeriveFunctor              #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE KindSignatures             #-}
 {-# LANGUAGE LambdaCase                 #-}
 {-# LANGUAGE OverloadedStrings          #-}
-
-{-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE KindSignatures             #-}
+{-# LANGUAGE PatternSynonyms            #-}
 {-# LANGUAGE PolyKinds                  #-}
 {-# LANGUAGE TypeOperators              #-}
 
@@ -22,7 +22,7 @@ import qualified Data.Text                         as T
 import           Data.Text.Prettyprint.Doc
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
-import           Write.Element
+import           Write.Element                     hiding (pattern TypeName)
 
 toHsType
   :: Type
@@ -63,9 +63,10 @@ toHsType' :: Int -> Pos -> Type -> TypeM (Doc ())
 toHsType' prec pos = \case
   Float -> use "Foreign.C.Types" "CFloat"
   Void  -> case pos of
-    Negative -> do
-      n <- pop
-      pure $ pretty n
+    Negative ->
+      pure "()"
+      -- n <- pop
+      -- pure $ pretty n
     Positive -> pure "()"
   Char  -> use "Foreign.C.Types" "CChar"
   Int   -> use "Foreign.C.Types" "CInt"
@@ -110,7 +111,7 @@ paramToHsType :: Int -> Pos -> (Maybe Text, Type) -> TypeM (Doc ())
 paramToHsType prec pos = \case
   (Just n, t) -> do
     t' <- toHsType' 9 pos t
-    tellImport "Graphics.Vulkan.NamedType" ":::"
+    tellImport "Graphics.Vulkan.NamedType" "(:::)"
     tellExtension "DataKinds"
     pure . parens' (prec >= 9) $ "\"" <> pretty n <> "\"" <+> ":::" <+> t'
   (Nothing, t) -> toHsType' prec pos t

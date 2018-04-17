@@ -27,9 +27,8 @@ writeFeature e@Feature {..} =
         (Pattern . exName . snd <$> (rEnumExtensions =<< fRequirements))
           ++ (Pattern . eaName <$> (rEnumAliases =<< fRequirements))
       weDepends =
-        -- ([Type, Term] <*> (fst <$> extEnumFeatures))
-        ([Type, Term] <*> (rEnumNames =<< fRequirements))
-          ++ (Term <$> (rCommandNames =<< fRequirements))
+        ([TypeName, TermName] <*> (rEnumNames =<< fRequirements))
+          ++ (TermName <$> (rCommandNames =<< fRequirements))
   in  WriteElement {..}
 
 extensionDoc :: Feature -> Doc ()

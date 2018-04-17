@@ -24,7 +24,7 @@ import           Spec.Section
 import           Spec.Spec
 import           Write.Utils
 
-data PartitionedSpec =
+newtype PartitionedSpec =
   PartitionedSpec{ moduleExports :: M.HashMap ModuleName (S.HashSet String)
                  }
   deriving(Show)
@@ -125,7 +125,7 @@ possibleEntityAssociations spec name
   | otherwise
   = []
   where (baseName, tag) = breakNameTag (getSpecExtensionTags spec) name
-        tagString = fromMaybe "" (unExtensionTag <$> tag)
+        tagString = maybe "" unExtensionTag tag
 
 possibleModuleAssociations :: ModuleName -> [String]
 possibleModuleAssociations moduleName

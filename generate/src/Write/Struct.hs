@@ -38,7 +38,7 @@ writeStruct s@Struct {..} = case sStructOrUnion of
           extensions
             ++ ["DuplicateRecordFields"]
         weImports  = imports
-        weProvides = [Type sName, Term sName]
+        weProvides = [TypeConstructor sName, Term sName]
         weDepends  = nubOrd $ concatMap (typeDepends . smType) sMembers
     pure WriteElement {..}
   AUnion -> do
@@ -47,7 +47,7 @@ writeStruct s@Struct {..} = case sStructOrUnion of
         weName       = "Union: " <> sName
         weExtensions = extensions
         weImports    = imports
-        weProvides   = Type sName : (Term <$> smNames)
+        weProvides   = TypeConstructor sName : (Term <$> smNames)
         weDepends    = nubOrd $ concatMap (typeDepends . smType) sMembers
     pure WriteElement {..}
 

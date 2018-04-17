@@ -1,6 +1,7 @@
 {-# LANGUAGE ApplicativeDo     #-}
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE ViewPatterns      #-}
 
@@ -34,7 +35,9 @@ import           Spec.Savvy.Error
 import qualified Spec.Spec                                as P
 import qualified Spec.Type                                as P
 import qualified Text.ParserCombinators.Parsec.Combinator as Parsec
-import           Write.Element
+import           Write.Element                            hiding
+                                                           (pattern TypeName)
+import qualified Write.Element                            as WE
 
 
 data Type
@@ -199,6 +202,6 @@ typeDepends = \case
   Int                           -> []
   Ptr t                         -> typeDepends t
   Array (NumericArraySize  _) t -> typeDepends t
-  Array (SymbolicArraySize s) t -> Type s : typeDepends t
-  TypeName t                    -> [Type t]
+  Array (SymbolicArraySize s) t -> WE.TypeName s : typeDepends t
+  TypeName t                    -> [WE.TypeName t]
   Proto t ps -> typeDepends t ++ [ p | (_, pt) <- ps, p <- typeDepends pt ]

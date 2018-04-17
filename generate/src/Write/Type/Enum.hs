@@ -8,17 +8,12 @@ module Write.Type.Enum
   ( writeEnum
   ) where
 
-import           Control.Monad
-import           Data.Either.Validation
 import           Data.Int
-import qualified Data.Map                                 as Map
+import           Data.List.Extra
 import           Data.Maybe
-import qualified Data.MultiMap                            as MultiMap
-import qualified Data.Set                                 as Set
 import           Data.Text                                (Text)
 import qualified Data.Text                                as T
 import           Data.Text.Prettyprint.Doc
-import           Data.Traversable
 import           Data.Word
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
@@ -27,7 +22,6 @@ import           Text.Printf
 import           Spec.Savvy.Enum
 
 import           Write.Element
-import           Write.Error
 import           Write.Util
 
 writeEnum :: Enum -> WriteElement
@@ -50,7 +44,7 @@ writeEnum e@Enum {..} =
                  ]
 
       weProvides =
-        [Type eName, Term eName]
+        [TypeConstructor eName, Term eName]
           ++ [ Pattern eeName | EnumElement {..} <- eElements ]
       weDepends = []
   in  WriteElement {..}
@@ -70,21 +64,16 @@ enumDoc e@Enum{..} = [qci|
         \\themselves are exported from the extension modules"
       | not (null eExtensions)
       ] ++
-      (writeExtensionElementShowsPrec eName <$> eExtensions)
+      (writeExtensionElementShowsPrec eName <$> (nubOrdOn exValue eExtensions))
     }
     showsPrec p ({eName} x) = showParen (p >= 11) (showString "{eName} " . showsPrec 11 x)
 
   instance Read {eName} where
-    readPrec = parens ( choose [ {indent (-2) . vcat $
-                                   (intercalatePrepend "," (writeReadTuples eElements)) ++
-                                   ["-- The following values are from extensions, the patterns \\
-                                     \\themselves are exported from the extension modules"
-                                   | not (null eExtensions)
-                                   ] ++
-                                   -- If we have no preceding elements, skip the first ","
-                                   -- Otherwise prepend a "," on every line
-                                   ((if null eElements then intercalatePrepend "," else (fmap ("," <+>)))
-                                      (writeReadExtensionTuples eName eExtensions))
+    readPrec = parens ( choose [ {indent (-2) $ separatedSections ","
+                                    [ (Nothing, writeReadTuples eElements)
+                                    , (Just "-- The following values are from extensions, the patterns themselves are exported from the extension modules"
+                                      , writeReadExtensionTuples eName eExtensions)
+                                    ]
                                  }
                                ] +++
                         prec 10 (do

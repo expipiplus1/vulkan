@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms   #-}
 
 module Write.Element
   where
@@ -15,18 +16,28 @@ data WriteElement = WriteElement
   , weImports    :: [Import]
     -- ^ "system" imports
   , weDoc        :: Doc ()
-  , weProvides   :: [HaskellName]
+  , weProvides   :: [Export]
     -- ^ The names this element declares
   , weDepends    :: [HaskellName]
     -- ^ Other Vulkan names to expose
   }
   deriving (Show)
 
-data HaskellName
-  = Type Text
-  | Term Text
-  | Pattern Text
+data Export
+  = WithConstructors { unExport :: HaskellName }
+  | WithoutConstructors { unExport :: HaskellName }
   deriving (Show, Eq, Ord)
+
+data HaskellName
+  = TypeName Text
+  | TermName Text
+  | PatternName Text
+  deriving (Show, Eq, Ord)
+
+pattern Pattern n = WithoutConstructors (PatternName n)
+pattern Term n = WithoutConstructors (TermName n)
+pattern TypeConstructor n = WithConstructors (TypeName n)
+pattern TypeAlias n = WithoutConstructors (TypeName n)
 
 data Import = Import
   { iModule  :: Text
@@ -37,9 +48,9 @@ data Import = Import
 instance Semigroup WriteElement where
   we1 <> we2 = WriteElement
     { weName       = weName we1 <> " and " <> weName we2
-    , weDoc        = vcat [weDoc we1, weDoc we2]
-    , weExtensions = nubOrd $ weExtensions we1 <> weExtensions we2
-    , weImports    = nubOrd $ weImports we1 <> weImports we2
-    , weProvides   = nubOrd $ weProvides we1 <> weProvides we2
-    , weDepends    = nubOrd $ weDepends we1 <> weDepends we2
+    , weDoc        = vcat [weDoc we1, line, weDoc we2]
+    , weExtensions = weExtensions we1 <> weExtensions we2
+    , weImports    = weImports we1 <> weImports we2
+    , weProvides   = weProvides we1 <> weProvides we2
+    , weDepends    = weDepends we1 <> weDepends we2
     }

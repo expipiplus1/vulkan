@@ -1,9 +1,6 @@
 {-# LANGUAGE ApplicativeDo     #-}
-
 {-# LANGUAGE OverloadedStrings #-}
-
 {-# LANGUAGE RecordWildCards   #-}
-
 
 module Write.Spec
   ( writeSpec
@@ -15,17 +12,14 @@ import           Data.Maybe
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import           Data.Text.Prettyprint.Doc
-
 import           Say
+
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
 import           Spec.Savvy.Spec
--- import           Spec.Savvy.Type
 import qualified Spec.Spec                 as P
--- import           Spec.Type
--- import           Write.Bitmask
 import           Write.Alias
 import           Write.Bespoke
 import           Write.Command
@@ -36,7 +30,9 @@ import           Write.Extension
 import           Write.Feature
 import           Write.Handle
 import           Write.HeaderVersion
+import           Write.Module
 import           Write.Partition
+import           Write.Seed
 import           Write.Struct
 import           Write.Type.Enum
 import           Write.Type.FuncPointer
@@ -50,48 +46,15 @@ writeSpec s = do
         sayErr "Failed to generate write elements:"
         traverse_ (sayErr . prettySpecError) es
       Success ws -> do
-        let seeds =
-              -- Put the extensions before the 1.1 release so they grab names
-              -- with priority
-              bespokeSeeds
-                ++ featureToSeeds (vulkan10Feature (sFeatures s))
-                ++ (extensionToSeed <$> sExtensions s)
-                ++ featureToSeeds (vulkan11Feature (sFeatures s))
+        let seeds = specSeeds s
         case partitionElements ws seeds of
           Left es -> do
             sayErr "Failed to partition write elements:"
             traverse_ (sayErr . prettySpecError) es
           -- Right ps -> traverse_ (say . moduleSummary) ps
-          Right ps -> traverse_ sayShow ps
-
-bespokeSeeds :: [ModuleSeed]
-bespokeSeeds =
-  [ ModuleSeed
-      "Core"
-      [ Type "VkResult"
-      , Type "VkStructureType"
-      , Pattern "VK_TRUE"
-      , Pattern "VK_FALSE"
-      ]
-  ]
-
-featureToSeeds :: Feature -> [ModuleSeed]
-featureToSeeds Feature {..} =
-  [ ModuleSeed name rRequiredNames
-  | Requirement {..} <- fRequirements
-  , Just name <- [rComment]
-  , name /= "Header boilerplate"
-  , not ("has no API" `T.isSuffixOf` name)
-  ]
-
-extensionToSeed :: Extension -> ModuleSeed
-extensionToSeed Extension {..} = ModuleSeed extName
-                                            (requiredNames <> providedValues)
-  where
-    requiredNames = rRequiredNames =<< extRequirements
-    providedValues =
-      Pattern . exName . snd <$> (rEnumExtensions =<< extRequirements)
-
+          Right ms ->
+            for_ (zip ms (writeModules ms)) $ \(m, s) -> do
+              writeFile (T.unpack ((<> ".hs") . T.replace "." "/" $ mName m)) (show s)
 
 tShow :: Show a => a -> Text
 tShow = T.pack . show

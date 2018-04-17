@@ -22,7 +22,7 @@ writeFuncPointer :: FuncPointer -> Either [SpecError] WriteElement
 writeFuncPointer fp@FuncPointer {..} = do
   (weDoc, weImports, weExtensions) <- fpDoc fp
   let weName     = "FuncPointer: " <> fpName
-      weProvides = [Type fpName]
+      weProvides = [TypeAlias fpName]
       weDepends  = typeDepends fpType
   pure WriteElement {..}
 

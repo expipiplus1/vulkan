@@ -1,11 +1,152 @@
+{-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternGuards     #-}
+{-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE QuasiQuotes       #-}
+{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE ViewPatterns      #-}
 
 module Write.Module
-  ( writeModule
+  ( Module(..)
+  , writeModules
   )where
 
+import           Control.Applicative
+import           Control.Arrow                            ((&&&))
+import           Control.Bool
+import           Data.Char
+import           Data.Either.Validation
+import           Data.Functor.Extra
+import           Data.List.Extra
+import qualified Data.Map                                 as Map
+import           Data.Maybe
+import           Data.Text                                (Text)
+import           Data.Text                                (Text)
+import qualified Data.Text                                as T
+import qualified Data.Text                                as T
+import           Data.Text.Prettyprint.Doc
+import           Data.Text.Prettyprint.Doc
+import           Prelude                                  hiding (Enum)
+import           Prelude                                  hiding (Enum)
+import           Text.InterpolatedString.Perl6.Unindented
+import           Text.InterpolatedString.Perl6.Unindented
+
+import           Spec.Savvy.Alias
+import           Spec.Savvy.APIConstant
+import           Spec.Savvy.Command
+import           Spec.Savvy.Define
+import           Spec.Savvy.Enum
+import           Spec.Savvy.Error
+import           Spec.Savvy.Error
+import           Spec.Savvy.Extension
+import           Spec.Savvy.Feature
+import           Spec.Savvy.FuncPointer
+import           Spec.Savvy.Handle
+import           Spec.Savvy.HeaderVersion
+import           Spec.Savvy.Preprocess
+import           Spec.Savvy.Struct
+import           Spec.Savvy.Struct
+import           Spec.Savvy.Type.Haskell
+import           Spec.Savvy.Type.Haskell
+import           Spec.Savvy.Type.Packing
+import           Spec.Savvy.TypeAlias
+
+import           Write.Element
+import           Write.Struct
+import           Write.Util
+
+data Module = Module
+  { mName          :: Text
+  , mWriteElements :: [WriteElement]
+  , mReexports     :: [Export]
+  }
+  deriving (Show)
+
+writeModules :: [Module] -> [Doc ()]
+writeModules ms =
+  ms <&> writeModule (findModule ms)
+
+writeModule :: (HaskellName -> Maybe (Text, Export)) -> Module -> Doc ()
+writeModule getModule m@Module{..} = [qci|
+  {vcat $ moduleExtensions m}
+
+  module {mName}
+    ( {indent (-2) $ separatedSections "," [(Nothing, moduleExports m), (Just "-- Reexports", moduleReexports m)]}
+    ) where
+
+  {vcat $ moduleImports m}
+
+  {vcat $ moduleInternalImports getModule m}
+
+  {vcatPara $ weDoc <$> mWriteElements}
+|]
+
+moduleExports :: Module -> [Doc ()]
+moduleExports Module {..} =
+  mapMaybe exportHaskellName (weProvides =<< mWriteElements)
+
+moduleReexports :: Module -> [Doc ()]
+moduleReexports Module {..} =
+  mapMaybe exportHaskellName mReexports
+
+exportHaskellName :: Export -> Maybe (Doc ())
+exportHaskellName e =
+  let s = case unExport e of
+        TypeName n -> Just (pretty n)
+        TermName n | isConstructor n -> Nothing
+                   | otherwise       -> Just (pretty n)
+        PatternName n -> Just ("pattern" <+> pretty n)
+  in  case e of
+        WithConstructors    _ -> (<> "(..)") <$> s
+        WithoutConstructors _ -> s
+
+isConstructor = \case
+  Cons x _ | isUpper x -> True
+  _                    -> False
+
+moduleImports :: Module -> [Doc ()]
+moduleImports Module{..} =
+  let importMap = Map.fromListWith union ((iModule &&& iImports) <$> (weImports =<< mWriteElements))
+  in  Map.assocs importMap <&> \(mod, is) -> [qci|
+        import {pretty mod}
+          ( {indent (-2) . vcat . intercalatePrepend "," $ pretty <$> is}
+          )
+|]
+
+findModule :: [Module] -> HaskellName -> Maybe (Text, Export)
+findModule ms =
+  let nameMap = Map.fromList
+        [ (unExport e, (mName m, e)) | m <- ms, we <- mWriteElements m, e <- weProvides we ]
+  in  (`Map.lookup` nameMap)
+
+moduleInternalImports
+  :: (HaskellName -> Maybe (Text, Export))
+  -- ^ which module is this name from
+  -> Module
+  -> [Doc ()]
+moduleInternalImports nameModule Module {..} =
+  let depends = Map.fromListWith
+        (<>)
+        [ (m, [e])
+        | d      <- nubOrd (weDepends =<< mWriteElements)
+        , Just (m, e) <- [nameModule d]
+        , d `notElem` (unExport <$> (weProvides =<< mWriteElements))
+        ]
+  in  Map.assocs depends <&> \(mod, is) -> [qci|
+        import {pretty mod}
+          ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe exportHaskellName is}
+          )
+|]
+
+pattern Cons :: Char -> Text -> Text
+pattern Cons c cs <- (T.uncons -> Just (c, cs))
+  where Cons c cs = T.cons c cs
+
+moduleExtensions :: Module -> [Doc ()]
+moduleExtensions Module{..} =
+  let es = nubOrd $ weExtensions =<< mWriteElements
+  in es <&> \e -> [qci|\{-# language {e} #-}|]
 
 {-
 import           Data.HashMap.Strict           as M

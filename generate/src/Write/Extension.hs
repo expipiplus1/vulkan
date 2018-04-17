@@ -18,17 +18,19 @@ import           Spec.Savvy.Feature
 import           Write.Element
 
 writeExtension :: Extension -> WriteElement
-writeExtension e@Extension {..} =
-  let weName       = "Extension: " <> extName
+writeExtension e@Extension {..}
+  = let
+      weName       = "Extension: " <> extName
       weDoc        = extensionDoc e
       weExtensions = ["PatternSynonyms"]
       weImports    = []
       weProvides =
         (Pattern . exName . snd <$> (rEnumExtensions =<< extRequirements))
       weDepends =
-        ([Type, Term] <*> (rEnumNames =<< extRequirements))
-          ++ (Term <$> (rCommandNames =<< extRequirements))
-  in  WriteElement {..}
+        ([TypeName, TermName] <*> (rEnumNames =<< extRequirements))
+          ++ (TermName <$> (rCommandNames =<< extRequirements))
+    in
+      WriteElement {..}
 
 extensionDoc :: Extension -> Doc ()
 extensionDoc Extension{..} = [qci|

@@ -23,7 +23,7 @@ writeConstantExtension ce@ConstantExtension {..} =
       weName       = "ConstantExtension: " <> ceName
       weProvides   = [Pattern ceName]
       weDepends    = case ceValue of
-                       EnumValueAlias n -> [Pattern n]
+                       EnumValueAlias n -> [PatternName n]
                        _                -> []
   in  WriteElement {..}
 

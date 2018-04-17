@@ -33,10 +33,9 @@ import           Spec.Savvy.Preprocess
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
-import           Spec.Savvy.Type.Packing
-import           Spec.Savvy.TypeAlias
 
-import           Write.Element
+import           Write.Element                            hiding (TypeName)
+import qualified Write.Element                            as WE
 import           Write.Struct
 
 writeAliases :: Aliases -> Validation [SpecError] [WriteElement]
@@ -45,7 +44,7 @@ writeAliases Aliases{..} =
     [ writeValueAlias commandType <$> commandAliases
     , pure . writeTypeAlias <$> enumAliases
     , pure . writeTypeAlias <$> handleAliases
-    , liftA2 (<>) (pure . writeTypeAlias) writeStructPatternAlias <$> structAliases
+    , liftA2 (liftA2 (<>)) (pure . writeTypeAlias) writeStructPatternAlias <$> structAliases
     , writeConstantAlias <$> constantAliases
     , writePatternAlias (TypeName . eName . fst) <$> enumExtensionAliases
     ]
@@ -65,7 +64,7 @@ writeValueAlias getType alias@Alias{..} = eitherToValidation $ do
       weExtensions = es
       weName       = "Value Alias: " <> aName
       weProvides   = [Term aName]
-      weDepends    = [Term aAliasName]
+      weDepends    = [TermName aAliasName]
   pure WriteElement {..}
 
 -- writePatternAlias
@@ -88,7 +87,7 @@ writePatternAlias getType alias@Alias{..} = eitherToValidation $ do
       weExtensions = "PatternSynonyms" : es
       weName       = "Pattern Alias: " <> aName
       weProvides   = [Pattern aName]
-      weDepends    = [Pattern aAliasName]
+      weDepends    = [PatternName aAliasName]
   pure WriteElement {..}
 
 writeTypeAlias
@@ -101,8 +100,8 @@ writeTypeAlias Alias{..} =
 |]
       weExtensions = []
       weName       = "Type Alias: " <> aName
-      weProvides   = [Type aName]
-      weDepends    = [Type aAliasName]
+      weProvides   = [TypeAlias aName]
+      weDepends    = [WE.TypeName aAliasName]
   in WriteElement {..}
 
 writeStructPatternAlias :: Alias Struct -> Validation [SpecError] WriteElement
@@ -119,7 +118,7 @@ writeStructPatternAlias alias@Alias{..} = eitherToValidation $ do
       weExtensions = "PatternSynonyms" : es
       weName       = "Struct Pattern Alias: " <> aName
       weProvides   = [Pattern aName]
-      weDepends    = [Pattern aAliasName]
+      weDepends    = [PatternName aAliasName]
   pure WriteElement {..}
 
 writeConstantAlias :: Alias APIConstant -> Validation [SpecError] WriteElement

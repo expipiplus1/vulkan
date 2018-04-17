@@ -16,21 +16,26 @@ import           Spec.Savvy.Handle
 import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
 
-import           Write.Element
+import           Write.Element                            hiding (TypeName)
 
 writeHandle :: Handle -> Either [SpecError] WriteElement
 writeHandle h@Handle {..} = do
   (weDoc, weImports, weExtensions) <- hDoc h
   let weName     = "Handle: " <> hName
-      weProvides = [Type hName]
+      weProvides = [TypeAlias hName]
       weDepends  = typeDepends hType
   pure WriteElement {..}
 
 hDoc :: Handle -> Either [SpecError] (Doc (), [Import], [Text])
 hDoc Handle{..} = do
   (t, (is, es)) <- toHsType hType
+  p <- case hType of
+    Ptr (TypeName p) -> pure p
+    _                -> error "TODO"
+  (t, (is', es)) <- toHsType hType
   let d = [qci|
   -- |
+  data {p}
   type {hName} = {t}
 |]
   pure (d, is, es)

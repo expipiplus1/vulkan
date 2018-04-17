@@ -77,6 +77,6 @@ aNativeWindow =
       weImports = []
       weExtensions = []
       weName = "ANativeWindow"
-      weProvides = [Type "ANativeWindow"]
+      weProvides = [WithoutConstructors (TypeName "ANativeWindow")]
       weDepends = []
   in WriteElement{..}

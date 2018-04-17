@@ -100,20 +100,21 @@ extractRequirement P.FeatureRequirement {..} = do
 interfaceRequiredNames :: P.InterfaceElement -> [HaskellName]
 interfaceRequiredNames = filter (`notElem` ignoredTypeNames) . \case
   -- P.AnEnumName              (P.EnumName    n)    -> [Type n, Term n]
-  P.AnEnumName (P.EnumName n) -> [Pattern n]
+  P.AnEnumName (P.EnumName n) -> [PatternName n]
   P.ATypeName (P.TypeName n) ->
-    if n `elem` patternsNotTypes then [Pattern n] else [Type n]
-  P.ACommandName            (P.CommandName n)            -> [Term n]
-  P.AnEnumExtension         P.EnumExtension {..}         -> [Pattern eexName]
-  P.ABitmaskExtension       P.BitmaskExtension {..}      -> [Pattern bmxName]
-  P.AnEnumAlias P.EnumAlias {..} -> Pattern <$> [eaName, eaAlias]
-  P.AnEnumExtensionAbsolute P.EnumExtensionAbsolute {..} -> [Pattern eexaName]
-  P.AnEnumValue             P.EnumValue {..}             -> [Pattern evName]
-  P.AComment                _                            -> []
+    if n `elem` patternsNotTypes then [PatternName n] else [TypeName n]
+  P.ACommandName      (P.CommandName n)       -> [TermName n]
+  P.AnEnumExtension   P.EnumExtension {..}    -> [PatternName eexName]
+  P.ABitmaskExtension P.BitmaskExtension {..} -> [PatternName bmxName]
+  P.AnEnumAlias P.EnumAlias {..} -> PatternName <$> [eaName, eaAlias]
+  P.AnEnumExtensionAbsolute P.EnumExtensionAbsolute {..} ->
+    [PatternName eexaName]
+  P.AnEnumValue P.EnumValue {..} -> [PatternName evName]
+  P.AComment    _                -> []
 
 -- Names which are not actually exported by the spec
 ignoredTypeNames :: [HaskellName]
-ignoredTypeNames = [Pattern "VK_API_VERSION"]
+ignoredTypeNames = [PatternName "VK_API_VERSION"]
 
 -- | Things which should be handled as a Pattern and not a type
 patternsNotTypes :: [Text]

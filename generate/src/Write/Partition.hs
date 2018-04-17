@@ -14,6 +14,7 @@ module Write.Partition
 import           Control.Arrow          ((&&&))
 import           Control.Monad
 import           Data.Closure
+import           Data.Either
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.Function
@@ -28,6 +29,7 @@ import           Prelude                hiding (mod)
 
 import           Spec.Savvy.Error
 import           Write.Element
+import           Write.Module
 
 data ModuleSeed = ModuleSeed
   { msName  :: Text
@@ -35,17 +37,12 @@ data ModuleSeed = ModuleSeed
   }
   deriving (Show)
 
-data Module = Module
-  { mName          :: Text
-  , mWriteElements :: [WriteElement]
-  }
-  deriving (Show)
-
 partitionElements
   :: [WriteElement] -> [ModuleSeed] -> Either [SpecError] [Module]
 partitionElements wes ss = validationToEither $ do
-  let allSeedNames :: [HaskellName]
-      allSeedNames = [ n | ModuleSeed {..} <- ss, n <- msSeeds ]
+  let -- All the names explicitly exported by seeds.
+      allSeedNames :: [HaskellName]
+      allSeedNames = weProvidesHN =<< providingElements . msSeeds =<< ss
 
       closeSeed :: ModuleSeed -> [HaskellName]
       closeSeed ModuleSeed {..} =
@@ -53,15 +50,17 @@ partitionElements wes ss = validationToEither $ do
               [ d
               | we <- providingElements [name]
               , d  <- weDepends we
+                -- Don't allow other modules to grab exports from another seed
               , d `notElem` allSeedNames
               ]
         in  close step msSeeds
 
       providingElements :: [HaskellName] -> [WriteElement]
       providingElements names =
-        [ we | we <- wes, not . null $ intersect names (weProvides we) ]
+        [ we | we <- wes, not . null $ intersect names (weProvidesHN we) ]
+
       modules =
-        [ Module msName closure
+        [ Module msName closure []
         | m@ModuleSeed {..} <- ss
         , let names   = closeSeed m
               closure = providingElements names
@@ -73,7 +72,7 @@ partitionElements wes ss = validationToEither $ do
   pure prioritizedModules
 
 -- | Make sure there are no duplicate exports, if something is exported in an
--- earlier module, remove it from later modules.
+-- earlier module make it a reexport in a later module
 prioritizeModules :: [Module] -> [Module]
 prioritizeModules = catMaybes . fmap fst . scanl go (Nothing, mempty)
   where
@@ -83,34 +82,39 @@ prioritizeModules = catMaybes . fmap fst . scanl go (Nothing, mempty)
       -> Module
       -- ^ The module to remove elements from
       -> (Maybe Module, Set.Set HaskellName)
-      -- ^ The module with names removed, the bigger set of haskell names
+      -- ^ The module with names removed, the enlarged set of haskell names
     go (_, disallowedNames) mod =
-      let mod' = removeNames disallowedNames mod
+      let mod' = makeReexports disallowedNames mod
           disallowedNames' =
             disallowedNames `Set.union` moduleExportedNames mod'
       in  (Just mod', disallowedNames')
 
-removeNames :: Set.Set HaskellName -> Module -> Module
-removeNames dis Module {..} =
-  let isAllowed WriteElement {..} = all (`Set.notMember` dis) weProvides
-      wes = [ we | we <- mWriteElements, isAllowed we ]
-  in  Module {mWriteElements = wes, ..}
+makeReexports :: Set.Set HaskellName -> Module -> Module
+makeReexports dis Module {..} =
+  let isAllowed we@WriteElement {..} = all (`Set.notMember` dis) (weProvidesHN we)
+      (wes, res) = partitionEithers
+        [ if isAllowed we then Left we else Right (weProvides we)
+        | we <- mWriteElements
+        , isAllowed we
+        ]
+  in  Module {mWriteElements = wes, mReexports = concat res, ..}
 
 moduleExportedNames :: Module -> Set.Set HaskellName
 moduleExportedNames Module {..} =
-  Set.fromList [ n | WriteElement {..} <- mWriteElements, n <- weProvides ]
+  Set.fromList [ n | we@WriteElement {..} <- mWriteElements, n <- weProvidesHN we ]
 
 ----------------------------------------------------------------
 -- Checks
 ----------------------------------------------------------------
 
+-- | These are in a "disabled" extension:
 ignoredUnexportedNames :: [HaskellName]
 ignoredUnexportedNames =
-  [ Term "vkGetSwapchainGrallocUsageANDROID"
-  , Term "vkAcquireImageANDROID"
-  , Term "vkQueueSignalReleaseImageANDROID"
-  , Type "VkNativeBufferANDROID"
-  , Term "VkNativeBufferANDROID"
+  [ TermName "vkGetSwapchainGrallocUsageANDROID"
+  , TermName "vkAcquireImageANDROID"
+  , TermName "vkQueueSignalReleaseImageANDROID"
+  , TypeName "VkNativeBufferANDROID"
+  , TermName "VkNativeBufferANDROID"
   ]
 
 -- | Make sure the values required by seeds occur exacly once in the write elements
@@ -133,7 +137,7 @@ assertExactlyOneSeeds wes seeds = do
 assertExactlyOneExport
   :: [WriteElement] -> [Module] -> Validation [SpecError] ()
 assertExactlyOneExport wes mods =
-  let allExports = [ e | WriteElement {..} <- wes, e <- weProvides ]
+  let allExports = weProvidesHN =<< wes
       exportMap  = genExportMap mods
       checkName :: HaskellName -> Validation [SpecError] ()
       checkName n = case exportMap n of
@@ -166,8 +170,8 @@ genExportMap ms = (`MultiMap.lookup` m)
     m = MultiMap.fromList
       [ (hsName, (mName, weName))
       | Module {..}       <- ms
-      , WriteElement {..} <- mWriteElements
-      , hsName            <- weProvides
+      , we@WriteElement {..} <- mWriteElements
+      , hsName            <- weProvidesHN we
       ]
 
 genExportMapWriteElements :: [WriteElement] -> HaskellName -> [Text]
@@ -175,8 +179,8 @@ genExportMapWriteElements wes = (`MultiMap.lookup` m)
   where
     m = MultiMap.fromList
       [ (hsName, weName)
-      | WriteElement {..} <- wes
-      , hsName            <- weProvides
+      | we@WriteElement {..} <- wes
+      , hsName            <- weProvidesHN we
       ]
 
 ----------------------------------------------------------------
@@ -185,14 +189,16 @@ genExportMapWriteElements wes = (`MultiMap.lookup` m)
 
 moduleSummary :: Module -> Text
 moduleSummary Module {..} = tShow mName <> ": " <> tShow
-  (filter (not . isPattern) . concatMap weProvides $ mWriteElements)
+  (filter (not . isPattern) . concatMap weProvidesHN $ mWriteElements)
 
 isPattern :: HaskellName -> Bool
 isPattern = \case
-  Pattern _ -> True
-  _         -> False
+  PatternName _ -> True
+  _             -> False
 
 
 tShow :: Show a => a -> Text
 tShow = T.pack . show
 
+weProvidesHN :: WriteElement -> [HaskellName]
+weProvidesHN = fmap unExport . weProvides
