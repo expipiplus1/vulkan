@@ -30,6 +30,7 @@ writeExtension e@Extension {..}
       weImports    = []
       weProvides =
         (Pattern . exName . snd <$> (rEnumExtensions =<< extRequirements))
+      -- TODO: add the enum type to the depends
       weDepends =
         (TypeName . fst <$> (rEnumExtensions =<< extRequirements))
           ++ ([TypeName, TermName] <*> (rEnumNames =<< extRequirements))
@@ -45,6 +46,7 @@ extensionDoc Extension{..} = [qci|
 enumExtensionDoc :: Text -> EnumExtension -> Doc ()
 enumExtensionDoc extendee EnumExtension{..} = [qci|
   -- | {exComment}
+  -- TODO: uncomment and add the enum type to the depends
   pattern {exName} :: {extendee}
   pattern {exName} = {extendee} {writeValue exValue}
 |]

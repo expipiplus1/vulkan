@@ -26,6 +26,7 @@ writeFeature e@Feature {..} =
       weProvides =
         (Pattern . exName . snd <$> (rEnumExtensions =<< fRequirements))
           ++ (Pattern . eaName <$> (rEnumAliases =<< fRequirements))
+      -- TODO: add the enum type to the depends
       weDepends =
         (PatternName <$> (rEnumNames =<< fRequirements))
           ++ (TermName <$> (rCommandNames =<< fRequirements))
@@ -42,7 +43,7 @@ enumFeatureDoc :: Text -> EnumExtension -> Doc ()
 enumFeatureDoc extendee EnumExtension{..} = [qci|
   -- | {exComment}
   pattern {exName} :: {extendee}
-  pattern {exName} = {extendee} {exValue}
+  pattern {exName} = {extendee} {writeValue exValue}
 |]
 
 enumAliasDoc :: EnumAlias -> Doc ()
@@ -50,3 +51,8 @@ enumAliasDoc EnumAlias{..} = [qci|
   pattern {eaName} :: {eaExtends}
   pattern {eaName} = {eaAlias}
 |]
+
+writeValue :: Either Int32 Word32 -> Doc ()
+writeValue = \case
+  Left i -> pretty $ showsPrec 10 i ""
+  Right i -> pretty $ (printf "0x%08x" i :: String)
