@@ -1,4 +1,5 @@
 {-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE LambdaCase     #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
@@ -7,6 +8,8 @@ module Write.Spec
   ) where
 
 import           Data.Bifunctor
+import System.Directory
+import System.FilePath
 import           Data.Either.Extra
 import           Data.Either.Validation
 import           Data.Foldable
@@ -57,9 +60,22 @@ writeSpec s = do
             sayErr "Failed to partition write elements:"
             traverse_ (sayErr . prettySpecError) es
           -- Right ps -> traverse_ (say . moduleSummary) ps
-          Right ms -> for_ (zip ms (writeModules ms)) $ \(m, s) -> do
-            writeFile (T.unpack ((<> ".hs") . T.replace "." "/" $ mName m))
-                      (show s)
+          Right ms -> saveModules ms >>= \case
+            [] -> pure ()
+            es -> do
+              sayErr "Failed to write files:"
+              traverse_ (sayErr . prettySpecError) es
+
+saveModules :: [Module] -> IO [SpecError]
+saveModules ms = concat <$> (traverse saveModule (zip ms (writeModules ms)))
+  where
+    saveModule :: (Module, Doc ()) -> IO [SpecError]
+    saveModule (Module {..}, doc) = do
+      let filename = (T.unpack ((<> ".hs") . T.replace "." "/" $ mName))
+          dir      = takeDirectory filename
+      createDirectoryIfMissing True     dir
+      writeFile                filename (show doc)
+      pure []
 
 tShow :: Show a => a -> Text
 tShow = T.pack . show
@@ -67,27 +83,39 @@ tShow = T.pack . show
 specWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specWriteElements Spec {..} = do
   let
+    -- All requirement in features and specs
+    reqs =
+      (extRequirements =<< sExtensions)
+        ++ (   fRequirements
+           =<< [vulkan10Feature sFeatures, vulkan11Feature sFeatures]
+           )
+
+    getEnumAliasTarget :: Text -> Maybe Text
+    getEnumAliasTarget n = do
+      a <- find ((== n) . aName) (enumAliases sAliases)
+      eitherToMaybe (eName <$> aliasTarget a)
+
+    getEnumerantEnumName :: Text -> Maybe Text
+    getEnumerantEnumName enumerantName = listToMaybe
+      [ eName e
+      | e <- sEnums
+      , enumerantName
+        `elem` ((eeName <$> eElements e) <> (exName <$> eExtensions e))
+      ]
+
     wHeaderVersion  = writeHeaderVersion sHeaderVersion
     wEnums          = writeEnum <$> sEnums
     -- Take the nub here to deal with duplicate extensions
     wEnumExtensions = uncurry writeEnumExtension <$> nubOrdOn
       (second exName)
       [ (eName e, ex) | e <- sEnums, ex <- eExtensions e ]
-    reqs =
-      (extRequirements =<< sExtensions)
-        ++ (   fRequirements
-           =<< [vulkan10Feature sFeatures, vulkan11Feature sFeatures]
-           )
-    wEnumAliases        = [] -- writeEnumAlias <$> [ ea | r <- reqs, ea <- rEnumAliases r ]
-    wConstants          = writeAPIConstant <$> sConstants
-    wConstantExtensions = (fmap writeConstantExtension . rConstants =<< reqs)
+    wEnumAliases = [] -- writeEnumAlias <$> [ ea | r <- reqs, ea <- rEnumAliases r ]
+    wConstants   = writeAPIConstant <$> sConstants
+    wConstantExtensions =
+      (fmap (writeConstantExtension getEnumerantEnumName) . rConstants =<< reqs)
   wFuncPointers <- eitherToValidation $ traverse writeFuncPointer sFuncPointers
   wHandles      <- eitherToValidation $ traverse writeHandle sHandles
-  let getEnumAliasTarget :: Text -> Maybe Text
-      getEnumAliasTarget n = do
-        a <- find ((== n) . aName) (enumAliases sAliases)
-        eitherToMaybe (eName <$> aliasTarget a)
-  wCommands <- eitherToValidation
+  wCommands     <- eitherToValidation
     $ traverse (writeCommand getEnumAliasTarget) sCommands
   wStructs   <- eitherToValidation $ traverse writeStruct sStructs
   wAliases   <- writeAliases sAliases

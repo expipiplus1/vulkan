@@ -41,9 +41,7 @@ writeStruct s@Struct {..} = case sStructOrUnion of
                , Import "Foreign.Storable" ["Storable(..)"]
                ]
         weProvides = [TypeConstructor sName, Term sName]
-        weDepends =
-          nubOrd (concatMap (typeDepends . smType) sMembers)
-            ++ (PatternName <$> (smValues =<< sMembers))
+        weDepends  = nubOrd (concatMap (typeDepends . smType) sMembers)
     pure WriteElement {..}
   AUnion -> do
     (weDoc, imports, extensions) <- unionDoc s
@@ -123,7 +121,7 @@ unionDoc s@Struct{..} = do
   instance Storable {sName} where
     sizeOf ~_ = {sSize}
     alignment ~_ = {sAlignment}
-    peek ptr = error "peek @{sName}"
+    peek _   = error "peek @{sName}"
     poke ptr = \case
       {indent 0 . vcat $ unionMemberPokeDoc <$> membersFixedNames}
 |], concat imports ++ [Import "Foreign.Storable" ["Storable"]], concat extensions ++ ["LambdaCase"])

@@ -39,8 +39,7 @@ writeEnum e@Enum {..} =
           ++ case eType of
                EnumTypeEnum -> [Import "Data.Int" ["Int32"]]
                EnumTypeBitmask ->
-                 [ Import "Data.Word" ["Word32"]
-                 , Import "Data.Bits" ["Bits", "FiniteBits"]
+                 [ Import "Data.Bits" ["Bits", "FiniteBits"]
                  ]
 
       weProvides =

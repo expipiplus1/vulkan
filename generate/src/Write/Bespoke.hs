@@ -87,7 +87,7 @@ unitPtrAliasWriteElement t =
 
 selfPtrWriteElement :: Text -> WriteElement
 selfPtrWriteElement t =
-  newtypeWriteElement t [qci|Ptr {t}|] [Import "Foreign.Ptr" ["Ptr"]]
+  newtypeWriteElement t [qci|{t} (Ptr {t})|] [Import "Foreign.Ptr" ["Ptr"]]
 
 aliasWriteElement
   :: Text
@@ -126,7 +126,10 @@ newtypeOrTypeWriteElement decl n t is =
       weImports = is
       weExtensions = []
       weName = t
-      weProvides = [WithoutConstructors (TypeName n)]
+      -- TODO: Tidy
+      weProvides = if decl == "newtype"
+                     then [WithConstructors (TypeName n)]
+                     else [WithoutConstructors (TypeName n)]
       weDepends = []
   in WriteElement{..}
 
