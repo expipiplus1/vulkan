@@ -25,6 +25,7 @@ import           Spec.Savvy.Feature
 import           Spec.Savvy.FuncPointer
 import           Spec.Savvy.Handle
 import           Spec.Savvy.HeaderVersion
+import           Spec.Savvy.Platform
 import           Spec.Savvy.Preprocess
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
@@ -45,6 +46,7 @@ data Spec = Spec
   , sStructs       :: [Struct]
   , sAliases       :: Aliases
   , sBaseTypes     :: [BaseType]
+  , sPlatforms     :: [Platform]
   }
   deriving (Show)
 
@@ -78,6 +80,7 @@ spec s = do
 
     enabledExtensions = filter ((/= Disabled) . extSupported) allExtensions
     sExtensions       = enabledExtensions
+    sPlatforms        = P.sPlatforms s
 
     requirements =
       (extRequirements =<< sExtensions)

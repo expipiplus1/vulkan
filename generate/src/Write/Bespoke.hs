@@ -16,7 +16,20 @@ import           Write.Type.Enum
 
 bespokeWriteElements :: [WriteElement]
 bespokeWriteElements =
-  [versions, nullHandle, bools] ++ concat [win32, x11, xcb, wayland, mir, android]
+  [namedType, versions, nullHandle, bools] ++ concat [win32, x11, xcb, wayland, mir, android]
+
+namedType :: WriteElement
+namedType =
+  let weDoc = [qci|
+        -- | Annotate a type with a name
+        type (name :: k) ::: a = a
+      |]
+      weImports = []
+      weExtensions = ["PolyKinds", "TypeOperators"]
+      weName = "NamedType"
+      weProvides = [ TypeAlias "(:::)" ]
+      weDepends = []
+  in WriteElement{..}
 
 versions :: WriteElement
 versions =
@@ -40,8 +53,7 @@ versions =
 
         _VK_VERSION_PATCH :: Word32 -> Word32
         _VK_VERSION_PATCH v = v .&. 0xfff
-
-|]
+      |]
       weImports = [ Import "Data.Word" ["Word32"]
                   , Import "Data.Bits" ["(.&.)", "(.|.)", "shiftL", "shiftR"]
                   ]

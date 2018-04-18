@@ -43,6 +43,7 @@ data SpecError
   | UnknownExtendedEnum Text
   | HandleToNonPointerType Text
   | RequiredExportMissing Text [Text]
+  | UnknownPlatform Text
   | Other Text
     -- ^ Used for testing in development
   deriving (Show)
@@ -111,6 +112,7 @@ prettySpecError = \case
       <+> e
       <+> "Required by WriteElements: "
       <+> showText ns
+  UnknownPlatform p -> "Unknown platform" <+> p
   Other e -> e
 
 (<+>) :: Text -> Text -> Text

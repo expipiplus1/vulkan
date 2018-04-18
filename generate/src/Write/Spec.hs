@@ -27,6 +27,7 @@ import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
+import           Spec.Savvy.Platform
 import           Spec.Savvy.Spec
 import qualified Spec.Spec                 as P
 import           Write.Alias
@@ -41,6 +42,7 @@ import           Write.EnumExtension
 import           Write.Handle
 import           Write.HeaderVersion
 import           Write.Module
+import           Write.Module.Aggregate
 import           Write.Partition
 import           Write.Seed
 import           Write.Struct
@@ -67,11 +69,14 @@ writeSpec outDir s = do
             sayErr "Failed to partition write elements:"
             traverse_ (sayErr . prettySpecError) es
           -- Right ps -> traverse_ (say . moduleSummary) ps
-          Right ms -> saveModules outDir ms >>= \case
-            [] -> pure ()
-            es -> do
-              sayErr "Failed to write files:"
-              traverse_ (sayErr . prettySpecError) es
+          Right ms -> do
+            let Success platformGuards = (guardedModules (sExtensions s) (sPlatforms s))
+                aggs       = makeAggregateModules platformGuards ms
+            saveModules outDir (ms ++ aggs) >>= \case
+              [] -> pure ()
+              es -> do
+                sayErr "Failed to write files:"
+                traverse_ (sayErr . prettySpecError) es
 
 saveModules
   :: FilePath

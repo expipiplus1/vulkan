@@ -19,6 +19,7 @@ data Extension = Extension
   { extName         :: Text
   , extRequirements :: [Requirement]
   , extSupported    :: P.ExtensionSupport
+  , extPlatform     :: Maybe Text
   }
   deriving (Show)
 

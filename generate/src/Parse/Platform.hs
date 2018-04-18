@@ -1,12 +1,12 @@
-{-# LANGUAGE Arrows          #-}
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE Arrows            #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Parse.Platform
   ( parsePlatforms
   ) where
 
 import           Parse.Utils
-import           Spec.ExtensionTag
 import           Spec.Platform
 import           Text.XML.HXT.Core
 
@@ -21,7 +21,7 @@ parsePlatform = extractFields "Platform"
                               (hasName "platform")
                               extract
   where extract = proc platform -> do
-          pName <- requiredAttrValue "name" -< platform
-          pProtect <- requiredAttrValue "protect" -< platform
-          pComment <- requiredAttrValue "comment" -< platform
+          pName <- requiredAttrValueT "name" -< platform
+          pProtect <- requiredAttrValueT "protect" -< platform
+          pComment <- requiredAttrValueT "comment" -< platform
           returnA -< Platform{..}

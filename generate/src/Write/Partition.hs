@@ -33,8 +33,10 @@ import           Write.Element
 import           Write.Module
 
 data ModuleSeed = ModuleSeed
-  { msName  :: Text
-  , msSeeds :: [HaskellName]
+  { msName     :: Text
+  , msSeeds    :: [HaskellName]
+  , msPlatform :: Maybe Text
+    -- ^ Is this module only available on a particular platform
   }
   deriving (Show)
 
@@ -70,7 +72,7 @@ partitionElements wes ss = validationToEither $ do
         [ we | we <- wes, not . null $ intersect names (weProvidesHN we) ]
 
       modules =
-        [ Module msName closure []
+        [ Module msName closure [] []
         | m@ModuleSeed {..} <- ss
         , let names   = closeSeed m
               closure = providingElements names

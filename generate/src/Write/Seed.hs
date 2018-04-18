@@ -7,6 +7,7 @@
 
 module Write.Seed
   ( specSeeds
+  , toModuleName
   ) where
 
 import           Control.Bool
@@ -33,22 +34,24 @@ specSeeds s =
 
 bespokeSeeds :: [ModuleSeed]
 bespokeSeeds =
-  [ ModuleSeed
-      (toModuleName "Version10" "Core")
-      [ TypeName "VkResult"
-      , TypeName "VkStructureType"
-      , PatternName "VK_TRUE"
-      , PatternName "VK_FALSE"
-      , TypeName "VkFlags"
-      , TypeName "VkFormat"
-      , TypeName "VkBool32"
-      , TypeName "VkObjectType"
-      ]
+  [ ModuleSeed "Graphics.Vulkan.NamedType" [TypeName "(:::)"] Nothing
+  , ModuleSeed
+    (toModuleName "Version10" "Core")
+    [ TypeName "VkResult"
+    , TypeName "VkStructureType"
+    , PatternName "VK_TRUE"
+    , PatternName "VK_FALSE"
+    , TypeName "VkFlags"
+    , TypeName "VkFormat"
+    , TypeName "VkBool32"
+    , TypeName "VkObjectType"
+    ]
+    Nothing
   ]
 
 featureToSeeds :: Feature -> [ModuleSeed]
 featureToSeeds Feature {..} =
-  [ ModuleSeed (toModuleName (featureModuleName fName) name) rRequiredNames
+  [ ModuleSeed (toModuleName (featureModuleName fName) name) rRequiredNames Nothing
   | Requirement {..} <- fRequirements
   , Just name        <- [rComment]
   , name
@@ -62,6 +65,7 @@ extensionToSeed :: Extension -> ModuleSeed
 extensionToSeed Extension {..} = ModuleSeed
   (toModuleName "Extensions" extName)
   (requiredNames <> providedValues)
+  extPlatform
   where
     requiredNames = rRequiredNames =<< extRequirements
     providedValues =

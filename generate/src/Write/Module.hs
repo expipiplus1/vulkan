@@ -9,6 +9,7 @@
 
 module Write.Module
   ( Module(..)
+  , ReexportedModule(..)
   , writeModules
   )where
 
@@ -32,34 +33,20 @@ import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 import           Text.InterpolatedString.Perl6.Unindented
 
-import           Spec.Savvy.Alias
-import           Spec.Savvy.APIConstant
-import           Spec.Savvy.Command
-import           Spec.Savvy.Define
-import           Spec.Savvy.Enum
-import           Spec.Savvy.Error
-import           Spec.Savvy.Error
-import           Spec.Savvy.Extension
-import           Spec.Savvy.Feature
-import           Spec.Savvy.FuncPointer
-import           Spec.Savvy.Handle
-import           Spec.Savvy.HeaderVersion
-import           Spec.Savvy.Preprocess
-import           Spec.Savvy.Struct
-import           Spec.Savvy.Struct
-import           Spec.Savvy.Type.Haskell
-import           Spec.Savvy.Type.Haskell
-import           Spec.Savvy.Type.Packing
-import           Spec.Savvy.TypeAlias
-
 import           Write.Element
-import           Write.Struct
 import           Write.Util
 
 data Module = Module
-  { mName          :: Text
-  , mWriteElements :: [WriteElement]
-  , mReexports     :: [Export]
+  { mName              :: Text
+  , mWriteElements     :: [WriteElement]
+  , mReexports         :: [Export]
+  , mReexportedModules :: [ReexportedModule]
+  }
+  deriving (Show)
+
+data ReexportedModule = ReexportedModule
+  { rmName  :: Text
+  , rmGuard :: Maybe Text
   }
   deriving (Show)
 
@@ -70,13 +57,17 @@ writeModules ms =
 writeModule :: (HaskellName -> Maybe (Text, Export)) -> Module -> Doc ()
 writeModule getModule m@Module{..} = [qci|
   \{-# language Strict #-}
+  \{-# language CPP #-}
   {vcat $ moduleExtensions m}
 
   module {mName}
-    ( {indent (-2) $ separatedSections "," [(Nothing, moduleExports m), (Just "-- Reexports", moduleReexports m)]}
+    ( {indent (-2) $ separatedSections ","
+         [ (Nothing, moduleExports m)
+         ]}{vcat $ moduleReexports (null (moduleExports m)) m}
     ) where
 
   {vcat $ moduleImports m}
+  {vcat $ importReexportedModule <$> mReexportedModules}
 
   {vcat $ moduleInternalImports getModule m}
 
@@ -87,9 +78,28 @@ moduleExports :: Module -> [Doc ()]
 moduleExports Module {..} =
   mapMaybe exportHaskellName (weProvides =<< mWriteElements)
 
-moduleReexports :: Module -> [Doc ()]
-moduleReexports Module {..} =
+moduleReexports :: Bool -> Module -> [Doc ()]
+moduleReexports first Module {..} =
   mapMaybe exportHaskellName mReexports
+    ++ (zipWith reexportModule (first : repeat False) mReexportedModules)
+
+reexportModule :: Bool -> ReexportedModule -> Doc ()
+reexportModule first ReexportedModule {..} = case rmGuard of
+  Nothing -> [qci|{indent 2 $ if first then " " else ","} module {rmName}|]
+  Just g  -> indent (-100) [qci|
+      #if defined({g})
+        {if first then " " else "," :: Doc a} module {rmName}
+      #endif
+    |]
+
+importReexportedModule :: ReexportedModule -> Doc ()
+importReexportedModule ReexportedModule {..} = case rmGuard of
+  Nothing -> [qci|import {rmName}|]
+  Just g  -> [qci|
+      #if defined({g})
+      import {rmName}
+      #endif
+    |]
 
 exportHaskellName :: Export -> Maybe (Doc ())
 exportHaskellName e =
