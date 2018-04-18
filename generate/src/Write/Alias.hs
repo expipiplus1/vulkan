@@ -10,8 +10,6 @@ module Write.Alias
 import           Control.Applicative
 import           Control.Arrow                            ((&&&))
 import           Data.Either.Validation
-import           Data.Text                                (Text)
-import qualified Data.Text                                as T
 import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
@@ -19,15 +17,8 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Alias
 import           Spec.Savvy.APIConstant
 import           Spec.Savvy.Command
-import           Spec.Savvy.Define
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
-import           Spec.Savvy.Extension
-import           Spec.Savvy.Feature
-import           Spec.Savvy.FuncPointer
-import           Spec.Savvy.Handle
-import           Spec.Savvy.HeaderVersion
-import           Spec.Savvy.Preprocess
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
@@ -62,7 +53,7 @@ writeValueAlias getType alias@Alias{..} = eitherToValidation $ do
       weExtensions = es
       weName       = "Value Alias: " <> aName
       weProvides   = [Term aName]
-      weDepends    = [TermName aAliasName]
+      weDepends    = [TermName aAliasName] ++ typeDepends (getType target)
   pure WriteElement {..}
 
 -- writePatternAlias
@@ -85,7 +76,7 @@ writePatternAlias getType alias@Alias{..} = eitherToValidation $ do
       weExtensions = "PatternSynonyms" : es
       weName       = "Pattern Alias: " <> aName
       weProvides   = [Pattern aName]
-      weDepends    = [PatternName aAliasName]
+      weDepends    = PatternName aAliasName : typeDepends (getType target)
   pure WriteElement {..}
 
 writeTypeAlias
@@ -116,8 +107,9 @@ writeStructPatternAlias alias@Alias{..} = eitherToValidation $ do
       weExtensions = "PatternSynonyms" : es
       weName       = "Struct Pattern Alias: " <> aName
       weProvides   = [Pattern aName]
-      -- This is not correct if we have a struct alias of a struct alias
-      weDepends    = [WE.TypeName aAliasName]
+      weDepends    = -- This is not correct if we have a struct alias of a struct alias
+                     [WE.TypeName aAliasName] ++
+                       (typeDepends . smType =<< sMembers)
   pure WriteElement {..}
 
 writeConstantAlias :: Alias APIConstant -> Validation [SpecError] WriteElement

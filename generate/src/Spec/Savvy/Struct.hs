@@ -17,6 +17,7 @@ import           Control.Monad.Fix.Extra
 import           Data.Closure
 import           Data.Either.Validation
 import           Data.List               (find)
+import           Data.Maybe
 import           Data.Monoid             (Endo (..))
 import qualified Data.MultiMap           as MultiMap
 import           Data.Semigroup
@@ -46,6 +47,7 @@ data StructMember = StructMember
   , smOffset    :: Word -- Keep this lazy
   , smSize      :: Word -- Keep this lazy
   , smAlignment :: Word -- Keep this lazy
+  , smValues    :: [Text]
   , smComment   :: Maybe Text
   }
   deriving (Show)
@@ -118,6 +120,7 @@ specStructMember tc P.StructMember {..} smOffset = eitherToValidation $ do
   smType      <- stringToTypeExpected (tcParseContext tc) smName smType
   smAlignment <- getTypeAlignment tc smType
   smSize      <- getTypeSize tc smType
+  smValues    <- pure (maybeToList smValues)
   pure StructMember {..}
 
 ----------------------------------------------------------------

@@ -6,9 +6,11 @@ module Write.Spec
   ( writeSpec
   ) where
 
+import           Data.Bifunctor
 import           Data.Either.Extra
 import           Data.Either.Validation
 import           Data.Foldable
+import           Data.List.Extra
 import           Data.Maybe
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
@@ -29,8 +31,8 @@ import           Write.Command
 import           Write.Constant
 import           Write.ConstantExtension
 import           Write.Element
-import           Write.Extension
-import           Write.Feature
+import           Write.EnumAlias
+import           Write.EnumExtension
 import           Write.Handle
 import           Write.HeaderVersion
 import           Write.Module
@@ -65,17 +67,19 @@ tShow = T.pack . show
 specWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specWriteElements Spec {..} = do
   let
-    wHeaderVersion = writeHeaderVersion sHeaderVersion
-    wEnums         = writeEnum <$> sEnums
-    wExtensions    = writeExtension <$> sExtensions
-    wFeatures =
-      writeFeature <$> [vulkan10Feature sFeatures, vulkan11Feature sFeatures]
-    wConstants = writeAPIConstant <$> sConstants
+    wHeaderVersion  = writeHeaderVersion sHeaderVersion
+    wEnums          = writeEnum <$> sEnums
+    -- Take the nub here to deal with duplicate extensions
+    wEnumExtensions = uncurry writeEnumExtension <$> nubOrdOn
+      (second exName)
+      [ (eName e, ex) | e <- sEnums, ex <- eExtensions e ]
     reqs =
       (extRequirements =<< sExtensions)
         ++ (   fRequirements
            =<< [vulkan10Feature sFeatures, vulkan11Feature sFeatures]
            )
+    wEnumAliases        = [] -- writeEnumAlias <$> [ ea | r <- reqs, ea <- rEnumAliases r ]
+    wConstants          = writeAPIConstant <$> sConstants
     wConstantExtensions = (fmap writeConstantExtension . rConstants =<< reqs)
   wFuncPointers <- eitherToValidation $ traverse writeFuncPointer sFuncPointers
   wHandles      <- eitherToValidation $ traverse writeHandle sHandles
@@ -92,14 +96,14 @@ specWriteElements Spec {..} = do
     [ [wHeaderVersion]
     , bespokeWriteElements
     , wEnums
-    , wExtensions
+    , wEnumExtensions
+    , wEnumAliases
     , wConstants
     , wConstantExtensions
     , wFuncPointers
     , wHandles
     , wCommands
     , wStructs
-    , wFeatures
     , wAliases
     , wBaseTypes
     ]

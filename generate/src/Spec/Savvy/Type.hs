@@ -218,5 +218,7 @@ typeDepends = \case
   TypeName "xcb_window_t"       -> [WE.TypeName "Xcb_window_t"]
   TypeName "wl_display"         -> [WE.TypeName "Wl_display"]
   TypeName "wl_surface"         -> [WE.TypeName "Wl_surface"]
+  -- TODO: Remove, this is hacky
+  TypeName "Integral a => a"    -> []
   TypeName t                    -> [WE.TypeName t]
   Proto t ps -> typeDepends t ++ [ p | (_, pt) <- ps, p <- typeDepends pt ]

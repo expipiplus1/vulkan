@@ -41,7 +41,9 @@ writeStruct s@Struct {..} = case sStructOrUnion of
                , Import "Foreign.Storable" ["Storable(..)"]
                ]
         weProvides = [TypeConstructor sName, Term sName]
-        weDepends  = nubOrd $ concatMap (typeDepends . smType) sMembers
+        weDepends =
+          nubOrd (concatMap (typeDepends . smType) sMembers)
+            ++ (PatternName <$> (smValues =<< sMembers))
     pure WriteElement {..}
   AUnion -> do
     (weDoc, imports, extensions) <- unionDoc s
@@ -162,7 +164,7 @@ toConstructorName = ("Vk" <>) . upperCaseFirst . stripHungarian
 -- | drop the first word if it is just @p@s and @s@s
 stripHungarian :: Text -> Text
 stripHungarian t = case T.break isUpper t of
-  (firstWord, remainder) | T.all ((== 'p') <||> (== 's')) firstWord ->
+  (firstWord, remainder) | T.all (== 'p') firstWord ->
     lowerCaseFirst remainder
   _ -> t
 

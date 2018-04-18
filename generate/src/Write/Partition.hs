@@ -124,6 +124,7 @@ ignoredUnexportedNames =
   , TermName "vkQueueSignalReleaseImageANDROID"
   , TypeName "VkNativeBufferANDROID"
   , TermName "VkNativeBufferANDROID"
+  , PatternName "VK_STRUCTURE_TYPE_NATIVE_BUFFER_ANDROID"
   ]
 
 explicitlyPlacedNames :: [(Text, HaskellName)]
