@@ -34,3 +34,8 @@ Then massage the pandoc representation.
 
 - emphasis on labels
 - remove enum code blocks
+
+## Differences from the vulkan API
+
+-- TODO: elaborate
+strongly type bools

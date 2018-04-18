@@ -10,11 +10,13 @@ import           Data.Text                                (Text)
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
+import           Spec.Savvy.Enum
 import           Write.Element
+import           Write.Type.Enum
 
 bespokeWriteElements :: [WriteElement]
 bespokeWriteElements =
-  [versions, nullHandle] ++ concat [win32, x11, xcb, wayland, mir, android]
+  [versions, nullHandle, bools] ++ concat [win32, x11, xcb, wayland, mir, android]
 
 versions :: WriteElement
 versions =
@@ -68,6 +70,18 @@ nullHandle =
       weProvides = [Pattern "VK_NULL_HANDLE"]
       weDepends = []
   in WriteElement{..}
+
+bools :: WriteElement
+bools = writeEnum
+  Enum { eName = "VkBool32"
+       , eType = EnumTypeEnum
+       , eAliases = []
+       , eComment = Just "Note that VkBool32 is not strongly typed in the specification"
+       , eElements = [EnumElement "VK_FALSE" (Left 0) Nothing
+                     ,EnumElement "VK_TRUE" (Left 1) Nothing
+                     ]
+       , eExtensions = []
+       }
 
 voidDataWriteElement :: Text -> WriteElement
 voidDataWriteElement n =

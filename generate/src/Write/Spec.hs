@@ -24,6 +24,8 @@ import           Spec.Savvy.Alias
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
+import           Spec.Savvy.BaseType
+import           Spec.Savvy.APIConstant
 import           Spec.Savvy.Feature
 import           Spec.Savvy.Spec
 import qualified Spec.Spec                 as P
@@ -110,7 +112,9 @@ specWriteElements Spec {..} = do
       (second exName)
       [ (eName e, ex) | e <- sEnums, ex <- eExtensions e ]
     wEnumAliases = [] -- writeEnumAlias <$> [ ea | r <- reqs, ea <- rEnumAliases r ]
-    wConstants   = writeAPIConstant <$> sConstants
+    wConstants   =
+      let isAllowedConstant c = acName c `notElem` ["VK_TRUE", "VK_FALSE"]
+      in writeAPIConstant <$> filter isAllowedConstant sConstants
     wConstantExtensions =
       (fmap (writeConstantExtension getEnumerantEnumName) . rConstants =<< reqs)
   wFuncPointers <- eitherToValidation $ traverse writeFuncPointer sFuncPointers
@@ -119,7 +123,9 @@ specWriteElements Spec {..} = do
     $ traverse (writeCommand getEnumAliasTarget) sCommands
   wStructs   <- eitherToValidation $ traverse writeStruct sStructs
   wAliases   <- writeAliases sAliases
-  wBaseTypes <- eitherToValidation $ traverse writeBaseType sBaseTypes
+  wBaseTypes <-
+    let isAllowedBaseType bt = btName bt /= "VkBool32"
+    in eitherToValidation $ traverse writeBaseType (filter isAllowedBaseType sBaseTypes)
   pure $ concat
     [ [wHeaderVersion]
     , bespokeWriteElements
