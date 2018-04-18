@@ -28,8 +28,6 @@ specSeeds :: Spec -> [ModuleSeed]
 specSeeds s =
   bespokeSeeds
     ++ featureToSeeds (vulkan10Feature (sFeatures s))
-    -- Put the extensions before the 1.1 release so they grab names with
-    -- priority
     ++ featureToSeeds (vulkan11Feature (sFeatures s))
     ++ (extensionToSeed <$> sExtensions s)
 

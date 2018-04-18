@@ -52,6 +52,8 @@ partitionElements wes ss = validationToEither $ do
               | we <- providingElements [name]
               , d  <- weDepends we
                 -- Don't allow other modules to grab exports from another seed
+                -- TODO: This may not disallow stealing names, as the
+                -- writeElement could be pulled in by a different requried name
               , d `notElem` allSeedNames
               ]
         in  close
