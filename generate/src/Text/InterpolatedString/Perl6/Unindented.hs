@@ -48,5 +48,3 @@ qci = wrapQuasi unindent qc
 
 qi :: QuasiQuoter
 qi = wrapQuasi unindent q
-
-

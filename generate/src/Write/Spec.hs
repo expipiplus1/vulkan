@@ -8,8 +8,6 @@ module Write.Spec
   ) where
 
 import           Data.Bifunctor
-import System.Directory
-import System.FilePath
 import           Data.Either.Extra
 import           Data.Either.Validation
 import           Data.Foldable
@@ -19,13 +17,15 @@ import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import           Data.Text.Prettyprint.Doc
 import           Say
+import           System.Directory
+import           System.FilePath
 
 import           Spec.Savvy.Alias
+import           Spec.Savvy.APIConstant
+import           Spec.Savvy.BaseType
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
-import           Spec.Savvy.BaseType
-import           Spec.Savvy.APIConstant
 import           Spec.Savvy.Feature
 import           Spec.Savvy.Spec
 import qualified Spec.Spec                 as P
@@ -47,8 +47,13 @@ import           Write.Struct
 import           Write.Type.Enum
 import           Write.Type.FuncPointer
 
-writeSpec :: P.Spec -> IO ()
-writeSpec s = do
+-- TODO: Better error handling
+writeSpec
+  :: FilePath
+  -- ^ Output Directory
+  -> P.Spec
+  -> IO ()
+writeSpec outDir s = do
   case spec s of
     Left  es -> traverse_ (sayErr . prettySpecError) es
     Right s  -> case specWriteElements s of
@@ -62,18 +67,22 @@ writeSpec s = do
             sayErr "Failed to partition write elements:"
             traverse_ (sayErr . prettySpecError) es
           -- Right ps -> traverse_ (say . moduleSummary) ps
-          Right ms -> saveModules ms >>= \case
+          Right ms -> saveModules outDir ms >>= \case
             [] -> pure ()
             es -> do
               sayErr "Failed to write files:"
               traverse_ (sayErr . prettySpecError) es
 
-saveModules :: [Module] -> IO [SpecError]
-saveModules ms = concat <$> (traverse saveModule (zip ms (writeModules ms)))
+saveModules
+  :: FilePath
+  -- ^ Output directory
+  -> [Module]
+  -> IO [SpecError]
+saveModules outDir ms = concat <$> (traverse saveModule (zip ms (writeModules ms)))
   where
     saveModule :: (Module, Doc ()) -> IO [SpecError]
     saveModule (Module {..}, doc) = do
-      let filename = (T.unpack ((<> ".hs") . T.replace "." "/" $ mName))
+      let filename = outDir </> (T.unpack ((<> ".hs") . T.replace "." "/" $ mName))
           dir      = takeDirectory filename
       createDirectoryIfMissing True     dir
       writeFile                filename (show doc)

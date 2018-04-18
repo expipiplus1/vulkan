@@ -12,7 +12,7 @@ import           Write.Spec
 
 main :: IO ()
 main = do
-  [xml]      <- getArgs
+  [outDir, xml]      <- getArgs
   specString <- readFile xml
   specMay    <- parseSpec specString
   case specMay of
@@ -21,6 +21,6 @@ main = do
       exitFailure
     Just spec ->
       -- putStrLn (ppShow spec)
-      writeSpec spec
+      writeSpec outDir spec
       -- let strippedSpec = stripExtensions spec
       --            in writeSpecModules "out" strippedSpec
