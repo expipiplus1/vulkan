@@ -180,10 +180,10 @@ instance Storable VkDescriptorUpdateTemplateEntry where
 -- | TODO: Struct comments
 data VkDescriptorUpdateTemplateCreateInfo = VkDescriptorUpdateTemplateCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkDescriptorUpdateTemplateCreateFlags
   , vkDescriptorUpdateEntryCount :: Word32
-  , vkDescriptorUpdateEntries :: Ptr VkDescriptorUpdateTemplateEntry
+  , vkPDescriptorUpdateEntries :: Ptr VkDescriptorUpdateTemplateEntry
   , vkTemplateType :: VkDescriptorUpdateTemplateType
   , vkDescriptorSetLayout :: VkDescriptorSetLayout
   , vkPipelineBindPoint :: VkPipelineBindPoint
@@ -206,10 +206,10 @@ instance Storable VkDescriptorUpdateTemplateCreateInfo where
                                                   <*> peek (ptr `plusPtr` 56)
                                                   <*> peek (ptr `plusPtr` 64)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorUpdateTemplateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDescriptorUpdateTemplateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorUpdateTemplateCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDescriptorUpdateTemplateCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkDescriptorUpdateEntryCount (poked :: VkDescriptorUpdateTemplateCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkDescriptorUpdateEntries (poked :: VkDescriptorUpdateTemplateCreateInfo))
+                *> poke (ptr `plusPtr` 24) (vkPDescriptorUpdateEntries (poked :: VkDescriptorUpdateTemplateCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkTemplateType (poked :: VkDescriptorUpdateTemplateCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkDescriptorSetLayout (poked :: VkDescriptorUpdateTemplateCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkPipelineBindPoint (poked :: VkDescriptorUpdateTemplateCreateInfo))

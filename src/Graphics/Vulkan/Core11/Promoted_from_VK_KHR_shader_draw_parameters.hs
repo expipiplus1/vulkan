@@ -30,7 +30,7 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = VkStr
 -- | TODO: Struct comments
 data VkPhysicalDeviceShaderDrawParameterFeatures = VkPhysicalDeviceShaderDrawParameterFeatures
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkShaderDrawParameters :: VkBool32
   }
   deriving (Eq, Show)
@@ -42,5 +42,5 @@ instance Storable VkPhysicalDeviceShaderDrawParameterFeatures where
                                                          <*> peek (ptr `plusPtr` 8)
                                                          <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceShaderDrawParameterFeatures))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceShaderDrawParameterFeatures))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceShaderDrawParameterFeatures))
                 *> poke (ptr `plusPtr` 16) (vkShaderDrawParameters (poked :: VkPhysicalDeviceShaderDrawParameterFeatures))

@@ -30,7 +30,7 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = VkStructur
 -- | TODO: Struct comments
 data VkPhysicalDeviceVariablePointerFeatures = VkPhysicalDeviceVariablePointerFeatures
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkVariablePointersStorageBuffer :: VkBool32
   , vkVariablePointers :: VkBool32
   }
@@ -44,6 +44,6 @@ instance Storable VkPhysicalDeviceVariablePointerFeatures where
                                                      <*> peek (ptr `plusPtr` 16)
                                                      <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceVariablePointerFeatures))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceVariablePointerFeatures))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceVariablePointerFeatures))
                 *> poke (ptr `plusPtr` 16) (vkVariablePointersStorageBuffer (poked :: VkPhysicalDeviceVariablePointerFeatures))
                 *> poke (ptr `plusPtr` 20) (vkVariablePointers (poked :: VkPhysicalDeviceVariablePointerFeatures))

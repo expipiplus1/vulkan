@@ -106,7 +106,7 @@ foreign import ccall "vkGetMemoryAndroidHardwareBufferANDROID" vkGetMemoryAndroi
 -- | TODO: Struct comments
 data VkImportAndroidHardwareBufferInfoANDROID = VkImportAndroidHardwareBufferInfoANDROID
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkBuffer :: Ptr AHardwareBuffer
   }
   deriving (Eq, Show)
@@ -118,12 +118,12 @@ instance Storable VkImportAndroidHardwareBufferInfoANDROID where
                                                       <*> peek (ptr `plusPtr` 8)
                                                       <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportAndroidHardwareBufferInfoANDROID))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImportAndroidHardwareBufferInfoANDROID))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportAndroidHardwareBufferInfoANDROID))
                 *> poke (ptr `plusPtr` 16) (vkBuffer (poked :: VkImportAndroidHardwareBufferInfoANDROID))
 -- | TODO: Struct comments
 data VkAndroidHardwareBufferUsageANDROID = VkAndroidHardwareBufferUsageANDROID
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkAndroidHardwareBufferUsage :: Word64
   }
   deriving (Eq, Show)
@@ -135,12 +135,12 @@ instance Storable VkAndroidHardwareBufferUsageANDROID where
                                                  <*> peek (ptr `plusPtr` 8)
                                                  <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkAndroidHardwareBufferUsageANDROID))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkAndroidHardwareBufferUsageANDROID))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkAndroidHardwareBufferUsageANDROID))
                 *> poke (ptr `plusPtr` 16) (vkAndroidHardwareBufferUsage (poked :: VkAndroidHardwareBufferUsageANDROID))
 -- | TODO: Struct comments
 data VkAndroidHardwareBufferPropertiesANDROID = VkAndroidHardwareBufferPropertiesANDROID
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkAllocationSize :: VkDeviceSize
   , vkMemoryTypeBits :: Word32
   }
@@ -154,13 +154,13 @@ instance Storable VkAndroidHardwareBufferPropertiesANDROID where
                                                       <*> peek (ptr `plusPtr` 16)
                                                       <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkAndroidHardwareBufferPropertiesANDROID))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkAndroidHardwareBufferPropertiesANDROID))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkAndroidHardwareBufferPropertiesANDROID))
                 *> poke (ptr `plusPtr` 16) (vkAllocationSize (poked :: VkAndroidHardwareBufferPropertiesANDROID))
                 *> poke (ptr `plusPtr` 24) (vkMemoryTypeBits (poked :: VkAndroidHardwareBufferPropertiesANDROID))
 -- | TODO: Struct comments
 data VkMemoryGetAndroidHardwareBufferInfoANDROID = VkMemoryGetAndroidHardwareBufferInfoANDROID
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemory :: VkDeviceMemory
   }
   deriving (Eq, Show)
@@ -172,12 +172,12 @@ instance Storable VkMemoryGetAndroidHardwareBufferInfoANDROID where
                                                          <*> peek (ptr `plusPtr` 8)
                                                          <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryGetAndroidHardwareBufferInfoANDROID))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryGetAndroidHardwareBufferInfoANDROID))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryGetAndroidHardwareBufferInfoANDROID))
                 *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkMemoryGetAndroidHardwareBufferInfoANDROID))
 -- | TODO: Struct comments
 data VkAndroidHardwareBufferFormatPropertiesANDROID = VkAndroidHardwareBufferFormatPropertiesANDROID
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFormat :: VkFormat
   , vkExternalFormat :: Word64
   , vkFormatFeatures :: VkFormatFeatureFlags
@@ -203,7 +203,7 @@ instance Storable VkAndroidHardwareBufferFormatPropertiesANDROID where
                                                             <*> peek (ptr `plusPtr` 60)
                                                             <*> peek (ptr `plusPtr` 64)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkAndroidHardwareBufferFormatPropertiesANDROID))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkAndroidHardwareBufferFormatPropertiesANDROID))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkAndroidHardwareBufferFormatPropertiesANDROID))
                 *> poke (ptr `plusPtr` 16) (vkFormat (poked :: VkAndroidHardwareBufferFormatPropertiesANDROID))
                 *> poke (ptr `plusPtr` 24) (vkExternalFormat (poked :: VkAndroidHardwareBufferFormatPropertiesANDROID))
                 *> poke (ptr `plusPtr` 32) (vkFormatFeatures (poked :: VkAndroidHardwareBufferFormatPropertiesANDROID))
@@ -215,7 +215,7 @@ instance Storable VkAndroidHardwareBufferFormatPropertiesANDROID where
 -- | TODO: Struct comments
 data VkExternalFormatANDROID = VkExternalFormatANDROID
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkExternalFormat :: Word64
   }
   deriving (Eq, Show)
@@ -227,5 +227,5 @@ instance Storable VkExternalFormatANDROID where
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalFormatANDROID))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExternalFormatANDROID))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalFormatANDROID))
                 *> poke (ptr `plusPtr` 16) (vkExternalFormat (poked :: VkExternalFormatANDROID))

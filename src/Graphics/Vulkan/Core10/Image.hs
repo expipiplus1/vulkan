@@ -176,7 +176,7 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 -- | TODO: Struct comments
 data VkImageCreateInfo = VkImageCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkImageCreateFlags
   , vkImageType :: VkImageType
   , vkFormat :: VkFormat
@@ -188,7 +188,7 @@ data VkImageCreateInfo = VkImageCreateInfo
   , vkUsage :: VkImageUsageFlags
   , vkSharingMode :: VkSharingMode
   , vkQueueFamilyIndexCount :: Word32
-  , vkQueueFamilyIndices :: Ptr Word32
+  , vkPQueueFamilyIndices :: Ptr Word32
   , vkInitialLayout :: VkImageLayout
   }
   deriving (Eq, Show)
@@ -212,7 +212,7 @@ instance Storable VkImageCreateInfo where
                                <*> peek (ptr `plusPtr` 72)
                                <*> peek (ptr `plusPtr` 80)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkImageCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkImageType (poked :: VkImageCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkFormat (poked :: VkImageCreateInfo))
@@ -224,7 +224,7 @@ instance Storable VkImageCreateInfo where
                 *> poke (ptr `plusPtr` 56) (vkUsage (poked :: VkImageCreateInfo))
                 *> poke (ptr `plusPtr` 60) (vkSharingMode (poked :: VkImageCreateInfo))
                 *> poke (ptr `plusPtr` 64) (vkQueueFamilyIndexCount (poked :: VkImageCreateInfo))
-                *> poke (ptr `plusPtr` 72) (vkQueueFamilyIndices (poked :: VkImageCreateInfo))
+                *> poke (ptr `plusPtr` 72) (vkPQueueFamilyIndices (poked :: VkImageCreateInfo))
                 *> poke (ptr `plusPtr` 80) (vkInitialLayout (poked :: VkImageCreateInfo))
 -- | TODO: Struct comments
 data VkSubresourceLayout = VkSubresourceLayout

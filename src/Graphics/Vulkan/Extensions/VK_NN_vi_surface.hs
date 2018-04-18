@@ -99,7 +99,7 @@ foreign import ccall "vkCreateViSurfaceNN" vkCreateViSurfaceNN :: ("instance" ::
 -- | TODO: Struct comments
 data VkViSurfaceCreateInfoNN = VkViSurfaceCreateInfoNN
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkViSurfaceCreateFlagsNN
   , vkWindow :: Ptr ()
   }
@@ -113,6 +113,6 @@ instance Storable VkViSurfaceCreateInfoNN where
                                      <*> peek (ptr `plusPtr` 16)
                                      <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkViSurfaceCreateInfoNN))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkViSurfaceCreateInfoNN))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkViSurfaceCreateInfoNN))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkViSurfaceCreateInfoNN))
                 *> poke (ptr `plusPtr` 24) (vkWindow (poked :: VkViSurfaceCreateInfoNN))

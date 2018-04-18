@@ -81,7 +81,7 @@ foreign import ccall "vkImportFenceWin32HandleKHR" vkImportFenceWin32HandleKHR :
 -- | TODO: Struct comments
 data VkImportFenceWin32HandleInfoKHR = VkImportFenceWin32HandleInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFence :: VkFence
   , vkFlags :: VkFenceImportFlags
   , vkHandleType :: VkExternalFenceHandleTypeFlagBits
@@ -101,7 +101,7 @@ instance Storable VkImportFenceWin32HandleInfoKHR where
                                              <*> peek (ptr `plusPtr` 32)
                                              <*> peek (ptr `plusPtr` 40)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportFenceWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImportFenceWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportFenceWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFence (poked :: VkImportFenceWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkFlags (poked :: VkImportFenceWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 28) (vkHandleType (poked :: VkImportFenceWin32HandleInfoKHR))
@@ -110,8 +110,8 @@ instance Storable VkImportFenceWin32HandleInfoKHR where
 -- | TODO: Struct comments
 data VkExportFenceWin32HandleInfoKHR = VkExportFenceWin32HandleInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
-  , vkAttributes :: Ptr SECURITY_ATTRIBUTES
+  , vkPNext :: Ptr ()
+  , vkPAttributes :: Ptr SECURITY_ATTRIBUTES
   , vkDwAccess :: DWORD
   , vkName :: LPCWSTR
   }
@@ -126,14 +126,14 @@ instance Storable VkExportFenceWin32HandleInfoKHR where
                                              <*> peek (ptr `plusPtr` 24)
                                              <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportFenceWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExportFenceWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 16) (vkAttributes (poked :: VkExportFenceWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportFenceWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 16) (vkPAttributes (poked :: VkExportFenceWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDwAccess (poked :: VkExportFenceWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkExportFenceWin32HandleInfoKHR))
 -- | TODO: Struct comments
 data VkFenceGetWin32HandleInfoKHR = VkFenceGetWin32HandleInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFence :: VkFence
   , vkHandleType :: VkExternalFenceHandleTypeFlagBits
   }
@@ -147,6 +147,6 @@ instance Storable VkFenceGetWin32HandleInfoKHR where
                                           <*> peek (ptr `plusPtr` 16)
                                           <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFenceGetWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkFenceGetWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFenceGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFence (poked :: VkFenceGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkFenceGetWin32HandleInfoKHR))

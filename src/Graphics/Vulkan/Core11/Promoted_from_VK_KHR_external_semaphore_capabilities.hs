@@ -154,7 +154,7 @@ foreign import ccall "vkGetPhysicalDeviceExternalSemaphoreProperties" vkGetPhysi
 -- | TODO: Struct comments
 data VkPhysicalDeviceExternalSemaphoreInfo = VkPhysicalDeviceExternalSemaphoreInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleType :: VkExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Eq, Show)
@@ -166,12 +166,12 @@ instance Storable VkPhysicalDeviceExternalSemaphoreInfo where
                                                    <*> peek (ptr `plusPtr` 8)
                                                    <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalSemaphoreInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceExternalSemaphoreInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalSemaphoreInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkPhysicalDeviceExternalSemaphoreInfo))
 -- | TODO: Struct comments
 data VkExternalSemaphoreProperties = VkExternalSemaphoreProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkExportFromImportedHandleTypes :: VkExternalSemaphoreHandleTypeFlags
   , vkCompatibleHandleTypes :: VkExternalSemaphoreHandleTypeFlags
   , vkExternalSemaphoreFeatures :: VkExternalSemaphoreFeatureFlags
@@ -187,7 +187,7 @@ instance Storable VkExternalSemaphoreProperties where
                                            <*> peek (ptr `plusPtr` 20)
                                            <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalSemaphoreProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExternalSemaphoreProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalSemaphoreProperties))
                 *> poke (ptr `plusPtr` 16) (vkExportFromImportedHandleTypes (poked :: VkExternalSemaphoreProperties))
                 *> poke (ptr `plusPtr` 20) (vkCompatibleHandleTypes (poked :: VkExternalSemaphoreProperties))
                 *> poke (ptr `plusPtr` 24) (vkExternalSemaphoreFeatures (poked :: VkExternalSemaphoreProperties))

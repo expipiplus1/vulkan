@@ -51,12 +51,12 @@ type VkMemoryDedicatedRequirementsKHR = VkMemoryDedicatedRequirements
 
 
 pattern VkMemoryDedicatedRequirementsKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("prefersDedicatedAllocation" ::: VkBool32) -> ("requiresDedicatedAllocation" ::: VkBool32) -> VkMemoryDedicatedRequirementsKHR
-pattern VkMemoryDedicatedRequirementsKHR vkSType vkNext vkPrefersDedicatedAllocation vkRequiresDedicatedAllocation = VkMemoryDedicatedRequirements vkSType vkNext vkPrefersDedicatedAllocation vkRequiresDedicatedAllocation
+pattern VkMemoryDedicatedRequirementsKHR vkSType vkPNext vkPrefersDedicatedAllocation vkRequiresDedicatedAllocation = VkMemoryDedicatedRequirements vkSType vkPNext vkPrefersDedicatedAllocation vkRequiresDedicatedAllocation
 type VkMemoryDedicatedAllocateInfoKHR = VkMemoryDedicatedAllocateInfo
 
 
 pattern VkMemoryDedicatedAllocateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("image" ::: VkImage) -> ("buffer" ::: VkBuffer) -> VkMemoryDedicatedAllocateInfoKHR
-pattern VkMemoryDedicatedAllocateInfoKHR vkSType vkNext vkImage vkBuffer = VkMemoryDedicatedAllocateInfo vkSType vkNext vkImage vkBuffer
+pattern VkMemoryDedicatedAllocateInfoKHR vkSType vkPNext vkImage vkBuffer = VkMemoryDedicatedAllocateInfo vkSType vkPNext vkImage vkBuffer
 pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS
 pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR :: VkStructureType

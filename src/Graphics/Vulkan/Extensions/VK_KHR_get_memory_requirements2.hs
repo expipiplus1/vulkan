@@ -87,27 +87,27 @@ type VkBufferMemoryRequirementsInfo2KHR = VkBufferMemoryRequirementsInfo2
 
 
 pattern VkBufferMemoryRequirementsInfo2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("buffer" ::: VkBuffer) -> VkBufferMemoryRequirementsInfo2KHR
-pattern VkBufferMemoryRequirementsInfo2KHR vkSType vkNext vkBuffer = VkBufferMemoryRequirementsInfo2 vkSType vkNext vkBuffer
+pattern VkBufferMemoryRequirementsInfo2KHR vkSType vkPNext vkBuffer = VkBufferMemoryRequirementsInfo2 vkSType vkPNext vkBuffer
 type VkImageMemoryRequirementsInfo2KHR = VkImageMemoryRequirementsInfo2
 
 
 pattern VkImageMemoryRequirementsInfo2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("image" ::: VkImage) -> VkImageMemoryRequirementsInfo2KHR
-pattern VkImageMemoryRequirementsInfo2KHR vkSType vkNext vkImage = VkImageMemoryRequirementsInfo2 vkSType vkNext vkImage
+pattern VkImageMemoryRequirementsInfo2KHR vkSType vkPNext vkImage = VkImageMemoryRequirementsInfo2 vkSType vkPNext vkImage
 type VkImageSparseMemoryRequirementsInfo2KHR = VkImageSparseMemoryRequirementsInfo2
 
 
 pattern VkImageSparseMemoryRequirementsInfo2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("image" ::: VkImage) -> VkImageSparseMemoryRequirementsInfo2KHR
-pattern VkImageSparseMemoryRequirementsInfo2KHR vkSType vkNext vkImage = VkImageSparseMemoryRequirementsInfo2 vkSType vkNext vkImage
+pattern VkImageSparseMemoryRequirementsInfo2KHR vkSType vkPNext vkImage = VkImageSparseMemoryRequirementsInfo2 vkSType vkPNext vkImage
 type VkMemoryRequirements2KHR = VkMemoryRequirements2
 
 
 pattern VkMemoryRequirements2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("memoryRequirements" ::: VkMemoryRequirements) -> VkMemoryRequirements2KHR
-pattern VkMemoryRequirements2KHR vkSType vkNext vkMemoryRequirements = VkMemoryRequirements2 vkSType vkNext vkMemoryRequirements
+pattern VkMemoryRequirements2KHR vkSType vkPNext vkMemoryRequirements = VkMemoryRequirements2 vkSType vkPNext vkMemoryRequirements
 type VkSparseImageMemoryRequirements2KHR = VkSparseImageMemoryRequirements2
 
 
 pattern VkSparseImageMemoryRequirements2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("memoryRequirements" ::: VkSparseImageMemoryRequirements) -> VkSparseImageMemoryRequirements2KHR
-pattern VkSparseImageMemoryRequirements2KHR vkSType vkNext vkMemoryRequirements = VkSparseImageMemoryRequirements2 vkSType vkNext vkMemoryRequirements
+pattern VkSparseImageMemoryRequirements2KHR vkSType vkPNext vkMemoryRequirements = VkSparseImageMemoryRequirements2 vkSType vkPNext vkMemoryRequirements
 pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2_KHR = VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2
 pattern VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2_KHR :: VkStructureType

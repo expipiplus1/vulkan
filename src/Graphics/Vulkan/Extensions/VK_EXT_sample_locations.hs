@@ -118,11 +118,11 @@ instance Storable VkSampleLocationEXT where
 -- | TODO: Struct comments
 data VkSampleLocationsInfoEXT = VkSampleLocationsInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSampleLocationsPerPixel :: VkSampleCountFlagBits
   , vkSampleLocationGridSize :: VkExtent2D
   , vkSampleLocationsCount :: Word32
-  , vkSampleLocations :: Ptr VkSampleLocationEXT
+  , vkPSampleLocations :: Ptr VkSampleLocationEXT
   }
   deriving (Eq, Show)
 
@@ -136,11 +136,11 @@ instance Storable VkSampleLocationsInfoEXT where
                                       <*> peek (ptr `plusPtr` 28)
                                       <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSampleLocationsInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSampleLocationsInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSampleLocationsInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkSampleLocationsPerPixel (poked :: VkSampleLocationsInfoEXT))
                 *> poke (ptr `plusPtr` 20) (vkSampleLocationGridSize (poked :: VkSampleLocationsInfoEXT))
                 *> poke (ptr `plusPtr` 28) (vkSampleLocationsCount (poked :: VkSampleLocationsInfoEXT))
-                *> poke (ptr `plusPtr` 32) (vkSampleLocations (poked :: VkSampleLocationsInfoEXT))
+                *> poke (ptr `plusPtr` 32) (vkPSampleLocations (poked :: VkSampleLocationsInfoEXT))
 -- | TODO: Struct comments
 data VkAttachmentSampleLocationsEXT = VkAttachmentSampleLocationsEXT
   { vkAttachmentIndex :: Word32
@@ -172,11 +172,11 @@ instance Storable VkSubpassSampleLocationsEXT where
 -- | TODO: Struct comments
 data VkRenderPassSampleLocationsBeginInfoEXT = VkRenderPassSampleLocationsBeginInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkAttachmentInitialSampleLocationsCount :: Word32
-  , vkAttachmentInitialSampleLocations :: Ptr VkAttachmentSampleLocationsEXT
+  , vkPAttachmentInitialSampleLocations :: Ptr VkAttachmentSampleLocationsEXT
   , vkPostSubpassSampleLocationsCount :: Word32
-  , vkPostSubpassSampleLocations :: Ptr VkSubpassSampleLocationsEXT
+  , vkPPostSubpassSampleLocations :: Ptr VkSubpassSampleLocationsEXT
   }
   deriving (Eq, Show)
 
@@ -190,15 +190,15 @@ instance Storable VkRenderPassSampleLocationsBeginInfoEXT where
                                                      <*> peek (ptr `plusPtr` 32)
                                                      <*> peek (ptr `plusPtr` 40)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkAttachmentInitialSampleLocationsCount (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
-                *> poke (ptr `plusPtr` 24) (vkAttachmentInitialSampleLocations (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
+                *> poke (ptr `plusPtr` 24) (vkPAttachmentInitialSampleLocations (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPostSubpassSampleLocationsCount (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
-                *> poke (ptr `plusPtr` 40) (vkPostSubpassSampleLocations (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
+                *> poke (ptr `plusPtr` 40) (vkPPostSubpassSampleLocations (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
 -- | TODO: Struct comments
 data VkPipelineSampleLocationsStateCreateInfoEXT = VkPipelineSampleLocationsStateCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSampleLocationsEnable :: VkBool32
   , vkSampleLocationsInfo :: VkSampleLocationsInfoEXT
   }
@@ -212,13 +212,13 @@ instance Storable VkPipelineSampleLocationsStateCreateInfoEXT where
                                                          <*> peek (ptr `plusPtr` 16)
                                                          <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineSampleLocationsStateCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineSampleLocationsStateCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineSampleLocationsStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkSampleLocationsEnable (poked :: VkPipelineSampleLocationsStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkSampleLocationsInfo (poked :: VkPipelineSampleLocationsStateCreateInfoEXT))
 -- | TODO: Struct comments
 data VkPhysicalDeviceSampleLocationsPropertiesEXT = VkPhysicalDeviceSampleLocationsPropertiesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSampleLocationSampleCounts :: VkSampleCountFlags
   , vkMaxSampleLocationGridSize :: VkExtent2D
   , vkSampleLocationCoordinateRange :: Vector 2 CFloat
@@ -238,7 +238,7 @@ instance Storable VkPhysicalDeviceSampleLocationsPropertiesEXT where
                                                           <*> peek (ptr `plusPtr` 36)
                                                           <*> peek (ptr `plusPtr` 40)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkSampleLocationSampleCounts (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
                 *> poke (ptr `plusPtr` 20) (vkMaxSampleLocationGridSize (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
                 *> poke (ptr `plusPtr` 28) (vkSampleLocationCoordinateRange (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
@@ -247,7 +247,7 @@ instance Storable VkPhysicalDeviceSampleLocationsPropertiesEXT where
 -- | TODO: Struct comments
 data VkMultisamplePropertiesEXT = VkMultisamplePropertiesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMaxSampleLocationGridSize :: VkExtent2D
   }
   deriving (Eq, Show)
@@ -259,5 +259,5 @@ instance Storable VkMultisamplePropertiesEXT where
                                         <*> peek (ptr `plusPtr` 8)
                                         <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMultisamplePropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMultisamplePropertiesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMultisamplePropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxSampleLocationGridSize (poked :: VkMultisamplePropertiesEXT))

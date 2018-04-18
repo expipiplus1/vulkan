@@ -201,7 +201,7 @@ foreign import ccall "vkGetSwapchainCounterEXT" vkGetSwapchainCounterEXT :: ("de
 -- | TODO: Struct comments
 data VkDisplayPowerInfoEXT = VkDisplayPowerInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPowerState :: VkDisplayPowerStateEXT
   }
   deriving (Eq, Show)
@@ -213,12 +213,12 @@ instance Storable VkDisplayPowerInfoEXT where
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayPowerInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDisplayPowerInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayPowerInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkPowerState (poked :: VkDisplayPowerInfoEXT))
 -- | TODO: Struct comments
 data VkDeviceEventInfoEXT = VkDeviceEventInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDeviceEvent :: VkDeviceEventTypeEXT
   }
   deriving (Eq, Show)
@@ -230,12 +230,12 @@ instance Storable VkDeviceEventInfoEXT where
                                   <*> peek (ptr `plusPtr` 8)
                                   <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceEventInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceEventInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceEventInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkDeviceEvent (poked :: VkDeviceEventInfoEXT))
 -- | TODO: Struct comments
 data VkDisplayEventInfoEXT = VkDisplayEventInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDisplayEvent :: VkDisplayEventTypeEXT
   }
   deriving (Eq, Show)
@@ -247,12 +247,12 @@ instance Storable VkDisplayEventInfoEXT where
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayEventInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDisplayEventInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayEventInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkDisplayEvent (poked :: VkDisplayEventInfoEXT))
 -- | TODO: Struct comments
 data VkSwapchainCounterCreateInfoEXT = VkSwapchainCounterCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSurfaceCounters :: VkSurfaceCounterFlagsEXT
   }
   deriving (Eq, Show)
@@ -264,5 +264,5 @@ instance Storable VkSwapchainCounterCreateInfoEXT where
                                              <*> peek (ptr `plusPtr` 8)
                                              <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSwapchainCounterCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSwapchainCounterCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSwapchainCounterCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkSurfaceCounters (poked :: VkSwapchainCounterCreateInfoEXT))

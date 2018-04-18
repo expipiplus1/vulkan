@@ -94,7 +94,7 @@ foreign import ccall "vkDestroyBufferView" vkDestroyBufferView :: ("device" ::: 
 -- | TODO: Struct comments
 data VkBufferViewCreateInfo = VkBufferViewCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkBufferViewCreateFlags
   , vkBuffer :: VkBuffer
   , vkFormat :: VkFormat
@@ -114,7 +114,7 @@ instance Storable VkBufferViewCreateInfo where
                                     <*> peek (ptr `plusPtr` 40)
                                     <*> peek (ptr `plusPtr` 48)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferViewCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkBufferViewCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferViewCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkBufferViewCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkBuffer (poked :: VkBufferViewCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkFormat (poked :: VkBufferViewCreateInfo))

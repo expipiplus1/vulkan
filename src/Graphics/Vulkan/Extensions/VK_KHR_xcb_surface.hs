@@ -113,7 +113,7 @@ foreign import ccall "vkGetPhysicalDeviceXcbPresentationSupportKHR" vkGetPhysica
 -- | TODO: Struct comments
 data VkXcbSurfaceCreateInfoKHR = VkXcbSurfaceCreateInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkXcbSurfaceCreateFlagsKHR
   , vkConnection :: Ptr Xcb_connection_t
   , vkWindow :: Xcb_window_t
@@ -129,7 +129,7 @@ instance Storable VkXcbSurfaceCreateInfoKHR where
                                        <*> peek (ptr `plusPtr` 24)
                                        <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkXcbSurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkXcbSurfaceCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkXcbSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkXcbSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkConnection (poked :: VkXcbSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkWindow (poked :: VkXcbSurfaceCreateInfoKHR))

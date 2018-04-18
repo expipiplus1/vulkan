@@ -175,9 +175,9 @@ instance Storable VkInputAttachmentAspectReference where
 -- | TODO: Struct comments
 data VkRenderPassInputAttachmentAspectCreateInfo = VkRenderPassInputAttachmentAspectCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkAspectReferenceCount :: Word32
-  , vkAspectReferences :: Ptr VkInputAttachmentAspectReference
+  , vkPAspectReferences :: Ptr VkInputAttachmentAspectReference
   }
   deriving (Eq, Show)
 
@@ -189,13 +189,13 @@ instance Storable VkRenderPassInputAttachmentAspectCreateInfo where
                                                          <*> peek (ptr `plusPtr` 16)
                                                          <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkAspectReferenceCount (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkAspectReferences (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
+                *> poke (ptr `plusPtr` 24) (vkPAspectReferences (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
 -- | TODO: Struct comments
 data VkPhysicalDevicePointClippingProperties = VkPhysicalDevicePointClippingProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPointClippingBehavior :: VkPointClippingBehavior
   }
   deriving (Eq, Show)
@@ -207,12 +207,12 @@ instance Storable VkPhysicalDevicePointClippingProperties where
                                                      <*> peek (ptr `plusPtr` 8)
                                                      <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDevicePointClippingProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDevicePointClippingProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDevicePointClippingProperties))
                 *> poke (ptr `plusPtr` 16) (vkPointClippingBehavior (poked :: VkPhysicalDevicePointClippingProperties))
 -- | TODO: Struct comments
 data VkImageViewUsageCreateInfo = VkImageViewUsageCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkUsage :: VkImageUsageFlags
   }
   deriving (Eq, Show)
@@ -224,12 +224,12 @@ instance Storable VkImageViewUsageCreateInfo where
                                         <*> peek (ptr `plusPtr` 8)
                                         <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageViewUsageCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImageViewUsageCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageViewUsageCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkUsage (poked :: VkImageViewUsageCreateInfo))
 -- | TODO: Struct comments
 data VkPipelineTessellationDomainOriginStateCreateInfo = VkPipelineTessellationDomainOriginStateCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDomainOrigin :: VkTessellationDomainOrigin
   }
   deriving (Eq, Show)
@@ -241,5 +241,5 @@ instance Storable VkPipelineTessellationDomainOriginStateCreateInfo where
                                                                <*> peek (ptr `plusPtr` 8)
                                                                <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineTessellationDomainOriginStateCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineTessellationDomainOriginStateCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineTessellationDomainOriginStateCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkDomainOrigin (poked :: VkPipelineTessellationDomainOriginStateCreateInfo))

@@ -145,7 +145,7 @@ foreign import ccall "vkCmdSetDiscardRectangleEXT" vkCmdSetDiscardRectangleEXT :
 -- | TODO: Struct comments
 data VkPhysicalDeviceDiscardRectanglePropertiesEXT = VkPhysicalDeviceDiscardRectanglePropertiesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMaxDiscardRectangles :: Word32
   }
   deriving (Eq, Show)
@@ -157,16 +157,16 @@ instance Storable VkPhysicalDeviceDiscardRectanglePropertiesEXT where
                                                            <*> peek (ptr `plusPtr` 8)
                                                            <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxDiscardRectangles (poked :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
 -- | TODO: Struct comments
 data VkPipelineDiscardRectangleStateCreateInfoEXT = VkPipelineDiscardRectangleStateCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkPipelineDiscardRectangleStateCreateFlagsEXT
   , vkDiscardRectangleMode :: VkDiscardRectangleModeEXT
   , vkDiscardRectangleCount :: Word32
-  , vkDiscardRectangles :: Ptr VkRect2D
+  , vkPDiscardRectangles :: Ptr VkRect2D
   }
   deriving (Eq, Show)
 
@@ -180,8 +180,8 @@ instance Storable VkPipelineDiscardRectangleStateCreateInfoEXT where
                                                           <*> peek (ptr `plusPtr` 24)
                                                           <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 20) (vkDiscardRectangleMode (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkDiscardRectangleCount (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
-                *> poke (ptr `plusPtr` 32) (vkDiscardRectangles (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
+                *> poke (ptr `plusPtr` 32) (vkPDiscardRectangles (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))

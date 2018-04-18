@@ -42,6 +42,6 @@ type VkPhysicalDevice16BitStorageFeaturesKHR = VkPhysicalDevice16BitStorageFeatu
 
 
 pattern VkPhysicalDevice16BitStorageFeaturesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("storageBuffer16BitAccess" ::: VkBool32) -> ("uniformAndStorageBuffer16BitAccess" ::: VkBool32) -> ("storagePushConstant16" ::: VkBool32) -> ("storageInputOutput16" ::: VkBool32) -> VkPhysicalDevice16BitStorageFeaturesKHR
-pattern VkPhysicalDevice16BitStorageFeaturesKHR vkSType vkNext vkStorageBuffer16BitAccess vkUniformAndStorageBuffer16BitAccess vkStoragePushConstant16 vkStorageInputOutput16 = VkPhysicalDevice16BitStorageFeatures vkSType vkNext vkStorageBuffer16BitAccess vkUniformAndStorageBuffer16BitAccess vkStoragePushConstant16 vkStorageInputOutput16
+pattern VkPhysicalDevice16BitStorageFeaturesKHR vkSType vkPNext vkStorageBuffer16BitAccess vkUniformAndStorageBuffer16BitAccess vkStoragePushConstant16 vkStorageInputOutput16 = VkPhysicalDevice16BitStorageFeatures vkSType vkPNext vkStorageBuffer16BitAccess vkUniformAndStorageBuffer16BitAccess vkStoragePushConstant16 vkStorageInputOutput16
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES_KHR = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES

@@ -151,19 +151,19 @@ fixUnionMemberName :: StructMember -> StructMember
 fixUnionMemberName s@StructMember {..} =
   StructMember {smName = toConstructorName smName, ..}
 
--- | Prefix with "vk", drop hungarian notation
+-- | Prefix with "vk", make hungarian notation uppercase
 toRecordMemberName :: Text -> Text
-toRecordMemberName = ("vk" <>) . upperCaseFirst . stripHungarian
+toRecordMemberName = ("vk" <>) . upperCaseFirst . uppercaseHungarian
 
--- | Prefix with "Vk", drop hungarian
+-- | Prefix with "Vk", make hungarian notation uppercase
 toConstructorName :: Text -> Text
-toConstructorName = ("Vk" <>) . upperCaseFirst . stripHungarian
+toConstructorName = ("Vk" <>) . upperCaseFirst . uppercaseHungarian
 
 -- | drop the first word if it is just @p@s and @s@s
-stripHungarian :: Text -> Text
-stripHungarian t = case T.break isUpper t of
-  (firstWord, remainder) | T.all (== 'p') firstWord ->
-    lowerCaseFirst remainder
+uppercaseHungarian :: Text -> Text
+uppercaseHungarian t = case T.break isUpper t of
+  (firstWord, remainder) | T.all ((== 'p') <||> (== 's')) firstWord ->
+    T.map toUpper firstWord <> remainder
   _ -> t
 
 upperCaseFirst :: Text -> Text

@@ -277,7 +277,7 @@ foreign import ccall "vkDestroySampler" vkDestroySampler :: ("device" ::: VkDevi
 -- | TODO: Struct comments
 data VkSamplerCreateInfo = VkSamplerCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkSamplerCreateFlags
   , vkMagFilter :: VkFilter
   , vkMinFilter :: VkFilter
@@ -319,7 +319,7 @@ instance Storable VkSamplerCreateInfo where
                                  <*> peek (ptr `plusPtr` 72)
                                  <*> peek (ptr `plusPtr` 76)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSamplerCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSamplerCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkMagFilter (poked :: VkSamplerCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkMinFilter (poked :: VkSamplerCreateInfo))

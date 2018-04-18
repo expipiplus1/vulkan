@@ -281,7 +281,7 @@ instance Storable VkImageSubresourceRange where
 -- | TODO: Struct comments
 data VkImageViewCreateInfo = VkImageViewCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkImageViewCreateFlags
   , vkImage :: VkImage
   , vkViewType :: VkImageViewType
@@ -303,7 +303,7 @@ instance Storable VkImageViewCreateInfo where
                                    <*> peek (ptr `plusPtr` 40)
                                    <*> peek (ptr `plusPtr` 56)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageViewCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImageViewCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageViewCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkImageViewCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkImage (poked :: VkImageViewCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkViewType (poked :: VkImageViewCreateInfo))

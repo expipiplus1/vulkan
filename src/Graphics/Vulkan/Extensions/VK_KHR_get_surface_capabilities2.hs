@@ -72,7 +72,7 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceFormats2KHR" vkGetPhysicalDevice
 -- | TODO: Struct comments
 data VkPhysicalDeviceSurfaceInfo2KHR = VkPhysicalDeviceSurfaceInfo2KHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSurface :: VkSurfaceKHR
   }
   deriving (Eq, Show)
@@ -84,12 +84,12 @@ instance Storable VkPhysicalDeviceSurfaceInfo2KHR where
                                              <*> peek (ptr `plusPtr` 8)
                                              <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceSurfaceInfo2KHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceSurfaceInfo2KHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSurfaceInfo2KHR))
                 *> poke (ptr `plusPtr` 16) (vkSurface (poked :: VkPhysicalDeviceSurfaceInfo2KHR))
 -- | TODO: Struct comments
 data VkSurfaceCapabilities2KHR = VkSurfaceCapabilities2KHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSurfaceCapabilities :: VkSurfaceCapabilitiesKHR
   }
   deriving (Eq, Show)
@@ -101,12 +101,12 @@ instance Storable VkSurfaceCapabilities2KHR where
                                        <*> peek (ptr `plusPtr` 8)
                                        <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSurfaceCapabilities2KHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSurfaceCapabilities2KHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSurfaceCapabilities2KHR))
                 *> poke (ptr `plusPtr` 16) (vkSurfaceCapabilities (poked :: VkSurfaceCapabilities2KHR))
 -- | TODO: Struct comments
 data VkSurfaceFormat2KHR = VkSurfaceFormat2KHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSurfaceFormat :: VkSurfaceFormatKHR
   }
   deriving (Eq, Show)
@@ -118,5 +118,5 @@ instance Storable VkSurfaceFormat2KHR where
                                  <*> peek (ptr `plusPtr` 8)
                                  <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSurfaceFormat2KHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSurfaceFormat2KHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSurfaceFormat2KHR))
                 *> poke (ptr `plusPtr` 16) (vkSurfaceFormat (poked :: VkSurfaceFormat2KHR))

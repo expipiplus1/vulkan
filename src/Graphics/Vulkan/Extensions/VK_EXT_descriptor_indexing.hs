@@ -149,7 +149,7 @@ pattern VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME = "VK_EXT_descriptor_indexing"
 -- | TODO: Struct comments
 data VkPhysicalDeviceDescriptorIndexingFeaturesEXT = VkPhysicalDeviceDescriptorIndexingFeaturesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkShaderInputAttachmentArrayDynamicIndexing :: VkBool32
   , vkShaderUniformTexelBufferArrayDynamicIndexing :: VkBool32
   , vkShaderStorageTexelBufferArrayDynamicIndexing :: VkBool32
@@ -199,7 +199,7 @@ instance Storable VkPhysicalDeviceDescriptorIndexingFeaturesEXT where
                                                            <*> peek (ptr `plusPtr` 88)
                                                            <*> peek (ptr `plusPtr` 92)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkShaderInputAttachmentArrayDynamicIndexing (poked :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
                 *> poke (ptr `plusPtr` 20) (vkShaderUniformTexelBufferArrayDynamicIndexing (poked :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
                 *> poke (ptr `plusPtr` 24) (vkShaderStorageTexelBufferArrayDynamicIndexing (poked :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
@@ -223,7 +223,7 @@ instance Storable VkPhysicalDeviceDescriptorIndexingFeaturesEXT where
 -- | TODO: Struct comments
 data VkPhysicalDeviceDescriptorIndexingPropertiesEXT = VkPhysicalDeviceDescriptorIndexingPropertiesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMaxUpdateAfterBindDescriptorsInAllPools :: Word32
   , vkShaderUniformBufferArrayNonUniformIndexingNative :: VkBool32
   , vkShaderSampledImageArrayNonUniformIndexingNative :: VkBool32
@@ -279,7 +279,7 @@ instance Storable VkPhysicalDeviceDescriptorIndexingPropertiesEXT where
                                                              <*> peek (ptr `plusPtr` 100)
                                                              <*> peek (ptr `plusPtr` 104)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxUpdateAfterBindDescriptorsInAllPools (poked :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
                 *> poke (ptr `plusPtr` 20) (vkShaderUniformBufferArrayNonUniformIndexingNative (poked :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
                 *> poke (ptr `plusPtr` 24) (vkShaderSampledImageArrayNonUniformIndexingNative (poked :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
@@ -306,9 +306,9 @@ instance Storable VkPhysicalDeviceDescriptorIndexingPropertiesEXT where
 -- | TODO: Struct comments
 data VkDescriptorSetLayoutBindingFlagsCreateInfoEXT = VkDescriptorSetLayoutBindingFlagsCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkBindingCount :: Word32
-  , vkBindingFlags :: Ptr VkDescriptorBindingFlagsEXT
+  , vkPBindingFlags :: Ptr VkDescriptorBindingFlagsEXT
   }
   deriving (Eq, Show)
 
@@ -320,15 +320,15 @@ instance Storable VkDescriptorSetLayoutBindingFlagsCreateInfoEXT where
                                                             <*> peek (ptr `plusPtr` 16)
                                                             <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkBindingCount (poked :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
-                *> poke (ptr `plusPtr` 24) (vkBindingFlags (poked :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
+                *> poke (ptr `plusPtr` 24) (vkPBindingFlags (poked :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
 -- | TODO: Struct comments
 data VkDescriptorSetVariableDescriptorCountAllocateInfoEXT = VkDescriptorSetVariableDescriptorCountAllocateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDescriptorSetCount :: Word32
-  , vkDescriptorCounts :: Ptr Word32
+  , vkPDescriptorCounts :: Ptr Word32
   }
   deriving (Eq, Show)
 
@@ -340,13 +340,13 @@ instance Storable VkDescriptorSetVariableDescriptorCountAllocateInfoEXT where
                                                                    <*> peek (ptr `plusPtr` 16)
                                                                    <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkDescriptorSetCount (poked :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
-                *> poke (ptr `plusPtr` 24) (vkDescriptorCounts (poked :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
+                *> poke (ptr `plusPtr` 24) (vkPDescriptorCounts (poked :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
 -- | TODO: Struct comments
 data VkDescriptorSetVariableDescriptorCountLayoutSupportEXT = VkDescriptorSetVariableDescriptorCountLayoutSupportEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMaxVariableDescriptorCount :: Word32
   }
   deriving (Eq, Show)
@@ -358,6 +358,6 @@ instance Storable VkDescriptorSetVariableDescriptorCountLayoutSupportEXT where
                                                                     <*> peek (ptr `plusPtr` 8)
                                                                     <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxVariableDescriptorCount (poked :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
 type VkDescriptorBindingFlagsEXT = VkDescriptorBindingFlagBitsEXT

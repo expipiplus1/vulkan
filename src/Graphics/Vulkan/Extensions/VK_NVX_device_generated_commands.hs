@@ -400,7 +400,7 @@ foreign import ccall "vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX" vkGetPh
 -- | TODO: Struct comments
 data VkDeviceGeneratedCommandsFeaturesNVX = VkDeviceGeneratedCommandsFeaturesNVX
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkComputeBindingPointSupport :: VkBool32
   }
   deriving (Eq, Show)
@@ -412,12 +412,12 @@ instance Storable VkDeviceGeneratedCommandsFeaturesNVX where
                                                   <*> peek (ptr `plusPtr` 8)
                                                   <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
                 *> poke (ptr `plusPtr` 16) (vkComputeBindingPointSupport (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
 -- | TODO: Struct comments
 data VkDeviceGeneratedCommandsLimitsNVX = VkDeviceGeneratedCommandsLimitsNVX
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMaxIndirectCommandsLayoutTokenCount :: Word32
   , vkMaxObjectEntryCounts :: Word32
   , vkMinSequenceCountBufferOffsetAlignment :: Word32
@@ -437,7 +437,7 @@ instance Storable VkDeviceGeneratedCommandsLimitsNVX where
                                                 <*> peek (ptr `plusPtr` 28)
                                                 <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGeneratedCommandsLimitsNVX))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceGeneratedCommandsLimitsNVX))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGeneratedCommandsLimitsNVX))
                 *> poke (ptr `plusPtr` 16) (vkMaxIndirectCommandsLayoutTokenCount (poked :: VkDeviceGeneratedCommandsLimitsNVX))
                 *> poke (ptr `plusPtr` 20) (vkMaxObjectEntryCounts (poked :: VkDeviceGeneratedCommandsLimitsNVX))
                 *> poke (ptr `plusPtr` 24) (vkMinSequenceCountBufferOffsetAlignment (poked :: VkDeviceGeneratedCommandsLimitsNVX))
@@ -483,11 +483,11 @@ instance Storable VkIndirectCommandsLayoutTokenNVX where
 -- | TODO: Struct comments
 data VkIndirectCommandsLayoutCreateInfoNVX = VkIndirectCommandsLayoutCreateInfoNVX
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPipelineBindPoint :: VkPipelineBindPoint
   , vkFlags :: VkIndirectCommandsLayoutUsageFlagsNVX
   , vkTokenCount :: Word32
-  , vkTokens :: Ptr VkIndirectCommandsLayoutTokenNVX
+  , vkPTokens :: Ptr VkIndirectCommandsLayoutTokenNVX
   }
   deriving (Eq, Show)
 
@@ -501,19 +501,19 @@ instance Storable VkIndirectCommandsLayoutCreateInfoNVX where
                                                    <*> peek (ptr `plusPtr` 24)
                                                    <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
                 *> poke (ptr `plusPtr` 16) (vkPipelineBindPoint (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
                 *> poke (ptr `plusPtr` 20) (vkFlags (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
                 *> poke (ptr `plusPtr` 24) (vkTokenCount (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
-                *> poke (ptr `plusPtr` 32) (vkTokens (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
+                *> poke (ptr `plusPtr` 32) (vkPTokens (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
 -- | TODO: Struct comments
 data VkCmdProcessCommandsInfoNVX = VkCmdProcessCommandsInfoNVX
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkObjectTable :: VkObjectTableNVX
   , vkIndirectCommandsLayout :: VkIndirectCommandsLayoutNVX
   , vkIndirectCommandsTokenCount :: Word32
-  , vkIndirectCommandsTokens :: Ptr VkIndirectCommandsTokenNVX
+  , vkPIndirectCommandsTokens :: Ptr VkIndirectCommandsTokenNVX
   , vkMaxSequencesCount :: Word32
   , vkTargetCommandBuffer :: VkCommandBuffer
   , vkSequencesCountBuffer :: VkBuffer
@@ -539,11 +539,11 @@ instance Storable VkCmdProcessCommandsInfoNVX where
                                          <*> peek (ptr `plusPtr` 80)
                                          <*> peek (ptr `plusPtr` 88)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkCmdProcessCommandsInfoNVX))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCmdProcessCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 16) (vkObjectTable (poked :: VkCmdProcessCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 24) (vkIndirectCommandsLayout (poked :: VkCmdProcessCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 32) (vkIndirectCommandsTokenCount (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 40) (vkIndirectCommandsTokens (poked :: VkCmdProcessCommandsInfoNVX))
+                *> poke (ptr `plusPtr` 40) (vkPIndirectCommandsTokens (poked :: VkCmdProcessCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 48) (vkMaxSequencesCount (poked :: VkCmdProcessCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 56) (vkTargetCommandBuffer (poked :: VkCmdProcessCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 64) (vkSequencesCountBuffer (poked :: VkCmdProcessCommandsInfoNVX))
@@ -553,7 +553,7 @@ instance Storable VkCmdProcessCommandsInfoNVX where
 -- | TODO: Struct comments
 data VkCmdReserveSpaceForCommandsInfoNVX = VkCmdReserveSpaceForCommandsInfoNVX
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkObjectTable :: VkObjectTableNVX
   , vkIndirectCommandsLayout :: VkIndirectCommandsLayoutNVX
   , vkMaxSequencesCount :: Word32
@@ -569,18 +569,18 @@ instance Storable VkCmdReserveSpaceForCommandsInfoNVX where
                                                  <*> peek (ptr `plusPtr` 24)
                                                  <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 16) (vkObjectTable (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 24) (vkIndirectCommandsLayout (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 32) (vkMaxSequencesCount (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
 -- | TODO: Struct comments
 data VkObjectTableCreateInfoNVX = VkObjectTableCreateInfoNVX
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkObjectCount :: Word32
-  , vkObjectEntryTypes :: Ptr VkObjectEntryTypeNVX
-  , vkObjectEntryCounts :: Ptr Word32
-  , vkObjectEntryUsageFlags :: Ptr VkObjectEntryUsageFlagsNVX
+  , vkPObjectEntryTypes :: Ptr VkObjectEntryTypeNVX
+  , vkPObjectEntryCounts :: Ptr Word32
+  , vkPObjectEntryUsageFlags :: Ptr VkObjectEntryUsageFlagsNVX
   , vkMaxUniformBuffersPerDescriptor :: Word32
   , vkMaxStorageBuffersPerDescriptor :: Word32
   , vkMaxStorageImagesPerDescriptor :: Word32
@@ -604,11 +604,11 @@ instance Storable VkObjectTableCreateInfoNVX where
                                         <*> peek (ptr `plusPtr` 60)
                                         <*> peek (ptr `plusPtr` 64)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkObjectTableCreateInfoNVX))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkObjectTableCreateInfoNVX))
                 *> poke (ptr `plusPtr` 16) (vkObjectCount (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 24) (vkObjectEntryTypes (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 32) (vkObjectEntryCounts (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 40) (vkObjectEntryUsageFlags (poked :: VkObjectTableCreateInfoNVX))
+                *> poke (ptr `plusPtr` 24) (vkPObjectEntryTypes (poked :: VkObjectTableCreateInfoNVX))
+                *> poke (ptr `plusPtr` 32) (vkPObjectEntryCounts (poked :: VkObjectTableCreateInfoNVX))
+                *> poke (ptr `plusPtr` 40) (vkPObjectEntryUsageFlags (poked :: VkObjectTableCreateInfoNVX))
                 *> poke (ptr `plusPtr` 48) (vkMaxUniformBuffersPerDescriptor (poked :: VkObjectTableCreateInfoNVX))
                 *> poke (ptr `plusPtr` 52) (vkMaxStorageBuffersPerDescriptor (poked :: VkObjectTableCreateInfoNVX))
                 *> poke (ptr `plusPtr` 56) (vkMaxStorageImagesPerDescriptor (poked :: VkObjectTableCreateInfoNVX))

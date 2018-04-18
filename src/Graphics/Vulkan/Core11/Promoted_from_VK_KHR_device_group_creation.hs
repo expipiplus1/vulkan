@@ -64,7 +64,7 @@ foreign import ccall "vkEnumeratePhysicalDeviceGroups" vkEnumeratePhysicalDevice
 -- | TODO: Struct comments
 data VkPhysicalDeviceGroupProperties = VkPhysicalDeviceGroupProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPhysicalDeviceCount :: Word32
   , vkPhysicalDevices :: Vector VK_MAX_DEVICE_GROUP_SIZE VkPhysicalDevice
   , vkSubsetAllocation :: VkBool32
@@ -80,16 +80,16 @@ instance Storable VkPhysicalDeviceGroupProperties where
                                              <*> peek (ptr `plusPtr` 24)
                                              <*> peek (ptr `plusPtr` 280)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceGroupProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceGroupProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceGroupProperties))
                 *> poke (ptr `plusPtr` 16) (vkPhysicalDeviceCount (poked :: VkPhysicalDeviceGroupProperties))
                 *> poke (ptr `plusPtr` 24) (vkPhysicalDevices (poked :: VkPhysicalDeviceGroupProperties))
                 *> poke (ptr `plusPtr` 280) (vkSubsetAllocation (poked :: VkPhysicalDeviceGroupProperties))
 -- | TODO: Struct comments
 data VkDeviceGroupDeviceCreateInfo = VkDeviceGroupDeviceCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPhysicalDeviceCount :: Word32
-  , vkPhysicalDevices :: Ptr VkPhysicalDevice
+  , vkPPhysicalDevices :: Ptr VkPhysicalDevice
   }
   deriving (Eq, Show)
 
@@ -101,6 +101,6 @@ instance Storable VkDeviceGroupDeviceCreateInfo where
                                            <*> peek (ptr `plusPtr` 16)
                                            <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGroupDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceGroupDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupDeviceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkPhysicalDeviceCount (poked :: VkDeviceGroupDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkPhysicalDevices (poked :: VkDeviceGroupDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 24) (vkPPhysicalDevices (poked :: VkDeviceGroupDeviceCreateInfo))

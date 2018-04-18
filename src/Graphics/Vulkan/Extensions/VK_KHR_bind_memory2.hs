@@ -72,12 +72,12 @@ type VkBindBufferMemoryInfoKHR = VkBindBufferMemoryInfo
 
 
 pattern VkBindBufferMemoryInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("buffer" ::: VkBuffer) -> ("memory" ::: VkDeviceMemory) -> ("memoryOffset" ::: VkDeviceSize) -> VkBindBufferMemoryInfoKHR
-pattern VkBindBufferMemoryInfoKHR vkSType vkNext vkBuffer vkMemory vkMemoryOffset = VkBindBufferMemoryInfo vkSType vkNext vkBuffer vkMemory vkMemoryOffset
+pattern VkBindBufferMemoryInfoKHR vkSType vkPNext vkBuffer vkMemory vkMemoryOffset = VkBindBufferMemoryInfo vkSType vkPNext vkBuffer vkMemory vkMemoryOffset
 type VkBindImageMemoryInfoKHR = VkBindImageMemoryInfo
 
 
 pattern VkBindImageMemoryInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("image" ::: VkImage) -> ("memory" ::: VkDeviceMemory) -> ("memoryOffset" ::: VkDeviceSize) -> VkBindImageMemoryInfoKHR
-pattern VkBindImageMemoryInfoKHR vkSType vkNext vkImage vkMemory vkMemoryOffset = VkBindImageMemoryInfo vkSType vkNext vkImage vkMemory vkMemoryOffset
+pattern VkBindImageMemoryInfoKHR vkSType vkPNext vkImage vkMemory vkMemoryOffset = VkBindImageMemoryInfo vkSType vkPNext vkImage vkMemory vkMemoryOffset
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO_KHR = VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO_KHR :: VkStructureType

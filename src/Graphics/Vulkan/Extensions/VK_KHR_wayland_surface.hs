@@ -111,7 +111,7 @@ foreign import ccall "vkGetPhysicalDeviceWaylandPresentationSupportKHR" vkGetPhy
 -- | TODO: Struct comments
 data VkWaylandSurfaceCreateInfoKHR = VkWaylandSurfaceCreateInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkWaylandSurfaceCreateFlagsKHR
   , vkDisplay :: Ptr Wl_display
   , vkSurface :: Ptr Wl_surface
@@ -127,7 +127,7 @@ instance Storable VkWaylandSurfaceCreateInfoKHR where
                                            <*> peek (ptr `plusPtr` 24)
                                            <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkWaylandSurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkWaylandSurfaceCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkWaylandSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkWaylandSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDisplay (poked :: VkWaylandSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkSurface (poked :: VkWaylandSurfaceCreateInfoKHR))

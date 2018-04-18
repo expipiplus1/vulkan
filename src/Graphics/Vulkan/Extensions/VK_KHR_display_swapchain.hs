@@ -67,7 +67,7 @@ foreign import ccall "vkCreateSharedSwapchainsKHR" vkCreateSharedSwapchainsKHR :
 -- | TODO: Struct comments
 data VkDisplayPresentInfoKHR = VkDisplayPresentInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSrcRect :: VkRect2D
   , vkDstRect :: VkRect2D
   , vkPersistent :: VkBool32
@@ -83,7 +83,7 @@ instance Storable VkDisplayPresentInfoKHR where
                                      <*> peek (ptr `plusPtr` 32)
                                      <*> peek (ptr `plusPtr` 48)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayPresentInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDisplayPresentInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayPresentInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkSrcRect (poked :: VkDisplayPresentInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkDstRect (poked :: VkDisplayPresentInfoKHR))
                 *> poke (ptr `plusPtr` 48) (vkPersistent (poked :: VkDisplayPresentInfoKHR))

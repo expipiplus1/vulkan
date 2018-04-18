@@ -90,7 +90,7 @@ foreign import ccall "vkImportSemaphoreWin32HandleKHR" vkImportSemaphoreWin32Han
 -- | TODO: Struct comments
 data VkImportSemaphoreWin32HandleInfoKHR = VkImportSemaphoreWin32HandleInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSemaphore :: VkSemaphore
   , vkFlags :: VkSemaphoreImportFlags
   , vkHandleType :: VkExternalSemaphoreHandleTypeFlagBits
@@ -110,7 +110,7 @@ instance Storable VkImportSemaphoreWin32HandleInfoKHR where
                                                  <*> peek (ptr `plusPtr` 32)
                                                  <*> peek (ptr `plusPtr` 40)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportSemaphoreWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImportSemaphoreWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportSemaphoreWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkSemaphore (poked :: VkImportSemaphoreWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkFlags (poked :: VkImportSemaphoreWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 28) (vkHandleType (poked :: VkImportSemaphoreWin32HandleInfoKHR))
@@ -119,8 +119,8 @@ instance Storable VkImportSemaphoreWin32HandleInfoKHR where
 -- | TODO: Struct comments
 data VkExportSemaphoreWin32HandleInfoKHR = VkExportSemaphoreWin32HandleInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
-  , vkAttributes :: Ptr SECURITY_ATTRIBUTES
+  , vkPNext :: Ptr ()
+  , vkPAttributes :: Ptr SECURITY_ATTRIBUTES
   , vkDwAccess :: DWORD
   , vkName :: LPCWSTR
   }
@@ -135,18 +135,18 @@ instance Storable VkExportSemaphoreWin32HandleInfoKHR where
                                                  <*> peek (ptr `plusPtr` 24)
                                                  <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportSemaphoreWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExportSemaphoreWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 16) (vkAttributes (poked :: VkExportSemaphoreWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportSemaphoreWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 16) (vkPAttributes (poked :: VkExportSemaphoreWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDwAccess (poked :: VkExportSemaphoreWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkExportSemaphoreWin32HandleInfoKHR))
 -- | TODO: Struct comments
 data VkD3D12FenceSubmitInfoKHR = VkD3D12FenceSubmitInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkWaitSemaphoreValuesCount :: Word32
-  , vkWaitSemaphoreValues :: Ptr Word64
+  , vkPWaitSemaphoreValues :: Ptr Word64
   , vkSignalSemaphoreValuesCount :: Word32
-  , vkSignalSemaphoreValues :: Ptr Word64
+  , vkPSignalSemaphoreValues :: Ptr Word64
   }
   deriving (Eq, Show)
 
@@ -160,15 +160,15 @@ instance Storable VkD3D12FenceSubmitInfoKHR where
                                        <*> peek (ptr `plusPtr` 32)
                                        <*> peek (ptr `plusPtr` 40)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkD3D12FenceSubmitInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkD3D12FenceSubmitInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkD3D12FenceSubmitInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkWaitSemaphoreValuesCount (poked :: VkD3D12FenceSubmitInfoKHR))
-                *> poke (ptr `plusPtr` 24) (vkWaitSemaphoreValues (poked :: VkD3D12FenceSubmitInfoKHR))
+                *> poke (ptr `plusPtr` 24) (vkPWaitSemaphoreValues (poked :: VkD3D12FenceSubmitInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkSignalSemaphoreValuesCount (poked :: VkD3D12FenceSubmitInfoKHR))
-                *> poke (ptr `plusPtr` 40) (vkSignalSemaphoreValues (poked :: VkD3D12FenceSubmitInfoKHR))
+                *> poke (ptr `plusPtr` 40) (vkPSignalSemaphoreValues (poked :: VkD3D12FenceSubmitInfoKHR))
 -- | TODO: Struct comments
 data VkSemaphoreGetWin32HandleInfoKHR = VkSemaphoreGetWin32HandleInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSemaphore :: VkSemaphore
   , vkHandleType :: VkExternalSemaphoreHandleTypeFlagBits
   }
@@ -182,6 +182,6 @@ instance Storable VkSemaphoreGetWin32HandleInfoKHR where
                                               <*> peek (ptr `plusPtr` 16)
                                               <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSemaphoreGetWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSemaphoreGetWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSemaphoreGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkSemaphore (poked :: VkSemaphoreGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkSemaphoreGetWin32HandleInfoKHR))

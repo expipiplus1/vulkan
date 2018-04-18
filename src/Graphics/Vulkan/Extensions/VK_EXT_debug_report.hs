@@ -438,10 +438,10 @@ foreign import ccall "vkDebugReportMessageEXT" vkDebugReportMessageEXT :: ("inst
 -- | TODO: Struct comments
 data VkDebugReportCallbackCreateInfoEXT = VkDebugReportCallbackCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkDebugReportFlagsEXT
   , vkPfnCallback :: PFN_vkDebugReportCallbackEXT
-  , vkUserData :: Ptr ()
+  , vkPUserData :: Ptr ()
   }
   deriving (Eq, Show)
 
@@ -454,8 +454,8 @@ instance Storable VkDebugReportCallbackCreateInfoEXT where
                                                 <*> peek (ptr `plusPtr` 24)
                                                 <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDebugReportCallbackCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugReportCallbackCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDebugReportCallbackCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkPfnCallback (poked :: VkDebugReportCallbackCreateInfoEXT))
-                *> poke (ptr `plusPtr` 32) (vkUserData (poked :: VkDebugReportCallbackCreateInfoEXT))
+                *> poke (ptr `plusPtr` 32) (vkPUserData (poked :: VkDebugReportCallbackCreateInfoEXT))
 type VkDebugReportFlagsEXT = VkDebugReportFlagBitsEXT

@@ -91,7 +91,7 @@ pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME = "VK_AMD_rasterization_order"
 -- | TODO: Struct comments
 data VkPipelineRasterizationStateRasterizationOrderAMD = VkPipelineRasterizationStateRasterizationOrderAMD
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkRasterizationOrder :: VkRasterizationOrderAMD
   }
   deriving (Eq, Show)
@@ -103,5 +103,5 @@ instance Storable VkPipelineRasterizationStateRasterizationOrderAMD where
                                                                <*> peek (ptr `plusPtr` 8)
                                                                <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineRasterizationStateRasterizationOrderAMD))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineRasterizationStateRasterizationOrderAMD))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineRasterizationStateRasterizationOrderAMD))
                 *> poke (ptr `plusPtr` 16) (vkRasterizationOrder (poked :: VkPipelineRasterizationStateRasterizationOrderAMD))

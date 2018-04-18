@@ -137,7 +137,7 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = VkStructureType 
 -- | TODO: Struct comments
 data VkPhysicalDeviceSubgroupProperties = VkPhysicalDeviceSubgroupProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSubgroupSize :: Word32
   , vkSupportedStages :: VkShaderStageFlags
   , vkSupportedOperations :: VkSubgroupFeatureFlags
@@ -155,7 +155,7 @@ instance Storable VkPhysicalDeviceSubgroupProperties where
                                                 <*> peek (ptr `plusPtr` 24)
                                                 <*> peek (ptr `plusPtr` 28)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceSubgroupProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceSubgroupProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSubgroupProperties))
                 *> poke (ptr `plusPtr` 16) (vkSubgroupSize (poked :: VkPhysicalDeviceSubgroupProperties))
                 *> poke (ptr `plusPtr` 20) (vkSupportedStages (poked :: VkPhysicalDeviceSubgroupProperties))
                 *> poke (ptr `plusPtr` 24) (vkSupportedOperations (poked :: VkPhysicalDeviceSubgroupProperties))

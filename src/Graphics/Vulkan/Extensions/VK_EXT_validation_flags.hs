@@ -94,9 +94,9 @@ pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME = "VK_EXT_validation_flags"
 -- | TODO: Struct comments
 data VkValidationFlagsEXT = VkValidationFlagsEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDisabledValidationCheckCount :: Word32
-  , vkDisabledValidationChecks :: Ptr VkValidationCheckEXT
+  , vkPDisabledValidationChecks :: Ptr VkValidationCheckEXT
   }
   deriving (Eq, Show)
 
@@ -108,6 +108,6 @@ instance Storable VkValidationFlagsEXT where
                                   <*> peek (ptr `plusPtr` 16)
                                   <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkValidationFlagsEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkValidationFlagsEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkValidationFlagsEXT))
                 *> poke (ptr `plusPtr` 16) (vkDisabledValidationCheckCount (poked :: VkValidationFlagsEXT))
-                *> poke (ptr `plusPtr` 24) (vkDisabledValidationChecks (poked :: VkValidationFlagsEXT))
+                *> poke (ptr `plusPtr` 24) (vkPDisabledValidationChecks (poked :: VkValidationFlagsEXT))

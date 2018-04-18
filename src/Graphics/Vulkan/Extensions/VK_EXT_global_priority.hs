@@ -110,7 +110,7 @@ pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME = "VK_EXT_global_priority"
 -- | TODO: Struct comments
 data VkDeviceQueueGlobalPriorityCreateInfoEXT = VkDeviceQueueGlobalPriorityCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkGlobalPriority :: VkQueueGlobalPriorityEXT
   }
   deriving (Eq, Show)
@@ -122,5 +122,5 @@ instance Storable VkDeviceQueueGlobalPriorityCreateInfoEXT where
                                                       <*> peek (ptr `plusPtr` 8)
                                                       <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkGlobalPriority (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))

@@ -160,10 +160,10 @@ foreign import ccall "vkMergeValidationCachesEXT" vkMergeValidationCachesEXT :: 
 -- | TODO: Struct comments
 data VkValidationCacheCreateInfoEXT = VkValidationCacheCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkValidationCacheCreateFlagsEXT
   , vkInitialDataSize :: CSize
-  , vkInitialData :: Ptr ()
+  , vkPInitialData :: Ptr ()
   }
   deriving (Eq, Show)
 
@@ -176,14 +176,14 @@ instance Storable VkValidationCacheCreateInfoEXT where
                                             <*> peek (ptr `plusPtr` 24)
                                             <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkValidationCacheCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkValidationCacheCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkValidationCacheCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkValidationCacheCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkInitialDataSize (poked :: VkValidationCacheCreateInfoEXT))
-                *> poke (ptr `plusPtr` 32) (vkInitialData (poked :: VkValidationCacheCreateInfoEXT))
+                *> poke (ptr `plusPtr` 32) (vkPInitialData (poked :: VkValidationCacheCreateInfoEXT))
 -- | TODO: Struct comments
 data VkShaderModuleValidationCacheCreateInfoEXT = VkShaderModuleValidationCacheCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkValidationCache :: VkValidationCacheEXT
   }
   deriving (Eq, Show)
@@ -195,5 +195,5 @@ instance Storable VkShaderModuleValidationCacheCreateInfoEXT where
                                                         <*> peek (ptr `plusPtr` 8)
                                                         <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkShaderModuleValidationCacheCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkShaderModuleValidationCacheCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkShaderModuleValidationCacheCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkValidationCache (poked :: VkShaderModuleValidationCacheCreateInfoEXT))

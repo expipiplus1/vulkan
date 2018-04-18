@@ -111,7 +111,7 @@ foreign import ccall "vkGetPhysicalDeviceWin32PresentationSupportKHR" vkGetPhysi
 -- | TODO: Struct comments
 data VkWin32SurfaceCreateInfoKHR = VkWin32SurfaceCreateInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkWin32SurfaceCreateFlagsKHR
   , vkHinstance :: HINSTANCE
   , vkHwnd :: HWND
@@ -127,7 +127,7 @@ instance Storable VkWin32SurfaceCreateInfoKHR where
                                          <*> peek (ptr `plusPtr` 24)
                                          <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkWin32SurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkWin32SurfaceCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkWin32SurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkWin32SurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHinstance (poked :: VkWin32SurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkHwnd (poked :: VkWin32SurfaceCreateInfoKHR))

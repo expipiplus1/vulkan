@@ -106,7 +106,7 @@ foreign import ccall "vkWaitForFences" vkWaitForFences :: ("device" ::: VkDevice
 -- | TODO: Struct comments
 data VkFenceCreateInfo = VkFenceCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkFenceCreateFlags
   }
   deriving (Eq, Show)
@@ -118,6 +118,6 @@ instance Storable VkFenceCreateInfo where
                                <*> peek (ptr `plusPtr` 8)
                                <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFenceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkFenceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFenceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkFenceCreateInfo))
 type VkFenceCreateFlags = VkFenceCreateFlagBits

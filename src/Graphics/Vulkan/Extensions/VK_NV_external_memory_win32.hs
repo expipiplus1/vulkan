@@ -72,7 +72,7 @@ foreign import ccall "vkGetMemoryWin32HandleNV" vkGetMemoryWin32HandleNV :: ("de
 -- | TODO: Struct comments
 data VkImportMemoryWin32HandleInfoNV = VkImportMemoryWin32HandleInfoNV
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleType :: VkExternalMemoryHandleTypeFlagsNV
   , vkHandle :: HANDLE
   }
@@ -86,14 +86,14 @@ instance Storable VkImportMemoryWin32HandleInfoNV where
                                              <*> peek (ptr `plusPtr` 16)
                                              <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportMemoryWin32HandleInfoNV))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImportMemoryWin32HandleInfoNV))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportMemoryWin32HandleInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkImportMemoryWin32HandleInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkHandle (poked :: VkImportMemoryWin32HandleInfoNV))
 -- | TODO: Struct comments
 data VkExportMemoryWin32HandleInfoNV = VkExportMemoryWin32HandleInfoNV
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
-  , vkAttributes :: Ptr SECURITY_ATTRIBUTES
+  , vkPNext :: Ptr ()
+  , vkPAttributes :: Ptr SECURITY_ATTRIBUTES
   , vkDwAccess :: DWORD
   }
   deriving (Eq, Show)
@@ -106,6 +106,6 @@ instance Storable VkExportMemoryWin32HandleInfoNV where
                                              <*> peek (ptr `plusPtr` 16)
                                              <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportMemoryWin32HandleInfoNV))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExportMemoryWin32HandleInfoNV))
-                *> poke (ptr `plusPtr` 16) (vkAttributes (poked :: VkExportMemoryWin32HandleInfoNV))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportMemoryWin32HandleInfoNV))
+                *> poke (ptr `plusPtr` 16) (vkPAttributes (poked :: VkExportMemoryWin32HandleInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkDwAccess (poked :: VkExportMemoryWin32HandleInfoNV))

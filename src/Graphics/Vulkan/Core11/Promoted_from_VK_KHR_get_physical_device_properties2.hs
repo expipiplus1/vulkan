@@ -117,7 +117,7 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties2" vkGetPhys
 -- | TODO: Struct comments
 data VkPhysicalDeviceFeatures2 = VkPhysicalDeviceFeatures2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFeatures :: VkPhysicalDeviceFeatures
   }
   deriving (Eq, Show)
@@ -129,12 +129,12 @@ instance Storable VkPhysicalDeviceFeatures2 where
                                        <*> peek (ptr `plusPtr` 8)
                                        <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceFeatures2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceFeatures2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceFeatures2))
                 *> poke (ptr `plusPtr` 16) (vkFeatures (poked :: VkPhysicalDeviceFeatures2))
 -- | TODO: Struct comments
 data VkPhysicalDeviceProperties2 = VkPhysicalDeviceProperties2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkProperties :: VkPhysicalDeviceProperties
   }
   deriving (Eq, Show)
@@ -146,12 +146,12 @@ instance Storable VkPhysicalDeviceProperties2 where
                                          <*> peek (ptr `plusPtr` 8)
                                          <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceProperties2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceProperties2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceProperties2))
                 *> poke (ptr `plusPtr` 16) (vkProperties (poked :: VkPhysicalDeviceProperties2))
 -- | TODO: Struct comments
 data VkFormatProperties2 = VkFormatProperties2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFormatProperties :: VkFormatProperties
   }
   deriving (Eq, Show)
@@ -163,12 +163,12 @@ instance Storable VkFormatProperties2 where
                                  <*> peek (ptr `plusPtr` 8)
                                  <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFormatProperties2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkFormatProperties2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFormatProperties2))
                 *> poke (ptr `plusPtr` 16) (vkFormatProperties (poked :: VkFormatProperties2))
 -- | TODO: Struct comments
 data VkImageFormatProperties2 = VkImageFormatProperties2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkImageFormatProperties :: VkImageFormatProperties
   }
   deriving (Eq, Show)
@@ -180,12 +180,12 @@ instance Storable VkImageFormatProperties2 where
                                       <*> peek (ptr `plusPtr` 8)
                                       <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageFormatProperties2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImageFormatProperties2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageFormatProperties2))
                 *> poke (ptr `plusPtr` 16) (vkImageFormatProperties (poked :: VkImageFormatProperties2))
 -- | TODO: Struct comments
 data VkPhysicalDeviceImageFormatInfo2 = VkPhysicalDeviceImageFormatInfo2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFormat :: VkFormat
   , vkType :: VkImageType
   , vkTiling :: VkImageTiling
@@ -205,7 +205,7 @@ instance Storable VkPhysicalDeviceImageFormatInfo2 where
                                               <*> peek (ptr `plusPtr` 28)
                                               <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceImageFormatInfo2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceImageFormatInfo2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceImageFormatInfo2))
                 *> poke (ptr `plusPtr` 16) (vkFormat (poked :: VkPhysicalDeviceImageFormatInfo2))
                 *> poke (ptr `plusPtr` 20) (vkType (poked :: VkPhysicalDeviceImageFormatInfo2))
                 *> poke (ptr `plusPtr` 24) (vkTiling (poked :: VkPhysicalDeviceImageFormatInfo2))
@@ -214,7 +214,7 @@ instance Storable VkPhysicalDeviceImageFormatInfo2 where
 -- | TODO: Struct comments
 data VkQueueFamilyProperties2 = VkQueueFamilyProperties2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkQueueFamilyProperties :: VkQueueFamilyProperties
   }
   deriving (Eq, Show)
@@ -226,12 +226,12 @@ instance Storable VkQueueFamilyProperties2 where
                                       <*> peek (ptr `plusPtr` 8)
                                       <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkQueueFamilyProperties2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkQueueFamilyProperties2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkQueueFamilyProperties2))
                 *> poke (ptr `plusPtr` 16) (vkQueueFamilyProperties (poked :: VkQueueFamilyProperties2))
 -- | TODO: Struct comments
 data VkPhysicalDeviceMemoryProperties2 = VkPhysicalDeviceMemoryProperties2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemoryProperties :: VkPhysicalDeviceMemoryProperties
   }
   deriving (Eq, Show)
@@ -243,12 +243,12 @@ instance Storable VkPhysicalDeviceMemoryProperties2 where
                                                <*> peek (ptr `plusPtr` 8)
                                                <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceMemoryProperties2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceMemoryProperties2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMemoryProperties2))
                 *> poke (ptr `plusPtr` 16) (vkMemoryProperties (poked :: VkPhysicalDeviceMemoryProperties2))
 -- | TODO: Struct comments
 data VkSparseImageFormatProperties2 = VkSparseImageFormatProperties2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkProperties :: VkSparseImageFormatProperties
   }
   deriving (Eq, Show)
@@ -260,12 +260,12 @@ instance Storable VkSparseImageFormatProperties2 where
                                             <*> peek (ptr `plusPtr` 8)
                                             <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSparseImageFormatProperties2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSparseImageFormatProperties2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSparseImageFormatProperties2))
                 *> poke (ptr `plusPtr` 16) (vkProperties (poked :: VkSparseImageFormatProperties2))
 -- | TODO: Struct comments
 data VkPhysicalDeviceSparseImageFormatInfo2 = VkPhysicalDeviceSparseImageFormatInfo2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFormat :: VkFormat
   , vkType :: VkImageType
   , vkSamples :: VkSampleCountFlagBits
@@ -285,7 +285,7 @@ instance Storable VkPhysicalDeviceSparseImageFormatInfo2 where
                                                     <*> peek (ptr `plusPtr` 28)
                                                     <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceSparseImageFormatInfo2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceSparseImageFormatInfo2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSparseImageFormatInfo2))
                 *> poke (ptr `plusPtr` 16) (vkFormat (poked :: VkPhysicalDeviceSparseImageFormatInfo2))
                 *> poke (ptr `plusPtr` 20) (vkType (poked :: VkPhysicalDeviceSparseImageFormatInfo2))
                 *> poke (ptr `plusPtr` 24) (vkSamples (poked :: VkPhysicalDeviceSparseImageFormatInfo2))

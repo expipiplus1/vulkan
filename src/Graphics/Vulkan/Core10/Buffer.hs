@@ -231,13 +231,13 @@ foreign import ccall "vkDestroyBuffer" vkDestroyBuffer :: ("device" ::: VkDevice
 -- | TODO: Struct comments
 data VkBufferCreateInfo = VkBufferCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkBufferCreateFlags
   , vkSize :: VkDeviceSize
   , vkUsage :: VkBufferUsageFlags
   , vkSharingMode :: VkSharingMode
   , vkQueueFamilyIndexCount :: Word32
-  , vkQueueFamilyIndices :: Ptr Word32
+  , vkPQueueFamilyIndices :: Ptr Word32
   }
   deriving (Eq, Show)
 
@@ -253,12 +253,12 @@ instance Storable VkBufferCreateInfo where
                                 <*> peek (ptr `plusPtr` 40)
                                 <*> peek (ptr `plusPtr` 48)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkBufferCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkBufferCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkSize (poked :: VkBufferCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkUsage (poked :: VkBufferCreateInfo))
                 *> poke (ptr `plusPtr` 36) (vkSharingMode (poked :: VkBufferCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkQueueFamilyIndexCount (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkQueueFamilyIndices (poked :: VkBufferCreateInfo))
+                *> poke (ptr `plusPtr` 48) (vkPQueueFamilyIndices (poked :: VkBufferCreateInfo))
 type VkBufferUsageFlags = VkBufferUsageFlagBits
 type VkBufferCreateFlags = VkBufferCreateFlagBits

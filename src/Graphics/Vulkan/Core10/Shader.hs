@@ -95,10 +95,10 @@ foreign import ccall "vkDestroyShaderModule" vkDestroyShaderModule :: ("device" 
 -- | TODO: Struct comments
 data VkShaderModuleCreateInfo = VkShaderModuleCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkShaderModuleCreateFlags
   , vkCodeSize :: CSize
-  , vkCode :: Ptr Word32
+  , vkPCode :: Ptr Word32
   }
   deriving (Eq, Show)
 
@@ -111,7 +111,7 @@ instance Storable VkShaderModuleCreateInfo where
                                       <*> peek (ptr `plusPtr` 24)
                                       <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkShaderModuleCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkShaderModuleCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkCodeSize (poked :: VkShaderModuleCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkCode (poked :: VkShaderModuleCreateInfo))
+                *> poke (ptr `plusPtr` 32) (vkPCode (poked :: VkShaderModuleCreateInfo))

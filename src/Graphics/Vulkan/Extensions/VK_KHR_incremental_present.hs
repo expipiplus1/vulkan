@@ -48,9 +48,9 @@ pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME = "VK_KHR_incremental_present"
 -- | TODO: Struct comments
 data VkPresentRegionsKHR = VkPresentRegionsKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSwapchainCount :: Word32
-  , vkRegions :: Ptr VkPresentRegionKHR
+  , vkPRegions :: Ptr VkPresentRegionKHR
   }
   deriving (Eq, Show)
 
@@ -62,13 +62,13 @@ instance Storable VkPresentRegionsKHR where
                                  <*> peek (ptr `plusPtr` 16)
                                  <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPresentRegionsKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPresentRegionsKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPresentRegionsKHR))
                 *> poke (ptr `plusPtr` 16) (vkSwapchainCount (poked :: VkPresentRegionsKHR))
-                *> poke (ptr `plusPtr` 24) (vkRegions (poked :: VkPresentRegionsKHR))
+                *> poke (ptr `plusPtr` 24) (vkPRegions (poked :: VkPresentRegionsKHR))
 -- | TODO: Struct comments
 data VkPresentRegionKHR = VkPresentRegionKHR
   { vkRectangleCount :: Word32
-  , vkRectangles :: Ptr VkRectLayerKHR
+  , vkPRectangles :: Ptr VkRectLayerKHR
   }
   deriving (Eq, Show)
 
@@ -78,7 +78,7 @@ instance Storable VkPresentRegionKHR where
   peek ptr = VkPresentRegionKHR <$> peek (ptr `plusPtr` 0)
                                 <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkRectangleCount (poked :: VkPresentRegionKHR))
-                *> poke (ptr `plusPtr` 8) (vkRectangles (poked :: VkPresentRegionKHR))
+                *> poke (ptr `plusPtr` 8) (vkPRectangles (poked :: VkPresentRegionKHR))
 -- | TODO: Struct comments
 data VkRectLayerKHR = VkRectLayerKHR
   { vkOffset :: VkOffset2D

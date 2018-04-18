@@ -47,7 +47,7 @@ pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME = "VK_NV_external_memory"
 -- | TODO: Struct comments
 data VkExternalMemoryImageCreateInfoNV = VkExternalMemoryImageCreateInfoNV
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
   }
   deriving (Eq, Show)
@@ -59,12 +59,12 @@ instance Storable VkExternalMemoryImageCreateInfoNV where
                                                <*> peek (ptr `plusPtr` 8)
                                                <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalMemoryImageCreateInfoNV))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExternalMemoryImageCreateInfoNV))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalMemoryImageCreateInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryImageCreateInfoNV))
 -- | TODO: Struct comments
 data VkExportMemoryAllocateInfoNV = VkExportMemoryAllocateInfoNV
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
   }
   deriving (Eq, Show)
@@ -76,5 +76,5 @@ instance Storable VkExportMemoryAllocateInfoNV where
                                           <*> peek (ptr `plusPtr` 8)
                                           <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportMemoryAllocateInfoNV))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExportMemoryAllocateInfoNV))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportMemoryAllocateInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportMemoryAllocateInfoNV))

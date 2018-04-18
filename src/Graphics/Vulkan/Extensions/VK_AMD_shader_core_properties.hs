@@ -42,7 +42,7 @@ pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME = "VK_AMD_shader_core_prope
 -- | TODO: Struct comments
 data VkPhysicalDeviceShaderCorePropertiesAMD = VkPhysicalDeviceShaderCorePropertiesAMD
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkShaderEngineCount :: Word32
   , vkShaderArraysPerEngineCount :: Word32
   , vkComputeUnitsPerShaderArray :: Word32
@@ -80,7 +80,7 @@ instance Storable VkPhysicalDeviceShaderCorePropertiesAMD where
                                                      <*> peek (ptr `plusPtr` 64)
                                                      <*> peek (ptr `plusPtr` 68)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
                 *> poke (ptr `plusPtr` 16) (vkShaderEngineCount (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
                 *> poke (ptr `plusPtr` 20) (vkShaderArraysPerEngineCount (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
                 *> poke (ptr `plusPtr` 24) (vkComputeUnitsPerShaderArray (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))

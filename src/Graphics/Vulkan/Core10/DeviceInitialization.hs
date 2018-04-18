@@ -932,10 +932,10 @@ instance Storable VkPhysicalDeviceProperties where
 -- | TODO: Struct comments
 data VkApplicationInfo = VkApplicationInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
-  , vkApplicationName :: Ptr CChar
+  , vkPNext :: Ptr ()
+  , vkPApplicationName :: Ptr CChar
   , vkApplicationVersion :: Word32
-  , vkEngineName :: Ptr CChar
+  , vkPEngineName :: Ptr CChar
   , vkEngineVersion :: Word32
   , vkApiVersion :: Word32
   }
@@ -952,15 +952,15 @@ instance Storable VkApplicationInfo where
                                <*> peek (ptr `plusPtr` 40)
                                <*> peek (ptr `plusPtr` 44)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkApplicationInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkApplicationInfo))
-                *> poke (ptr `plusPtr` 16) (vkApplicationName (poked :: VkApplicationInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkApplicationInfo))
+                *> poke (ptr `plusPtr` 16) (vkPApplicationName (poked :: VkApplicationInfo))
                 *> poke (ptr `plusPtr` 24) (vkApplicationVersion (poked :: VkApplicationInfo))
-                *> poke (ptr `plusPtr` 32) (vkEngineName (poked :: VkApplicationInfo))
+                *> poke (ptr `plusPtr` 32) (vkPEngineName (poked :: VkApplicationInfo))
                 *> poke (ptr `plusPtr` 40) (vkEngineVersion (poked :: VkApplicationInfo))
                 *> poke (ptr `plusPtr` 44) (vkApiVersion (poked :: VkApplicationInfo))
 -- | TODO: Struct comments
 data VkAllocationCallbacks = VkAllocationCallbacks
-  { vkUserData :: Ptr ()
+  { vkPUserData :: Ptr ()
   , vkPfnAllocation :: PFN_vkAllocationFunction
   , vkPfnReallocation :: PFN_vkReallocationFunction
   , vkPfnFree :: PFN_vkFreeFunction
@@ -978,7 +978,7 @@ instance Storable VkAllocationCallbacks where
                                    <*> peek (ptr `plusPtr` 24)
                                    <*> peek (ptr `plusPtr` 32)
                                    <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkUserData (poked :: VkAllocationCallbacks))
+  poke ptr poked = poke (ptr `plusPtr` 0) (vkPUserData (poked :: VkAllocationCallbacks))
                 *> poke (ptr `plusPtr` 8) (vkPfnAllocation (poked :: VkAllocationCallbacks))
                 *> poke (ptr `plusPtr` 16) (vkPfnReallocation (poked :: VkAllocationCallbacks))
                 *> poke (ptr `plusPtr` 24) (vkPfnFree (poked :: VkAllocationCallbacks))
@@ -987,13 +987,13 @@ instance Storable VkAllocationCallbacks where
 -- | TODO: Struct comments
 data VkInstanceCreateInfo = VkInstanceCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkInstanceCreateFlags
-  , vkApplicationInfo :: Ptr VkApplicationInfo
+  , vkPApplicationInfo :: Ptr VkApplicationInfo
   , vkEnabledLayerCount :: Word32
-  , vkEnabledLayerNames :: Ptr (Ptr CChar)
+  , vkPPEnabledLayerNames :: Ptr (Ptr CChar)
   , vkEnabledExtensionCount :: Word32
-  , vkEnabledExtensionNames :: Ptr (Ptr CChar)
+  , vkPPEnabledExtensionNames :: Ptr (Ptr CChar)
   }
   deriving (Eq, Show)
 
@@ -1009,13 +1009,13 @@ instance Storable VkInstanceCreateInfo where
                                   <*> peek (ptr `plusPtr` 48)
                                   <*> peek (ptr `plusPtr` 56)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkInstanceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkApplicationInfo (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 24) (vkPApplicationInfo (poked :: VkInstanceCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkEnabledLayerCount (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkEnabledLayerNames (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 40) (vkPPEnabledLayerNames (poked :: VkInstanceCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkEnabledExtensionCount (poked :: VkInstanceCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkEnabledExtensionNames (poked :: VkInstanceCreateInfo))
+                *> poke (ptr `plusPtr` 56) (vkPPEnabledExtensionNames (poked :: VkInstanceCreateInfo))
 -- | TODO: Struct comments
 data VkQueueFamilyProperties = VkQueueFamilyProperties
   { vkQueueFlags :: VkQueueFlags

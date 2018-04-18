@@ -62,17 +62,17 @@ type VkExternalMemoryImageCreateInfoKHR = VkExternalMemoryImageCreateInfo
 
 
 pattern VkExternalMemoryImageCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("handleTypes" ::: VkExternalMemoryHandleTypeFlags) -> VkExternalMemoryImageCreateInfoKHR
-pattern VkExternalMemoryImageCreateInfoKHR vkSType vkNext vkHandleTypes = VkExternalMemoryImageCreateInfo vkSType vkNext vkHandleTypes
+pattern VkExternalMemoryImageCreateInfoKHR vkSType vkPNext vkHandleTypes = VkExternalMemoryImageCreateInfo vkSType vkPNext vkHandleTypes
 type VkExternalMemoryBufferCreateInfoKHR = VkExternalMemoryBufferCreateInfo
 
 
 pattern VkExternalMemoryBufferCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("handleTypes" ::: VkExternalMemoryHandleTypeFlags) -> VkExternalMemoryBufferCreateInfoKHR
-pattern VkExternalMemoryBufferCreateInfoKHR vkSType vkNext vkHandleTypes = VkExternalMemoryBufferCreateInfo vkSType vkNext vkHandleTypes
+pattern VkExternalMemoryBufferCreateInfoKHR vkSType vkPNext vkHandleTypes = VkExternalMemoryBufferCreateInfo vkSType vkPNext vkHandleTypes
 type VkExportMemoryAllocateInfoKHR = VkExportMemoryAllocateInfo
 
 
 pattern VkExportMemoryAllocateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("handleTypes" ::: VkExternalMemoryHandleTypeFlags) -> VkExportMemoryAllocateInfoKHR
-pattern VkExportMemoryAllocateInfoKHR vkSType vkNext vkHandleTypes = VkExportMemoryAllocateInfo vkSType vkNext vkHandleTypes
+pattern VkExportMemoryAllocateInfoKHR vkSType vkPNext vkHandleTypes = VkExportMemoryAllocateInfo vkSType vkPNext vkHandleTypes
 pattern VK_QUEUE_FAMILY_EXTERNAL_KHR :: Word32
 pattern VK_QUEUE_FAMILY_EXTERNAL_KHR = VK_QUEUE_FAMILY_EXTERNAL
 pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO_KHR :: VkStructureType

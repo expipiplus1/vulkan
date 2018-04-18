@@ -52,7 +52,7 @@ type VkExportFenceCreateInfoKHR = VkExportFenceCreateInfo
 
 
 pattern VkExportFenceCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("handleTypes" ::: VkExternalFenceHandleTypeFlags) -> VkExportFenceCreateInfoKHR
-pattern VkExportFenceCreateInfoKHR vkSType vkNext vkHandleTypes = VkExportFenceCreateInfo vkSType vkNext vkHandleTypes
+pattern VkExportFenceCreateInfoKHR vkSType vkPNext vkHandleTypes = VkExportFenceCreateInfo vkSType vkPNext vkHandleTypes
 pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO_KHR = VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
 pattern VK_FENCE_IMPORT_TEMPORARY_BIT_KHR :: VkFenceImportFlagBits

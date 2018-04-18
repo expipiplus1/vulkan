@@ -76,9 +76,9 @@ foreign import ccall "vkGetMemoryHostPointerPropertiesEXT" vkGetMemoryHostPointe
 -- | TODO: Struct comments
 data VkImportMemoryHostPointerInfoEXT = VkImportMemoryHostPointerInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleType :: VkExternalMemoryHandleTypeFlagBits
-  , vkHostPointer :: Ptr ()
+  , vkPHostPointer :: Ptr ()
   }
   deriving (Eq, Show)
 
@@ -90,13 +90,13 @@ instance Storable VkImportMemoryHostPointerInfoEXT where
                                               <*> peek (ptr `plusPtr` 16)
                                               <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportMemoryHostPointerInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImportMemoryHostPointerInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportMemoryHostPointerInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkImportMemoryHostPointerInfoEXT))
-                *> poke (ptr `plusPtr` 24) (vkHostPointer (poked :: VkImportMemoryHostPointerInfoEXT))
+                *> poke (ptr `plusPtr` 24) (vkPHostPointer (poked :: VkImportMemoryHostPointerInfoEXT))
 -- | TODO: Struct comments
 data VkMemoryHostPointerPropertiesEXT = VkMemoryHostPointerPropertiesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemoryTypeBits :: Word32
   }
   deriving (Eq, Show)
@@ -108,12 +108,12 @@ instance Storable VkMemoryHostPointerPropertiesEXT where
                                               <*> peek (ptr `plusPtr` 8)
                                               <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryHostPointerPropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryHostPointerPropertiesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryHostPointerPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryHostPointerPropertiesEXT))
 -- | TODO: Struct comments
 data VkPhysicalDeviceExternalMemoryHostPropertiesEXT = VkPhysicalDeviceExternalMemoryHostPropertiesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMinImportedHostPointerAlignment :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -125,5 +125,5 @@ instance Storable VkPhysicalDeviceExternalMemoryHostPropertiesEXT where
                                                              <*> peek (ptr `plusPtr` 8)
                                                              <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMinImportedHostPointerAlignment (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))

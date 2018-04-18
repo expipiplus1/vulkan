@@ -101,10 +101,10 @@ foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches :: ("device" 
 -- | TODO: Struct comments
 data VkPipelineCacheCreateInfo = VkPipelineCacheCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkPipelineCacheCreateFlags
   , vkInitialDataSize :: CSize
-  , vkInitialData :: Ptr ()
+  , vkPInitialData :: Ptr ()
   }
   deriving (Eq, Show)
 
@@ -117,7 +117,7 @@ instance Storable VkPipelineCacheCreateInfo where
                                        <*> peek (ptr `plusPtr` 24)
                                        <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineCacheCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineCacheCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineCacheCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineCacheCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkInitialDataSize (poked :: VkPipelineCacheCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkInitialData (poked :: VkPipelineCacheCreateInfo))
+                *> poke (ptr `plusPtr` 32) (vkPInitialData (poked :: VkPipelineCacheCreateInfo))

@@ -115,7 +115,7 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalD
 -- | TODO: Struct comments
 data VkSurfaceCapabilities2EXT = VkSurfaceCapabilities2EXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMinImageCount :: Word32
   , vkMaxImageCount :: Word32
   , vkCurrentExtent :: VkExtent2D
@@ -147,7 +147,7 @@ instance Storable VkSurfaceCapabilities2EXT where
                                        <*> peek (ptr `plusPtr` 64)
                                        <*> peek (ptr `plusPtr` 68)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSurfaceCapabilities2EXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSurfaceCapabilities2EXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSurfaceCapabilities2EXT))
                 *> poke (ptr `plusPtr` 16) (vkMinImageCount (poked :: VkSurfaceCapabilities2EXT))
                 *> poke (ptr `plusPtr` 20) (vkMaxImageCount (poked :: VkSurfaceCapabilities2EXT))
                 *> poke (ptr `plusPtr` 24) (vkCurrentExtent (poked :: VkSurfaceCapabilities2EXT))

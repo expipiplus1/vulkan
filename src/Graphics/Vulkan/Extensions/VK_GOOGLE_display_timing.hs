@@ -98,9 +98,9 @@ instance Storable VkPastPresentationTimingGOOGLE where
 -- | TODO: Struct comments
 data VkPresentTimesInfoGOOGLE = VkPresentTimesInfoGOOGLE
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSwapchainCount :: Word32
-  , vkTimes :: Ptr VkPresentTimeGOOGLE
+  , vkPTimes :: Ptr VkPresentTimeGOOGLE
   }
   deriving (Eq, Show)
 
@@ -112,9 +112,9 @@ instance Storable VkPresentTimesInfoGOOGLE where
                                       <*> peek (ptr `plusPtr` 16)
                                       <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPresentTimesInfoGOOGLE))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPresentTimesInfoGOOGLE))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPresentTimesInfoGOOGLE))
                 *> poke (ptr `plusPtr` 16) (vkSwapchainCount (poked :: VkPresentTimesInfoGOOGLE))
-                *> poke (ptr `plusPtr` 24) (vkTimes (poked :: VkPresentTimesInfoGOOGLE))
+                *> poke (ptr `plusPtr` 24) (vkPTimes (poked :: VkPresentTimesInfoGOOGLE))
 -- | TODO: Struct comments
 data VkPresentTimeGOOGLE = VkPresentTimeGOOGLE
   { vkPresentID :: Word32

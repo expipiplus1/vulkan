@@ -69,12 +69,12 @@ type VkPhysicalDeviceGroupPropertiesKHR = VkPhysicalDeviceGroupProperties
 
 
 pattern VkPhysicalDeviceGroupPropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("physicalDeviceCount" ::: Word32) -> ("physicalDevices" ::: Vector VK_MAX_DEVICE_GROUP_SIZE VkPhysicalDevice) -> ("subsetAllocation" ::: VkBool32) -> VkPhysicalDeviceGroupPropertiesKHR
-pattern VkPhysicalDeviceGroupPropertiesKHR vkSType vkNext vkPhysicalDeviceCount vkPhysicalDevices vkSubsetAllocation = VkPhysicalDeviceGroupProperties vkSType vkNext vkPhysicalDeviceCount vkPhysicalDevices vkSubsetAllocation
+pattern VkPhysicalDeviceGroupPropertiesKHR vkSType vkPNext vkPhysicalDeviceCount vkPhysicalDevices vkSubsetAllocation = VkPhysicalDeviceGroupProperties vkSType vkPNext vkPhysicalDeviceCount vkPhysicalDevices vkSubsetAllocation
 type VkDeviceGroupDeviceCreateInfoKHR = VkDeviceGroupDeviceCreateInfo
 
 
 pattern VkDeviceGroupDeviceCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("physicalDeviceCount" ::: Word32) -> ("pPhysicalDevices" ::: Ptr VkPhysicalDevice) -> VkDeviceGroupDeviceCreateInfoKHR
-pattern VkDeviceGroupDeviceCreateInfoKHR vkSType vkNext vkPhysicalDeviceCount vkPhysicalDevices = VkDeviceGroupDeviceCreateInfo vkSType vkNext vkPhysicalDeviceCount vkPhysicalDevices
+pattern VkDeviceGroupDeviceCreateInfoKHR vkSType vkPNext vkPhysicalDeviceCount vkPPhysicalDevices = VkDeviceGroupDeviceCreateInfo vkSType vkPNext vkPhysicalDeviceCount vkPPhysicalDevices
 pattern VK_MAX_DEVICE_GROUP_SIZE_KHR :: Integral a => a
 pattern VK_MAX_DEVICE_GROUP_SIZE_KHR = VK_MAX_DEVICE_GROUP_SIZE
 

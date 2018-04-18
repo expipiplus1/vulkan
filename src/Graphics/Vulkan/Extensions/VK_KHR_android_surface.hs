@@ -101,7 +101,7 @@ foreign import ccall "vkCreateAndroidSurfaceKHR" vkCreateAndroidSurfaceKHR :: ("
 -- | TODO: Struct comments
 data VkAndroidSurfaceCreateInfoKHR = VkAndroidSurfaceCreateInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkAndroidSurfaceCreateFlagsKHR
   , vkWindow :: Ptr ANativeWindow
   }
@@ -115,6 +115,6 @@ instance Storable VkAndroidSurfaceCreateInfoKHR where
                                            <*> peek (ptr `plusPtr` 16)
                                            <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkAndroidSurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkAndroidSurfaceCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkAndroidSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkAndroidSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkWindow (poked :: VkAndroidSurfaceCreateInfoKHR))

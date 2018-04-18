@@ -229,14 +229,14 @@ foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle :: ("device" ::: VkDevi
 -- | TODO: Struct comments
 data VkSubmitInfo = VkSubmitInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkWaitSemaphoreCount :: Word32
-  , vkWaitSemaphores :: Ptr VkSemaphore
-  , vkWaitDstStageMask :: Ptr VkPipelineStageFlags
+  , vkPWaitSemaphores :: Ptr VkSemaphore
+  , vkPWaitDstStageMask :: Ptr VkPipelineStageFlags
   , vkCommandBufferCount :: Word32
-  , vkCommandBuffers :: Ptr VkCommandBuffer
+  , vkPCommandBuffers :: Ptr VkCommandBuffer
   , vkSignalSemaphoreCount :: Word32
-  , vkSignalSemaphores :: Ptr VkSemaphore
+  , vkPSignalSemaphores :: Ptr VkSemaphore
   }
   deriving (Eq, Show)
 
@@ -253,12 +253,12 @@ instance Storable VkSubmitInfo where
                           <*> peek (ptr `plusPtr` 56)
                           <*> peek (ptr `plusPtr` 64)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSubmitInfo))
                 *> poke (ptr `plusPtr` 16) (vkWaitSemaphoreCount (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 24) (vkWaitSemaphores (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 32) (vkWaitDstStageMask (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 24) (vkPWaitSemaphores (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 32) (vkPWaitDstStageMask (poked :: VkSubmitInfo))
                 *> poke (ptr `plusPtr` 40) (vkCommandBufferCount (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 48) (vkCommandBuffers (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 48) (vkPCommandBuffers (poked :: VkSubmitInfo))
                 *> poke (ptr `plusPtr` 56) (vkSignalSemaphoreCount (poked :: VkSubmitInfo))
-                *> poke (ptr `plusPtr` 64) (vkSignalSemaphores (poked :: VkSubmitInfo))
+                *> poke (ptr `plusPtr` 64) (vkPSignalSemaphores (poked :: VkSubmitInfo))
 type VkPipelineStageFlags = VkPipelineStageFlagBits

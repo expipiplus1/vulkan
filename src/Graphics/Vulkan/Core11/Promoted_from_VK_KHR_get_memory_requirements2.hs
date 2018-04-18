@@ -77,7 +77,7 @@ foreign import ccall "vkGetImageSparseMemoryRequirements2" vkGetImageSparseMemor
 -- | TODO: Struct comments
 data VkBufferMemoryRequirementsInfo2 = VkBufferMemoryRequirementsInfo2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkBuffer :: VkBuffer
   }
   deriving (Eq, Show)
@@ -89,12 +89,12 @@ instance Storable VkBufferMemoryRequirementsInfo2 where
                                              <*> peek (ptr `plusPtr` 8)
                                              <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferMemoryRequirementsInfo2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkBufferMemoryRequirementsInfo2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferMemoryRequirementsInfo2))
                 *> poke (ptr `plusPtr` 16) (vkBuffer (poked :: VkBufferMemoryRequirementsInfo2))
 -- | TODO: Struct comments
 data VkImageMemoryRequirementsInfo2 = VkImageMemoryRequirementsInfo2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkImage :: VkImage
   }
   deriving (Eq, Show)
@@ -106,12 +106,12 @@ instance Storable VkImageMemoryRequirementsInfo2 where
                                             <*> peek (ptr `plusPtr` 8)
                                             <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageMemoryRequirementsInfo2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImageMemoryRequirementsInfo2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageMemoryRequirementsInfo2))
                 *> poke (ptr `plusPtr` 16) (vkImage (poked :: VkImageMemoryRequirementsInfo2))
 -- | TODO: Struct comments
 data VkImageSparseMemoryRequirementsInfo2 = VkImageSparseMemoryRequirementsInfo2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkImage :: VkImage
   }
   deriving (Eq, Show)
@@ -123,12 +123,12 @@ instance Storable VkImageSparseMemoryRequirementsInfo2 where
                                                   <*> peek (ptr `plusPtr` 8)
                                                   <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageSparseMemoryRequirementsInfo2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImageSparseMemoryRequirementsInfo2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageSparseMemoryRequirementsInfo2))
                 *> poke (ptr `plusPtr` 16) (vkImage (poked :: VkImageSparseMemoryRequirementsInfo2))
 -- | TODO: Struct comments
 data VkMemoryRequirements2 = VkMemoryRequirements2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemoryRequirements :: VkMemoryRequirements
   }
   deriving (Eq, Show)
@@ -140,12 +140,12 @@ instance Storable VkMemoryRequirements2 where
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryRequirements2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryRequirements2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryRequirements2))
                 *> poke (ptr `plusPtr` 16) (vkMemoryRequirements (poked :: VkMemoryRequirements2))
 -- | TODO: Struct comments
 data VkSparseImageMemoryRequirements2 = VkSparseImageMemoryRequirements2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemoryRequirements :: VkSparseImageMemoryRequirements
   }
   deriving (Eq, Show)
@@ -157,5 +157,5 @@ instance Storable VkSparseImageMemoryRequirements2 where
                                               <*> peek (ptr `plusPtr` 8)
                                               <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSparseImageMemoryRequirements2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSparseImageMemoryRequirements2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSparseImageMemoryRequirements2))
                 *> poke (ptr `plusPtr` 16) (vkMemoryRequirements (poked :: VkSparseImageMemoryRequirements2))

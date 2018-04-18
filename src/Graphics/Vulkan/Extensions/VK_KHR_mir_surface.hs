@@ -111,7 +111,7 @@ foreign import ccall "vkGetPhysicalDeviceMirPresentationSupportKHR" vkGetPhysica
 -- | TODO: Struct comments
 data VkMirSurfaceCreateInfoKHR = VkMirSurfaceCreateInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkMirSurfaceCreateFlagsKHR
   , vkConnection :: Ptr MirConnection
   , vkMirSurface :: Ptr MirSurface
@@ -127,7 +127,7 @@ instance Storable VkMirSurfaceCreateInfoKHR where
                                        <*> peek (ptr `plusPtr` 24)
                                        <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMirSurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMirSurfaceCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMirSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkMirSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkConnection (poked :: VkMirSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkMirSurface (poked :: VkMirSurfaceCreateInfoKHR))

@@ -71,7 +71,7 @@ foreign import ccall "vkImportSemaphoreFdKHR" vkImportSemaphoreFdKHR :: ("device
 -- | TODO: Struct comments
 data VkImportSemaphoreFdInfoKHR = VkImportSemaphoreFdInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSemaphore :: VkSemaphore
   , vkFlags :: VkSemaphoreImportFlags
   , vkHandleType :: VkExternalSemaphoreHandleTypeFlagBits
@@ -89,7 +89,7 @@ instance Storable VkImportSemaphoreFdInfoKHR where
                                         <*> peek (ptr `plusPtr` 28)
                                         <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportSemaphoreFdInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImportSemaphoreFdInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportSemaphoreFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkSemaphore (poked :: VkImportSemaphoreFdInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkFlags (poked :: VkImportSemaphoreFdInfoKHR))
                 *> poke (ptr `plusPtr` 28) (vkHandleType (poked :: VkImportSemaphoreFdInfoKHR))
@@ -97,7 +97,7 @@ instance Storable VkImportSemaphoreFdInfoKHR where
 -- | TODO: Struct comments
 data VkSemaphoreGetFdInfoKHR = VkSemaphoreGetFdInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSemaphore :: VkSemaphore
   , vkHandleType :: VkExternalSemaphoreHandleTypeFlagBits
   }
@@ -111,6 +111,6 @@ instance Storable VkSemaphoreGetFdInfoKHR where
                                      <*> peek (ptr `plusPtr` 16)
                                      <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSemaphoreGetFdInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSemaphoreGetFdInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSemaphoreGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkSemaphore (poked :: VkSemaphoreGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkSemaphoreGetFdInfoKHR))

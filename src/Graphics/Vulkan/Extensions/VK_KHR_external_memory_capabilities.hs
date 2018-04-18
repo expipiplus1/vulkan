@@ -125,27 +125,27 @@ type VkPhysicalDeviceExternalImageFormatInfoKHR = VkPhysicalDeviceExternalImageF
 
 
 pattern VkPhysicalDeviceExternalImageFormatInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("handleType" ::: VkExternalMemoryHandleTypeFlagBits) -> VkPhysicalDeviceExternalImageFormatInfoKHR
-pattern VkPhysicalDeviceExternalImageFormatInfoKHR vkSType vkNext vkHandleType = VkPhysicalDeviceExternalImageFormatInfo vkSType vkNext vkHandleType
+pattern VkPhysicalDeviceExternalImageFormatInfoKHR vkSType vkPNext vkHandleType = VkPhysicalDeviceExternalImageFormatInfo vkSType vkPNext vkHandleType
 type VkExternalImageFormatPropertiesKHR = VkExternalImageFormatProperties
 
 
 pattern VkExternalImageFormatPropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("externalMemoryProperties" ::: VkExternalMemoryProperties) -> VkExternalImageFormatPropertiesKHR
-pattern VkExternalImageFormatPropertiesKHR vkSType vkNext vkExternalMemoryProperties = VkExternalImageFormatProperties vkSType vkNext vkExternalMemoryProperties
+pattern VkExternalImageFormatPropertiesKHR vkSType vkPNext vkExternalMemoryProperties = VkExternalImageFormatProperties vkSType vkPNext vkExternalMemoryProperties
 type VkPhysicalDeviceExternalBufferInfoKHR = VkPhysicalDeviceExternalBufferInfo
 
 
 pattern VkPhysicalDeviceExternalBufferInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("flags" ::: VkBufferCreateFlags) -> ("usage" ::: VkBufferUsageFlags) -> ("handleType" ::: VkExternalMemoryHandleTypeFlagBits) -> VkPhysicalDeviceExternalBufferInfoKHR
-pattern VkPhysicalDeviceExternalBufferInfoKHR vkSType vkNext vkFlags vkUsage vkHandleType = VkPhysicalDeviceExternalBufferInfo vkSType vkNext vkFlags vkUsage vkHandleType
+pattern VkPhysicalDeviceExternalBufferInfoKHR vkSType vkPNext vkFlags vkUsage vkHandleType = VkPhysicalDeviceExternalBufferInfo vkSType vkPNext vkFlags vkUsage vkHandleType
 type VkExternalBufferPropertiesKHR = VkExternalBufferProperties
 
 
 pattern VkExternalBufferPropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("externalMemoryProperties" ::: VkExternalMemoryProperties) -> VkExternalBufferPropertiesKHR
-pattern VkExternalBufferPropertiesKHR vkSType vkNext vkExternalMemoryProperties = VkExternalBufferProperties vkSType vkNext vkExternalMemoryProperties
+pattern VkExternalBufferPropertiesKHR vkSType vkPNext vkExternalMemoryProperties = VkExternalBufferProperties vkSType vkPNext vkExternalMemoryProperties
 type VkPhysicalDeviceIDPropertiesKHR = VkPhysicalDeviceIDProperties
 
 
 pattern VkPhysicalDeviceIDPropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("deviceUUID" ::: Vector VK_UUID_SIZE Word8) -> ("driverUUID" ::: Vector VK_UUID_SIZE Word8) -> ("deviceLUID" ::: Vector VK_LUID_SIZE Word8) -> ("deviceNodeMask" ::: Word32) -> ("deviceLUIDValid" ::: VkBool32) -> VkPhysicalDeviceIDPropertiesKHR
-pattern VkPhysicalDeviceIDPropertiesKHR vkSType vkNext vkDeviceUUID vkDriverUUID vkDeviceLUID vkDeviceNodeMask vkDeviceLUIDValid = VkPhysicalDeviceIDProperties vkSType vkNext vkDeviceUUID vkDriverUUID vkDeviceLUID vkDeviceNodeMask vkDeviceLUIDValid
+pattern VkPhysicalDeviceIDPropertiesKHR vkSType vkPNext vkDeviceUUID vkDriverUUID vkDeviceLUID vkDeviceNodeMask vkDeviceLUIDValid = VkPhysicalDeviceIDProperties vkSType vkPNext vkDeviceUUID vkDriverUUID vkDeviceLUID vkDeviceNodeMask vkDeviceLUIDValid
 pattern VK_LUID_SIZE_KHR :: Integral a => a
 pattern VK_LUID_SIZE_KHR = VK_LUID_SIZE
 

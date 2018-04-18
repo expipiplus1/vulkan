@@ -299,7 +299,7 @@ instance Storable VkDisplayModePropertiesKHR where
 -- | TODO: Struct comments
 data VkDisplayModeCreateInfoKHR = VkDisplayModeCreateInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkDisplayModeCreateFlagsKHR
   , vkParameters :: VkDisplayModeParametersKHR
   }
@@ -313,7 +313,7 @@ instance Storable VkDisplayModeCreateInfoKHR where
                                         <*> peek (ptr `plusPtr` 16)
                                         <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayModeCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDisplayModeCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayModeCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDisplayModeCreateInfoKHR))
                 *> poke (ptr `plusPtr` 20) (vkParameters (poked :: VkDisplayModeCreateInfoKHR))
 -- | TODO: Struct comments
@@ -354,7 +354,7 @@ instance Storable VkDisplayPlaneCapabilitiesKHR where
 -- | TODO: Struct comments
 data VkDisplaySurfaceCreateInfoKHR = VkDisplaySurfaceCreateInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkDisplaySurfaceCreateFlagsKHR
   , vkDisplayMode :: VkDisplayModeKHR
   , vkPlaneIndex :: Word32
@@ -380,7 +380,7 @@ instance Storable VkDisplaySurfaceCreateInfoKHR where
                                            <*> peek (ptr `plusPtr` 48)
                                            <*> peek (ptr `plusPtr` 52)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDisplaySurfaceCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplaySurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDisplaySurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDisplayMode (poked :: VkDisplaySurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkPlaneIndex (poked :: VkDisplaySurfaceCreateInfoKHR))

@@ -42,6 +42,6 @@ type VkPhysicalDeviceVariablePointerFeaturesKHR = VkPhysicalDeviceVariablePointe
 
 
 pattern VkPhysicalDeviceVariablePointerFeaturesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("variablePointersStorageBuffer" ::: VkBool32) -> ("variablePointers" ::: VkBool32) -> VkPhysicalDeviceVariablePointerFeaturesKHR
-pattern VkPhysicalDeviceVariablePointerFeaturesKHR vkSType vkNext vkVariablePointersStorageBuffer vkVariablePointers = VkPhysicalDeviceVariablePointerFeatures vkSType vkNext vkVariablePointersStorageBuffer vkVariablePointers
+pattern VkPhysicalDeviceVariablePointerFeaturesKHR vkSType vkPNext vkVariablePointersStorageBuffer vkVariablePointers = VkPhysicalDeviceVariablePointerFeatures vkSType vkPNext vkVariablePointersStorageBuffer vkVariablePointers
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES_KHR = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES

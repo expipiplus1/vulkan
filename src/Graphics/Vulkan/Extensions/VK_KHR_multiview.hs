@@ -63,17 +63,17 @@ type VkPhysicalDeviceMultiviewFeaturesKHR = VkPhysicalDeviceMultiviewFeatures
 
 
 pattern VkPhysicalDeviceMultiviewFeaturesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("multiview" ::: VkBool32) -> ("multiviewGeometryShader" ::: VkBool32) -> ("multiviewTessellationShader" ::: VkBool32) -> VkPhysicalDeviceMultiviewFeaturesKHR
-pattern VkPhysicalDeviceMultiviewFeaturesKHR vkSType vkNext vkMultiview vkMultiviewGeometryShader vkMultiviewTessellationShader = VkPhysicalDeviceMultiviewFeatures vkSType vkNext vkMultiview vkMultiviewGeometryShader vkMultiviewTessellationShader
+pattern VkPhysicalDeviceMultiviewFeaturesKHR vkSType vkPNext vkMultiview vkMultiviewGeometryShader vkMultiviewTessellationShader = VkPhysicalDeviceMultiviewFeatures vkSType vkPNext vkMultiview vkMultiviewGeometryShader vkMultiviewTessellationShader
 type VkPhysicalDeviceMultiviewPropertiesKHR = VkPhysicalDeviceMultiviewProperties
 
 
 pattern VkPhysicalDeviceMultiviewPropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("maxMultiviewViewCount" ::: Word32) -> ("maxMultiviewInstanceIndex" ::: Word32) -> VkPhysicalDeviceMultiviewPropertiesKHR
-pattern VkPhysicalDeviceMultiviewPropertiesKHR vkSType vkNext vkMaxMultiviewViewCount vkMaxMultiviewInstanceIndex = VkPhysicalDeviceMultiviewProperties vkSType vkNext vkMaxMultiviewViewCount vkMaxMultiviewInstanceIndex
+pattern VkPhysicalDeviceMultiviewPropertiesKHR vkSType vkPNext vkMaxMultiviewViewCount vkMaxMultiviewInstanceIndex = VkPhysicalDeviceMultiviewProperties vkSType vkPNext vkMaxMultiviewViewCount vkMaxMultiviewInstanceIndex
 type VkRenderPassMultiviewCreateInfoKHR = VkRenderPassMultiviewCreateInfo
 
 
 pattern VkRenderPassMultiviewCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("subpassCount" ::: Word32) -> ("pViewMasks" ::: Ptr Word32) -> ("dependencyCount" ::: Word32) -> ("pViewOffsets" ::: Ptr Int32) -> ("correlationMaskCount" ::: Word32) -> ("pCorrelationMasks" ::: Ptr Word32) -> VkRenderPassMultiviewCreateInfoKHR
-pattern VkRenderPassMultiviewCreateInfoKHR vkSType vkNext vkSubpassCount vkViewMasks vkDependencyCount vkViewOffsets vkCorrelationMaskCount vkCorrelationMasks = VkRenderPassMultiviewCreateInfo vkSType vkNext vkSubpassCount vkViewMasks vkDependencyCount vkViewOffsets vkCorrelationMaskCount vkCorrelationMasks
+pattern VkRenderPassMultiviewCreateInfoKHR vkSType vkPNext vkSubpassCount vkPViewMasks vkDependencyCount vkPViewOffsets vkCorrelationMaskCount vkPCorrelationMasks = VkRenderPassMultiviewCreateInfo vkSType vkPNext vkSubpassCount vkPViewMasks vkDependencyCount vkPViewOffsets vkCorrelationMaskCount vkPCorrelationMasks
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO_KHR = VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES_KHR :: VkStructureType

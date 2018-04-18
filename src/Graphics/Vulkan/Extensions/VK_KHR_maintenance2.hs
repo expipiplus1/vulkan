@@ -99,22 +99,22 @@ type VkRenderPassInputAttachmentAspectCreateInfoKHR = VkRenderPassInputAttachmen
 
 
 pattern VkRenderPassInputAttachmentAspectCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("aspectReferenceCount" ::: Word32) -> ("pAspectReferences" ::: Ptr VkInputAttachmentAspectReference) -> VkRenderPassInputAttachmentAspectCreateInfoKHR
-pattern VkRenderPassInputAttachmentAspectCreateInfoKHR vkSType vkNext vkAspectReferenceCount vkAspectReferences = VkRenderPassInputAttachmentAspectCreateInfo vkSType vkNext vkAspectReferenceCount vkAspectReferences
+pattern VkRenderPassInputAttachmentAspectCreateInfoKHR vkSType vkPNext vkAspectReferenceCount vkPAspectReferences = VkRenderPassInputAttachmentAspectCreateInfo vkSType vkPNext vkAspectReferenceCount vkPAspectReferences
 type VkPhysicalDevicePointClippingPropertiesKHR = VkPhysicalDevicePointClippingProperties
 
 
 pattern VkPhysicalDevicePointClippingPropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("pointClippingBehavior" ::: VkPointClippingBehavior) -> VkPhysicalDevicePointClippingPropertiesKHR
-pattern VkPhysicalDevicePointClippingPropertiesKHR vkSType vkNext vkPointClippingBehavior = VkPhysicalDevicePointClippingProperties vkSType vkNext vkPointClippingBehavior
+pattern VkPhysicalDevicePointClippingPropertiesKHR vkSType vkPNext vkPointClippingBehavior = VkPhysicalDevicePointClippingProperties vkSType vkPNext vkPointClippingBehavior
 type VkImageViewUsageCreateInfoKHR = VkImageViewUsageCreateInfo
 
 
 pattern VkImageViewUsageCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("usage" ::: VkImageUsageFlags) -> VkImageViewUsageCreateInfoKHR
-pattern VkImageViewUsageCreateInfoKHR vkSType vkNext vkUsage = VkImageViewUsageCreateInfo vkSType vkNext vkUsage
+pattern VkImageViewUsageCreateInfoKHR vkSType vkPNext vkUsage = VkImageViewUsageCreateInfo vkSType vkPNext vkUsage
 type VkPipelineTessellationDomainOriginStateCreateInfoKHR = VkPipelineTessellationDomainOriginStateCreateInfo
 
 
 pattern VkPipelineTessellationDomainOriginStateCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("domainOrigin" ::: VkTessellationDomainOrigin) -> VkPipelineTessellationDomainOriginStateCreateInfoKHR
-pattern VkPipelineTessellationDomainOriginStateCreateInfoKHR vkSType vkNext vkDomainOrigin = VkPipelineTessellationDomainOriginStateCreateInfo vkSType vkNext vkDomainOrigin
+pattern VkPipelineTessellationDomainOriginStateCreateInfoKHR vkSType vkPNext vkDomainOrigin = VkPipelineTessellationDomainOriginStateCreateInfo vkSType vkPNext vkDomainOrigin
 pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR = VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
 pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR :: VkImageCreateFlagBits

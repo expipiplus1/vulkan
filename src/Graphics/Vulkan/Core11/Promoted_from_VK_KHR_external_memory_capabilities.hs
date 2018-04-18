@@ -236,7 +236,7 @@ instance Storable VkExternalMemoryProperties where
 -- | TODO: Struct comments
 data VkPhysicalDeviceExternalImageFormatInfo = VkPhysicalDeviceExternalImageFormatInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleType :: VkExternalMemoryHandleTypeFlagBits
   }
   deriving (Eq, Show)
@@ -248,12 +248,12 @@ instance Storable VkPhysicalDeviceExternalImageFormatInfo where
                                                      <*> peek (ptr `plusPtr` 8)
                                                      <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalImageFormatInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceExternalImageFormatInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalImageFormatInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkPhysicalDeviceExternalImageFormatInfo))
 -- | TODO: Struct comments
 data VkExternalImageFormatProperties = VkExternalImageFormatProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkExternalMemoryProperties :: VkExternalMemoryProperties
   }
   deriving (Eq, Show)
@@ -265,12 +265,12 @@ instance Storable VkExternalImageFormatProperties where
                                              <*> peek (ptr `plusPtr` 8)
                                              <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalImageFormatProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExternalImageFormatProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalImageFormatProperties))
                 *> poke (ptr `plusPtr` 16) (vkExternalMemoryProperties (poked :: VkExternalImageFormatProperties))
 -- | TODO: Struct comments
 data VkPhysicalDeviceExternalBufferInfo = VkPhysicalDeviceExternalBufferInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkBufferCreateFlags
   , vkUsage :: VkBufferUsageFlags
   , vkHandleType :: VkExternalMemoryHandleTypeFlagBits
@@ -286,14 +286,14 @@ instance Storable VkPhysicalDeviceExternalBufferInfo where
                                                 <*> peek (ptr `plusPtr` 20)
                                                 <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalBufferInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceExternalBufferInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalBufferInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPhysicalDeviceExternalBufferInfo))
                 *> poke (ptr `plusPtr` 20) (vkUsage (poked :: VkPhysicalDeviceExternalBufferInfo))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkPhysicalDeviceExternalBufferInfo))
 -- | TODO: Struct comments
 data VkExternalBufferProperties = VkExternalBufferProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkExternalMemoryProperties :: VkExternalMemoryProperties
   }
   deriving (Eq, Show)
@@ -305,12 +305,12 @@ instance Storable VkExternalBufferProperties where
                                         <*> peek (ptr `plusPtr` 8)
                                         <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalBufferProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExternalBufferProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalBufferProperties))
                 *> poke (ptr `plusPtr` 16) (vkExternalMemoryProperties (poked :: VkExternalBufferProperties))
 -- | TODO: Struct comments
 data VkPhysicalDeviceIDProperties = VkPhysicalDeviceIDProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDeviceUUID :: Vector VK_UUID_SIZE Word8
   , vkDriverUUID :: Vector VK_UUID_SIZE Word8
   , vkDeviceLUID :: Vector VK_LUID_SIZE Word8
@@ -330,7 +330,7 @@ instance Storable VkPhysicalDeviceIDProperties where
                                           <*> peek (ptr `plusPtr` 56)
                                           <*> peek (ptr `plusPtr` 60)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceIDProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceIDProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceIDProperties))
                 *> poke (ptr `plusPtr` 16) (vkDeviceUUID (poked :: VkPhysicalDeviceIDProperties))
                 *> poke (ptr `plusPtr` 32) (vkDriverUUID (poked :: VkPhysicalDeviceIDProperties))
                 *> poke (ptr `plusPtr` 48) (vkDeviceLUID (poked :: VkPhysicalDeviceIDProperties))

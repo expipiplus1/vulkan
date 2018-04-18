@@ -531,13 +531,13 @@ data VkSubpassDescription = VkSubpassDescription
   { vkFlags :: VkSubpassDescriptionFlags
   , vkPipelineBindPoint :: VkPipelineBindPoint
   , vkInputAttachmentCount :: Word32
-  , vkInputAttachments :: Ptr VkAttachmentReference
+  , vkPInputAttachments :: Ptr VkAttachmentReference
   , vkColorAttachmentCount :: Word32
-  , vkColorAttachments :: Ptr VkAttachmentReference
-  , vkResolveAttachments :: Ptr VkAttachmentReference
-  , vkDepthStencilAttachment :: Ptr VkAttachmentReference
+  , vkPColorAttachments :: Ptr VkAttachmentReference
+  , vkPResolveAttachments :: Ptr VkAttachmentReference
+  , vkPDepthStencilAttachment :: Ptr VkAttachmentReference
   , vkPreserveAttachmentCount :: Word32
-  , vkPreserveAttachments :: Ptr Word32
+  , vkPPreserveAttachments :: Ptr Word32
   }
   deriving (Eq, Show)
 
@@ -557,13 +557,13 @@ instance Storable VkSubpassDescription where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkFlags (poked :: VkSubpassDescription))
                 *> poke (ptr `plusPtr` 4) (vkPipelineBindPoint (poked :: VkSubpassDescription))
                 *> poke (ptr `plusPtr` 8) (vkInputAttachmentCount (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 16) (vkInputAttachments (poked :: VkSubpassDescription))
+                *> poke (ptr `plusPtr` 16) (vkPInputAttachments (poked :: VkSubpassDescription))
                 *> poke (ptr `plusPtr` 24) (vkColorAttachmentCount (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 32) (vkColorAttachments (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 40) (vkResolveAttachments (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 48) (vkDepthStencilAttachment (poked :: VkSubpassDescription))
+                *> poke (ptr `plusPtr` 32) (vkPColorAttachments (poked :: VkSubpassDescription))
+                *> poke (ptr `plusPtr` 40) (vkPResolveAttachments (poked :: VkSubpassDescription))
+                *> poke (ptr `plusPtr` 48) (vkPDepthStencilAttachment (poked :: VkSubpassDescription))
                 *> poke (ptr `plusPtr` 56) (vkPreserveAttachmentCount (poked :: VkSubpassDescription))
-                *> poke (ptr `plusPtr` 64) (vkPreserveAttachments (poked :: VkSubpassDescription))
+                *> poke (ptr `plusPtr` 64) (vkPPreserveAttachments (poked :: VkSubpassDescription))
 -- | TODO: Struct comments
 data VkSubpassDependency = VkSubpassDependency
   { vkSrcSubpass :: Word32
@@ -596,14 +596,14 @@ instance Storable VkSubpassDependency where
 -- | TODO: Struct comments
 data VkRenderPassCreateInfo = VkRenderPassCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkRenderPassCreateFlags
   , vkAttachmentCount :: Word32
-  , vkAttachments :: Ptr VkAttachmentDescription
+  , vkPAttachments :: Ptr VkAttachmentDescription
   , vkSubpassCount :: Word32
-  , vkSubpasses :: Ptr VkSubpassDescription
+  , vkPSubpasses :: Ptr VkSubpassDescription
   , vkDependencyCount :: Word32
-  , vkDependencies :: Ptr VkSubpassDependency
+  , vkPDependencies :: Ptr VkSubpassDependency
   }
   deriving (Eq, Show)
 
@@ -620,22 +620,22 @@ instance Storable VkRenderPassCreateInfo where
                                     <*> peek (ptr `plusPtr` 48)
                                     <*> peek (ptr `plusPtr` 56)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkRenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkRenderPassCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkAttachmentCount (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkAttachments (poked :: VkRenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 24) (vkPAttachments (poked :: VkRenderPassCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkSubpassCount (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkSubpasses (poked :: VkRenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 40) (vkPSubpasses (poked :: VkRenderPassCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkDependencyCount (poked :: VkRenderPassCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkDependencies (poked :: VkRenderPassCreateInfo))
+                *> poke (ptr `plusPtr` 56) (vkPDependencies (poked :: VkRenderPassCreateInfo))
 -- | TODO: Struct comments
 data VkFramebufferCreateInfo = VkFramebufferCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkFramebufferCreateFlags
   , vkRenderPass :: VkRenderPass
   , vkAttachmentCount :: Word32
-  , vkAttachments :: Ptr VkImageView
+  , vkPAttachments :: Ptr VkImageView
   , vkWidth :: Word32
   , vkHeight :: Word32
   , vkLayers :: Word32
@@ -655,11 +655,11 @@ instance Storable VkFramebufferCreateInfo where
                                      <*> peek (ptr `plusPtr` 52)
                                      <*> peek (ptr `plusPtr` 56)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkFramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFramebufferCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkFramebufferCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkRenderPass (poked :: VkFramebufferCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkAttachmentCount (poked :: VkFramebufferCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkAttachments (poked :: VkFramebufferCreateInfo))
+                *> poke (ptr `plusPtr` 40) (vkPAttachments (poked :: VkFramebufferCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkWidth (poked :: VkFramebufferCreateInfo))
                 *> poke (ptr `plusPtr` 52) (vkHeight (poked :: VkFramebufferCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkLayers (poked :: VkFramebufferCreateInfo))

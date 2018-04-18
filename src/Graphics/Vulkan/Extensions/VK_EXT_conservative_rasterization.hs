@@ -134,7 +134,7 @@ pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME = "VK_EXT_conservative_
 -- | TODO: Struct comments
 data VkPhysicalDeviceConservativeRasterizationPropertiesEXT = VkPhysicalDeviceConservativeRasterizationPropertiesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPrimitiveOverestimationSize :: CFloat
   , vkMaxExtraPrimitiveOverestimationSize :: CFloat
   , vkExtraPrimitiveOverestimationSizeGranularity :: CFloat
@@ -162,7 +162,7 @@ instance Storable VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
                                                                     <*> peek (ptr `plusPtr` 44)
                                                                     <*> peek (ptr `plusPtr` 48)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkPrimitiveOverestimationSize (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
                 *> poke (ptr `plusPtr` 20) (vkMaxExtraPrimitiveOverestimationSize (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
                 *> poke (ptr `plusPtr` 24) (vkExtraPrimitiveOverestimationSizeGranularity (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
@@ -175,7 +175,7 @@ instance Storable VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
 -- | TODO: Struct comments
 data VkPipelineRasterizationConservativeStateCreateInfoEXT = VkPipelineRasterizationConservativeStateCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkPipelineRasterizationConservativeStateCreateFlagsEXT
   , vkConservativeRasterizationMode :: VkConservativeRasterizationModeEXT
   , vkExtraPrimitiveOverestimationSize :: CFloat
@@ -191,7 +191,7 @@ instance Storable VkPipelineRasterizationConservativeStateCreateInfoEXT where
                                                                    <*> peek (ptr `plusPtr` 20)
                                                                    <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 20) (vkConservativeRasterizationMode (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkExtraPrimitiveOverestimationSize (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))

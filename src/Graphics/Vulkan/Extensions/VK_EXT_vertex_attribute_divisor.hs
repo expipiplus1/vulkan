@@ -62,9 +62,9 @@ instance Storable VkVertexInputBindingDivisorDescriptionEXT where
 -- | TODO: Struct comments
 data VkPipelineVertexInputDivisorStateCreateInfoEXT = VkPipelineVertexInputDivisorStateCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkVertexBindingDivisorCount :: Word32
-  , vkVertexBindingDivisors :: Ptr VkVertexInputBindingDivisorDescriptionEXT
+  , vkPVertexBindingDivisors :: Ptr VkVertexInputBindingDivisorDescriptionEXT
   }
   deriving (Eq, Show)
 
@@ -76,13 +76,13 @@ instance Storable VkPipelineVertexInputDivisorStateCreateInfoEXT where
                                                             <*> peek (ptr `plusPtr` 16)
                                                             <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineVertexInputDivisorStateCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineVertexInputDivisorStateCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineVertexInputDivisorStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkVertexBindingDivisorCount (poked :: VkPipelineVertexInputDivisorStateCreateInfoEXT))
-                *> poke (ptr `plusPtr` 24) (vkVertexBindingDivisors (poked :: VkPipelineVertexInputDivisorStateCreateInfoEXT))
+                *> poke (ptr `plusPtr` 24) (vkPVertexBindingDivisors (poked :: VkPipelineVertexInputDivisorStateCreateInfoEXT))
 -- | TODO: Struct comments
 data VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT = VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMaxVertexAttribDivisor :: Word32
   }
   deriving (Eq, Show)
@@ -94,5 +94,5 @@ instance Storable VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT where
                                                                  <*> peek (ptr `plusPtr` 8)
                                                                  <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxVertexAttribDivisor (poked :: VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT))

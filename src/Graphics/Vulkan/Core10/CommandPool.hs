@@ -136,7 +136,7 @@ foreign import ccall "vkResetCommandPool" vkResetCommandPool :: ("device" ::: Vk
 -- | TODO: Struct comments
 data VkCommandPoolCreateInfo = VkCommandPoolCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkCommandPoolCreateFlags
   , vkQueueFamilyIndex :: Word32
   }
@@ -150,7 +150,7 @@ instance Storable VkCommandPoolCreateInfo where
                                      <*> peek (ptr `plusPtr` 16)
                                      <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkCommandPoolCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandPoolCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkCommandPoolCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkQueueFamilyIndex (poked :: VkCommandPoolCreateInfo))
 type VkCommandPoolCreateFlags = VkCommandPoolCreateFlagBits

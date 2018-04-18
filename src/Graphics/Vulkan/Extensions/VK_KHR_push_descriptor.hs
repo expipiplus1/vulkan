@@ -78,7 +78,7 @@ foreign import ccall "vkCmdPushDescriptorSetWithTemplateKHR" vkCmdPushDescriptor
 -- | TODO: Struct comments
 data VkPhysicalDevicePushDescriptorPropertiesKHR = VkPhysicalDevicePushDescriptorPropertiesKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMaxPushDescriptors :: Word32
   }
   deriving (Eq, Show)
@@ -90,5 +90,5 @@ instance Storable VkPhysicalDevicePushDescriptorPropertiesKHR where
                                                          <*> peek (ptr `plusPtr` 8)
                                                          <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkMaxPushDescriptors (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))

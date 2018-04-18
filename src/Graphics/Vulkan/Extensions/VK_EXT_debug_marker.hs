@@ -90,10 +90,10 @@ foreign import ccall "vkCmdDebugMarkerInsertEXT" vkCmdDebugMarkerInsertEXT :: ("
 -- | TODO: Struct comments
 data VkDebugMarkerObjectNameInfoEXT = VkDebugMarkerObjectNameInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkObjectType :: VkDebugReportObjectTypeEXT
   , vkObject :: Word64
-  , vkObjectName :: Ptr CChar
+  , vkPObjectName :: Ptr CChar
   }
   deriving (Eq, Show)
 
@@ -106,19 +106,19 @@ instance Storable VkDebugMarkerObjectNameInfoEXT where
                                             <*> peek (ptr `plusPtr` 24)
                                             <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDebugMarkerObjectNameInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDebugMarkerObjectNameInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugMarkerObjectNameInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkObjectType (poked :: VkDebugMarkerObjectNameInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkObject (poked :: VkDebugMarkerObjectNameInfoEXT))
-                *> poke (ptr `plusPtr` 32) (vkObjectName (poked :: VkDebugMarkerObjectNameInfoEXT))
+                *> poke (ptr `plusPtr` 32) (vkPObjectName (poked :: VkDebugMarkerObjectNameInfoEXT))
 -- | TODO: Struct comments
 data VkDebugMarkerObjectTagInfoEXT = VkDebugMarkerObjectTagInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkObjectType :: VkDebugReportObjectTypeEXT
   , vkObject :: Word64
   , vkTagName :: Word64
   , vkTagSize :: CSize
-  , vkTag :: Ptr ()
+  , vkPTag :: Ptr ()
   }
   deriving (Eq, Show)
 
@@ -133,17 +133,17 @@ instance Storable VkDebugMarkerObjectTagInfoEXT where
                                            <*> peek (ptr `plusPtr` 40)
                                            <*> peek (ptr `plusPtr` 48)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDebugMarkerObjectTagInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDebugMarkerObjectTagInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugMarkerObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkObjectType (poked :: VkDebugMarkerObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkObject (poked :: VkDebugMarkerObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkTagName (poked :: VkDebugMarkerObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 40) (vkTagSize (poked :: VkDebugMarkerObjectTagInfoEXT))
-                *> poke (ptr `plusPtr` 48) (vkTag (poked :: VkDebugMarkerObjectTagInfoEXT))
+                *> poke (ptr `plusPtr` 48) (vkPTag (poked :: VkDebugMarkerObjectTagInfoEXT))
 -- | TODO: Struct comments
 data VkDebugMarkerMarkerInfoEXT = VkDebugMarkerMarkerInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
-  , vkMarkerName :: Ptr CChar
+  , vkPNext :: Ptr ()
+  , vkPMarkerName :: Ptr CChar
   , vkColor :: Vector 4 CFloat
   }
   deriving (Eq, Show)
@@ -156,6 +156,6 @@ instance Storable VkDebugMarkerMarkerInfoEXT where
                                         <*> peek (ptr `plusPtr` 16)
                                         <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDebugMarkerMarkerInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDebugMarkerMarkerInfoEXT))
-                *> poke (ptr `plusPtr` 16) (vkMarkerName (poked :: VkDebugMarkerMarkerInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugMarkerMarkerInfoEXT))
+                *> poke (ptr `plusPtr` 16) (vkPMarkerName (poked :: VkDebugMarkerMarkerInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkColor (poked :: VkDebugMarkerMarkerInfoEXT))

@@ -61,12 +61,12 @@ type VkPhysicalDeviceMaintenance3PropertiesKHR = VkPhysicalDeviceMaintenance3Pro
 
 
 pattern VkPhysicalDeviceMaintenance3PropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("maxPerSetDescriptors" ::: Word32) -> ("maxMemoryAllocationSize" ::: VkDeviceSize) -> VkPhysicalDeviceMaintenance3PropertiesKHR
-pattern VkPhysicalDeviceMaintenance3PropertiesKHR vkSType vkNext vkMaxPerSetDescriptors vkMaxMemoryAllocationSize = VkPhysicalDeviceMaintenance3Properties vkSType vkNext vkMaxPerSetDescriptors vkMaxMemoryAllocationSize
+pattern VkPhysicalDeviceMaintenance3PropertiesKHR vkSType vkPNext vkMaxPerSetDescriptors vkMaxMemoryAllocationSize = VkPhysicalDeviceMaintenance3Properties vkSType vkPNext vkMaxPerSetDescriptors vkMaxMemoryAllocationSize
 type VkDescriptorSetLayoutSupportKHR = VkDescriptorSetLayoutSupport
 
 
 pattern VkDescriptorSetLayoutSupportKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("supported" ::: VkBool32) -> VkDescriptorSetLayoutSupportKHR
-pattern VkDescriptorSetLayoutSupportKHR vkSType vkNext vkSupported = VkDescriptorSetLayoutSupport vkSType vkNext vkSupported
+pattern VkDescriptorSetLayoutSupportKHR vkSType vkPNext vkSupported = VkDescriptorSetLayoutSupport vkSType vkPNext vkSupported
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES_KHR = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT_KHR :: VkStructureType

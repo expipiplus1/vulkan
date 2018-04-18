@@ -65,7 +65,7 @@ foreign import ccall "vkBindImageMemory2" vkBindImageMemory2 :: ("device" ::: Vk
 -- | TODO: Struct comments
 data VkBindBufferMemoryInfo = VkBindBufferMemoryInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkBuffer :: VkBuffer
   , vkMemory :: VkDeviceMemory
   , vkMemoryOffset :: VkDeviceSize
@@ -81,14 +81,14 @@ instance Storable VkBindBufferMemoryInfo where
                                     <*> peek (ptr `plusPtr` 24)
                                     <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBindBufferMemoryInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkBindBufferMemoryInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindBufferMemoryInfo))
                 *> poke (ptr `plusPtr` 16) (vkBuffer (poked :: VkBindBufferMemoryInfo))
                 *> poke (ptr `plusPtr` 24) (vkMemory (poked :: VkBindBufferMemoryInfo))
                 *> poke (ptr `plusPtr` 32) (vkMemoryOffset (poked :: VkBindBufferMemoryInfo))
 -- | TODO: Struct comments
 data VkBindImageMemoryInfo = VkBindImageMemoryInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkImage :: VkImage
   , vkMemory :: VkDeviceMemory
   , vkMemoryOffset :: VkDeviceSize
@@ -104,7 +104,7 @@ instance Storable VkBindImageMemoryInfo where
                                    <*> peek (ptr `plusPtr` 24)
                                    <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBindImageMemoryInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkBindImageMemoryInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindImageMemoryInfo))
                 *> poke (ptr `plusPtr` 16) (vkImage (poked :: VkBindImageMemoryInfo))
                 *> poke (ptr `plusPtr` 24) (vkMemory (poked :: VkBindImageMemoryInfo))
                 *> poke (ptr `plusPtr` 32) (vkMemoryOffset (poked :: VkBindImageMemoryInfo))

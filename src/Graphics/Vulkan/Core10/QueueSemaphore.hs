@@ -88,7 +88,7 @@ foreign import ccall "vkDestroySemaphore" vkDestroySemaphore :: ("device" ::: Vk
 -- | TODO: Struct comments
 data VkSemaphoreCreateInfo = VkSemaphoreCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkSemaphoreCreateFlags
   }
   deriving (Eq, Show)
@@ -100,5 +100,5 @@ instance Storable VkSemaphoreCreateInfo where
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSemaphoreCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSemaphoreCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSemaphoreCreateInfo))

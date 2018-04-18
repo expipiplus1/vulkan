@@ -111,7 +111,7 @@ pattern VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME = "VK_EXT_sampler_filter_min
 -- | TODO: Struct comments
 data VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT = VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFilterMinmaxSingleComponentFormats :: VkBool32
   , vkFilterMinmaxImageComponentMapping :: VkBool32
   }
@@ -125,13 +125,13 @@ instance Storable VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
                                                               <*> peek (ptr `plusPtr` 16)
                                                               <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkFilterMinmaxSingleComponentFormats (poked :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT))
                 *> poke (ptr `plusPtr` 20) (vkFilterMinmaxImageComponentMapping (poked :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT))
 -- | TODO: Struct comments
 data VkSamplerReductionModeCreateInfoEXT = VkSamplerReductionModeCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkReductionMode :: VkSamplerReductionModeEXT
   }
   deriving (Eq, Show)
@@ -143,5 +143,5 @@ instance Storable VkSamplerReductionModeCreateInfoEXT where
                                                  <*> peek (ptr `plusPtr` 8)
                                                  <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerReductionModeCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSamplerReductionModeCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerReductionModeCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkReductionMode (poked :: VkSamplerReductionModeCreateInfoEXT))

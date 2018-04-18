@@ -77,12 +77,12 @@ type VkPhysicalDeviceExternalFenceInfoKHR = VkPhysicalDeviceExternalFenceInfo
 
 
 pattern VkPhysicalDeviceExternalFenceInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("handleType" ::: VkExternalFenceHandleTypeFlagBits) -> VkPhysicalDeviceExternalFenceInfoKHR
-pattern VkPhysicalDeviceExternalFenceInfoKHR vkSType vkNext vkHandleType = VkPhysicalDeviceExternalFenceInfo vkSType vkNext vkHandleType
+pattern VkPhysicalDeviceExternalFenceInfoKHR vkSType vkPNext vkHandleType = VkPhysicalDeviceExternalFenceInfo vkSType vkPNext vkHandleType
 type VkExternalFencePropertiesKHR = VkExternalFenceProperties
 
 
 pattern VkExternalFencePropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("exportFromImportedHandleTypes" ::: VkExternalFenceHandleTypeFlags) -> ("compatibleHandleTypes" ::: VkExternalFenceHandleTypeFlags) -> ("externalFenceFeatures" ::: VkExternalFenceFeatureFlags) -> VkExternalFencePropertiesKHR
-pattern VkExternalFencePropertiesKHR vkSType vkNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalFenceFeatures = VkExternalFenceProperties vkSType vkNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalFenceFeatures
+pattern VkExternalFencePropertiesKHR vkSType vkPNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalFenceFeatures = VkExternalFenceProperties vkSType vkPNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalFenceFeatures
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO_KHR = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO
 pattern VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES_KHR :: VkStructureType

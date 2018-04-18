@@ -46,14 +46,14 @@ pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME = "VK_KHR_win32_keyed_mutex"
 -- | TODO: Struct comments
 data VkWin32KeyedMutexAcquireReleaseInfoKHR = VkWin32KeyedMutexAcquireReleaseInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkAcquireCount :: Word32
-  , vkAcquireSyncs :: Ptr VkDeviceMemory
-  , vkAcquireKeys :: Ptr Word64
-  , vkAcquireTimeouts :: Ptr Word32
+  , vkPAcquireSyncs :: Ptr VkDeviceMemory
+  , vkPAcquireKeys :: Ptr Word64
+  , vkPAcquireTimeouts :: Ptr Word32
   , vkReleaseCount :: Word32
-  , vkReleaseSyncs :: Ptr VkDeviceMemory
-  , vkReleaseKeys :: Ptr Word64
+  , vkPReleaseSyncs :: Ptr VkDeviceMemory
+  , vkPReleaseKeys :: Ptr Word64
   }
   deriving (Eq, Show)
 
@@ -70,11 +70,11 @@ instance Storable VkWin32KeyedMutexAcquireReleaseInfoKHR where
                                                     <*> peek (ptr `plusPtr` 56)
                                                     <*> peek (ptr `plusPtr` 64)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkAcquireCount (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 24) (vkAcquireSyncs (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 32) (vkAcquireKeys (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 40) (vkAcquireTimeouts (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
+                *> poke (ptr `plusPtr` 24) (vkPAcquireSyncs (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
+                *> poke (ptr `plusPtr` 32) (vkPAcquireKeys (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
+                *> poke (ptr `plusPtr` 40) (vkPAcquireTimeouts (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
                 *> poke (ptr `plusPtr` 48) (vkReleaseCount (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 56) (vkReleaseSyncs (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 64) (vkReleaseKeys (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
+                *> poke (ptr `plusPtr` 56) (vkPReleaseSyncs (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
+                *> poke (ptr `plusPtr` 64) (vkPReleaseKeys (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))

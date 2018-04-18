@@ -80,7 +80,7 @@ pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO = VkStructureType 1000113000
 -- | TODO: Struct comments
 data VkExportFenceCreateInfo = VkExportFenceCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleTypes :: VkExternalFenceHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -92,6 +92,6 @@ instance Storable VkExportFenceCreateInfo where
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportFenceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExportFenceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportFenceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportFenceCreateInfo))
 type VkFenceImportFlags = VkFenceImportFlagBits

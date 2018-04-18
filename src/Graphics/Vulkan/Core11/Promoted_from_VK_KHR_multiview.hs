@@ -53,7 +53,7 @@ pattern VK_DEPENDENCY_VIEW_LOCAL_BIT = VkDependencyFlagBits 0x00000002
 -- | TODO: Struct comments
 data VkPhysicalDeviceMultiviewFeatures = VkPhysicalDeviceMultiviewFeatures
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMultiview :: VkBool32
   , vkMultiviewGeometryShader :: VkBool32
   , vkMultiviewTessellationShader :: VkBool32
@@ -69,14 +69,14 @@ instance Storable VkPhysicalDeviceMultiviewFeatures where
                                                <*> peek (ptr `plusPtr` 20)
                                                <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceMultiviewFeatures))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceMultiviewFeatures))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMultiviewFeatures))
                 *> poke (ptr `plusPtr` 16) (vkMultiview (poked :: VkPhysicalDeviceMultiviewFeatures))
                 *> poke (ptr `plusPtr` 20) (vkMultiviewGeometryShader (poked :: VkPhysicalDeviceMultiviewFeatures))
                 *> poke (ptr `plusPtr` 24) (vkMultiviewTessellationShader (poked :: VkPhysicalDeviceMultiviewFeatures))
 -- | TODO: Struct comments
 data VkPhysicalDeviceMultiviewProperties = VkPhysicalDeviceMultiviewProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMaxMultiviewViewCount :: Word32
   , vkMaxMultiviewInstanceIndex :: Word32
   }
@@ -90,19 +90,19 @@ instance Storable VkPhysicalDeviceMultiviewProperties where
                                                  <*> peek (ptr `plusPtr` 16)
                                                  <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceMultiviewProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceMultiviewProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMultiviewProperties))
                 *> poke (ptr `plusPtr` 16) (vkMaxMultiviewViewCount (poked :: VkPhysicalDeviceMultiviewProperties))
                 *> poke (ptr `plusPtr` 20) (vkMaxMultiviewInstanceIndex (poked :: VkPhysicalDeviceMultiviewProperties))
 -- | TODO: Struct comments
 data VkRenderPassMultiviewCreateInfo = VkRenderPassMultiviewCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSubpassCount :: Word32
-  , vkViewMasks :: Ptr Word32
+  , vkPViewMasks :: Ptr Word32
   , vkDependencyCount :: Word32
-  , vkViewOffsets :: Ptr Int32
+  , vkPViewOffsets :: Ptr Int32
   , vkCorrelationMaskCount :: Word32
-  , vkCorrelationMasks :: Ptr Word32
+  , vkPCorrelationMasks :: Ptr Word32
   }
   deriving (Eq, Show)
 
@@ -118,10 +118,10 @@ instance Storable VkRenderPassMultiviewCreateInfo where
                                              <*> peek (ptr `plusPtr` 48)
                                              <*> peek (ptr `plusPtr` 56)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkRenderPassMultiviewCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkRenderPassMultiviewCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassMultiviewCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkSubpassCount (poked :: VkRenderPassMultiviewCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkViewMasks (poked :: VkRenderPassMultiviewCreateInfo))
+                *> poke (ptr `plusPtr` 24) (vkPViewMasks (poked :: VkRenderPassMultiviewCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkDependencyCount (poked :: VkRenderPassMultiviewCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkViewOffsets (poked :: VkRenderPassMultiviewCreateInfo))
+                *> poke (ptr `plusPtr` 40) (vkPViewOffsets (poked :: VkRenderPassMultiviewCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkCorrelationMaskCount (poked :: VkRenderPassMultiviewCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkCorrelationMasks (poked :: VkRenderPassMultiviewCreateInfo))
+                *> poke (ptr `plusPtr` 56) (vkPCorrelationMasks (poked :: VkRenderPassMultiviewCreateInfo))

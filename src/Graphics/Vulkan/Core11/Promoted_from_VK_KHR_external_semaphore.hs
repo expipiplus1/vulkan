@@ -80,7 +80,7 @@ pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO = VkStructureType 1000077
 -- | TODO: Struct comments
 data VkExportSemaphoreCreateInfo = VkExportSemaphoreCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleTypes :: VkExternalSemaphoreHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -92,6 +92,6 @@ instance Storable VkExportSemaphoreCreateInfo where
                                          <*> peek (ptr `plusPtr` 8)
                                          <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExportSemaphoreCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportSemaphoreCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportSemaphoreCreateInfo))
 type VkSemaphoreImportFlags = VkSemaphoreImportFlagBits

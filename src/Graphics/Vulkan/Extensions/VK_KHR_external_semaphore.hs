@@ -52,7 +52,7 @@ type VkExportSemaphoreCreateInfoKHR = VkExportSemaphoreCreateInfo
 
 
 pattern VkExportSemaphoreCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("handleTypes" ::: VkExternalSemaphoreHandleTypeFlags) -> VkExportSemaphoreCreateInfoKHR
-pattern VkExportSemaphoreCreateInfoKHR vkSType vkNext vkHandleTypes = VkExportSemaphoreCreateInfo vkSType vkNext vkHandleTypes
+pattern VkExportSemaphoreCreateInfoKHR vkSType vkPNext vkHandleTypes = VkExportSemaphoreCreateInfo vkSType vkPNext vkHandleTypes
 pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO_KHR = VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
 pattern VK_SEMAPHORE_IMPORT_TEMPORARY_BIT_KHR :: VkSemaphoreImportFlagBits

@@ -74,7 +74,7 @@ instance Storable VkXYColorEXT where
 -- | TODO: Struct comments
 data VkHdrMetadataEXT = VkHdrMetadataEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDisplayPrimaryRed :: VkXYColorEXT
   , vkDisplayPrimaryGreen :: VkXYColorEXT
   , vkDisplayPrimaryBlue :: VkXYColorEXT
@@ -100,7 +100,7 @@ instance Storable VkHdrMetadataEXT where
                               <*> peek (ptr `plusPtr` 56)
                               <*> peek (ptr `plusPtr` 60)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkHdrMetadataEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkHdrMetadataEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkHdrMetadataEXT))
                 *> poke (ptr `plusPtr` 16) (vkDisplayPrimaryRed (poked :: VkHdrMetadataEXT))
                 *> poke (ptr `plusPtr` 24) (vkDisplayPrimaryGreen (poked :: VkHdrMetadataEXT))
                 *> poke (ptr `plusPtr` 32) (vkDisplayPrimaryBlue (poked :: VkHdrMetadataEXT))

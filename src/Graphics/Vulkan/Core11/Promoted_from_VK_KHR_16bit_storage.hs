@@ -30,7 +30,7 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES = VkStructureTy
 -- | TODO: Struct comments
 data VkPhysicalDevice16BitStorageFeatures = VkPhysicalDevice16BitStorageFeatures
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkStorageBuffer16BitAccess :: VkBool32
   , vkUniformAndStorageBuffer16BitAccess :: VkBool32
   , vkStoragePushConstant16 :: VkBool32
@@ -48,7 +48,7 @@ instance Storable VkPhysicalDevice16BitStorageFeatures where
                                                   <*> peek (ptr `plusPtr` 24)
                                                   <*> peek (ptr `plusPtr` 28)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDevice16BitStorageFeatures))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDevice16BitStorageFeatures))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDevice16BitStorageFeatures))
                 *> poke (ptr `plusPtr` 16) (vkStorageBuffer16BitAccess (poked :: VkPhysicalDevice16BitStorageFeatures))
                 *> poke (ptr `plusPtr` 20) (vkUniformAndStorageBuffer16BitAccess (poked :: VkPhysicalDevice16BitStorageFeatures))
                 *> poke (ptr `plusPtr` 24) (vkStoragePushConstant16 (poked :: VkPhysicalDevice16BitStorageFeatures))

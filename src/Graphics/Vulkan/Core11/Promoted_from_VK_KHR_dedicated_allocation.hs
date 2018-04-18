@@ -39,7 +39,7 @@ pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO = VkStructureType 10001
 -- | TODO: Struct comments
 data VkMemoryDedicatedRequirements = VkMemoryDedicatedRequirements
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPrefersDedicatedAllocation :: VkBool32
   , vkRequiresDedicatedAllocation :: VkBool32
   }
@@ -53,13 +53,13 @@ instance Storable VkMemoryDedicatedRequirements where
                                            <*> peek (ptr `plusPtr` 16)
                                            <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryDedicatedRequirements))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryDedicatedRequirements))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryDedicatedRequirements))
                 *> poke (ptr `plusPtr` 16) (vkPrefersDedicatedAllocation (poked :: VkMemoryDedicatedRequirements))
                 *> poke (ptr `plusPtr` 20) (vkRequiresDedicatedAllocation (poked :: VkMemoryDedicatedRequirements))
 -- | TODO: Struct comments
 data VkMemoryDedicatedAllocateInfo = VkMemoryDedicatedAllocateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkImage :: VkImage
   , vkBuffer :: VkBuffer
   }
@@ -73,6 +73,6 @@ instance Storable VkMemoryDedicatedAllocateInfo where
                                            <*> peek (ptr `plusPtr` 16)
                                            <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryDedicatedAllocateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryDedicatedAllocateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryDedicatedAllocateInfo))
                 *> poke (ptr `plusPtr` 16) (vkImage (poked :: VkMemoryDedicatedAllocateInfo))
                 *> poke (ptr `plusPtr` 24) (vkBuffer (poked :: VkMemoryDedicatedAllocateInfo))

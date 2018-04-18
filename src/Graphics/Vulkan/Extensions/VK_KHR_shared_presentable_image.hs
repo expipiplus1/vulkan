@@ -73,7 +73,7 @@ foreign import ccall "vkGetSwapchainStatusKHR" vkGetSwapchainStatusKHR :: ("devi
 -- | TODO: Struct comments
 data VkSharedPresentSurfaceCapabilitiesKHR = VkSharedPresentSurfaceCapabilitiesKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSharedPresentSupportedUsageFlags :: VkImageUsageFlags
   }
   deriving (Eq, Show)
@@ -85,5 +85,5 @@ instance Storable VkSharedPresentSurfaceCapabilitiesKHR where
                                                    <*> peek (ptr `plusPtr` 8)
                                                    <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSharedPresentSurfaceCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSharedPresentSurfaceCapabilitiesKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSharedPresentSurfaceCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkSharedPresentSupportedUsageFlags (poked :: VkSharedPresentSurfaceCapabilitiesKHR))

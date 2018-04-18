@@ -147,7 +147,7 @@ foreign import ccall "vkGetPhysicalDeviceExternalFenceProperties" vkGetPhysicalD
 -- | TODO: Struct comments
 data VkPhysicalDeviceExternalFenceInfo = VkPhysicalDeviceExternalFenceInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleType :: VkExternalFenceHandleTypeFlagBits
   }
   deriving (Eq, Show)
@@ -159,12 +159,12 @@ instance Storable VkPhysicalDeviceExternalFenceInfo where
                                                <*> peek (ptr `plusPtr` 8)
                                                <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalFenceInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceExternalFenceInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalFenceInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkPhysicalDeviceExternalFenceInfo))
 -- | TODO: Struct comments
 data VkExternalFenceProperties = VkExternalFenceProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkExportFromImportedHandleTypes :: VkExternalFenceHandleTypeFlags
   , vkCompatibleHandleTypes :: VkExternalFenceHandleTypeFlags
   , vkExternalFenceFeatures :: VkExternalFenceFeatureFlags
@@ -180,7 +180,7 @@ instance Storable VkExternalFenceProperties where
                                        <*> peek (ptr `plusPtr` 20)
                                        <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalFenceProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExternalFenceProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalFenceProperties))
                 *> poke (ptr `plusPtr` 16) (vkExportFromImportedHandleTypes (poked :: VkExternalFenceProperties))
                 *> poke (ptr `plusPtr` 20) (vkCompatibleHandleTypes (poked :: VkExternalFenceProperties))
                 *> poke (ptr `plusPtr` 24) (vkExternalFenceFeatures (poked :: VkExternalFenceProperties))

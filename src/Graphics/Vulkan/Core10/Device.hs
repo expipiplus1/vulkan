@@ -120,11 +120,11 @@ foreign import ccall "vkDestroyDevice" vkDestroyDevice :: ("device" ::: VkDevice
 -- | TODO: Struct comments
 data VkDeviceQueueCreateInfo = VkDeviceQueueCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkDeviceQueueCreateFlags
   , vkQueueFamilyIndex :: Word32
   , vkQueueCount :: Word32
-  , vkQueuePriorities :: Ptr CFloat
+  , vkPQueuePriorities :: Ptr CFloat
   }
   deriving (Eq, Show)
 
@@ -138,23 +138,23 @@ instance Storable VkDeviceQueueCreateInfo where
                                      <*> peek (ptr `plusPtr` 24)
                                      <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceQueueCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceQueueCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceQueueCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDeviceQueueCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkQueueFamilyIndex (poked :: VkDeviceQueueCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkQueueCount (poked :: VkDeviceQueueCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkQueuePriorities (poked :: VkDeviceQueueCreateInfo))
+                *> poke (ptr `plusPtr` 32) (vkPQueuePriorities (poked :: VkDeviceQueueCreateInfo))
 -- | TODO: Struct comments
 data VkDeviceCreateInfo = VkDeviceCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkDeviceCreateFlags
   , vkQueueCreateInfoCount :: Word32
-  , vkQueueCreateInfos :: Ptr VkDeviceQueueCreateInfo
+  , vkPQueueCreateInfos :: Ptr VkDeviceQueueCreateInfo
   , vkEnabledLayerCount :: Word32
-  , vkEnabledLayerNames :: Ptr (Ptr CChar)
+  , vkPPEnabledLayerNames :: Ptr (Ptr CChar)
   , vkEnabledExtensionCount :: Word32
-  , vkEnabledExtensionNames :: Ptr (Ptr CChar)
-  , vkEnabledFeatures :: Ptr VkPhysicalDeviceFeatures
+  , vkPPEnabledExtensionNames :: Ptr (Ptr CChar)
+  , vkPEnabledFeatures :: Ptr VkPhysicalDeviceFeatures
   }
   deriving (Eq, Show)
 
@@ -172,13 +172,13 @@ instance Storable VkDeviceCreateInfo where
                                 <*> peek (ptr `plusPtr` 56)
                                 <*> peek (ptr `plusPtr` 64)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDeviceCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkQueueCreateInfoCount (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkQueueCreateInfos (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 24) (vkPQueueCreateInfos (poked :: VkDeviceCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkEnabledLayerCount (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkEnabledLayerNames (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 40) (vkPPEnabledLayerNames (poked :: VkDeviceCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkEnabledExtensionCount (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 56) (vkEnabledExtensionNames (poked :: VkDeviceCreateInfo))
-                *> poke (ptr `plusPtr` 64) (vkEnabledFeatures (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 56) (vkPPEnabledExtensionNames (poked :: VkDeviceCreateInfo))
+                *> poke (ptr `plusPtr` 64) (vkPEnabledFeatures (poked :: VkDeviceCreateInfo))
 type VkDeviceQueueCreateFlags = VkDeviceQueueCreateFlagBits

@@ -88,7 +88,7 @@ foreign import ccall "vkGetMemoryWin32HandlePropertiesKHR" vkGetMemoryWin32Handl
 -- | TODO: Struct comments
 data VkImportMemoryWin32HandleInfoKHR = VkImportMemoryWin32HandleInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleType :: VkExternalMemoryHandleTypeFlagBits
   , vkHandle :: HANDLE
   , vkName :: LPCWSTR
@@ -104,15 +104,15 @@ instance Storable VkImportMemoryWin32HandleInfoKHR where
                                               <*> peek (ptr `plusPtr` 24)
                                               <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportMemoryWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImportMemoryWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportMemoryWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkImportMemoryWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandle (poked :: VkImportMemoryWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkImportMemoryWin32HandleInfoKHR))
 -- | TODO: Struct comments
 data VkExportMemoryWin32HandleInfoKHR = VkExportMemoryWin32HandleInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
-  , vkAttributes :: Ptr SECURITY_ATTRIBUTES
+  , vkPNext :: Ptr ()
+  , vkPAttributes :: Ptr SECURITY_ATTRIBUTES
   , vkDwAccess :: DWORD
   , vkName :: LPCWSTR
   }
@@ -127,14 +127,14 @@ instance Storable VkExportMemoryWin32HandleInfoKHR where
                                               <*> peek (ptr `plusPtr` 24)
                                               <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportMemoryWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExportMemoryWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 16) (vkAttributes (poked :: VkExportMemoryWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportMemoryWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 16) (vkPAttributes (poked :: VkExportMemoryWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDwAccess (poked :: VkExportMemoryWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkExportMemoryWin32HandleInfoKHR))
 -- | TODO: Struct comments
 data VkMemoryWin32HandlePropertiesKHR = VkMemoryWin32HandlePropertiesKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemoryTypeBits :: Word32
   }
   deriving (Eq, Show)
@@ -146,12 +146,12 @@ instance Storable VkMemoryWin32HandlePropertiesKHR where
                                               <*> peek (ptr `plusPtr` 8)
                                               <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryWin32HandlePropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryWin32HandlePropertiesKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryWin32HandlePropertiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryWin32HandlePropertiesKHR))
 -- | TODO: Struct comments
 data VkMemoryGetWin32HandleInfoKHR = VkMemoryGetWin32HandleInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemory :: VkDeviceMemory
   , vkHandleType :: VkExternalMemoryHandleTypeFlagBits
   }
@@ -165,6 +165,6 @@ instance Storable VkMemoryGetWin32HandleInfoKHR where
                                            <*> peek (ptr `plusPtr` 16)
                                            <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryGetWin32HandleInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryGetWin32HandleInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkMemoryGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkMemoryGetWin32HandleInfoKHR))

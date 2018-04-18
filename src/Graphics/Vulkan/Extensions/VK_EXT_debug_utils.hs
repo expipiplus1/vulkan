@@ -288,10 +288,10 @@ foreign import ccall "vkSubmitDebugUtilsMessageEXT" vkSubmitDebugUtilsMessageEXT
 -- | TODO: Struct comments
 data VkDebugUtilsObjectNameInfoEXT = VkDebugUtilsObjectNameInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkObjectType :: VkObjectType
   , vkObjectHandle :: Word64
-  , vkObjectName :: Ptr CChar
+  , vkPObjectName :: Ptr CChar
   }
   deriving (Eq, Show)
 
@@ -304,19 +304,19 @@ instance Storable VkDebugUtilsObjectNameInfoEXT where
                                            <*> peek (ptr `plusPtr` 24)
                                            <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDebugUtilsObjectNameInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDebugUtilsObjectNameInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugUtilsObjectNameInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkObjectType (poked :: VkDebugUtilsObjectNameInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkObjectHandle (poked :: VkDebugUtilsObjectNameInfoEXT))
-                *> poke (ptr `plusPtr` 32) (vkObjectName (poked :: VkDebugUtilsObjectNameInfoEXT))
+                *> poke (ptr `plusPtr` 32) (vkPObjectName (poked :: VkDebugUtilsObjectNameInfoEXT))
 -- | TODO: Struct comments
 data VkDebugUtilsObjectTagInfoEXT = VkDebugUtilsObjectTagInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkObjectType :: VkObjectType
   , vkObjectHandle :: Word64
   , vkTagName :: Word64
   , vkTagSize :: CSize
-  , vkTag :: Ptr ()
+  , vkPTag :: Ptr ()
   }
   deriving (Eq, Show)
 
@@ -331,17 +331,17 @@ instance Storable VkDebugUtilsObjectTagInfoEXT where
                                           <*> peek (ptr `plusPtr` 40)
                                           <*> peek (ptr `plusPtr` 48)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDebugUtilsObjectTagInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDebugUtilsObjectTagInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugUtilsObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkObjectType (poked :: VkDebugUtilsObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkObjectHandle (poked :: VkDebugUtilsObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkTagName (poked :: VkDebugUtilsObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 40) (vkTagSize (poked :: VkDebugUtilsObjectTagInfoEXT))
-                *> poke (ptr `plusPtr` 48) (vkTag (poked :: VkDebugUtilsObjectTagInfoEXT))
+                *> poke (ptr `plusPtr` 48) (vkPTag (poked :: VkDebugUtilsObjectTagInfoEXT))
 -- | TODO: Struct comments
 data VkDebugUtilsLabelEXT = VkDebugUtilsLabelEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
-  , vkLabelName :: Ptr CChar
+  , vkPNext :: Ptr ()
+  , vkPLabelName :: Ptr CChar
   , vkColor :: Vector 4 CFloat
   }
   deriving (Eq, Show)
@@ -354,18 +354,18 @@ instance Storable VkDebugUtilsLabelEXT where
                                   <*> peek (ptr `plusPtr` 16)
                                   <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDebugUtilsLabelEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDebugUtilsLabelEXT))
-                *> poke (ptr `plusPtr` 16) (vkLabelName (poked :: VkDebugUtilsLabelEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugUtilsLabelEXT))
+                *> poke (ptr `plusPtr` 16) (vkPLabelName (poked :: VkDebugUtilsLabelEXT))
                 *> poke (ptr `plusPtr` 24) (vkColor (poked :: VkDebugUtilsLabelEXT))
 -- | TODO: Struct comments
 data VkDebugUtilsMessengerCreateInfoEXT = VkDebugUtilsMessengerCreateInfoEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkDebugUtilsMessengerCreateFlagsEXT
   , vkMessageSeverity :: VkDebugUtilsMessageSeverityFlagsEXT
   , vkMessageType :: VkDebugUtilsMessageTypeFlagsEXT
   , vkPfnUserCallback :: PFN_vkDebugUtilsMessengerCallbackEXT
-  , vkUserData :: Ptr ()
+  , vkPUserData :: Ptr ()
   }
   deriving (Eq, Show)
 
@@ -380,26 +380,26 @@ instance Storable VkDebugUtilsMessengerCreateInfoEXT where
                                                 <*> peek (ptr `plusPtr` 32)
                                                 <*> peek (ptr `plusPtr` 40)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDebugUtilsMessengerCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDebugUtilsMessengerCreateInfoEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugUtilsMessengerCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDebugUtilsMessengerCreateInfoEXT))
                 *> poke (ptr `plusPtr` 20) (vkMessageSeverity (poked :: VkDebugUtilsMessengerCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkMessageType (poked :: VkDebugUtilsMessengerCreateInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPfnUserCallback (poked :: VkDebugUtilsMessengerCreateInfoEXT))
-                *> poke (ptr `plusPtr` 40) (vkUserData (poked :: VkDebugUtilsMessengerCreateInfoEXT))
+                *> poke (ptr `plusPtr` 40) (vkPUserData (poked :: VkDebugUtilsMessengerCreateInfoEXT))
 -- | TODO: Struct comments
 data VkDebugUtilsMessengerCallbackDataEXT = VkDebugUtilsMessengerCallbackDataEXT
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkDebugUtilsMessengerCallbackDataFlagsEXT
-  , vkMessageIdName :: Ptr CChar
+  , vkPMessageIdName :: Ptr CChar
   , vkMessageIdNumber :: Int32
-  , vkMessage :: Ptr CChar
+  , vkPMessage :: Ptr CChar
   , vkQueueLabelCount :: Word32
-  , vkQueueLabels :: Ptr VkDebugUtilsLabelEXT
+  , vkPQueueLabels :: Ptr VkDebugUtilsLabelEXT
   , vkCmdBufLabelCount :: Word32
-  , vkCmdBufLabels :: Ptr VkDebugUtilsLabelEXT
+  , vkPCmdBufLabels :: Ptr VkDebugUtilsLabelEXT
   , vkObjectCount :: Word32
-  , vkObjects :: Ptr VkDebugUtilsObjectNameInfoEXT
+  , vkPObjects :: Ptr VkDebugUtilsObjectNameInfoEXT
   }
   deriving (Eq, Show)
 
@@ -419,16 +419,16 @@ instance Storable VkDebugUtilsMessengerCallbackDataEXT where
                                                   <*> peek (ptr `plusPtr` 80)
                                                   <*> peek (ptr `plusPtr` 88)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDebugUtilsMessengerCallbackDataEXT))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDebugUtilsMessengerCallbackDataEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugUtilsMessengerCallbackDataEXT))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDebugUtilsMessengerCallbackDataEXT))
-                *> poke (ptr `plusPtr` 24) (vkMessageIdName (poked :: VkDebugUtilsMessengerCallbackDataEXT))
+                *> poke (ptr `plusPtr` 24) (vkPMessageIdName (poked :: VkDebugUtilsMessengerCallbackDataEXT))
                 *> poke (ptr `plusPtr` 32) (vkMessageIdNumber (poked :: VkDebugUtilsMessengerCallbackDataEXT))
-                *> poke (ptr `plusPtr` 40) (vkMessage (poked :: VkDebugUtilsMessengerCallbackDataEXT))
+                *> poke (ptr `plusPtr` 40) (vkPMessage (poked :: VkDebugUtilsMessengerCallbackDataEXT))
                 *> poke (ptr `plusPtr` 48) (vkQueueLabelCount (poked :: VkDebugUtilsMessengerCallbackDataEXT))
-                *> poke (ptr `plusPtr` 56) (vkQueueLabels (poked :: VkDebugUtilsMessengerCallbackDataEXT))
+                *> poke (ptr `plusPtr` 56) (vkPQueueLabels (poked :: VkDebugUtilsMessengerCallbackDataEXT))
                 *> poke (ptr `plusPtr` 64) (vkCmdBufLabelCount (poked :: VkDebugUtilsMessengerCallbackDataEXT))
-                *> poke (ptr `plusPtr` 72) (vkCmdBufLabels (poked :: VkDebugUtilsMessengerCallbackDataEXT))
+                *> poke (ptr `plusPtr` 72) (vkPCmdBufLabels (poked :: VkDebugUtilsMessengerCallbackDataEXT))
                 *> poke (ptr `plusPtr` 80) (vkObjectCount (poked :: VkDebugUtilsMessengerCallbackDataEXT))
-                *> poke (ptr `plusPtr` 88) (vkObjects (poked :: VkDebugUtilsMessengerCallbackDataEXT))
+                *> poke (ptr `plusPtr` 88) (vkPObjects (poked :: VkDebugUtilsMessengerCallbackDataEXT))
 type VkDebugUtilsMessageSeverityFlagsEXT = VkDebugUtilsMessageSeverityFlagBitsEXT
 type VkDebugUtilsMessageTypeFlagsEXT = VkDebugUtilsMessageTypeFlagBitsEXT

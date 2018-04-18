@@ -104,7 +104,7 @@ type VkDescriptorUpdateTemplateCreateInfoKHR = VkDescriptorUpdateTemplateCreateI
 
 
 pattern VkDescriptorUpdateTemplateCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("flags" ::: VkDescriptorUpdateTemplateCreateFlags) -> ("descriptorUpdateEntryCount" ::: Word32) -> ("pDescriptorUpdateEntries" ::: Ptr VkDescriptorUpdateTemplateEntry) -> ("templateType" ::: VkDescriptorUpdateTemplateType) -> ("descriptorSetLayout" ::: VkDescriptorSetLayout) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("pipelineLayout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> VkDescriptorUpdateTemplateCreateInfoKHR
-pattern VkDescriptorUpdateTemplateCreateInfoKHR vkSType vkNext vkFlags vkDescriptorUpdateEntryCount vkDescriptorUpdateEntries vkTemplateType vkDescriptorSetLayout vkPipelineBindPoint vkPipelineLayout vkSet = VkDescriptorUpdateTemplateCreateInfo vkSType vkNext vkFlags vkDescriptorUpdateEntryCount vkDescriptorUpdateEntries vkTemplateType vkDescriptorSetLayout vkPipelineBindPoint vkPipelineLayout vkSet
+pattern VkDescriptorUpdateTemplateCreateInfoKHR vkSType vkPNext vkFlags vkDescriptorUpdateEntryCount vkPDescriptorUpdateEntries vkTemplateType vkDescriptorSetLayout vkPipelineBindPoint vkPipelineLayout vkSet = VkDescriptorUpdateTemplateCreateInfo vkSType vkPNext vkFlags vkDescriptorUpdateEntryCount vkPDescriptorUpdateEntries vkTemplateType vkDescriptorSetLayout vkPipelineBindPoint vkPipelineLayout vkSet
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR = VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
 pattern VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR :: VkObjectType

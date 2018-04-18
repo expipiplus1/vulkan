@@ -131,47 +131,47 @@ type VkPhysicalDeviceFeatures2KHR = VkPhysicalDeviceFeatures2
 
 
 pattern VkPhysicalDeviceFeatures2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("features" ::: VkPhysicalDeviceFeatures) -> VkPhysicalDeviceFeatures2KHR
-pattern VkPhysicalDeviceFeatures2KHR vkSType vkNext vkFeatures = VkPhysicalDeviceFeatures2 vkSType vkNext vkFeatures
+pattern VkPhysicalDeviceFeatures2KHR vkSType vkPNext vkFeatures = VkPhysicalDeviceFeatures2 vkSType vkPNext vkFeatures
 type VkPhysicalDeviceProperties2KHR = VkPhysicalDeviceProperties2
 
 
 pattern VkPhysicalDeviceProperties2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("properties" ::: VkPhysicalDeviceProperties) -> VkPhysicalDeviceProperties2KHR
-pattern VkPhysicalDeviceProperties2KHR vkSType vkNext vkProperties = VkPhysicalDeviceProperties2 vkSType vkNext vkProperties
+pattern VkPhysicalDeviceProperties2KHR vkSType vkPNext vkProperties = VkPhysicalDeviceProperties2 vkSType vkPNext vkProperties
 type VkFormatProperties2KHR = VkFormatProperties2
 
 
 pattern VkFormatProperties2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("formatProperties" ::: VkFormatProperties) -> VkFormatProperties2KHR
-pattern VkFormatProperties2KHR vkSType vkNext vkFormatProperties = VkFormatProperties2 vkSType vkNext vkFormatProperties
+pattern VkFormatProperties2KHR vkSType vkPNext vkFormatProperties = VkFormatProperties2 vkSType vkPNext vkFormatProperties
 type VkImageFormatProperties2KHR = VkImageFormatProperties2
 
 
 pattern VkImageFormatProperties2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("imageFormatProperties" ::: VkImageFormatProperties) -> VkImageFormatProperties2KHR
-pattern VkImageFormatProperties2KHR vkSType vkNext vkImageFormatProperties = VkImageFormatProperties2 vkSType vkNext vkImageFormatProperties
+pattern VkImageFormatProperties2KHR vkSType vkPNext vkImageFormatProperties = VkImageFormatProperties2 vkSType vkPNext vkImageFormatProperties
 type VkPhysicalDeviceImageFormatInfo2KHR = VkPhysicalDeviceImageFormatInfo2
 
 
 pattern VkPhysicalDeviceImageFormatInfo2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> VkPhysicalDeviceImageFormatInfo2KHR
-pattern VkPhysicalDeviceImageFormatInfo2KHR vkSType vkNext vkFormat vkType vkTiling vkUsage vkFlags = VkPhysicalDeviceImageFormatInfo2 vkSType vkNext vkFormat vkType vkTiling vkUsage vkFlags
+pattern VkPhysicalDeviceImageFormatInfo2KHR vkSType vkPNext vkFormat vkType vkTiling vkUsage vkFlags = VkPhysicalDeviceImageFormatInfo2 vkSType vkPNext vkFormat vkType vkTiling vkUsage vkFlags
 type VkQueueFamilyProperties2KHR = VkQueueFamilyProperties2
 
 
 pattern VkQueueFamilyProperties2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("queueFamilyProperties" ::: VkQueueFamilyProperties) -> VkQueueFamilyProperties2KHR
-pattern VkQueueFamilyProperties2KHR vkSType vkNext vkQueueFamilyProperties = VkQueueFamilyProperties2 vkSType vkNext vkQueueFamilyProperties
+pattern VkQueueFamilyProperties2KHR vkSType vkPNext vkQueueFamilyProperties = VkQueueFamilyProperties2 vkSType vkPNext vkQueueFamilyProperties
 type VkPhysicalDeviceMemoryProperties2KHR = VkPhysicalDeviceMemoryProperties2
 
 
 pattern VkPhysicalDeviceMemoryProperties2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("memoryProperties" ::: VkPhysicalDeviceMemoryProperties) -> VkPhysicalDeviceMemoryProperties2KHR
-pattern VkPhysicalDeviceMemoryProperties2KHR vkSType vkNext vkMemoryProperties = VkPhysicalDeviceMemoryProperties2 vkSType vkNext vkMemoryProperties
+pattern VkPhysicalDeviceMemoryProperties2KHR vkSType vkPNext vkMemoryProperties = VkPhysicalDeviceMemoryProperties2 vkSType vkPNext vkMemoryProperties
 type VkSparseImageFormatProperties2KHR = VkSparseImageFormatProperties2
 
 
 pattern VkSparseImageFormatProperties2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("properties" ::: VkSparseImageFormatProperties) -> VkSparseImageFormatProperties2KHR
-pattern VkSparseImageFormatProperties2KHR vkSType vkNext vkProperties = VkSparseImageFormatProperties2 vkSType vkNext vkProperties
+pattern VkSparseImageFormatProperties2KHR vkSType vkPNext vkProperties = VkSparseImageFormatProperties2 vkSType vkPNext vkProperties
 type VkPhysicalDeviceSparseImageFormatInfo2KHR = VkPhysicalDeviceSparseImageFormatInfo2
 
 
 pattern VkPhysicalDeviceSparseImageFormatInfo2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("samples" ::: VkSampleCountFlagBits) -> ("usage" ::: VkImageUsageFlags) -> ("tiling" ::: VkImageTiling) -> VkPhysicalDeviceSparseImageFormatInfo2KHR
-pattern VkPhysicalDeviceSparseImageFormatInfo2KHR vkSType vkNext vkFormat vkType vkSamples vkUsage vkTiling = VkPhysicalDeviceSparseImageFormatInfo2 vkSType vkNext vkFormat vkType vkSamples vkUsage vkTiling
+pattern VkPhysicalDeviceSparseImageFormatInfo2KHR vkSType vkPNext vkFormat vkType vkSamples vkUsage vkTiling = VkPhysicalDeviceSparseImageFormatInfo2 vkSType vkPNext vkFormat vkType vkSamples vkUsage vkTiling
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2_KHR :: VkStructureType

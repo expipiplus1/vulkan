@@ -223,32 +223,32 @@ type VkSamplerYcbcrConversionInfoKHR = VkSamplerYcbcrConversionInfo
 
 
 pattern VkSamplerYcbcrConversionInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("conversion" ::: VkSamplerYcbcrConversion) -> VkSamplerYcbcrConversionInfoKHR
-pattern VkSamplerYcbcrConversionInfoKHR vkSType vkNext vkConversion = VkSamplerYcbcrConversionInfo vkSType vkNext vkConversion
+pattern VkSamplerYcbcrConversionInfoKHR vkSType vkPNext vkConversion = VkSamplerYcbcrConversionInfo vkSType vkPNext vkConversion
 type VkSamplerYcbcrConversionCreateInfoKHR = VkSamplerYcbcrConversionCreateInfo
 
 
 pattern VkSamplerYcbcrConversionCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("format" ::: VkFormat) -> ("ycbcrModel" ::: VkSamplerYcbcrModelConversion) -> ("ycbcrRange" ::: VkSamplerYcbcrRange) -> ("components" ::: VkComponentMapping) -> ("xChromaOffset" ::: VkChromaLocation) -> ("yChromaOffset" ::: VkChromaLocation) -> ("chromaFilter" ::: VkFilter) -> ("forceExplicitReconstruction" ::: VkBool32) -> VkSamplerYcbcrConversionCreateInfoKHR
-pattern VkSamplerYcbcrConversionCreateInfoKHR vkSType vkNext vkFormat vkYcbcrModel vkYcbcrRange vkComponents vkXChromaOffset vkYChromaOffset vkChromaFilter vkForceExplicitReconstruction = VkSamplerYcbcrConversionCreateInfo vkSType vkNext vkFormat vkYcbcrModel vkYcbcrRange vkComponents vkXChromaOffset vkYChromaOffset vkChromaFilter vkForceExplicitReconstruction
+pattern VkSamplerYcbcrConversionCreateInfoKHR vkSType vkPNext vkFormat vkYcbcrModel vkYcbcrRange vkComponents vkXChromaOffset vkYChromaOffset vkChromaFilter vkForceExplicitReconstruction = VkSamplerYcbcrConversionCreateInfo vkSType vkPNext vkFormat vkYcbcrModel vkYcbcrRange vkComponents vkXChromaOffset vkYChromaOffset vkChromaFilter vkForceExplicitReconstruction
 type VkBindImagePlaneMemoryInfoKHR = VkBindImagePlaneMemoryInfo
 
 
 pattern VkBindImagePlaneMemoryInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("planeAspect" ::: VkImageAspectFlagBits) -> VkBindImagePlaneMemoryInfoKHR
-pattern VkBindImagePlaneMemoryInfoKHR vkSType vkNext vkPlaneAspect = VkBindImagePlaneMemoryInfo vkSType vkNext vkPlaneAspect
+pattern VkBindImagePlaneMemoryInfoKHR vkSType vkPNext vkPlaneAspect = VkBindImagePlaneMemoryInfo vkSType vkPNext vkPlaneAspect
 type VkImagePlaneMemoryRequirementsInfoKHR = VkImagePlaneMemoryRequirementsInfo
 
 
 pattern VkImagePlaneMemoryRequirementsInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("planeAspect" ::: VkImageAspectFlagBits) -> VkImagePlaneMemoryRequirementsInfoKHR
-pattern VkImagePlaneMemoryRequirementsInfoKHR vkSType vkNext vkPlaneAspect = VkImagePlaneMemoryRequirementsInfo vkSType vkNext vkPlaneAspect
+pattern VkImagePlaneMemoryRequirementsInfoKHR vkSType vkPNext vkPlaneAspect = VkImagePlaneMemoryRequirementsInfo vkSType vkPNext vkPlaneAspect
 type VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR = VkPhysicalDeviceSamplerYcbcrConversionFeatures
 
 
 pattern VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("samplerYcbcrConversion" ::: VkBool32) -> VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR
-pattern VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR vkSType vkNext vkSamplerYcbcrConversion = VkPhysicalDeviceSamplerYcbcrConversionFeatures vkSType vkNext vkSamplerYcbcrConversion
+pattern VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR vkSType vkPNext vkSamplerYcbcrConversion = VkPhysicalDeviceSamplerYcbcrConversionFeatures vkSType vkPNext vkSamplerYcbcrConversion
 type VkSamplerYcbcrConversionImageFormatPropertiesKHR = VkSamplerYcbcrConversionImageFormatProperties
 
 
 pattern VkSamplerYcbcrConversionImageFormatPropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("combinedImageSamplerDescriptorCount" ::: Word32) -> VkSamplerYcbcrConversionImageFormatPropertiesKHR
-pattern VkSamplerYcbcrConversionImageFormatPropertiesKHR vkSType vkNext vkCombinedImageSamplerDescriptorCount = VkSamplerYcbcrConversionImageFormatProperties vkSType vkNext vkCombinedImageSamplerDescriptorCount
+pattern VkSamplerYcbcrConversionImageFormatPropertiesKHR vkSType vkPNext vkCombinedImageSamplerDescriptorCount = VkSamplerYcbcrConversionImageFormatProperties vkSType vkPNext vkCombinedImageSamplerDescriptorCount
 pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO_KHR = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
 pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO_KHR :: VkStructureType

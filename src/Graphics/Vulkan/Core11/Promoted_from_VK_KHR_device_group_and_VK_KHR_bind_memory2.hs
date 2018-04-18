@@ -47,9 +47,9 @@ pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = VkImageCreateFlagBits 
 -- | TODO: Struct comments
 data VkBindBufferMemoryDeviceGroupInfo = VkBindBufferMemoryDeviceGroupInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDeviceIndexCount :: Word32
-  , vkDeviceIndices :: Ptr Word32
+  , vkPDeviceIndices :: Ptr Word32
   }
   deriving (Eq, Show)
 
@@ -61,17 +61,17 @@ instance Storable VkBindBufferMemoryDeviceGroupInfo where
                                                <*> peek (ptr `plusPtr` 16)
                                                <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBindBufferMemoryDeviceGroupInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkBindBufferMemoryDeviceGroupInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindBufferMemoryDeviceGroupInfo))
                 *> poke (ptr `plusPtr` 16) (vkDeviceIndexCount (poked :: VkBindBufferMemoryDeviceGroupInfo))
-                *> poke (ptr `plusPtr` 24) (vkDeviceIndices (poked :: VkBindBufferMemoryDeviceGroupInfo))
+                *> poke (ptr `plusPtr` 24) (vkPDeviceIndices (poked :: VkBindBufferMemoryDeviceGroupInfo))
 -- | TODO: Struct comments
 data VkBindImageMemoryDeviceGroupInfo = VkBindImageMemoryDeviceGroupInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDeviceIndexCount :: Word32
-  , vkDeviceIndices :: Ptr Word32
+  , vkPDeviceIndices :: Ptr Word32
   , vkSplitInstanceBindRegionCount :: Word32
-  , vkSplitInstanceBindRegions :: Ptr VkRect2D
+  , vkPSplitInstanceBindRegions :: Ptr VkRect2D
   }
   deriving (Eq, Show)
 
@@ -85,8 +85,8 @@ instance Storable VkBindImageMemoryDeviceGroupInfo where
                                               <*> peek (ptr `plusPtr` 32)
                                               <*> peek (ptr `plusPtr` 40)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBindImageMemoryDeviceGroupInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkBindImageMemoryDeviceGroupInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindImageMemoryDeviceGroupInfo))
                 *> poke (ptr `plusPtr` 16) (vkDeviceIndexCount (poked :: VkBindImageMemoryDeviceGroupInfo))
-                *> poke (ptr `plusPtr` 24) (vkDeviceIndices (poked :: VkBindImageMemoryDeviceGroupInfo))
+                *> poke (ptr `plusPtr` 24) (vkPDeviceIndices (poked :: VkBindImageMemoryDeviceGroupInfo))
                 *> poke (ptr `plusPtr` 32) (vkSplitInstanceBindRegionCount (poked :: VkBindImageMemoryDeviceGroupInfo))
-                *> poke (ptr `plusPtr` 40) (vkSplitInstanceBindRegions (poked :: VkBindImageMemoryDeviceGroupInfo))
+                *> poke (ptr `plusPtr` 40) (vkPSplitInstanceBindRegions (poked :: VkBindImageMemoryDeviceGroupInfo))

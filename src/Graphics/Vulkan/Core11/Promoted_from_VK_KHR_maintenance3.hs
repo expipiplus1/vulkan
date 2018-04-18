@@ -53,7 +53,7 @@ foreign import ccall "vkGetDescriptorSetLayoutSupport" vkGetDescriptorSetLayoutS
 -- | TODO: Struct comments
 data VkPhysicalDeviceMaintenance3Properties = VkPhysicalDeviceMaintenance3Properties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMaxPerSetDescriptors :: Word32
   , vkMaxMemoryAllocationSize :: VkDeviceSize
   }
@@ -67,13 +67,13 @@ instance Storable VkPhysicalDeviceMaintenance3Properties where
                                                     <*> peek (ptr `plusPtr` 16)
                                                     <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceMaintenance3Properties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceMaintenance3Properties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMaintenance3Properties))
                 *> poke (ptr `plusPtr` 16) (vkMaxPerSetDescriptors (poked :: VkPhysicalDeviceMaintenance3Properties))
                 *> poke (ptr `plusPtr` 24) (vkMaxMemoryAllocationSize (poked :: VkPhysicalDeviceMaintenance3Properties))
 -- | TODO: Struct comments
 data VkDescriptorSetLayoutSupport = VkDescriptorSetLayoutSupport
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSupported :: VkBool32
   }
   deriving (Eq, Show)
@@ -85,5 +85,5 @@ instance Storable VkDescriptorSetLayoutSupport where
                                           <*> peek (ptr `plusPtr` 8)
                                           <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorSetLayoutSupport))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDescriptorSetLayoutSupport))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetLayoutSupport))
                 *> poke (ptr `plusPtr` 16) (vkSupported (poked :: VkDescriptorSetLayoutSupport))

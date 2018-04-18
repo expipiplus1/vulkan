@@ -71,7 +71,7 @@ foreign import ccall "vkImportFenceFdKHR" vkImportFenceFdKHR :: ("device" ::: Vk
 -- | TODO: Struct comments
 data VkImportFenceFdInfoKHR = VkImportFenceFdInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFence :: VkFence
   , vkFlags :: VkFenceImportFlags
   , vkHandleType :: VkExternalFenceHandleTypeFlagBits
@@ -89,7 +89,7 @@ instance Storable VkImportFenceFdInfoKHR where
                                     <*> peek (ptr `plusPtr` 28)
                                     <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportFenceFdInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImportFenceFdInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportFenceFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFence (poked :: VkImportFenceFdInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkFlags (poked :: VkImportFenceFdInfoKHR))
                 *> poke (ptr `plusPtr` 28) (vkHandleType (poked :: VkImportFenceFdInfoKHR))
@@ -97,7 +97,7 @@ instance Storable VkImportFenceFdInfoKHR where
 -- | TODO: Struct comments
 data VkFenceGetFdInfoKHR = VkFenceGetFdInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFence :: VkFence
   , vkHandleType :: VkExternalFenceHandleTypeFlagBits
   }
@@ -111,6 +111,6 @@ instance Storable VkFenceGetFdInfoKHR where
                                  <*> peek (ptr `plusPtr` 16)
                                  <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFenceGetFdInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkFenceGetFdInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFenceGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFence (poked :: VkFenceGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkFenceGetFdInfoKHR))

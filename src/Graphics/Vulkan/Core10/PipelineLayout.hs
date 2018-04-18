@@ -115,12 +115,12 @@ instance Storable VkPushConstantRange where
 -- | TODO: Struct comments
 data VkPipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkPipelineLayoutCreateFlags
   , vkSetLayoutCount :: Word32
-  , vkSetLayouts :: Ptr VkDescriptorSetLayout
+  , vkPSetLayouts :: Ptr VkDescriptorSetLayout
   , vkPushConstantRangeCount :: Word32
-  , vkPushConstantRanges :: Ptr VkPushConstantRange
+  , vkPPushConstantRanges :: Ptr VkPushConstantRange
   }
   deriving (Eq, Show)
 
@@ -135,10 +135,10 @@ instance Storable VkPipelineLayoutCreateInfo where
                                         <*> peek (ptr `plusPtr` 32)
                                         <*> peek (ptr `plusPtr` 40)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineLayoutCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineLayoutCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkSetLayoutCount (poked :: VkPipelineLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkSetLayouts (poked :: VkPipelineLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 24) (vkPSetLayouts (poked :: VkPipelineLayoutCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkPushConstantRangeCount (poked :: VkPipelineLayoutCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkPushConstantRanges (poked :: VkPipelineLayoutCreateInfo))
+                *> poke (ptr `plusPtr` 40) (vkPPushConstantRanges (poked :: VkPipelineLayoutCreateInfo))
 type VkShaderStageFlags = VkShaderStageFlagBits

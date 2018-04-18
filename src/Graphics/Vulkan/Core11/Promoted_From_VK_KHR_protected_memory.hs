@@ -99,7 +99,7 @@ foreign import ccall "vkGetDeviceQueue2" vkGetDeviceQueue2 :: ("device" ::: VkDe
 -- | TODO: Struct comments
 data VkProtectedSubmitInfo = VkProtectedSubmitInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkProtectedSubmit :: VkBool32
   }
   deriving (Eq, Show)
@@ -111,12 +111,12 @@ instance Storable VkProtectedSubmitInfo where
                                    <*> peek (ptr `plusPtr` 8)
                                    <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkProtectedSubmitInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkProtectedSubmitInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkProtectedSubmitInfo))
                 *> poke (ptr `plusPtr` 16) (vkProtectedSubmit (poked :: VkProtectedSubmitInfo))
 -- | TODO: Struct comments
 data VkPhysicalDeviceProtectedMemoryFeatures = VkPhysicalDeviceProtectedMemoryFeatures
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkProtectedMemory :: VkBool32
   }
   deriving (Eq, Show)
@@ -128,12 +128,12 @@ instance Storable VkPhysicalDeviceProtectedMemoryFeatures where
                                                      <*> peek (ptr `plusPtr` 8)
                                                      <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceProtectedMemoryFeatures))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceProtectedMemoryFeatures))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceProtectedMemoryFeatures))
                 *> poke (ptr `plusPtr` 16) (vkProtectedMemory (poked :: VkPhysicalDeviceProtectedMemoryFeatures))
 -- | TODO: Struct comments
 data VkPhysicalDeviceProtectedMemoryProperties = VkPhysicalDeviceProtectedMemoryProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkProtectedNoFault :: VkBool32
   }
   deriving (Eq, Show)
@@ -145,12 +145,12 @@ instance Storable VkPhysicalDeviceProtectedMemoryProperties where
                                                        <*> peek (ptr `plusPtr` 8)
                                                        <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceProtectedMemoryProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceProtectedMemoryProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceProtectedMemoryProperties))
                 *> poke (ptr `plusPtr` 16) (vkProtectedNoFault (poked :: VkPhysicalDeviceProtectedMemoryProperties))
 -- | TODO: Struct comments
 data VkDeviceQueueInfo2 = VkDeviceQueueInfo2
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkDeviceQueueCreateFlags
   , vkQueueFamilyIndex :: Word32
   , vkQueueIndex :: Word32
@@ -166,7 +166,7 @@ instance Storable VkDeviceQueueInfo2 where
                                 <*> peek (ptr `plusPtr` 20)
                                 <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceQueueInfo2))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceQueueInfo2))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceQueueInfo2))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDeviceQueueInfo2))
                 *> poke (ptr `plusPtr` 20) (vkQueueFamilyIndex (poked :: VkDeviceQueueInfo2))
                 *> poke (ptr `plusPtr` 24) (vkQueueIndex (poked :: VkDeviceQueueInfo2))

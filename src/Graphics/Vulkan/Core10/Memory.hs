@@ -109,7 +109,7 @@ foreign import ccall "vkGetDeviceMemoryCommitment" vkGetDeviceMemoryCommitment :
 -- | TODO: Struct comments
 data VkMemoryAllocateInfo = VkMemoryAllocateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkAllocationSize :: VkDeviceSize
   , vkMemoryTypeIndex :: Word32
   }
@@ -123,13 +123,13 @@ instance Storable VkMemoryAllocateInfo where
                                   <*> peek (ptr `plusPtr` 16)
                                   <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryAllocateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryAllocateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryAllocateInfo))
                 *> poke (ptr `plusPtr` 16) (vkAllocationSize (poked :: VkMemoryAllocateInfo))
                 *> poke (ptr `plusPtr` 24) (vkMemoryTypeIndex (poked :: VkMemoryAllocateInfo))
 -- | TODO: Struct comments
 data VkMappedMemoryRange = VkMappedMemoryRange
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemory :: VkDeviceMemory
   , vkOffset :: VkDeviceSize
   , vkSize :: VkDeviceSize
@@ -145,7 +145,7 @@ instance Storable VkMappedMemoryRange where
                                  <*> peek (ptr `plusPtr` 24)
                                  <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMappedMemoryRange))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMappedMemoryRange))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMappedMemoryRange))
                 *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkMappedMemoryRange))
                 *> poke (ptr `plusPtr` 24) (vkOffset (poked :: VkMappedMemoryRange))
                 *> poke (ptr `plusPtr` 32) (vkSize (poked :: VkMappedMemoryRange))

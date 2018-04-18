@@ -412,7 +412,7 @@ foreign import ccall "vkDestroySamplerYcbcrConversion" vkDestroySamplerYcbcrConv
 -- | TODO: Struct comments
 data VkSamplerYcbcrConversionInfo = VkSamplerYcbcrConversionInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkConversion :: VkSamplerYcbcrConversion
   }
   deriving (Eq, Show)
@@ -424,12 +424,12 @@ instance Storable VkSamplerYcbcrConversionInfo where
                                           <*> peek (ptr `plusPtr` 8)
                                           <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerYcbcrConversionInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSamplerYcbcrConversionInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerYcbcrConversionInfo))
                 *> poke (ptr `plusPtr` 16) (vkConversion (poked :: VkSamplerYcbcrConversionInfo))
 -- | TODO: Struct comments
 data VkSamplerYcbcrConversionCreateInfo = VkSamplerYcbcrConversionCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFormat :: VkFormat
   , vkYcbcrModel :: VkSamplerYcbcrModelConversion
   , vkYcbcrRange :: VkSamplerYcbcrRange
@@ -455,7 +455,7 @@ instance Storable VkSamplerYcbcrConversionCreateInfo where
                                                 <*> peek (ptr `plusPtr` 52)
                                                 <*> peek (ptr `plusPtr` 56)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerYcbcrConversionCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSamplerYcbcrConversionCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerYcbcrConversionCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFormat (poked :: VkSamplerYcbcrConversionCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkYcbcrModel (poked :: VkSamplerYcbcrConversionCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkYcbcrRange (poked :: VkSamplerYcbcrConversionCreateInfo))
@@ -467,7 +467,7 @@ instance Storable VkSamplerYcbcrConversionCreateInfo where
 -- | TODO: Struct comments
 data VkBindImagePlaneMemoryInfo = VkBindImagePlaneMemoryInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPlaneAspect :: VkImageAspectFlagBits
   }
   deriving (Eq, Show)
@@ -479,12 +479,12 @@ instance Storable VkBindImagePlaneMemoryInfo where
                                         <*> peek (ptr `plusPtr` 8)
                                         <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBindImagePlaneMemoryInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkBindImagePlaneMemoryInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindImagePlaneMemoryInfo))
                 *> poke (ptr `plusPtr` 16) (vkPlaneAspect (poked :: VkBindImagePlaneMemoryInfo))
 -- | TODO: Struct comments
 data VkImagePlaneMemoryRequirementsInfo = VkImagePlaneMemoryRequirementsInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPlaneAspect :: VkImageAspectFlagBits
   }
   deriving (Eq, Show)
@@ -496,12 +496,12 @@ instance Storable VkImagePlaneMemoryRequirementsInfo where
                                                 <*> peek (ptr `plusPtr` 8)
                                                 <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImagePlaneMemoryRequirementsInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImagePlaneMemoryRequirementsInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImagePlaneMemoryRequirementsInfo))
                 *> poke (ptr `plusPtr` 16) (vkPlaneAspect (poked :: VkImagePlaneMemoryRequirementsInfo))
 -- | TODO: Struct comments
 data VkPhysicalDeviceSamplerYcbcrConversionFeatures = VkPhysicalDeviceSamplerYcbcrConversionFeatures
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSamplerYcbcrConversion :: VkBool32
   }
   deriving (Eq, Show)
@@ -513,12 +513,12 @@ instance Storable VkPhysicalDeviceSamplerYcbcrConversionFeatures where
                                                             <*> peek (ptr `plusPtr` 8)
                                                             <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
                 *> poke (ptr `plusPtr` 16) (vkSamplerYcbcrConversion (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
 -- | TODO: Struct comments
 data VkSamplerYcbcrConversionImageFormatProperties = VkSamplerYcbcrConversionImageFormatProperties
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkCombinedImageSamplerDescriptorCount :: Word32
   }
   deriving (Eq, Show)
@@ -530,5 +530,5 @@ instance Storable VkSamplerYcbcrConversionImageFormatProperties where
                                                            <*> peek (ptr `plusPtr` 8)
                                                            <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerYcbcrConversionImageFormatProperties))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkSamplerYcbcrConversionImageFormatProperties))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerYcbcrConversionImageFormatProperties))
                 *> poke (ptr `plusPtr` 16) (vkCombinedImageSamplerDescriptorCount (poked :: VkSamplerYcbcrConversionImageFormatProperties))

@@ -51,7 +51,7 @@ pattern VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME = "VK_NVX_multiview_
 -- | TODO: Struct comments
 data VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX = VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkPerViewPositionAllComponents :: VkBool32
   }
   deriving (Eq, Show)
@@ -63,5 +63,5 @@ instance Storable VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
                                                                      <*> peek (ptr `plusPtr` 8)
                                                                      <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX))
                 *> poke (ptr `plusPtr` 16) (vkPerViewPositionAllComponents (poked :: VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX))

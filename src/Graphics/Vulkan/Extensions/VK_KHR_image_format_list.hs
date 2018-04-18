@@ -43,9 +43,9 @@ pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME = "VK_KHR_image_format_list"
 -- | TODO: Struct comments
 data VkImageFormatListCreateInfoKHR = VkImageFormatListCreateInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkViewFormatCount :: Word32
-  , vkViewFormats :: Ptr VkFormat
+  , vkPViewFormats :: Ptr VkFormat
   }
   deriving (Eq, Show)
 
@@ -57,6 +57,6 @@ instance Storable VkImageFormatListCreateInfoKHR where
                                             <*> peek (ptr `plusPtr` 16)
                                             <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageFormatListCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImageFormatListCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageFormatListCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkViewFormatCount (poked :: VkImageFormatListCreateInfoKHR))
-                *> poke (ptr `plusPtr` 24) (vkViewFormats (poked :: VkImageFormatListCreateInfoKHR))
+                *> poke (ptr `plusPtr` 24) (vkPViewFormats (poked :: VkImageFormatListCreateInfoKHR))

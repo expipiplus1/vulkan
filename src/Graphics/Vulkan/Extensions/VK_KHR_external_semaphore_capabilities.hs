@@ -79,12 +79,12 @@ type VkPhysicalDeviceExternalSemaphoreInfoKHR = VkPhysicalDeviceExternalSemaphor
 
 
 pattern VkPhysicalDeviceExternalSemaphoreInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("handleType" ::: VkExternalSemaphoreHandleTypeFlagBits) -> VkPhysicalDeviceExternalSemaphoreInfoKHR
-pattern VkPhysicalDeviceExternalSemaphoreInfoKHR vkSType vkNext vkHandleType = VkPhysicalDeviceExternalSemaphoreInfo vkSType vkNext vkHandleType
+pattern VkPhysicalDeviceExternalSemaphoreInfoKHR vkSType vkPNext vkHandleType = VkPhysicalDeviceExternalSemaphoreInfo vkSType vkPNext vkHandleType
 type VkExternalSemaphorePropertiesKHR = VkExternalSemaphoreProperties
 
 
 pattern VkExternalSemaphorePropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("exportFromImportedHandleTypes" ::: VkExternalSemaphoreHandleTypeFlags) -> ("compatibleHandleTypes" ::: VkExternalSemaphoreHandleTypeFlags) -> ("externalSemaphoreFeatures" ::: VkExternalSemaphoreFeatureFlags) -> VkExternalSemaphorePropertiesKHR
-pattern VkExternalSemaphorePropertiesKHR vkSType vkNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalSemaphoreFeatures = VkExternalSemaphoreProperties vkSType vkNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalSemaphoreFeatures
+pattern VkExternalSemaphorePropertiesKHR vkSType vkPNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalSemaphoreFeatures = VkExternalSemaphoreProperties vkSType vkPNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalSemaphoreFeatures
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO_KHR = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
 pattern VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES_KHR :: VkStructureType

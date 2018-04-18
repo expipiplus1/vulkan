@@ -76,7 +76,7 @@ foreign import ccall "vkGetMemoryFdPropertiesKHR" vkGetMemoryFdPropertiesKHR :: 
 -- | TODO: Struct comments
 data VkImportMemoryFdInfoKHR = VkImportMemoryFdInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleType :: VkExternalMemoryHandleTypeFlagBits
   , vkFd :: CInt
   }
@@ -90,13 +90,13 @@ instance Storable VkImportMemoryFdInfoKHR where
                                      <*> peek (ptr `plusPtr` 16)
                                      <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportMemoryFdInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImportMemoryFdInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportMemoryFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkImportMemoryFdInfoKHR))
                 *> poke (ptr `plusPtr` 20) (vkFd (poked :: VkImportMemoryFdInfoKHR))
 -- | TODO: Struct comments
 data VkMemoryFdPropertiesKHR = VkMemoryFdPropertiesKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemoryTypeBits :: Word32
   }
   deriving (Eq, Show)
@@ -108,12 +108,12 @@ instance Storable VkMemoryFdPropertiesKHR where
                                      <*> peek (ptr `plusPtr` 8)
                                      <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryFdPropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryFdPropertiesKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryFdPropertiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryFdPropertiesKHR))
 -- | TODO: Struct comments
 data VkMemoryGetFdInfoKHR = VkMemoryGetFdInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkMemory :: VkDeviceMemory
   , vkHandleType :: VkExternalMemoryHandleTypeFlagBits
   }
@@ -127,6 +127,6 @@ instance Storable VkMemoryGetFdInfoKHR where
                                   <*> peek (ptr `plusPtr` 16)
                                   <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryGetFdInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryGetFdInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkMemoryGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkMemoryGetFdInfoKHR))

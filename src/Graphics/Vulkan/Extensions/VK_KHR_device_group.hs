@@ -132,37 +132,37 @@ type VkMemoryAllocateFlagsInfoKHR = VkMemoryAllocateFlagsInfo
 
 
 pattern VkMemoryAllocateFlagsInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("flags" ::: VkMemoryAllocateFlags) -> ("deviceMask" ::: Word32) -> VkMemoryAllocateFlagsInfoKHR
-pattern VkMemoryAllocateFlagsInfoKHR vkSType vkNext vkFlags vkDeviceMask = VkMemoryAllocateFlagsInfo vkSType vkNext vkFlags vkDeviceMask
+pattern VkMemoryAllocateFlagsInfoKHR vkSType vkPNext vkFlags vkDeviceMask = VkMemoryAllocateFlagsInfo vkSType vkPNext vkFlags vkDeviceMask
 type VkBindBufferMemoryDeviceGroupInfoKHR = VkBindBufferMemoryDeviceGroupInfo
 
 
 pattern VkBindBufferMemoryDeviceGroupInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("deviceIndexCount" ::: Word32) -> ("pDeviceIndices" ::: Ptr Word32) -> VkBindBufferMemoryDeviceGroupInfoKHR
-pattern VkBindBufferMemoryDeviceGroupInfoKHR vkSType vkNext vkDeviceIndexCount vkDeviceIndices = VkBindBufferMemoryDeviceGroupInfo vkSType vkNext vkDeviceIndexCount vkDeviceIndices
+pattern VkBindBufferMemoryDeviceGroupInfoKHR vkSType vkPNext vkDeviceIndexCount vkPDeviceIndices = VkBindBufferMemoryDeviceGroupInfo vkSType vkPNext vkDeviceIndexCount vkPDeviceIndices
 type VkBindImageMemoryDeviceGroupInfoKHR = VkBindImageMemoryDeviceGroupInfo
 
 
 pattern VkBindImageMemoryDeviceGroupInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("deviceIndexCount" ::: Word32) -> ("pDeviceIndices" ::: Ptr Word32) -> ("splitInstanceBindRegionCount" ::: Word32) -> ("pSplitInstanceBindRegions" ::: Ptr VkRect2D) -> VkBindImageMemoryDeviceGroupInfoKHR
-pattern VkBindImageMemoryDeviceGroupInfoKHR vkSType vkNext vkDeviceIndexCount vkDeviceIndices vkSplitInstanceBindRegionCount vkSplitInstanceBindRegions = VkBindImageMemoryDeviceGroupInfo vkSType vkNext vkDeviceIndexCount vkDeviceIndices vkSplitInstanceBindRegionCount vkSplitInstanceBindRegions
+pattern VkBindImageMemoryDeviceGroupInfoKHR vkSType vkPNext vkDeviceIndexCount vkPDeviceIndices vkSplitInstanceBindRegionCount vkPSplitInstanceBindRegions = VkBindImageMemoryDeviceGroupInfo vkSType vkPNext vkDeviceIndexCount vkPDeviceIndices vkSplitInstanceBindRegionCount vkPSplitInstanceBindRegions
 type VkDeviceGroupRenderPassBeginInfoKHR = VkDeviceGroupRenderPassBeginInfo
 
 
 pattern VkDeviceGroupRenderPassBeginInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("deviceMask" ::: Word32) -> ("deviceRenderAreaCount" ::: Word32) -> ("pDeviceRenderAreas" ::: Ptr VkRect2D) -> VkDeviceGroupRenderPassBeginInfoKHR
-pattern VkDeviceGroupRenderPassBeginInfoKHR vkSType vkNext vkDeviceMask vkDeviceRenderAreaCount vkDeviceRenderAreas = VkDeviceGroupRenderPassBeginInfo vkSType vkNext vkDeviceMask vkDeviceRenderAreaCount vkDeviceRenderAreas
+pattern VkDeviceGroupRenderPassBeginInfoKHR vkSType vkPNext vkDeviceMask vkDeviceRenderAreaCount vkPDeviceRenderAreas = VkDeviceGroupRenderPassBeginInfo vkSType vkPNext vkDeviceMask vkDeviceRenderAreaCount vkPDeviceRenderAreas
 type VkDeviceGroupCommandBufferBeginInfoKHR = VkDeviceGroupCommandBufferBeginInfo
 
 
 pattern VkDeviceGroupCommandBufferBeginInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("deviceMask" ::: Word32) -> VkDeviceGroupCommandBufferBeginInfoKHR
-pattern VkDeviceGroupCommandBufferBeginInfoKHR vkSType vkNext vkDeviceMask = VkDeviceGroupCommandBufferBeginInfo vkSType vkNext vkDeviceMask
+pattern VkDeviceGroupCommandBufferBeginInfoKHR vkSType vkPNext vkDeviceMask = VkDeviceGroupCommandBufferBeginInfo vkSType vkPNext vkDeviceMask
 type VkDeviceGroupSubmitInfoKHR = VkDeviceGroupSubmitInfo
 
 
 pattern VkDeviceGroupSubmitInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("waitSemaphoreCount" ::: Word32) -> ("pWaitSemaphoreDeviceIndices" ::: Ptr Word32) -> ("commandBufferCount" ::: Word32) -> ("pCommandBufferDeviceMasks" ::: Ptr Word32) -> ("signalSemaphoreCount" ::: Word32) -> ("pSignalSemaphoreDeviceIndices" ::: Ptr Word32) -> VkDeviceGroupSubmitInfoKHR
-pattern VkDeviceGroupSubmitInfoKHR vkSType vkNext vkWaitSemaphoreCount vkWaitSemaphoreDeviceIndices vkCommandBufferCount vkCommandBufferDeviceMasks vkSignalSemaphoreCount vkSignalSemaphoreDeviceIndices = VkDeviceGroupSubmitInfo vkSType vkNext vkWaitSemaphoreCount vkWaitSemaphoreDeviceIndices vkCommandBufferCount vkCommandBufferDeviceMasks vkSignalSemaphoreCount vkSignalSemaphoreDeviceIndices
+pattern VkDeviceGroupSubmitInfoKHR vkSType vkPNext vkWaitSemaphoreCount vkPWaitSemaphoreDeviceIndices vkCommandBufferCount vkPCommandBufferDeviceMasks vkSignalSemaphoreCount vkPSignalSemaphoreDeviceIndices = VkDeviceGroupSubmitInfo vkSType vkPNext vkWaitSemaphoreCount vkPWaitSemaphoreDeviceIndices vkCommandBufferCount vkPCommandBufferDeviceMasks vkSignalSemaphoreCount vkPSignalSemaphoreDeviceIndices
 type VkDeviceGroupBindSparseInfoKHR = VkDeviceGroupBindSparseInfo
 
 
 pattern VkDeviceGroupBindSparseInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("resourceDeviceIndex" ::: Word32) -> ("memoryDeviceIndex" ::: Word32) -> VkDeviceGroupBindSparseInfoKHR
-pattern VkDeviceGroupBindSparseInfoKHR vkSType vkNext vkResourceDeviceIndex vkMemoryDeviceIndex = VkDeviceGroupBindSparseInfo vkSType vkNext vkResourceDeviceIndex vkMemoryDeviceIndex
+pattern VkDeviceGroupBindSparseInfoKHR vkSType vkPNext vkResourceDeviceIndex vkMemoryDeviceIndex = VkDeviceGroupBindSparseInfo vkSType vkPNext vkResourceDeviceIndex vkMemoryDeviceIndex
 pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO_KHR = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO_KHR :: VkStructureType

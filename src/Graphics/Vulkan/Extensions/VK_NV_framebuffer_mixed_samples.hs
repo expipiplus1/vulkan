@@ -139,12 +139,12 @@ pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME = "VK_NV_framebuffer_mixe
 -- | TODO: Struct comments
 data VkPipelineCoverageModulationStateCreateInfoNV = VkPipelineCoverageModulationStateCreateInfoNV
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkPipelineCoverageModulationStateCreateFlagsNV
   , vkCoverageModulationMode :: VkCoverageModulationModeNV
   , vkCoverageModulationTableEnable :: VkBool32
   , vkCoverageModulationTableCount :: Word32
-  , vkCoverageModulationTable :: Ptr CFloat
+  , vkPCoverageModulationTable :: Ptr CFloat
   }
   deriving (Eq, Show)
 
@@ -159,9 +159,9 @@ instance Storable VkPipelineCoverageModulationStateCreateInfoNV where
                                                            <*> peek (ptr `plusPtr` 28)
                                                            <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 20) (vkCoverageModulationMode (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkCoverageModulationTableEnable (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 28) (vkCoverageModulationTableCount (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
-                *> poke (ptr `plusPtr` 32) (vkCoverageModulationTable (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
+                *> poke (ptr `plusPtr` 32) (vkPCoverageModulationTable (poked :: VkPipelineCoverageModulationStateCreateInfoNV))

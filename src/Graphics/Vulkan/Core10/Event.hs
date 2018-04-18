@@ -98,7 +98,7 @@ foreign import ccall "vkResetEvent" vkResetEvent :: ("device" ::: VkDevice) -> (
 -- | TODO: Struct comments
 data VkEventCreateInfo = VkEventCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkEventCreateFlags
   }
   deriving (Eq, Show)
@@ -110,5 +110,5 @@ instance Storable VkEventCreateInfo where
                                <*> peek (ptr `plusPtr` 8)
                                <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkEventCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkEventCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkEventCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkEventCreateInfo))

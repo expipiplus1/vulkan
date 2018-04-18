@@ -219,7 +219,7 @@ foreign import ccall "vkResetCommandBuffer" vkResetCommandBuffer :: ("commandBuf
 -- | TODO: Struct comments
 data VkCommandBufferAllocateInfo = VkCommandBufferAllocateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkCommandPool :: VkCommandPool
   , vkLevel :: VkCommandBufferLevel
   , vkCommandBufferCount :: Word32
@@ -235,14 +235,14 @@ instance Storable VkCommandBufferAllocateInfo where
                                          <*> peek (ptr `plusPtr` 24)
                                          <*> peek (ptr `plusPtr` 28)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferAllocateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkCommandBufferAllocateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferAllocateInfo))
                 *> poke (ptr `plusPtr` 16) (vkCommandPool (poked :: VkCommandBufferAllocateInfo))
                 *> poke (ptr `plusPtr` 24) (vkLevel (poked :: VkCommandBufferAllocateInfo))
                 *> poke (ptr `plusPtr` 28) (vkCommandBufferCount (poked :: VkCommandBufferAllocateInfo))
 -- | TODO: Struct comments
 data VkCommandBufferInheritanceInfo = VkCommandBufferInheritanceInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkRenderPass :: VkRenderPass
   , vkSubpass :: Word32
   , vkFramebuffer :: VkFramebuffer
@@ -264,7 +264,7 @@ instance Storable VkCommandBufferInheritanceInfo where
                                             <*> peek (ptr `plusPtr` 44)
                                             <*> peek (ptr `plusPtr` 48)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkCommandBufferInheritanceInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferInheritanceInfo))
                 *> poke (ptr `plusPtr` 16) (vkRenderPass (poked :: VkCommandBufferInheritanceInfo))
                 *> poke (ptr `plusPtr` 24) (vkSubpass (poked :: VkCommandBufferInheritanceInfo))
                 *> poke (ptr `plusPtr` 32) (vkFramebuffer (poked :: VkCommandBufferInheritanceInfo))
@@ -274,9 +274,9 @@ instance Storable VkCommandBufferInheritanceInfo where
 -- | TODO: Struct comments
 data VkCommandBufferBeginInfo = VkCommandBufferBeginInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkCommandBufferUsageFlags
-  , vkInheritanceInfo :: Ptr VkCommandBufferInheritanceInfo
+  , vkPInheritanceInfo :: Ptr VkCommandBufferInheritanceInfo
   }
   deriving (Eq, Show)
 
@@ -288,9 +288,9 @@ instance Storable VkCommandBufferBeginInfo where
                                       <*> peek (ptr `plusPtr` 16)
                                       <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferBeginInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkCommandBufferBeginInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferBeginInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkCommandBufferBeginInfo))
-                *> poke (ptr `plusPtr` 24) (vkInheritanceInfo (poked :: VkCommandBufferBeginInfo))
+                *> poke (ptr `plusPtr` 24) (vkPInheritanceInfo (poked :: VkCommandBufferBeginInfo))
 type VkQueryControlFlags = VkQueryControlFlagBits
 type VkCommandBufferResetFlags = VkCommandBufferResetFlagBits
 type VkCommandBufferUsageFlags = VkCommandBufferUsageFlagBits

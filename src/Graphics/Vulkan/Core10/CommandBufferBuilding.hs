@@ -415,7 +415,7 @@ instance Storable VkImageSubresourceLayers where
 -- | TODO: Struct comments
 data VkMemoryBarrier = VkMemoryBarrier
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSrcAccessMask :: VkAccessFlags
   , vkDstAccessMask :: VkAccessFlags
   }
@@ -429,13 +429,13 @@ instance Storable VkMemoryBarrier where
                              <*> peek (ptr `plusPtr` 16)
                              <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryBarrier))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryBarrier))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryBarrier))
                 *> poke (ptr `plusPtr` 16) (vkSrcAccessMask (poked :: VkMemoryBarrier))
                 *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkMemoryBarrier))
 -- | TODO: Struct comments
 data VkBufferMemoryBarrier = VkBufferMemoryBarrier
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSrcAccessMask :: VkAccessFlags
   , vkDstAccessMask :: VkAccessFlags
   , vkSrcQueueFamilyIndex :: Word32
@@ -459,7 +459,7 @@ instance Storable VkBufferMemoryBarrier where
                                    <*> peek (ptr `plusPtr` 40)
                                    <*> peek (ptr `plusPtr` 48)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferMemoryBarrier))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkBufferMemoryBarrier))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferMemoryBarrier))
                 *> poke (ptr `plusPtr` 16) (vkSrcAccessMask (poked :: VkBufferMemoryBarrier))
                 *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkBufferMemoryBarrier))
                 *> poke (ptr `plusPtr` 24) (vkSrcQueueFamilyIndex (poked :: VkBufferMemoryBarrier))
@@ -470,7 +470,7 @@ instance Storable VkBufferMemoryBarrier where
 -- | TODO: Struct comments
 data VkImageMemoryBarrier = VkImageMemoryBarrier
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkSrcAccessMask :: VkAccessFlags
   , vkDstAccessMask :: VkAccessFlags
   , vkOldLayout :: VkImageLayout
@@ -496,7 +496,7 @@ instance Storable VkImageMemoryBarrier where
                                   <*> peek (ptr `plusPtr` 40)
                                   <*> peek (ptr `plusPtr` 48)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageMemoryBarrier))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkImageMemoryBarrier))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageMemoryBarrier))
                 *> poke (ptr `plusPtr` 16) (vkSrcAccessMask (poked :: VkImageMemoryBarrier))
                 *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkImageMemoryBarrier))
                 *> poke (ptr `plusPtr` 24) (vkOldLayout (poked :: VkImageMemoryBarrier))
@@ -617,12 +617,12 @@ instance Storable VkImageResolve where
 -- | TODO: Struct comments
 data VkRenderPassBeginInfo = VkRenderPassBeginInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkRenderPass :: VkRenderPass
   , vkFramebuffer :: VkFramebuffer
   , vkRenderArea :: VkRect2D
   , vkClearValueCount :: Word32
-  , vkClearValues :: Ptr VkClearValue
+  , vkPClearValues :: Ptr VkClearValue
   }
   deriving (Eq, Show)
 
@@ -637,12 +637,12 @@ instance Storable VkRenderPassBeginInfo where
                                    <*> peek (ptr `plusPtr` 48)
                                    <*> peek (ptr `plusPtr` 56)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 16) (vkRenderPass (poked :: VkRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 24) (vkFramebuffer (poked :: VkRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 32) (vkRenderArea (poked :: VkRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 48) (vkClearValueCount (poked :: VkRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 56) (vkClearValues (poked :: VkRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 56) (vkPClearValues (poked :: VkRenderPassBeginInfo))
 -- | TODO: Struct comments
 data VkClearDepthStencilValue = VkClearDepthStencilValue
   { vkDepth :: CFloat

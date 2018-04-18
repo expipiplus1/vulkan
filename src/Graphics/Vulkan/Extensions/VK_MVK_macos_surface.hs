@@ -99,9 +99,9 @@ foreign import ccall "vkCreateMacOSSurfaceMVK" vkCreateMacOSSurfaceMVK :: ("inst
 -- | TODO: Struct comments
 data VkMacOSSurfaceCreateInfoMVK = VkMacOSSurfaceCreateInfoMVK
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkMacOSSurfaceCreateFlagsMVK
-  , vkView :: Ptr ()
+  , vkPView :: Ptr ()
   }
   deriving (Eq, Show)
 
@@ -113,6 +113,6 @@ instance Storable VkMacOSSurfaceCreateInfoMVK where
                                          <*> peek (ptr `plusPtr` 16)
                                          <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMacOSSurfaceCreateInfoMVK))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMacOSSurfaceCreateInfoMVK))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMacOSSurfaceCreateInfoMVK))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkMacOSSurfaceCreateInfoMVK))
-                *> poke (ptr `plusPtr` 24) (vkView (poked :: VkMacOSSurfaceCreateInfoMVK))
+                *> poke (ptr `plusPtr` 24) (vkPView (poked :: VkMacOSSurfaceCreateInfoMVK))

@@ -186,7 +186,7 @@ foreign import ccall "vkCmdDispatchBase" vkCmdDispatchBase :: ("commandBuffer" :
 -- | TODO: Struct comments
 data VkMemoryAllocateFlagsInfo = VkMemoryAllocateFlagsInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkMemoryAllocateFlags
   , vkDeviceMask :: Word32
   }
@@ -200,16 +200,16 @@ instance Storable VkMemoryAllocateFlagsInfo where
                                        <*> peek (ptr `plusPtr` 16)
                                        <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryAllocateFlagsInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkMemoryAllocateFlagsInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryAllocateFlagsInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkMemoryAllocateFlagsInfo))
                 *> poke (ptr `plusPtr` 20) (vkDeviceMask (poked :: VkMemoryAllocateFlagsInfo))
 -- | TODO: Struct comments
 data VkDeviceGroupRenderPassBeginInfo = VkDeviceGroupRenderPassBeginInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDeviceMask :: Word32
   , vkDeviceRenderAreaCount :: Word32
-  , vkDeviceRenderAreas :: Ptr VkRect2D
+  , vkPDeviceRenderAreas :: Ptr VkRect2D
   }
   deriving (Eq, Show)
 
@@ -222,14 +222,14 @@ instance Storable VkDeviceGroupRenderPassBeginInfo where
                                               <*> peek (ptr `plusPtr` 20)
                                               <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGroupRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceGroupRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 16) (vkDeviceMask (poked :: VkDeviceGroupRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 20) (vkDeviceRenderAreaCount (poked :: VkDeviceGroupRenderPassBeginInfo))
-                *> poke (ptr `plusPtr` 24) (vkDeviceRenderAreas (poked :: VkDeviceGroupRenderPassBeginInfo))
+                *> poke (ptr `plusPtr` 24) (vkPDeviceRenderAreas (poked :: VkDeviceGroupRenderPassBeginInfo))
 -- | TODO: Struct comments
 data VkDeviceGroupCommandBufferBeginInfo = VkDeviceGroupCommandBufferBeginInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkDeviceMask :: Word32
   }
   deriving (Eq, Show)
@@ -241,18 +241,18 @@ instance Storable VkDeviceGroupCommandBufferBeginInfo where
                                                  <*> peek (ptr `plusPtr` 8)
                                                  <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGroupCommandBufferBeginInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceGroupCommandBufferBeginInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupCommandBufferBeginInfo))
                 *> poke (ptr `plusPtr` 16) (vkDeviceMask (poked :: VkDeviceGroupCommandBufferBeginInfo))
 -- | TODO: Struct comments
 data VkDeviceGroupSubmitInfo = VkDeviceGroupSubmitInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkWaitSemaphoreCount :: Word32
-  , vkWaitSemaphoreDeviceIndices :: Ptr Word32
+  , vkPWaitSemaphoreDeviceIndices :: Ptr Word32
   , vkCommandBufferCount :: Word32
-  , vkCommandBufferDeviceMasks :: Ptr Word32
+  , vkPCommandBufferDeviceMasks :: Ptr Word32
   , vkSignalSemaphoreCount :: Word32
-  , vkSignalSemaphoreDeviceIndices :: Ptr Word32
+  , vkPSignalSemaphoreDeviceIndices :: Ptr Word32
   }
   deriving (Eq, Show)
 
@@ -268,17 +268,17 @@ instance Storable VkDeviceGroupSubmitInfo where
                                      <*> peek (ptr `plusPtr` 48)
                                      <*> peek (ptr `plusPtr` 56)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGroupSubmitInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceGroupSubmitInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupSubmitInfo))
                 *> poke (ptr `plusPtr` 16) (vkWaitSemaphoreCount (poked :: VkDeviceGroupSubmitInfo))
-                *> poke (ptr `plusPtr` 24) (vkWaitSemaphoreDeviceIndices (poked :: VkDeviceGroupSubmitInfo))
+                *> poke (ptr `plusPtr` 24) (vkPWaitSemaphoreDeviceIndices (poked :: VkDeviceGroupSubmitInfo))
                 *> poke (ptr `plusPtr` 32) (vkCommandBufferCount (poked :: VkDeviceGroupSubmitInfo))
-                *> poke (ptr `plusPtr` 40) (vkCommandBufferDeviceMasks (poked :: VkDeviceGroupSubmitInfo))
+                *> poke (ptr `plusPtr` 40) (vkPCommandBufferDeviceMasks (poked :: VkDeviceGroupSubmitInfo))
                 *> poke (ptr `plusPtr` 48) (vkSignalSemaphoreCount (poked :: VkDeviceGroupSubmitInfo))
-                *> poke (ptr `plusPtr` 56) (vkSignalSemaphoreDeviceIndices (poked :: VkDeviceGroupSubmitInfo))
+                *> poke (ptr `plusPtr` 56) (vkPSignalSemaphoreDeviceIndices (poked :: VkDeviceGroupSubmitInfo))
 -- | TODO: Struct comments
 data VkDeviceGroupBindSparseInfo = VkDeviceGroupBindSparseInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkResourceDeviceIndex :: Word32
   , vkMemoryDeviceIndex :: Word32
   }
@@ -292,7 +292,7 @@ instance Storable VkDeviceGroupBindSparseInfo where
                                          <*> peek (ptr `plusPtr` 16)
                                          <*> peek (ptr `plusPtr` 20)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGroupBindSparseInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkDeviceGroupBindSparseInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupBindSparseInfo))
                 *> poke (ptr `plusPtr` 16) (vkResourceDeviceIndex (poked :: VkDeviceGroupBindSparseInfo))
                 *> poke (ptr `plusPtr` 20) (vkMemoryDeviceIndex (poked :: VkDeviceGroupBindSparseInfo))
 type VkPeerMemoryFeatureFlags = VkPeerMemoryFeatureFlagBits

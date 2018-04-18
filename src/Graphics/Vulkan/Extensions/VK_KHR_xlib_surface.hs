@@ -114,7 +114,7 @@ foreign import ccall "vkGetPhysicalDeviceXlibPresentationSupportKHR" vkGetPhysic
 -- | TODO: Struct comments
 data VkXlibSurfaceCreateInfoKHR = VkXlibSurfaceCreateInfoKHR
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkXlibSurfaceCreateFlagsKHR
   , vkDpy :: Ptr Display
   , vkWindow :: Window
@@ -130,7 +130,7 @@ instance Storable VkXlibSurfaceCreateInfoKHR where
                                         <*> peek (ptr `plusPtr` 24)
                                         <*> peek (ptr `plusPtr` 32)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkXlibSurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkXlibSurfaceCreateInfoKHR))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkXlibSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkXlibSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDpy (poked :: VkXlibSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkWindow (poked :: VkXlibSurfaceCreateInfoKHR))

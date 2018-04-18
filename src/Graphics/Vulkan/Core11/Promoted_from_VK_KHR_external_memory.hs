@@ -53,7 +53,7 @@ pattern VK_QUEUE_FAMILY_EXTERNAL = 0xfffffffe
 -- | TODO: Struct comments
 data VkExternalMemoryImageCreateInfo = VkExternalMemoryImageCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleTypes :: VkExternalMemoryHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -65,12 +65,12 @@ instance Storable VkExternalMemoryImageCreateInfo where
                                              <*> peek (ptr `plusPtr` 8)
                                              <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalMemoryImageCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExternalMemoryImageCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalMemoryImageCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryImageCreateInfo))
 -- | TODO: Struct comments
 data VkExternalMemoryBufferCreateInfo = VkExternalMemoryBufferCreateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleTypes :: VkExternalMemoryHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -82,12 +82,12 @@ instance Storable VkExternalMemoryBufferCreateInfo where
                                               <*> peek (ptr `plusPtr` 8)
                                               <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalMemoryBufferCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExternalMemoryBufferCreateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalMemoryBufferCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryBufferCreateInfo))
 -- | TODO: Struct comments
 data VkExportMemoryAllocateInfo = VkExportMemoryAllocateInfo
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkHandleTypes :: VkExternalMemoryHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -99,5 +99,5 @@ instance Storable VkExportMemoryAllocateInfo where
                                         <*> peek (ptr `plusPtr` 8)
                                         <*> peek (ptr `plusPtr` 16)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportMemoryAllocateInfo))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkExportMemoryAllocateInfo))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportMemoryAllocateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportMemoryAllocateInfo))

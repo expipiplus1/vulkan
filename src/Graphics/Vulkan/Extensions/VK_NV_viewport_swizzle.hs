@@ -184,10 +184,10 @@ instance Storable VkViewportSwizzleNV where
 -- | TODO: Struct comments
 data VkPipelineViewportSwizzleStateCreateInfoNV = VkPipelineViewportSwizzleStateCreateInfoNV
   { vkSType :: VkStructureType
-  , vkNext :: Ptr ()
+  , vkPNext :: Ptr ()
   , vkFlags :: VkPipelineViewportSwizzleStateCreateFlagsNV
   , vkViewportCount :: Word32
-  , vkViewportSwizzles :: Ptr VkViewportSwizzleNV
+  , vkPViewportSwizzles :: Ptr VkViewportSwizzleNV
   }
   deriving (Eq, Show)
 
@@ -200,7 +200,7 @@ instance Storable VkPipelineViewportSwizzleStateCreateInfoNV where
                                                         <*> peek (ptr `plusPtr` 20)
                                                         <*> peek (ptr `plusPtr` 24)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
-                *> poke (ptr `plusPtr` 8) (vkNext (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 20) (vkViewportCount (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
-                *> poke (ptr `plusPtr` 24) (vkViewportSwizzles (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
+                *> poke (ptr `plusPtr` 24) (vkPViewportSwizzles (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
