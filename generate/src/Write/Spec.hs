@@ -33,6 +33,7 @@ import qualified Spec.Spec                 as P
 import           Write.Alias
 import           Write.BaseType
 import           Write.Bespoke
+import           Write.Cabal
 import           Write.Command
 import           Write.Constant
 import           Write.ConstantExtension
@@ -72,6 +73,8 @@ writeSpec outDir s = do
           Right ms -> do
             let Success platformGuards = (guardedModules (sExtensions s) (sPlatforms s))
                 aggs       = makeAggregateModules platformGuards ms
+            -- writeFile (outDir </> "vulkan.cabal") (show (writeCabal ms platformGuards))
+            sayErrShow (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards)
             saveModules outDir (ms ++ aggs) >>= \case
               [] -> pure ()
               es -> do

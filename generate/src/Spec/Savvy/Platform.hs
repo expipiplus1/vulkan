@@ -22,6 +22,7 @@ data PlatformGuardInfo = PlatformGuardInfo
   , pgiPlatform   :: Text
   , pgiGuard      :: Text
   }
+  deriving(Eq, Ord)
 
 guardedModules
   :: [Extension] -> [Platform] -> Validation [SpecError] [PlatformGuardInfo]
