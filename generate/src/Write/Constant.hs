@@ -26,7 +26,7 @@ writeAPIConstant ac@APIConstant {..} =
           let weExtensions = ["PatternSynonyms", "DataKinds"]
               weImports    = []
               weProvides =
-                [Pattern acName, TypeAlias acName]
+                [TypeAlias acName, Pattern acName]
           in  WriteElement {..}
         FloatValue _ ->
           let weExtensions = ["PatternSynonyms"]
