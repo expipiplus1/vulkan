@@ -80,7 +80,7 @@ writeModule getModule m@Module{..} = [qci|
   {vcat $ moduleInternalImports getModule m}
 
   {vcatPara $ weDoc <$> mWriteElements}
-|]
+  |]
 
 moduleExports :: Module -> [Doc ()]
 moduleExports Module {..} =

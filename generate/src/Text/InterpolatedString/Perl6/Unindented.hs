@@ -8,13 +8,15 @@
 -- trailingNewline :: Text
 -- foo = [qci|
 --   foo
---   |] -- <-- Note the spaces here, causing this line to not be trimmed
+--
+--   |]
 -- @
 --
+-- @
 -- noTrailingNewline :: Text
 -- noTrailingNewline = [qci|
 --   foo
--- |]
+--   |]
 -- @
 module Text.InterpolatedString.Perl6.Unindented (qqi, qci, qi)where
 
@@ -30,15 +32,19 @@ wrapQuasi f QuasiQuoter {..} =
 -- Strips empty lines from the beginning and end
 -- Removed the common space prefix from the nonempty lines
 unindent :: String -> String
-unindent s =
-  let stripEmptyLines = dropWhile (== "") . dropWhileEnd (== "")
+unindent s
+  = let
+      stripEmptyLines = dropWhile (== "") . dropWhileEnd (== "")
       ls              = stripEmptyLines . lines $ s
       nonEmpties      = filter (/= "") ls
       minIndent       = case nonEmpties of
         [] -> 0
         _  -> minimum (length . takeWhile (== ' ') <$> nonEmpties)
-      ls' = drop minIndent <$> ls
-  in  intercalate "\n" ls'
+      unindented = drop minIndent <$> ls
+      noEmptyLastLine =
+        if null (last unindented) then init unindented else unindented
+    in
+      intercalate "\n" noEmptyLastLine
 
 qqi :: QuasiQuoter
 qqi = wrapQuasi unindent qq
