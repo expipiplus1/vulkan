@@ -42,6 +42,7 @@ bespokeSeeds =
       , TypeName "VkFlags"
       , TypeName "VkFormat"
       , TypeName "VkBool32"
+      , TypeName "VkObjectType"
       ]
   ]
 
