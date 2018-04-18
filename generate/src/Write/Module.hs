@@ -69,6 +69,7 @@ writeModules ms =
 
 writeModule :: (HaskellName -> Maybe (Text, Export)) -> Module -> Doc ()
 writeModule getModule m@Module{..} = [qci|
+  \{-# language Strict #-}
   {vcat $ moduleExtensions m}
 
   module {mName}

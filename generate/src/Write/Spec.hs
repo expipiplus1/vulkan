@@ -1,5 +1,5 @@
 {-# LANGUAGE ApplicativeDo     #-}
-{-# LANGUAGE LambdaCase     #-}
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
