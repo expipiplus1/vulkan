@@ -1,5 +1,5 @@
 name:                vulkan
-version:             1.7.0.0
+version:             2.0.0.0
 synopsis:            Bindings to the Vulkan graphics API.
 description:         Please see readme.md
 homepage:            http://github.com/expipiplus1/vulkan#readme
@@ -7,54 +7,270 @@ license:             BSD3
 license-file:        LICENSE
 author:              Joe Hermaszewski
 maintainer:          live.long.and.prosper@monoid.al
-copyright:           2016 Joe Hermaszewski
+copyright:           2018 Joe Hermaszewski
 category:            Graphics
 build-type:          Simple
 extra-source-files:  readme.md,
                      changelog.md
 cabal-version:       >=1.10
 
+flag xlib
+    description:
+      Enable xlib specific extensions
+    default: False
+flag xlib_xrandr
+    description:
+      Enable xlib_xrandr specific extensions
+    default: False
+flag xcb
+    description:
+      Enable xcb specific extensions
+    default: False
+flag wayland
+    description:
+      Enable wayland specific extensions
+    default: False
+flag mir
+    description:
+      Enable mir specific extensions
+    default: False
+flag android
+    description:
+      Enable android specific extensions
+    default: False
+flag win32
+    description:
+      Enable win32 specific extensions
+    default: False
+flag vi
+    description:
+      Enable vi specific extensions
+    default: False
+flag ios
+    description:
+      Enable ios specific extensions
+    default: False
+flag macos
+    description:
+      Enable macos specific extensions
+    default: False
+
 library
   hs-source-dirs:      src
-  exposed-modules:     Graphics.Vulkan
-                     , Graphics.Vulkan.Buffer
-                     , Graphics.Vulkan.BufferView
-                     , Graphics.Vulkan.CommandBuffer
-                     , Graphics.Vulkan.CommandBufferBuilding
-                     , Graphics.Vulkan.CommandPool
-                     , Graphics.Vulkan.Constants
-                     , Graphics.Vulkan.Core
-                     , Graphics.Vulkan.DescriptorSet
-                     , Graphics.Vulkan.Device
-                     , Graphics.Vulkan.DeviceInitialization
-                     , Graphics.Vulkan.EXT.DebugReport
-                     , Graphics.Vulkan.Event
-                     , Graphics.Vulkan.ExtensionDiscovery
-                     , Graphics.Vulkan.Fence
-                     , Graphics.Vulkan.Image
-                     , Graphics.Vulkan.ImageView
-                     , Graphics.Vulkan.KHR.Display
-                     , Graphics.Vulkan.KHR.DisplaySwapchain
-                     , Graphics.Vulkan.KHR.Surface
-                     , Graphics.Vulkan.KHR.Swapchain
-                     , Graphics.Vulkan.LayerDiscovery
-                     , Graphics.Vulkan.Memory
-                     , Graphics.Vulkan.MemoryManagement
-                     , Graphics.Vulkan.OtherTypes
-                     , Graphics.Vulkan.Pass
-                     , Graphics.Vulkan.Pipeline
-                     , Graphics.Vulkan.PipelineCache
-                     , Graphics.Vulkan.PipelineLayout
-                     , Graphics.Vulkan.Query
-                     , Graphics.Vulkan.Queue
-                     , Graphics.Vulkan.QueueSemaphore
-                     , Graphics.Vulkan.Sampler
-                     , Graphics.Vulkan.Shader
-                     , Graphics.Vulkan.SparseResourceMemoryManagement
-                     , Graphics.Vulkan.Version
+  ghc-options:         -Wall
+  exposed-modules:     Graphics.Vulkan.NamedType
+                     , Graphics.Vulkan.Core10.Core
+                     , Graphics.Vulkan.Core10.Version
+                     , Graphics.Vulkan.Core10.Constants
+                     , Graphics.Vulkan.Core10.DeviceInitialization
+                     , Graphics.Vulkan.Core10.Device
+                     , Graphics.Vulkan.Core10.ExtensionDiscovery
+                     , Graphics.Vulkan.Core10.LayerDiscovery
+                     , Graphics.Vulkan.Core10.Queue
+                     , Graphics.Vulkan.Core10.Memory
+                     , Graphics.Vulkan.Core10.MemoryManagement
+                     , Graphics.Vulkan.Core10.SparseResourceMemoryManagement
+                     , Graphics.Vulkan.Core10.Fence
+                     , Graphics.Vulkan.Core10.QueueSemaphore
+                     , Graphics.Vulkan.Core10.Event
+                     , Graphics.Vulkan.Core10.Query
+                     , Graphics.Vulkan.Core10.Buffer
+                     , Graphics.Vulkan.Core10.BufferView
+                     , Graphics.Vulkan.Core10.Image
+                     , Graphics.Vulkan.Core10.ImageView
+                     , Graphics.Vulkan.Core10.Shader
+                     , Graphics.Vulkan.Core10.PipelineCache
+                     , Graphics.Vulkan.Core10.Pipeline
+                     , Graphics.Vulkan.Core10.PipelineLayout
+                     , Graphics.Vulkan.Core10.Sampler
+                     , Graphics.Vulkan.Core10.DescriptorSet
+                     , Graphics.Vulkan.Core10.Pass
+                     , Graphics.Vulkan.Core10.CommandPool
+                     , Graphics.Vulkan.Core10.CommandBuffer
+                     , Graphics.Vulkan.Core10.CommandBufferBuilding
+                     , Graphics.Vulkan.Core11.DeviceInitialization
+                     , Graphics.Vulkan.Core11.Promoted_From_VK_KHR_subgroup
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_bind_memory2
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_16bit_storage
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_creation
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance1
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_multiview
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_variable_pointers
+                     , Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3
+                     , Graphics.Vulkan.Core11.Promoted_from_VK_KHR_shader_draw_parameters
+                     , Graphics.Vulkan.Extensions.VK_KHR_surface
+                     , Graphics.Vulkan.Extensions.VK_KHR_swapchain
+                     , Graphics.Vulkan.Extensions.VK_KHR_display
+                     , Graphics.Vulkan.Extensions.VK_KHR_display_swapchain
+                     , Graphics.Vulkan.Extensions.VK_EXT_debug_report
+                     , Graphics.Vulkan.Extensions.VK_NV_glsl_shader
+                     , Graphics.Vulkan.Extensions.VK_EXT_depth_range_unrestricted
+                     , Graphics.Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
+                     , Graphics.Vulkan.Extensions.VK_IMG_filter_cubic
+                     , Graphics.Vulkan.Extensions.VK_AMD_rasterization_order
+                     , Graphics.Vulkan.Extensions.VK_AMD_shader_trinary_minmax
+                     , Graphics.Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter
+                     , Graphics.Vulkan.Extensions.VK_EXT_debug_marker
+                     , Graphics.Vulkan.Extensions.VK_AMD_gcn_shader
+                     , Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
+                     , Graphics.Vulkan.Extensions.VK_AMD_draw_indirect_count
+                     , Graphics.Vulkan.Extensions.VK_AMD_negative_viewport_height
+                     , Graphics.Vulkan.Extensions.VK_AMD_gpu_shader_half_float
+                     , Graphics.Vulkan.Extensions.VK_AMD_shader_ballot
+                     , Graphics.Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
+                     , Graphics.Vulkan.Extensions.VK_AMD_shader_info
+                     , Graphics.Vulkan.Extensions.VK_AMD_shader_image_load_store_lod
+                     , Graphics.Vulkan.Extensions.VK_KHR_multiview
+                     , Graphics.Vulkan.Extensions.VK_IMG_format_pvrtc
+                     , Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
+                     , Graphics.Vulkan.Extensions.VK_NV_external_memory
+                     , Graphics.Vulkan.Extensions.VK_KHR_get_physical_device_properties2
+                     , Graphics.Vulkan.Extensions.VK_KHR_device_group
+                     , Graphics.Vulkan.Extensions.VK_EXT_validation_flags
+                     , Graphics.Vulkan.Extensions.VK_KHR_shader_draw_parameters
+                     , Graphics.Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
+                     , Graphics.Vulkan.Extensions.VK_EXT_shader_subgroup_vote
+                     , Graphics.Vulkan.Extensions.VK_KHR_maintenance1
+                     , Graphics.Vulkan.Extensions.VK_KHR_device_group_creation
+                     , Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities
+                     , Graphics.Vulkan.Extensions.VK_KHR_external_memory
+                     , Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd
+                     , Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_capabilities
+                     , Graphics.Vulkan.Extensions.VK_KHR_external_semaphore
+                     , Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd
+                     , Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
+                     , Graphics.Vulkan.Extensions.VK_KHR_16bit_storage
+                     , Graphics.Vulkan.Extensions.VK_KHR_incremental_present
+                     , Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template
+                     , Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
+                     , Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling
+                     , Graphics.Vulkan.Extensions.VK_EXT_direct_mode_display
+                     , Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter
+                     , Graphics.Vulkan.Extensions.VK_EXT_display_control
+                     , Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing
+                     , Graphics.Vulkan.Extensions.VK_NV_sample_mask_override_coverage
+                     , Graphics.Vulkan.Extensions.VK_NV_geometry_shader_passthrough
+                     , Graphics.Vulkan.Extensions.VK_NV_viewport_array2
+                     , Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
+                     , Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
+                     , Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles
+                     , Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization
+                     , Graphics.Vulkan.Extensions.VK_EXT_swapchain_colorspace
+                     , Graphics.Vulkan.Extensions.VK_EXT_hdr_metadata
+                     , Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image
+                     , Graphics.Vulkan.Extensions.VK_KHR_external_fence_capabilities
+                     , Graphics.Vulkan.Extensions.VK_KHR_external_fence
+                     , Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd
+                     , Graphics.Vulkan.Extensions.VK_KHR_maintenance2
+                     , Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2
+                     , Graphics.Vulkan.Extensions.VK_KHR_variable_pointers
+                     , Graphics.Vulkan.Extensions.VK_EXT_external_memory_dma_buf
+                     , Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
+                     , Graphics.Vulkan.Extensions.VK_KHR_dedicated_allocation
+                     , Graphics.Vulkan.Extensions.VK_EXT_debug_utils
+                     , Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
+                     , Graphics.Vulkan.Extensions.VK_KHR_storage_buffer_storage_class
+                     , Graphics.Vulkan.Extensions.VK_AMD_gpu_shader_int16
+                     , Graphics.Vulkan.Extensions.VK_AMD_mixed_attachment_samples
+                     , Graphics.Vulkan.Extensions.VK_AMD_shader_fragment_mask
+                     , Graphics.Vulkan.Extensions.VK_EXT_shader_stencil_export
+                     , Graphics.Vulkan.Extensions.VK_EXT_sample_locations
+                     , Graphics.Vulkan.Extensions.VK_KHR_relaxed_block_layout
+                     , Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2
+                     , Graphics.Vulkan.Extensions.VK_KHR_image_format_list
+                     , Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced
+                     , Graphics.Vulkan.Extensions.VK_NV_fragment_coverage_to_color
+                     , Graphics.Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
+                     , Graphics.Vulkan.Extensions.VK_NV_fill_rectangle
+                     , Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
+                     , Graphics.Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
+                     , Graphics.Vulkan.Extensions.VK_KHR_bind_memory2
+                     , Graphics.Vulkan.Extensions.VK_EXT_validation_cache
+                     , Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing
+                     , Graphics.Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
+                     , Graphics.Vulkan.Extensions.VK_KHR_maintenance3
+                     , Graphics.Vulkan.Extensions.VK_EXT_global_priority
+                     , Graphics.Vulkan.Extensions.VK_EXT_external_memory_host
+                     , Graphics.Vulkan.Extensions.VK_AMD_buffer_marker
+                     , Graphics.Vulkan.Extensions.VK_AMD_shader_core_properties
+                     , Graphics.Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
+                     , Graphics.Vulkan.Extensions.VK_NV_shader_subgroup_partitioned
+                     , Graphics.Vulkan
+                     , Graphics.Vulkan.Core10
+                     , Graphics.Vulkan.Core11
+                     , Graphics.Vulkan.Extensions
+
+  if flag(android)
+    cpp-options: -DVK_USE_PLATFORM_ANDROID_KHR
+    exposed-modules: Graphics.Vulkan.Extensions.VK_KHR_android_surface
+                   , Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+
+  if flag(ios)
+    cpp-options: -DVK_USE_PLATFORM_IOS_MVK
+    exposed-modules: Graphics.Vulkan.Extensions.VK_MVK_ios_surface
+
+  if flag(macos)
+    cpp-options: -DVK_USE_PLATFORM_MACOS_MVK
+    exposed-modules: Graphics.Vulkan.Extensions.VK_MVK_macos_surface
+
+  if flag(mir)
+    cpp-options: -DVK_USE_PLATFORM_MIR_KHR
+    exposed-modules: Graphics.Vulkan.Extensions.VK_KHR_mir_surface
+
+  if flag(vi)
+    cpp-options: -DVK_USE_PLATFORM_VI_NN
+    exposed-modules: Graphics.Vulkan.Extensions.VK_NN_vi_surface
+
+  if flag(wayland)
+    cpp-options: -DVK_USE_PLATFORM_WAYLAND_KHR
+    exposed-modules: Graphics.Vulkan.Extensions.VK_KHR_wayland_surface
+
+  if flag(win32)
+    cpp-options: -DVK_USE_PLATFORM_WIN32_KHR
+    exposed-modules: Graphics.Vulkan.Extensions.VK_KHR_win32_surface
+                   , Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
+                   , Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
+                   , Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32
+                   , Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex
+                   , Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32
+                   , Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32
+
+  if flag(xcb)
+    cpp-options: -DVK_USE_PLATFORM_XCB_KHR
+    exposed-modules: Graphics.Vulkan.Extensions.VK_KHR_xcb_surface
+
+  if flag(xlib)
+    cpp-options: -DVK_USE_PLATFORM_XLIB_KHR
+    exposed-modules: Graphics.Vulkan.Extensions.VK_KHR_xlib_surface
+
+  if flag(xlib_xrandr)
+    cpp-options: -DVK_USE_PLATFORM_XLIB_XRANDR_EXT
+    exposed-modules: Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display
+
+
   build-depends:       base >= 4.9 && < 5
                      , vector-sized >= 0.1 && < 1.1
   default-language:    Haskell2010
+
+  if os(windows)
+    extra-libraries:   vulkan-1
+  else
+    extra-libraries:   vulkan
 
 source-repository head
   type:     git

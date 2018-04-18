@@ -36,7 +36,7 @@ bespokeSeeds :: [ModuleSeed]
 bespokeSeeds =
   [ ModuleSeed "Graphics.Vulkan.NamedType" [TypeName "(:::)"] Nothing
   , ModuleSeed
-    (toModuleName "Version10" "Core")
+    (toModuleName "Core10" "Core")
     [ TypeName "VkResult"
     , TypeName "VkStructureType"
     , PatternName "VK_TRUE"
@@ -75,7 +75,7 @@ featureModuleName :: Text -> Text
 featureModuleName = \case
   t
     | Just (major, minor) <- match parseVersion (T.unpack t)
-    -> "Version" <> major <> minor
+    -> "Core" <> major <> minor
     | otherwise
     -> t
   where

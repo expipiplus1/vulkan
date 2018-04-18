@@ -19,7 +19,7 @@ let
         '';
     in import package;
 
-  drv = haskellPackages.callPackage (haskellPackageGen {} ./.) {};
+  drv = haskellPackages.callPackage (haskellPackageGen {} ./.) {vulkan = pkgs.vulkan-loader;};
 
   extraEnvPackages = with haskellPackages; [];
 

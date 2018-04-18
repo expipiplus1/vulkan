@@ -133,13 +133,13 @@ ignoredUnexportedNames =
 
 explicitlyPlacedNames :: [(Text, HaskellName)]
 explicitlyPlacedNames =
-  [ ( "Graphics.Vulkan.Version10.CommandBufferBuilding"
+  [ ( "Graphics.Vulkan.Core10.CommandBufferBuilding"
     , TypeName "VkDrawIndirectCommand"
     )
-  , ( "Graphics.Vulkan.Version10.CommandBufferBuilding"
+  , ( "Graphics.Vulkan.Core10.CommandBufferBuilding"
     , TypeName "VkDrawIndexedIndirectCommand"
     )
-  , ( "Graphics.Vulkan.Version10.CommandBufferBuilding"
+  , ( "Graphics.Vulkan.Core10.CommandBufferBuilding"
     , TypeName "VkDispatchIndirectCommand"
     )
   ]
