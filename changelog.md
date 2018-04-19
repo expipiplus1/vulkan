@@ -1,5 +1,11 @@
 # Change Log
 
+## [2.0.0.0] - 2018-04-20
+  - Total rewrite of the generator
+  - All extensions are in here
+  - Split into core versions
+  - Documentation on most things
+
 ## [1.7.0.0] - 2016-04-13
   - Fix struct member names containing digits being erroneously truncated
 
