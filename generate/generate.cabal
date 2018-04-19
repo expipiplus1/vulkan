@@ -110,8 +110,8 @@ executable generate
                      , data-default
                      , either
                      , multimap
-                     , pandoc
-                     , pandoc-types
+                     -- , pandoc
+                     -- , pandoc-types
                      , parsec
                      , pretty-show
                      , say

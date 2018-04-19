@@ -6,7 +6,6 @@
 
 module Write.Seed
   ( specSeeds
-  , toModuleName
   ) where
 
 import           Control.Bool

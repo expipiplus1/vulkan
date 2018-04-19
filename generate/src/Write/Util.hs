@@ -51,16 +51,3 @@ separatedSections separator sections = vcat $ case nonEmptySections of
           : indent (T.length separator + 1) x
           : ((pretty separator <+>) <$> xs)
       (Nothing, x :| xs) -> ((pretty separator <+>) <$> (x : xs))
-
--- separatedSections open separator close sections =
---   indent 0 $ vcat $ case nonEmptySections of
---     [] -> [pretty open <> pretty close]
---     x : xs ->
---       firstSection x ++ concat (subsequentSection <$> xs) ++ [pretty close]
---   where
---     nonEmptySections = mapMaybe (traverse nonEmpty) sections
---     firstSection (header, x :| xs) =
---       [pretty open <+> header, indent (T.length separator + 1) x]
---         ++ ((pretty separator <+>) <$> xs)
---     subsequentSection (header, x :| xs) =
---       indent (T.length separator + 1) header : ((pretty separator <+>) <$> x : xs)

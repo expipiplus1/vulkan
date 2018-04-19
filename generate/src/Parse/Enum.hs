@@ -2,12 +2,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
-module Parse.Enum where
+module Parse.Enum
+  ( parseEnum
+  ) where
 
 import           Data.Maybe        (listToMaybe)
 import           Data.Text
 import           Parse.Utils
-import           Prelude           hiding (Enum, elem)
+import           Prelude           hiding (Enum)
 import           Spec.Enum
 import           Text.XML.HXT.Core
 

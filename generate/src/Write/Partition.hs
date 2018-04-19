@@ -8,7 +8,6 @@ module Write.Partition
   ( ModuleSeed(..)
   , Module(..)
   , partitionElements
-  , moduleSummary
   ) where
 
 import           Control.Monad
@@ -24,7 +23,7 @@ import qualified Data.MultiMap          as MultiMap
 import           Data.Semigroup
 import qualified Data.Set               as Set
 import           Data.Text              (Text)
-import qualified Data.Text              as T
+import qualified Data.Text.Extra        as T
 import           Prelude                hiding (mod)
 
 import           Spec.Savvy.Error
@@ -156,9 +155,9 @@ assertExactlyOneSeeds wes seeds = do
   -- Check that every reference has exactly one match
   _ <- for_ seeds $ \ModuleSeed {..} -> for_ msSeeds $ \seed ->
     case exportMap seed of
-        []   -> Failure [UnexportedNameWriteElement (tShow seed) (tShow msName)]
+        []   -> Failure [UnexportedNameWriteElement (T.tShow seed) (T.tShow msName)]
         [_]  -> Success ()
-        wes' -> Failure [MultipleExportError1 (tShow seed) wes']
+        wes' -> Failure [MultipleExportError1 (T.tShow seed) wes']
 
   pure ()
 
@@ -173,9 +172,9 @@ assertExactlyOneExport wes mods =
       checkName n = case exportMap n of
         []    -> if n `elem` ignoredUnexportedNames
                    then Success ()
-                   else Failure [UnexportedName (tShow n)]
+                   else Failure [UnexportedName (T.tShow n)]
         [_]   -> Success ()
-        mods' -> Failure [MultipleExportError2 (tShow n) mods']
+        mods' -> Failure [MultipleExportError2 (T.tShow n) mods']
   in  for_ allExports checkName
 
 -- | Make sure there are no modules exporting nothing
@@ -204,18 +203,7 @@ assertAllDependenciesSatisfied ms
       case allDepends \\ allExports of
         [] -> pure ()
         xs -> Failure
-          (xs <&> (\x -> RequiredExportMissing (tShow x) (dependsMap x)))
-
-
--- assertNoDuplicates :: [Module] -> Validation [SpecError] ()
--- assertNoDuplicates modules =
---   let exportMap = genExportMap modules
---   in  traverse_ (uncurry checkExport) exportMap
-
--- checkExport :: HaskellName -> [Text] -> Validation [SpecError] ()
--- checkExport name modules = if length modules > 1
---   then Failure [MultipleExportError (tShow name) modules]
---   else pure ()
+          (xs <&> (\x -> RequiredExportMissing (T.tShow x) (dependsMap x)))
 
 genExportMap :: [Module] -> HaskellName -> [(Text, Text)]
 genExportMap ms = (`MultiMap.lookup` m)
@@ -239,19 +227,6 @@ genExportMapWriteElements wes = (`MultiMap.lookup` m)
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
-
-moduleSummary :: Module -> Text
-moduleSummary Module {..} = tShow mName <> ": " <> tShow
-  (filter (not . isPattern) . concatMap weProvidesHN $ mWriteElements)
-
-isPattern :: HaskellName -> Bool
-isPattern = \case
-  PatternName _ -> True
-  _             -> False
-
-
-tShow :: Show a => a -> Text
-tShow = T.pack . show
 
 weProvidesHN :: WriteElement -> [HaskellName]
 weProvidesHN = fmap unExport . weProvides

@@ -28,7 +28,7 @@ import Data.Word
 
 
 pattern VK_HEADER_VERSION :: Integral a => a
-pattern VK_HEADER_VERSION = 72
+pattern VK_HEADER_VERSION = 73
 pattern VK_MAKE_VERSION :: Word32 -> Word32 -> Word32 -> Word32
 pattern VK_MAKE_VERSION major minor patch <-
   (\v -> (_VK_VERSION_MAJOR v, _VK_VERSION_MINOR v, _VK_VERSION_PATCH v) -> (major, minor, patch))

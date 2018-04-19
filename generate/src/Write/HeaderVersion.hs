@@ -14,9 +14,9 @@ import           Write.Element
 writeHeaderVersion :: Word -> WriteElement
 writeHeaderVersion version =
   let weDoc = [qci|
-        pattern VK_HEADER_VERSION :: Integral a => a
-        pattern VK_HEADER_VERSION = {version}
-|]
+          pattern VK_HEADER_VERSION :: Integral a => a
+          pattern VK_HEADER_VERSION = {version}
+        |]
       weImports = []
       weExtensions = ["PatternSynonyms"]
       weName = "Header Version"

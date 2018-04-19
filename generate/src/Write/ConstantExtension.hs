@@ -6,7 +6,7 @@ module Write.ConstantExtension
   ( writeConstantExtension
   ) where
 
-import           Data.Text
+import           Data.Text.Extra
 import           Data.Maybe
 import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
@@ -25,7 +25,7 @@ writeConstantExtension getEnumerantEnumName ce@ConstantExtension {..} =
         EnumValueInt    _ -> []
         EnumValueAlias  _ -> []
       weDoc        = constantExtensionDoc getEnumerantEnumName ce
-      weExtensions = ["PatternSynonyms"] ++ case ceValue of
+      weExtensions = "PatternSynonyms" : case ceValue of
         EnumValueString _ -> ["OverloadedStrings"]
         EnumValueInt    _ -> []
         EnumValueAlias  _ -> []
@@ -33,7 +33,9 @@ writeConstantExtension getEnumerantEnumName ce@ConstantExtension {..} =
       weProvides = [Pattern ceName]
       weDepends  = case ceValue of
         EnumValueAlias n ->
-          [PatternName n, TypeName (fromMaybe (error (show n)) (getEnumerantEnumName n))]
+          [ PatternName n
+          , TypeName (fromMaybe (error (show n)) (getEnumerantEnumName n))
+          ]
         _ -> []
   in  WriteElement {..}
 
@@ -51,6 +53,3 @@ constantExtensionDoc getEnumerantEnumName ConstantExtension{..} = [qci|
       EnumValueAlias  a -> a
   }
 |]
-
-tShow :: Show a => a -> Text
-tShow = pack . show

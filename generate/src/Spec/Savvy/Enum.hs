@@ -8,7 +8,6 @@ module Spec.Savvy.Enum
   , EnumElement(..)
   , EnumExtension(..)
   , specEnums
-  , guessBitmaskRequirement
   ) where
 
 import           Control.Applicative

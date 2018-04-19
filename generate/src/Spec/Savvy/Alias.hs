@@ -5,7 +5,7 @@
 module Spec.Savvy.Alias
   ( Aliases(..)
   , Alias(..)
-  , AliasTarget(..)
+  , AliasTarget
   , aliasTarget
   , specAliases
   ) where

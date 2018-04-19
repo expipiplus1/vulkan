@@ -2,7 +2,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
-module Parse.Command where
+module Parse.Command
+  ( parseCommands
+  ) where
 
 import           Data.Either
 import           Data.Text

@@ -8,13 +8,10 @@ module Data.Text.Extra
   , pattern Cons
   , upperCaseFirst
   , dropPrefix
-  , dropSuffix
-  , dropSuffix'
   , module Data.Text
   ) where
 
 import           Data.Char
-import           Data.Maybe
 import qualified Text.Read as R
 import           Data.Text
 import qualified Data.Text as T
@@ -43,12 +40,3 @@ dropPrefix :: Text -> Text -> Maybe Text
 dropPrefix prefix s = if prefix `T.isPrefixOf` s
                         then Just (T.drop (T.length prefix) s)
                         else Nothing
-
-dropSuffix :: Text -> Text -> Maybe Text
-dropSuffix suffix s = if suffix `T.isSuffixOf` s
-                        then Just (T.take (T.length s - T.length suffix) s)
-                        else Nothing
-
--- | If the suffix doesn't match: return the original string
-dropSuffix' :: Text -> Text -> Text
-dropSuffix' suffix s = fromMaybe s (dropSuffix suffix s)

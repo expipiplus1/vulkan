@@ -56,11 +56,6 @@ writeValueAlias getType alias@Alias{..} = eitherToValidation $ do
       weDepends    = [TermName aAliasName] ++ typeDepends (getType target)
   pure WriteElement {..}
 
--- writePatternAlias
---   :: Alias a
---   -> (a -> Type)
---   -> Validation [SpecError] WriteElement
-
 writePatternAlias
   :: (a -> Type)
   -> Alias a
@@ -120,46 +115,3 @@ writeConstantAlias alias = eitherToValidation $ do
     FloatValue    _ -> writePatternAlias (const Float) alias
     Word32Value   _ -> writePatternAlias (const (TypeName "uint32_t")) alias
     Word64Value   _ -> writePatternAlias (const (TypeName "uint64_t")) alias
-
---  {vcat $ aliasDoc sName (smName <$> membersFixedNames) <$> sAliases}
-
-
--- writeAlias
---   :: Type
---   -> Alias a
---   -> Validation [SpecError] WriteElement
--- writeAlias _ Alias{..} = do
---   -- (t, (is, es)) <- maybe toHsType t
---   let weImports    = []
---       weDoc        = constantExtensionDoc ce
---       weExtensions = ["PatternSynonyms"]
---       weName       = "Alias: " <> ceName
---       weProvides   = [Pattern ceName]
---       weDepends    =
---   in  WriteElement {..}
-
-{-
-writeAlias :: Alias -> WriteElement
-writeAlias ce@Alias {..} =
-  let weImports    = []
-      weDoc        = constantExtensionDoc ce
-      weExtensions = ["PatternSynonyms"]
-      weName       = "Alias: " <> ceName
-      weProvides   = [Pattern ceName]
-      weDepends    = case ceValue of
-                       EnumValueAlias n -> [Pattern n]
-                       _                -> []
-  in  WriteElement {..}
-
-constantExtensionDoc :: Alias -> Doc ()
-constantExtensionDoc Alias{..} = [qci|
-  pattern {ceName} = {case ceValue of
-      EnumValueString s -> tShow s
-      EnumValueInt i -> tShow i
-      EnumValueAlias a -> a
-  }
-|]
-
-tShow :: Show a => a -> Text
-tShow = pack . show
--}

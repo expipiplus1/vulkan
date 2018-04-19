@@ -3,7 +3,9 @@
 {-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE TypeApplications  #-}
 
-module Parse.Bitmask where
+module Parse.Bitmask
+  ( parseBitmask
+  ) where
 
 import           Data.Text
 import           Data.Word

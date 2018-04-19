@@ -9,10 +9,8 @@ module Spec.Savvy.Struct
   , StructMember(..)
   , StructOrUnion(..)
   , specStructs
-  , makeStructConstructorType
   ) where
 
-import           Control.Arrow           ((&&&))
 import           Control.Monad.Fix.Extra
 import           Data.Closure
 import           Data.Either.Validation
@@ -176,11 +174,3 @@ nextAlignment alignment value =
 zipSameLength :: [a] -> [b] -> [(a,b)]
 zipSameLength []     _bs     = []
 zipSameLength (a:as) ~(b:bs) = (a,b) : zipSameLength as bs
-
-makeStructConstructorType
-  :: Text
-  -- ^ Constructor name
-  -> [StructMember]
-  -> Type
-makeStructConstructorType structName members =
-  Proto (TypeName structName) (((Just . smName) &&& smType) <$> members)

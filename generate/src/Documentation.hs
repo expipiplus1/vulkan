@@ -139,20 +139,6 @@ memberDocs m = \case
     in  traverse enumDoc bs
   _ -> Left "Trying to extract member documentation from an unhandled desscription"
 
---
--- runhaskell -isrc src/Documentation.hs \
---   <(asciidoctor -r ~/src/Vulkan-Docs/config/tilde_open_block.rb \
---                 -r asciidoctor-mathematical \
---                 -r ~/src/Vulkan-Docs/config/vulkan-macros.rb \
---                 --backend docbook5 \
---                 ~/src/Vulkan-Docs/man/VkSparseMemoryBind.txt \
---                 --out-file -
---    | sed 's/sidebar/section/'
---    | sed 's/<strong /<emphasis role="strong"/g'
---    | sed 's/<\/strong/<\/emphasis/g')
-
-
-
 main :: IO ()
 main = do
   [d, m] <- getArgs
@@ -172,23 +158,8 @@ main = do
                 "\n\n--------------------------------------------------------------------------------\n\n"
             Left e -> sayErrShow e
 
--- extractMatches
---   :: ([a] -> Int)
---   -- ^ A function which takes a list and determines the length of a prefix to
---   -- extract.
---   -> [a]
---   -- ^ A list to extract parts from
---   -> ([[a]], [a])
---   -- ^ (The list of extracted prefixes, the list without those prefixes)
--- extractMatches _ [] = ([], [])
--- extractMatches split (x:xs) =
---   let (is, xs') = extractMatches split xs
---   in case split (x:xs') of
---         0 ->(is, x:xs')
---         i ->(take i (x:xs') : is, drop i (x:xs'))
 
-
-extractMatches'
+extractMatches
   :: forall a b
    . ([a] -> (b, [a]))
   -- ^ A function which takes a list transforming it and returning something
@@ -197,7 +168,7 @@ extractMatches'
   -> ([b], [a])
   -- ^ (The list of (non-empty) extracted prefixes, the list without those
   -- prefixes)
-extractMatches' split = foldr go ([], [])
+extractMatches split = foldr go ([], [])
   where
     go :: a -> ([b], [a]) -> ([b], [a])
     go x (ss, xs) = first (: ss) $ split (x : xs)
@@ -216,22 +187,3 @@ extractMatchesM split = foldrM go ([], [])
   where
     go :: a -> ([b], [a]) -> m ([b], [a])
     go x (ss, xs) = first (: ss) <$> split (x : xs)
-
-extractMatches
-  :: forall a
-   . ([a] -> Int)
-  -- ^ A function which takes a list and determines the length of a prefix to
-  -- extract.
-  -> [a]
-  -- ^ A list to extract parts from
-  -> ([[a]], [a])
-  -- ^ (The list of (non-empty) extracted prefixes, the list without those
-  -- prefixes)
-extractMatches split = foldr go ([], [])
-  where
-    go :: a -> ([[a]], [a]) -> ([[a]], [a])
-    go x (ss, xs) =
-      let xs' = x : xs
-      in  case split xs' of
-            0 -> (ss, xs')
-            n -> (take n xs' : ss, drop n xs')

@@ -14,36 +14,25 @@ module Parse.Utils
   , requiredRead
   , required
   , failA
-  , failString
   , arrF
-  , traceShowA
   , oneRequired
   , onlyChildWithName
   , getAllText
   , getAllTextT
   , getAllNonCommentText
   , getAllNonCommentNonNameText
-  , oneOf
-  , oneOf'
   , allChildren
   , extractFields
   , getAttrOrChildText
   , getAttrOrChildTextT
   , getOptionalAttrOrChildTextT
-  , getChildText
   , getChildTextT
-  , parseValidityBlock
   , traverseMaybeA
   , mapA
   , parseBool
   , parseBoolT
   , boolAttrDefault
-  , fromRightA
-  , fromRightShowA
   , strip
-  , stripL
-  , stripR
-  , stripLines
   , readRational
   , getAttrValue0T
   ) where
@@ -191,10 +180,8 @@ getOptionalAttrOrChildTextT
   :: String
   -- ^ The attribute or child name to get
   -> IOStateArrow s XmlTree (Maybe Text)
-getOptionalAttrOrChildTextT s = optional
-  (        (getAttrValue0T s)
-  `orElse` (getChildTextT s)
-  )
+getOptionalAttrOrChildTextT s =
+  optional (getAttrValue0T s `orElse` getChildTextT s)
 
 -- | Get all the text between the child with the given name
 getChildText
@@ -209,11 +196,6 @@ getChildTextT
   -- ^ The name of the child to get the text of
   -> IOStateArrow s XmlTree Text
 getChildTextT s = T.pack ^<< getChildText s
-
-parseValidityBlock :: ArrowXml a => a XmlTree [String]
-parseValidityBlock = hasName "validity" >>>
-                     listA (getChildren >>> parseUsageString)
-  where parseUsageString = hasName "usage" >>> getAllText
 
 traverseMaybeA :: ArrowIf a => a b c -> a (Maybe b) (Maybe c)
 traverseMaybeA a = (arrF id >>> a >>^ Just) `orElse` constA Nothing
@@ -238,22 +220,6 @@ boolAttrDefault attrName def =
   (parseBool <<< getAttrValue0 attrName) `orElse`
   constA def
 
--- | Take the right element of either or failA with the error on the Left
-fromRightA :: IOStateArrow s (Either String a) a
-fromRightA = ifP isRight
-                 (arr $ \(Right x) -> x)
-                 (applyA (arr $ \(Left e) -> failA e))
-  where isRight (Right _) = True
-        isRight (Left _)  = False
-
--- | Take the right element of either or failA with the error on the Left
-fromRightShowA :: Show e => IOStateArrow s (Either e a) a
-fromRightShowA = ifP isRight
-                 (arr $ \(Right x) -> x)
-                 (arr (\(Left e) -> show e) ^>> failString)
-  where isRight (Right _) = True
-        isRight (Left _)  = False
-
 strip :: String -> String
 strip = stripL . stripR
 
@@ -262,9 +228,6 @@ stripL = dropWhile isSpace
 
 stripR :: String -> String
 stripR = reverse . stripL . reverse
-
-stripLines :: String -> String
-stripLines = unlines . fmap strip . lines
 
 readRational :: String -> Maybe Rational
 readRational = fmap fst . listToMaybe . readSigned readFloat

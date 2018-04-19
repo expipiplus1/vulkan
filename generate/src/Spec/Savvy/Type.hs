@@ -13,7 +13,6 @@ module Spec.Savvy.Type
   , getTypeSize
   , getTypeAlignment
   , TypeParseContext
-  , stringToType
   , stringToTypeExpected
   , specParserContext
   , typeDepends

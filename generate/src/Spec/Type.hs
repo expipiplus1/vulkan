@@ -5,9 +5,6 @@ module Spec.Type where
 
 import           Data.Semigroup
 import           Data.Text
-import           Language.C.Types (CIdentifier, Type)
-
-type CType = Type CIdentifier
 
 data TypeDecl
   = -- | These aren't really types, they are #includes too
@@ -111,9 +108,8 @@ data TypeAlias = TypeAlias
   deriving (Show, Eq)
 
 ----------------------------------------------------------------
--- old stuff
+-- Utils
 ----------------------------------------------------------------
-
 
 typeDeclTypeName :: TypeDecl -> Maybe Text
 typeDeclTypeName = \case
@@ -129,72 +125,3 @@ typeDeclTypeName = \case
   (AUnionType ut)        -> Just $ utName ut
   (ASectionComment _)    -> Nothing
   (AnAlias ta)           -> Just $ taName ta
-
---    APlatformHeader PlatformHeader
---  | ARequirement Requirement
---  | ADefine Define
---  | ABaseType BaseType
---  | ABitmaskType BitmaskType
---  | AHandleType HandleType
---  | AnEnumType EnumType
---  | AFuncPointerType FuncPointerType
---  | AStructType StructType
---  | AUnionType UnionType
---  | -- | A comment separating type sections
---    ASectionComment SectionComment
---  | AnAlias TypeAlias
-
-
-{-
-typeDeclCType :: TypeDecl -> Maybe CType
-typeDeclCType (AnInclude _)          = Nothing
-typeDeclCType (ADefine _)            = Nothing
-typeDeclCType (ABaseType bt)         = Just $ btCType bt
-typeDeclCType (APlatformType _)      = Nothing
-typeDeclCType (ABitmaskType bmt)     = Just $ bmtCType bmt
-typeDeclCType (AHandleType ht)       = Just $ htCType ht
-typeDeclCType (AnEnumType _)         = Nothing
-typeDeclCType (AFuncPointerType fpt) = Just $ fptCType fpt
-typeDeclCType (AStructType _)        = Nothing
-typeDeclCType (AUnionType _)         = Nothing
-
-typeDeclToInclude :: TypeDecl -> Maybe Include
-typeDeclToInclude (AnInclude x) = Just x
-typeDeclToInclude _             = Nothing
-
-typeDeclToDefine :: TypeDecl -> Maybe Define
-typeDeclToDefine (ADefine x) = Just x
-typeDeclToDefine _           = Nothing
-
-typeDeclToBaseType :: TypeDecl -> Maybe BaseType
-typeDeclToBaseType (ABaseType x) = Just x
-typeDeclToBaseType _             = Nothing
-
-typeDeclToPlatformType :: TypeDecl -> Maybe PlatformType
-typeDeclToPlatformType (APlatformType x) = Just x
-typeDeclToPlatformType _                 = Nothing
-
-typeDeclToBitmaskType :: TypeDecl -> Maybe BitmaskType
-typeDeclToBitmaskType (ABitmaskType x) = Just x
-typeDeclToBitmaskType _                = Nothing
-
-typeDeclToHandleType :: TypeDecl -> Maybe HandleType
-typeDeclToHandleType (AHandleType x) = Just x
-typeDeclToHandleType _               = Nothing
-
-typeDeclToEnumType :: TypeDecl -> Maybe EnumType
-typeDeclToEnumType (AnEnumType x) = Just x
-typeDeclToEnumType _              = Nothing
-
-typeDeclToFuncPointerType :: TypeDecl -> Maybe FuncPointerType
-typeDeclToFuncPointerType (AFuncPointerType x) = Just x
-typeDeclToFuncPointerType _                    = Nothing
-
-typeDeclToStructType :: TypeDecl -> Maybe StructType
-typeDeclToStructType (AStructType x) = Just x
-typeDeclToStructType _               = Nothing
-
-typeDeclToUnionType :: TypeDecl -> Maybe UnionType
-typeDeclToUnionType (AUnionType x) = Just x
-typeDeclToUnionType _              = Nothing
--}
