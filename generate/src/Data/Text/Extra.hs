@@ -1,6 +1,7 @@
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE ViewPatterns #-}
-{-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms   #-}
+{-# LANGUAGE ViewPatterns      #-}
 
 module Data.Text.Extra
   ( readMaybe
@@ -8,13 +9,16 @@ module Data.Text.Extra
   , pattern Cons
   , upperCaseFirst
   , dropPrefix
+  , (<+>)
   , module Data.Text
   ) where
 
 import           Data.Char
-import qualified Text.Read as R
+import           Data.Semigroup
+import           Data.String    (IsString)
 import           Data.Text
-import qualified Data.Text as T
+import qualified Data.Text      as T
+import qualified Text.Read      as R
 
 -- | Read some text into a value
 readMaybe :: Read a => Text -> Maybe a
@@ -40,3 +44,6 @@ dropPrefix :: Text -> Text -> Maybe Text
 dropPrefix prefix s = if prefix `T.isPrefixOf` s
                         then Just (T.drop (T.length prefix) s)
                         else Nothing
+
+(<+>) :: (IsString a, Semigroup a) => a -> a -> a
+a <+> b = a <> " " <> b

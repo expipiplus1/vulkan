@@ -2,40 +2,46 @@
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE PatternSynonyms     #-}
 {-# LANGUAGE RecordWildCards     #-}
+{-# LANGUAGE RecursiveDo         #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE ViewPatterns        #-}
 
 module Documentation
-  ( main
+  ( Documentation(..)
+  , Documentee(..)
+  , docBookToDocumentation
+  , splitDocumentation
+  , main
   ) where
 
 import           Control.Monad
 import           Data.Bifunctor
 import           Data.Default
-import           Data.Either.Validation
+import           Data.Either.Combinators
 import           Data.Foldable
 import           Data.List
 import           Data.Maybe
 import           Data.Semigroup
 import           Data.Text                    (Text)
-import qualified Data.Text                    as T
-import qualified Data.Text.IO                 as T
+import qualified Data.Text.Extra              as T
 import           Documentation.RunAsciiDoctor
 import           Prelude                      hiding (rem)
 import           Say
 import           System.Environment
 import           Text.Pandoc
-import           Text.Pandoc.Generic
-import           Text.Pandoc.Class
-import           Text.Pandoc.Readers
 
 data Documentation = Documentation
-  { dDocumentee    :: Text
+  { dDocumentee    :: Documentee
     -- ^ The name of the thing being documented
   , dDocumentation :: Pandoc
     -- ^ The documentation itself
   }
   deriving (Show)
+
+data Documentee
+  = TopLevelName Text
+  | NestedDocumentation Text Text
+  deriving (Show, Eq, Ord)
 
 documentationToHaddock :: Documentation -> Either PandocError Text
 documentationToHaddock Documentation{..} =
@@ -44,23 +50,35 @@ documentationToHaddock Documentation{..} =
 
 docBookToDocumentation
   :: Text
-  -- ^ The object being documented
-  -> Text
   -- ^ The docbook string
-  -> Either PandocError Documentation
-docBookToDocumentation name db = do
+  -> Either Text [Documentation]
+docBookToDocumentation db = mdo
   let readerOptions = def
-      dDocumentee = name
-  dDocumentation <- runPure (readDocBook readerOptions db)
-  pure Documentation{..}
+  pandoc             <- mapLeft T.tShow $ runPure (readDocBook readerOptions db)
+  (removed, subDocs) <- splitDocumentation name pandoc
+  name               <- guessDocumentee removed
+  pure $ Documentation (TopLevelName name) removed : subDocs
+
+guessDocumentee :: Pandoc -> Either Text Text
+guessDocumentee (Pandoc _ bs) = do
+  firstWord <- case bs of
+    Para (Str n : _) : _ -> pure (T.pack n)
+    _                    -> Left "Unable to find first word in documentation"
+  if "vk"
+       `T.isPrefixOf` T.toLower firstWord
+       ||             "pfn_"
+       `T.isPrefixOf` T.toLower firstWord
+    then pure firstWord
+    else Left "First word of documentation doesn't begin with \"vk\" or \"pfn\""
 
 -- | If the description is a bullet list of "enames" then remove those from the
 -- original documentation and return them separately.
-splitDocumentation :: Documentation -> Either Text [Documentation]
-splitDocumentation Documentation {..} = case dDocumentation of
-  Pandoc meta bs -> do
-    (es, bs') <- extractMatchesM (splitPrefix meta) bs
-    pure $ Documentation dDocumentee (Pandoc meta bs') : join (catMaybes es)
+--
+-- Return the original documentation with the new document sections removed
+splitDocumentation :: Text -> Pandoc -> Either Text (Pandoc, [Documentation])
+splitDocumentation parent (Pandoc meta bs) = do
+  (es, bs') <- extractMatchesM (splitPrefix meta) bs
+  pure (Pandoc meta bs', join (catMaybes es))
   where
     splitPrefix m = \case
       -- Remove the "Document Notes" section
@@ -76,7 +94,7 @@ splitDocumentation Documentation {..} = case dDocumentation of
       -- values, split them into separate documentation elements
       xs@(Section sectionTag bs rem)
         | sectionTag `elem` ["_description", "_members"] -> case
-            memberDocs m bs
+            memberDocs parent m bs
           of
             Left  err -> pure (Nothing, xs)
             Right ds  -> pure (Just ds, rem)
@@ -84,7 +102,6 @@ splitDocumentation Documentation {..} = case dDocumentation of
       -- Leave everything else alone
       xs -> pure (Nothing, xs)
 
---
 fixupDocumentation :: Documentation -> Documentation
 fixupDocumentation (Documentation dDocumentee p) = Documentation
   { dDocumentation = fixup p
@@ -128,35 +145,36 @@ isHeaderLE n = \case
   _             -> False
 
 -- Handle struct members, enum docs and function parameter documentation
-memberDocs :: Meta -> [Block] -> Either Text [Documentation]
-memberDocs m = \case
+memberDocs :: Text -> Meta -> [Block] -> Either Text [Documentation]
+memberDocs parent m = \case
   [BulletList bs] ->
     let enumDoc :: [Block] -> Either Text Documentation
         enumDoc = \case
-          [p@(Para (Code ("",[],[]) memberName:_))] ->
-            pure Documentation {dDocumentee = T.pack memberName, dDocumentation = Pandoc m [p]}
+          [p@(Para (Code ("", [], []) memberName : _))] -> pure Documentation
+            { dDocumentee    = NestedDocumentation parent (T.pack memberName)
+            , dDocumentation = Pandoc m [p]
+            }
           _ -> Left "Unhandled member documentation declaration"
     in  traverse enumDoc bs
-  _ -> Left "Trying to extract member documentation from an unhandled desscription"
+  _ -> Left
+    "Trying to extract member documentation from an unhandled desscription"
 
 main :: IO ()
 main = do
   [d, m] <- getArgs
   manTxtToDocbook d m >>= \case
     Left  e -> sayErr e
-    Right d -> case docBookToDocumentation (T.pack m) d of
-      Left  e -> sayErrShow e
-      Right d -> case splitDocumentation d of
-        Left  e  -> sayErr e
-        Right ds -> do
-          for_ ds sayShow
-          for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
-            Right t -> do
-              -- sayShow ()
-              say t
-              say
-                "\n\n--------------------------------------------------------------------------------\n\n"
-            Left e -> sayErrShow e
+    Right d -> case docBookToDocumentation d of
+      Left  e  -> sayErr e
+      Right ds -> do
+        for_ ds sayShow
+        for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
+          Right t ->
+            -- sayShow ()
+            say t
+            -- say
+            --   "\n\n--------------------------------------------------------------------------------\n\n"
+          Left e -> sayErrShow e
 
 
 extractMatches
