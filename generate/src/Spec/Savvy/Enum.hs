@@ -31,8 +31,6 @@ import           Prelude                   hiding (Enum)
 import qualified Spec.Bitmask              as P
 import qualified Spec.Enum                 as P
 import qualified Spec.ExtensionTag         as P
-import qualified Spec.Feature              as P
-import qualified Spec.Feature              as PF
 import           Spec.Savvy.Enum.Extension
 import           Spec.Savvy.Error
 import qualified Spec.Spec                 as P
@@ -124,9 +122,8 @@ specEnumEnums spec@P.Spec {..} =
           pure
             $ let eName = etName
                   eElements =
-                    [ EnumElement {..}
+                    [ EnumElement {eeValue = Left (P.eeValue el), ..}
                     | el@P.EnumElement {..} <- P.eElements ee
-                    , let eeValue = Left (P.eeValue el)
                     ]
                   eAliases    = closeNonReflexive (`MultiMap.lookup` aliasMap) [etName]
                   eComment    = P.eComment ee

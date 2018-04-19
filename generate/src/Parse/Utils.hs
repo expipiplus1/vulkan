@@ -8,11 +8,8 @@ module Parse.Utils
   , optionalAttrValueT
   , requiredAttrValue
   , requiredAttrValueT
-  , commaSepList
   , commaSepListT
-  , optionalCommaSepListAttr
   , optionalCommaSepListAttrT
-  , commaSepListAttr
   , commaSepListAttrT
   , requiredRead
   , required
@@ -53,7 +50,6 @@ module Parse.Utils
 
 import           Data.Char         (isSpace)
 import           Data.Foldable     (foldr', toList)
-import           Data.List.Split   (splitOn)
 import           Data.Maybe        (listToMaybe)
 import           Data.Text         (Text)
 import qualified Data.Text         as T
@@ -121,25 +117,15 @@ oneRequired e a = listA a
 onlyChildWithName :: String -> IOStateArrow s XmlTree XmlTree
 onlyChildWithName s = oneRequired s (hasName s <<< getChildren)
 
-commaSepList :: String -> [String]
-commaSepList = splitOn ","
-
 commaSepListT :: Text -> [Text]
 commaSepListT = T.splitOn ","
 
 -- | When the attribute is not present this returns the empty list
-commaSepListAttr :: ArrowXml a => String -> a XmlTree [String]
-commaSepListAttr n = commaSepList ^<< getAttrValue n
-
--- | When the attribute is not present this returns the empty list
 commaSepListAttrT :: ArrowXml a => String -> a XmlTree [Text]
-commaSepListAttrT n = fmap T.pack ^<< commaSepListAttr n
-
-optionalCommaSepListAttr :: ArrowXml a => String -> a XmlTree (Maybe [String])
-optionalCommaSepListAttr n = fmap commaSepList ^<< optionalAttrValue n
+commaSepListAttrT n = commaSepListT . T.pack ^<< getAttrValue n
 
 optionalCommaSepListAttrT :: ArrowXml a => String -> a XmlTree (Maybe [Text])
-optionalCommaSepListAttrT n = fmap (fmap T.pack) ^<< optionalCommaSepListAttr n
+optionalCommaSepListAttrT n = fmap commaSepListT ^<< optionalAttrValueT n
 
 getAllText :: ArrowXml a => a XmlTree String
 getAllText = deep getText >. concat

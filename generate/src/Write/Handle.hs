@@ -6,7 +6,6 @@ module Write.Handle
   ( writeHandle
   ) where
 
-import           Data.Text                                (Text)
 import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
@@ -14,7 +13,6 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Type
-import           Spec.Savvy.Type.Haskell
 
 import           Write.Element                            hiding (TypeName)
 

@@ -6,7 +6,6 @@ module Parse.Spec
   ) where
 
 import           Control.Monad.IO.Class (MonadIO, liftIO)
-import           Data.List              (isPrefixOf)
 import           Parse.Bitmask
 import           Parse.Command
 import           Parse.Constant
@@ -15,7 +14,6 @@ import           Parse.Enum
 import           Parse.Extension
 import           Parse.Feature
 import           Parse.Platform
-import           Parse.Section
 import           Parse.Tag
 import           Parse.Type
 import           Parse.Utils
@@ -48,5 +46,3 @@ parseSpecXML = isRoot /> hasName "registry" >>> extract
           sFeatures <- listA (parseFeature <<< getChildren) -< registry
           sExtensions <- oneRequired "extensions" (parseExtensions <<< getChildren) -< registry
           returnA -< Spec{..}
-
-

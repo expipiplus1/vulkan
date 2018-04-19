@@ -3,7 +3,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE RecordWildCards   #-}
-{-# LANGUAGE ViewPatterns      #-}
 
 module Write.Seed
   ( specSeeds
@@ -12,9 +11,8 @@ module Write.Seed
 
 import           Control.Bool
 import           Data.Char
-import           Data.Maybe
 import           Data.Text                 (Text)
-import qualified Data.Text                 as T
+import qualified Data.Text.Extra                 as T
 import           Data.Text.Prettyprint.Doc
 import           Text.Regex.Applicative
 
@@ -104,11 +102,11 @@ sectionNameToModuleBaseName = \case
       . T.words
       . T.takeWhile (/= ',')
       $ t
-    | Just e <- dropPrefix "Originally based on" t
+    | Just e <- T.dropPrefix "Originally based on" t
     -> ("Promoted_From_" <>) . head . T.words $ e
     | otherwise
     -> T.concat
-      . fmap upperCaseFirst
+      . fmap T.upperCaseFirst
       . filter isAllowed
       . T.words
       . T.filter ((not . isPunctuation) <||> (== '_'))
@@ -116,38 +114,3 @@ sectionNameToModuleBaseName = \case
     where
       isAllowed n = n `notElem` forbiddenWords
       forbiddenWords = ["commands", "API"]
-
-upperCaseFirst :: Text -> Text
-upperCaseFirst = onFirst toUpper
-
-onFirst :: (Char -> Char) -> Text -> Text
-onFirst f = \case
-  Cons c cs -> Cons (f c) cs
-  t         -> t
-
-pattern Cons :: Char -> Text -> Text
-pattern Cons c cs <- (T.uncons -> Just (c, cs))
-  where Cons c cs = T.cons c cs
-
-dropPrefix :: Text -> Text -> Maybe Text
-dropPrefix prefix s = if prefix `T.isPrefixOf` s
-                        then Just (T.drop (T.length prefix) s)
-                        else Nothing
-
-dropSuffix :: Text -> Text -> Maybe Text
-dropSuffix suffix s = if suffix `T.isSuffixOf` s
-                        then Just (T.take (T.length s - T.length suffix) s)
-                        else Nothing
-
--- | If the suffix doesn't match: return the original string
-dropSuffix' :: Text -> Text -> Text
-dropSuffix' suffix s = fromMaybe s (dropSuffix suffix s)
-
--- extensionNameToModuleName :: String -> ModuleName
--- extensionNameToModuleName extensionName
---   | "VK":category:n:ns <- splitOn "_" extensionName
---   = ModuleName $ "Graphics.Vulkan." ++
---                  pascalCase category ++ "." ++
---                  pascalCase (unwords (n:ns))
---   | otherwise
---   = error ("extension name in unexpected format: " ++ extensionName)

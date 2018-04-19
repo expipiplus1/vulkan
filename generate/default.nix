@@ -11,7 +11,7 @@ let
       };
 
   haskellPackageGen = { doFilter ? true }: src:
-    let filteredSrc = builtins.filterSource (n: t: builtins.baseNameOf n == "generate.cabal") src;
+    let filteredSrc = builtins.filterSource (n: t: t != "unknown") src;
         package = pkgs.runCommand "default.nix" {} ''
           ${pkgs.haskellPackages.cabal2nix}/bin/cabal2nix \
             ${if doFilter then filteredSrc else src} \

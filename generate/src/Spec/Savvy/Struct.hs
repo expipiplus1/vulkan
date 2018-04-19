@@ -16,9 +16,7 @@ import           Control.Arrow           ((&&&))
 import           Control.Monad.Fix.Extra
 import           Data.Closure
 import           Data.Either.Validation
-import           Data.List               (find)
 import           Data.Maybe
-import           Data.Monoid             (Endo (..))
 import qualified Data.MultiMap           as MultiMap
 import           Data.Semigroup
 import           Data.Text               (Text)
@@ -60,9 +58,9 @@ data StructOrUnion
 specStructs :: TypeContext -> P.Spec -> Validation [SpecError] [Struct]
 specStructs tc P.Spec {..}
   = let
-      specStructs     = [ s | P.AStructType s <- sTypes ]
-      specUnions      = [ u | P.AUnionType u <- sTypes ]
-      specStructNames = (P.stName <$> specStructs) ++ (P.utName <$> specUnions)
+      parsedStructs     = [ s | P.AStructType s <- sTypes ]
+      parsedUnions      = [ u | P.AUnionType u <- sTypes ]
+      parsedStructNames = (P.stName <$> parsedStructs) ++ (P.utName <$> parsedUnions)
 
       structAliases :: [(Text, Text)]
       structAliases =
@@ -73,7 +71,7 @@ specStructs tc P.Spec {..}
       aliasMap = MultiMap.fromList structAliases
       getAliases s = closeNonReflexive (`MultiMap.lookup` aliasMap) [s]
     in
-      eitherToValidation $ fixLookupM specStructNames sName $ \getStruct ->
+      eitherToValidation $ fixLookupM parsedStructNames sName $ \getStruct ->
         let structTypeContext =
               extendTypeContext getStructSize getStructAlignment tc
             getField f = \case
@@ -83,9 +81,9 @@ specStructs tc P.Spec {..}
             getStructSize      = getField sSize
             getStructAlignment = getField sAlignment
         in  (<>)
-            <$> (for specStructs (specStruct getAliases structTypeContext))
+            <$> for parsedStructs (specStruct getAliases structTypeContext)
             <*> validationToEither
-                  (for specUnions (specUnion getAliases structTypeContext))
+                  (for parsedUnions (specUnion getAliases structTypeContext))
 
 ----------------------------------------------------------------
 -- Structs
@@ -117,11 +115,11 @@ specStructMember
   -- ^ The offset in the struct
   -> Validation [SpecError] StructMember
 specStructMember tc P.StructMember {..} smOffset = eitherToValidation $ do
-  smType      <- stringToTypeExpected (tcParseContext tc) smName smType
-  smAlignment <- getTypeAlignment tc smType
-  smSize      <- getTypeSize tc smType
-  smValues    <- pure (maybeToList smValues)
-  pure StructMember {..}
+  type'       <- stringToTypeExpected (tcParseContext tc) smName smType
+  smAlignment <- getTypeAlignment tc type'
+  smSize      <- getTypeSize tc type'
+  vals        <- pure (maybeToList smValues)
+  pure StructMember {smType = type', smValues = vals, ..}
 
 ----------------------------------------------------------------
 -- Unions

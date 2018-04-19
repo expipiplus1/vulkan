@@ -17,8 +17,6 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Text.Printf
 
 import           Spec.Savvy.Enum
-import           Spec.Savvy.Extension
-import           Spec.Savvy.Feature
 import           Write.Element
 
 writeEnumExtension

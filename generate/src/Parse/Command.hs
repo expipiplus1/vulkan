@@ -77,8 +77,8 @@ parameter = proc p -> do
   hasName "param" -< p
   pName <- getAllTextT <<< onlyChildWithName "name" -< p
   pType <- getAllTextT <<< processChildren (neg (hasName "name")) -< p
-  pIsOptional <- traverseMaybeA (mapA parseBool) <<<
-                 optionalCommaSepListAttr "optional" -< p
+  pIsOptional <- traverseMaybeA (mapA parseBoolT) <<<
+                 optionalCommaSepListAttrT "optional" -< p
   pIsExternSync <-
     fmap externSync ^<< optionalAttrValueT "externsync" -< p
   pLengths <- optionalCommaSepListAttrT "len" -< p

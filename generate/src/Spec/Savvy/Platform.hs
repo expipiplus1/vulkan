@@ -4,7 +4,7 @@
 module Spec.Savvy.Platform
   ( module Spec.Platform
   , PlatformGuardInfo(..)
-  , guardedModules
+  , getModuleGuardInfo
   ) where
 
 import           Control.Arrow          ((&&&))
@@ -24,11 +24,11 @@ data PlatformGuardInfo = PlatformGuardInfo
   }
   deriving(Eq, Ord)
 
-guardedModules
+getModuleGuardInfo
   :: [Extension] -> [Platform] -> Validation [SpecError] [PlatformGuardInfo]
   -- TODO: better representation
   -- ^ (moduleName, guard)
-guardedModules exts platforms =
+getModuleGuardInfo exts platforms =
   let guardMap = Map.fromList $ (pName &&& pProtect) <$> platforms
       platformToGuard :: Text -> Validation [SpecError] Text
       platformToGuard p = case Map.lookup p guardMap of

@@ -32,9 +32,9 @@ specHandles
   -> P.Spec
   -> Validation [SpecError] [Handle]
 specHandles preprocess pc P.Spec {..} =
-  let specHandles = [ h | P.AHandleType h <- sTypes ]
-      handleNames = [ htName | P.HandleType {..} <- specHandles ]
-      pc'         = CParserContext
+  let parsedHandles = [ h | P.AHandleType h <- sTypes ]
+      handleNames   = [ htName | P.HandleType {..} <- parsedHandles ]
+      pc'           = CParserContext
         (cpcIdentName pc)
         (HashSet.filter ((`notElem` handleNames) . pack . unCIdentifier)
                         (cpcTypeNames pc)
@@ -54,7 +54,7 @@ specHandles preprocess pc P.Spec {..} =
           $   Handle htName
           <$> (stringToTypeExpected pc' htName =<< preprocess htType)
           <*> pure (getAliases htName)
-        | P.HandleType {..} <- specHandles
+        | P.HandleType {..} <- parsedHandles
         ]
 
 

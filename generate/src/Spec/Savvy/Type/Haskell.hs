@@ -1,7 +1,6 @@
 {-# LANGUAGE DataKinds                  #-}
-{-# LANGUAGE DeriveFunctor              #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE KindSignatures             #-}
+
+
 {-# LANGUAGE LambdaCase                 #-}
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE PatternSynonyms            #-}
@@ -14,11 +13,9 @@ module Spec.Savvy.Type.Haskell
   , protoToHsTypeNonIO
   ) where
 
-import           Control.Monad.Trans.State.Strict
 import           Control.Monad.Trans.Writer.Strict (WriterT, runWriterT)
 import           Control.Monad.Writer.Class
 import           Data.Text                         (Text)
-import qualified Data.Text                         as T
 import           Data.Text.Prettyprint.Doc
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
@@ -38,17 +35,17 @@ toHsTypePrec
   -- ^ The type to convert to a Haskell string
   -> Either [SpecError] (Doc (), ([Import], [Text]))
   -- ^ (The type string, (Any imports it requires, Any language extensions it requires))
-toHsTypePrec prec = runWriterT . runPop allLowercaseWords . toHsType' prec Positive
+toHsTypePrec prec = runWriterT . toHsType' prec Positive
 
 protoToHsTypeNonIO
   :: Type
   -> [(Maybe Text, Type)]
   -> Either [SpecError] (Doc (), ([Import], [Text]))
-protoToHsTypeNonIO ret ps = runWriterT . runPop allLowercaseWords $ do
+protoToHsTypeNonIO ret ps = runWriterT $ do
   ret' <- toHsType' 10 Positive ret
   -- Although '->' has a precedence of 0, it looks weird to leave the
   -- arguments naked.
-  ps'  <- traverse (paramToHsType 10 (Negative)) ps
+  ps'  <- traverse (paramToHsType 10 Negative) ps
   pure . parens' False $ foldr (\p r -> p <+> "->" <+> r) ret' ps'
 
 
@@ -62,12 +59,7 @@ neg = \case
 toHsType' :: Int -> Pos -> Type -> TypeM (Doc ())
 toHsType' prec pos = \case
   Float -> useWithConstructors "Foreign.C.Types" "CFloat"
-  Void  -> case pos of
-    Negative ->
-      pure "()"
-      -- n <- pop
-      -- pure $ pretty n
-    Positive -> pure "()"
+  Void  -> pure "()"
   Char  -> useWithConstructors "Foreign.C.Types" "CChar"
   Int   -> useWithConstructors "Foreign.C.Types" "CInt"
   Ptr t -> do
@@ -159,41 +151,5 @@ tellExtension :: Text
   -> TypeM ()
 tellExtension e = tell ([], [e])
 
-type TypeM  = PopT Text (WriterT ([Import], [Text]) (Either [SpecError]))
+type TypeM  = WriterT ([Import], [Text]) (Either [SpecError])
 
-----------------------------------------------------------------
--- Getting names
-----------------------------------------------------------------
-
-newtype PopT p m a = Pop { unPop :: StateT [p] m a }
-  deriving (Functor, Applicative, Monad, MonadWriter w)
-
-runPop :: Monad m => [p] -> PopT p m a -> m a
-runPop ps (Pop s) = evalStateT s (cycle ps)
-
-pop :: Monad m => PopT p m p
-pop = Pop $ do
-  p <- gets head
-  modify' tail
-  pure p
-
---------------------------------------------------------------------------------
--- The alphabet
---------------------------------------------------------------------------------
-
-allLowercaseWords :: [Text]
-allLowercaseWords =
-  T.pack . fmap unLowercase <$> iterate lexicographicIncrement [minBound]
-
-newtype LowercaseLatin = LowercaseLatin {unLowercase :: Char}
-  deriving (Eq, Enum)
-
-instance Bounded LowercaseLatin where
-  minBound = LowercaseLatin 'a'
-  maxBound = LowercaseLatin 'z'
-
-lexicographicIncrement :: (Bounded a, Enum a, Eq a) => [a] -> [a]
-lexicographicIncrement = \case
-  [] -> [minBound]
-  (x : xs) | x == maxBound -> minBound : lexicographicIncrement xs
-           | otherwise     -> succ x : xs

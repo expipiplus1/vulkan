@@ -19,7 +19,6 @@ import qualified Spec.Command           as P
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
 import qualified Spec.Spec              as P
-import qualified Spec.Type              as P
 
 data Command = Command
   { cName       :: Text
@@ -39,21 +38,23 @@ data Parameter = Parameter
   deriving (Show)
 
 specCommands :: TypeParseContext -> P.Spec -> Validation [SpecError] [Command]
-specCommands pc P.Spec {..} =
-  let commandAliases :: [(Text, Text)]
+specCommands pc P.Spec {..}
+  = let
+      commandAliases :: [(Text, Text)]
       commandAliases =
         [ (caAlias, caName) | P.CommandAlias {..} <- sCommandAliases ]
       aliasMap :: MultiMap.MultiMap Text Text
       aliasMap = MultiMap.fromList commandAliases
-  in  for sCommands $ \P.Command {..} -> do
-        cReturnType <- eitherToValidation
-          $ stringToTypeExpected pc cName cReturnType
-        cParameters <- for cParameters $ \P.Parameter {..} -> do
-          pType <- eitherToValidation $ stringToTypeExpected pc pName pType
-          pure Parameter {..}
-        pure $
-          let cAliases = closeNonReflexive (`MultiMap.lookup` aliasMap) [cName]
-          in Command {..}
+    in
+      for sCommands $ \P.Command {..} -> do
+        ret <- eitherToValidation $ stringToTypeExpected pc cName cReturnType
+        ps  <- for cParameters $ \P.Parameter {..} -> do
+          t <- eitherToValidation $ stringToTypeExpected pc pName pType
+          pure Parameter {pType = t, ..}
+        pure
+          $ let cAliases =
+                  closeNonReflexive (`MultiMap.lookup` aliasMap) [cName]
+            in  Command {cReturnType = ret, cParameters = ps, ..}
 
 commandType :: Command -> Type
 commandType Command {..} = Proto

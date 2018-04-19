@@ -7,13 +7,11 @@ module Parse.Extension
   ( parseExtensions
   ) where
 
-import           Data.Maybe        (fromMaybe, listToMaybe)
+import           Data.Maybe
 import           Data.Text         (Text)
 import qualified Data.Text         as T
-import           Numeric           (readFloat, readSigned)
 import           Parse.Feature
 import           Parse.Utils
-import           Safe              (readMay)
 import           Spec.Extension
 import           Text.XML.HXT.Core
 
@@ -59,9 +57,6 @@ requirement = proc r -> do
   erComment    <- getOptionalAttrOrChildTextT "comment" -< r
   erInterfaces <- app -< (interfaces (fromMaybe "no comment" erComment), r)
   returnA -< ExtensionRequirement{..}
-
-comment :: IOStateArrow s XmlTree Text
-comment = getAllTextT <<< hasName "comment"
 
 readExtType :: String -> Maybe ExtensionType
 readExtType = \case

@@ -1,10 +1,8 @@
 {-# LANGUAGE ApplicativeDo     #-}
-{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
-{-# LANGUAGE ViewPatterns      #-}
 
 module Write.Struct
   ( writeStruct
@@ -14,9 +12,8 @@ module Write.Struct
 import           Control.Bool
 import           Data.Char
 import           Data.List.Extra
-import           Data.Maybe
 import           Data.Text                                (Text)
-import qualified Data.Text                                as T
+import qualified Data.Text.Extra                                as T
 import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
@@ -107,7 +104,7 @@ memberPokeDoc Struct{..} StructMember{..} = [qci|
 ----------------------------------------------------------------
 
 unionDoc :: Struct -> Either [SpecError] (Doc (), [Import], [Text])
-unionDoc s@Struct{..} = do
+unionDoc Struct{..} = do
   let membersFixedNames = fixUnionMemberName <$> sMembers
   (memberDocs, imports, extensions ) <- unzip3 <$> traverse unionMemberDoc membersFixedNames
   pure ([qci|
@@ -148,16 +145,16 @@ fixMemberName StructMember {..} =
   StructMember {smName = toRecordMemberName smName, ..}
 
 fixUnionMemberName :: StructMember -> StructMember
-fixUnionMemberName s@StructMember {..} =
+fixUnionMemberName StructMember {..} =
   StructMember {smName = toConstructorName smName, ..}
 
 -- | Prefix with "vk", make hungarian notation uppercase
 toRecordMemberName :: Text -> Text
-toRecordMemberName = ("vk" <>) . upperCaseFirst . uppercaseHungarian
+toRecordMemberName = ("vk" <>) . T.upperCaseFirst . uppercaseHungarian
 
 -- | Prefix with "Vk", make hungarian notation uppercase
 toConstructorName :: Text -> Text
-toConstructorName = ("Vk" <>) . upperCaseFirst . uppercaseHungarian
+toConstructorName = ("Vk" <>) . T.upperCaseFirst . uppercaseHungarian
 
 -- | drop the first word if it is just @p@s and @s@s
 uppercaseHungarian :: Text -> Text
@@ -165,18 +162,3 @@ uppercaseHungarian t = case T.break isUpper t of
   (firstWord, remainder) | T.all ((== 'p') <||> (== 's')) firstWord ->
     T.map toUpper firstWord <> remainder
   _ -> t
-
-upperCaseFirst :: Text -> Text
-upperCaseFirst = onFirst toUpper
-
-lowerCaseFirst :: Text -> Text
-lowerCaseFirst = onFirst toLower
-
-onFirst :: (Char -> Char) -> Text -> Text
-onFirst f = \case
-  Cons c cs -> Cons (f c) cs
-  t         -> t
-
-pattern Cons :: Char -> Text -> Text
-pattern Cons c cs <- (T.uncons -> Just (c, cs))
-  where Cons c cs = T.cons c cs

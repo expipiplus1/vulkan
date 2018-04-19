@@ -1,7 +1,6 @@
 {-# LANGUAGE ApplicativeDo     #-}
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternGuards     #-}
 {-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
@@ -15,22 +14,15 @@ module Write.Module
 
 import           Control.Applicative
 import           Control.Arrow                            ((&&&))
-import           Control.Bool
 import           Data.Char
-import           Data.Either.Validation
 import           Data.Functor.Extra
 import           Data.List.Extra
 import qualified Data.Map                                 as Map
 import           Data.Maybe
 import           Data.Text                                (Text)
-import           Data.Text                                (Text)
-import qualified Data.Text                                as T
 import qualified Data.Text                                as T
 import           Data.Text.Prettyprint.Doc
-import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
-import           Prelude                                  hiding (Enum)
-import           Text.InterpolatedString.Perl6.Unindented
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Write.Element
@@ -112,6 +104,7 @@ exportHaskellName e =
         WithConstructors    _ -> (<> "(..)") <$> s
         WithoutConstructors _ -> s
 
+isConstructor :: Text -> Bool
 isConstructor = \case
   Cons x _ | isUpper x -> True
   _                    -> False
@@ -119,8 +112,8 @@ isConstructor = \case
 moduleImports :: Module -> [Doc ()]
 moduleImports Module{..} =
   let importMap = Map.fromListWith union ((iModule &&& iImports) <$> (weImports =<< mWriteElements))
-  in  Map.assocs importMap <&> \(mod, is) -> [qci|
-        import {pretty mod}
+  in  Map.assocs importMap <&> \(moduleName, is) -> [qci|
+        import {pretty moduleName}
           ( {indent (-2) . vcat . intercalatePrepend "," $ pretty <$> is}
           )
 |]
@@ -144,8 +137,8 @@ moduleInternalImports nameModule Module {..} =
         , Just (m, e) <- [nameModule d]
         , d `notElem` (unExport <$> (weProvides =<< mWriteElements))
         ]
-  in  Map.assocs depends <&> \(mod, is) -> [qci|
-        import {pretty mod}
+  in  Map.assocs depends <&> \(moduleName, is) -> [qci|
+        import {pretty moduleName}
           ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe exportHaskellName is}
           )
 |]

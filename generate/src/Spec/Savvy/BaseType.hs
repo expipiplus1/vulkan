@@ -1,5 +1,4 @@
 {-# LANGUAGE ApplicativeDo     #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
 module Spec.Savvy.BaseType
@@ -7,10 +6,8 @@ module Spec.Savvy.BaseType
   , specBaseTypes
   ) where
 
-import           Data.Closure
 import           Data.Either.Validation
 import qualified Data.HashSet           as HashSet
-import qualified Data.MultiMap          as MultiMap
 import           Data.Text
 import           Language.C.Types.Parse
 import           Spec.Savvy.Error
@@ -24,13 +21,10 @@ data BaseType = BaseType
   }
   deriving (Show)
 
-specBaseTypes
-  :: TypeParseContext
-  -> P.Spec
-  -> Validation [SpecError] [BaseType]
+specBaseTypes :: TypeParseContext -> P.Spec -> Validation [SpecError] [BaseType]
 specBaseTypes pc P.Spec {..} =
-  let specBaseTypes = [ h | P.ABaseType h <- sTypes ]
-      basetypeNames = [ btName | P.BaseType {..} <- specBaseTypes ]
+  let parsedBaseTypes = [ h | P.ABaseType h <- sTypes ]
+      basetypeNames = [ btName | P.BaseType {..} <- parsedBaseTypes ]
       pc'         = CParserContext
         (cpcIdentName pc)
         (HashSet.filter ((`notElem` basetypeNames) . pack . unCIdentifier)
@@ -42,7 +36,5 @@ specBaseTypes pc P.Spec {..} =
         [ eitherToValidation
           $   BaseType btName
           <$> stringToTypeExpected pc' btName btType
-        | P.BaseType {..} <- specBaseTypes
+        | P.BaseType {..} <- parsedBaseTypes
         ]
-
-

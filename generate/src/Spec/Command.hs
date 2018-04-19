@@ -1,7 +1,6 @@
 module Spec.Command where
 
 import           Data.Text
-import           Spec.Type
 
 data Command = Command { cName                     :: Text
                        , cReturnType               :: Text

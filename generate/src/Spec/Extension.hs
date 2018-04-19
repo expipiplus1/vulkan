@@ -1,6 +1,5 @@
 module Spec.Extension where
 
-import           Data.Int     (Int32)
 import           Data.Text
 import           Spec.Feature
 

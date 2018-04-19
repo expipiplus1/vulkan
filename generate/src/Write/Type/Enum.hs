@@ -116,14 +116,6 @@ writeReadExtensionTuples eName ees =
       spaces n = T.replicate (maxNameLength - T.length n) " "
   in [[qci|("{exName}", {spaces exName}pure ({eName} {writeValue exValue}))|] | EnumExtension{..} <- ees]
 
-writeAlias
-  :: Text
-  -- ^ Enum name
-  -> Text
-  -- ^ Alias
-  -> Doc ()
-writeAlias name alias = [qci|type {alias} = {name}|]
-
 writeValue :: Either Int32 Word32 -> String
 writeValue = \case
   Left i -> showsPrec 10 i ""

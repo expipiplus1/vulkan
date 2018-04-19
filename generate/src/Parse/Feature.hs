@@ -35,9 +35,9 @@ featureElemFail
   --- ^ feature name
   -> IOStateArrow s XmlTree String
 featureElemFail n = proc t -> do
-  comment <- optional (getAttrOrChildText "comment") -< t
+  featureComment <- optional (getAttrOrChildText "comment") -< t
   returnA -< ("Failed to parse value of feature " ++ T.unpack n)
-          ++ maybe "" (" with comment " ++) comment
+          ++ maybe "" (" with comment " ++) featureComment
 
 requirement
   :: IOStateArrow s XmlTree FeatureRequirement

@@ -1,5 +1,7 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 module Data.MultiMap.Extra
-  (
+  ( -- orphans
   ) where
 
 import qualified Data.Map       as Map

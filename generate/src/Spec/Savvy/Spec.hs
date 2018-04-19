@@ -102,15 +102,6 @@ getConstantValue cs t = do
     IntegralValue k -> Just k
     _               -> Nothing
 
-
--- | From Control.Zipper
-farthest :: (a -> Maybe a) -> a -> a
-farthest f = go where
-  go a = maybe a go (f a)
-
-getAlias :: [TypeAlias] -> Text -> Text
-getAlias = farthest . getAlias1
-
 getHandle :: [Handle] -> Text -> Maybe Type
 getHandle hs = (`Map.lookup` m)
   where m = Map.fromList [ (hName, hType) | Handle {..} <- hs ]

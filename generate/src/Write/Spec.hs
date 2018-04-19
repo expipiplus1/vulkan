@@ -38,7 +38,6 @@ import           Write.Command
 import           Write.Constant
 import           Write.ConstantExtension
 import           Write.Element
-import           Write.EnumAlias
 import           Write.EnumExtension
 import           Write.Handle
 import           Write.HeaderVersion
@@ -56,8 +55,8 @@ writeSpec
   -- ^ Output Directory
   -> P.Spec
   -> IO ()
-writeSpec outDir s = do
-  case spec s of
+writeSpec outDir parsedSpec = do
+  case spec parsedSpec of
     Left  es -> traverse_ (sayErr . prettySpecError) es
     Right s  -> case specWriteElements s of
       Failure es -> do
@@ -71,7 +70,7 @@ writeSpec outDir s = do
             traverse_ (sayErr . prettySpecError) es
           -- Right ps -> traverse_ (say . moduleSummary) ps
           Right ms -> do
-            let Success platformGuards = (guardedModules (sExtensions s) (sPlatforms s))
+            let Success platformGuards = (getModuleGuardInfo (sExtensions s) (sPlatforms s))
                 aggs       = makeAggregateModules platformGuards ms
             -- writeFile (outDir </> "vulkan.cabal") (show (writeCabal ms platformGuards))
             sayErrShow (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards)
@@ -95,9 +94,6 @@ saveModules outDir ms = concat <$> (traverse saveModule (zip ms (writeModules ms
       createDirectoryIfMissing True     dir
       writeFile                filename (show doc)
       pure []
-
-tShow :: Show a => a -> Text
-tShow = T.pack . show
 
 specWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specWriteElements Spec {..} = do

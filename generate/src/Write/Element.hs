@@ -2,9 +2,16 @@
 {-# LANGUAGE PatternSynonyms   #-}
 
 module Write.Element
-  where
+  ( WriteElement(..)
+  , Export(..)
+  , HaskellName(..)
+  , Import(..)
+  , pattern Pattern
+  , pattern Term
+  , pattern TypeConstructor
+  , pattern TypeAlias
+  ) where
 
-import           Data.List.Extra
 import           Data.Semigroup
 import           Data.Text
 import           Data.Text.Prettyprint.Doc
@@ -34,9 +41,16 @@ data HaskellName
   | PatternName Text
   deriving (Show, Eq, Ord)
 
+pattern Pattern :: Text -> Export
 pattern Pattern n = WithoutConstructors (PatternName n)
+
+pattern Term :: Text -> Export
 pattern Term n = WithoutConstructors (TermName n)
+
+pattern TypeConstructor :: Text -> Export
 pattern TypeConstructor n = WithConstructors (TypeName n)
+
+pattern TypeAlias :: Text -> Export
 pattern TypeAlias n = WithoutConstructors (TypeName n)
 
 data Import = Import

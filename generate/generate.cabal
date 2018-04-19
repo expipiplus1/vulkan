@@ -16,17 +16,20 @@ cabal-version:       >=1.10
 executable generate
   hs-source-dirs:      src
   main-is:             Main.hs
-  other-modules:       Parse.Bitmask
-                     , Parse.CType
+  other-modules:       Control.Monad.Fix.Extra
+                     , Data.Closure
+                     , Data.Functor.Extra
+                     , Data.MultiMap.Extra
+                     , Data.Text.Extra
+                     , Parse.Bitmask
                      , Parse.Command
                      , Parse.Constant
-                     , Parse.Platform
                      , Parse.Copyright
                      , Parse.Enum
                      , Parse.Extension
-                     , Parse.Section
+                     , Parse.Feature
+                     , Parse.Platform
                      , Parse.Spec
-                     , Parse.State
                      , Parse.Tag
                      , Parse.Type
                      , Parse.Utils
@@ -37,59 +40,72 @@ executable generate
                      , Spec.Enum
                      , Spec.Extension
                      , Spec.ExtensionTag
-                     , Spec.Graph
-                     , Spec.Partition
+                     , Spec.Feature
                      , Spec.Platform
-                     , Spec.Section
+                     , Spec.Savvy.APIConstant
+                     , Spec.Savvy.Alias
+                     , Spec.Savvy.BaseType
+                     , Spec.Savvy.Command
+                     , Spec.Savvy.Define
+                     , Spec.Savvy.Enum
+                     , Spec.Savvy.Enum.Extension
+                     , Spec.Savvy.Error
+                     , Spec.Savvy.Extension
+                     , Spec.Savvy.Feature
+                     , Spec.Savvy.FuncPointer
+                     , Spec.Savvy.Handle
+                     , Spec.Savvy.HeaderVersion
+                     , Spec.Savvy.Platform
+                     , Spec.Savvy.Preprocess
+                     , Spec.Savvy.Spec
+                     , Spec.Savvy.Struct
+                     , Spec.Savvy.Type
+                     , Spec.Savvy.Type.Haskell
+                     , Spec.Savvy.Type.Packing
+                     , Spec.Savvy.TypeAlias
                      , Spec.Spec
-                     , Spec.StripExtensions
                      , Spec.Tag
                      , Spec.Type
-                     , Spec.TypeEnv
                      , Spec.VendorID
+                     , Text.InterpolatedString.Perl6.Unindented
+                     , Write.Alias
+                     , Write.BaseType
+                     , Write.Bespoke
+                     , Write.Cabal
                      , Write.Command
                      , Write.Constant
-                     , Write.CycleBreak
-                     , Write.Enum
-                     , Write.Header
+                     , Write.ConstantExtension
+                     , Write.Element
+                     , Write.EnumExtension
+                     , Write.Handle
+                     , Write.HeaderVersion
                      , Write.Module
-                     , Write.Quirks
+                     , Write.Module.Aggregate
+                     , Write.Partition
+                     , Write.Seed
                      , Write.Spec
-                     , Write.Type.Base
-                     , Write.Type.Bitmask
-                     , Write.Type.Define
+                     , Write.Struct
+                     , Write.Type.Enum
                      , Write.Type.FuncPointer
-                     , Write.Type.Handle
-                     , Write.Type.Struct
-                     , Write.TypeConverter
-                     , Write.Utils
-                     , Write.Vertex
-                     , Write.WriteMonad
+                     , Write.Util
+
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:       base >= 4.8 && < 4.11
                      , control-bool >= 0.2.1
-                     , cpphs >= 1.19 && < 1.21
                      , directory >= 1.2 && < 1.4
                      , extra
                      , filepath >= 1.4 && < 1.5
-                     , hashable >= 1.2 && < 1.3
-                     , haskell-src-exts
                      , haskell-src-exts-simple
                      , hxt >= 9.3 && < 9.4
                      , inline-c >= 0.5 && < 0.7
                      , interpolatedstring-perl6 >= 1.0 && < 1.1
                      , mtl >= 2.2.1 && < 2.3
-                     , parsers >= 0.12 && < 0.13
                      , prettyprinter
-                     , regex-tdfa >= 1.2 && < 1.3
                      , safe >= 0.3 && < 0.4
-                     , split >= 0.2 && < 0.3
                      , template-haskell
                      , text
                      , transformers >= 0.4.2 && < 0.6
-                     , trifecta >= 1.5 && < 1.8
-                     , unordered-containers >= 0.2 && < 0.3
-                     , wl-pprint-text >= 1.1 && < 1.2
+                     , unordered-containers
                      , containers
                      , data-default
                      , either

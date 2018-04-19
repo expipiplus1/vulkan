@@ -137,7 +137,7 @@ extractEnumExtensions
   -- ^ A the interfaces in the requirement
   -> Validation [SpecError] [(Text, EnumExtension)]
 extractEnumExtensions extNumber feature interfaces =
-  let filter = case feature of
+  let filterFeature = case feature of
         Just "VK_VERSION_1_1" -> duplicateFilter -- These are sometimes accompanied by a
                                          -- comment mentioning the duplication.
                                          -- TODO!!! return the reexports!
@@ -149,7 +149,7 @@ extractEnumExtensions extNumber feature interfaces =
           pure $ Just (extractEnumExtensionAbsolute ex)
         P.ABitmaskExtension ex -> pure $ Just (extractBitmaskExtension ex)
         _                      -> pure Nothing
-  in  filter <$> exs
+  in  filterFeature <$> exs
 
 duplicateFilter :: [(Text, EnumExtension)] -> [(Text, EnumExtension)]
 duplicateFilter =

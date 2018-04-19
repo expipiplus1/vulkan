@@ -15,31 +15,20 @@ import           Control.Arrow            ((&&&))
 import           Control.Monad.Fix.Extra
 import           Data.Either.Validation
 import           Data.Foldable
-import           Data.List
 import qualified Data.Map                 as Map
-import           Data.Monoid              (Endo (..))
 import           Data.Semigroup
 import           Data.Text                (Text)
 import           Data.Traversable
 import           Prelude                  hiding (Enum)
 import qualified Spec.Command             as P
 import qualified Spec.Constant            as P
-import qualified Spec.ExtensionTag        as P
 import           Spec.Savvy.APIConstant
 import           Spec.Savvy.Command
-import           Spec.Savvy.Define
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
-import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
-import           Spec.Savvy.FuncPointer
 import           Spec.Savvy.Handle
-import           Spec.Savvy.HeaderVersion
-import           Spec.Savvy.Preprocess
 import           Spec.Savvy.Struct
-import           Spec.Savvy.Type
-import           Spec.Savvy.Type.Packing
-import           Spec.Savvy.TypeAlias
 import qualified Spec.Spec                as P
 import qualified Spec.Type                as P
 
@@ -68,7 +57,7 @@ data AliasTarget targetType
   deriving (Show)
 
 aliasTarget :: Alias t -> Either [SpecError] t
-aliasTarget a = aliasTargetSeen [] a
+aliasTarget = aliasTargetSeen []
 
 aliasTargetSeen :: [Text] -> Alias t -> Either [SpecError] t
 aliasTargetSeen seen Alias {..}
@@ -86,7 +75,7 @@ specAliases
   -> [APIConstant]
   -> [Requirement]
   -> Validation [SpecError] Aliases
-specAliases spec@P.Spec {..} commands enums handles structs constants requirements
+specAliases P.Spec {..} commands enums handles structs constants requirements
   = do
     let typeAliases  = [ ta | P.AnAlias ta <- sTypes ]
         bitmaskTypes = [ bmt | P.ABitmaskType bmt <- sTypes ]
@@ -96,12 +85,8 @@ specAliases spec@P.Spec {..} commands enums handles structs constants requiremen
       cName
     enumAliases <-
       (<>)
-      <$> makeTypeAliases typeAliases "enum" enums eName
-      <*> makeBitmaskAliases (P.getSpecExtensionTags spec)
-                             typeAliases
-                             bitmaskTypes
-                             enums
-                             eName
+      <$> makeTypeAliases    typeAliases "enum"       enums eName
+      <*> makeBitmaskAliases typeAliases bitmaskTypes enums eName
     handleAliases   <- makeTypeAliases typeAliases "handle" handles hName
     structAliases   <- makeTypeAliases typeAliases "struct" structs sName
     constantAliases <- makeAliases
@@ -112,32 +97,31 @@ specAliases spec@P.Spec {..} commands enums handles structs constants requiremen
       constants
       acName
     enumExtensionAliases <- eitherToValidation $ do
-      let enumMap     = Map.fromList ((eName &&& id) <$> enums)
-          enumAliases = rEnumAliases =<< requirements
+      let enumMap              = Map.fromList ((eName &&& id) <$> enums)
+          enumExtensionAliases = rEnumAliases =<< requirements
       enumerantEnums <-
-        validationToEither $ for enumAliases $ \EnumAlias {..} ->
+        validationToEither $ for enumExtensionAliases $ \EnumAlias {..} ->
           case Map.lookup eaExtends enumMap of
             Nothing -> Failure [UnknownExtendedEnum eaExtends]
             Just e  -> pure (e, eaAlias)
       validationToEither $ makeAliases
-        [ (eaAlias, eaName) | EnumAlias {..} <- enumAliases ]
+        [ (eaAlias, eaName) | EnumAlias {..} <- enumExtensionAliases ]
         enumerantEnums
         snd
     pure Aliases {..}
 
 makeBitmaskAliases
-  :: [P.ExtensionTag]
-  -> [P.TypeAlias]
+  :: [P.TypeAlias]
   -> [P.BitmaskType]
   -> [a]
   -- ^ Targets
   -> (a -> Text)
   -- ^ Get target name
   -> Validation [SpecError] [Alias a]
-makeBitmaskAliases vendors aliases bmts = makeAliases
+makeBitmaskAliases aliases bmts = makeAliases
   ([ (taAlias, taName) | P.TypeAlias {..} <- aliases, taCategory == "bitmask" ]
   <> [ (alias, bmtName)
-     | bmt@P.BitmaskType {..} <- bmts
+     | P.BitmaskType {..} <- bmts
      , Just alias             <- [bmtRequires]
      ]
   )

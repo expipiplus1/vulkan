@@ -166,10 +166,10 @@ main = do
           for_ ds sayShow
           for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
             Right t -> do
-              sayShow ()
-              -- say t
-              -- say
-              --   "\n\n--------------------------------------------------------------------------------\n\n"
+              -- sayShow ()
+              say t
+              say
+                "\n\n--------------------------------------------------------------------------------\n\n"
             Left e -> sayErrShow e
 
 -- extractMatches
