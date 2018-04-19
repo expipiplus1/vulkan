@@ -26,6 +26,7 @@ import           Spec.Savvy.Type.Haskell
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
 import           Write.Struct
+import           Write.Util
 
 writeAliases :: Aliases -> Validation [SpecError] [WriteElement]
 writeAliases Aliases{..} =
@@ -46,7 +47,8 @@ writeValueAlias getType alias@Alias{..} = eitherToValidation $ do
   target <- aliasTarget alias
   (t, (is, es)) <- toHsType (getType target)
   let weImports    = is
-      weDoc        = [qci|
+      weDoc getDoc = [qci|
+        {document getDoc (TopLevel aName)}
         {aName} :: {t}
         {aName} = {aAliasName}
 |]
@@ -64,7 +66,8 @@ writePatternAlias getType alias@Alias{..} = eitherToValidation $ do
   target <- aliasTarget alias
   (t, (is, es)) <- toHsType (getType target)
   let weImports    = is
-      weDoc        = [qci|
+      weDoc getDoc = [qci|
+        {document getDoc (TopLevel aName)}
         pattern {aName} :: {t}
         pattern {aName} = {aAliasName}
 |]
@@ -79,7 +82,8 @@ writeTypeAlias
   -> WriteElement
 writeTypeAlias Alias{..} =
   let weImports    = []
-      weDoc        = [qci|
+      weDoc getDoc = [qci|
+        {document getDoc (TopLevel aName)}
         type {aName} = {aAliasName}
 |]
       weExtensions = []
@@ -95,7 +99,8 @@ writeStructPatternAlias alias@Alias{..} = eitherToValidation $ do
     protoToHsTypeNonIO (TypeName aName) (((Just . smName) &&& smType) <$> sMembers)
   let memberNames = smName . fixMemberName <$> sMembers
       weImports    = is
-      weDoc        = [qci|
+      weDoc getDoc = [qci|
+        {document getDoc (TopLevel aName)}
         pattern {aName} :: {t}
         pattern {aName} {hsep (pretty <$> memberNames)} = {aAliasName} {hsep (pretty <$> memberNames)}
 |]

@@ -6,21 +6,18 @@ module Documentation.All
   ( loadAllDocumentation
   ) where
 
-import           Control.Arrow                 ((&&&))
-import           Control.Concurrent.Async.Pool
-import           Control.Monad                 (unless)
+import           Control.Arrow                ((&&&))
+import           Control.Monad                (unless)
 import           Control.Monad.Except
 import           Data.Either
-import           Data.Foldable                 hiding (find)
-import qualified Data.Map                      as Map
-import           Data.Text.Extra               (Text, (<+>))
-import qualified Data.Text.Extra               as T
+import           Data.Foldable                hiding (find)
+import qualified Data.Map                     as Map
+import           Data.Text.Extra              (Text, (<+>))
+import qualified Data.Text.Extra              as T
 import           Say
-import           System.Console.AsciiProgress  (Options (..), def,
-                                                displayConsoleRegions,
-                                                newProgressBar, tick)
 import           System.FilePath
-import           System.FilePath.Find          (extension, find, (==?))
+import           System.FilePath.Find         (extension, find, (==?))
+import           System.ProgressBar
 
 import           Documentation
 import           Documentation.RunAsciiDoctor
@@ -68,10 +65,3 @@ loadDocumentation vkDocs doc = do
     . ExceptT
     . pure
     $ docBookToDocumentation docbook
-
-withProgress :: Traversable t => Int -> (a -> IO b) -> t a -> IO (t b)
-withProgress numThreads f t = displayConsoleRegions $ do
-  let numElements = length t
-  pg <- newProgressBar def { pgTotal = fromIntegral numElements }
-  withTaskGroup numThreads $ \g ->
-    mapTasks g ((\x -> f x <* tick pg) <$> t)

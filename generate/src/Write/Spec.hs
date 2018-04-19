@@ -7,11 +7,13 @@ module Write.Spec
   ( writeSpec
   ) where
 
+import           Control.Monad.Except
 import           Data.Bifunctor
 import           Data.Either.Extra
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.List.Extra
+import qualified Data.Map                  as Map
 import           Data.Maybe
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
@@ -19,7 +21,9 @@ import           Data.Text.Prettyprint.Doc
 import           Say
 import           System.Directory
 import           System.FilePath
+import           System.ProgressBar
 
+import           Documentation
 import           Spec.Savvy.Alias
 import           Spec.Savvy.APIConstant
 import           Spec.Savvy.BaseType
@@ -51,46 +55,45 @@ import           Write.Type.FuncPointer
 
 -- TODO: Better error handling
 writeSpec
-  :: FilePath
+  :: (Documentee -> Maybe Documentation)
+  -- ^ Documentation
+  -> FilePath
   -- ^ Output Directory
   -> P.Spec
   -> IO ()
-writeSpec outDir parsedSpec = do
-  case spec parsedSpec of
-    Left  es -> traverse_ (sayErr . prettySpecError) es
-    Right s  -> case specWriteElements s of
-      Failure es -> do
-        sayErr "Failed to generate write elements:"
-        traverse_ (sayErr . prettySpecError) es
-      Success ws -> do
-        let seeds = specSeeds s
-        case partitionElements ws seeds of
-          Left es -> do
-            sayErr "Failed to partition write elements:"
-            traverse_ (sayErr . prettySpecError) es
-          -- Right ps -> traverse_ (say . moduleSummary) ps
-          Right ms -> do
-            let Success platformGuards = (getModuleGuardInfo (sExtensions s) (sPlatforms s))
-                aggs       = makeAggregateModules platformGuards ms
-            -- writeFile (outDir </> "vulkan.cabal") (show (writeCabal ms platformGuards))
-            sayErrShow (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards)
-            saveModules outDir (ms ++ aggs) >>= \case
-              [] -> pure ()
-              es -> do
-                sayErr "Failed to write files:"
-                traverse_ (sayErr . prettySpecError) es
+writeSpec docs outDir parsedSpec = (printErrors =<<) $ runExceptT $ do
+  s  <- ExceptT . pure $ spec parsedSpec
+  ws <- ExceptT . pure . validationToEither $ specWriteElements s
+  let seeds = specSeeds s
+  ms             <- ExceptT . pure $ partitionElements ws seeds
+  platformGuards <- ExceptT . pure . validationToEither $ getModuleGuardInfo
+    (sExtensions s)
+    (sPlatforms s)
+  let aggs = makeAggregateModules platformGuards ms
+  sayErrShow (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards)
+  liftIO (saveModules docs outDir (ms ++ aggs)) >>= \case
+    [] -> pure ()
+    es -> throwError es
+
+printErrors :: Either [SpecError] () -> IO ()
+printErrors = \case
+  Left es -> traverse_ (sayErr . prettySpecError) es
+  Right a -> pure a
 
 saveModules
-  :: FilePath
+  :: (Documentee -> Maybe Documentation)
+  -> FilePath
   -- ^ Output directory
   -> [Module]
   -> IO [SpecError]
-saveModules outDir ms = concat <$> (traverse saveModule (zip ms (writeModules ms)))
+saveModules getDoc outDir ms = concat
+  <$> withProgress 1 saveModule (zip ms (writeModules getDoc ms))
   where
     saveModule :: (Module, Doc ()) -> IO [SpecError]
     saveModule (Module {..}, doc) = do
-      let filename = outDir </> (T.unpack ((<> ".hs") . T.replace "." "/" $ mName))
-          dir      = takeDirectory filename
+      let filename =
+            outDir </> T.unpack ((<> ".hs") . T.replace "." "/" $ mName)
+          dir = takeDirectory filename
       createDirectoryIfMissing True     dir
       writeFile                filename (show doc)
       pure []
@@ -129,7 +132,7 @@ specWriteElements Spec {..} = do
       let isAllowedConstant c = acName c `notElem` ["VK_TRUE", "VK_FALSE"]
       in writeAPIConstant <$> filter isAllowedConstant sConstants
     wConstantExtensions =
-      (fmap (writeConstantExtension getEnumerantEnumName) . rConstants =<< reqs)
+      fmap (writeConstantExtension getEnumerantEnumName) . rConstants =<< reqs
   wFuncPointers <- eitherToValidation $ traverse writeFuncPointer sFuncPointers
   wHandles      <- eitherToValidation $ traverse writeHandle sHandles
   wCommands     <- eitherToValidation

@@ -39,14 +39,9 @@ data Documentation = Documentation
   deriving (Show)
 
 data Documentee
-  = TopLevelName Text
-  | NestedDocumentation Text Text
+  = TopLevel Text
+  | Nested Text Text
   deriving (Show, Eq, Ord)
-
-documentationToHaddock :: Documentation -> Either PandocError Text
-documentationToHaddock Documentation{..} =
-  let writerOptions = def
-  in runPure (writeHaddock writerOptions dDocumentation)
 
 docBookToDocumentation
   :: Text
@@ -57,7 +52,7 @@ docBookToDocumentation db = mdo
   pandoc             <- mapLeft T.tShow $ runPure (readDocBook readerOptions db)
   (removed, subDocs) <- splitDocumentation name pandoc
   name               <- guessDocumentee removed
-  pure $ Documentation (TopLevelName name) removed : subDocs
+  pure $ Documentation (TopLevel name) removed : subDocs
 
 guessDocumentee :: Pandoc -> Either Text Text
 guessDocumentee (Pandoc _ bs) = do
@@ -109,7 +104,7 @@ fixupDocumentation (Documentation dDocumentee p) = Documentation
   }
   where
     fixup :: Pandoc -> Pandoc
-    fixup = topDown fixupBlock . topDown fixupInline
+    fixup = topDown fixupBlock
 
     fixupBlock :: Block -> Block
     fixupBlock = \case
@@ -118,11 +113,6 @@ fixupDocumentation (Documentation dDocumentee p) = Documentation
       DefinitionList ds | all (null . fst) ds, all ((== 1) . length . snd) ds ->
         BulletList (head . snd <$> ds)
       b -> b
-    fixupInline :: Inline -> Inline
-    fixupInline = \case
-      Link ("", [], []) [Str name] (tag, "") | tag == "#" <> name ->
-        RawInline "haddock" ("'" <> name <> "'")
-      i -> i
 
 dropPrefix :: String -> String -> Maybe String
 dropPrefix prefix s = if prefix `isPrefixOf` s
@@ -151,7 +141,7 @@ memberDocs parent m = \case
     let enumDoc :: [Block] -> Either Text Documentation
         enumDoc = \case
           [p@(Para (Code ("", [], []) memberName : _))] -> pure Documentation
-            { dDocumentee    = NestedDocumentation parent (T.pack memberName)
+            { dDocumentee    = Nested parent (T.pack memberName)
             , dDocumentation = Pandoc m [p]
             }
           _ -> Left "Unhandled member documentation declaration"
@@ -168,13 +158,13 @@ main = do
       Left  e  -> sayErr e
       Right ds -> do
         for_ ds sayShow
-        for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
-          Right t ->
-            -- sayShow ()
-            say t
-            -- say
-            --   "\n\n--------------------------------------------------------------------------------\n\n"
-          Left e -> sayErrShow e
+        -- for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
+        --   Right t ->
+        --     -- sayShow ()
+        --     say t
+        --     -- say
+        --     --   "\n\n--------------------------------------------------------------------------------\n\n"
+        --   Left e -> sayErrShow e
 
 
 extractMatches

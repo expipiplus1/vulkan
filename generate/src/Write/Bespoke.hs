@@ -13,6 +13,7 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Enum
 import           Write.Element
 import           Write.Type.Enum
+import           Write.Util
 
 bespokeWriteElements :: [WriteElement]
 bespokeWriteElements =
@@ -20,7 +21,7 @@ bespokeWriteElements =
 
 namedType :: WriteElement
 namedType =
-  let weDoc = [qci|
+  let weDoc = const [qci|
         -- | Annotate a type with a name
         type (name :: k) ::: a = a
       |]
@@ -33,24 +34,30 @@ namedType =
 
 versions :: WriteElement
 versions =
-  let weDoc = [qci|
+  let weDoc getDoc = [qci|
+        {document getDoc (TopLevel "VK_MAKE_VERSION")}
         pattern VK_MAKE_VERSION :: Word32 -> Word32 -> Word32 -> Word32
         pattern VK_MAKE_VERSION major minor patch <-
           (\v -> (_VK_VERSION_MAJOR v, _VK_VERSION_MINOR v, _VK_VERSION_PATCH v) -> (major, minor, patch))
           where VK_MAKE_VERSION major minor patch = major `shiftL` 22 .|. minor `shiftL` 12 .|. patch
 
+        {document getDoc (TopLevel "VK_API_VERSION_1_0")}
         pattern VK_API_VERSION_1_0 :: Word32
         pattern VK_API_VERSION_1_0 = VK_MAKE_VERSION 1 0 0
 
+        {document getDoc (TopLevel "VK_API_VERSION_1_1")}
         pattern VK_API_VERSION_1_1 :: Word32
         pattern VK_API_VERSION_1_1 = VK_MAKE_VERSION 1 1 0
 
+        {document getDoc (TopLevel "VK_VERSION_MAJOR")}
         _VK_VERSION_MAJOR :: Word32 -> Word32
         _VK_VERSION_MAJOR v = v `shiftR` 22
 
+        {document getDoc (TopLevel "VK_VERSION_MINOR")}
         _VK_VERSION_MINOR :: Word32 -> Word32
         _VK_VERSION_MINOR v = v `shiftR` 12 .&. 0x3ff
 
+        {document getDoc (TopLevel "VK_VERSION_PATCh")}
         _VK_VERSION_PATCH :: Word32 -> Word32
         _VK_VERSION_PATCH v = v .&. 0xfff
       |]
@@ -71,7 +78,8 @@ versions =
 
 nullHandle :: WriteElement
 nullHandle =
-  let weDoc = [qci|
+  let weDoc getDoc = [qci|
+        {document getDoc (TopLevel "VK_NULL_HANDLE")}
         pattern VK_NULL_HANDLE :: Ptr a
         pattern VK_NULL_HANDLE <- ((== nullPtr) -> True)
           where VK_NULL_HANDLE = nullPtr
@@ -97,7 +105,8 @@ bools = writeEnum
 
 voidDataWriteElement :: Text -> WriteElement
 voidDataWriteElement n =
-  let weDoc = [qci|
+  let weDoc _ = [qci|
+        -- | Opaque data
         data {n}
 |]
       weImports = []
@@ -146,7 +155,8 @@ newtypeOrTypeWriteElement
   -- ^ Imports
   -> WriteElement
 newtypeOrTypeWriteElement decl n t is =
-  let weDoc = [qci|
+  let weDoc getDoc = [qci|
+        {document getDoc (TopLevel n)}
         {decl} {n} = {t}
 |]
       weImports = is

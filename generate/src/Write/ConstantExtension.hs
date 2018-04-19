@@ -6,8 +6,8 @@ module Write.ConstantExtension
   ( writeConstantExtension
   ) where
 
-import           Data.Text.Extra
 import           Data.Maybe
+import           Data.Text.Extra
 import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
@@ -15,6 +15,7 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Feature
 
 import           Write.Element
+import           Write.Util
 
 -- TODO: Reduce duplication here
 writeConstantExtension
@@ -39,8 +40,10 @@ writeConstantExtension getEnumerantEnumName ce@ConstantExtension {..} =
         _ -> []
   in  WriteElement {..}
 
-constantExtensionDoc :: (Text -> Maybe Text) -> ConstantExtension -> Doc ()
-constantExtensionDoc getEnumerantEnumName ConstantExtension{..} = [qci|
+constantExtensionDoc
+  :: (Text -> Maybe Text) -> ConstantExtension -> DocMap -> Doc ()
+constantExtensionDoc getEnumerantEnumName ConstantExtension{..} getDoc = [qci|
+  {document getDoc (TopLevel ceName)}
   pattern {ceName} :: {case ceValue of
       EnumValueString _ -> "(Eq a ,IsString a) => a" :: Doc a
       EnumValueInt    _ -> "Integral a => a"

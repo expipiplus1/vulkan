@@ -18,6 +18,7 @@ import           Text.Printf
 
 import           Spec.Savvy.Enum
 import           Write.Element
+import           Write.Util
 
 writeEnumExtension
   :: Text
@@ -34,9 +35,9 @@ writeEnumExtension enumName e@EnumExtension {..} =
       weDepends    = [TypeName enumName]
   in  WriteElement {..}
 
-enumExtensionDoc :: Text -> EnumExtension -> Doc ()
-enumExtensionDoc extendee EnumExtension{..} = [qci|
-  -- | {exComment}
+enumExtensionDoc :: Text -> EnumExtension -> DocMap -> Doc ()
+enumExtensionDoc extendee EnumExtension{..} getDoc = [qci|
+  {document getDoc (Nested extendee exName)}
   pattern {exName} :: {extendee}
   pattern {exName} = {extendee} {writeValue exValue}
 |]

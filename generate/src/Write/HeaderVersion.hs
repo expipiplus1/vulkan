@@ -10,10 +10,12 @@ import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Write.Element
+import           Write.Util
 
 writeHeaderVersion :: Word -> WriteElement
 writeHeaderVersion version =
-  let weDoc = [qci|
+  let weDoc getDoc = [qci|
+          {document getDoc (TopLevel "VK_HEADER_VERSION")}
           pattern VK_HEADER_VERSION :: Integral a => a
           pattern VK_HEADER_VERSION = {version}
         |]

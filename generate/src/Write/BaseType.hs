@@ -17,6 +17,7 @@ import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
 
 import           Write.Element                            hiding (TypeName)
+import           Write.Util
 
 writeBaseType :: BaseType -> Either [SpecError] WriteElement
 writeBaseType bt@BaseType {..} = do
@@ -26,11 +27,11 @@ writeBaseType bt@BaseType {..} = do
       weDepends  = typeDepends btType
   pure WriteElement {..}
 
-hDoc :: BaseType -> Either [SpecError] (Doc (), [Import], [Text])
+hDoc :: BaseType -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
 hDoc BaseType{..} = do
   (t, (is, es)) <- toHsType btType
-  let d = [qci|
-  -- |
+  let d getDoc = [qci|
+  {document getDoc (TopLevel btName)}
   type {btName} = {t}
 |]
   pure (d, is, es)

@@ -10,11 +10,15 @@ module Write.Element
   , pattern Term
   , pattern TypeConstructor
   , pattern TypeAlias
+  , DocMap
   ) where
 
 import           Data.Semigroup
 import           Data.Text
 import           Data.Text.Prettyprint.Doc
+
+import           Documentation
+import           Documentation.Haddock
 
 data WriteElement = WriteElement
   { weName       :: Text
@@ -22,13 +26,12 @@ data WriteElement = WriteElement
   , weExtensions :: [Text]
   , weImports    :: [Import]
     -- ^ "system" imports
-  , weDoc        :: Doc ()
+  , weDoc        :: DocMap -> Doc ()
   , weProvides   :: [Export]
     -- ^ The names this element declares
   , weDepends    :: [HaskellName]
     -- ^ Other Vulkan names to expose
   }
-  deriving (Show)
 
 data Export
   = WithConstructors { unExport :: HaskellName }
@@ -36,9 +39,9 @@ data Export
   deriving (Show, Eq, Ord)
 
 data HaskellName
-  = TypeName Text
-  | TermName Text
-  | PatternName Text
+  = TypeName { unHaskellName :: Text }
+  | TermName { unHaskellName :: Text }
+  | PatternName { unHaskellName :: Text }
   deriving (Show, Eq, Ord)
 
 pattern Pattern :: Text -> Export
@@ -59,10 +62,12 @@ data Import = Import
   }
   deriving (Show, Eq, Ord)
 
+type DocMap = Documentee -> Maybe Haddock
+
 instance Semigroup WriteElement where
   we1 <> we2 = WriteElement
     { weName       = weName we1 <> " and " <> weName we2
-    , weDoc        = vcat [weDoc we1, line, weDoc we2]
+    , weDoc        = (\d -> vcat [weDoc we1 d, line, weDoc we2 d])
     , weExtensions = weExtensions we1 <> weExtensions we2
     , weImports    = weImports we1 <> weImports we2
     , weProvides   = weProvides we1 <> weProvides we2

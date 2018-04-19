@@ -17,6 +17,7 @@ import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
 
 import           Write.Element
+import           Write.Util
 
 writeFuncPointer :: FuncPointer -> Either [SpecError] WriteElement
 writeFuncPointer fp@FuncPointer {..} = do
@@ -26,11 +27,11 @@ writeFuncPointer fp@FuncPointer {..} = do
       weDepends  = typeDepends fpType
   pure WriteElement {..}
 
-fpDoc :: FuncPointer -> Either [SpecError] (Doc (), [Import], [Text])
+fpDoc :: FuncPointer -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
 fpDoc FuncPointer{..} = do
   (t, (is, es)) <- toHsType fpType
-  let d = [qci|
-  -- |
+  let d getDoc = [qci|
+  {document getDoc (TopLevel fpName)}
   type {fpName} = {t}
 |]
   pure (d, is, es)

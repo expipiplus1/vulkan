@@ -19,6 +19,7 @@ import           Spec.Savvy.Type                          hiding (TypeName)
 import           Spec.Savvy.Type.Haskell
 
 import           Write.Element
+import           Write.Util
 
 writeCommand
   :: (Text -> Maybe Text)
@@ -42,11 +43,11 @@ writeCommand getEnumName fp@Command {..} = do
            ]
   pure WriteElement {..}
 
-commandDoc :: Command -> Either [SpecError] (Doc (), [Import], [Text])
+commandDoc :: Command -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
 commandDoc c@Command {..} = do
   (t, (is, es)) <- toHsType (commandType c)
-  let d = [qci|
-  -- | {fromMaybe "" cComment}
+  let d getDoc = [qci|
+  {document getDoc (TopLevel cName)}
   foreign import ccall "{cName}" {cName} :: {t}
 |]
   pure (d, is, es)

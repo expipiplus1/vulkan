@@ -24,6 +24,8 @@ import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
+import           Documentation
+import           Documentation.Haddock
 import           Write.Element
 import           Write.Util
 
@@ -33,7 +35,6 @@ data Module = Module
   , mReexports         :: [Export]
   , mReexportedModules :: [ReexportedModule]
   }
-  deriving (Show)
 
 data ReexportedModule = ReexportedModule
   { rmName  :: Text
@@ -41,12 +42,43 @@ data ReexportedModule = ReexportedModule
   }
   deriving (Show)
 
-writeModules :: [Module] -> [Doc ()]
-writeModules ms =
-  ms <&> writeModule (findModule ms)
+writeModules
+  :: (Documentee -> Maybe Documentation)
+  -- Find some documentation
+  -> [Module]
+  -> [Doc ()]
+writeModules findDoc ms =
+  let moduleMap = findModule ms
+      getDoc :: Text -> Documentee -> Maybe Haddock
+      getDoc = getModuleDoc findDoc (fmap fst . moduleMap)
+  in ms <&> (\m -> writeModule (getDoc (mName m)) moduleMap m)
 
-writeModule :: (HaskellName -> Maybe (Text, Export)) -> Module -> Doc ()
-writeModule getModule m@Module{..} = [qci|
+getModuleDoc
+  :: (Documentee -> Maybe Documentation)
+  -- ^ find docs
+  -> (Text -> Maybe Text)
+  -- ^ Find the module exporting a name
+  -> Text
+  -- ^ The module name we are rendering
+  -> (Documentee -> Maybe Haddock)
+  -- ^ Get the rendered haddocks
+getModuleDoc findDoc findModule thisModule name = do
+  doc <- findDoc name
+  let getLoc :: Text -> DocumenteeLocation
+      getLoc n = case findModule n of
+        Nothing -> Unknown
+        Just m | m == thisModule -> ThisModule
+               | otherwise       -> OtherModule m
+  case documentationToHaddock getLoc doc of
+    Left  _ -> Nothing -- TODO Improve
+    Right h -> pure h
+
+writeModule
+  :: (Documentee -> Maybe Haddock)
+  -> (Text -> Maybe (Text, Export))
+  -> Module
+  -> Doc ()
+writeModule getDoc getModule m@Module{..} = [qci|
   \{-# language Strict #-}
   \{-# language CPP #-}
   {vcat $ moduleExtensions m}
@@ -62,7 +94,7 @@ writeModule getModule m@Module{..} = [qci|
 
   {vcat $ moduleInternalImports getModule m}
 
-  {vcatPara $ weDoc <$> mWriteElements}
+  {vcatPara $ (flip weDoc getDoc) <$> mWriteElements}
   |]
 
 moduleExports :: Module -> [Doc ()]
@@ -117,14 +149,18 @@ moduleImports Module{..} =
           )
       |]
 
-findModule :: [Module] -> HaskellName -> Maybe (Text, Export)
+findModule :: [Module] -> Text -> Maybe (Text, Export)
 findModule ms =
   let nameMap = Map.fromList
-        [ (unExport e, (mName m, e)) | m <- ms, we <- mWriteElements m, e <- weProvides we ]
+        [ (unHaskellName (unExport e), (mName m, e))
+        | m  <- ms
+        , we <- mWriteElements m
+        , e  <- weProvides we
+        ]
   in  (`Map.lookup` nameMap)
 
 moduleInternalImports
-  :: (HaskellName -> Maybe (Text, Export))
+  :: (Text -> Maybe (Text, Export))
   -- ^ which module is this name from
   -> Module
   -> [Doc ()]
@@ -133,7 +169,7 @@ moduleInternalImports nameModule Module {..} =
         (<>)
         [ (m, [e])
         | d      <- nubOrd (weDepends =<< mWriteElements)
-        , Just (m, e) <- [nameModule d]
+        , Just (m, e) <- [nameModule (unHaskellName d)]
         , d `notElem` (unExport <$> (weProvides =<< mWriteElements))
         ]
   in  Map.assocs depends <&> \(moduleName, is) -> [qci|
@@ -146,3 +182,4 @@ moduleExtensions :: Module -> [Doc ()]
 moduleExtensions Module{..} =
   let es = nubOrd $ weExtensions =<< mWriteElements
   in es <&> \e -> [qci|\{-# language {e} #-}|]
+

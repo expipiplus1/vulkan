@@ -50,11 +50,11 @@ writeEnum e@Enum {..} =
         EnumTypeBitmask -> [TypeName "VkFlags"]
   in  WriteElement {..}
 
-enumDoc :: Enum -> Doc ()
-enumDoc e@Enum{..} = [qci|
+enumDoc :: Enum -> DocMap -> Doc ()
+enumDoc e@Enum{..} getDoc = [qci|
   -- ** {eName}
 
-  -- | {fromMaybe "" (eComment)}
+  {document getDoc (TopLevel eName)}
   newtype {eName} = {eName} {enumBackingType e}
     deriving ({hcat $ intercalatePrepend "," (enumDerivedClasses e)})
 
@@ -84,12 +84,12 @@ enumDoc e@Enum{..} = [qci|
                           )
                       )
 
-  {emptyLineSep $ writeElement e <$> eElements}
+  {emptyLineSep $ writeElement getDoc e <$> eElements}
 |]
 
-writeElement :: Enum -> EnumElement -> Doc ()
-writeElement Enum{..} EnumElement{..} = [qci|
-  -- | {fromMaybe "" eeComment}
+writeElement :: DocMap -> Enum -> EnumElement -> Doc ()
+writeElement getDoc Enum{..} EnumElement{..} = [qci|
+  {document getDoc (Nested eName eeName)}
   pattern {eeName} :: {eName}
   pattern {eeName} = {eName} {writeValue eeValue}
 |]

@@ -1,17 +1,23 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Write.Util
   ( intercalatePrepend
   , emptyLineSep
   , vcatPara
   , separatedSections
+  , document
+  , Documentee(..)
   ) where
 
 import           Data.List.NonEmpty
 import           Data.Maybe
 import           Data.Text                 (Text)
-import qualified Data.Text                 as T
+import qualified Data.Text.Extra           as T
 import           Data.Text.Prettyprint.Doc
+
+import           Documentation
+import           Documentation.Haddock
 
 -- | 'intercalatePrepend d (x:xs)' will prepend with a space d to xs
 intercalatePrepend :: Doc () -> [Doc ()] -> [Doc ()]
@@ -51,3 +57,11 @@ separatedSections separator sections = vcat $ case nonEmptySections of
           : indent (T.length separator + 1) x
           : ((pretty separator <+>) <$> xs)
       (Nothing, x :| xs) -> ((pretty separator <+>) <$> (x : xs))
+
+-- Return a documentation rendering if possible, otherwise ""
+document :: (Documentee -> Maybe Haddock) -> Documentee -> Doc ()
+document getDoc n = case getDoc n of
+  Nothing          -> ""
+  Just (Haddock h) -> case T.lines h of
+    []     -> "-- No Documentation Found for " <+> pretty (T.tShow n)
+    x : xs -> vcat (("-- |" <+> pretty x) : (("--" <+>) . pretty <$> xs))

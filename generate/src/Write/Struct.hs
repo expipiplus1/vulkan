@@ -13,7 +13,7 @@ import           Control.Bool
 import           Data.Char
 import           Data.List.Extra
 import           Data.Text                                (Text)
-import qualified Data.Text.Extra                                as T
+import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
@@ -58,15 +58,16 @@ writeStruct s@Struct {..} = case sStructOrUnion of
 -- Struct
 ----------------------------------------------------------------
 
-structDoc :: Struct -> Either [SpecError] (Doc (), [Import], [Text])
-structDoc s@Struct{..} = do
+structDoc :: Struct -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+structDoc s@Struct {..} = do
   let membersFixedNames = fixMemberName <$> sMembers
-  (memberDocs, imports, extensions) <- unzip3 <$> traverse memberDoc membersFixedNames
-  pure ([qci|
-  -- | TODO: Struct comments
+  (memberDocs, imports, extensions) <-
+    unzip3 <$> traverse (memberDoc sName) membersFixedNames
+  pure (\getDoc -> [qci|
+  {document getDoc (TopLevel sName)}
   data {sName} = {sName}
     \{ {indent (-2) . vsep $
-       intercalatePrepend "," memberDocs
+       intercalatePrepend "," (($ getDoc) <$> memberDocs)
       }
     }
     deriving (Eq, Show)
@@ -82,10 +83,11 @@ structDoc s@Struct{..} = do
                        memberPokeDoc s <$> membersFixedNames)}
 |], concat imports ++ [Import "Foreign.Storable" ["Storable"]], concat extensions)
 
-memberDoc :: StructMember -> Either [SpecError] (Doc (), [Import], [Text])
-memberDoc StructMember{..} = do
+memberDoc :: Text -> StructMember -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+memberDoc parentName StructMember{..} = do
   (t, (is, es)) <- toHsType smType
-  pure ([qci|
+  pure (\getDoc -> [qci|
+  {document getDoc (Nested parentName smName)}
   {smName} :: {t}
 |], is, es)
 
@@ -103,15 +105,16 @@ memberPokeDoc Struct{..} StructMember{..} = [qci|
 -- Unions
 ----------------------------------------------------------------
 
-unionDoc :: Struct -> Either [SpecError] (Doc (), [Import], [Text])
+unionDoc :: Struct -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
 unionDoc Struct{..} = do
   let membersFixedNames = fixUnionMemberName <$> sMembers
-  (memberDocs, imports, extensions ) <- unzip3 <$> traverse unionMemberDoc membersFixedNames
-  pure ([qci|
-  -- | TODO: Union comments
+  (memberDocs, imports, extensions ) <-
+    unzip3 <$> traverse (unionMemberDoc sName) membersFixedNames
+  pure (\getDoc -> [qci|
+  {document getDoc (TopLevel sName)}
   data {sName}
     = {indent (-2) . vsep $
-       intercalatePrepend "|" memberDocs}
+       intercalatePrepend "|" (($ getDoc) <$> memberDocs)}
     deriving (Eq, Show)
 
   -- | _Note_: peek is undefined as we wouldn't know which constructor to use
@@ -123,10 +126,15 @@ unionDoc Struct{..} = do
       {indent 0 . vcat $ unionMemberPokeDoc <$> membersFixedNames}
 |], concat imports ++ [Import "Foreign.Storable" ["Storable"]], concat extensions ++ ["LambdaCase"])
 
-unionMemberDoc :: StructMember -> Either [SpecError] (Doc (), [Import], [Text])
-unionMemberDoc StructMember{..} = do
+unionMemberDoc
+  :: Text
+  -- ^ Parent name
+  -> StructMember
+  -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+unionMemberDoc parentName StructMember{..} = do
   (t, (is, es)) <- toHsTypePrec 10 smType
-  pure ([qci|
+  pure (\getDoc -> [qci|
+  {document getDoc (Nested parentName smName)}
   {smName} {t}
 |], is, es)
 
