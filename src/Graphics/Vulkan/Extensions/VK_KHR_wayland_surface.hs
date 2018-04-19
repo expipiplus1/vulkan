@@ -74,11 +74,13 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
   )
 
 
+-- | Opaque data
 data Wl_display
+-- | Opaque data
 data Wl_surface
 -- ** VkWaylandSurfaceCreateFlagsKHR
 
--- | 
+-- No documentation found for TopLevel "VkWaylandSurfaceCreateFlagsKHR"
 newtype VkWaylandSurfaceCreateFlagsKHR = VkWaylandSurfaceCreateFlagsKHR VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -97,24 +99,141 @@ instance Read VkWaylandSurfaceCreateFlagsKHR where
                     )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR = VkStructureType 1000006000
+-- No documentation found for TopLevel "VK_KHR_WAYLAND_SURFACE_SPEC_VERSION"
 pattern VK_KHR_WAYLAND_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_WAYLAND_SURFACE_SPEC_VERSION = 6
+-- No documentation found for TopLevel "VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME"
 pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME = "VK_KHR_wayland_surface"
--- | 
+-- | vkCreateWaylandSurfaceKHR - Create a
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
+-- Wayland window
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @instance@ is the instance to associate the surface with.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'VkWaylandSurfaceCreateInfoKHR' structure containing parameters
+--     affecting the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
+--     surface object is returned.
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid @VkInstance@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkWaylandSurfaceCreateInfoKHR@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+--
+-- == Return Codes
+--
+-- [<#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'VkWaylandSurfaceCreateInfoKHR'
 foreign import ccall "vkCreateWaylandSurfaceKHR" vkCreateWaylandSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkWaylandSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
--- | 
+-- | vkGetPhysicalDeviceWaylandPresentationSupportKHR - Query physical device
+-- for presentation to Wayland
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @physicalDevice@ is the physical device.
+--
+-- -   @queueFamilyIndex@ is the queue family index.
+--
+-- -   @display@ is a pointer to the @wl_display@ associated with a Wayland
+--     compositor.
+--
+-- = Description
+-- #_description#
+--
+-- This platform-specific function /can/ be called prior to creating a
+-- surface.
+--
+-- == Valid Usage
+--
+-- -   @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+--     returned by @vkGetPhysicalDeviceQueueFamilyProperties@ for the given
+--     @physicalDevice@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+--
+-- -   @display@ /must/ be a valid pointer to a @wl_display@ value
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall "vkGetPhysicalDeviceWaylandPresentationSupportKHR" vkGetPhysicalDeviceWaylandPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("display" ::: Ptr Wl_display) -> IO VkBool32
--- | TODO: Struct comments
+-- | VkWaylandSurfaceCreateInfoKHR - Structure specifying parameters of a
+-- newly created Wayland surface object
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage
+--
+-- -   @display@ /must/ point to a valid Wayland @wl_display@.
+--
+-- -   @surface@ /must/ point to a valid Wayland @wl_surface@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR@
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType',
+-- 'VkWaylandSurfaceCreateFlagsKHR', 'vkCreateWaylandSurfaceKHR'
 data VkWaylandSurfaceCreateInfoKHR = VkWaylandSurfaceCreateInfoKHR
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkFlags :: VkWaylandSurfaceCreateFlagsKHR
-  , vkDisplay :: Ptr Wl_display
-  , vkSurface :: Ptr Wl_surface
+  { -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkFlags"
+  vkFlags :: VkWaylandSurfaceCreateFlagsKHR
+  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkDisplay"
+  vkDisplay :: Ptr Wl_display
+  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkSurface"
+  vkSurface :: Ptr Wl_surface
   }
   deriving (Eq, Show)
 

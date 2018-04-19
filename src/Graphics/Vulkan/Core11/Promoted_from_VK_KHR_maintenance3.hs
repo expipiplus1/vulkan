@@ -42,20 +42,26 @@ import Graphics.Vulkan.Core10.DeviceInitialization
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = VkStructureType 1000168000
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT"
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = VkStructureType 1000168001
--- | 
+-- | vkGetDescriptorSetLayoutSupport - Query whether a descriptor set layout
+-- can be created
 foreign import ccall "vkGetDescriptorSetLayoutSupport" vkGetDescriptorSetLayoutSupport :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ()
--- | TODO: Struct comments
+-- | VkPhysicalDeviceMaintenance3Properties - Structure describing descriptor
+-- set properties
 data VkPhysicalDeviceMaintenance3Properties = VkPhysicalDeviceMaintenance3Properties
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkMaxPerSetDescriptors :: Word32
-  , vkMaxMemoryAllocationSize :: VkDeviceSize
+  { -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "vkMaxPerSetDescriptors"
+  vkMaxPerSetDescriptors :: Word32
+  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "vkMaxMemoryAllocationSize"
+  vkMaxMemoryAllocationSize :: VkDeviceSize
   }
   deriving (Eq, Show)
 
@@ -70,11 +76,15 @@ instance Storable VkPhysicalDeviceMaintenance3Properties where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMaintenance3Properties))
                 *> poke (ptr `plusPtr` 16) (vkMaxPerSetDescriptors (poked :: VkPhysicalDeviceMaintenance3Properties))
                 *> poke (ptr `plusPtr` 24) (vkMaxMemoryAllocationSize (poked :: VkPhysicalDeviceMaintenance3Properties))
--- | TODO: Struct comments
+-- | VkDescriptorSetLayoutSupport - Structure returning information about
+-- whether a descriptor set layout can be supported
 data VkDescriptorSetLayoutSupport = VkDescriptorSetLayoutSupport
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkSupported :: VkBool32
+  { -- No documentation found for Nested "VkDescriptorSetLayoutSupport" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkDescriptorSetLayoutSupport" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkDescriptorSetLayoutSupport" "vkSupported"
+  vkSupported :: VkBool32
   }
   deriving (Eq, Show)
 

@@ -33,19 +33,63 @@ import Graphics.Vulkan.Core10.Core
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR = VkStructureType 1000147000
+-- No documentation found for TopLevel "VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION"
 pattern VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME"
 pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME = "VK_KHR_image_format_list"
--- | TODO: Struct comments
+-- | VkImageFormatListCreateInfoKHR - Specify that an image /can/ be used
+-- with a particular set of formats
+--
+-- = Description
+-- #_description#
+--
+-- If @viewFormatCount@ is zero, @pViewFormats@ is ignored and the image is
+-- created as if the @VkImageFormatListCreateInfoKHR@ structure were not
+-- included in the @pNext@ list of
+-- 'Graphics.Vulkan.Core10.Image.VkImageCreateInfo'.
+--
+-- == Valid Usage
+--
+-- -   If @viewFormatCount@ is not @0@, all of the formats in the
+--     @pViewFormats@ array /must/ be compatible with the format specified
+--     in the @format@ field of @VkImageCreateInfo@, as described in the
+--     <{html_spec_relative}#resources-image-views-compatibility compatibility table>.
+--
+-- -   If @VkImageCreateInfo@::@flags@ does not contain
+--     @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@, @viewFormatCount@ /must/ be
+--     @0@ or @1@.
+--
+-- -   If @viewFormatCount@ is not @0@, @VkImageCreateInfo@::@format@
+--     /must/ be in @pViewFormats@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR@
+--
+-- -   If @viewFormatCount@ is not @0@, @pViewFormats@ /must/ be a valid
+--     pointer to an array of @viewFormatCount@ valid
+--     'Graphics.Vulkan.Core10.Core.VkFormat' values
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkImageFormatListCreateInfoKHR = VkImageFormatListCreateInfoKHR
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkViewFormatCount :: Word32
-  , vkPViewFormats :: Ptr VkFormat
+  { -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "vkViewFormatCount"
+  vkViewFormatCount :: Word32
+  , -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "vkPViewFormats"
+  vkPViewFormats :: Ptr VkFormat
   }
   deriving (Eq, Show)
 

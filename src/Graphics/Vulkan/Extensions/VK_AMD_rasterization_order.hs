@@ -54,7 +54,13 @@ import Graphics.Vulkan.Core10.Core
 
 -- ** VkRasterizationOrderAMD
 
--- | 
+-- | VkRasterizationOrderAMD - Specify rasterization order for a graphics
+-- pipeline
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkPipelineRasterizationStateRasterizationOrderAMD'
 newtype VkRasterizationOrderAMD = VkRasterizationOrderAMD Int32
   deriving (Eq, Ord, Storable)
 
@@ -74,25 +80,58 @@ instance Read VkRasterizationOrderAMD where
                         )
                     )
 
--- | 
+-- | @VK_RASTERIZATION_ORDER_STRICT_AMD@ specifies that operations for each
+-- primitive in a subpass /must/ occur in
+-- <{html_spec_relative}#drawing-primitive-order primitive order>.
 pattern VK_RASTERIZATION_ORDER_STRICT_AMD :: VkRasterizationOrderAMD
 pattern VK_RASTERIZATION_ORDER_STRICT_AMD = VkRasterizationOrderAMD 0
 
--- | 
+-- | @VK_RASTERIZATION_ORDER_RELAXED_AMD@ specifies that operations for each
+-- primitive in a subpass /may/ not occur in
+-- <{html_spec_relative}#drawing-primitive-order primitive order>.
 pattern VK_RASTERIZATION_ORDER_RELAXED_AMD :: VkRasterizationOrderAMD
 pattern VK_RASTERIZATION_ORDER_RELAXED_AMD = VkRasterizationOrderAMD 1
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD"
 pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD = VkStructureType 1000018000
+-- No documentation found for TopLevel "VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION"
 pattern VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION :: Integral a => a
 pattern VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME"
 pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME = "VK_AMD_rasterization_order"
--- | TODO: Struct comments
+-- | VkPipelineRasterizationStateRasterizationOrderAMD - Structure defining
+-- rasterization order for a graphics pipeline
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD@
+--
+-- -   @rasterizationOrder@ /must/ be a valid 'VkRasterizationOrderAMD'
+--     value
+--
+-- If the @{html_spec_relative}#VK_AMD_rasterization_order@ device
+-- extension is not enabled or the application does not request a
+-- particular rasterization order through specifying a
+-- @VkPipelineRasterizationStateRasterizationOrderAMD@ structure then the
+-- rasterization order used by the graphics pipeline defaults to
+-- @VK_RASTERIZATION_ORDER_STRICT_AMD@.
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkRasterizationOrderAMD', 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineRasterizationStateRasterizationOrderAMD = VkPipelineRasterizationStateRasterizationOrderAMD
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkRasterizationOrder :: VkRasterizationOrderAMD
+  { -- No documentation found for Nested "VkPipelineRasterizationStateRasterizationOrderAMD" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPipelineRasterizationStateRasterizationOrderAMD" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPipelineRasterizationStateRasterizationOrderAMD" "vkRasterizationOrder"
+  vkRasterizationOrder :: VkRasterizationOrderAMD
   }
   deriving (Eq, Show)
 

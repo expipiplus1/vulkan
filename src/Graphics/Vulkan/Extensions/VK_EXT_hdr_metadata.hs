@@ -48,19 +48,73 @@ import Graphics.Vulkan.Extensions.VK_KHR_swapchain
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_HDR_METADATA_EXT"
 pattern VK_STRUCTURE_TYPE_HDR_METADATA_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_HDR_METADATA_EXT = VkStructureType 1000105000
+-- No documentation found for TopLevel "VK_EXT_HDR_METADATA_SPEC_VERSION"
 pattern VK_EXT_HDR_METADATA_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_HDR_METADATA_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_EXT_HDR_METADATA_EXTENSION_NAME"
 pattern VK_EXT_HDR_METADATA_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_HDR_METADATA_EXTENSION_NAME = "VK_EXT_hdr_metadata"
--- | 
+-- | vkSetHdrMetadataEXT - function to set Hdr metadata
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @device@ is the logical device where the swapchain(s) were created.
+--
+-- -   @swapchainCount@ is the number of swapchains included in
+--     @pSwapchains@.
+--
+-- -   @pSwapchains@ is a pointer to the array of @swapchainCount@
+--     @VkSwapchainKHR@ handles.
+--
+-- -   @pMetadata@ is a pointer to the array of @swapchainCount@
+--     @VkHdrMetadataEXT@ structures.
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @pSwapchains@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid @VkSwapchainKHR@ handles
+--
+-- -   @pMetadata@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid @VkHdrMetadataEXT@ structures
+--
+-- -   @swapchainCount@ /must/ be greater than @0@
+--
+-- -   Both of @device@, and the elements of @pSwapchains@ /must/ have been
+--     created, allocated, or retrieved from the same @VkInstance@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
+-- 'VkHdrMetadataEXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 foreign import ccall "vkSetHdrMetadataEXT" vkSetHdrMetadataEXT :: ("device" ::: VkDevice) -> ("swapchainCount" ::: Word32) -> ("pSwapchains" ::: Ptr VkSwapchainKHR) -> ("pMetadata" ::: Ptr VkHdrMetadataEXT) -> IO ()
--- | TODO: Struct comments
+-- | VkXYColorEXT - structure to specify X,Y chromaticity coordinates
+--
+-- = Members
+-- #_members#
+--
+-- = Description
+-- #_description#
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkHdrMetadataEXT'
 data VkXYColorEXT = VkXYColorEXT
-  { vkX :: CFloat
-  , vkY :: CFloat
+  { -- No documentation found for Nested "VkXYColorEXT" "vkX"
+  vkX :: CFloat
+  , -- No documentation found for Nested "VkXYColorEXT" "vkY"
+  vkY :: CFloat
   }
   deriving (Eq, Show)
 
@@ -71,18 +125,42 @@ instance Storable VkXYColorEXT where
                           <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkXYColorEXT))
                 *> poke (ptr `plusPtr` 4) (vkY (poked :: VkXYColorEXT))
--- | TODO: Struct comments
+-- | VkHdrMetadataEXT - structure to specify Hdr metadata
+--
+-- = Description
+-- #_description#
+--
+-- __Note__
+--
+-- The validity and use of this data is outside the scope of Vulkan and
+-- thus no Valid Usage is given.
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkXYColorEXT',
+-- 'vkSetHdrMetadataEXT'
 data VkHdrMetadataEXT = VkHdrMetadataEXT
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkDisplayPrimaryRed :: VkXYColorEXT
-  , vkDisplayPrimaryGreen :: VkXYColorEXT
-  , vkDisplayPrimaryBlue :: VkXYColorEXT
-  , vkWhitePoint :: VkXYColorEXT
-  , vkMaxLuminance :: CFloat
-  , vkMinLuminance :: CFloat
-  , vkMaxContentLightLevel :: CFloat
-  , vkMaxFrameAverageLightLevel :: CFloat
+  { -- No documentation found for Nested "VkHdrMetadataEXT" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkDisplayPrimaryRed"
+  vkDisplayPrimaryRed :: VkXYColorEXT
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkDisplayPrimaryGreen"
+  vkDisplayPrimaryGreen :: VkXYColorEXT
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkDisplayPrimaryBlue"
+  vkDisplayPrimaryBlue :: VkXYColorEXT
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkWhitePoint"
+  vkWhitePoint :: VkXYColorEXT
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkMaxLuminance"
+  vkMaxLuminance :: CFloat
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkMinLuminance"
+  vkMinLuminance :: CFloat
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkMaxContentLightLevel"
+  vkMaxContentLightLevel :: CFloat
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkMaxFrameAverageLightLevel"
+  vkMaxFrameAverageLightLevel :: CFloat
   }
   deriving (Eq, Show)
 

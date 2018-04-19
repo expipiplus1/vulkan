@@ -75,7 +75,7 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
 
 -- ** VkPointClippingBehavior
 
--- | 
+-- | VkPointClippingBehavior - Enum specifying the point clipping behaviour
 newtype VkPointClippingBehavior = VkPointClippingBehavior Int32
   deriving (Eq, Ord, Storable)
 
@@ -95,16 +95,16 @@ instance Read VkPointClippingBehavior where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkPointClippingBehavior" "VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES"
 pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES :: VkPointClippingBehavior
 pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = VkPointClippingBehavior 0
 
--- | 
+-- No documentation found for Nested "VkPointClippingBehavior" "VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY"
 pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY :: VkPointClippingBehavior
 pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = VkPointClippingBehavior 1
 -- ** VkTessellationDomainOrigin
 
--- | 
+-- | VkTessellationDomainOrigin - Enum describing tessellation domain origin
 newtype VkTessellationDomainOrigin = VkTessellationDomainOrigin Int32
   deriving (Eq, Ord, Storable)
 
@@ -124,42 +124,46 @@ instance Read VkTessellationDomainOrigin where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkTessellationDomainOrigin" "VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT"
 pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT :: VkTessellationDomainOrigin
 pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = VkTessellationDomainOrigin 0
 
--- | 
+-- No documentation found for Nested "VkTessellationDomainOrigin" "VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT"
 pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT :: VkTessellationDomainOrigin
 pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = VkTessellationDomainOrigin 1
--- | Nothing
+-- No documentation found for Nested "VkImageLayout" "VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL"
 pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL :: VkImageLayout
 pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = VkImageLayout 1000117000
--- | Nothing
+-- No documentation found for Nested "VkImageLayout" "VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL"
 pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL :: VkImageLayout
 pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL = VkImageLayout 1000117001
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES = VkStructureType 1000117000
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO = VkStructureType 1000117001
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO = VkStructureType 1000117002
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO = VkStructureType 1000117003
--- | Nothing
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT"
 pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT = VkImageCreateFlagBits 0x00000080
--- | Nothing
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_EXTENDED_USAGE_BIT"
 pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT = VkImageCreateFlagBits 0x00000100
--- | TODO: Struct comments
+-- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
+-- attachment pair and an aspect mask that /can/ be read.
 data VkInputAttachmentAspectReference = VkInputAttachmentAspectReference
-  { vkSubpass :: Word32
-  , vkInputAttachmentIndex :: Word32
-  , vkAspectMask :: VkImageAspectFlags
+  { -- No documentation found for Nested "VkInputAttachmentAspectReference" "vkSubpass"
+  vkSubpass :: Word32
+  , -- No documentation found for Nested "VkInputAttachmentAspectReference" "vkInputAttachmentIndex"
+  vkInputAttachmentIndex :: Word32
+  , -- No documentation found for Nested "VkInputAttachmentAspectReference" "vkAspectMask"
+  vkAspectMask :: VkImageAspectFlags
   }
   deriving (Eq, Show)
 
@@ -172,12 +176,17 @@ instance Storable VkInputAttachmentAspectReference where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSubpass (poked :: VkInputAttachmentAspectReference))
                 *> poke (ptr `plusPtr` 4) (vkInputAttachmentIndex (poked :: VkInputAttachmentAspectReference))
                 *> poke (ptr `plusPtr` 8) (vkAspectMask (poked :: VkInputAttachmentAspectReference))
--- | TODO: Struct comments
+-- | VkRenderPassInputAttachmentAspectCreateInfo - Structure specifying, for
+-- a given subpass\/input attachment pair, which aspect /can/ be read.
 data VkRenderPassInputAttachmentAspectCreateInfo = VkRenderPassInputAttachmentAspectCreateInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkAspectReferenceCount :: Word32
-  , vkPAspectReferences :: Ptr VkInputAttachmentAspectReference
+  { -- No documentation found for Nested "VkRenderPassInputAttachmentAspectCreateInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkRenderPassInputAttachmentAspectCreateInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkRenderPassInputAttachmentAspectCreateInfo" "vkAspectReferenceCount"
+  vkAspectReferenceCount :: Word32
+  , -- No documentation found for Nested "VkRenderPassInputAttachmentAspectCreateInfo" "vkPAspectReferences"
+  vkPAspectReferences :: Ptr VkInputAttachmentAspectReference
   }
   deriving (Eq, Show)
 
@@ -192,11 +201,15 @@ instance Storable VkRenderPassInputAttachmentAspectCreateInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkAspectReferenceCount (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkPAspectReferences (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
--- | TODO: Struct comments
+-- | VkPhysicalDevicePointClippingProperties - Structure describing the point
+-- clipping behavior supported by an implementation
 data VkPhysicalDevicePointClippingProperties = VkPhysicalDevicePointClippingProperties
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkPointClippingBehavior :: VkPointClippingBehavior
+  { -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "vkPointClippingBehavior"
+  vkPointClippingBehavior :: VkPointClippingBehavior
   }
   deriving (Eq, Show)
 
@@ -209,11 +222,14 @@ instance Storable VkPhysicalDevicePointClippingProperties where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDevicePointClippingProperties))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDevicePointClippingProperties))
                 *> poke (ptr `plusPtr` 16) (vkPointClippingBehavior (poked :: VkPhysicalDevicePointClippingProperties))
--- | TODO: Struct comments
+-- | VkImageViewUsageCreateInfo - Specify the intended usage of an image view
 data VkImageViewUsageCreateInfo = VkImageViewUsageCreateInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkUsage :: VkImageUsageFlags
+  { -- No documentation found for Nested "VkImageViewUsageCreateInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkImageViewUsageCreateInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkImageViewUsageCreateInfo" "vkUsage"
+  vkUsage :: VkImageUsageFlags
   }
   deriving (Eq, Show)
 
@@ -226,11 +242,15 @@ instance Storable VkImageViewUsageCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageViewUsageCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageViewUsageCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkUsage (poked :: VkImageViewUsageCreateInfo))
--- | TODO: Struct comments
+-- | VkPipelineTessellationDomainOriginStateCreateInfo - Structure specifying
+-- the orientation of the tessellation domain
 data VkPipelineTessellationDomainOriginStateCreateInfo = VkPipelineTessellationDomainOriginStateCreateInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkDomainOrigin :: VkTessellationDomainOrigin
+  { -- No documentation found for Nested "VkPipelineTessellationDomainOriginStateCreateInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPipelineTessellationDomainOriginStateCreateInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPipelineTessellationDomainOriginStateCreateInfo" "vkDomainOrigin"
+  vkDomainOrigin :: VkTessellationDomainOrigin
   }
   deriving (Eq, Show)
 

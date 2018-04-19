@@ -30,18 +30,33 @@ import Graphics.Vulkan.Core10.Core
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD"
 pattern VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD :: VkStructureType
 pattern VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD = VkStructureType 1000041000
+-- No documentation found for TopLevel "VK_AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION"
 pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION :: Integral a => a
 pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME"
 pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME = "VK_AMD_texture_gather_bias_lod"
--- | TODO: Struct comments
+-- | VkTextureLODGatherFormatPropertiesAMD - Structure informing whether or
+-- not texture gather bias\/LOD functionality is supported for a given
+-- image format and a given physical device.
+--
+-- = Description
+-- #_description#
+--
+-- = See Also
+-- #_see_also#
+--
+-- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkTextureLODGatherFormatPropertiesAMD = VkTextureLODGatherFormatPropertiesAMD
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkSupportsTextureGatherLODBiasAMD :: VkBool32
+  { -- No documentation found for Nested "VkTextureLODGatherFormatPropertiesAMD" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkTextureLODGatherFormatPropertiesAMD" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkTextureLODGatherFormatPropertiesAMD" "vkSupportsTextureGatherLODBiasAMD"
+  vkSupportsTextureGatherLODBiasAMD :: VkBool32
   }
   deriving (Eq, Show)
 

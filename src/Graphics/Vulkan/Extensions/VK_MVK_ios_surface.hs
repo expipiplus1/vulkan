@@ -68,7 +68,7 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
 
 -- ** VkIOSSurfaceCreateFlagsMVK
 
--- | 
+-- No documentation found for TopLevel "VkIOSSurfaceCreateFlagsMVK"
 newtype VkIOSSurfaceCreateFlagsMVK = VkIOSSurfaceCreateFlagsMVK VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -87,21 +87,101 @@ instance Read VkIOSSurfaceCreateFlagsMVK where
                     )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK"
 pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK = VkStructureType 1000122000
+-- No documentation found for TopLevel "VK_MVK_IOS_SURFACE_SPEC_VERSION"
 pattern VK_MVK_IOS_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_MVK_IOS_SURFACE_SPEC_VERSION = 2
+-- No documentation found for TopLevel "VK_MVK_IOS_SURFACE_EXTENSION_NAME"
 pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME = "VK_MVK_ios_surface"
--- | 
+-- | vkCreateIOSSurfaceMVK - Create a VkSurfaceKHR object for an iOS UIView
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @instance@ is the instance with which to associate the surface.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'VkIOSSurfaceCreateInfoMVK' structure containing parameters
+--     affecting the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
+--     surface object is returned.
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid @VkInstance@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkIOSSurfaceCreateInfoMVK@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+--
+-- == Return Codes
+--
+-- [<#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+--     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'VkIOSSurfaceCreateInfoMVK',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'
 foreign import ccall "vkCreateIOSSurfaceMVK" vkCreateIOSSurfaceMVK :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkIOSSurfaceCreateInfoMVK) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
--- | TODO: Struct comments
+-- | VkIOSSurfaceCreateInfoMVK - Structure specifying parameters of a newly
+-- created iOS surface object
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage
+--
+-- -   @pView@ /must/ be a valid @UIView@ and /must/ be backed by a
+--     @CALayer@ instance of type @CAMetalLayer@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK@
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkIOSSurfaceCreateFlagsMVK',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateIOSSurfaceMVK'
 data VkIOSSurfaceCreateInfoMVK = VkIOSSurfaceCreateInfoMVK
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkFlags :: VkIOSSurfaceCreateFlagsMVK
-  , vkPView :: Ptr ()
+  { -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "vkFlags"
+  vkFlags :: VkIOSSurfaceCreateFlagsMVK
+  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "vkPView"
+  vkPView :: Ptr ()
   }
   deriving (Eq, Show)
 

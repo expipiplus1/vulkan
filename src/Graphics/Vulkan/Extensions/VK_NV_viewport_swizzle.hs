@@ -70,7 +70,19 @@ import Graphics.Vulkan.Core10.Core
 
 -- ** VkViewportCoordinateSwizzleNV
 
--- | 
+-- | VkViewportCoordinateSwizzleNV - Specify how a viewport coordinate is
+-- swizzled
+--
+-- = Description
+-- #_description#
+--
+-- These values are described in detail in
+-- <{html_spec_relative}#vertexpostproc-viewport-swizzle Viewport Swizzle>.
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkViewportSwizzleNV'
 newtype VkViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV Int32
   deriving (Eq, Ord, Storable)
 
@@ -102,40 +114,51 @@ instance Read VkViewportCoordinateSwizzleNV where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV"
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV :: VkViewportCoordinateSwizzleNV
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV = VkViewportCoordinateSwizzleNV 0
 
--- | 
+-- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV"
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV :: VkViewportCoordinateSwizzleNV
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV = VkViewportCoordinateSwizzleNV 1
 
--- | 
+-- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV"
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV :: VkViewportCoordinateSwizzleNV
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV = VkViewportCoordinateSwizzleNV 2
 
--- | 
+-- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV"
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV :: VkViewportCoordinateSwizzleNV
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV = VkViewportCoordinateSwizzleNV 3
 
--- | 
+-- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV"
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV :: VkViewportCoordinateSwizzleNV
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV = VkViewportCoordinateSwizzleNV 4
 
--- | 
+-- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV"
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV :: VkViewportCoordinateSwizzleNV
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV = VkViewportCoordinateSwizzleNV 5
 
--- | 
+-- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV"
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV :: VkViewportCoordinateSwizzleNV
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV = VkViewportCoordinateSwizzleNV 6
 
--- | 
+-- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV"
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV :: VkViewportCoordinateSwizzleNV
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = VkViewportCoordinateSwizzleNV 7
 -- ** VkPipelineViewportSwizzleStateCreateFlagsNV
 
--- | 
+-- | VkPipelineViewportSwizzleStateCreateFlagsNV - Reserved for future use
+--
+-- = Description
+-- #_description#
+--
+-- @VkPipelineViewportSwizzleStateCreateFlagsNV@ is a bitmask type for
+-- setting a mask, but is currently reserved for future use.
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkPipelineViewportSwizzleStateCreateInfoNV'
 newtype VkPipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateCreateFlagsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -154,19 +177,44 @@ instance Read VkPipelineViewportSwizzleStateCreateFlagsNV where
                     )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV"
 pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV = VkStructureType 1000098000
+-- No documentation found for TopLevel "VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION"
 pattern VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION :: Integral a => a
 pattern VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME"
 pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME = "VK_NV_viewport_swizzle"
--- | TODO: Struct comments
+-- | VkViewportSwizzleNV - Structure specifying a viewport swizzle
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @x@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
+--
+-- -   @y@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
+--
+-- -   @z@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
+--
+-- -   @w@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkPipelineViewportSwizzleStateCreateInfoNV',
+-- 'VkViewportCoordinateSwizzleNV'
 data VkViewportSwizzleNV = VkViewportSwizzleNV
-  { vkX :: VkViewportCoordinateSwizzleNV
-  , vkY :: VkViewportCoordinateSwizzleNV
-  , vkZ :: VkViewportCoordinateSwizzleNV
-  , vkW :: VkViewportCoordinateSwizzleNV
+  { -- No documentation found for Nested "VkViewportSwizzleNV" "vkX"
+  vkX :: VkViewportCoordinateSwizzleNV
+  , -- No documentation found for Nested "VkViewportSwizzleNV" "vkY"
+  vkY :: VkViewportCoordinateSwizzleNV
+  , -- No documentation found for Nested "VkViewportSwizzleNV" "vkZ"
+  vkZ :: VkViewportCoordinateSwizzleNV
+  , -- No documentation found for Nested "VkViewportSwizzleNV" "vkW"
+  vkW :: VkViewportCoordinateSwizzleNV
   }
   deriving (Eq, Show)
 
@@ -181,13 +229,42 @@ instance Storable VkViewportSwizzleNV where
                 *> poke (ptr `plusPtr` 4) (vkY (poked :: VkViewportSwizzleNV))
                 *> poke (ptr `plusPtr` 8) (vkZ (poked :: VkViewportSwizzleNV))
                 *> poke (ptr `plusPtr` 12) (vkW (poked :: VkViewportSwizzleNV))
--- | TODO: Struct comments
+-- | VkPipelineViewportSwizzleStateCreateInfoNV - Structure specifying
+-- swizzle applied to primitive clip coordinates
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage
+--
+-- -   @viewportCount@ /must/ match the @viewportCount@ set in
+--     @VkPipelineViewportStateCreateInfo@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @viewportCount@ /must/ be greater than @0@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkPipelineViewportSwizzleStateCreateFlagsNV',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkViewportSwizzleNV'
 data VkPipelineViewportSwizzleStateCreateInfoNV = VkPipelineViewportSwizzleStateCreateInfoNV
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkFlags :: VkPipelineViewportSwizzleStateCreateFlagsNV
-  , vkViewportCount :: Word32
-  , vkPViewportSwizzles :: Ptr VkViewportSwizzleNV
+  { -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkFlags"
+  vkFlags :: VkPipelineViewportSwizzleStateCreateFlagsNV
+  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkViewportCount"
+  vkViewportCount :: Word32
+  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkPViewportSwizzles"
+  vkPViewportSwizzles :: Ptr VkViewportSwizzleNV
   }
   deriving (Eq, Show)
 

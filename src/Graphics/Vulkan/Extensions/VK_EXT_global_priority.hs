@@ -58,7 +58,30 @@ import Graphics.Vulkan.Core10.Core
 
 -- ** VkQueueGlobalPriorityEXT
 
--- | 
+-- | VkQueueGlobalPriorityEXT - Values specifying a system-wide queue
+-- priority
+--
+-- = Description
+-- #_description#
+--
+-- Priority values are sorted in ascending order. A comparison operation on
+-- the enum values can be used to determine the priority order.
+--
+-- -   @VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT@ is below the system default.
+--     Useful for non-interactive tasks.
+--
+-- -   @VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT@ is the system default
+--     priority.
+--
+-- -   @VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT@ is above the system default.
+--
+-- -   @VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT@ is the highest priority.
+--     Useful for critical tasks.
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkDeviceQueueGlobalPriorityCreateInfoEXT'
 newtype VkQueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT Int32
   deriving (Eq, Ord, Storable)
 
@@ -82,36 +105,62 @@ instance Read VkQueueGlobalPriorityEXT where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkQueueGlobalPriorityEXT" "VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT"
 pattern VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT :: VkQueueGlobalPriorityEXT
 pattern VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT = VkQueueGlobalPriorityEXT 128
 
--- | 
+-- No documentation found for Nested "VkQueueGlobalPriorityEXT" "VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT"
 pattern VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT :: VkQueueGlobalPriorityEXT
 pattern VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT = VkQueueGlobalPriorityEXT 256
 
--- | 
+-- No documentation found for Nested "VkQueueGlobalPriorityEXT" "VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT"
 pattern VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT :: VkQueueGlobalPriorityEXT
 pattern VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT = VkQueueGlobalPriorityEXT 512
 
--- | 
+-- No documentation found for Nested "VkQueueGlobalPriorityEXT" "VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT"
 pattern VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT :: VkQueueGlobalPriorityEXT
 pattern VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = VkQueueGlobalPriorityEXT 1024
--- | Nothing
+-- No documentation found for Nested "VkResult" "VK_ERROR_NOT_PERMITTED_EXT"
 pattern VK_ERROR_NOT_PERMITTED_EXT :: VkResult
 pattern VK_ERROR_NOT_PERMITTED_EXT = VkResult (-1000174001)
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT = VkStructureType 1000174000
+-- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION"
 pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION = 2
+-- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME"
 pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME = "VK_EXT_global_priority"
--- | TODO: Struct comments
+-- | VkDeviceQueueGlobalPriorityCreateInfoEXT - Specify a system wide
+-- priority
+--
+-- = Description
+-- #_description#
+--
+-- A queue created without specifying
+-- @VkDeviceQueueGlobalPriorityCreateInfoEXT@ will default to
+-- @VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT@
+--
+-- -   @globalPriority@ /must/ be a valid 'VkQueueGlobalPriorityEXT' value
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkQueueGlobalPriorityEXT',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkDeviceQueueGlobalPriorityCreateInfoEXT = VkDeviceQueueGlobalPriorityCreateInfoEXT
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkGlobalPriority :: VkQueueGlobalPriorityEXT
+  { -- No documentation found for Nested "VkDeviceQueueGlobalPriorityCreateInfoEXT" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkDeviceQueueGlobalPriorityCreateInfoEXT" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkDeviceQueueGlobalPriorityCreateInfoEXT" "vkGlobalPriority"
+  vkGlobalPriority :: VkQueueGlobalPriorityEXT
   }
   deriving (Eq, Show)
 

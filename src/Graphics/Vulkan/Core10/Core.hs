@@ -324,7 +324,70 @@ import Text.Read.Lex
 
 -- ** VkBool32
 
--- | Note that VkBool32 is not strongly typed in the specification
+-- | VkBool32 - Vulkan boolean type
+--
+-- = Description
+-- #_description#
+--
+-- @VK_TRUE@ represents a boolean __True__ (integer 1) value, and
+-- @VK_FALSE@ a boolean __False__ (integer 0) value.
+--
+-- All values returned from a Vulkan implementation in a @VkBool32@ will be
+-- either @VK_TRUE@ or @VK_FALSE@.
+--
+-- Applications /must/ not pass any other values than @VK_TRUE@ or
+-- @VK_FALSE@ into a Vulkan implementation where a @VkBool32@ is expected.
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationImageCreateInfoNV',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3.VkDescriptorSetLayoutSupport',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkDeviceGeneratedCommandsFeaturesNVX',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_display_swapchain.VkDisplayPresentInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayPropertiesKHR',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedRequirements',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_16bit_storage.VkPhysicalDevice16BitStorageFeatures',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization.VkPhysicalDeviceConservativeRasterizationPropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceFeatures',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_creation.VkPhysicalDeviceGroupProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceIDProperties',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceLimits',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewFeatures',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory.VkPhysicalDeviceProtectedMemoryFeatures',
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory.VkPhysicalDeviceProtectedMemoryProperties',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax.VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkPhysicalDeviceSamplerYcbcrConversionFeatures',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_shader_draw_parameters.VkPhysicalDeviceShaderDrawParameterFeatures',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceSparseProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_variable_pointers.VkPhysicalDeviceVariablePointerFeatures',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPipelineColorBlendAdvancedStateCreateInfoEXT',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineColorBlendAttachmentState',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineColorBlendStateCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.VkPipelineCoverageModulationStateCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_fragment_coverage_to_color.VkPipelineCoverageToColorStateCreateInfoNV',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineDepthStencilStateCreateInfo',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineInputAssemblyStateCreateInfo',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineMultisampleStateCreateInfo',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineRasterizationStateCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling.VkPipelineViewportWScalingStateCreateInfoNV',
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory.VkProtectedSubmitInfo',
+-- 'Graphics.Vulkan.Core10.Sampler.VkSamplerCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_AMD_texture_gather_bias_lod.VkTextureLODGatherFormatPropertiesAMD',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceSupportKHR',
+-- 'Graphics.Vulkan.Core10.Fence.vkWaitForFences'
 newtype VkBool32 = VkBool32 Int32
   deriving (Eq, Ord, Storable)
 
@@ -344,16 +407,38 @@ instance Read VkBool32 where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkBool32" "VK_FALSE"
 pattern VK_FALSE :: VkBool32
 pattern VK_FALSE = VkBool32 0
 
--- | 
+-- No documentation found for Nested "VkBool32" "VK_TRUE"
 pattern VK_TRUE :: VkBool32
 pattern VK_TRUE = VkBool32 1
 -- ** VkFormat
 
--- | Vulkan format definitions
+-- | VkFormat - Available image formats
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
+-- 'Graphics.Vulkan.Core10.Pass.VkAttachmentDescription',
+-- 'Graphics.Vulkan.Core10.BufferView.VkBufferViewCreateInfo',
+-- 'Graphics.Vulkan.Core10.Image.VkImageCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR',
+-- 'Graphics.Vulkan.Core10.ImageView.VkImageViewCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceFormatKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkVertexInputAttributeDescription',
+-- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceFormatProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFormatProperties2',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFormatProperties2KHR',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties',
+-- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 newtype VkFormat = VkFormat Int32
   deriving (Eq, Ord, Storable)
 
@@ -825,748 +910,1278 @@ instance Read VkFormat where
                         )
                     )
 
--- | 
+-- | @VK_FORMAT_UNDEFINED@ specifies that the format is not specified.
 pattern VK_FORMAT_UNDEFINED :: VkFormat
 pattern VK_FORMAT_UNDEFINED = VkFormat 0
 
--- | 
+-- | @VK_FORMAT_R4G4_UNORM_PACK8@ specifies a two-component, 8-bit packed
+-- unsigned normalized format that has a 4-bit R component in bits 4..7,
+-- and a 4-bit G component in bits 0..3.
 pattern VK_FORMAT_R4G4_UNORM_PACK8 :: VkFormat
 pattern VK_FORMAT_R4G4_UNORM_PACK8 = VkFormat 1
 
--- | 
+-- | @VK_FORMAT_R4G4B4A4_UNORM_PACK16@ specifies a four-component, 16-bit
+-- packed unsigned normalized format that has a 4-bit R component in bits
+-- 12..15, a 4-bit G component in bits 8..11, a 4-bit B component in bits
+-- 4..7, and a 4-bit A component in bits 0..3.
 pattern VK_FORMAT_R4G4B4A4_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_R4G4B4A4_UNORM_PACK16 = VkFormat 2
 
--- | 
+-- | @VK_FORMAT_B4G4R4A4_UNORM_PACK16@ specifies a four-component, 16-bit
+-- packed unsigned normalized format that has a 4-bit B component in bits
+-- 12..15, a 4-bit G component in bits 8..11, a 4-bit R component in bits
+-- 4..7, and a 4-bit A component in bits 0..3.
 pattern VK_FORMAT_B4G4R4A4_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_B4G4R4A4_UNORM_PACK16 = VkFormat 3
 
--- | 
+-- | @VK_FORMAT_R5G6B5_UNORM_PACK16@ specifies a three-component, 16-bit
+-- packed unsigned normalized format that has a 5-bit R component in bits
+-- 11..15, a 6-bit G component in bits 5..10, and a 5-bit B component in
+-- bits 0..4.
 pattern VK_FORMAT_R5G6B5_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_R5G6B5_UNORM_PACK16 = VkFormat 4
 
--- | 
+-- | @VK_FORMAT_B5G6R5_UNORM_PACK16@ specifies a three-component, 16-bit
+-- packed unsigned normalized format that has a 5-bit B component in bits
+-- 11..15, a 6-bit G component in bits 5..10, and a 5-bit R component in
+-- bits 0..4.
 pattern VK_FORMAT_B5G6R5_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_B5G6R5_UNORM_PACK16 = VkFormat 5
 
--- | 
+-- | @VK_FORMAT_R5G5B5A1_UNORM_PACK16@ specifies a four-component, 16-bit
+-- packed unsigned normalized format that has a 5-bit R component in bits
+-- 11..15, a 5-bit G component in bits 6..10, a 5-bit B component in bits
+-- 1..5, and a 1-bit A component in bit 0.
 pattern VK_FORMAT_R5G5B5A1_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_R5G5B5A1_UNORM_PACK16 = VkFormat 6
 
--- | 
+-- | @VK_FORMAT_B5G5R5A1_UNORM_PACK16@ specifies a four-component, 16-bit
+-- packed unsigned normalized format that has a 5-bit B component in bits
+-- 11..15, a 5-bit G component in bits 6..10, a 5-bit R component in bits
+-- 1..5, and a 1-bit A component in bit 0.
 pattern VK_FORMAT_B5G5R5A1_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_B5G5R5A1_UNORM_PACK16 = VkFormat 7
 
--- | 
+-- | @VK_FORMAT_A1R5G5B5_UNORM_PACK16@ specifies a four-component, 16-bit
+-- packed unsigned normalized format that has a 1-bit A component in bit
+-- 15, a 5-bit R component in bits 10..14, a 5-bit G component in bits
+-- 5..9, and a 5-bit B component in bits 0..4.
 pattern VK_FORMAT_A1R5G5B5_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_A1R5G5B5_UNORM_PACK16 = VkFormat 8
 
--- | 
+-- | @VK_FORMAT_R8_UNORM@ specifies a one-component, 8-bit unsigned
+-- normalized format that has a single 8-bit R component.
 pattern VK_FORMAT_R8_UNORM :: VkFormat
 pattern VK_FORMAT_R8_UNORM = VkFormat 9
 
--- | 
+-- | @VK_FORMAT_R8_SNORM@ specifies a one-component, 8-bit signed normalized
+-- format that has a single 8-bit R component.
 pattern VK_FORMAT_R8_SNORM :: VkFormat
 pattern VK_FORMAT_R8_SNORM = VkFormat 10
 
--- | 
+-- | @VK_FORMAT_R8_USCALED@ specifies a one-component, 8-bit unsigned scaled
+-- integer format that has a single 8-bit R component.
 pattern VK_FORMAT_R8_USCALED :: VkFormat
 pattern VK_FORMAT_R8_USCALED = VkFormat 11
 
--- | 
+-- | @VK_FORMAT_R8_SSCALED@ specifies a one-component, 8-bit signed scaled
+-- integer format that has a single 8-bit R component.
 pattern VK_FORMAT_R8_SSCALED :: VkFormat
 pattern VK_FORMAT_R8_SSCALED = VkFormat 12
 
--- | 
+-- | @VK_FORMAT_R8_UINT@ specifies a one-component, 8-bit unsigned integer
+-- format that has a single 8-bit R component.
 pattern VK_FORMAT_R8_UINT :: VkFormat
 pattern VK_FORMAT_R8_UINT = VkFormat 13
 
--- | 
+-- | @VK_FORMAT_R8_SINT@ specifies a one-component, 8-bit signed integer
+-- format that has a single 8-bit R component.
 pattern VK_FORMAT_R8_SINT :: VkFormat
 pattern VK_FORMAT_R8_SINT = VkFormat 14
 
--- | 
+-- | @VK_FORMAT_R8_SRGB@ specifies a one-component, 8-bit unsigned normalized
+-- format that has a single 8-bit R component stored with sRGB nonlinear
+-- encoding.
 pattern VK_FORMAT_R8_SRGB :: VkFormat
 pattern VK_FORMAT_R8_SRGB = VkFormat 15
 
--- | 
+-- | @VK_FORMAT_R8G8_UNORM@ specifies a two-component, 16-bit unsigned
+-- normalized format that has an 8-bit R component in byte 0, and an 8-bit
+-- G component in byte 1.
 pattern VK_FORMAT_R8G8_UNORM :: VkFormat
 pattern VK_FORMAT_R8G8_UNORM = VkFormat 16
 
--- | 
+-- | @VK_FORMAT_R8G8_SNORM@ specifies a two-component, 16-bit signed
+-- normalized format that has an 8-bit R component in byte 0, and an 8-bit
+-- G component in byte 1.
 pattern VK_FORMAT_R8G8_SNORM :: VkFormat
 pattern VK_FORMAT_R8G8_SNORM = VkFormat 17
 
--- | 
+-- | @VK_FORMAT_R8G8_USCALED@ specifies a two-component, 16-bit unsigned
+-- scaled integer format that has an 8-bit R component in byte 0, and an
+-- 8-bit G component in byte 1.
 pattern VK_FORMAT_R8G8_USCALED :: VkFormat
 pattern VK_FORMAT_R8G8_USCALED = VkFormat 18
 
--- | 
+-- | @VK_FORMAT_R8G8_SSCALED@ specifies a two-component, 16-bit signed scaled
+-- integer format that has an 8-bit R component in byte 0, and an 8-bit G
+-- component in byte 1.
 pattern VK_FORMAT_R8G8_SSCALED :: VkFormat
 pattern VK_FORMAT_R8G8_SSCALED = VkFormat 19
 
--- | 
+-- | @VK_FORMAT_R8G8_UINT@ specifies a two-component, 16-bit unsigned integer
+-- format that has an 8-bit R component in byte 0, and an 8-bit G component
+-- in byte 1.
 pattern VK_FORMAT_R8G8_UINT :: VkFormat
 pattern VK_FORMAT_R8G8_UINT = VkFormat 20
 
--- | 
+-- | @VK_FORMAT_R8G8_SINT@ specifies a two-component, 16-bit signed integer
+-- format that has an 8-bit R component in byte 0, and an 8-bit G component
+-- in byte 1.
 pattern VK_FORMAT_R8G8_SINT :: VkFormat
 pattern VK_FORMAT_R8G8_SINT = VkFormat 21
 
--- | 
+-- | @VK_FORMAT_R8G8_SRGB@ specifies a two-component, 16-bit unsigned
+-- normalized format that has an 8-bit R component stored with sRGB
+-- nonlinear encoding in byte 0, and an 8-bit G component stored with sRGB
+-- nonlinear encoding in byte 1.
 pattern VK_FORMAT_R8G8_SRGB :: VkFormat
 pattern VK_FORMAT_R8G8_SRGB = VkFormat 22
 
--- | 
+-- | @VK_FORMAT_R8G8B8_UNORM@ specifies a three-component, 24-bit unsigned
+-- normalized format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit B component in byte 2.
 pattern VK_FORMAT_R8G8B8_UNORM :: VkFormat
 pattern VK_FORMAT_R8G8B8_UNORM = VkFormat 23
 
--- | 
+-- | @VK_FORMAT_R8G8B8_SNORM@ specifies a three-component, 24-bit signed
+-- normalized format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit B component in byte 2.
 pattern VK_FORMAT_R8G8B8_SNORM :: VkFormat
 pattern VK_FORMAT_R8G8B8_SNORM = VkFormat 24
 
--- | 
+-- | @VK_FORMAT_R8G8B8_USCALED@ specifies a three-component, 24-bit unsigned
+-- scaled format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit B component in byte 2.
 pattern VK_FORMAT_R8G8B8_USCALED :: VkFormat
 pattern VK_FORMAT_R8G8B8_USCALED = VkFormat 25
 
--- | 
+-- | @VK_FORMAT_R8G8B8_SSCALED@ specifies a three-component, 24-bit signed
+-- scaled format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit B component in byte 2.
 pattern VK_FORMAT_R8G8B8_SSCALED :: VkFormat
 pattern VK_FORMAT_R8G8B8_SSCALED = VkFormat 26
 
--- | 
+-- | @VK_FORMAT_R8G8B8_UINT@ specifies a three-component, 24-bit unsigned
+-- integer format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit B component in byte 2.
 pattern VK_FORMAT_R8G8B8_UINT :: VkFormat
 pattern VK_FORMAT_R8G8B8_UINT = VkFormat 27
 
--- | 
+-- | @VK_FORMAT_R8G8B8_SINT@ specifies a three-component, 24-bit signed
+-- integer format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit B component in byte 2.
 pattern VK_FORMAT_R8G8B8_SINT :: VkFormat
 pattern VK_FORMAT_R8G8B8_SINT = VkFormat 28
 
--- | 
+-- | @VK_FORMAT_R8G8B8_SRGB@ specifies a three-component, 24-bit unsigned
+-- normalized format that has an 8-bit R component stored with sRGB
+-- nonlinear encoding in byte 0, an 8-bit G component stored with sRGB
+-- nonlinear encoding in byte 1, and an 8-bit B component stored with sRGB
+-- nonlinear encoding in byte 2.
 pattern VK_FORMAT_R8G8B8_SRGB :: VkFormat
 pattern VK_FORMAT_R8G8B8_SRGB = VkFormat 29
 
--- | 
+-- | @VK_FORMAT_B8G8R8_UNORM@ specifies a three-component, 24-bit unsigned
+-- normalized format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit R component in byte 2.
 pattern VK_FORMAT_B8G8R8_UNORM :: VkFormat
 pattern VK_FORMAT_B8G8R8_UNORM = VkFormat 30
 
--- | 
+-- | @VK_FORMAT_B8G8R8_SNORM@ specifies a three-component, 24-bit signed
+-- normalized format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit R component in byte 2.
 pattern VK_FORMAT_B8G8R8_SNORM :: VkFormat
 pattern VK_FORMAT_B8G8R8_SNORM = VkFormat 31
 
--- | 
+-- | @VK_FORMAT_B8G8R8_USCALED@ specifies a three-component, 24-bit unsigned
+-- scaled format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit R component in byte 2.
 pattern VK_FORMAT_B8G8R8_USCALED :: VkFormat
 pattern VK_FORMAT_B8G8R8_USCALED = VkFormat 32
 
--- | 
+-- | @VK_FORMAT_B8G8R8_SSCALED@ specifies a three-component, 24-bit signed
+-- scaled format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit R component in byte 2.
 pattern VK_FORMAT_B8G8R8_SSCALED :: VkFormat
 pattern VK_FORMAT_B8G8R8_SSCALED = VkFormat 33
 
--- | 
+-- | @VK_FORMAT_B8G8R8_UINT@ specifies a three-component, 24-bit unsigned
+-- integer format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit R component in byte 2.
 pattern VK_FORMAT_B8G8R8_UINT :: VkFormat
 pattern VK_FORMAT_B8G8R8_UINT = VkFormat 34
 
--- | 
+-- | @VK_FORMAT_B8G8R8_SINT@ specifies a three-component, 24-bit signed
+-- integer format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, and an 8-bit R component in byte 2.
 pattern VK_FORMAT_B8G8R8_SINT :: VkFormat
 pattern VK_FORMAT_B8G8R8_SINT = VkFormat 35
 
--- | 
+-- | @VK_FORMAT_B8G8R8_SRGB@ specifies a three-component, 24-bit unsigned
+-- normalized format that has an 8-bit B component stored with sRGB
+-- nonlinear encoding in byte 0, an 8-bit G component stored with sRGB
+-- nonlinear encoding in byte 1, and an 8-bit R component stored with sRGB
+-- nonlinear encoding in byte 2.
 pattern VK_FORMAT_B8G8R8_SRGB :: VkFormat
 pattern VK_FORMAT_B8G8R8_SRGB = VkFormat 36
 
--- | 
+-- | @VK_FORMAT_R8G8B8A8_UNORM@ specifies a four-component, 32-bit unsigned
+-- normalized format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit B component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_R8G8B8A8_UNORM :: VkFormat
 pattern VK_FORMAT_R8G8B8A8_UNORM = VkFormat 37
 
--- | 
+-- | @VK_FORMAT_R8G8B8A8_SNORM@ specifies a four-component, 32-bit signed
+-- normalized format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit B component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_R8G8B8A8_SNORM :: VkFormat
 pattern VK_FORMAT_R8G8B8A8_SNORM = VkFormat 38
 
--- | 
+-- | @VK_FORMAT_R8G8B8A8_USCALED@ specifies a four-component, 32-bit unsigned
+-- scaled format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit B component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_R8G8B8A8_USCALED :: VkFormat
 pattern VK_FORMAT_R8G8B8A8_USCALED = VkFormat 39
 
--- | 
+-- | @VK_FORMAT_R8G8B8A8_SSCALED@ specifies a four-component, 32-bit signed
+-- scaled format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit B component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_R8G8B8A8_SSCALED :: VkFormat
 pattern VK_FORMAT_R8G8B8A8_SSCALED = VkFormat 40
 
--- | 
+-- | @VK_FORMAT_R8G8B8A8_UINT@ specifies a four-component, 32-bit unsigned
+-- integer format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit B component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_R8G8B8A8_UINT :: VkFormat
 pattern VK_FORMAT_R8G8B8A8_UINT = VkFormat 41
 
--- | 
+-- | @VK_FORMAT_R8G8B8A8_SINT@ specifies a four-component, 32-bit signed
+-- integer format that has an 8-bit R component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit B component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_R8G8B8A8_SINT :: VkFormat
 pattern VK_FORMAT_R8G8B8A8_SINT = VkFormat 42
 
--- | 
+-- | @VK_FORMAT_R8G8B8A8_SRGB@ specifies a four-component, 32-bit unsigned
+-- normalized format that has an 8-bit R component stored with sRGB
+-- nonlinear encoding in byte 0, an 8-bit G component stored with sRGB
+-- nonlinear encoding in byte 1, an 8-bit B component stored with sRGB
+-- nonlinear encoding in byte 2, and an 8-bit A component in byte 3.
 pattern VK_FORMAT_R8G8B8A8_SRGB :: VkFormat
 pattern VK_FORMAT_R8G8B8A8_SRGB = VkFormat 43
 
--- | 
+-- | @VK_FORMAT_B8G8R8A8_UNORM@ specifies a four-component, 32-bit unsigned
+-- normalized format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit R component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_B8G8R8A8_UNORM :: VkFormat
 pattern VK_FORMAT_B8G8R8A8_UNORM = VkFormat 44
 
--- | 
+-- | @VK_FORMAT_B8G8R8A8_SNORM@ specifies a four-component, 32-bit signed
+-- normalized format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit R component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_B8G8R8A8_SNORM :: VkFormat
 pattern VK_FORMAT_B8G8R8A8_SNORM = VkFormat 45
 
--- | 
+-- | @VK_FORMAT_B8G8R8A8_USCALED@ specifies a four-component, 32-bit unsigned
+-- scaled format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit R component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_B8G8R8A8_USCALED :: VkFormat
 pattern VK_FORMAT_B8G8R8A8_USCALED = VkFormat 46
 
--- | 
+-- | @VK_FORMAT_B8G8R8A8_SSCALED@ specifies a four-component, 32-bit signed
+-- scaled format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit R component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_B8G8R8A8_SSCALED :: VkFormat
 pattern VK_FORMAT_B8G8R8A8_SSCALED = VkFormat 47
 
--- | 
+-- | @VK_FORMAT_B8G8R8A8_UINT@ specifies a four-component, 32-bit unsigned
+-- integer format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit R component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_B8G8R8A8_UINT :: VkFormat
 pattern VK_FORMAT_B8G8R8A8_UINT = VkFormat 48
 
--- | 
+-- | @VK_FORMAT_B8G8R8A8_SINT@ specifies a four-component, 32-bit signed
+-- integer format that has an 8-bit B component in byte 0, an 8-bit G
+-- component in byte 1, an 8-bit R component in byte 2, and an 8-bit A
+-- component in byte 3.
 pattern VK_FORMAT_B8G8R8A8_SINT :: VkFormat
 pattern VK_FORMAT_B8G8R8A8_SINT = VkFormat 49
 
--- | 
+-- | @VK_FORMAT_B8G8R8A8_SRGB@ specifies a four-component, 32-bit unsigned
+-- normalized format that has an 8-bit B component stored with sRGB
+-- nonlinear encoding in byte 0, an 8-bit G component stored with sRGB
+-- nonlinear encoding in byte 1, an 8-bit R component stored with sRGB
+-- nonlinear encoding in byte 2, and an 8-bit A component in byte 3.
 pattern VK_FORMAT_B8G8R8A8_SRGB :: VkFormat
 pattern VK_FORMAT_B8G8R8A8_SRGB = VkFormat 50
 
--- | 
+-- | @VK_FORMAT_A8B8G8R8_UNORM_PACK32@ specifies a four-component, 32-bit
+-- packed unsigned normalized format that has an 8-bit A component in bits
+-- 24..31, an 8-bit B component in bits 16..23, an 8-bit G component in
+-- bits 8..15, and an 8-bit R component in bits 0..7.
 pattern VK_FORMAT_A8B8G8R8_UNORM_PACK32 :: VkFormat
 pattern VK_FORMAT_A8B8G8R8_UNORM_PACK32 = VkFormat 51
 
--- | 
+-- | @VK_FORMAT_A8B8G8R8_SNORM_PACK32@ specifies a four-component, 32-bit
+-- packed signed normalized format that has an 8-bit A component in bits
+-- 24..31, an 8-bit B component in bits 16..23, an 8-bit G component in
+-- bits 8..15, and an 8-bit R component in bits 0..7.
 pattern VK_FORMAT_A8B8G8R8_SNORM_PACK32 :: VkFormat
 pattern VK_FORMAT_A8B8G8R8_SNORM_PACK32 = VkFormat 52
 
--- | 
+-- | @VK_FORMAT_A8B8G8R8_USCALED_PACK32@ specifies a four-component, 32-bit
+-- packed unsigned scaled integer format that has an 8-bit A component in
+-- bits 24..31, an 8-bit B component in bits 16..23, an 8-bit G component
+-- in bits 8..15, and an 8-bit R component in bits 0..7.
 pattern VK_FORMAT_A8B8G8R8_USCALED_PACK32 :: VkFormat
 pattern VK_FORMAT_A8B8G8R8_USCALED_PACK32 = VkFormat 53
 
--- | 
+-- | @VK_FORMAT_A8B8G8R8_SSCALED_PACK32@ specifies a four-component, 32-bit
+-- packed signed scaled integer format that has an 8-bit A component in
+-- bits 24..31, an 8-bit B component in bits 16..23, an 8-bit G component
+-- in bits 8..15, and an 8-bit R component in bits 0..7.
 pattern VK_FORMAT_A8B8G8R8_SSCALED_PACK32 :: VkFormat
 pattern VK_FORMAT_A8B8G8R8_SSCALED_PACK32 = VkFormat 54
 
--- | 
+-- | @VK_FORMAT_A8B8G8R8_UINT_PACK32@ specifies a four-component, 32-bit
+-- packed unsigned integer format that has an 8-bit A component in bits
+-- 24..31, an 8-bit B component in bits 16..23, an 8-bit G component in
+-- bits 8..15, and an 8-bit R component in bits 0..7.
 pattern VK_FORMAT_A8B8G8R8_UINT_PACK32 :: VkFormat
 pattern VK_FORMAT_A8B8G8R8_UINT_PACK32 = VkFormat 55
 
--- | 
+-- | @VK_FORMAT_A8B8G8R8_SINT_PACK32@ specifies a four-component, 32-bit
+-- packed signed integer format that has an 8-bit A component in bits
+-- 24..31, an 8-bit B component in bits 16..23, an 8-bit G component in
+-- bits 8..15, and an 8-bit R component in bits 0..7.
 pattern VK_FORMAT_A8B8G8R8_SINT_PACK32 :: VkFormat
 pattern VK_FORMAT_A8B8G8R8_SINT_PACK32 = VkFormat 56
 
--- | 
+-- | @VK_FORMAT_A8B8G8R8_SRGB_PACK32@ specifies a four-component, 32-bit
+-- packed unsigned normalized format that has an 8-bit A component in bits
+-- 24..31, an 8-bit B component stored with sRGB nonlinear encoding in bits
+-- 16..23, an 8-bit G component stored with sRGB nonlinear encoding in bits
+-- 8..15, and an 8-bit R component stored with sRGB nonlinear encoding in
+-- bits 0..7.
 pattern VK_FORMAT_A8B8G8R8_SRGB_PACK32 :: VkFormat
 pattern VK_FORMAT_A8B8G8R8_SRGB_PACK32 = VkFormat 57
 
--- | 
+-- | @VK_FORMAT_A2R10G10B10_UNORM_PACK32@ specifies a four-component, 32-bit
+-- packed unsigned normalized format that has a 2-bit A component in bits
+-- 30..31, a 10-bit R component in bits 20..29, a 10-bit G component in
+-- bits 10..19, and a 10-bit B component in bits 0..9.
 pattern VK_FORMAT_A2R10G10B10_UNORM_PACK32 :: VkFormat
 pattern VK_FORMAT_A2R10G10B10_UNORM_PACK32 = VkFormat 58
 
--- | 
+-- | @VK_FORMAT_A2R10G10B10_SNORM_PACK32@ specifies a four-component, 32-bit
+-- packed signed normalized format that has a 2-bit A component in bits
+-- 30..31, a 10-bit R component in bits 20..29, a 10-bit G component in
+-- bits 10..19, and a 10-bit B component in bits 0..9.
 pattern VK_FORMAT_A2R10G10B10_SNORM_PACK32 :: VkFormat
 pattern VK_FORMAT_A2R10G10B10_SNORM_PACK32 = VkFormat 59
 
--- | 
+-- | @VK_FORMAT_A2R10G10B10_USCALED_PACK32@ specifies a four-component,
+-- 32-bit packed unsigned scaled integer format that has a 2-bit A
+-- component in bits 30..31, a 10-bit R component in bits 20..29, a 10-bit
+-- G component in bits 10..19, and a 10-bit B component in bits 0..9.
 pattern VK_FORMAT_A2R10G10B10_USCALED_PACK32 :: VkFormat
 pattern VK_FORMAT_A2R10G10B10_USCALED_PACK32 = VkFormat 60
 
--- | 
+-- | @VK_FORMAT_A2R10G10B10_SSCALED_PACK32@ specifies a four-component,
+-- 32-bit packed signed scaled integer format that has a 2-bit A component
+-- in bits 30..31, a 10-bit R component in bits 20..29, a 10-bit G
+-- component in bits 10..19, and a 10-bit B component in bits 0..9.
 pattern VK_FORMAT_A2R10G10B10_SSCALED_PACK32 :: VkFormat
 pattern VK_FORMAT_A2R10G10B10_SSCALED_PACK32 = VkFormat 61
 
--- | 
+-- | @VK_FORMAT_A2R10G10B10_UINT_PACK32@ specifies a four-component, 32-bit
+-- packed unsigned integer format that has a 2-bit A component in bits
+-- 30..31, a 10-bit R component in bits 20..29, a 10-bit G component in
+-- bits 10..19, and a 10-bit B component in bits 0..9.
 pattern VK_FORMAT_A2R10G10B10_UINT_PACK32 :: VkFormat
 pattern VK_FORMAT_A2R10G10B10_UINT_PACK32 = VkFormat 62
 
--- | 
+-- | @VK_FORMAT_A2R10G10B10_SINT_PACK32@ specifies a four-component, 32-bit
+-- packed signed integer format that has a 2-bit A component in bits
+-- 30..31, a 10-bit R component in bits 20..29, a 10-bit G component in
+-- bits 10..19, and a 10-bit B component in bits 0..9.
 pattern VK_FORMAT_A2R10G10B10_SINT_PACK32 :: VkFormat
 pattern VK_FORMAT_A2R10G10B10_SINT_PACK32 = VkFormat 63
 
--- | 
+-- | @VK_FORMAT_A2B10G10R10_UNORM_PACK32@ specifies a four-component, 32-bit
+-- packed unsigned normalized format that has a 2-bit A component in bits
+-- 30..31, a 10-bit B component in bits 20..29, a 10-bit G component in
+-- bits 10..19, and a 10-bit R component in bits 0..9.
 pattern VK_FORMAT_A2B10G10R10_UNORM_PACK32 :: VkFormat
 pattern VK_FORMAT_A2B10G10R10_UNORM_PACK32 = VkFormat 64
 
--- | 
+-- | @VK_FORMAT_A2B10G10R10_SNORM_PACK32@ specifies a four-component, 32-bit
+-- packed signed normalized format that has a 2-bit A component in bits
+-- 30..31, a 10-bit B component in bits 20..29, a 10-bit G component in
+-- bits 10..19, and a 10-bit R component in bits 0..9.
 pattern VK_FORMAT_A2B10G10R10_SNORM_PACK32 :: VkFormat
 pattern VK_FORMAT_A2B10G10R10_SNORM_PACK32 = VkFormat 65
 
--- | 
+-- | @VK_FORMAT_A2B10G10R10_USCALED_PACK32@ specifies a four-component,
+-- 32-bit packed unsigned scaled integer format that has a 2-bit A
+-- component in bits 30..31, a 10-bit B component in bits 20..29, a 10-bit
+-- G component in bits 10..19, and a 10-bit R component in bits 0..9.
 pattern VK_FORMAT_A2B10G10R10_USCALED_PACK32 :: VkFormat
 pattern VK_FORMAT_A2B10G10R10_USCALED_PACK32 = VkFormat 66
 
--- | 
+-- | @VK_FORMAT_A2B10G10R10_SSCALED_PACK32@ specifies a four-component,
+-- 32-bit packed signed scaled integer format that has a 2-bit A component
+-- in bits 30..31, a 10-bit B component in bits 20..29, a 10-bit G
+-- component in bits 10..19, and a 10-bit R component in bits 0..9.
 pattern VK_FORMAT_A2B10G10R10_SSCALED_PACK32 :: VkFormat
 pattern VK_FORMAT_A2B10G10R10_SSCALED_PACK32 = VkFormat 67
 
--- | 
+-- | @VK_FORMAT_A2B10G10R10_UINT_PACK32@ specifies a four-component, 32-bit
+-- packed unsigned integer format that has a 2-bit A component in bits
+-- 30..31, a 10-bit B component in bits 20..29, a 10-bit G component in
+-- bits 10..19, and a 10-bit R component in bits 0..9.
 pattern VK_FORMAT_A2B10G10R10_UINT_PACK32 :: VkFormat
 pattern VK_FORMAT_A2B10G10R10_UINT_PACK32 = VkFormat 68
 
--- | 
+-- | @VK_FORMAT_A2B10G10R10_SINT_PACK32@ specifies a four-component, 32-bit
+-- packed signed integer format that has a 2-bit A component in bits
+-- 30..31, a 10-bit B component in bits 20..29, a 10-bit G component in
+-- bits 10..19, and a 10-bit R component in bits 0..9.
 pattern VK_FORMAT_A2B10G10R10_SINT_PACK32 :: VkFormat
 pattern VK_FORMAT_A2B10G10R10_SINT_PACK32 = VkFormat 69
 
--- | 
+-- | @VK_FORMAT_R16_UNORM@ specifies a one-component, 16-bit unsigned
+-- normalized format that has a single 16-bit R component.
 pattern VK_FORMAT_R16_UNORM :: VkFormat
 pattern VK_FORMAT_R16_UNORM = VkFormat 70
 
--- | 
+-- | @VK_FORMAT_R16_SNORM@ specifies a one-component, 16-bit signed
+-- normalized format that has a single 16-bit R component.
 pattern VK_FORMAT_R16_SNORM :: VkFormat
 pattern VK_FORMAT_R16_SNORM = VkFormat 71
 
--- | 
+-- | @VK_FORMAT_R16_USCALED@ specifies a one-component, 16-bit unsigned
+-- scaled integer format that has a single 16-bit R component.
 pattern VK_FORMAT_R16_USCALED :: VkFormat
 pattern VK_FORMAT_R16_USCALED = VkFormat 72
 
--- | 
+-- | @VK_FORMAT_R16_SSCALED@ specifies a one-component, 16-bit signed scaled
+-- integer format that has a single 16-bit R component.
 pattern VK_FORMAT_R16_SSCALED :: VkFormat
 pattern VK_FORMAT_R16_SSCALED = VkFormat 73
 
--- | 
+-- | @VK_FORMAT_R16_UINT@ specifies a one-component, 16-bit unsigned integer
+-- format that has a single 16-bit R component.
 pattern VK_FORMAT_R16_UINT :: VkFormat
 pattern VK_FORMAT_R16_UINT = VkFormat 74
 
--- | 
+-- | @VK_FORMAT_R16_SINT@ specifies a one-component, 16-bit signed integer
+-- format that has a single 16-bit R component.
 pattern VK_FORMAT_R16_SINT :: VkFormat
 pattern VK_FORMAT_R16_SINT = VkFormat 75
 
--- | 
+-- | @VK_FORMAT_R16_SFLOAT@ specifies a one-component, 16-bit signed
+-- floating-point format that has a single 16-bit R component.
 pattern VK_FORMAT_R16_SFLOAT :: VkFormat
 pattern VK_FORMAT_R16_SFLOAT = VkFormat 76
 
--- | 
+-- | @VK_FORMAT_R16G16_UNORM@ specifies a two-component, 32-bit unsigned
+-- normalized format that has a 16-bit R component in bytes 0..1, and a
+-- 16-bit G component in bytes 2..3.
 pattern VK_FORMAT_R16G16_UNORM :: VkFormat
 pattern VK_FORMAT_R16G16_UNORM = VkFormat 77
 
--- | 
+-- | @VK_FORMAT_R16G16_SNORM@ specifies a two-component, 32-bit signed
+-- normalized format that has a 16-bit R component in bytes 0..1, and a
+-- 16-bit G component in bytes 2..3.
 pattern VK_FORMAT_R16G16_SNORM :: VkFormat
 pattern VK_FORMAT_R16G16_SNORM = VkFormat 78
 
--- | 
+-- | @VK_FORMAT_R16G16_USCALED@ specifies a two-component, 32-bit unsigned
+-- scaled integer format that has a 16-bit R component in bytes 0..1, and a
+-- 16-bit G component in bytes 2..3.
 pattern VK_FORMAT_R16G16_USCALED :: VkFormat
 pattern VK_FORMAT_R16G16_USCALED = VkFormat 79
 
--- | 
+-- | @VK_FORMAT_R16G16_SSCALED@ specifies a two-component, 32-bit signed
+-- scaled integer format that has a 16-bit R component in bytes 0..1, and a
+-- 16-bit G component in bytes 2..3.
 pattern VK_FORMAT_R16G16_SSCALED :: VkFormat
 pattern VK_FORMAT_R16G16_SSCALED = VkFormat 80
 
--- | 
+-- | @VK_FORMAT_R16G16_UINT@ specifies a two-component, 32-bit unsigned
+-- integer format that has a 16-bit R component in bytes 0..1, and a 16-bit
+-- G component in bytes 2..3.
 pattern VK_FORMAT_R16G16_UINT :: VkFormat
 pattern VK_FORMAT_R16G16_UINT = VkFormat 81
 
--- | 
+-- | @VK_FORMAT_R16G16_SINT@ specifies a two-component, 32-bit signed integer
+-- format that has a 16-bit R component in bytes 0..1, and a 16-bit G
+-- component in bytes 2..3.
 pattern VK_FORMAT_R16G16_SINT :: VkFormat
 pattern VK_FORMAT_R16G16_SINT = VkFormat 82
 
--- | 
+-- | @VK_FORMAT_R16G16_SFLOAT@ specifies a two-component, 32-bit signed
+-- floating-point format that has a 16-bit R component in bytes 0..1, and a
+-- 16-bit G component in bytes 2..3.
 pattern VK_FORMAT_R16G16_SFLOAT :: VkFormat
 pattern VK_FORMAT_R16G16_SFLOAT = VkFormat 83
 
--- | 
+-- | @VK_FORMAT_R16G16B16_UNORM@ specifies a three-component, 48-bit unsigned
+-- normalized format that has a 16-bit R component in bytes 0..1, a 16-bit
+-- G component in bytes 2..3, and a 16-bit B component in bytes 4..5.
 pattern VK_FORMAT_R16G16B16_UNORM :: VkFormat
 pattern VK_FORMAT_R16G16B16_UNORM = VkFormat 84
 
--- | 
+-- | @VK_FORMAT_R16G16B16_SNORM@ specifies a three-component, 48-bit signed
+-- normalized format that has a 16-bit R component in bytes 0..1, a 16-bit
+-- G component in bytes 2..3, and a 16-bit B component in bytes 4..5.
 pattern VK_FORMAT_R16G16B16_SNORM :: VkFormat
 pattern VK_FORMAT_R16G16B16_SNORM = VkFormat 85
 
--- | 
+-- | @VK_FORMAT_R16G16B16_USCALED@ specifies a three-component, 48-bit
+-- unsigned scaled integer format that has a 16-bit R component in bytes
+-- 0..1, a 16-bit G component in bytes 2..3, and a 16-bit B component in
+-- bytes 4..5.
 pattern VK_FORMAT_R16G16B16_USCALED :: VkFormat
 pattern VK_FORMAT_R16G16B16_USCALED = VkFormat 86
 
--- | 
+-- | @VK_FORMAT_R16G16B16_SSCALED@ specifies a three-component, 48-bit signed
+-- scaled integer format that has a 16-bit R component in bytes 0..1, a
+-- 16-bit G component in bytes 2..3, and a 16-bit B component in bytes
+-- 4..5.
 pattern VK_FORMAT_R16G16B16_SSCALED :: VkFormat
 pattern VK_FORMAT_R16G16B16_SSCALED = VkFormat 87
 
--- | 
+-- | @VK_FORMAT_R16G16B16_UINT@ specifies a three-component, 48-bit unsigned
+-- integer format that has a 16-bit R component in bytes 0..1, a 16-bit G
+-- component in bytes 2..3, and a 16-bit B component in bytes 4..5.
 pattern VK_FORMAT_R16G16B16_UINT :: VkFormat
 pattern VK_FORMAT_R16G16B16_UINT = VkFormat 88
 
--- | 
+-- | @VK_FORMAT_R16G16B16_SINT@ specifies a three-component, 48-bit signed
+-- integer format that has a 16-bit R component in bytes 0..1, a 16-bit G
+-- component in bytes 2..3, and a 16-bit B component in bytes 4..5.
 pattern VK_FORMAT_R16G16B16_SINT :: VkFormat
 pattern VK_FORMAT_R16G16B16_SINT = VkFormat 89
 
--- | 
+-- | @VK_FORMAT_R16G16B16_SFLOAT@ specifies a three-component, 48-bit signed
+-- floating-point format that has a 16-bit R component in bytes 0..1, a
+-- 16-bit G component in bytes 2..3, and a 16-bit B component in bytes
+-- 4..5.
 pattern VK_FORMAT_R16G16B16_SFLOAT :: VkFormat
 pattern VK_FORMAT_R16G16B16_SFLOAT = VkFormat 90
 
--- | 
+-- | @VK_FORMAT_R16G16B16A16_UNORM@ specifies a four-component, 64-bit
+-- unsigned normalized format that has a 16-bit R component in bytes 0..1,
+-- a 16-bit G component in bytes 2..3, a 16-bit B component in bytes 4..5,
+-- and a 16-bit A component in bytes 6..7.
 pattern VK_FORMAT_R16G16B16A16_UNORM :: VkFormat
 pattern VK_FORMAT_R16G16B16A16_UNORM = VkFormat 91
 
--- | 
+-- | @VK_FORMAT_R16G16B16A16_SNORM@ specifies a four-component, 64-bit signed
+-- normalized format that has a 16-bit R component in bytes 0..1, a 16-bit
+-- G component in bytes 2..3, a 16-bit B component in bytes 4..5, and a
+-- 16-bit A component in bytes 6..7.
 pattern VK_FORMAT_R16G16B16A16_SNORM :: VkFormat
 pattern VK_FORMAT_R16G16B16A16_SNORM = VkFormat 92
 
--- | 
+-- | @VK_FORMAT_R16G16B16A16_USCALED@ specifies a four-component, 64-bit
+-- unsigned scaled integer format that has a 16-bit R component in bytes
+-- 0..1, a 16-bit G component in bytes 2..3, a 16-bit B component in bytes
+-- 4..5, and a 16-bit A component in bytes 6..7.
 pattern VK_FORMAT_R16G16B16A16_USCALED :: VkFormat
 pattern VK_FORMAT_R16G16B16A16_USCALED = VkFormat 93
 
--- | 
+-- | @VK_FORMAT_R16G16B16A16_SSCALED@ specifies a four-component, 64-bit
+-- signed scaled integer format that has a 16-bit R component in bytes
+-- 0..1, a 16-bit G component in bytes 2..3, a 16-bit B component in bytes
+-- 4..5, and a 16-bit A component in bytes 6..7.
 pattern VK_FORMAT_R16G16B16A16_SSCALED :: VkFormat
 pattern VK_FORMAT_R16G16B16A16_SSCALED = VkFormat 94
 
--- | 
+-- | @VK_FORMAT_R16G16B16A16_UINT@ specifies a four-component, 64-bit
+-- unsigned integer format that has a 16-bit R component in bytes 0..1, a
+-- 16-bit G component in bytes 2..3, a 16-bit B component in bytes 4..5,
+-- and a 16-bit A component in bytes 6..7.
 pattern VK_FORMAT_R16G16B16A16_UINT :: VkFormat
 pattern VK_FORMAT_R16G16B16A16_UINT = VkFormat 95
 
--- | 
+-- | @VK_FORMAT_R16G16B16A16_SINT@ specifies a four-component, 64-bit signed
+-- integer format that has a 16-bit R component in bytes 0..1, a 16-bit G
+-- component in bytes 2..3, a 16-bit B component in bytes 4..5, and a
+-- 16-bit A component in bytes 6..7.
 pattern VK_FORMAT_R16G16B16A16_SINT :: VkFormat
 pattern VK_FORMAT_R16G16B16A16_SINT = VkFormat 96
 
--- | 
+-- | @VK_FORMAT_R16G16B16A16_SFLOAT@ specifies a four-component, 64-bit
+-- signed floating-point format that has a 16-bit R component in bytes
+-- 0..1, a 16-bit G component in bytes 2..3, a 16-bit B component in bytes
+-- 4..5, and a 16-bit A component in bytes 6..7.
 pattern VK_FORMAT_R16G16B16A16_SFLOAT :: VkFormat
 pattern VK_FORMAT_R16G16B16A16_SFLOAT = VkFormat 97
 
--- | 
+-- | @VK_FORMAT_R32_UINT@ specifies a one-component, 32-bit unsigned integer
+-- format that has a single 32-bit R component.
 pattern VK_FORMAT_R32_UINT :: VkFormat
 pattern VK_FORMAT_R32_UINT = VkFormat 98
 
--- | 
+-- | @VK_FORMAT_R32_SINT@ specifies a one-component, 32-bit signed integer
+-- format that has a single 32-bit R component.
 pattern VK_FORMAT_R32_SINT :: VkFormat
 pattern VK_FORMAT_R32_SINT = VkFormat 99
 
--- | 
+-- | @VK_FORMAT_R32_SFLOAT@ specifies a one-component, 32-bit signed
+-- floating-point format that has a single 32-bit R component.
 pattern VK_FORMAT_R32_SFLOAT :: VkFormat
 pattern VK_FORMAT_R32_SFLOAT = VkFormat 100
 
--- | 
+-- | @VK_FORMAT_R32G32_UINT@ specifies a two-component, 64-bit unsigned
+-- integer format that has a 32-bit R component in bytes 0..3, and a 32-bit
+-- G component in bytes 4..7.
 pattern VK_FORMAT_R32G32_UINT :: VkFormat
 pattern VK_FORMAT_R32G32_UINT = VkFormat 101
 
--- | 
+-- | @VK_FORMAT_R32G32_SINT@ specifies a two-component, 64-bit signed integer
+-- format that has a 32-bit R component in bytes 0..3, and a 32-bit G
+-- component in bytes 4..7.
 pattern VK_FORMAT_R32G32_SINT :: VkFormat
 pattern VK_FORMAT_R32G32_SINT = VkFormat 102
 
--- | 
+-- | @VK_FORMAT_R32G32_SFLOAT@ specifies a two-component, 64-bit signed
+-- floating-point format that has a 32-bit R component in bytes 0..3, and a
+-- 32-bit G component in bytes 4..7.
 pattern VK_FORMAT_R32G32_SFLOAT :: VkFormat
 pattern VK_FORMAT_R32G32_SFLOAT = VkFormat 103
 
--- | 
+-- | @VK_FORMAT_R32G32B32_UINT@ specifies a three-component, 96-bit unsigned
+-- integer format that has a 32-bit R component in bytes 0..3, a 32-bit G
+-- component in bytes 4..7, and a 32-bit B component in bytes 8..11.
 pattern VK_FORMAT_R32G32B32_UINT :: VkFormat
 pattern VK_FORMAT_R32G32B32_UINT = VkFormat 104
 
--- | 
+-- | @VK_FORMAT_R32G32B32_SINT@ specifies a three-component, 96-bit signed
+-- integer format that has a 32-bit R component in bytes 0..3, a 32-bit G
+-- component in bytes 4..7, and a 32-bit B component in bytes 8..11.
 pattern VK_FORMAT_R32G32B32_SINT :: VkFormat
 pattern VK_FORMAT_R32G32B32_SINT = VkFormat 105
 
--- | 
+-- | @VK_FORMAT_R32G32B32_SFLOAT@ specifies a three-component, 96-bit signed
+-- floating-point format that has a 32-bit R component in bytes 0..3, a
+-- 32-bit G component in bytes 4..7, and a 32-bit B component in bytes
+-- 8..11.
 pattern VK_FORMAT_R32G32B32_SFLOAT :: VkFormat
 pattern VK_FORMAT_R32G32B32_SFLOAT = VkFormat 106
 
--- | 
+-- | @VK_FORMAT_R32G32B32A32_UINT@ specifies a four-component, 128-bit
+-- unsigned integer format that has a 32-bit R component in bytes 0..3, a
+-- 32-bit G component in bytes 4..7, a 32-bit B component in bytes 8..11,
+-- and a 32-bit A component in bytes 12..15.
 pattern VK_FORMAT_R32G32B32A32_UINT :: VkFormat
 pattern VK_FORMAT_R32G32B32A32_UINT = VkFormat 107
 
--- | 
+-- | @VK_FORMAT_R32G32B32A32_SINT@ specifies a four-component, 128-bit signed
+-- integer format that has a 32-bit R component in bytes 0..3, a 32-bit G
+-- component in bytes 4..7, a 32-bit B component in bytes 8..11, and a
+-- 32-bit A component in bytes 12..15.
 pattern VK_FORMAT_R32G32B32A32_SINT :: VkFormat
 pattern VK_FORMAT_R32G32B32A32_SINT = VkFormat 108
 
--- | 
+-- | @VK_FORMAT_R32G32B32A32_SFLOAT@ specifies a four-component, 128-bit
+-- signed floating-point format that has a 32-bit R component in bytes
+-- 0..3, a 32-bit G component in bytes 4..7, a 32-bit B component in bytes
+-- 8..11, and a 32-bit A component in bytes 12..15.
 pattern VK_FORMAT_R32G32B32A32_SFLOAT :: VkFormat
 pattern VK_FORMAT_R32G32B32A32_SFLOAT = VkFormat 109
 
--- | 
+-- | @VK_FORMAT_R64_UINT@ specifies a one-component, 64-bit unsigned integer
+-- format that has a single 64-bit R component.
 pattern VK_FORMAT_R64_UINT :: VkFormat
 pattern VK_FORMAT_R64_UINT = VkFormat 110
 
--- | 
+-- | @VK_FORMAT_R64_SINT@ specifies a one-component, 64-bit signed integer
+-- format that has a single 64-bit R component.
 pattern VK_FORMAT_R64_SINT :: VkFormat
 pattern VK_FORMAT_R64_SINT = VkFormat 111
 
--- | 
+-- | @VK_FORMAT_R64_SFLOAT@ specifies a one-component, 64-bit signed
+-- floating-point format that has a single 64-bit R component.
 pattern VK_FORMAT_R64_SFLOAT :: VkFormat
 pattern VK_FORMAT_R64_SFLOAT = VkFormat 112
 
--- | 
+-- | @VK_FORMAT_R64G64_UINT@ specifies a two-component, 128-bit unsigned
+-- integer format that has a 64-bit R component in bytes 0..7, and a 64-bit
+-- G component in bytes 8..15.
 pattern VK_FORMAT_R64G64_UINT :: VkFormat
 pattern VK_FORMAT_R64G64_UINT = VkFormat 113
 
--- | 
+-- | @VK_FORMAT_R64G64_SINT@ specifies a two-component, 128-bit signed
+-- integer format that has a 64-bit R component in bytes 0..7, and a 64-bit
+-- G component in bytes 8..15.
 pattern VK_FORMAT_R64G64_SINT :: VkFormat
 pattern VK_FORMAT_R64G64_SINT = VkFormat 114
 
--- | 
+-- | @VK_FORMAT_R64G64_SFLOAT@ specifies a two-component, 128-bit signed
+-- floating-point format that has a 64-bit R component in bytes 0..7, and a
+-- 64-bit G component in bytes 8..15.
 pattern VK_FORMAT_R64G64_SFLOAT :: VkFormat
 pattern VK_FORMAT_R64G64_SFLOAT = VkFormat 115
 
--- | 
+-- | @VK_FORMAT_R64G64B64_UINT@ specifies a three-component, 192-bit unsigned
+-- integer format that has a 64-bit R component in bytes 0..7, a 64-bit G
+-- component in bytes 8..15, and a 64-bit B component in bytes 16..23.
 pattern VK_FORMAT_R64G64B64_UINT :: VkFormat
 pattern VK_FORMAT_R64G64B64_UINT = VkFormat 116
 
--- | 
+-- | @VK_FORMAT_R64G64B64_SINT@ specifies a three-component, 192-bit signed
+-- integer format that has a 64-bit R component in bytes 0..7, a 64-bit G
+-- component in bytes 8..15, and a 64-bit B component in bytes 16..23.
 pattern VK_FORMAT_R64G64B64_SINT :: VkFormat
 pattern VK_FORMAT_R64G64B64_SINT = VkFormat 117
 
--- | 
+-- | @VK_FORMAT_R64G64B64_SFLOAT@ specifies a three-component, 192-bit signed
+-- floating-point format that has a 64-bit R component in bytes 0..7, a
+-- 64-bit G component in bytes 8..15, and a 64-bit B component in bytes
+-- 16..23.
 pattern VK_FORMAT_R64G64B64_SFLOAT :: VkFormat
 pattern VK_FORMAT_R64G64B64_SFLOAT = VkFormat 118
 
--- | 
+-- | @VK_FORMAT_R64G64B64A64_UINT@ specifies a four-component, 256-bit
+-- unsigned integer format that has a 64-bit R component in bytes 0..7, a
+-- 64-bit G component in bytes 8..15, a 64-bit B component in bytes 16..23,
+-- and a 64-bit A component in bytes 24..31.
 pattern VK_FORMAT_R64G64B64A64_UINT :: VkFormat
 pattern VK_FORMAT_R64G64B64A64_UINT = VkFormat 119
 
--- | 
+-- | @VK_FORMAT_R64G64B64A64_SINT@ specifies a four-component, 256-bit signed
+-- integer format that has a 64-bit R component in bytes 0..7, a 64-bit G
+-- component in bytes 8..15, a 64-bit B component in bytes 16..23, and a
+-- 64-bit A component in bytes 24..31.
 pattern VK_FORMAT_R64G64B64A64_SINT :: VkFormat
 pattern VK_FORMAT_R64G64B64A64_SINT = VkFormat 120
 
--- | 
+-- | @VK_FORMAT_R64G64B64A64_SFLOAT@ specifies a four-component, 256-bit
+-- signed floating-point format that has a 64-bit R component in bytes
+-- 0..7, a 64-bit G component in bytes 8..15, a 64-bit B component in bytes
+-- 16..23, and a 64-bit A component in bytes 24..31.
 pattern VK_FORMAT_R64G64B64A64_SFLOAT :: VkFormat
 pattern VK_FORMAT_R64G64B64A64_SFLOAT = VkFormat 121
 
--- | 
+-- | @VK_FORMAT_B10G11R11_UFLOAT_PACK32@ specifies a three-component, 32-bit
+-- packed unsigned floating-point format that has a 10-bit B component in
+-- bits 22..31, an 11-bit G component in bits 11..21, an 11-bit R component
+-- in bits 0..10. See
+-- <{html_spec_relative}#fundamentals-fp10 {html_spec_relative}#fundamentals-fp10>
+-- and
+-- <{html_spec_relative}#fundamentals-fp11 {html_spec_relative}#fundamentals-fp11>.
 pattern VK_FORMAT_B10G11R11_UFLOAT_PACK32 :: VkFormat
 pattern VK_FORMAT_B10G11R11_UFLOAT_PACK32 = VkFormat 122
 
--- | 
+-- | @VK_FORMAT_E5B9G9R9_UFLOAT_PACK32@ specifies a three-component, 32-bit
+-- packed unsigned floating-point format that has a 5-bit shared exponent
+-- in bits 27..31, a 9-bit B component mantissa in bits 18..26, a 9-bit G
+-- component mantissa in bits 9..17, and a 9-bit R component mantissa in
+-- bits 0..8.
 pattern VK_FORMAT_E5B9G9R9_UFLOAT_PACK32 :: VkFormat
 pattern VK_FORMAT_E5B9G9R9_UFLOAT_PACK32 = VkFormat 123
 
--- | 
+-- | @VK_FORMAT_D16_UNORM@ specifies a one-component, 16-bit unsigned
+-- normalized format that has a single 16-bit depth component.
 pattern VK_FORMAT_D16_UNORM :: VkFormat
 pattern VK_FORMAT_D16_UNORM = VkFormat 124
 
--- | 
+-- | @VK_FORMAT_X8_D24_UNORM_PACK32@ specifies a two-component, 32-bit format
+-- that has 24 unsigned normalized bits in the depth component and,
+-- optionally:, 8 bits that are unused.
 pattern VK_FORMAT_X8_D24_UNORM_PACK32 :: VkFormat
 pattern VK_FORMAT_X8_D24_UNORM_PACK32 = VkFormat 125
 
--- | 
+-- | @VK_FORMAT_D32_SFLOAT@ specifies a one-component, 32-bit signed
+-- floating-point format that has 32-bits in the depth component.
 pattern VK_FORMAT_D32_SFLOAT :: VkFormat
 pattern VK_FORMAT_D32_SFLOAT = VkFormat 126
 
--- | 
+-- | @VK_FORMAT_S8_UINT@ specifies a one-component, 8-bit unsigned integer
+-- format that has 8-bits in the stencil component.
 pattern VK_FORMAT_S8_UINT :: VkFormat
 pattern VK_FORMAT_S8_UINT = VkFormat 127
 
--- | 
+-- | @VK_FORMAT_D16_UNORM_S8_UINT@ specifies a two-component, 24-bit format
+-- that has 16 unsigned normalized bits in the depth component and 8
+-- unsigned integer bits in the stencil component.
 pattern VK_FORMAT_D16_UNORM_S8_UINT :: VkFormat
 pattern VK_FORMAT_D16_UNORM_S8_UINT = VkFormat 128
 
--- | 
+-- | @VK_FORMAT_D24_UNORM_S8_UINT@ specifies a two-component, 32-bit packed
+-- format that has 8 unsigned integer bits in the stencil component, and 24
+-- unsigned normalized bits in the depth component.
 pattern VK_FORMAT_D24_UNORM_S8_UINT :: VkFormat
 pattern VK_FORMAT_D24_UNORM_S8_UINT = VkFormat 129
 
--- | 
+-- | @VK_FORMAT_D32_SFLOAT_S8_UINT@ specifies a two-component format that has
+-- 32 signed float bits in the depth component and 8 unsigned integer bits
+-- in the stencil component. There are optionally: 24-bits that are unused.
 pattern VK_FORMAT_D32_SFLOAT_S8_UINT :: VkFormat
 pattern VK_FORMAT_D32_SFLOAT_S8_UINT = VkFormat 130
 
--- | 
+-- | @VK_FORMAT_BC1_RGB_UNORM_BLOCK@ specifies a three-component,
+-- block-compressed format where each 64-bit compressed texel block encodes
+-- a 4×4 rectangle of unsigned normalized RGB texel data. This format has
+-- no alpha and is considered opaque.
 pattern VK_FORMAT_BC1_RGB_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_BC1_RGB_UNORM_BLOCK = VkFormat 131
 
--- | 
+-- | @VK_FORMAT_BC1_RGB_SRGB_BLOCK@ specifies a three-component,
+-- block-compressed format where each 64-bit compressed texel block encodes
+-- a 4×4 rectangle of unsigned normalized RGB texel data with sRGB
+-- nonlinear encoding. This format has no alpha and is considered opaque.
 pattern VK_FORMAT_BC1_RGB_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_BC1_RGB_SRGB_BLOCK = VkFormat 132
 
--- | 
+-- | @VK_FORMAT_BC1_RGBA_UNORM_BLOCK@ specifies a four-component,
+-- block-compressed format where each 64-bit compressed texel block encodes
+-- a 4×4 rectangle of unsigned normalized RGB texel data, and provides 1
+-- bit of alpha.
 pattern VK_FORMAT_BC1_RGBA_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_BC1_RGBA_UNORM_BLOCK = VkFormat 133
 
--- | 
+-- | @VK_FORMAT_BC1_RGBA_SRGB_BLOCK@ specifies a four-component,
+-- block-compressed format where each 64-bit compressed texel block encodes
+-- a 4×4 rectangle of unsigned normalized RGB texel data with sRGB
+-- nonlinear encoding, and provides 1 bit of alpha.
 pattern VK_FORMAT_BC1_RGBA_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_BC1_RGBA_SRGB_BLOCK = VkFormat 134
 
--- | 
+-- | @VK_FORMAT_BC2_UNORM_BLOCK@ specifies a four-component, block-compressed
+-- format where each 128-bit compressed texel block encodes a 4×4 rectangle
+-- of unsigned normalized RGBA texel data with the first 64 bits encoding
+-- alpha values followed by 64 bits encoding RGB values.
 pattern VK_FORMAT_BC2_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_BC2_UNORM_BLOCK = VkFormat 135
 
--- | 
+-- | @VK_FORMAT_BC2_SRGB_BLOCK@ specifies a four-component, block-compressed
+-- format where each 128-bit compressed texel block encodes a 4×4 rectangle
+-- of unsigned normalized RGBA texel data with the first 64 bits encoding
+-- alpha values followed by 64 bits encoding RGB values with sRGB nonlinear
+-- encoding.
 pattern VK_FORMAT_BC2_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_BC2_SRGB_BLOCK = VkFormat 136
 
--- | 
+-- | @VK_FORMAT_BC3_UNORM_BLOCK@ specifies a four-component, block-compressed
+-- format where each 128-bit compressed texel block encodes a 4×4 rectangle
+-- of unsigned normalized RGBA texel data with the first 64 bits encoding
+-- alpha values followed by 64 bits encoding RGB values.
 pattern VK_FORMAT_BC3_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_BC3_UNORM_BLOCK = VkFormat 137
 
--- | 
+-- | @VK_FORMAT_BC3_SRGB_BLOCK@ specifies a four-component, block-compressed
+-- format where each 128-bit compressed texel block encodes a 4×4 rectangle
+-- of unsigned normalized RGBA texel data with the first 64 bits encoding
+-- alpha values followed by 64 bits encoding RGB values with sRGB nonlinear
+-- encoding.
 pattern VK_FORMAT_BC3_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_BC3_SRGB_BLOCK = VkFormat 138
 
--- | 
+-- | @VK_FORMAT_BC4_UNORM_BLOCK@ specifies a one-component, block-compressed
+-- format where each 64-bit compressed texel block encodes a 4×4 rectangle
+-- of unsigned normalized red texel data.
 pattern VK_FORMAT_BC4_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_BC4_UNORM_BLOCK = VkFormat 139
 
--- | 
+-- | @VK_FORMAT_BC4_SNORM_BLOCK@ specifies a one-component, block-compressed
+-- format where each 64-bit compressed texel block encodes a 4×4 rectangle
+-- of signed normalized red texel data.
 pattern VK_FORMAT_BC4_SNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_BC4_SNORM_BLOCK = VkFormat 140
 
--- | 
+-- | @VK_FORMAT_BC5_UNORM_BLOCK@ specifies a two-component, block-compressed
+-- format where each 128-bit compressed texel block encodes a 4×4 rectangle
+-- of unsigned normalized RG texel data with the first 64 bits encoding red
+-- values followed by 64 bits encoding green values.
 pattern VK_FORMAT_BC5_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_BC5_UNORM_BLOCK = VkFormat 141
 
--- | 
+-- | @VK_FORMAT_BC5_SNORM_BLOCK@ specifies a two-component, block-compressed
+-- format where each 128-bit compressed texel block encodes a 4×4 rectangle
+-- of signed normalized RG texel data with the first 64 bits encoding red
+-- values followed by 64 bits encoding green values.
 pattern VK_FORMAT_BC5_SNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_BC5_SNORM_BLOCK = VkFormat 142
 
--- | 
+-- | @VK_FORMAT_BC6H_UFLOAT_BLOCK@ specifies a three-component,
+-- block-compressed format where each 128-bit compressed texel block
+-- encodes a 4×4 rectangle of unsigned floating-point RGB texel data.
 pattern VK_FORMAT_BC6H_UFLOAT_BLOCK :: VkFormat
 pattern VK_FORMAT_BC6H_UFLOAT_BLOCK = VkFormat 143
 
--- | 
+-- | @VK_FORMAT_BC6H_SFLOAT_BLOCK@ specifies a three-component,
+-- block-compressed format where each 128-bit compressed texel block
+-- encodes a 4×4 rectangle of signed floating-point RGB texel data.
 pattern VK_FORMAT_BC6H_SFLOAT_BLOCK :: VkFormat
 pattern VK_FORMAT_BC6H_SFLOAT_BLOCK = VkFormat 144
 
--- | 
+-- | @VK_FORMAT_BC7_UNORM_BLOCK@ specifies a four-component, block-compressed
+-- format where each 128-bit compressed texel block encodes a 4×4 rectangle
+-- of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_BC7_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_BC7_UNORM_BLOCK = VkFormat 145
 
--- | 
+-- | @VK_FORMAT_BC7_SRGB_BLOCK@ specifies a four-component, block-compressed
+-- format where each 128-bit compressed texel block encodes a 4×4 rectangle
+-- of unsigned normalized RGBA texel data with sRGB nonlinear encoding
+-- applied to the RGB components.
 pattern VK_FORMAT_BC7_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_BC7_SRGB_BLOCK = VkFormat 146
 
--- | 
+-- | @VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK@ specifies a three-component, ETC2
+-- compressed format where each 64-bit compressed texel block encodes a 4×4
+-- rectangle of unsigned normalized RGB texel data. This format has no
+-- alpha and is considered opaque.
 pattern VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK = VkFormat 147
 
--- | 
+-- | @VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK@ specifies a three-component, ETC2
+-- compressed format where each 64-bit compressed texel block encodes a 4×4
+-- rectangle of unsigned normalized RGB texel data with sRGB nonlinear
+-- encoding. This format has no alpha and is considered opaque.
 pattern VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK = VkFormat 148
 
--- | 
+-- | @VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK@ specifies a four-component, ETC2
+-- compressed format where each 64-bit compressed texel block encodes a 4×4
+-- rectangle of unsigned normalized RGB texel data, and provides 1 bit of
+-- alpha.
 pattern VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK = VkFormat 149
 
--- | 
+-- | @VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK@ specifies a four-component, ETC2
+-- compressed format where each 64-bit compressed texel block encodes a 4×4
+-- rectangle of unsigned normalized RGB texel data with sRGB nonlinear
+-- encoding, and provides 1 bit of alpha.
 pattern VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK = VkFormat 150
 
--- | 
+-- | @VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK@ specifies a four-component, ETC2
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 4×4 rectangle of unsigned normalized RGBA texel data with the first 64
+-- bits encoding alpha values followed by 64 bits encoding RGB values.
 pattern VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK = VkFormat 151
 
--- | 
+-- | @VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK@ specifies a four-component, ETC2
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 4×4 rectangle of unsigned normalized RGBA texel data with the first 64
+-- bits encoding alpha values followed by 64 bits encoding RGB values with
+-- sRGB nonlinear encoding applied.
 pattern VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK = VkFormat 152
 
--- | 
+-- | @VK_FORMAT_EAC_R11_UNORM_BLOCK@ specifies a one-component, ETC2
+-- compressed format where each 64-bit compressed texel block encodes a 4×4
+-- rectangle of unsigned normalized red texel data.
 pattern VK_FORMAT_EAC_R11_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_EAC_R11_UNORM_BLOCK = VkFormat 153
 
--- | 
+-- | @VK_FORMAT_EAC_R11_SNORM_BLOCK@ specifies a one-component, ETC2
+-- compressed format where each 64-bit compressed texel block encodes a 4×4
+-- rectangle of signed normalized red texel data.
 pattern VK_FORMAT_EAC_R11_SNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_EAC_R11_SNORM_BLOCK = VkFormat 154
 
--- | 
+-- | @VK_FORMAT_EAC_R11G11_UNORM_BLOCK@ specifies a two-component, ETC2
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 4×4 rectangle of unsigned normalized RG texel data with the first 64
+-- bits encoding red values followed by 64 bits encoding green values.
 pattern VK_FORMAT_EAC_R11G11_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_EAC_R11G11_UNORM_BLOCK = VkFormat 155
 
--- | 
+-- | @VK_FORMAT_EAC_R11G11_SNORM_BLOCK@ specifies a two-component, ETC2
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 4×4 rectangle of signed normalized RG texel data with the first 64 bits
+-- encoding red values followed by 64 bits encoding green values.
 pattern VK_FORMAT_EAC_R11G11_SNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_EAC_R11G11_SNORM_BLOCK = VkFormat 156
 
--- | 
+-- | @VK_FORMAT_ASTC_4x4_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 4×4 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_4x4_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_4x4_UNORM_BLOCK = VkFormat 157
 
--- | 
+-- | @VK_FORMAT_ASTC_4x4_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 4×4 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
+-- encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_4x4_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_4x4_SRGB_BLOCK = VkFormat 158
 
--- | 
+-- | @VK_FORMAT_ASTC_5x4_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 5×4 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_5x4_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_5x4_UNORM_BLOCK = VkFormat 159
 
--- | 
+-- | @VK_FORMAT_ASTC_5x4_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 5×4 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
+-- encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_5x4_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_5x4_SRGB_BLOCK = VkFormat 160
 
--- | 
+-- | @VK_FORMAT_ASTC_5x5_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 5×5 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_5x5_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_5x5_UNORM_BLOCK = VkFormat 161
 
--- | 
+-- | @VK_FORMAT_ASTC_5x5_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 5×5 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
+-- encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_5x5_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_5x5_SRGB_BLOCK = VkFormat 162
 
--- | 
+-- | @VK_FORMAT_ASTC_6x5_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 6×5 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_6x5_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_6x5_UNORM_BLOCK = VkFormat 163
 
--- | 
+-- | @VK_FORMAT_ASTC_6x5_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 6×5 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
+-- encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_6x5_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_6x5_SRGB_BLOCK = VkFormat 164
 
--- | 
+-- | @VK_FORMAT_ASTC_6x6_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 6×6 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_6x6_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_6x6_UNORM_BLOCK = VkFormat 165
 
--- | 
+-- | @VK_FORMAT_ASTC_6x6_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 6×6 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
+-- encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_6x6_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_6x6_SRGB_BLOCK = VkFormat 166
 
--- | 
+-- | @VK_FORMAT_ASTC_8x5_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes an
+-- 8×5 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_8x5_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_8x5_UNORM_BLOCK = VkFormat 167
 
--- | 
+-- | @VK_FORMAT_ASTC_8x5_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes an
+-- 8×5 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
+-- encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_8x5_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_8x5_SRGB_BLOCK = VkFormat 168
 
--- | 
+-- | @VK_FORMAT_ASTC_8x6_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes an
+-- 8×6 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_8x6_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_8x6_UNORM_BLOCK = VkFormat 169
 
--- | 
+-- | @VK_FORMAT_ASTC_8x6_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes an
+-- 8×6 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
+-- encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_8x6_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_8x6_SRGB_BLOCK = VkFormat 170
 
--- | 
+-- | @VK_FORMAT_ASTC_8x8_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes an
+-- 8×8 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_8x8_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_8x8_UNORM_BLOCK = VkFormat 171
 
--- | 
+-- | @VK_FORMAT_ASTC_8x8_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes an
+-- 8×8 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear
+-- encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_8x8_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_8x8_SRGB_BLOCK = VkFormat 172
 
--- | 
+-- | @VK_FORMAT_ASTC_10x5_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×5 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_10x5_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_10x5_UNORM_BLOCK = VkFormat 173
 
--- | 
+-- | @VK_FORMAT_ASTC_10x5_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×5 rectangle of unsigned normalized RGBA texel data with sRGB
+-- nonlinear encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_10x5_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_10x5_SRGB_BLOCK = VkFormat 174
 
--- | 
+-- | @VK_FORMAT_ASTC_10x6_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×6 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_10x6_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_10x6_UNORM_BLOCK = VkFormat 175
 
--- | 
+-- | @VK_FORMAT_ASTC_10x6_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×6 rectangle of unsigned normalized RGBA texel data with sRGB
+-- nonlinear encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_10x6_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_10x6_SRGB_BLOCK = VkFormat 176
 
--- | 
+-- | @VK_FORMAT_ASTC_10x8_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×8 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_10x8_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_10x8_UNORM_BLOCK = VkFormat 177
 
--- | 
+-- | @VK_FORMAT_ASTC_10x8_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×8 rectangle of unsigned normalized RGBA texel data with sRGB
+-- nonlinear encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_10x8_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_10x8_SRGB_BLOCK = VkFormat 178
 
--- | 
+-- | @VK_FORMAT_ASTC_10x10_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×10 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_10x10_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_10x10_UNORM_BLOCK = VkFormat 179
 
--- | 
+-- | @VK_FORMAT_ASTC_10x10_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 10×10 rectangle of unsigned normalized RGBA texel data with sRGB
+-- nonlinear encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_10x10_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_10x10_SRGB_BLOCK = VkFormat 180
 
--- | 
+-- | @VK_FORMAT_ASTC_12x10_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 12×10 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_12x10_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_12x10_UNORM_BLOCK = VkFormat 181
 
--- | 
+-- | @VK_FORMAT_ASTC_12x10_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 12×10 rectangle of unsigned normalized RGBA texel data with sRGB
+-- nonlinear encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_12x10_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_12x10_SRGB_BLOCK = VkFormat 182
 
--- | 
+-- | @VK_FORMAT_ASTC_12x12_UNORM_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 12×12 rectangle of unsigned normalized RGBA texel data.
 pattern VK_FORMAT_ASTC_12x12_UNORM_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_12x12_UNORM_BLOCK = VkFormat 183
 
--- | 
+-- | @VK_FORMAT_ASTC_12x12_SRGB_BLOCK@ specifies a four-component, ASTC
+-- compressed format where each 128-bit compressed texel block encodes a
+-- 12×12 rectangle of unsigned normalized RGBA texel data with sRGB
+-- nonlinear encoding applied to the RGB components.
 pattern VK_FORMAT_ASTC_12x12_SRGB_BLOCK :: VkFormat
 pattern VK_FORMAT_ASTC_12x12_SRGB_BLOCK = VkFormat 184
 -- ** VkResult
 
--- | API result codes
+-- | VkResult - Vulkan command return codes
+--
+-- = Description
+-- #_description#
+--
+-- -   @VK_SUCCESS@ Command successfully completed
+--
+-- -   @VK_NOT_READY@ A fence or query has not yet completed
+--
+-- -   @VK_TIMEOUT@ A wait operation has not completed in the specified
+--     time
+--
+-- -   @VK_EVENT_SET@ An event is signaled
+--
+-- -   @VK_EVENT_RESET@ An event is unsignaled
+--
+-- -   @VK_INCOMPLETE@ A return array was too small for the result
+--
+-- -   @VK_ERROR_OUT_OF_HOST_MEMORY@ A host memory allocation has failed.
+--
+-- -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@ A device memory allocation has
+--     failed.
+--
+-- -   @VK_ERROR_INITIALIZATION_FAILED@ Initialization of an object could
+--     not be completed for implementation-specific reasons.
+--
+-- -   @VK_ERROR_DEVICE_LOST@ The logical or physical device has been lost.
+--     See <{html_spec_relative}#devsandqueues-lost-device Lost Device>
+--
+-- -   @VK_ERROR_MEMORY_MAP_FAILED@ Mapping of a memory object has failed.
+--
+-- -   @VK_ERROR_LAYER_NOT_PRESENT@ A requested layer is not present or
+--     could not be loaded.
+--
+-- -   @VK_ERROR_EXTENSION_NOT_PRESENT@ A requested extension is not
+--     supported.
+--
+-- -   @VK_ERROR_FEATURE_NOT_PRESENT@ A requested feature is not supported.
+--
+-- -   @VK_ERROR_INCOMPATIBLE_DRIVER@ The requested version of Vulkan is
+--     not supported by the driver or is otherwise incompatible for
+--     implementation-specific reasons.
+--
+-- -   @VK_ERROR_TOO_MANY_OBJECTS@ Too many objects of the type have
+--     already been created.
+--
+-- -   @VK_ERROR_FORMAT_NOT_SUPPORTED@ A requested format is not supported
+--     on this device.
+--
+-- -   @VK_ERROR_FRAGMENTED_POOL@ A pool allocation has failed due to
+--     fragmentation of the pool’s memory. This /must/ only be returned if
+--     no attempt to allocate host or device memory was made to accomodate
+--     the new allocation.
+--
+-- If a command returns a run time error, unless otherwise specified any
+-- output parameters will have undefined contents, except that if the
+-- output parameter is a structure with @sType@ and @pNext@ fields, those
+-- fields will be unmodified. Any structures chained from @pNext@ will also
+-- have undefined contents, except that @sType@ and @pNext@ will be
+-- unmodified.
+--
+-- Out of memory errors do not damage any currently existing Vulkan
+-- objects. Objects that have already been successfully created /can/ still
+-- be used by the application.
+--
+-- Performance-critical commands generally do not have return codes. If a
+-- run time error occurs in such commands, the implementation will defer
+-- reporting the error until a specified point. For commands that record
+-- into command buffers (@vkCmd*@) run time errors are reported by
+-- @vkEndCommandBuffer@.
+--
+-- = See Also
+-- #_see_also#
+--
+-- No cross-references are available,
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'
 newtype VkResult = VkResult Int32
   deriving (Eq, Ord, Storable)
 
@@ -1642,80 +2257,332 @@ instance Read VkResult where
                         )
                     )
 
--- | Command completed successfully
+-- No documentation found for Nested "VkResult" "VK_SUCCESS"
 pattern VK_SUCCESS :: VkResult
 pattern VK_SUCCESS = VkResult 0
 
--- | A fence or query has not yet completed
+-- No documentation found for Nested "VkResult" "VK_NOT_READY"
 pattern VK_NOT_READY :: VkResult
 pattern VK_NOT_READY = VkResult 1
 
--- | A wait operation has not completed in the specified time
+-- No documentation found for Nested "VkResult" "VK_TIMEOUT"
 pattern VK_TIMEOUT :: VkResult
 pattern VK_TIMEOUT = VkResult 2
 
--- | An event is signaled
+-- No documentation found for Nested "VkResult" "VK_EVENT_SET"
 pattern VK_EVENT_SET :: VkResult
 pattern VK_EVENT_SET = VkResult 3
 
--- | An event is unsignaled
+-- No documentation found for Nested "VkResult" "VK_EVENT_RESET"
 pattern VK_EVENT_RESET :: VkResult
 pattern VK_EVENT_RESET = VkResult 4
 
--- | A return array was too small for the result
+-- No documentation found for Nested "VkResult" "VK_INCOMPLETE"
 pattern VK_INCOMPLETE :: VkResult
 pattern VK_INCOMPLETE = VkResult 5
 
--- | A host memory allocation has failed
+-- No documentation found for Nested "VkResult" "VK_ERROR_OUT_OF_HOST_MEMORY"
 pattern VK_ERROR_OUT_OF_HOST_MEMORY :: VkResult
 pattern VK_ERROR_OUT_OF_HOST_MEMORY = VkResult (-1)
 
--- | A device memory allocation has failed
+-- No documentation found for Nested "VkResult" "VK_ERROR_OUT_OF_DEVICE_MEMORY"
 pattern VK_ERROR_OUT_OF_DEVICE_MEMORY :: VkResult
 pattern VK_ERROR_OUT_OF_DEVICE_MEMORY = VkResult (-2)
 
--- | Initialization of a object has failed
+-- No documentation found for Nested "VkResult" "VK_ERROR_INITIALIZATION_FAILED"
 pattern VK_ERROR_INITIALIZATION_FAILED :: VkResult
 pattern VK_ERROR_INITIALIZATION_FAILED = VkResult (-3)
 
--- | The logical device has been lost. See <<devsandqueues-lost-device>>
+-- No documentation found for Nested "VkResult" "VK_ERROR_DEVICE_LOST"
 pattern VK_ERROR_DEVICE_LOST :: VkResult
 pattern VK_ERROR_DEVICE_LOST = VkResult (-4)
 
--- | Mapping of a memory object has failed
+-- No documentation found for Nested "VkResult" "VK_ERROR_MEMORY_MAP_FAILED"
 pattern VK_ERROR_MEMORY_MAP_FAILED :: VkResult
 pattern VK_ERROR_MEMORY_MAP_FAILED = VkResult (-5)
 
--- | Layer specified does not exist
+-- No documentation found for Nested "VkResult" "VK_ERROR_LAYER_NOT_PRESENT"
 pattern VK_ERROR_LAYER_NOT_PRESENT :: VkResult
 pattern VK_ERROR_LAYER_NOT_PRESENT = VkResult (-6)
 
--- | Extension specified does not exist
+-- No documentation found for Nested "VkResult" "VK_ERROR_EXTENSION_NOT_PRESENT"
 pattern VK_ERROR_EXTENSION_NOT_PRESENT :: VkResult
 pattern VK_ERROR_EXTENSION_NOT_PRESENT = VkResult (-7)
 
--- | Requested feature is not available on this device
+-- No documentation found for Nested "VkResult" "VK_ERROR_FEATURE_NOT_PRESENT"
 pattern VK_ERROR_FEATURE_NOT_PRESENT :: VkResult
 pattern VK_ERROR_FEATURE_NOT_PRESENT = VkResult (-8)
 
--- | Unable to find a Vulkan driver
+-- No documentation found for Nested "VkResult" "VK_ERROR_INCOMPATIBLE_DRIVER"
 pattern VK_ERROR_INCOMPATIBLE_DRIVER :: VkResult
 pattern VK_ERROR_INCOMPATIBLE_DRIVER = VkResult (-9)
 
--- | Too many objects of the type have already been created
+-- No documentation found for Nested "VkResult" "VK_ERROR_TOO_MANY_OBJECTS"
 pattern VK_ERROR_TOO_MANY_OBJECTS :: VkResult
 pattern VK_ERROR_TOO_MANY_OBJECTS = VkResult (-10)
 
--- | Requested format is not supported on this device
+-- No documentation found for Nested "VkResult" "VK_ERROR_FORMAT_NOT_SUPPORTED"
 pattern VK_ERROR_FORMAT_NOT_SUPPORTED :: VkResult
 pattern VK_ERROR_FORMAT_NOT_SUPPORTED = VkResult (-11)
 
--- | A requested pool allocation has failed due to fragmentation of the pool's memory
+-- No documentation found for Nested "VkResult" "VK_ERROR_FRAGMENTED_POOL"
 pattern VK_ERROR_FRAGMENTED_POOL :: VkResult
 pattern VK_ERROR_FRAGMENTED_POOL = VkResult (-12)
 -- ** VkStructureType
 
--- | Structure type enumerant
+-- | VkStructureType - Vulkan structure types (@stype@)
+--
+-- = Description
+-- #_description#
+--
+-- Each value corresponds to a particular structure with a @sType@ member
+-- with a matching name. As a general rule, the name of each
+-- @VkStructureType@ value is obtained by taking the name of the structure,
+-- stripping the leading @Vk@, prefixing each capital letter with @_@,
+-- converting the entire resulting string to upper case, and prefixing it
+-- with @VK_STRUCTURE_TYPE_@. For example, structures of type
+-- @VkImageCreateInfo@ correspond to a @VkStructureType@ of
+-- @VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO@, and thus its @sType@ member
+-- /must/ equal that when it is passed to the API.
+--
+-- The values @VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO@ and
+-- @VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO@ are reserved for internal
+-- use by the loader, and do not have corresponding Vulkan structures in
+-- this Specification.
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkAcquireNextImageInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
+-- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferPropertiesANDROID',
+-- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferUsageANDROID',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_android_surface.VkAndroidSurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkApplicationInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindBufferMemoryDeviceGroupInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindBufferMemoryInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindImageMemoryInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkBindImageMemorySwapchainInfoKHR',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo',
+-- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.VkBindSparseInfo',
+-- 'Graphics.Vulkan.Core10.Buffer.VkBufferCreateInfo',
+-- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkBufferMemoryBarrier',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkBufferMemoryRequirementsInfo2',
+-- 'Graphics.Vulkan.Core10.BufferView.VkBufferViewCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkCmdProcessCommandsInfoNVX',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkCmdReserveSpaceForCommandsInfoNVX',
+-- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferAllocateInfo',
+-- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferBeginInfo',
+-- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
+-- 'Graphics.Vulkan.Core10.CommandPool.VkCommandPoolCreateInfo',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkComputePipelineCreateInfo',
+-- 'Graphics.Vulkan.Core10.DescriptorSet.VkCopyDescriptorSet',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32.VkD3D12FenceSubmitInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectNameInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectTagInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_report.VkDebugReportCallbackCreateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.VkDebugUtilsLabelEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.VkDebugUtilsMessengerCallbackDataEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.VkDebugUtilsMessengerCreateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectNameInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectTagInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationImageCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV',
+-- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorPoolCreateInfo',
+-- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSetAllocateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetLayoutBindingFlagsCreateInfoEXT',
+-- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3.VkDescriptorSetLayoutSupport',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetVariableDescriptorCountAllocateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetVariableDescriptorCountLayoutSupportEXT',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo',
+-- 'Graphics.Vulkan.Core10.Device.VkDeviceCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_display_control.VkDeviceEventInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkDeviceGeneratedCommandsFeaturesNVX',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkDeviceGeneratedCommandsLimitsNVX',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupBindSparseInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupCommandBufferBeginInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_creation.VkDeviceGroupDeviceCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentCapabilitiesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentInfoKHR',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupRenderPassBeginInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupSubmitInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkDeviceGroupSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.Core10.Device.VkDeviceQueueCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_global_priority.VkDeviceQueueGlobalPriorityCreateInfoEXT',
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory.VkDeviceQueueInfo2',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_display_control.VkDisplayEventInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayModeCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_display_control.VkDisplayPowerInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_display_swapchain.VkDisplayPresentInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplaySurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Core10.Event.VkEventCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence.VkExportFenceCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32.VkExportFenceWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkExportMemoryWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.VkExportMemoryWin32HandleInfoNV',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore.VkExportSemaphoreCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32.VkExportSemaphoreWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties',
+-- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkExternalFormatANDROID',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalImageFormatProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreProperties',
+-- 'Graphics.Vulkan.Core10.Fence.VkFenceCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd.VkFenceGetFdInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32.VkFenceGetWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkFormatProperties2',
+-- 'Graphics.Vulkan.Core10.Pass.VkFramebufferCreateInfo',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkGraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_hdr_metadata.VkHdrMetadataEXT',
+-- 'Graphics.Vulkan.Extensions.VK_MVK_ios_surface.VkIOSSurfaceCreateInfoMVK',
+-- 'Graphics.Vulkan.Core10.Image.VkImageCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkImageFormatProperties2',
+-- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkImageMemoryBarrier',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageSparseMemoryRequirementsInfo2',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkImageSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.Core10.ImageView.VkImageViewCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2.VkImageViewUsageCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkImportAndroidHardwareBufferInfoANDROID',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.VkImportMemoryFdInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.VkImportMemoryHostPointerInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsLayoutCreateInfoNVX',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstanceCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_MVK_macos_surface.VkMacOSSurfaceCreateInfoMVK',
+-- 'Graphics.Vulkan.Core10.Memory.VkMappedMemoryRange',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group.VkMemoryAllocateFlagsInfo',
+-- 'Graphics.Vulkan.Core10.Memory.VkMemoryAllocateInfo',
+-- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkMemoryBarrier',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedRequirements',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.VkMemoryFdPropertiesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkMemoryGetAndroidHardwareBufferInfoANDROID',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.VkMemoryGetFdInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkMemoryGetWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.VkMemoryHostPointerPropertiesEXT',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkMemoryRequirements2',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkMemoryWin32HandlePropertiesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_mir_surface.VkMirSurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkMultisamplePropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkObjectTableCreateInfoNVX',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_16bit_storage.VkPhysicalDevice16BitStorageFeatures',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization.VkPhysicalDeviceConservativeRasterizationPropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles.VkPhysicalDeviceDiscardRectanglePropertiesEXT',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkPhysicalDeviceExternalFenceInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.VkPhysicalDeviceExternalMemoryHostPropertiesEXT',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkPhysicalDeviceExternalSemaphoreInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_creation.VkPhysicalDeviceGroupProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceIDProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3.VkPhysicalDeviceMaintenance3Properties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceMemoryProperties2',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewFeatures',
+-- 'Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes.VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2.VkPhysicalDevicePointClippingProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory.VkPhysicalDeviceProtectedMemoryFeatures',
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory.VkPhysicalDeviceProtectedMemoryProperties',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_push_descriptor.VkPhysicalDevicePushDescriptorPropertiesKHR',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax.VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkPhysicalDeviceSamplerYcbcrConversionFeatures',
+-- 'Graphics.Vulkan.Extensions.VK_AMD_shader_core_properties.VkPhysicalDeviceShaderCorePropertiesAMD',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_shader_draw_parameters.VkPhysicalDeviceShaderDrawParameterFeatures',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_variable_pointers.VkPhysicalDeviceVariablePointerFeatures',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT',
+-- 'Graphics.Vulkan.Core10.PipelineCache.VkPipelineCacheCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPipelineColorBlendAdvancedStateCreateInfoEXT',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineColorBlendStateCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_framebuffer_mixed_samples.VkPipelineCoverageModulationStateCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_fragment_coverage_to_color.VkPipelineCoverageToColorStateCreateInfoNV',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineDepthStencilStateCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateInfoEXT',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineDynamicStateCreateInfo',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineInputAssemblyStateCreateInfo',
+-- 'Graphics.Vulkan.Core10.PipelineLayout.VkPipelineLayoutCreateInfo',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineMultisampleStateCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateInfoEXT',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineRasterizationStateCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_AMD_rasterization_order.VkPipelineRasterizationStateRasterizationOrderAMD',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineShaderStageCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2.VkPipelineTessellationDomainOriginStateCreateInfo',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineTessellationStateCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_vertex_attribute_divisor.VkPipelineVertexInputDivisorStateCreateInfoEXT',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineVertexInputStateCreateInfo',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineViewportStateCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle.VkPipelineViewportSwizzleStateCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling.VkPipelineViewportWScalingStateCreateInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkPresentInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_incremental_present.VkPresentRegionsKHR',
+-- 'Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing.VkPresentTimesInfoGOOGLE',
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory.VkProtectedSubmitInfo',
+-- 'Graphics.Vulkan.Core10.Query.VkQueryPoolCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkQueueFamilyProperties2',
+-- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkRenderPassBeginInfo',
+-- 'Graphics.Vulkan.Core10.Pass.VkRenderPassCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2.VkRenderPassInputAttachmentAspectCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_multiview.VkRenderPassMultiviewCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkRenderPassSampleLocationsBeginInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT',
+-- 'Graphics.Vulkan.Core10.Sampler.VkSamplerCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeCreateInfoEXT',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionImageFormatProperties',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo',
+-- 'Graphics.Vulkan.Core10.QueueSemaphore.VkSemaphoreCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd.VkSemaphoreGetFdInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32.VkSemaphoreGetWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.Core10.Shader.VkShaderModuleCreateInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_validation_cache.VkShaderModuleValidationCacheCreateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkSparseImageFormatProperties2',
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkSparseImageMemoryRequirements2',
+-- 'Graphics.Vulkan.Core10.Queue.VkSubmitInfo',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceCapabilities2KHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceFormat2KHR',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_display_control.VkSwapchainCounterCreateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_AMD_texture_gather_bias_lod.VkTextureLODGatherFormatPropertiesAMD',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_validation_cache.VkValidationCacheCreateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_validation_flags.VkValidationFlagsEXT',
+-- 'Graphics.Vulkan.Extensions.VK_NN_vi_surface.VkViSurfaceCreateInfoNN',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_wayland_surface.VkWaylandSurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoNV',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_win32_surface.VkWin32SurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Core10.DescriptorSet.VkWriteDescriptorSet',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_xcb_surface.VkXcbSurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_xlib_surface.VkXlibSurfaceCreateInfoKHR'
 newtype VkStructureType = VkStructureType Int32
   deriving (Eq, Ord, Storable)
 
@@ -2205,204 +3072,303 @@ instance Read VkStructureType where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_APPLICATION_INFO"
 pattern VK_STRUCTURE_TYPE_APPLICATION_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_APPLICATION_INFO = VkStructureType 0
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO = VkStructureType 1
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO = VkStructureType 2
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO = VkStructureType 3
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBMIT_INFO"
 pattern VK_STRUCTURE_TYPE_SUBMIT_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SUBMIT_INFO = VkStructureType 4
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO"
 pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO = VkStructureType 5
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE"
 pattern VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE = VkStructureType 6
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_SPARSE_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_SPARSE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_SPARSE_INFO = VkStructureType 7
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FENCE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_FENCE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_FENCE_CREATE_INFO = VkStructureType 8
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO = VkStructureType 9
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EVENT_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_EVENT_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EVENT_CREATE_INFO = VkStructureType 10
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO = VkStructureType 11
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO = VkStructureType 12
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO = VkStructureType 13
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO = VkStructureType 14
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO = VkStructureType 15
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO = VkStructureType 16
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO = VkStructureType 17
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO = VkStructureType 18
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO = VkStructureType 19
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO = VkStructureType 20
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO = VkStructureType 21
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO = VkStructureType 22
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO = VkStructureType 23
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO = VkStructureType 24
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO = VkStructureType 25
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO = VkStructureType 26
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO = VkStructureType 27
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO = VkStructureType 28
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO = VkStructureType 29
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO = VkStructureType 30
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO = VkStructureType 31
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO = VkStructureType 32
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO = VkStructureType 33
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO"
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO = VkStructureType 34
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET"
 pattern VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET :: VkStructureType
 pattern VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET = VkStructureType 35
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET"
 pattern VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET :: VkStructureType
 pattern VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET = VkStructureType 36
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO = VkStructureType 37
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO = VkStructureType 38
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO = VkStructureType 39
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO"
 pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO = VkStructureType 40
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO"
 pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO = VkStructureType 41
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO"
 pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO = VkStructureType 42
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO"
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO = VkStructureType 43
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER"
 pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER = VkStructureType 44
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER"
 pattern VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER = VkStructureType 45
 
--- | 
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_BARRIER"
 pattern VK_STRUCTURE_TYPE_MEMORY_BARRIER :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_BARRIER = VkStructureType 46
 
--- | Reserved for internal use by the loader, layers, and ICDs
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = VkStructureType 47
 
--- | Reserved for internal use by the loader, layers, and ICDs
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = VkStructureType 48
 -- ** VkObjectType
 
--- | Enums to track objects of various types
+-- | VkObjectType - Specify an enumeration to track object handle types
+--
+-- = Description
+-- #_description#
+--
+-- > +------------------------------------------+---------------------------+
+-- > | 'VkObjectType'                           | Vulkan Handle Type        |
+-- > +==========================================+===========================+
+-- > | @VK_OBJECT_TYPE_UNKNOWN@                 | Unknown\/Undefined Handle |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_INSTANCE@                | 'Graphics.Vulkan.Core10.D |
+-- > |                                          | eviceInitialization.VkIns |
+-- > |                                          | tance'                    |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_PHYSICAL_DEVICE@         | 'Graphics.Vulkan.Core10.D |
+-- > |                                          | eviceInitialization.VkPhy |
+-- > |                                          | sicalDevice'              |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_DEVICE@                  | 'Graphics.Vulkan.Core10.D |
+-- > |                                          | eviceInitialization.VkDev |
+-- > |                                          | ice'                      |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_QUEUE@                   | 'Graphics.Vulkan.Core10.Q |
+-- > |                                          | ueue.VkQueue'             |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_SEMAPHORE@               | 'Graphics.Vulkan.Core10.Q |
+-- > |                                          | ueue.VkSemaphore'         |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_COMMAND_BUFFER@          | 'Graphics.Vulkan.Core10.Q |
+-- > |                                          | ueue.VkCommandBuffer'     |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_FENCE@                   | 'Graphics.Vulkan.Core10.Q |
+-- > |                                          | ueue.VkFence'             |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_DEVICE_MEMORY@           | 'Graphics.Vulkan.Core10.M |
+-- > |                                          | emory.VkDeviceMemory'     |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_BUFFER@                  | 'Graphics.Vulkan.Core10.M |
+-- > |                                          | emoryManagement.VkBuffer' |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_IMAGE@                   | 'Graphics.Vulkan.Core10.M |
+-- > |                                          | emoryManagement.VkImage'  |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_EVENT@                   | 'Graphics.Vulkan.Core10.E |
+-- > |                                          | vent.VkEvent'             |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_QUERY_POOL@              | 'Graphics.Vulkan.Core10.Q |
+-- > |                                          | uery.VkQueryPool'         |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_BUFFER_VIEW@             | 'Graphics.Vulkan.Core10.B |
+-- > |                                          | ufferView.VkBufferView'   |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_IMAGE_VIEW@              | 'Graphics.Vulkan.Core10.I |
+-- > |                                          | mageView.VkImageView'     |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_SHADER_MODULE@           | 'Graphics.Vulkan.Core10.S |
+-- > |                                          | hader.VkShaderModule'     |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_PIPELINE_CACHE@          | 'Graphics.Vulkan.Core10.P |
+-- > |                                          | ipelineCache.VkPipelineCa |
+-- > |                                          | che'                      |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_PIPELINE_LAYOUT@         | 'Graphics.Vulkan.Core10.P |
+-- > |                                          | ipeline.VkPipelineLayout' |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_RENDER_PASS@             | 'Graphics.Vulkan.Core10.P |
+-- > |                                          | ipeline.VkRenderPass'     |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_PIPELINE@                | 'Graphics.Vulkan.Core10.P |
+-- > |                                          | ipeline.VkPipeline'       |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT@   | 'Graphics.Vulkan.Core10.P |
+-- > |                                          | ipelineLayout.VkDescripto |
+-- > |                                          | rSetLayout'               |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_SAMPLER@                 | 'Graphics.Vulkan.Core10.S |
+-- > |                                          | ampler.VkSampler'         |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_DESCRIPTOR_POOL@         | 'Graphics.Vulkan.Core10.D |
+-- > |                                          | escriptorSet.VkDescriptor |
+-- > |                                          | Pool'                     |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_DESCRIPTOR_SET@          | 'Graphics.Vulkan.Core10.D |
+-- > |                                          | escriptorSet.VkDescriptor |
+-- > |                                          | Set'                      |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_FRAMEBUFFER@             | 'Graphics.Vulkan.Core10.P |
+-- > |                                          | ass.VkFramebuffer'        |
+-- > +------------------------------------------+---------------------------+
+-- > | @VK_OBJECT_TYPE_COMMAND_POOL@            | 'Graphics.Vulkan.Core10.C |
+-- > |                                          | ommandPool.VkCommandPool' |
+-- > +------------------------------------------+---------------------------+
+-- >
+-- > VkObjectType and Vulkan Handle Relationship
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectNameInfoEXT',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectTagInfoEXT'
 newtype VkObjectType = VkObjectType Int32
   deriving (Eq, Ord, Storable)
 
@@ -2494,108 +3460,122 @@ instance Read VkObjectType where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_UNKNOWN"
 pattern VK_OBJECT_TYPE_UNKNOWN :: VkObjectType
 pattern VK_OBJECT_TYPE_UNKNOWN = VkObjectType 0
 
--- | VkInstance
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INSTANCE"
 pattern VK_OBJECT_TYPE_INSTANCE :: VkObjectType
 pattern VK_OBJECT_TYPE_INSTANCE = VkObjectType 1
 
--- | VkPhysicalDevice
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PHYSICAL_DEVICE"
 pattern VK_OBJECT_TYPE_PHYSICAL_DEVICE :: VkObjectType
 pattern VK_OBJECT_TYPE_PHYSICAL_DEVICE = VkObjectType 2
 
--- | VkDevice
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEVICE"
 pattern VK_OBJECT_TYPE_DEVICE :: VkObjectType
 pattern VK_OBJECT_TYPE_DEVICE = VkObjectType 3
 
--- | VkQueue
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_QUEUE"
 pattern VK_OBJECT_TYPE_QUEUE :: VkObjectType
 pattern VK_OBJECT_TYPE_QUEUE = VkObjectType 4
 
--- | VkSemaphore
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SEMAPHORE"
 pattern VK_OBJECT_TYPE_SEMAPHORE :: VkObjectType
 pattern VK_OBJECT_TYPE_SEMAPHORE = VkObjectType 5
 
--- | VkCommandBuffer
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_COMMAND_BUFFER"
 pattern VK_OBJECT_TYPE_COMMAND_BUFFER :: VkObjectType
 pattern VK_OBJECT_TYPE_COMMAND_BUFFER = VkObjectType 6
 
--- | VkFence
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_FENCE"
 pattern VK_OBJECT_TYPE_FENCE :: VkObjectType
 pattern VK_OBJECT_TYPE_FENCE = VkObjectType 7
 
--- | VkDeviceMemory
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DEVICE_MEMORY"
 pattern VK_OBJECT_TYPE_DEVICE_MEMORY :: VkObjectType
 pattern VK_OBJECT_TYPE_DEVICE_MEMORY = VkObjectType 8
 
--- | VkBuffer
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_BUFFER"
 pattern VK_OBJECT_TYPE_BUFFER :: VkObjectType
 pattern VK_OBJECT_TYPE_BUFFER = VkObjectType 9
 
--- | VkImage
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_IMAGE"
 pattern VK_OBJECT_TYPE_IMAGE :: VkObjectType
 pattern VK_OBJECT_TYPE_IMAGE = VkObjectType 10
 
--- | VkEvent
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_EVENT"
 pattern VK_OBJECT_TYPE_EVENT :: VkObjectType
 pattern VK_OBJECT_TYPE_EVENT = VkObjectType 11
 
--- | VkQueryPool
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_QUERY_POOL"
 pattern VK_OBJECT_TYPE_QUERY_POOL :: VkObjectType
 pattern VK_OBJECT_TYPE_QUERY_POOL = VkObjectType 12
 
--- | VkBufferView
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_BUFFER_VIEW"
 pattern VK_OBJECT_TYPE_BUFFER_VIEW :: VkObjectType
 pattern VK_OBJECT_TYPE_BUFFER_VIEW = VkObjectType 13
 
--- | VkImageView
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_IMAGE_VIEW"
 pattern VK_OBJECT_TYPE_IMAGE_VIEW :: VkObjectType
 pattern VK_OBJECT_TYPE_IMAGE_VIEW = VkObjectType 14
 
--- | VkShaderModule
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SHADER_MODULE"
 pattern VK_OBJECT_TYPE_SHADER_MODULE :: VkObjectType
 pattern VK_OBJECT_TYPE_SHADER_MODULE = VkObjectType 15
 
--- | VkPipelineCache
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PIPELINE_CACHE"
 pattern VK_OBJECT_TYPE_PIPELINE_CACHE :: VkObjectType
 pattern VK_OBJECT_TYPE_PIPELINE_CACHE = VkObjectType 16
 
--- | VkPipelineLayout
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PIPELINE_LAYOUT"
 pattern VK_OBJECT_TYPE_PIPELINE_LAYOUT :: VkObjectType
 pattern VK_OBJECT_TYPE_PIPELINE_LAYOUT = VkObjectType 17
 
--- | VkRenderPass
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_RENDER_PASS"
 pattern VK_OBJECT_TYPE_RENDER_PASS :: VkObjectType
 pattern VK_OBJECT_TYPE_RENDER_PASS = VkObjectType 18
 
--- | VkPipeline
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_PIPELINE"
 pattern VK_OBJECT_TYPE_PIPELINE :: VkObjectType
 pattern VK_OBJECT_TYPE_PIPELINE = VkObjectType 19
 
--- | VkDescriptorSetLayout
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT"
 pattern VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT :: VkObjectType
 pattern VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT = VkObjectType 20
 
--- | VkSampler
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SAMPLER"
 pattern VK_OBJECT_TYPE_SAMPLER :: VkObjectType
 pattern VK_OBJECT_TYPE_SAMPLER = VkObjectType 21
 
--- | VkDescriptorPool
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DESCRIPTOR_POOL"
 pattern VK_OBJECT_TYPE_DESCRIPTOR_POOL :: VkObjectType
 pattern VK_OBJECT_TYPE_DESCRIPTOR_POOL = VkObjectType 22
 
--- | VkDescriptorSet
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DESCRIPTOR_SET"
 pattern VK_OBJECT_TYPE_DESCRIPTOR_SET :: VkObjectType
 pattern VK_OBJECT_TYPE_DESCRIPTOR_SET = VkObjectType 23
 
--- | VkFramebuffer
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_FRAMEBUFFER"
 pattern VK_OBJECT_TYPE_FRAMEBUFFER :: VkObjectType
 pattern VK_OBJECT_TYPE_FRAMEBUFFER = VkObjectType 24
 
--- | VkCommandPool
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_COMMAND_POOL"
 pattern VK_OBJECT_TYPE_COMMAND_POOL :: VkObjectType
 pattern VK_OBJECT_TYPE_COMMAND_POOL = VkObjectType 25
--- |
+-- | VkFlags - Vulkan bitmasks
+--
+-- = Description
+-- #_description#
+--
+-- Bitmasks are passed to many commands and structures to compactly
+-- represent options, but @VkFlags@ is not used directly in the API.
+-- Instead, a @Vk*Flags@ type which is an alias of @VkFlags@, and whose
+-- name matches the corresponding @Vk*FlagBits@ that are valid for that
+-- type, is used.
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.Pipeline.VkColorComponentFlags'
 type VkFlags = Word32

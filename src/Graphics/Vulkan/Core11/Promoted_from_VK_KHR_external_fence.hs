@@ -53,7 +53,8 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities
 
 -- ** VkFenceImportFlagBits
 
--- | 
+-- | VkFenceImportFlagBits - Bitmask specifying additional parameters of
+-- fence payload import
 newtype VkFenceImportFlagBits = VkFenceImportFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -71,17 +72,21 @@ instance Read VkFenceImportFlagBits where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkFenceImportFlagBits" "VK_FENCE_IMPORT_TEMPORARY_BIT"
 pattern VK_FENCE_IMPORT_TEMPORARY_BIT :: VkFenceImportFlagBits
 pattern VK_FENCE_IMPORT_TEMPORARY_BIT = VkFenceImportFlagBits 0x00000001
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO = VkStructureType 1000113000
--- | TODO: Struct comments
+-- | VkExportFenceCreateInfo - Structure specifying handle types that can be
+-- exported from a fence
 data VkExportFenceCreateInfo = VkExportFenceCreateInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkHandleTypes :: VkExternalFenceHandleTypeFlags
+  { -- No documentation found for Nested "VkExportFenceCreateInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkExportFenceCreateInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkExportFenceCreateInfo" "vkHandleTypes"
+  vkHandleTypes :: VkExternalFenceHandleTypeFlags
   }
   deriving (Eq, Show)
 
@@ -94,4 +99,5 @@ instance Storable VkExportFenceCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportFenceCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportFenceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportFenceCreateInfo))
+-- | VkFenceImportFlags - Bitmask of VkFenceImportFlagBits
 type VkFenceImportFlags = VkFenceImportFlagBits

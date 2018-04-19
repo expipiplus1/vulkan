@@ -57,7 +57,12 @@ import Graphics.Vulkan.Core10.Core
 
 -- ** VkValidationCheckEXT
 
--- | 
+-- | VkValidationCheckEXT - Specify validation checks to disable
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkValidationFlagsEXT'
 newtype VkValidationCheckEXT = VkValidationCheckEXT Int32
   deriving (Eq, Ord, Storable)
 
@@ -77,26 +82,52 @@ instance Read VkValidationCheckEXT where
                         )
                     )
 
--- | 
+-- | @VK_VALIDATION_CHECK_ALL_EXT@ specifies that all validation checks are
+-- disabled.
 pattern VK_VALIDATION_CHECK_ALL_EXT :: VkValidationCheckEXT
 pattern VK_VALIDATION_CHECK_ALL_EXT = VkValidationCheckEXT 0
 
--- | 
+-- | @VK_VALIDATION_CHECK_SHADERS_EXT@ specifies that shader validation is
+-- disabled.
 pattern VK_VALIDATION_CHECK_SHADERS_EXT :: VkValidationCheckEXT
 pattern VK_VALIDATION_CHECK_SHADERS_EXT = VkValidationCheckEXT 1
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT"
 pattern VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT = VkStructureType 1000061000
+-- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_SPEC_VERSION"
 pattern VK_EXT_VALIDATION_FLAGS_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_VALIDATION_FLAGS_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME"
 pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME = "VK_EXT_validation_flags"
--- | TODO: Struct comments
+-- | VkValidationFlagsEXT - Specify validation checks to disable for a Vulkan
+-- instance
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT@
+--
+-- -   @pDisabledValidationChecks@ /must/ be a valid pointer to an array of
+--     @disabledValidationCheckCount@ 'VkValidationCheckEXT' values
+--
+-- -   @disabledValidationCheckCount@ /must/ be greater than @0@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkValidationCheckEXT'
 data VkValidationFlagsEXT = VkValidationFlagsEXT
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkDisabledValidationCheckCount :: Word32
-  , vkPDisabledValidationChecks :: Ptr VkValidationCheckEXT
+  { -- No documentation found for Nested "VkValidationFlagsEXT" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkValidationFlagsEXT" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkValidationFlagsEXT" "vkDisabledValidationCheckCount"
+  vkDisabledValidationCheckCount :: Word32
+  , -- No documentation found for Nested "VkValidationFlagsEXT" "vkPDisabledValidationChecks"
+  vkPDisabledValidationChecks :: Ptr VkValidationCheckEXT
   }
   deriving (Eq, Show)
 

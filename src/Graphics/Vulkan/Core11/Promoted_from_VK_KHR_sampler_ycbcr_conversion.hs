@@ -143,7 +143,7 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
 
 -- ** VkSamplerYcbcrModelConversion
 
--- | 
+-- | VkSamplerYcbcrModelConversion - Color model component of a color space
 newtype VkSamplerYcbcrModelConversion = VkSamplerYcbcrModelConversion Int32
   deriving (Eq, Ord, Storable)
 
@@ -169,28 +169,28 @@ instance Read VkSamplerYcbcrModelConversion where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY"
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY :: VkSamplerYcbcrModelConversion
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY = VkSamplerYcbcrModelConversion 0
 
--- | just range expansion
+-- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY"
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY :: VkSamplerYcbcrModelConversion
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY = VkSamplerYcbcrModelConversion 1
 
--- | aka HD YUV
+-- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709"
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 :: VkSamplerYcbcrModelConversion
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 = VkSamplerYcbcrModelConversion 2
 
--- | aka SD YUV
+-- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601"
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 :: VkSamplerYcbcrModelConversion
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 = VkSamplerYcbcrModelConversion 3
 
--- | aka UHD YUV
+-- No documentation found for Nested "VkSamplerYcbcrModelConversion" "VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020"
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 :: VkSamplerYcbcrModelConversion
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 = VkSamplerYcbcrModelConversion 4
 -- ** VkSamplerYcbcrRange
 
--- | 
+-- | VkSamplerYcbcrRange - Range of encoded values in a color space
 newtype VkSamplerYcbcrRange = VkSamplerYcbcrRange Int32
   deriving (Eq, Ord, Storable)
 
@@ -210,16 +210,16 @@ instance Read VkSamplerYcbcrRange where
                         )
                     )
 
--- | Luma 0..1 maps to 0..255, chroma -0.5..0.5 to 1..255 (clamped)
+-- No documentation found for Nested "VkSamplerYcbcrRange" "VK_SAMPLER_YCBCR_RANGE_ITU_FULL"
 pattern VK_SAMPLER_YCBCR_RANGE_ITU_FULL :: VkSamplerYcbcrRange
 pattern VK_SAMPLER_YCBCR_RANGE_ITU_FULL = VkSamplerYcbcrRange 0
 
--- | Luma 0..1 maps to 16..235, chroma -0.5..0.5 to 16..240
+-- No documentation found for Nested "VkSamplerYcbcrRange" "VK_SAMPLER_YCBCR_RANGE_ITU_NARROW"
 pattern VK_SAMPLER_YCBCR_RANGE_ITU_NARROW :: VkSamplerYcbcrRange
 pattern VK_SAMPLER_YCBCR_RANGE_ITU_NARROW = VkSamplerYcbcrRange 1
 -- ** VkChromaLocation
 
--- | 
+-- | VkChromaLocation - Position of downsampled chroma samples
 newtype VkChromaLocation = VkChromaLocation Int32
   deriving (Eq, Ord, Storable)
 
@@ -239,181 +239,186 @@ instance Read VkChromaLocation where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkChromaLocation" "VK_CHROMA_LOCATION_COSITED_EVEN"
 pattern VK_CHROMA_LOCATION_COSITED_EVEN :: VkChromaLocation
 pattern VK_CHROMA_LOCATION_COSITED_EVEN = VkChromaLocation 0
 
--- | 
+-- No documentation found for Nested "VkChromaLocation" "VK_CHROMA_LOCATION_MIDPOINT"
 pattern VK_CHROMA_LOCATION_MIDPOINT :: VkChromaLocation
 pattern VK_CHROMA_LOCATION_MIDPOINT = VkChromaLocation 1
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G8B8G8R8_422_UNORM"
 pattern VK_FORMAT_G8B8G8R8_422_UNORM :: VkFormat
 pattern VK_FORMAT_G8B8G8R8_422_UNORM = VkFormat 1000156000
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_B8G8R8G8_422_UNORM"
 pattern VK_FORMAT_B8G8R8G8_422_UNORM :: VkFormat
 pattern VK_FORMAT_B8G8R8G8_422_UNORM = VkFormat 1000156001
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM"
 pattern VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM = VkFormat 1000156002
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8R8_2PLANE_420_UNORM"
 pattern VK_FORMAT_G8_B8R8_2PLANE_420_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8R8_2PLANE_420_UNORM = VkFormat 1000156003
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM"
 pattern VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM = VkFormat 1000156004
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8R8_2PLANE_422_UNORM"
 pattern VK_FORMAT_G8_B8R8_2PLANE_422_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8R8_2PLANE_422_UNORM = VkFormat 1000156005
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM"
 pattern VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM = VkFormat 1000156006
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_R10X6_UNORM_PACK16"
 pattern VK_FORMAT_R10X6_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_R10X6_UNORM_PACK16 = VkFormat 1000156007
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_R10X6G10X6_UNORM_2PACK16"
 pattern VK_FORMAT_R10X6G10X6_UNORM_2PACK16 :: VkFormat
 pattern VK_FORMAT_R10X6G10X6_UNORM_2PACK16 = VkFormat 1000156008
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16"
 pattern VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16 = VkFormat 1000156009
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16"
 pattern VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16 = VkFormat 1000156010
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16"
 pattern VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 = VkFormat 1000156011
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16"
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 = VkFormat 1000156012
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16"
 pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 = VkFormat 1000156013
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16"
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 = VkFormat 1000156014
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16"
 pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 = VkFormat 1000156015
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16"
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 = VkFormat 1000156016
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_R12X4_UNORM_PACK16"
 pattern VK_FORMAT_R12X4_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_R12X4_UNORM_PACK16 = VkFormat 1000156017
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_R12X4G12X4_UNORM_2PACK16"
 pattern VK_FORMAT_R12X4G12X4_UNORM_2PACK16 :: VkFormat
 pattern VK_FORMAT_R12X4G12X4_UNORM_2PACK16 = VkFormat 1000156018
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16"
 pattern VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 = VkFormat 1000156019
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16"
 pattern VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 = VkFormat 1000156020
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16"
 pattern VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 = VkFormat 1000156021
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16"
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 = VkFormat 1000156022
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16"
 pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 = VkFormat 1000156023
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16"
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 = VkFormat 1000156024
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16"
 pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 = VkFormat 1000156025
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16"
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 = VkFormat 1000156026
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G16B16G16R16_422_UNORM"
 pattern VK_FORMAT_G16B16G16R16_422_UNORM :: VkFormat
 pattern VK_FORMAT_G16B16G16R16_422_UNORM = VkFormat 1000156027
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_B16G16R16G16_422_UNORM"
 pattern VK_FORMAT_B16G16R16G16_422_UNORM :: VkFormat
 pattern VK_FORMAT_B16G16R16G16_422_UNORM = VkFormat 1000156028
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM"
 pattern VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM = VkFormat 1000156029
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16R16_2PLANE_420_UNORM"
 pattern VK_FORMAT_G16_B16R16_2PLANE_420_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16R16_2PLANE_420_UNORM = VkFormat 1000156030
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM"
 pattern VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM = VkFormat 1000156031
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16R16_2PLANE_422_UNORM"
 pattern VK_FORMAT_G16_B16R16_2PLANE_422_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16R16_2PLANE_422_UNORM = VkFormat 1000156032
--- | Nothing
+-- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM"
 pattern VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM = VkFormat 1000156033
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO = VkStructureType 1000156000
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO"
 pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO = VkStructureType 1000156001
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO = VkStructureType 1000156002
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO"
 pattern VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO = VkStructureType 1000156003
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES = VkStructureType 1000156004
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES"
 pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES = VkStructureType 1000156005
--- | Nothing
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION"
 pattern VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION :: VkObjectType
 pattern VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION = VkObjectType 1000156000
--- | Nothing
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_DISJOINT_BIT"
 pattern VK_IMAGE_CREATE_DISJOINT_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_DISJOINT_BIT = VkImageCreateFlagBits 0x00000200
--- | Just "Format can have midpoint rather than cosited chroma samples"
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT"
 pattern VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT = VkFormatFeatureFlagBits 0x00020000
--- | Just "Format can be used with linear filtering whilst color conversion is enabled"
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = VkFormatFeatureFlagBits 0x00040000
--- | Just "Format can have different chroma, min and mag filters"
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = VkFormatFeatureFlagBits 0x00080000
--- | Nothing
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = VkFormatFeatureFlagBits 0x00100000
--- | Nothing
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = VkFormatFeatureFlagBits 0x00200000
--- | Just "Format supports disjoint planes"
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_DISJOINT_BIT"
 pattern VK_FORMAT_FEATURE_DISJOINT_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_DISJOINT_BIT = VkFormatFeatureFlagBits 0x00400000
--- | Just "Format can have cosited rather than midpoint chroma samples"
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT"
 pattern VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT = VkFormatFeatureFlagBits 0x00800000
--- | Nothing
+-- No documentation found for Nested "VkImageAspectFlagBits" "VK_IMAGE_ASPECT_PLANE_0_BIT"
 pattern VK_IMAGE_ASPECT_PLANE_0_BIT :: VkImageAspectFlagBits
 pattern VK_IMAGE_ASPECT_PLANE_0_BIT = VkImageAspectFlagBits 0x00000010
--- | Nothing
+-- No documentation found for Nested "VkImageAspectFlagBits" "VK_IMAGE_ASPECT_PLANE_1_BIT"
 pattern VK_IMAGE_ASPECT_PLANE_1_BIT :: VkImageAspectFlagBits
 pattern VK_IMAGE_ASPECT_PLANE_1_BIT = VkImageAspectFlagBits 0x00000020
--- | Nothing
+-- No documentation found for Nested "VkImageAspectFlagBits" "VK_IMAGE_ASPECT_PLANE_2_BIT"
 pattern VK_IMAGE_ASPECT_PLANE_2_BIT :: VkImageAspectFlagBits
 pattern VK_IMAGE_ASPECT_PLANE_2_BIT = VkImageAspectFlagBits 0x00000040
--- |
+-- | Dummy data to tag the 'Ptr' with
 data VkSamplerYcbcrConversion_T
+-- | VkSamplerYcbcrConversion - NO SHORT DESCRIPTION PROVIDED
 type VkSamplerYcbcrConversion = Ptr VkSamplerYcbcrConversion_T
--- | 
+-- | vkCreateSamplerYcbcrConversion - Create a new Ycbcr conversion
 foreign import ccall "vkCreateSamplerYcbcrConversion" vkCreateSamplerYcbcrConversion :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSamplerYcbcrConversionCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pYcbcrConversion" ::: Ptr VkSamplerYcbcrConversion) -> IO VkResult
--- | 
+-- | vkDestroySamplerYcbcrConversion - Destroy a created Y’CbCr conversion
 foreign import ccall "vkDestroySamplerYcbcrConversion" vkDestroySamplerYcbcrConversion :: ("device" ::: VkDevice) -> ("ycbcrConversion" ::: VkSamplerYcbcrConversion) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
--- | TODO: Struct comments
+-- | VkSamplerYcbcrConversionInfo - Structure specifying Y’CbCr conversion to
+-- a sampler or image view
 data VkSamplerYcbcrConversionInfo = VkSamplerYcbcrConversionInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkConversion :: VkSamplerYcbcrConversion
+  { -- No documentation found for Nested "VkSamplerYcbcrConversionInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionInfo" "vkConversion"
+  vkConversion :: VkSamplerYcbcrConversion
   }
   deriving (Eq, Show)
 
@@ -426,18 +431,29 @@ instance Storable VkSamplerYcbcrConversionInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerYcbcrConversionInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerYcbcrConversionInfo))
                 *> poke (ptr `plusPtr` 16) (vkConversion (poked :: VkSamplerYcbcrConversionInfo))
--- | TODO: Struct comments
+-- | VkSamplerYcbcrConversionCreateInfo - Structure specifying the parameters
+-- of the newly created conversion
 data VkSamplerYcbcrConversionCreateInfo = VkSamplerYcbcrConversionCreateInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkFormat :: VkFormat
-  , vkYcbcrModel :: VkSamplerYcbcrModelConversion
-  , vkYcbcrRange :: VkSamplerYcbcrRange
-  , vkComponents :: VkComponentMapping
-  , vkXChromaOffset :: VkChromaLocation
-  , vkYChromaOffset :: VkChromaLocation
-  , vkChromaFilter :: VkFilter
-  , vkForceExplicitReconstruction :: VkBool32
+  { -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkFormat"
+  vkFormat :: VkFormat
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkYcbcrModel"
+  vkYcbcrModel :: VkSamplerYcbcrModelConversion
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkYcbcrRange"
+  vkYcbcrRange :: VkSamplerYcbcrRange
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkComponents"
+  vkComponents :: VkComponentMapping
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkXChromaOffset"
+  vkXChromaOffset :: VkChromaLocation
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkYChromaOffset"
+  vkYChromaOffset :: VkChromaLocation
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkChromaFilter"
+  vkChromaFilter :: VkFilter
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "vkForceExplicitReconstruction"
+  vkForceExplicitReconstruction :: VkBool32
   }
   deriving (Eq, Show)
 
@@ -464,11 +480,15 @@ instance Storable VkSamplerYcbcrConversionCreateInfo where
                 *> poke (ptr `plusPtr` 48) (vkYChromaOffset (poked :: VkSamplerYcbcrConversionCreateInfo))
                 *> poke (ptr `plusPtr` 52) (vkChromaFilter (poked :: VkSamplerYcbcrConversionCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkForceExplicitReconstruction (poked :: VkSamplerYcbcrConversionCreateInfo))
--- | TODO: Struct comments
+-- | VkBindImagePlaneMemoryInfo - Structure specifying how to bind an image
+-- plane to memory
 data VkBindImagePlaneMemoryInfo = VkBindImagePlaneMemoryInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkPlaneAspect :: VkImageAspectFlagBits
+  { -- No documentation found for Nested "VkBindImagePlaneMemoryInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkBindImagePlaneMemoryInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkBindImagePlaneMemoryInfo" "vkPlaneAspect"
+  vkPlaneAspect :: VkImageAspectFlagBits
   }
   deriving (Eq, Show)
 
@@ -481,11 +501,15 @@ instance Storable VkBindImagePlaneMemoryInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBindImagePlaneMemoryInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindImagePlaneMemoryInfo))
                 *> poke (ptr `plusPtr` 16) (vkPlaneAspect (poked :: VkBindImagePlaneMemoryInfo))
--- | TODO: Struct comments
+-- | VkImagePlaneMemoryRequirementsInfo - Structure specifying image plane
+-- for memory requirements
 data VkImagePlaneMemoryRequirementsInfo = VkImagePlaneMemoryRequirementsInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkPlaneAspect :: VkImageAspectFlagBits
+  { -- No documentation found for Nested "VkImagePlaneMemoryRequirementsInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkImagePlaneMemoryRequirementsInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkImagePlaneMemoryRequirementsInfo" "vkPlaneAspect"
+  vkPlaneAspect :: VkImageAspectFlagBits
   }
   deriving (Eq, Show)
 
@@ -498,11 +522,15 @@ instance Storable VkImagePlaneMemoryRequirementsInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImagePlaneMemoryRequirementsInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImagePlaneMemoryRequirementsInfo))
                 *> poke (ptr `plusPtr` 16) (vkPlaneAspect (poked :: VkImagePlaneMemoryRequirementsInfo))
--- | TODO: Struct comments
+-- | VkPhysicalDeviceSamplerYcbcrConversionFeatures - Structure describing
+-- Y’CbCr conversion features that can be supported by an implementation
 data VkPhysicalDeviceSamplerYcbcrConversionFeatures = VkPhysicalDeviceSamplerYcbcrConversionFeatures
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkSamplerYcbcrConversion :: VkBool32
+  { -- No documentation found for Nested "VkPhysicalDeviceSamplerYcbcrConversionFeatures" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerYcbcrConversionFeatures" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerYcbcrConversionFeatures" "vkSamplerYcbcrConversion"
+  vkSamplerYcbcrConversion :: VkBool32
   }
   deriving (Eq, Show)
 
@@ -515,11 +543,15 @@ instance Storable VkPhysicalDeviceSamplerYcbcrConversionFeatures where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
                 *> poke (ptr `plusPtr` 16) (vkSamplerYcbcrConversion (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
--- | TODO: Struct comments
+-- | VkSamplerYcbcrConversionImageFormatProperties - Structure specifying
+-- combined image sampler descriptor count for multi-planar images
 data VkSamplerYcbcrConversionImageFormatProperties = VkSamplerYcbcrConversionImageFormatProperties
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkCombinedImageSamplerDescriptorCount :: Word32
+  { -- No documentation found for Nested "VkSamplerYcbcrConversionImageFormatProperties" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionImageFormatProperties" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkSamplerYcbcrConversionImageFormatProperties" "vkCombinedImageSamplerDescriptorCount"
+  vkCombinedImageSamplerDescriptorCount :: Word32
   }
   deriving (Eq, Show)
 

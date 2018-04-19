@@ -68,7 +68,7 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
 
 -- ** VkViSurfaceCreateFlagsNN
 
--- | 
+-- No documentation found for TopLevel "VkViSurfaceCreateFlagsNN"
 newtype VkViSurfaceCreateFlagsNN = VkViSurfaceCreateFlagsNN VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -87,21 +87,113 @@ instance Read VkViSurfaceCreateFlagsNN where
                     )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN"
 pattern VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN :: VkStructureType
 pattern VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN = VkStructureType 1000062000
+-- No documentation found for TopLevel "VK_NN_VI_SURFACE_SPEC_VERSION"
 pattern VK_NN_VI_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_NN_VI_SURFACE_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_NN_VI_SURFACE_EXTENSION_NAME"
 pattern VK_NN_VI_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NN_VI_SURFACE_EXTENSION_NAME = "VK_NN_vi_surface"
--- | 
+-- | vkCreateViSurfaceNN - Create a
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a VI
+-- layer
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @instance@ is the instance with which to associate the surface.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     @VkViSurfaceCreateInfoNN@ structure containing parameters affecting
+--     the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
+--     surface object is returned.
+--
+-- = Description
+-- #_description#
+--
+-- During the lifetime of a surface created using a particular
+-- @nn@::@vi@::@NativeWindowHandle@ any attempts to create another surface
+-- for the same @nn@::@vi@::@Layer@ and any attempts to connect to the same
+-- @nn@::@vi@::@Layer@ through other platform mechanisms will have
+-- undefined results.
+--
+-- The @currentExtent@ of a VI surface is always undefined. Applications
+-- are expected to choose an appropriate size for the swapchain’s
+-- @imageExtent@ (e.g., by matching the the result of a call to
+-- @nn@::@vi@::@GetDisplayResolution@).
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid @VkInstance@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkViSurfaceCreateInfoNN@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+--
+-- == Return Codes
+--
+-- [<#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+--     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'VkViSurfaceCreateInfoNN'
 foreign import ccall "vkCreateViSurfaceNN" vkCreateViSurfaceNN :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkViSurfaceCreateInfoNN) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
--- | TODO: Struct comments
+-- | VkViSurfaceCreateInfoNN - Structure specifying parameters of a newly
+-- created VI surface object
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage
+--
+-- -   @window@ /must/ be a valid @nn@::@vi@::@NativeWindowHandle@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN@
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType',
+-- 'VkViSurfaceCreateFlagsNN', 'vkCreateViSurfaceNN'
 data VkViSurfaceCreateInfoNN = VkViSurfaceCreateInfoNN
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkFlags :: VkViSurfaceCreateFlagsNN
-  , vkWindow :: Ptr ()
+  { -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "vkFlags"
+  vkFlags :: VkViSurfaceCreateFlagsNN
+  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "vkWindow"
+  vkWindow :: Ptr ()
   }
   deriving (Eq, Show)
 

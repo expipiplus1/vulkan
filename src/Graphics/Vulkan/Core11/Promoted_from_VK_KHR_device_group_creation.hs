@@ -47,27 +47,36 @@ import Graphics.Vulkan.Core10.DeviceInitialization
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES = VkStructureType 1000070000
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO = VkStructureType 1000070001
--- | Just "If set, heap allocations allocate multiple instances by default"
+-- No documentation found for Nested "VkMemoryHeapFlagBits" "VK_MEMORY_HEAP_MULTI_INSTANCE_BIT"
 pattern VK_MEMORY_HEAP_MULTI_INSTANCE_BIT :: VkMemoryHeapFlagBits
 pattern VK_MEMORY_HEAP_MULTI_INSTANCE_BIT = VkMemoryHeapFlagBits 0x00000002
+-- No documentation found for TopLevel "VK_MAX_DEVICE_GROUP_SIZE"
 type VK_MAX_DEVICE_GROUP_SIZE = 32
+-- No documentation found for Nested "Integral a => a" "VK_MAX_DEVICE_GROUP_SIZE"
 pattern VK_MAX_DEVICE_GROUP_SIZE :: Integral a => a
 pattern VK_MAX_DEVICE_GROUP_SIZE = 32
--- | 
+-- | vkEnumeratePhysicalDeviceGroups - Enumerates groups of physical devices
+-- that can be used to create a single logical device
 foreign import ccall "vkEnumeratePhysicalDeviceGroups" vkEnumeratePhysicalDeviceGroups :: ("instance" ::: VkInstance) -> ("pPhysicalDeviceGroupCount" ::: Ptr Word32) -> ("pPhysicalDeviceGroupProperties" ::: Ptr VkPhysicalDeviceGroupProperties) -> IO VkResult
--- | TODO: Struct comments
+-- | VkPhysicalDeviceGroupProperties - Structure specifying physical device
+-- group properties
 data VkPhysicalDeviceGroupProperties = VkPhysicalDeviceGroupProperties
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkPhysicalDeviceCount :: Word32
-  , vkPhysicalDevices :: Vector VK_MAX_DEVICE_GROUP_SIZE VkPhysicalDevice
-  , vkSubsetAllocation :: VkBool32
+  { -- No documentation found for Nested "VkPhysicalDeviceGroupProperties" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDeviceGroupProperties" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDeviceGroupProperties" "vkPhysicalDeviceCount"
+  vkPhysicalDeviceCount :: Word32
+  , -- No documentation found for Nested "VkPhysicalDeviceGroupProperties" "vkPhysicalDevices"
+  vkPhysicalDevices :: Vector VK_MAX_DEVICE_GROUP_SIZE VkPhysicalDevice
+  , -- No documentation found for Nested "VkPhysicalDeviceGroupProperties" "vkSubsetAllocation"
+  vkSubsetAllocation :: VkBool32
   }
   deriving (Eq, Show)
 
@@ -84,12 +93,17 @@ instance Storable VkPhysicalDeviceGroupProperties where
                 *> poke (ptr `plusPtr` 16) (vkPhysicalDeviceCount (poked :: VkPhysicalDeviceGroupProperties))
                 *> poke (ptr `plusPtr` 24) (vkPhysicalDevices (poked :: VkPhysicalDeviceGroupProperties))
                 *> poke (ptr `plusPtr` 280) (vkSubsetAllocation (poked :: VkPhysicalDeviceGroupProperties))
--- | TODO: Struct comments
+-- | VkDeviceGroupDeviceCreateInfo - Create a logical device from multiple
+-- physical devices
 data VkDeviceGroupDeviceCreateInfo = VkDeviceGroupDeviceCreateInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkPhysicalDeviceCount :: Word32
-  , vkPPhysicalDevices :: Ptr VkPhysicalDevice
+  { -- No documentation found for Nested "VkDeviceGroupDeviceCreateInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkDeviceGroupDeviceCreateInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkDeviceGroupDeviceCreateInfo" "vkPhysicalDeviceCount"
+  vkPhysicalDeviceCount :: Word32
+  , -- No documentation found for Nested "VkDeviceGroupDeviceCreateInfo" "vkPPhysicalDevices"
+  vkPPhysicalDevices :: Ptr VkPhysicalDevice
   }
   deriving (Eq, Show)
 

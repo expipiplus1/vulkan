@@ -74,11 +74,13 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
   )
 
 
+-- | Opaque data
 data MirConnection
+-- | Opaque data
 data MirSurface
 -- ** VkMirSurfaceCreateFlagsKHR
 
--- | 
+-- No documentation found for TopLevel "VkMirSurfaceCreateFlagsKHR"
 newtype VkMirSurfaceCreateFlagsKHR = VkMirSurfaceCreateFlagsKHR VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -97,24 +99,140 @@ instance Read VkMirSurfaceCreateFlagsKHR where
                     )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR = VkStructureType 1000007000
+-- No documentation found for TopLevel "VK_KHR_MIR_SURFACE_SPEC_VERSION"
 pattern VK_KHR_MIR_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_MIR_SURFACE_SPEC_VERSION = 4
+-- No documentation found for TopLevel "VK_KHR_MIR_SURFACE_EXTENSION_NAME"
 pattern VK_KHR_MIR_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_MIR_SURFACE_EXTENSION_NAME = "VK_KHR_mir_surface"
--- | 
+-- | vkCreateMirSurfaceKHR - Create a
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
+-- Mir window
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @instance@ is the instance to associate the surface with.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'VkMirSurfaceCreateInfoKHR' structure containing parameters
+--     affecting the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
+--     surface object is returned.
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid @VkInstance@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkMirSurfaceCreateInfoKHR@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+--
+-- == Return Codes
+--
+-- [<#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
+-- 'VkMirSurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'
 foreign import ccall "vkCreateMirSurfaceKHR" vkCreateMirSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMirSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
--- | 
+-- | vkGetPhysicalDeviceMirPresentationSupportKHR - Query physical device for
+-- presentation to Mir
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @physicalDevice@ is the physical device.
+--
+-- -   @queueFamilyIndex@ is the queue family index.
+--
+-- -   @connection@ is a pointer to the @MirConnection@, and identifies the
+--     desired Mir compositor.
+--
+-- = Description
+-- #_description#
+--
+-- This platform-specific function /can/ be called prior to creating a
+-- surface.
+--
+-- == Valid Usage
+--
+-- -   @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+--     returned by @vkGetPhysicalDeviceQueueFamilyProperties@ for the given
+--     @physicalDevice@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+--
+-- -   @connection@ /must/ be a valid pointer to a @MirConnection@ value
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall "vkGetPhysicalDeviceMirPresentationSupportKHR" vkGetPhysicalDeviceMirPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr MirConnection) -> IO VkBool32
--- | TODO: Struct comments
+-- | VkMirSurfaceCreateInfoKHR - Structure specifying parameters of a newly
+-- created Mir surface object
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage
+--
+-- -   @connection@ /must/ point to a valid @MirConnection@.
+--
+-- -   @surface@ /must/ point to a valid @MirSurface@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR@
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkMirSurfaceCreateFlagsKHR',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateMirSurfaceKHR'
 data VkMirSurfaceCreateInfoKHR = VkMirSurfaceCreateInfoKHR
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkFlags :: VkMirSurfaceCreateFlagsKHR
-  , vkConnection :: Ptr MirConnection
-  , vkMirSurface :: Ptr MirSurface
+  { -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkFlags"
+  vkFlags :: VkMirSurfaceCreateFlagsKHR
+  , -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkConnection"
+  vkConnection :: Ptr MirConnection
+  , -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkMirSurface"
+  vkMirSurface :: Ptr MirSurface
   }
   deriving (Eq, Show)
 

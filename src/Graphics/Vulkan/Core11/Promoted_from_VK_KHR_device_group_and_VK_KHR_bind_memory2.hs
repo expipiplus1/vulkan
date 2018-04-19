@@ -35,21 +35,26 @@ import Graphics.Vulkan.Core10.Pipeline
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO = VkStructureType 1000060013
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO = VkStructureType 1000060014
--- | Just "Allows using VkBindImageMemoryDeviceGroupInfo::pSplitInstanceBindRegions when binding memory to the image"
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT"
 pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = VkImageCreateFlagBits 0x00000040
--- | TODO: Struct comments
+-- | VkBindBufferMemoryDeviceGroupInfo - Structure specifying device within a
+-- group to bind to
 data VkBindBufferMemoryDeviceGroupInfo = VkBindBufferMemoryDeviceGroupInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkDeviceIndexCount :: Word32
-  , vkPDeviceIndices :: Ptr Word32
+  { -- No documentation found for Nested "VkBindBufferMemoryDeviceGroupInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkBindBufferMemoryDeviceGroupInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkBindBufferMemoryDeviceGroupInfo" "vkDeviceIndexCount"
+  vkDeviceIndexCount :: Word32
+  , -- No documentation found for Nested "VkBindBufferMemoryDeviceGroupInfo" "vkPDeviceIndices"
+  vkPDeviceIndices :: Ptr Word32
   }
   deriving (Eq, Show)
 
@@ -64,14 +69,21 @@ instance Storable VkBindBufferMemoryDeviceGroupInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindBufferMemoryDeviceGroupInfo))
                 *> poke (ptr `plusPtr` 16) (vkDeviceIndexCount (poked :: VkBindBufferMemoryDeviceGroupInfo))
                 *> poke (ptr `plusPtr` 24) (vkPDeviceIndices (poked :: VkBindBufferMemoryDeviceGroupInfo))
--- | TODO: Struct comments
+-- | VkBindImageMemoryDeviceGroupInfo - Structure specifying device within a
+-- group to bind to
 data VkBindImageMemoryDeviceGroupInfo = VkBindImageMemoryDeviceGroupInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkDeviceIndexCount :: Word32
-  , vkPDeviceIndices :: Ptr Word32
-  , vkSplitInstanceBindRegionCount :: Word32
-  , vkPSplitInstanceBindRegions :: Ptr VkRect2D
+  { -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "vkDeviceIndexCount"
+  vkDeviceIndexCount :: Word32
+  , -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "vkPDeviceIndices"
+  vkPDeviceIndices :: Ptr Word32
+  , -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "vkSplitInstanceBindRegionCount"
+  vkSplitInstanceBindRegionCount :: Word32
+  , -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "vkPSplitInstanceBindRegions"
+  vkPSplitInstanceBindRegions :: Ptr VkRect2D
   }
   deriving (Eq, Show)
 

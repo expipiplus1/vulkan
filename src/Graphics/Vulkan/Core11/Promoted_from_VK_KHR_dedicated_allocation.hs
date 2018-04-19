@@ -30,18 +30,23 @@ import Graphics.Vulkan.Core10.MemoryManagement
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS"
 pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS = VkStructureType 1000127000
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO"
 pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO = VkStructureType 1000127001
--- | TODO: Struct comments
+-- | VkMemoryDedicatedRequirements - Structure describing dedicated
+-- allocation requirements of buffer and image resources
 data VkMemoryDedicatedRequirements = VkMemoryDedicatedRequirements
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkPrefersDedicatedAllocation :: VkBool32
-  , vkRequiresDedicatedAllocation :: VkBool32
+  { -- No documentation found for Nested "VkMemoryDedicatedRequirements" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkMemoryDedicatedRequirements" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkMemoryDedicatedRequirements" "vkPrefersDedicatedAllocation"
+  vkPrefersDedicatedAllocation :: VkBool32
+  , -- No documentation found for Nested "VkMemoryDedicatedRequirements" "vkRequiresDedicatedAllocation"
+  vkRequiresDedicatedAllocation :: VkBool32
   }
   deriving (Eq, Show)
 
@@ -56,12 +61,17 @@ instance Storable VkMemoryDedicatedRequirements where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryDedicatedRequirements))
                 *> poke (ptr `plusPtr` 16) (vkPrefersDedicatedAllocation (poked :: VkMemoryDedicatedRequirements))
                 *> poke (ptr `plusPtr` 20) (vkRequiresDedicatedAllocation (poked :: VkMemoryDedicatedRequirements))
--- | TODO: Struct comments
+-- | VkMemoryDedicatedAllocateInfo - Specify a dedicated memory allocation
+-- resource
 data VkMemoryDedicatedAllocateInfo = VkMemoryDedicatedAllocateInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkImage :: VkImage
-  , vkBuffer :: VkBuffer
+  { -- No documentation found for Nested "VkMemoryDedicatedAllocateInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkMemoryDedicatedAllocateInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkMemoryDedicatedAllocateInfo" "vkImage"
+  vkImage :: VkImage
+  , -- No documentation found for Nested "VkMemoryDedicatedAllocateInfo" "vkBuffer"
+  vkBuffer :: VkBuffer
   }
   deriving (Eq, Show)
 

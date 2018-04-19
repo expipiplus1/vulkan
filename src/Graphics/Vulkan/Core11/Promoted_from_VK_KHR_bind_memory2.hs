@@ -49,26 +49,32 @@ import Graphics.Vulkan.Core10.MemoryManagement
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO = VkStructureType 1000157000
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO = VkStructureType 1000157001
--- | Nothing
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_ALIAS_BIT"
 pattern VK_IMAGE_CREATE_ALIAS_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_ALIAS_BIT = VkImageCreateFlagBits 0x00000400
--- | 
+-- | vkBindBufferMemory2 - Bind device memory to buffer objects
 foreign import ccall "vkBindBufferMemory2" vkBindBufferMemory2 :: ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindBufferMemoryInfo) -> IO VkResult
--- | 
+-- | vkBindImageMemory2 - Bind device memory to image objects
 foreign import ccall "vkBindImageMemory2" vkBindImageMemory2 :: ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindImageMemoryInfo) -> IO VkResult
--- | TODO: Struct comments
+-- | VkBindBufferMemoryInfo - Structure specifying how to bind a buffer to
+-- memory
 data VkBindBufferMemoryInfo = VkBindBufferMemoryInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkBuffer :: VkBuffer
-  , vkMemory :: VkDeviceMemory
-  , vkMemoryOffset :: VkDeviceSize
+  { -- No documentation found for Nested "VkBindBufferMemoryInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkBindBufferMemoryInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkBindBufferMemoryInfo" "vkBuffer"
+  vkBuffer :: VkBuffer
+  , -- No documentation found for Nested "VkBindBufferMemoryInfo" "vkMemory"
+  vkMemory :: VkDeviceMemory
+  , -- No documentation found for Nested "VkBindBufferMemoryInfo" "vkMemoryOffset"
+  vkMemoryOffset :: VkDeviceSize
   }
   deriving (Eq, Show)
 
@@ -85,13 +91,19 @@ instance Storable VkBindBufferMemoryInfo where
                 *> poke (ptr `plusPtr` 16) (vkBuffer (poked :: VkBindBufferMemoryInfo))
                 *> poke (ptr `plusPtr` 24) (vkMemory (poked :: VkBindBufferMemoryInfo))
                 *> poke (ptr `plusPtr` 32) (vkMemoryOffset (poked :: VkBindBufferMemoryInfo))
--- | TODO: Struct comments
+-- | VkBindImageMemoryInfo - Structure specifying how to bind an image to
+-- memory
 data VkBindImageMemoryInfo = VkBindImageMemoryInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkImage :: VkImage
-  , vkMemory :: VkDeviceMemory
-  , vkMemoryOffset :: VkDeviceSize
+  { -- No documentation found for Nested "VkBindImageMemoryInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkBindImageMemoryInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkBindImageMemoryInfo" "vkImage"
+  vkImage :: VkImage
+  , -- No documentation found for Nested "VkBindImageMemoryInfo" "vkMemory"
+  vkMemory :: VkDeviceMemory
+  , -- No documentation found for Nested "VkBindImageMemoryInfo" "vkMemoryOffset"
+  vkMemoryOffset :: VkDeviceSize
   }
   deriving (Eq, Show)
 

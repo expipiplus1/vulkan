@@ -91,7 +91,8 @@ import Graphics.Vulkan.Core10.Queue
 
 -- ** VkPeerMemoryFeatureFlagBits
 
--- | 
+-- | VkPeerMemoryFeatureFlagBits - Bitmask specifying supported peer memory
+-- features
 newtype VkPeerMemoryFeatureFlagBits = VkPeerMemoryFeatureFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -115,24 +116,25 @@ instance Read VkPeerMemoryFeatureFlagBits where
                         )
                     )
 
--- | Can read with vkCmdCopy commands
+-- No documentation found for Nested "VkPeerMemoryFeatureFlagBits" "VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT"
 pattern VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT :: VkPeerMemoryFeatureFlagBits
 pattern VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT = VkPeerMemoryFeatureFlagBits 0x00000001
 
--- | Can write with vkCmdCopy commands
+-- No documentation found for Nested "VkPeerMemoryFeatureFlagBits" "VK_PEER_MEMORY_FEATURE_COPY_DST_BIT"
 pattern VK_PEER_MEMORY_FEATURE_COPY_DST_BIT :: VkPeerMemoryFeatureFlagBits
 pattern VK_PEER_MEMORY_FEATURE_COPY_DST_BIT = VkPeerMemoryFeatureFlagBits 0x00000002
 
--- | Can read with any access type/command
+-- No documentation found for Nested "VkPeerMemoryFeatureFlagBits" "VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT"
 pattern VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT :: VkPeerMemoryFeatureFlagBits
 pattern VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = VkPeerMemoryFeatureFlagBits 0x00000004
 
--- | Can write with and access type/command
+-- No documentation found for Nested "VkPeerMemoryFeatureFlagBits" "VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT"
 pattern VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT :: VkPeerMemoryFeatureFlagBits
 pattern VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT = VkPeerMemoryFeatureFlagBits 0x00000008
 -- ** VkMemoryAllocateFlagBits
 
--- | 
+-- | VkMemoryAllocateFlagBits - Bitmask specifying flags for a device memory
+-- allocation
 newtype VkMemoryAllocateFlagBits = VkMemoryAllocateFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -150,45 +152,51 @@ instance Read VkMemoryAllocateFlagBits where
                         )
                     )
 
--- | Force allocation on specific devices
+-- No documentation found for Nested "VkMemoryAllocateFlagBits" "VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT"
 pattern VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT :: VkMemoryAllocateFlagBits
 pattern VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT = VkMemoryAllocateFlagBits 0x00000001
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO"
 pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO = VkStructureType 1000060000
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO = VkStructureType 1000060003
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO = VkStructureType 1000060004
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO = VkStructureType 1000060005
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO = VkStructureType 1000060006
--- | Nothing
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"
 pattern VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT :: VkPipelineCreateFlagBits
 pattern VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = VkPipelineCreateFlagBits 0x00000008
--- | Nothing
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DISPATCH_BASE"
 pattern VK_PIPELINE_CREATE_DISPATCH_BASE :: VkPipelineCreateFlagBits
 pattern VK_PIPELINE_CREATE_DISPATCH_BASE = VkPipelineCreateFlagBits 0x00000010
--- | Just "Dependency is across devices"
+-- No documentation found for Nested "VkDependencyFlagBits" "VK_DEPENDENCY_DEVICE_GROUP_BIT"
 pattern VK_DEPENDENCY_DEVICE_GROUP_BIT :: VkDependencyFlagBits
 pattern VK_DEPENDENCY_DEVICE_GROUP_BIT = VkDependencyFlagBits 0x00000004
--- | 
+-- | vkGetDeviceGroupPeerMemoryFeatures - Query supported peer memory
+-- features of a device
 foreign import ccall "vkGetDeviceGroupPeerMemoryFeatures" vkGetDeviceGroupPeerMemoryFeatures :: ("device" ::: VkDevice) -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> ("pPeerMemoryFeatures" ::: Ptr VkPeerMemoryFeatureFlags) -> IO ()
--- | 
+-- | vkCmdSetDeviceMask - Modify device mask of a command buffer
 foreign import ccall "vkCmdSetDeviceMask" vkCmdSetDeviceMask :: ("commandBuffer" ::: VkCommandBuffer) -> ("deviceMask" ::: Word32) -> IO ()
--- | 
+-- | vkCmdDispatchBase - Dispatch compute work items
 foreign import ccall "vkCmdDispatchBase" vkCmdDispatchBase :: ("commandBuffer" ::: VkCommandBuffer) -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
--- | TODO: Struct comments
+-- | VkMemoryAllocateFlagsInfo - Structure controlling how many instances of
+-- memory will be allocated
 data VkMemoryAllocateFlagsInfo = VkMemoryAllocateFlagsInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkFlags :: VkMemoryAllocateFlags
-  , vkDeviceMask :: Word32
+  { -- No documentation found for Nested "VkMemoryAllocateFlagsInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkMemoryAllocateFlagsInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkMemoryAllocateFlagsInfo" "vkFlags"
+  vkFlags :: VkMemoryAllocateFlags
+  , -- No documentation found for Nested "VkMemoryAllocateFlagsInfo" "vkDeviceMask"
+  vkDeviceMask :: Word32
   }
   deriving (Eq, Show)
 
@@ -203,13 +211,19 @@ instance Storable VkMemoryAllocateFlagsInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryAllocateFlagsInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkMemoryAllocateFlagsInfo))
                 *> poke (ptr `plusPtr` 20) (vkDeviceMask (poked :: VkMemoryAllocateFlagsInfo))
--- | TODO: Struct comments
+-- | VkDeviceGroupRenderPassBeginInfo - Set the initial device mask and
+-- render areas for a render pass instance
 data VkDeviceGroupRenderPassBeginInfo = VkDeviceGroupRenderPassBeginInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkDeviceMask :: Word32
-  , vkDeviceRenderAreaCount :: Word32
-  , vkPDeviceRenderAreas :: Ptr VkRect2D
+  { -- No documentation found for Nested "VkDeviceGroupRenderPassBeginInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkDeviceGroupRenderPassBeginInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkDeviceGroupRenderPassBeginInfo" "vkDeviceMask"
+  vkDeviceMask :: Word32
+  , -- No documentation found for Nested "VkDeviceGroupRenderPassBeginInfo" "vkDeviceRenderAreaCount"
+  vkDeviceRenderAreaCount :: Word32
+  , -- No documentation found for Nested "VkDeviceGroupRenderPassBeginInfo" "vkPDeviceRenderAreas"
+  vkPDeviceRenderAreas :: Ptr VkRect2D
   }
   deriving (Eq, Show)
 
@@ -226,11 +240,15 @@ instance Storable VkDeviceGroupRenderPassBeginInfo where
                 *> poke (ptr `plusPtr` 16) (vkDeviceMask (poked :: VkDeviceGroupRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 20) (vkDeviceRenderAreaCount (poked :: VkDeviceGroupRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 24) (vkPDeviceRenderAreas (poked :: VkDeviceGroupRenderPassBeginInfo))
--- | TODO: Struct comments
+-- | VkDeviceGroupCommandBufferBeginInfo - Set the initial device mask for a
+-- command buffer
 data VkDeviceGroupCommandBufferBeginInfo = VkDeviceGroupCommandBufferBeginInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkDeviceMask :: Word32
+  { -- No documentation found for Nested "VkDeviceGroupCommandBufferBeginInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkDeviceGroupCommandBufferBeginInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkDeviceGroupCommandBufferBeginInfo" "vkDeviceMask"
+  vkDeviceMask :: Word32
   }
   deriving (Eq, Show)
 
@@ -243,16 +261,25 @@ instance Storable VkDeviceGroupCommandBufferBeginInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGroupCommandBufferBeginInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupCommandBufferBeginInfo))
                 *> poke (ptr `plusPtr` 16) (vkDeviceMask (poked :: VkDeviceGroupCommandBufferBeginInfo))
--- | TODO: Struct comments
+-- | VkDeviceGroupSubmitInfo - Structure indicating which physical devices
+-- execute semaphore operations and command buffers
 data VkDeviceGroupSubmitInfo = VkDeviceGroupSubmitInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkWaitSemaphoreCount :: Word32
-  , vkPWaitSemaphoreDeviceIndices :: Ptr Word32
-  , vkCommandBufferCount :: Word32
-  , vkPCommandBufferDeviceMasks :: Ptr Word32
-  , vkSignalSemaphoreCount :: Word32
-  , vkPSignalSemaphoreDeviceIndices :: Ptr Word32
+  { -- No documentation found for Nested "VkDeviceGroupSubmitInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkDeviceGroupSubmitInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkDeviceGroupSubmitInfo" "vkWaitSemaphoreCount"
+  vkWaitSemaphoreCount :: Word32
+  , -- No documentation found for Nested "VkDeviceGroupSubmitInfo" "vkPWaitSemaphoreDeviceIndices"
+  vkPWaitSemaphoreDeviceIndices :: Ptr Word32
+  , -- No documentation found for Nested "VkDeviceGroupSubmitInfo" "vkCommandBufferCount"
+  vkCommandBufferCount :: Word32
+  , -- No documentation found for Nested "VkDeviceGroupSubmitInfo" "vkPCommandBufferDeviceMasks"
+  vkPCommandBufferDeviceMasks :: Ptr Word32
+  , -- No documentation found for Nested "VkDeviceGroupSubmitInfo" "vkSignalSemaphoreCount"
+  vkSignalSemaphoreCount :: Word32
+  , -- No documentation found for Nested "VkDeviceGroupSubmitInfo" "vkPSignalSemaphoreDeviceIndices"
+  vkPSignalSemaphoreDeviceIndices :: Ptr Word32
   }
   deriving (Eq, Show)
 
@@ -275,12 +302,17 @@ instance Storable VkDeviceGroupSubmitInfo where
                 *> poke (ptr `plusPtr` 40) (vkPCommandBufferDeviceMasks (poked :: VkDeviceGroupSubmitInfo))
                 *> poke (ptr `plusPtr` 48) (vkSignalSemaphoreCount (poked :: VkDeviceGroupSubmitInfo))
                 *> poke (ptr `plusPtr` 56) (vkPSignalSemaphoreDeviceIndices (poked :: VkDeviceGroupSubmitInfo))
--- | TODO: Struct comments
+-- | VkDeviceGroupBindSparseInfo - Structure indicating which instances are
+-- bound
 data VkDeviceGroupBindSparseInfo = VkDeviceGroupBindSparseInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkResourceDeviceIndex :: Word32
-  , vkMemoryDeviceIndex :: Word32
+  { -- No documentation found for Nested "VkDeviceGroupBindSparseInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkDeviceGroupBindSparseInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkDeviceGroupBindSparseInfo" "vkResourceDeviceIndex"
+  vkResourceDeviceIndex :: Word32
+  , -- No documentation found for Nested "VkDeviceGroupBindSparseInfo" "vkMemoryDeviceIndex"
+  vkMemoryDeviceIndex :: Word32
   }
   deriving (Eq, Show)
 
@@ -295,5 +327,7 @@ instance Storable VkDeviceGroupBindSparseInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupBindSparseInfo))
                 *> poke (ptr `plusPtr` 16) (vkResourceDeviceIndex (poked :: VkDeviceGroupBindSparseInfo))
                 *> poke (ptr `plusPtr` 20) (vkMemoryDeviceIndex (poked :: VkDeviceGroupBindSparseInfo))
+-- | VkPeerMemoryFeatureFlags - Bitmask of VkPeerMemoryFeatureFlagBits
 type VkPeerMemoryFeatureFlags = VkPeerMemoryFeatureFlagBits
+-- | VkMemoryAllocateFlags - Bitmask of VkMemoryAllocateFlagBits
 type VkMemoryAllocateFlags = VkMemoryAllocateFlagBits

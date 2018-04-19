@@ -116,7 +116,37 @@ import Graphics.Vulkan.Core10.Pipeline
 
 -- ** VkBlendOverlapEXT
 
--- | 
+-- | VkBlendOverlapEXT - Enumerant specifying the blend overlap parameter
+--
+-- = Description
+-- #_description#
+--
+-- -   @VK_BLEND_OVERLAP_UNCORRELATED_EXT@ specifies that there is no
+--     correlation between the source and destination coverage.
+--
+-- -   @VK_BLEND_OVERLAP_CONJOINT_EXT@ specifies that the source and
+--     destination coverage are considered to have maximal overlap.
+--
+-- -   @VK_BLEND_OVERLAP_DISJOINT_EXT@ specifies that the source and
+--     destination coverage are considered to have minimal overlap.
+--
+-- > +-----------------------------------+-----------------------------------+
+-- > | Overlap Mode                      | Weighting Equations               |
+-- > +===================================+===================================+
+-- > | @VK_BLEND_OVERLAP_UNCORRELATED_EX |                                   |
+-- > | T@                                |                                   |
+-- > +-----------------------------------+-----------------------------------+
+-- > | @VK_BLEND_OVERLAP_CONJOINT_EXT@   |                                   |
+-- > +-----------------------------------+-----------------------------------+
+-- > | @VK_BLEND_OVERLAP_DISJOINT_EXT@   |                                   |
+-- > +-----------------------------------+-----------------------------------+
+-- >
+-- > Advanced Blend Overlap Modes
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkPipelineColorBlendAdvancedStateCreateInfoEXT'
 newtype VkBlendOverlapEXT = VkBlendOverlapEXT Int32
   deriving (Eq, Ord, Storable)
 
@@ -138,176 +168,221 @@ instance Read VkBlendOverlapEXT where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkBlendOverlapEXT" "VK_BLEND_OVERLAP_UNCORRELATED_EXT"
 pattern VK_BLEND_OVERLAP_UNCORRELATED_EXT :: VkBlendOverlapEXT
 pattern VK_BLEND_OVERLAP_UNCORRELATED_EXT = VkBlendOverlapEXT 0
 
--- | 
+-- No documentation found for Nested "VkBlendOverlapEXT" "VK_BLEND_OVERLAP_DISJOINT_EXT"
 pattern VK_BLEND_OVERLAP_DISJOINT_EXT :: VkBlendOverlapEXT
 pattern VK_BLEND_OVERLAP_DISJOINT_EXT = VkBlendOverlapEXT 1
 
--- | 
+-- No documentation found for Nested "VkBlendOverlapEXT" "VK_BLEND_OVERLAP_CONJOINT_EXT"
 pattern VK_BLEND_OVERLAP_CONJOINT_EXT :: VkBlendOverlapEXT
 pattern VK_BLEND_OVERLAP_CONJOINT_EXT = VkBlendOverlapEXT 2
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_ZERO_EXT"
 pattern VK_BLEND_OP_ZERO_EXT :: VkBlendOp
 pattern VK_BLEND_OP_ZERO_EXT = VkBlendOp 1000148000
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_SRC_EXT"
 pattern VK_BLEND_OP_SRC_EXT :: VkBlendOp
 pattern VK_BLEND_OP_SRC_EXT = VkBlendOp 1000148001
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_DST_EXT"
 pattern VK_BLEND_OP_DST_EXT :: VkBlendOp
 pattern VK_BLEND_OP_DST_EXT = VkBlendOp 1000148002
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_SRC_OVER_EXT"
 pattern VK_BLEND_OP_SRC_OVER_EXT :: VkBlendOp
 pattern VK_BLEND_OP_SRC_OVER_EXT = VkBlendOp 1000148003
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_DST_OVER_EXT"
 pattern VK_BLEND_OP_DST_OVER_EXT :: VkBlendOp
 pattern VK_BLEND_OP_DST_OVER_EXT = VkBlendOp 1000148004
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_SRC_IN_EXT"
 pattern VK_BLEND_OP_SRC_IN_EXT :: VkBlendOp
 pattern VK_BLEND_OP_SRC_IN_EXT = VkBlendOp 1000148005
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_DST_IN_EXT"
 pattern VK_BLEND_OP_DST_IN_EXT :: VkBlendOp
 pattern VK_BLEND_OP_DST_IN_EXT = VkBlendOp 1000148006
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_SRC_OUT_EXT"
 pattern VK_BLEND_OP_SRC_OUT_EXT :: VkBlendOp
 pattern VK_BLEND_OP_SRC_OUT_EXT = VkBlendOp 1000148007
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_DST_OUT_EXT"
 pattern VK_BLEND_OP_DST_OUT_EXT :: VkBlendOp
 pattern VK_BLEND_OP_DST_OUT_EXT = VkBlendOp 1000148008
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_SRC_ATOP_EXT"
 pattern VK_BLEND_OP_SRC_ATOP_EXT :: VkBlendOp
 pattern VK_BLEND_OP_SRC_ATOP_EXT = VkBlendOp 1000148009
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_DST_ATOP_EXT"
 pattern VK_BLEND_OP_DST_ATOP_EXT :: VkBlendOp
 pattern VK_BLEND_OP_DST_ATOP_EXT = VkBlendOp 1000148010
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_XOR_EXT"
 pattern VK_BLEND_OP_XOR_EXT :: VkBlendOp
 pattern VK_BLEND_OP_XOR_EXT = VkBlendOp 1000148011
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_MULTIPLY_EXT"
 pattern VK_BLEND_OP_MULTIPLY_EXT :: VkBlendOp
 pattern VK_BLEND_OP_MULTIPLY_EXT = VkBlendOp 1000148012
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_SCREEN_EXT"
 pattern VK_BLEND_OP_SCREEN_EXT :: VkBlendOp
 pattern VK_BLEND_OP_SCREEN_EXT = VkBlendOp 1000148013
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_OVERLAY_EXT"
 pattern VK_BLEND_OP_OVERLAY_EXT :: VkBlendOp
 pattern VK_BLEND_OP_OVERLAY_EXT = VkBlendOp 1000148014
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_DARKEN_EXT"
 pattern VK_BLEND_OP_DARKEN_EXT :: VkBlendOp
 pattern VK_BLEND_OP_DARKEN_EXT = VkBlendOp 1000148015
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_LIGHTEN_EXT"
 pattern VK_BLEND_OP_LIGHTEN_EXT :: VkBlendOp
 pattern VK_BLEND_OP_LIGHTEN_EXT = VkBlendOp 1000148016
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_COLORDODGE_EXT"
 pattern VK_BLEND_OP_COLORDODGE_EXT :: VkBlendOp
 pattern VK_BLEND_OP_COLORDODGE_EXT = VkBlendOp 1000148017
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_COLORBURN_EXT"
 pattern VK_BLEND_OP_COLORBURN_EXT :: VkBlendOp
 pattern VK_BLEND_OP_COLORBURN_EXT = VkBlendOp 1000148018
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_HARDLIGHT_EXT"
 pattern VK_BLEND_OP_HARDLIGHT_EXT :: VkBlendOp
 pattern VK_BLEND_OP_HARDLIGHT_EXT = VkBlendOp 1000148019
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_SOFTLIGHT_EXT"
 pattern VK_BLEND_OP_SOFTLIGHT_EXT :: VkBlendOp
 pattern VK_BLEND_OP_SOFTLIGHT_EXT = VkBlendOp 1000148020
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_DIFFERENCE_EXT"
 pattern VK_BLEND_OP_DIFFERENCE_EXT :: VkBlendOp
 pattern VK_BLEND_OP_DIFFERENCE_EXT = VkBlendOp 1000148021
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_EXCLUSION_EXT"
 pattern VK_BLEND_OP_EXCLUSION_EXT :: VkBlendOp
 pattern VK_BLEND_OP_EXCLUSION_EXT = VkBlendOp 1000148022
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_INVERT_EXT"
 pattern VK_BLEND_OP_INVERT_EXT :: VkBlendOp
 pattern VK_BLEND_OP_INVERT_EXT = VkBlendOp 1000148023
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_INVERT_RGB_EXT"
 pattern VK_BLEND_OP_INVERT_RGB_EXT :: VkBlendOp
 pattern VK_BLEND_OP_INVERT_RGB_EXT = VkBlendOp 1000148024
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_LINEARDODGE_EXT"
 pattern VK_BLEND_OP_LINEARDODGE_EXT :: VkBlendOp
 pattern VK_BLEND_OP_LINEARDODGE_EXT = VkBlendOp 1000148025
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_LINEARBURN_EXT"
 pattern VK_BLEND_OP_LINEARBURN_EXT :: VkBlendOp
 pattern VK_BLEND_OP_LINEARBURN_EXT = VkBlendOp 1000148026
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_VIVIDLIGHT_EXT"
 pattern VK_BLEND_OP_VIVIDLIGHT_EXT :: VkBlendOp
 pattern VK_BLEND_OP_VIVIDLIGHT_EXT = VkBlendOp 1000148027
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_LINEARLIGHT_EXT"
 pattern VK_BLEND_OP_LINEARLIGHT_EXT :: VkBlendOp
 pattern VK_BLEND_OP_LINEARLIGHT_EXT = VkBlendOp 1000148028
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_PINLIGHT_EXT"
 pattern VK_BLEND_OP_PINLIGHT_EXT :: VkBlendOp
 pattern VK_BLEND_OP_PINLIGHT_EXT = VkBlendOp 1000148029
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_HARDMIX_EXT"
 pattern VK_BLEND_OP_HARDMIX_EXT :: VkBlendOp
 pattern VK_BLEND_OP_HARDMIX_EXT = VkBlendOp 1000148030
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_HSL_HUE_EXT"
 pattern VK_BLEND_OP_HSL_HUE_EXT :: VkBlendOp
 pattern VK_BLEND_OP_HSL_HUE_EXT = VkBlendOp 1000148031
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_HSL_SATURATION_EXT"
 pattern VK_BLEND_OP_HSL_SATURATION_EXT :: VkBlendOp
 pattern VK_BLEND_OP_HSL_SATURATION_EXT = VkBlendOp 1000148032
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_HSL_COLOR_EXT"
 pattern VK_BLEND_OP_HSL_COLOR_EXT :: VkBlendOp
 pattern VK_BLEND_OP_HSL_COLOR_EXT = VkBlendOp 1000148033
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_HSL_LUMINOSITY_EXT"
 pattern VK_BLEND_OP_HSL_LUMINOSITY_EXT :: VkBlendOp
 pattern VK_BLEND_OP_HSL_LUMINOSITY_EXT = VkBlendOp 1000148034
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_PLUS_EXT"
 pattern VK_BLEND_OP_PLUS_EXT :: VkBlendOp
 pattern VK_BLEND_OP_PLUS_EXT = VkBlendOp 1000148035
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_PLUS_CLAMPED_EXT"
 pattern VK_BLEND_OP_PLUS_CLAMPED_EXT :: VkBlendOp
 pattern VK_BLEND_OP_PLUS_CLAMPED_EXT = VkBlendOp 1000148036
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT"
 pattern VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT :: VkBlendOp
 pattern VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT = VkBlendOp 1000148037
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_PLUS_DARKER_EXT"
 pattern VK_BLEND_OP_PLUS_DARKER_EXT :: VkBlendOp
 pattern VK_BLEND_OP_PLUS_DARKER_EXT = VkBlendOp 1000148038
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_MINUS_EXT"
 pattern VK_BLEND_OP_MINUS_EXT :: VkBlendOp
 pattern VK_BLEND_OP_MINUS_EXT = VkBlendOp 1000148039
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_MINUS_CLAMPED_EXT"
 pattern VK_BLEND_OP_MINUS_CLAMPED_EXT :: VkBlendOp
 pattern VK_BLEND_OP_MINUS_CLAMPED_EXT = VkBlendOp 1000148040
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_CONTRAST_EXT"
 pattern VK_BLEND_OP_CONTRAST_EXT :: VkBlendOp
 pattern VK_BLEND_OP_CONTRAST_EXT = VkBlendOp 1000148041
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_INVERT_OVG_EXT"
 pattern VK_BLEND_OP_INVERT_OVG_EXT :: VkBlendOp
 pattern VK_BLEND_OP_INVERT_OVG_EXT = VkBlendOp 1000148042
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_RED_EXT"
 pattern VK_BLEND_OP_RED_EXT :: VkBlendOp
 pattern VK_BLEND_OP_RED_EXT = VkBlendOp 1000148043
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_GREEN_EXT"
 pattern VK_BLEND_OP_GREEN_EXT :: VkBlendOp
 pattern VK_BLEND_OP_GREEN_EXT = VkBlendOp 1000148044
--- | Nothing
+-- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_BLUE_EXT"
 pattern VK_BLEND_OP_BLUE_EXT :: VkBlendOp
 pattern VK_BLEND_OP_BLUE_EXT = VkBlendOp 1000148045
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT = VkStructureType 1000148000
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT = VkStructureType 1000148001
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT = VkStructureType 1000148002
--- | Nothing
+-- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"
 pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = VkAccessFlagBits 0x00080000
+-- No documentation found for TopLevel "VK_EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION"
 pattern VK_EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION = 2
+-- No documentation found for TopLevel "VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME"
 pattern VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME = "VK_EXT_blend_operation_advanced"
--- | TODO: Struct comments
+-- | VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT - Structure describing
+-- advanced blending features that can be supported by an implementation
+--
+-- = Members
+-- #_members#
+--
+-- The members of the @VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT@
+-- structure describe the following features:
+--
+-- = Description
+-- #_description#
+--
+-- -   @advancedBlendCoherentOperations@ specifies whether blending using
+--     <{html_spec_relative}#framebuffer-blend-advanced advanced blend operations>
+--     is guaranteed to execute atomically and in
+--     <{html_spec_relative}#drawing-primitive-order primitive order>. If
+--     this is @VK_TRUE@,
+--     @VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT@ is treated the
+--     same as @VK_ACCESS_COLOR_ATTACHMENT_READ_BIT@, and advanced blending
+--     needs no additional synchronization over basic blending. If this is
+--     @VK_FALSE@, then memory dependencies are required to guarantee order
+--     between two advanced blending operations that occur on the same
+--     sample.
+--
+-- If the @VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+-- it is filled with values indicating whether each feature is supported.
+-- @VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT@ /can/ also be used
+-- in @pNext@ chain of 'Graphics.Vulkan.Core10.Device.VkDeviceCreateInfo'
+-- to enable the features.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT@
+--
+-- = See Also
+-- #_see_also#
+--
+-- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT = VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkAdvancedBlendCoherentOperations :: VkBool32
+  { -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT" "vkAdvancedBlendCoherentOperations"
+  vkAdvancedBlendCoherentOperations :: VkBool32
   }
   deriving (Eq, Show)
 
@@ -320,16 +395,79 @@ instance Storable VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkAdvancedBlendCoherentOperations (poked :: VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT))
--- | TODO: Struct comments
+-- | VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT - Structure
+-- describing advanced blending limits that can be supported by an
+-- implementation
+--
+-- = Members
+-- #_members#
+--
+-- The members of the @VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT@
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+-- #_description#
+--
+-- -   @advancedBlendMaxColorAttachments@ is one greater than the highest
+--     color attachment index that /can/ be used in a subpass, for a
+--     pipeline that uses an
+--     <{html_spec_relative}#framebuffer-blend-advanced advanced blend operation>.
+--
+-- -   @advancedBlendIndependentBlend@ specifies whether advanced blend
+--     operations /can/ vary per-attachment.
+--
+-- -   @advancedBlendNonPremultipliedSrcColor@ specifies whether the source
+--     color /can/ be treated as non-premultiplied. If this is @VK_FALSE@,
+--     then
+--     'VkPipelineColorBlendAdvancedStateCreateInfoEXT'::@srcPremultiplied@
+--     /must/ be @VK_TRUE@.
+--
+-- -   @advancedBlendNonPremultipliedDstColor@ specifies whether the
+--     destination color /can/ be treated as non-premultiplied. If this is
+--     @VK_FALSE@, then
+--     'VkPipelineColorBlendAdvancedStateCreateInfoEXT'::@dstPremultiplied@
+--     /must/ be @VK_TRUE@.
+--
+-- -   @advancedBlendCorrelatedOverlap@ specifies whether the overlap mode
+--     /can/ be treated as correlated. If this is @VK_FALSE@, then
+--     'VkPipelineColorBlendAdvancedStateCreateInfoEXT'::@blendOverlap@
+--     /must/ be @VK_BLEND_OVERLAP_UNCORRELATED_EXT@.
+--
+-- -   @advancedBlendAllOperations@ specifies whether all advanced blend
+--     operation enums are supported. See the valid usage of
+--     'Graphics.Vulkan.Core10.Pipeline.VkPipelineColorBlendAttachmentState'.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT@
+--
+-- If the @VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT@ structure
+-- is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- = See Also
+-- #_see_also#
+--
+-- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT = VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkAdvancedBlendMaxColorAttachments :: Word32
-  , vkAdvancedBlendIndependentBlend :: VkBool32
-  , vkAdvancedBlendNonPremultipliedSrcColor :: VkBool32
-  , vkAdvancedBlendNonPremultipliedDstColor :: VkBool32
-  , vkAdvancedBlendCorrelatedOverlap :: VkBool32
-  , vkAdvancedBlendAllOperations :: VkBool32
+  { -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "vkAdvancedBlendMaxColorAttachments"
+  vkAdvancedBlendMaxColorAttachments :: Word32
+  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "vkAdvancedBlendIndependentBlend"
+  vkAdvancedBlendIndependentBlend :: VkBool32
+  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "vkAdvancedBlendNonPremultipliedSrcColor"
+  vkAdvancedBlendNonPremultipliedSrcColor :: VkBool32
+  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "vkAdvancedBlendNonPremultipliedDstColor"
+  vkAdvancedBlendNonPremultipliedDstColor :: VkBool32
+  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "vkAdvancedBlendCorrelatedOverlap"
+  vkAdvancedBlendCorrelatedOverlap :: VkBool32
+  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "vkAdvancedBlendAllOperations"
+  vkAdvancedBlendAllOperations :: VkBool32
   }
   deriving (Eq, Show)
 
@@ -352,13 +490,54 @@ instance Storable VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT where
                 *> poke (ptr `plusPtr` 28) (vkAdvancedBlendNonPremultipliedDstColor (poked :: VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT))
                 *> poke (ptr `plusPtr` 32) (vkAdvancedBlendCorrelatedOverlap (poked :: VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT))
                 *> poke (ptr `plusPtr` 36) (vkAdvancedBlendAllOperations (poked :: VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT))
--- | TODO: Struct comments
+-- | VkPipelineColorBlendAdvancedStateCreateInfoEXT - Structure specifying
+-- parameters that affect advanced blend operations
+--
+-- = Description
+-- #_description#
+--
+-- If this structure is not present, @srcPremultiplied@ and
+-- @dstPremultiplied@ are both considered to be @VK_TRUE@, and
+-- @blendOverlap@ is considered to be @VK_BLEND_OVERLAP_UNCORRELATED_EXT@.
+--
+-- == Valid Usage
+--
+-- -   If the
+--     <{html_spec_relative}#features-limits-advancedBlendNonPremultipliedSrcColor non-premultiplied source color>
+--     property is not supported, @srcPremultiplied@ /must/ be @VK_TRUE@
+--
+-- -   If the
+--     <{html_spec_relative}#features-limits-advancedBlendNonPremultipliedDstColor non-premultiplied destination color>
+--     property is not supported, @dstPremultiplied@ /must/ be @VK_TRUE@
+--
+-- -   If the
+--     <{html_spec_relative}#features-limits-advancedBlendCorrelatedOverlap correlated overlap>
+--     property is not supported, @blendOverlap@ /must/ be
+--     @VK_BLEND_OVERLAP_UNCORRELATED_EXT@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT@
+--
+-- -   @blendOverlap@ /must/ be a valid 'VkBlendOverlapEXT' value
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkBlendOverlapEXT', @VkBool32@,
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineColorBlendAdvancedStateCreateInfoEXT = VkPipelineColorBlendAdvancedStateCreateInfoEXT
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkSrcPremultiplied :: VkBool32
-  , vkDstPremultiplied :: VkBool32
-  , vkBlendOverlap :: VkBlendOverlapEXT
+  { -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "vkSrcPremultiplied"
+  vkSrcPremultiplied :: VkBool32
+  , -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "vkDstPremultiplied"
+  vkDstPremultiplied :: VkBool32
+  , -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "vkBlendOverlap"
+  vkBlendOverlap :: VkBlendOverlapEXT
   }
   deriving (Eq, Show)
 

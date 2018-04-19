@@ -36,24 +36,69 @@ import Graphics.Vulkan.Core10.Memory
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV"
 pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV = VkStructureType 1000058000
+-- No documentation found for TopLevel "VK_NV_WIN32_KEYED_MUTEX_SPEC_VERSION"
 pattern VK_NV_WIN32_KEYED_MUTEX_SPEC_VERSION :: Integral a => a
 pattern VK_NV_WIN32_KEYED_MUTEX_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME"
 pattern VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME = "VK_NV_win32_keyed_mutex"
--- | TODO: Struct comments
+-- | VkWin32KeyedMutexAcquireReleaseInfoNV - use Windows keyex mutex
+-- mechanism to synchronize work
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV@
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireSyncs@ /must/ be a valid
+--     pointer to an array of @acquireCount@ valid @VkDeviceMemory@ handles
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireKeys@ /must/ be a valid
+--     pointer to an array of @acquireCount@ @uint64_t@ values
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireTimeoutMilliseconds@ /must/
+--     be a valid pointer to an array of @acquireCount@ @uint32_t@ values
+--
+-- -   If @releaseCount@ is not @0@, @pReleaseSyncs@ /must/ be a valid
+--     pointer to an array of @releaseCount@ valid @VkDeviceMemory@ handles
+--
+-- -   If @releaseCount@ is not @0@, @pReleaseKeys@ /must/ be a valid
+--     pointer to an array of @releaseCount@ @uint64_t@ values
+--
+-- -   Both of the elements of @pAcquireSyncs@, and the elements of
+--     @pReleaseSyncs@ that are valid handles /must/ have been created,
+--     allocated, or retrieved from the same @VkDevice@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkWin32KeyedMutexAcquireReleaseInfoNV = VkWin32KeyedMutexAcquireReleaseInfoNV
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkAcquireCount :: Word32
-  , vkPAcquireSyncs :: Ptr VkDeviceMemory
-  , vkPAcquireKeys :: Ptr Word64
-  , vkPAcquireTimeoutMilliseconds :: Ptr Word32
-  , vkReleaseCount :: Word32
-  , vkPReleaseSyncs :: Ptr VkDeviceMemory
-  , vkPReleaseKeys :: Ptr Word64
+  { -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "vkAcquireCount"
+  vkAcquireCount :: Word32
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "vkPAcquireSyncs"
+  vkPAcquireSyncs :: Ptr VkDeviceMemory
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "vkPAcquireKeys"
+  vkPAcquireKeys :: Ptr Word64
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "vkPAcquireTimeoutMilliseconds"
+  vkPAcquireTimeoutMilliseconds :: Ptr Word32
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "vkReleaseCount"
+  vkReleaseCount :: Word32
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "vkPReleaseSyncs"
+  vkPReleaseSyncs :: Ptr VkDeviceMemory
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "vkPReleaseKeys"
+  vkPReleaseKeys :: Ptr Word64
   }
   deriving (Eq, Show)
 

@@ -58,7 +58,7 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 
 -- ** VkCommandPoolTrimFlags
 
--- | 
+-- | VkCommandPoolTrimFlags - Reserved for future use
 newtype VkCommandPoolTrimFlags = VkCommandPoolTrimFlags VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -77,17 +77,17 @@ instance Read VkCommandPoolTrimFlags where
                     )
 
 
--- | Nothing
+-- No documentation found for Nested "VkResult" "VK_ERROR_OUT_OF_POOL_MEMORY"
 pattern VK_ERROR_OUT_OF_POOL_MEMORY :: VkResult
 pattern VK_ERROR_OUT_OF_POOL_MEMORY = VkResult (-1000069000)
--- | Just "The 3D image can be viewed as a 2D or 2D array image"
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT"
 pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT = VkImageCreateFlagBits 0x00000020
--- | Just "Format can be used as the source image of image transfer commands"
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_TRANSFER_SRC_BIT"
 pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT = VkFormatFeatureFlagBits 0x00004000
--- | Just "Format can be used as the destination image of image transfer commands"
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_TRANSFER_DST_BIT"
 pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT = VkFormatFeatureFlagBits 0x00008000
--- | 
+-- | vkTrimCommandPool - Trim a command pool
 foreign import ccall "vkTrimCommandPool" vkTrimCommandPool :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("flags" ::: VkCommandPoolTrimFlags) -> IO ()

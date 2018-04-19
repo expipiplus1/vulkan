@@ -89,7 +89,8 @@ import Graphics.Vulkan.Core10.PipelineLayout
 
 -- ** VkDescriptorUpdateTemplateType
 
--- | 
+-- | VkDescriptorUpdateTemplateType - Indicates the valid usage of the
+-- descriptor update template
 newtype VkDescriptorUpdateTemplateType = VkDescriptorUpdateTemplateType Int32
   deriving (Eq, Ord, Storable)
 
@@ -112,12 +113,12 @@ instance Read VkDescriptorUpdateTemplateType where
                         )
                     )
 
--- | Create descriptor update template for descriptor set updates
+-- No documentation found for Nested "VkDescriptorUpdateTemplateType" "VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET"
 pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET :: VkDescriptorUpdateTemplateType
 pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = VkDescriptorUpdateTemplateType 0
 -- ** VkDescriptorUpdateTemplateCreateFlags
 
--- | 
+-- | VkDescriptorUpdateTemplateCreateFlags - Reserved for future use
 newtype VkDescriptorUpdateTemplateCreateFlags = VkDescriptorUpdateTemplateCreateFlags VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -136,29 +137,41 @@ instance Read VkDescriptorUpdateTemplateCreateFlags where
                     )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO = VkStructureType 1000085000
--- | Nothing
+-- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE"
 pattern VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE :: VkObjectType
 pattern VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE = VkObjectType 1000085000
--- |
+-- | Dummy data to tag the 'Ptr' with
 data VkDescriptorUpdateTemplate_T
+-- | VkDescriptorUpdateTemplate - Opaque handle to a descriptor update
+-- template
 type VkDescriptorUpdateTemplate = Ptr VkDescriptorUpdateTemplate_T
--- | 
+-- | vkCreateDescriptorUpdateTemplate - Create a new descriptor update
+-- template
 foreign import ccall "vkCreateDescriptorUpdateTemplate" vkCreateDescriptorUpdateTemplate :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorUpdateTemplateCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pDescriptorUpdateTemplate" ::: Ptr VkDescriptorUpdateTemplate) -> IO VkResult
--- | 
+-- | vkDestroyDescriptorUpdateTemplate - Destroy a descriptor update template
+-- object
 foreign import ccall "vkDestroyDescriptorUpdateTemplate" vkDestroyDescriptorUpdateTemplate :: ("device" ::: VkDevice) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
--- | 
+-- | vkUpdateDescriptorSetWithTemplate - Update the contents of a descriptor
+-- set object using an update template
 foreign import ccall "vkUpdateDescriptorSetWithTemplate" vkUpdateDescriptorSetWithTemplate :: ("device" ::: VkDevice) -> ("descriptorSet" ::: VkDescriptorSet) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("pData" ::: Ptr ()) -> IO ()
--- | TODO: Struct comments
+-- | VkDescriptorUpdateTemplateEntry - Describes a single descriptor update
+-- of the descriptor update template
 data VkDescriptorUpdateTemplateEntry = VkDescriptorUpdateTemplateEntry
-  { vkDstBinding :: Word32
-  , vkDstArrayElement :: Word32
-  , vkDescriptorCount :: Word32
-  , vkDescriptorType :: VkDescriptorType
-  , vkOffset :: CSize
-  , vkStride :: CSize
+  { -- No documentation found for Nested "VkDescriptorUpdateTemplateEntry" "vkDstBinding"
+  vkDstBinding :: Word32
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateEntry" "vkDstArrayElement"
+  vkDstArrayElement :: Word32
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateEntry" "vkDescriptorCount"
+  vkDescriptorCount :: Word32
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateEntry" "vkDescriptorType"
+  vkDescriptorType :: VkDescriptorType
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateEntry" "vkOffset"
+  vkOffset :: CSize
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateEntry" "vkStride"
+  vkStride :: CSize
   }
   deriving (Eq, Show)
 
@@ -177,18 +190,29 @@ instance Storable VkDescriptorUpdateTemplateEntry where
                 *> poke (ptr `plusPtr` 12) (vkDescriptorType (poked :: VkDescriptorUpdateTemplateEntry))
                 *> poke (ptr `plusPtr` 16) (vkOffset (poked :: VkDescriptorUpdateTemplateEntry))
                 *> poke (ptr `plusPtr` 24) (vkStride (poked :: VkDescriptorUpdateTemplateEntry))
--- | TODO: Struct comments
+-- | VkDescriptorUpdateTemplateCreateInfo - Structure specifying parameters
+-- of a newly created descriptor update template
 data VkDescriptorUpdateTemplateCreateInfo = VkDescriptorUpdateTemplateCreateInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkFlags :: VkDescriptorUpdateTemplateCreateFlags
-  , vkDescriptorUpdateEntryCount :: Word32
-  , vkPDescriptorUpdateEntries :: Ptr VkDescriptorUpdateTemplateEntry
-  , vkTemplateType :: VkDescriptorUpdateTemplateType
-  , vkDescriptorSetLayout :: VkDescriptorSetLayout
-  , vkPipelineBindPoint :: VkPipelineBindPoint
-  , vkPipelineLayout :: VkPipelineLayout
-  , vkSet :: Word32
+  { -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkFlags"
+  vkFlags :: VkDescriptorUpdateTemplateCreateFlags
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkDescriptorUpdateEntryCount"
+  vkDescriptorUpdateEntryCount :: Word32
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkPDescriptorUpdateEntries"
+  vkPDescriptorUpdateEntries :: Ptr VkDescriptorUpdateTemplateEntry
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkTemplateType"
+  vkTemplateType :: VkDescriptorUpdateTemplateType
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkDescriptorSetLayout"
+  vkDescriptorSetLayout :: VkDescriptorSetLayout
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkPipelineBindPoint"
+  vkPipelineBindPoint :: VkPipelineBindPoint
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkPipelineLayout"
+  vkPipelineLayout :: VkPipelineLayout
+  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "vkSet"
+  vkSet :: Word32
   }
   deriving (Eq, Show)
 

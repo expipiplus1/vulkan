@@ -24,15 +24,20 @@ import Graphics.Vulkan.Core10.Core
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = VkStructureType 1000120000
--- | TODO: Struct comments
+-- | VkPhysicalDeviceVariablePointerFeatures - Structure describing variable
+-- pointers features that can be supported by an implementation
 data VkPhysicalDeviceVariablePointerFeatures = VkPhysicalDeviceVariablePointerFeatures
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkVariablePointersStorageBuffer :: VkBool32
-  , vkVariablePointers :: VkBool32
+  { -- No documentation found for Nested "VkPhysicalDeviceVariablePointerFeatures" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDeviceVariablePointerFeatures" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDeviceVariablePointerFeatures" "vkVariablePointersStorageBuffer"
+  vkVariablePointersStorageBuffer :: VkBool32
+  , -- No documentation found for Nested "VkPhysicalDeviceVariablePointerFeatures" "vkVariablePointers"
+  vkVariablePointers :: VkBool32
   }
   deriving (Eq, Show)
 

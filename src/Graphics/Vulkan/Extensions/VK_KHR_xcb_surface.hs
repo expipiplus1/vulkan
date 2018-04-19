@@ -75,12 +75,15 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
   )
 
 
+-- | Opaque data
 data Xcb_connection_t
+-- No documentation found for TopLevel "Xcb_visualid_t"
 type Xcb_visualid_t = Word32
+-- No documentation found for TopLevel "Xcb_window_t"
 type Xcb_window_t = Word32
 -- ** VkXcbSurfaceCreateFlagsKHR
 
--- | 
+-- No documentation found for TopLevel "VkXcbSurfaceCreateFlagsKHR"
 newtype VkXcbSurfaceCreateFlagsKHR = VkXcbSurfaceCreateFlagsKHR VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -99,24 +102,140 @@ instance Read VkXcbSurfaceCreateFlagsKHR where
                     )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR = VkStructureType 1000005000
+-- No documentation found for TopLevel "VK_KHR_XCB_SURFACE_SPEC_VERSION"
 pattern VK_KHR_XCB_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_XCB_SURFACE_SPEC_VERSION = 6
+-- No documentation found for TopLevel "VK_KHR_XCB_SURFACE_EXTENSION_NAME"
 pattern VK_KHR_XCB_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface"
--- | 
+-- | vkCreateXcbSurfaceKHR - Create a
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
+-- X11 window, using the XCB client-side library
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @instance@ is the instance to associate the surface with.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     @VkXcbSurfaceCreateInfoKHR@ structure containing parameters
+--     affecting the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
+--     surface object is returned.
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid @VkInstance@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkXcbSurfaceCreateInfoKHR@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+--
+-- == Return Codes
+--
+-- [<#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'VkXcbSurfaceCreateInfoKHR'
 foreign import ccall "vkCreateXcbSurfaceKHR" vkCreateXcbSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkXcbSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
--- | 
+-- | vkGetPhysicalDeviceXcbPresentationSupportKHR - Query physical device for
+-- presentation to X11 server using XCB
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @physicalDevice@ is the physical device.
+--
+-- -   @queueFamilyIndex@ is the queue family index.
+--
+-- -   @connection@ is a pointer to an @xcb_connection_t@ to the X server.
+--     @visual_id@ is an X11 visual (@xcb_visualid_t@).
+--
+-- = Description
+-- #_description#
+--
+-- This platform-specific function /can/ be called prior to creating a
+-- surface.
+--
+-- == Valid Usage
+--
+-- -   @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+--     returned by @vkGetPhysicalDeviceQueueFamilyProperties@ for the given
+--     @physicalDevice@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+--
+-- -   @connection@ /must/ be a valid pointer to a @xcb_connection_t@ value
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall "vkGetPhysicalDeviceXcbPresentationSupportKHR" vkGetPhysicalDeviceXcbPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr Xcb_connection_t) -> ("visual_id" ::: Xcb_visualid_t) -> IO VkBool32
--- | TODO: Struct comments
+-- | VkXcbSurfaceCreateInfoKHR - Structure specifying parameters of a newly
+-- created Xcb surface object
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage
+--
+-- -   @connection@ /must/ point to a valid X11 @xcb_connection_t@.
+--
+-- -   @window@ /must/ be a valid X11 @xcb_window_t@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR@
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType',
+-- 'VkXcbSurfaceCreateFlagsKHR', 'vkCreateXcbSurfaceKHR'
 data VkXcbSurfaceCreateInfoKHR = VkXcbSurfaceCreateInfoKHR
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkFlags :: VkXcbSurfaceCreateFlagsKHR
-  , vkConnection :: Ptr Xcb_connection_t
-  , vkWindow :: Xcb_window_t
+  { -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "vkFlags"
+  vkFlags :: VkXcbSurfaceCreateFlagsKHR
+  , -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "vkConnection"
+  vkConnection :: Ptr Xcb_connection_t
+  , -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "vkWindow"
+  vkWindow :: Xcb_window_t
   }
   deriving (Eq, Show)
 

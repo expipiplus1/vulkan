@@ -38,25 +38,31 @@ import Graphics.Vulkan.Core10.Pass
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO = VkStructureType 1000053000
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES = VkStructureType 1000053001
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES = VkStructureType 1000053002
--- | Nothing
+-- No documentation found for Nested "VkDependencyFlagBits" "VK_DEPENDENCY_VIEW_LOCAL_BIT"
 pattern VK_DEPENDENCY_VIEW_LOCAL_BIT :: VkDependencyFlagBits
 pattern VK_DEPENDENCY_VIEW_LOCAL_BIT = VkDependencyFlagBits 0x00000002
--- | TODO: Struct comments
+-- | VkPhysicalDeviceMultiviewFeatures - Structure describing multiview
+-- features that can be supported by an implementation
 data VkPhysicalDeviceMultiviewFeatures = VkPhysicalDeviceMultiviewFeatures
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkMultiview :: VkBool32
-  , vkMultiviewGeometryShader :: VkBool32
-  , vkMultiviewTessellationShader :: VkBool32
+  { -- No documentation found for Nested "VkPhysicalDeviceMultiviewFeatures" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewFeatures" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewFeatures" "vkMultiview"
+  vkMultiview :: VkBool32
+  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewFeatures" "vkMultiviewGeometryShader"
+  vkMultiviewGeometryShader :: VkBool32
+  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewFeatures" "vkMultiviewTessellationShader"
+  vkMultiviewTessellationShader :: VkBool32
   }
   deriving (Eq, Show)
 
@@ -73,12 +79,17 @@ instance Storable VkPhysicalDeviceMultiviewFeatures where
                 *> poke (ptr `plusPtr` 16) (vkMultiview (poked :: VkPhysicalDeviceMultiviewFeatures))
                 *> poke (ptr `plusPtr` 20) (vkMultiviewGeometryShader (poked :: VkPhysicalDeviceMultiviewFeatures))
                 *> poke (ptr `plusPtr` 24) (vkMultiviewTessellationShader (poked :: VkPhysicalDeviceMultiviewFeatures))
--- | TODO: Struct comments
+-- | VkPhysicalDeviceMultiviewProperties - Structure describing multiview
+-- limits that can be supported by an implementation
 data VkPhysicalDeviceMultiviewProperties = VkPhysicalDeviceMultiviewProperties
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkMaxMultiviewViewCount :: Word32
-  , vkMaxMultiviewInstanceIndex :: Word32
+  { -- No documentation found for Nested "VkPhysicalDeviceMultiviewProperties" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewProperties" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewProperties" "vkMaxMultiviewViewCount"
+  vkMaxMultiviewViewCount :: Word32
+  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewProperties" "vkMaxMultiviewInstanceIndex"
+  vkMaxMultiviewInstanceIndex :: Word32
   }
   deriving (Eq, Show)
 
@@ -93,16 +104,25 @@ instance Storable VkPhysicalDeviceMultiviewProperties where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMultiviewProperties))
                 *> poke (ptr `plusPtr` 16) (vkMaxMultiviewViewCount (poked :: VkPhysicalDeviceMultiviewProperties))
                 *> poke (ptr `plusPtr` 20) (vkMaxMultiviewInstanceIndex (poked :: VkPhysicalDeviceMultiviewProperties))
--- | TODO: Struct comments
+-- | VkRenderPassMultiviewCreateInfo - Structure containing multiview info
+-- for all subpasses
 data VkRenderPassMultiviewCreateInfo = VkRenderPassMultiviewCreateInfo
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkSubpassCount :: Word32
-  , vkPViewMasks :: Ptr Word32
-  , vkDependencyCount :: Word32
-  , vkPViewOffsets :: Ptr Int32
-  , vkCorrelationMaskCount :: Word32
-  , vkPCorrelationMasks :: Ptr Word32
+  { -- No documentation found for Nested "VkRenderPassMultiviewCreateInfo" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkRenderPassMultiviewCreateInfo" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkRenderPassMultiviewCreateInfo" "vkSubpassCount"
+  vkSubpassCount :: Word32
+  , -- No documentation found for Nested "VkRenderPassMultiviewCreateInfo" "vkPViewMasks"
+  vkPViewMasks :: Ptr Word32
+  , -- No documentation found for Nested "VkRenderPassMultiviewCreateInfo" "vkDependencyCount"
+  vkDependencyCount :: Word32
+  , -- No documentation found for Nested "VkRenderPassMultiviewCreateInfo" "vkPViewOffsets"
+  vkPViewOffsets :: Ptr Int32
+  , -- No documentation found for Nested "VkRenderPassMultiviewCreateInfo" "vkCorrelationMaskCount"
+  vkCorrelationMaskCount :: Word32
+  , -- No documentation found for Nested "VkRenderPassMultiviewCreateInfo" "vkPCorrelationMasks"
+  vkPCorrelationMasks :: Ptr Word32
   }
   deriving (Eq, Show)
 

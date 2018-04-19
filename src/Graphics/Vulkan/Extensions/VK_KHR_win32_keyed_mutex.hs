@@ -36,24 +36,77 @@ import Graphics.Vulkan.Core10.Memory
   )
 
 
--- | Nothing
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR = VkStructureType 1000075000
+-- No documentation found for TopLevel "VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION"
 pattern VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME"
 pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME = "VK_KHR_win32_keyed_mutex"
--- | TODO: Struct comments
+-- | VkWin32KeyedMutexAcquireReleaseInfoKHR - Use the Windows keyed mutex
+-- mechanism to synchronize work
+--
+-- = Description
+-- #_description#
+--
+-- == Valid Usage
+--
+-- -   Each member of @pAcquireSyncs@ and @pReleaseSyncs@ /must/ be a
+--     device memory object imported by setting
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR'::@handleType@
+--     to @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT@ or
+--     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR@
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireSyncs@ /must/ be a valid
+--     pointer to an array of @acquireCount@ valid @VkDeviceMemory@ handles
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireKeys@ /must/ be a valid
+--     pointer to an array of @acquireCount@ @uint64_t@ values
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireTimeouts@ /must/ be a valid
+--     pointer to an array of @acquireCount@ @uint32_t@ values
+--
+-- -   If @releaseCount@ is not @0@, @pReleaseSyncs@ /must/ be a valid
+--     pointer to an array of @releaseCount@ valid @VkDeviceMemory@ handles
+--
+-- -   If @releaseCount@ is not @0@, @pReleaseKeys@ /must/ be a valid
+--     pointer to an array of @releaseCount@ @uint64_t@ values
+--
+-- -   Both of the elements of @pAcquireSyncs@, and the elements of
+--     @pReleaseSyncs@ that are valid handles /must/ have been created,
+--     allocated, or retrieved from the same @VkDevice@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkWin32KeyedMutexAcquireReleaseInfoKHR = VkWin32KeyedMutexAcquireReleaseInfoKHR
-  { vkSType :: VkStructureType
-  , vkPNext :: Ptr ()
-  , vkAcquireCount :: Word32
-  , vkPAcquireSyncs :: Ptr VkDeviceMemory
-  , vkPAcquireKeys :: Ptr Word64
-  , vkPAcquireTimeouts :: Ptr Word32
-  , vkReleaseCount :: Word32
-  , vkPReleaseSyncs :: Ptr VkDeviceMemory
-  , vkPReleaseKeys :: Ptr Word64
+  { -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "vkSType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "vkPNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "vkAcquireCount"
+  vkAcquireCount :: Word32
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "vkPAcquireSyncs"
+  vkPAcquireSyncs :: Ptr VkDeviceMemory
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "vkPAcquireKeys"
+  vkPAcquireKeys :: Ptr Word64
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "vkPAcquireTimeouts"
+  vkPAcquireTimeouts :: Ptr Word32
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "vkReleaseCount"
+  vkReleaseCount :: Word32
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "vkPReleaseSyncs"
+  vkPReleaseSyncs :: Ptr VkDeviceMemory
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "vkPReleaseKeys"
+  vkPReleaseKeys :: Ptr Word64
   }
   deriving (Eq, Show)
 

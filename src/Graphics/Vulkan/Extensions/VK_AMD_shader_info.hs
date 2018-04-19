@@ -80,7 +80,7 @@ import Graphics.Vulkan.Core10.PipelineLayout
 
 -- ** VkShaderInfoTypeAMD
 
--- | 
+-- No documentation found for TopLevel "VkShaderInfoTypeAMD"
 newtype VkShaderInfoTypeAMD = VkShaderInfoTypeAMD Int32
   deriving (Eq, Ord, Storable)
 
@@ -102,30 +102,138 @@ instance Read VkShaderInfoTypeAMD where
                         )
                     )
 
--- | 
+-- No documentation found for Nested "VkShaderInfoTypeAMD" "VK_SHADER_INFO_TYPE_STATISTICS_AMD"
 pattern VK_SHADER_INFO_TYPE_STATISTICS_AMD :: VkShaderInfoTypeAMD
 pattern VK_SHADER_INFO_TYPE_STATISTICS_AMD = VkShaderInfoTypeAMD 0
 
--- | 
+-- No documentation found for Nested "VkShaderInfoTypeAMD" "VK_SHADER_INFO_TYPE_BINARY_AMD"
 pattern VK_SHADER_INFO_TYPE_BINARY_AMD :: VkShaderInfoTypeAMD
 pattern VK_SHADER_INFO_TYPE_BINARY_AMD = VkShaderInfoTypeAMD 1
 
--- | 
+-- No documentation found for Nested "VkShaderInfoTypeAMD" "VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD"
 pattern VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD :: VkShaderInfoTypeAMD
 pattern VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD = VkShaderInfoTypeAMD 2
+-- No documentation found for TopLevel "VK_AMD_SHADER_INFO_SPEC_VERSION"
 pattern VK_AMD_SHADER_INFO_SPEC_VERSION :: Integral a => a
 pattern VK_AMD_SHADER_INFO_SPEC_VERSION = 1
+-- No documentation found for TopLevel "VK_AMD_SHADER_INFO_EXTENSION_NAME"
 pattern VK_AMD_SHADER_INFO_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_AMD_SHADER_INFO_EXTENSION_NAME = "VK_AMD_shader_info"
--- | 
+-- | vkGetShaderInfoAMD - Get information about a shader in a pipeline
+--
+-- = Parameters
+-- #_parameters#
+--
+-- -   @device@ is the device that created @pipeline@.
+--
+-- -   @pipeline@ is the target of the query.
+--
+-- -   @shaderStage@ identifies the particular shader within the pipeline
+--     about which information is being queried.
+--
+-- -   @infoType@ describes what kind of information is being queried.
+--
+-- -   @pInfoSize@ is a pointer to a value related to the amount of data
+--     the query returns, as described below.
+--
+-- -   @pInfo@ is either NULL or a pointer to a buffer.
+--
+-- = Description
+-- #_description#
+--
+-- If @pInfo@ is @NULL@, then the maximum size of the information that
+-- /can/ be retrieved about the shader, in bytes, is returned in
+-- @pInfoSize@. Otherwise, @pInfoSize@ /must/ point to a variable set by
+-- the user to the size of the buffer, in bytes, pointed to by @pInfo@, and
+-- on return the variable is overwritten with the amount of data actually
+-- written to @pInfo@.
+--
+-- If @pInfoSize@ is less than the maximum size that /can/ be retrieved by
+-- the pipeline cache, then at most @pInfoSize@ bytes will be written to
+-- @pInfo@, and @vkGetShaderInfoAMD@ will return @VK_INCOMPLETE@.
+--
+-- Not all information is available for every shader and implementations
+-- may not support all kinds of information for any shader. When a certain
+-- type of information is unavailable, the function returns
+-- @VK_ERROR_FEATURE_NOT_PRESENT@.
+--
+-- If information is successfully and fully queried, the function will
+-- return @VK_SUCCESS@.
+--
+-- For @VK_SHADER_INFO_TYPE_STATISTICS_AMD@, an instance of
+-- @VkShaderStatisticsInfoAMD@ will be written to the buffer pointed to by
+-- @pInfo@. This structure will be populated with statistics regarding the
+-- physical device resources used by that shader along with other
+-- miscellaneous information and is described in further detail below.
+--
+-- For @VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD@, @pInfo@ points to a UTF-8
+-- null-terminated string containing human-readable disassembly. The exact
+-- formatting and contents of the disassembly string are vendor-specific.
+--
+-- The formatting and contents of all other types of information, including
+-- @VK_SHADER_INFO_TYPE_BINARY_AMD@, are left to the vendor and are not
+-- further specified by this extension.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @pipeline@ /must/ be a valid @VkPipeline@ handle
+--
+-- -   @shaderStage@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Pipeline.VkShaderStageFlagBits' value
+--
+-- -   @infoType@ /must/ be a valid 'VkShaderInfoTypeAMD' value
+--
+-- -   @pInfoSize@ /must/ be a valid pointer to a @size_t@ value
+--
+-- -   If the value referenced by @pInfoSize@ is not @0@, and @pInfo@ is
+--     not @NULL@, @pInfo@ /must/ be a valid pointer to an array of
+--     @pInfoSize@ bytes
+--
+-- -   @pipeline@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Return Codes
+--
+-- [<#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+--     -   @VK_INCOMPLETE@
+--
+-- [<#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_FEATURE_NOT_PRESENT@
+--
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipeline', 'VkShaderInfoTypeAMD',
+-- 'Graphics.Vulkan.Core10.Pipeline.VkShaderStageFlagBits'
 foreign import ccall "vkGetShaderInfoAMD" vkGetShaderInfoAMD :: ("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shaderStage" ::: VkShaderStageFlagBits) -> ("infoType" ::: VkShaderInfoTypeAMD) -> ("pInfoSize" ::: Ptr CSize) -> ("pInfo" ::: Ptr ()) -> IO VkResult
--- | TODO: Struct comments
+-- | VkShaderResourceUsageAMD - Resource usage information about a particular
+-- shader within a pipeline
+--
+-- = Description
+-- #_description#
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkShaderStatisticsInfoAMD'
 data VkShaderResourceUsageAMD = VkShaderResourceUsageAMD
-  { vkNumUsedVgprs :: Word32
-  , vkNumUsedSgprs :: Word32
-  , vkLdsSizePerLocalWorkGroup :: Word32
-  , vkLdsUsageSizeInBytes :: CSize
-  , vkScratchMemUsageInBytes :: CSize
+  { -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkNumUsedVgprs"
+  vkNumUsedVgprs :: Word32
+  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkNumUsedSgprs"
+  vkNumUsedSgprs :: Word32
+  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkLdsSizePerLocalWorkGroup"
+  vkLdsSizePerLocalWorkGroup :: Word32
+  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkLdsUsageSizeInBytes"
+  vkLdsUsageSizeInBytes :: CSize
+  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkScratchMemUsageInBytes"
+  vkScratchMemUsageInBytes :: CSize
   }
   deriving (Eq, Show)
 
@@ -142,15 +250,45 @@ instance Storable VkShaderResourceUsageAMD where
                 *> poke (ptr `plusPtr` 8) (vkLdsSizePerLocalWorkGroup (poked :: VkShaderResourceUsageAMD))
                 *> poke (ptr `plusPtr` 16) (vkLdsUsageSizeInBytes (poked :: VkShaderResourceUsageAMD))
                 *> poke (ptr `plusPtr` 24) (vkScratchMemUsageInBytes (poked :: VkShaderResourceUsageAMD))
--- | TODO: Struct comments
+-- | VkShaderStatisticsInfoAMD - Statistical information about a particular
+-- shader within a pipeline
+--
+-- = Description
+-- #_description#
+--
+-- Some implementations may merge multiple logical shader stages together
+-- in a single shader. In such cases, @shaderStageMask@ will contain a
+-- bitmask of all of the stages that are active within that shader.
+-- Consequently, if specifying those stages as input to
+-- 'vkGetShaderInfoAMD', the same output information /may/ be returned for
+-- all such shader stage queries.
+--
+-- The number of available VGPRs and SGPRs (@numAvailableVgprs@ and
+-- @numAvailableSgprs@ respectively) are the shader-addressable subset of
+-- physical registers that is given as a limit to the compiler for register
+-- assignment. These values /may/ further be limited by implementations due
+-- to performance optimizations where register pressure is a bottleneck.
+--
+-- = See Also
+-- #_see_also#
+--
+-- 'VkShaderResourceUsageAMD',
+-- 'Graphics.Vulkan.Core10.PipelineLayout.VkShaderStageFlags'
 data VkShaderStatisticsInfoAMD = VkShaderStatisticsInfoAMD
-  { vkShaderStageMask :: VkShaderStageFlags
-  , vkResourceUsage :: VkShaderResourceUsageAMD
-  , vkNumPhysicalVgprs :: Word32
-  , vkNumPhysicalSgprs :: Word32
-  , vkNumAvailableVgprs :: Word32
-  , vkNumAvailableSgprs :: Word32
-  , vkComputeWorkGroupSize :: Vector 3 Word32
+  { -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkShaderStageMask"
+  vkShaderStageMask :: VkShaderStageFlags
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkResourceUsage"
+  vkResourceUsage :: VkShaderResourceUsageAMD
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkNumPhysicalVgprs"
+  vkNumPhysicalVgprs :: Word32
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkNumPhysicalSgprs"
+  vkNumPhysicalSgprs :: Word32
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkNumAvailableVgprs"
+  vkNumAvailableVgprs :: Word32
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkNumAvailableSgprs"
+  vkNumAvailableSgprs :: Word32
+  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkComputeWorkGroupSize"
+  vkComputeWorkGroupSize :: Vector 3 Word32
   }
   deriving (Eq, Show)
 
