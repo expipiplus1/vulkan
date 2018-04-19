@@ -61,7 +61,12 @@ separatedSections separator sections = vcat $ case nonEmptySections of
 -- Return a documentation rendering if possible, otherwise ""
 document :: (Documentee -> Maybe Haddock) -> Documentee -> Doc ()
 document getDoc n = case getDoc n of
-  Nothing          -> ""
+  Nothing          -> "-- No documentation found for" <+> pretty (T.tShow n)
   Just (Haddock h) -> case T.lines h of
-    []     -> "-- No Documentation Found for " <+> pretty (T.tShow n)
-    x : xs -> vcat (("-- |" <+> pretty x) : (("--" <+>) . pretty <$> xs))
+    [] -> "-- Empty Documentation Found for" <+> pretty (T.tShow n)
+    x : xs ->
+      vcat (("-- |" <> pretty (space x)) : (("--" <>) . pretty . space <$> xs))
+    where
+      space = \case
+        "" -> ""
+        x  -> " " <> x

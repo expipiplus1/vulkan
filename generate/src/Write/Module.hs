@@ -48,10 +48,11 @@ writeModules
   -> [Module]
   -> [Doc ()]
 writeModules findDoc ms =
-  let moduleMap = findModule ms
+  let moduleMapHN = findModuleHN ms
+      moduleMap = findModule ms
       getDoc :: Text -> Documentee -> Maybe Haddock
-      getDoc = getModuleDoc findDoc (fmap fst . moduleMap)
-  in ms <&> (\m -> writeModule (getDoc (mName m)) moduleMap m)
+      getDoc = getModuleDoc findDoc moduleMap
+  in ms <&> (\m -> writeModule (getDoc (mName m)) moduleMapHN m)
 
 getModuleDoc
   :: (Documentee -> Maybe Documentation)
@@ -75,7 +76,7 @@ getModuleDoc findDoc findModule thisModule name = do
 
 writeModule
   :: (Documentee -> Maybe Haddock)
-  -> (Text -> Maybe (Text, Export))
+  -> (HaskellName -> Maybe (Text, Export))
   -> Module
   -> Doc ()
 writeModule getDoc getModule m@Module{..} = [qci|
@@ -149,18 +150,28 @@ moduleImports Module{..} =
           )
       |]
 
-findModule :: [Module] -> Text -> Maybe (Text, Export)
-findModule ms =
+findModuleHN :: [Module] -> HaskellName -> Maybe (Text, Export)
+findModuleHN ms =
   let nameMap = Map.fromList
-        [ (unHaskellName (unExport e), (mName m, e))
+        [ (unExport e, (mName m, e))
         | m  <- ms
         , we <- mWriteElements m
         , e  <- weProvides we
         ]
   in  (`Map.lookup` nameMap)
 
+findModule :: [Module] -> Text -> Maybe Text
+findModule ms =
+  let nameMap = Map.fromList
+        [ (e, mName m)
+        | m  <- ms
+        , we <- mWriteElements m
+        , e  <- unHaskellName . unExport <$> weProvides we
+        ]
+  in  (`Map.lookup` nameMap)
+
 moduleInternalImports
-  :: (Text -> Maybe (Text, Export))
+  :: (HaskellName -> Maybe (Text, Export))
   -- ^ which module is this name from
   -> Module
   -> [Doc ()]
@@ -169,7 +180,7 @@ moduleInternalImports nameModule Module {..} =
         (<>)
         [ (m, [e])
         | d      <- nubOrd (weDepends =<< mWriteElements)
-        , Just (m, e) <- [nameModule (unHaskellName d)]
+        , Just (m, e) <- [nameModule d]
         , d `notElem` (unExport <$> (weProvides =<< mWriteElements))
         ]
   in  Map.assocs depends <&> \(moduleName, is) -> [qci|
