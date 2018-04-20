@@ -55,7 +55,10 @@ writeCabal modules platforms guardInfo =
 
         library
           hs-source-dirs:      src
-          ghc-options:         -Wall
+          -- We need to use cpphs, as regular cpp ruins latex math with lines
+          -- ending in backslashes
+          ghc-options:         -Wall -pgmPcpphs -optP--cpp
+          build-depends:       cpphs
           exposed-modules:     {indent (-2) . vcat . intercalatePrepend "," $ pretty . mName <$> unguardedModules}
 
           {indent 0 . vcat $ writeGuardedModules <$> guardGroups}
