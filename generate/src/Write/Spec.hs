@@ -67,7 +67,7 @@ writeSpec docs outDir s = (printErrors =<<) $ runExceptT $ do
     (sExtensions s)
     (sPlatforms s)
   let aggs = makeAggregateModules platformGuards ms
-  sayErrShow (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards)
+  sayShow (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards)
   liftIO (saveModules docs outDir (ms ++ aggs)) >>= \case
     [] -> pure ()
     es -> throwError es
