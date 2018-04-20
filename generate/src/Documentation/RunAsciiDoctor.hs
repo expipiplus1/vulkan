@@ -55,21 +55,21 @@ asciidoctor extensions vkPath manTxt = do
         , "-r"
         , vkPath </> "config/tilde_open_block.rb"
         ]
-      adocOpts = attribOpts ++ noteOpts ++ adocExts
+      adocOpts         = attribOpts ++ noteOpts ++ adocExts
+      mathemeticalOpts =
+        [ "-r"
+        , "asciidoctor-mathematical"
+        , "-r"
+        , vkPath </> "config/asciidoctor-mathematical-ext.rb"
+        , "-a"
+        , "mathematical-format=png"
+        , "-a"
+        , "mathematical-ppi=100"
+        ]
       args =
         adocOpts
-          ++ [ "-r"
-             , "asciidoctor-mathematical"
-             , "-r"
-             , vkPath </> "config/asciidoctor-mathematical-ext.rb"
-             , "-a"
-             , "mathematical-format=svg"
-             , "--backend"
-             , "docbook5"
-             , manTxt
-             , "--out-file"
-             , "-"
-             ]
+          ++ mathemeticalOpts
+          ++ ["--backend", "docbook5", manTxt, "--out-file", "-"]
       p = setStdin closed $ proc asciidoctorPath args
   (exitCode, out, err) <- readProcess p
   case exitCode of
