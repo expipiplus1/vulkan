@@ -56,16 +56,8 @@ asciidoctor extensions vkPath manTxt = do
         , vkPath </> "config/tilde_open_block.rb"
         ]
       adocOpts         = attribOpts ++ noteOpts ++ adocExts
-      mathemeticalOpts =
-        [ "-r"
-        , "asciidoctor-mathematical"
-        , "-r"
-        , vkPath </> "config/asciidoctor-mathematical-ext.rb"
-        , "-a"
-        , "mathematical-format=png"
-        , "-a"
-        , "mathematical-ppi=100"
-        ]
+      -- Do not use asciidoctor-mathematical, pandoc can understand the raw latex
+      mathemeticalOpts = []
       args =
         adocOpts
           ++ mathemeticalOpts
