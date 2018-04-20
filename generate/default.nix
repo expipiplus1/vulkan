@@ -11,7 +11,15 @@ let
     python3
   ];
 
-  drv = pkgs.haskellPackages.callCabal2nix "generate" src {};
+  haskellPackages = pkgs.haskellPackages.override{
+    overrides = self: super: {
+      pandoc = pkgs.haskell.lib.appendPatch
+                 super.pandoc
+                 ./pandoc-math.patch;
+    };
+  };
+
+  drv = haskellPackages.callCabal2nix "generate" src {};
 
   envWithExtras = pkgs.lib.overrideDerivation drv.env (attrs: {
     buildInputs = attrs.buildInputs ++ extraEnvPackages;
