@@ -62,7 +62,7 @@ structDoc :: Struct -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
 structDoc s@Struct {..} = do
   let membersFixedNames = fixMemberName <$> sMembers
   (memberDocs, imports, extensions) <-
-    unzip3 <$> traverse (memberDoc sName) membersFixedNames
+    unzip3 <$> traverse (memberDoc sName) sMembers
   pure (\getDoc -> [qci|
   {document getDoc (TopLevel sName)}
   data {sName} = {sName}
@@ -88,7 +88,7 @@ memberDoc parentName StructMember{..} = do
   (t, (is, es)) <- toHsType smType
   pure (\getDoc -> [qci|
   {document getDoc (Nested parentName smName)}
-  {smName} :: {t}
+  {toRecordMemberName smName} :: {t}
 |], is, es)
 
 memberPeekDoc :: StructMember -> Doc ()
