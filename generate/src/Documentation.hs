@@ -97,23 +97,6 @@ splitDocumentation parent (Pandoc meta bs) = do
       -- Leave everything else alone
       xs -> pure (Nothing, xs)
 
-fixupDocumentation :: Documentation -> Documentation
-fixupDocumentation (Documentation dDocumentee p) = Documentation
-  { dDocumentation = fixup p
-  , ..
-  }
-  where
-    fixup :: Pandoc -> Pandoc
-    fixup = topDown fixupBlock
-
-    fixupBlock :: Block -> Block
-    fixupBlock = \case
-      -- Remove idents from headers
-      Header n (_, cs, kvs) is -> Header n ("", cs, kvs) is
-      DefinitionList ds | all (null . fst) ds, all ((== 1) . length . snd) ds ->
-        BulletList (head . snd <$> ds)
-      b -> b
-
 dropPrefix :: String -> String -> Maybe String
 dropPrefix prefix s = if prefix `isPrefixOf` s
                         then Just (drop (length prefix) s)
@@ -152,7 +135,7 @@ memberDocs parent m = \case
 main :: IO ()
 main = do
   [d, m] <- getArgs
-  manTxtToDocbook d m >>= \case
+  manTxtToDocbook [] d m >>= \case
     Left  e -> sayErr e
     Right d -> case docBookToDocumentation d of
       Left  e  -> sayErr e

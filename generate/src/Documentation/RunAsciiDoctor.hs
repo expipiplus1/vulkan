@@ -9,6 +9,7 @@ import           Data.Semigroup
 import           Data.Text
 import qualified Data.Text               as T
 import qualified Data.Text.Lazy          as T (toStrict)
+import qualified Data.List as L
 import           Data.Text.Lazy.Encoding
 import           Say
 import           System.Environment
@@ -22,42 +23,66 @@ import           System.Process.Typed
 -- This function also applies a few fixes to the output to make it more
 -- friendly for Pandoc.
 manTxtToDocbook
-  :: FilePath
+  :: [Text]
+  -- ^ A list of extension names to enable
+  -> FilePath
   -- ^ The 'Vulkan-Docs' directory, necessary to find plugins
   -> FilePath
   -- ^ The path to the man page to translate
   -> IO (Either Text Text)
   -- ^ Either an error if something went wrong, or the docbook xml
-manTxtToDocbook vkPath manTxt =
-  fmap fixupDocbookOutput <$> asciidoctor vkPath manTxt
+manTxtToDocbook extensions vkPath manTxt =
+  fmap fixupDocbookOutput <$> asciidoctor extensions vkPath manTxt
 
 asciidoctor
-  :: FilePath
+  :: [Text]
+  -- ^ Extension names
+  -> FilePath
   -- ^ The 'Vulkan-Docs' directory, necessary to find plugins
   -> FilePath
   -- ^ The path to the man page to translate
   -> IO (Either Text Text)
-asciidoctor vkPath manTxt = do
+asciidoctor extensions vkPath manTxt = do
   let asciidoctorPath = "asciidoctor"
-      args =
-        [ "-r" , vkPath </> "config/tilde_open_block.rb"
-        , "-r" , vkPath </> "config/vulkan-macros.rb"
-        , "-r" , "asciidoctor-mathematical"
-        , "--backend"
-        , "docbook5"
-        , manTxt
-        , "--out-file" , "-"
+      -- This is mimicing the Makefile in Vulkan-Docs
+      extAttribs      = preceedAll "-a" (T.unpack <$> extensions)
+      -- TODO: Version information here
+      attribOpts      = extAttribs
+      noteOpts        = []
+      adocExts =
+        [ "-r"
+        , vkPath </> "config/vulkan-macros.rb"
+        , "-r"
+        , vkPath </> "config/tilde_open_block.rb"
         ]
+      adocOpts = attribOpts ++ noteOpts ++ adocExts
+      args =
+        adocOpts
+          ++ [ "-r"
+             , "asciidoctor-mathematical"
+             , "-r"
+             , vkPath </> "config/asciidoctor-mathematical-ext.rb"
+             , "-a"
+             , "mathematical-format=svg"
+             , "--backend"
+             , "docbook5"
+             , manTxt
+             , "--out-file"
+             , "-"
+             ]
       p = setStdin closed $ proc asciidoctorPath args
   (exitCode, out, err) <- readProcess p
   case exitCode of
     ExitFailure e ->
       pure
         .  Left
-        $  "asciidoctor failed with code " <> T.pack (show e)
+        $  "asciidoctor failed with code "
+        <> T.pack (show e)
         <> ":\ncommand: "
-        <> T.pack asciidoctorPath <> T.concat ((" " <>) . T.pack <$> args)
-        <> "\noutput:" <> T.toStrict (decodeUtf8 err)
+        <> T.pack asciidoctorPath
+        <> T.concat ((" " <>) . T.pack <$> args)
+        <> "\noutput:"
+        <> T.toStrict (decodeUtf8 err)
     ExitSuccess -> pure . Right $ T.toStrict (decodeUtf8 out)
 
 -- | Some hacky replaces in the docbook XML to make pandoc cope better
@@ -84,6 +109,12 @@ replaceTag needle maybeAttr replacement =
 main :: IO ()
 main = do
   [d, m] <- getArgs
-  manTxtToDocbook d m >>= \case
+  manTxtToDocbook [] d m >>= \case
     Left  e -> sayErr e
     Right d -> say d
+
+-- | @preceedAll x xs@ inserts @x@ before every element in @xs@
+preceedAll :: a -> [a] -> [a]
+preceedAll x = \case
+  [] -> []
+  xs -> x : L.intersperse x xs

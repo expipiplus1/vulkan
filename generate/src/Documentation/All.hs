@@ -25,26 +25,30 @@ import           Documentation.RunAsciiDoctor
 -- | Creat a function which can be used to query for documentation
 -- Might take a few seconds to run, as vulkan has lots of documentation.
 loadAllDocumentation
-  :: FilePath
+  :: [Text]
+  -- ^ List of extensions
+  -> FilePath
   -- ^ Path to the 'Vulkan-Docs' directory
   -> FilePath
   -- ^ Directory where the documentation ".txt" (asciidoc) files are located
   -> IO (Documentee -> Maybe Documentation)
-loadAllDocumentation vkDocs manDir = do
+loadAllDocumentation extensions vkDocs manDir = do
   let dontRecurse = pure True
       notDocs     = ["apispec.txt", "copyright-ccby.txt", "footer.txt"]
   allDocs <-
     filter ((`notElem` notDocs) . takeFileName)
       <$> find dontRecurse (extension ==? ".txt") manDir
   let numDocumentationThreads :: Int
-      numDocumentationThreads = 8
+      numDocumentationThreads = 16
   sayErr
     $   "Loading Documentation with"
     <+> T.tShow numDocumentationThreads
     <+> "threads"
   (errors, documentations) <-
     partitionEithers
-      <$> withProgress 8 (runExceptT . loadDocumentation vkDocs) allDocs
+      <$> withProgress numDocumentationThreads
+                       (runExceptT . loadDocumentation extensions vkDocs)
+                       allDocs
   unless (null errors) $ do
     sayErr "Errors while loading documentation:"
     traverse_ sayErr errors
@@ -54,13 +58,15 @@ loadAllDocumentation vkDocs manDir = do
   pure (`Map.lookup` docMap)
 
 loadDocumentation
-  :: FilePath
+  :: [Text]
+  -- ^ Extension names
+  -> FilePath
   -- ^ Path to the 'Vulkan-Docs' directory
   -> FilePath
   -- ^ The asciidoc .txt file to load
   -> ExceptT Text IO [Documentation]
-loadDocumentation vkDocs doc = do
-  docbook <- ExceptT $ manTxtToDocbook vkDocs doc
+loadDocumentation extensions vkDocs doc = do
+  docbook <- ExceptT $ manTxtToDocbook extensions vkDocs doc
   withExceptT (("Error while parsing documentation for" <+> T.tShow doc) <+>)
     . ExceptT
     . pure

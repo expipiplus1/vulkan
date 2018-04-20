@@ -46,7 +46,24 @@ documentationToHaddock
 documentationToHaddock getModule Documentation {..} =
   let writerOptions = def
   in  bimap T.tShow Haddock $ runPure
-        (writeHaddock writerOptions (fixLinks getModule dDocumentation))
+        (writeHaddock
+          writerOptions
+          (prepareForHaddock . fixLinks getModule $ dDocumentation)
+        )
+
+prepareForHaddock :: Pandoc -> Pandoc
+prepareForHaddock = topDown fixupBlock
+  where
+    fixupBlock :: Block -> Block
+    fixupBlock = \case
+      -- Remove idents from headers
+      Header n (_, cs, kvs) is -> Header n ("", cs, kvs) is
+
+      -- Change definition lists to bullets
+      DefinitionList ds | all (null . fst) ds, all ((== 1) . length . snd) ds ->
+        BulletList (head . snd <$> ds)
+
+      b -> b
 
 fixLinks :: (Text -> DocumenteeLocation) -> Pandoc -> Pandoc
 fixLinks findDocs = topDown fixInlines

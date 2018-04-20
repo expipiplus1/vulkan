@@ -13,7 +13,6 @@ import           Data.Either.Extra
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.List.Extra
-import qualified Data.Map                  as Map
 import           Data.Maybe
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
@@ -33,7 +32,6 @@ import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Spec
-import qualified Spec.Spec                 as P
 import           Write.Alias
 import           Write.BaseType
 import           Write.Bespoke
@@ -59,10 +57,9 @@ writeSpec
   -- ^ Documentation
   -> FilePath
   -- ^ Output Directory
-  -> P.Spec
+  -> Spec
   -> IO ()
-writeSpec docs outDir parsedSpec = (printErrors =<<) $ runExceptT $ do
-  s  <- ExceptT . pure $ spec parsedSpec
+writeSpec docs outDir s = (printErrors =<<) $ runExceptT $ do
   ws <- ExceptT . pure . validationToEither $ specWriteElements s
   let seeds = specSeeds s
   ms             <- ExceptT . pure $ partitionElements ws seeds
