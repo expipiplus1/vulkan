@@ -13,9 +13,11 @@ let
 
   haskellPackages = pkgs.haskellPackages.override{
     overrides = self: super: {
-      pandoc = pkgs.haskell.lib.appendPatch
+      pandoc = pkgs.haskell.lib.appendPatches
                  super.pandoc
-                 ./pandoc-math.patch;
+                 [ ./pandoc-math.patch
+                   ./pandoc-haddock-math.patch
+                 ];
     };
   };
 
