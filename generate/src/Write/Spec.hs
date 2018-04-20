@@ -57,9 +57,11 @@ writeSpec
   -- ^ Documentation
   -> FilePath
   -- ^ Output Directory
+  -> FilePath
+  -- ^ Cabal output path
   -> Spec
   -> IO ()
-writeSpec docs outDir s = (printErrors =<<) $ runExceptT $ do
+writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
   ws <- ExceptT . pure . validationToEither $ specWriteElements s
   let seeds = specSeeds s
   ms             <- ExceptT . pure $ partitionElements ws seeds
@@ -67,7 +69,8 @@ writeSpec docs outDir s = (printErrors =<<) $ runExceptT $ do
     (sExtensions s)
     (sPlatforms s)
   let aggs = makeAggregateModules platformGuards ms
-  sayShow (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards)
+  liftIO $ writeFile cabalPath
+            (show (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards))
   liftIO (saveModules docs outDir (ms ++ aggs)) >>= \case
     [] -> pure ()
     es -> throwError es

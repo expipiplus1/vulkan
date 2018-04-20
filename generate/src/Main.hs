@@ -4,24 +4,24 @@ module Main
   ( main
   ) where
 
+import           Data.Foldable
 import           Data.Text.Extra
-import Data.Foldable
 import           Say
 import           System.Environment
 import           System.Exit
 import           System.FilePath
-import           System.IO          (hPutStr, stderr)
+import           System.IO            (hPutStr, stderr)
 
 import           Documentation.All
 import           Parse.Spec
-import           Write.Spec
-import           Spec.Savvy.Spec
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
+import           Spec.Savvy.Spec
+import           Write.Spec
 
 main :: IO ()
 main = do
-  [outDir, vkDir]      <- getArgs
+  [outDir, cabalPath, vkDir]      <- getArgs
   let xmlPath = vkDir </> "xml" </> "vk.xml"
       manPath = vkDir </> "man"
   sayErr ("Reading spec from" <+> pack xmlPath)
@@ -39,4 +39,4 @@ main = do
         Right s -> do
           let allExtensionNames = extName <$> sExtensions s
           documentation <- loadAllDocumentation allExtensionNames vkDir manPath
-          writeSpec documentation outDir s
+          writeSpec documentation outDir cabalPath s
