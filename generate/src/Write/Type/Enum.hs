@@ -48,8 +48,6 @@ writeEnum e@Enum {..} =
       weDepends = case eType of
         EnumTypeEnum    -> []
         EnumTypeBitmask -> [TypeName "VkFlags"]
-      weReexports    = []
-      weReexportable = []
   in  WriteElement {..}
 
 enumDoc :: Enum -> DocMap -> Doc ()

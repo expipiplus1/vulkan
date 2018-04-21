@@ -38,8 +38,6 @@ writeConstantExtension getEnumerantEnumName ce@ConstantExtension {..} =
           , TypeName (fromMaybe (error (show n)) (getEnumerantEnumName n))
           ]
         _ -> []
-      weReexports = []
-      weReexportable = []
   in  WriteElement {..}
 
 constantExtensionDoc

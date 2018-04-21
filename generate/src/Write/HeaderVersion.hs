@@ -24,6 +24,4 @@ writeHeaderVersion version =
       weName = "Header Version"
       weProvides = [Pattern "VK_HEADER_VERSION"]
       weDepends = []
-      weReexports    = []
-      weReexportable = []
   in WriteElement{..}
