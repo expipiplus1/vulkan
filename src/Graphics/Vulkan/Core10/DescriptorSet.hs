@@ -122,40 +122,44 @@ import Graphics.Vulkan.Core10.Sampler
 -- set
 --
 -- = Description
--- #_description#
 --
--- -   @VK_DESCRIPTOR_TYPE_SAMPLER@ specifies a
---     <{html_spec_relative}#descriptorsets-sampler sampler descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_SAMPLER@ specifies a [sampler
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampler).
 --
--- -   @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ specifies a
---     <{html_spec_relative}#descriptorsets-combinedimagesampler combined image sampler descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ specifies a [combined
+--     image sampler
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler).
 --
--- -   @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@ specifies a
---     <{html_spec_relative}#descriptorsets-sampledimage sampled image descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@ specifies a [sampled image
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampledimage).
 --
--- -   @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@ specifies a
---     <{html_spec_relative}#descriptorsets-storageimage storage image descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@ specifies a [storage image
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storageimage).
 --
--- -   @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ specifies a
---     <{html_spec_relative}#descriptorsets-uniformtexelbuffer uniform texel buffer descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ specifies a [uniform texel
+--     buffer
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer).
 --
--- -   @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ specifies a
---     <{html_spec_relative}#descriptorsets-storagetexelbuffer storage texel buffer descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ specifies a [storage texel
+--     buffer
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer).
 --
--- -   @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ specifies a
---     <{html_spec_relative}#descriptorsets-uniformbuffer uniform buffer descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ specifies a [uniform buffer
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbuffer).
 --
--- -   @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ specifies a
---     <{html_spec_relative}#descriptorsets-storagebuffer storage buffer descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ specifies a [storage buffer
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebuffer).
 --
--- -   @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ specifies a
---     <{html_spec_relative}#descriptorsets-uniformbufferdynamic dynamic uniform buffer descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ specifies a [dynamic
+--     uniform buffer
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic).
 --
--- -   @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ specifies a
---     <{html_spec_relative}#descriptorsets-storagebufferdynamic dynamic storage buffer descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ specifies a [dynamic
+--     storage buffer
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic).
 --
--- -   @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@ specifies a
---     <{html_spec_relative}#descriptorsets-inputattachment input attachment descriptor>.
+-- -   @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@ specifies a [input attachment
+--     descriptor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-inputattachment).
 --
 -- When a descriptor set is updated via elements of 'VkWriteDescriptorSet',
 -- members of @pImageInfo@, @pBufferInfo@ and @pTexelBufferView@ are only
@@ -186,7 +190,6 @@ import Graphics.Vulkan.Core10.Sampler
 --     'VkWriteDescriptorSet'::@pTexelBufferView@ is accessed.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorPoolSize', 'VkDescriptorSetLayoutBinding',
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateEntry',
@@ -276,16 +279,7 @@ pattern VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = VkDescriptorType 10
 -- | VkDescriptorSetLayoutCreateFlagBits - Bitmask specifying descriptor set
 -- layout properties
 --
--- = Description
--- #_description#
---
--- __Note__
---
--- All bits for this type are defined by extensions, and none of those
--- extensions are enabled in this build of the specification.
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorSetLayoutCreateFlags'
 newtype VkDescriptorSetLayoutCreateFlagBits = VkDescriptorSetLayoutCreateFlagBits VkFlags
@@ -316,7 +310,6 @@ instance Read VkDescriptorSetLayoutCreateFlagBits where
 -- operations on a descriptor pool
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorPoolCreateFlags'
 newtype VkDescriptorPoolCreateFlagBits = VkDescriptorPoolCreateFlagBits VkFlags
@@ -354,13 +347,11 @@ pattern VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = VkDescriptorPoolCrea
 -- | VkDescriptorPoolResetFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkDescriptorPoolResetFlags@ is a bitmask type for setting a mask, but
 -- is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'vkResetDescriptorPool'
 newtype VkDescriptorPoolResetFlags = VkDescriptorPoolResetFlags VkFlags
@@ -385,11 +376,7 @@ instance Read VkDescriptorPoolResetFlags where
 data VkDescriptorSet_T
 -- | VkDescriptorSet - Opaque handle to a descriptor set object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkCopyDescriptorSet',
 -- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkObjectTableDescriptorSetEntryNVX',
@@ -403,11 +390,7 @@ type VkDescriptorSet = Ptr VkDescriptorSet_T
 data VkDescriptorPool_T
 -- | VkDescriptorPool - Opaque handle to a descriptor pool object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorSetAllocateInfo', 'vkCreateDescriptorPool',
 -- 'vkDestroyDescriptorPool', 'vkFreeDescriptorSets',
@@ -416,7 +399,6 @@ type VkDescriptorPool = Ptr VkDescriptorPool_T
 -- | vkCreateDescriptorSetLayout - Create a new descriptor set layout
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the descriptor set
 --     layout.
@@ -426,13 +408,12 @@ type VkDescriptorPool = Ptr VkDescriptorPool_T
 --     the descriptor set layout object.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pSetLayout@ points to a @VkDescriptorSetLayout@ handle in which the
 --     resulting descriptor set layout object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -449,16 +430,15 @@ type VkDescriptorPool = Ptr VkDescriptorPool_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.PipelineLayout.VkDescriptorSetLayout',
@@ -468,7 +448,6 @@ foreign import ccall "vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout :
 -- | vkDestroyDescriptorSetLayout - Destroy a descriptor set layout object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the descriptor set
 --     layout.
@@ -476,10 +455,9 @@ foreign import ccall "vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout :
 -- -   @descriptorSetLayout@ is the descriptor set layout to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -510,7 +488,6 @@ foreign import ccall "vkCreateDescriptorSetLayout" vkCreateDescriptorSetLayout :
 --     synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.PipelineLayout.VkDescriptorSetLayout',
@@ -519,7 +496,6 @@ foreign import ccall "vkDestroyDescriptorSetLayout" vkDestroyDescriptorSetLayout
 -- | vkCreateDescriptorPool - Creates a descriptor pool object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the descriptor pool.
 --
@@ -528,16 +504,18 @@ foreign import ccall "vkDestroyDescriptorSetLayout" vkDestroyDescriptorSetLayout
 --     descriptor pool object.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pDescriptorPool@ points to a @VkDescriptorPool@ handle in which the
 --     resulting descriptor pool object is returned.
 --
 -- = Description
--- #_description#
 --
--- @pAllocator@ controls host memory allocation as described in the
--- <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+-- @pAllocator@ controls host memory allocation as described in the [Memory
+-- Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+-- chapter.
 --
 -- The created descriptor pool is returned in @pDescriptorPool@.
 --
@@ -556,10 +534,10 @@ foreign import ccall "vkDestroyDescriptorSetLayout" vkDestroyDescriptorSetLayout
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -567,7 +545,6 @@ foreign import ccall "vkDestroyDescriptorSetLayout" vkDestroyDescriptorSetLayout
 --     -   @VK_ERROR_FRAGMENTATION_EXT@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkDescriptorPool', 'VkDescriptorPoolCreateInfo',
@@ -576,17 +553,17 @@ foreign import ccall "vkCreateDescriptorPool" vkCreateDescriptorPool :: ("device
 -- | vkDestroyDescriptorPool - Destroy a descriptor pool object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the descriptor pool.
 --
 -- -   @descriptorPool@ is the descriptor pool to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- = Description
--- #_description#
 --
 -- When a pool is destroyed, all descriptor sets allocated from the pool
 -- are implicitly freed and become invalid. Descriptor sets allocated from
@@ -623,7 +600,6 @@ foreign import ccall "vkCreateDescriptorPool" vkCreateDescriptorPool :: ("device
 -- -   Host access to @descriptorPool@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkDescriptorPool',
@@ -632,7 +608,6 @@ foreign import ccall "vkDestroyDescriptorPool" vkDestroyDescriptorPool :: ("devi
 -- | vkResetDescriptorPool - Resets a descriptor pool object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the descriptor pool.
 --
@@ -641,7 +616,6 @@ foreign import ccall "vkDestroyDescriptorPool" vkDestroyDescriptorPool :: ("devi
 -- -   @flags@ is reserved for future use.
 --
 -- = Description
--- #_description#
 --
 -- Resetting a descriptor pool recycles all of the resources from all of
 -- the descriptor sets allocated from the descriptor pool back to the
@@ -672,16 +646,15 @@ foreign import ccall "vkDestroyDescriptorPool" vkDestroyDescriptorPool :: ("devi
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorPool', 'VkDescriptorPoolResetFlags',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
@@ -689,7 +662,6 @@ foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool :: ("device" 
 -- | vkAllocateDescriptorSets - Allocate one or more descriptor sets
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the descriptor pool.
 --
@@ -701,40 +673,47 @@ foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool :: ("device" 
 --     handles in which the resulting descriptor set objects are returned.
 --
 -- = Description
--- #_description#
 --
 -- The allocated descriptor sets are returned in @pDescriptorSets@.
 --
 -- When a descriptor set is allocated, the initial state is largely
 -- uninitialized and all descriptors are undefined. However, the descriptor
 -- set /can/ be bound in a command buffer without causing errors or
--- exceptions. All descriptors that are statically used /must/ have been
--- populated before the descriptor set is consumed. Entries that are not
--- used by a pipeline /can/ have uninitialized descriptors or descriptors
--- of resources that have been destroyed, and executing a draw or dispatch
--- with such a descriptor set bound does not cause undefined behavior. This
--- means applications need not populate unused entries with dummy
--- descriptors.
+-- exceptions. For descriptor set bindings created with the
+-- @VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT@ bit set, all descriptors
+-- in that binding that are dynamically used /must/ have been populated
+-- before the descriptor set is
+-- [consumed](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-binding).
+-- For descriptor set bindings created without the
+-- @VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT@ bit set, all descriptors
+-- in that binding that are statically used /must/ have been populated
+-- before the descriptor set is
+-- [consumed](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-binding).
+-- Entries that are not used by a pipeline /can/ have uninitialized
+-- descriptors or descriptors of resources that have been destroyed, and
+-- executing a draw or dispatch with such a descriptor set bound does not
+-- cause undefined behavior. This means applications need not populate
+-- unused entries with dummy descriptors.
 --
--- If an allocation fails due to fragmentation, an indeterminate error is
--- returned with an unspecified error code. Any returned error other than
--- @VK_ERROR_FRAGMENTED_POOL@ does not imply its usual meaning:
--- applications /should/ assume that the allocation failed due to
--- fragmentation, and create a new descriptor pool.
+-- If a call to @vkAllocateDescriptorSets@ would cause the total number of
+-- descriptor sets allocated from the pool to exceed the value of
+-- 'VkDescriptorPoolCreateInfo'::@maxSets@ used to create
+-- @pAllocateInfo@→@descriptorPool@, then the allocation /may/ fail due to
+-- lack of space in the descriptor pool. Similarly, the allocation /may/
+-- fail due to lack of space if the call to @vkAllocateDescriptorSets@
+-- would cause the number of any given descriptor type to exceed the sum of
+-- all the @descriptorCount@ members of each element of
+-- 'VkDescriptorPoolCreateInfo'::@pPoolSizes@ with a @member@ equal to that
+-- type. If the allocation fails due to no more space in the descriptor
+-- pool, and not because of system or device memory exhaustion, then
+-- @VK_ERROR_OUT_OF_POOL_MEMORY@ /must/ be returned.
 --
--- __Note__
---
--- Applications /should/ check for a negative return value when allocating
--- new descriptor sets, assume that any error effectively means
--- @VK_ERROR_FRAGMENTED_POOL@, and try to create a new descriptor pool. If
--- @VK_ERROR_FRAGMENTED_POOL@ is the actual return value, it adds certainty
--- to that decision.
---
--- The reason for this is that @VK_ERROR_FRAGMENTED_POOL@ was only added in
--- a later revision of the 1.0 specification, and so drivers /may/ return
--- other errors if they were written against earlier revisions. To ensure
--- full compatibility with earlier patch revisions, these other errors are
--- allowed.
+-- @vkAllocateDescriptorSets@ /can/ be used to create multiple descriptor
+-- sets. If the creation of any of those descriptor sets fails, then the
+-- implementation /must/ destroy all successfully created descriptor set
+-- objects from this command, set all entries of the @pDescriptorSets@
+-- array to 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE' and return
+-- the error.
 --
 -- == Valid Usage (Implicit)
 --
@@ -753,10 +732,10 @@ foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool :: ("device" 
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -766,7 +745,6 @@ foreign import ccall "vkResetDescriptorPool" vkResetDescriptorPool :: ("device" 
 --     -   @VK_ERROR_OUT_OF_POOL_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorSet', 'VkDescriptorSetAllocateInfo',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
@@ -774,7 +752,6 @@ foreign import ccall "vkAllocateDescriptorSets" vkAllocateDescriptorSets :: ("de
 -- | vkFreeDescriptorSets - Free one or more descriptor sets
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the descriptor pool.
 --
@@ -788,7 +765,6 @@ foreign import ccall "vkAllocateDescriptorSets" vkAllocateDescriptorSets :: ("de
 --     objects.
 --
 -- = Description
--- #_description#
 --
 -- After a successful call to @vkFreeDescriptorSets@, all descriptor sets
 -- in @pDescriptorSets@ are invalid.
@@ -832,16 +808,15 @@ foreign import ccall "vkAllocateDescriptorSets" vkAllocateDescriptorSets :: ("de
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorPool', 'VkDescriptorSet',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
@@ -849,7 +824,6 @@ foreign import ccall "vkFreeDescriptorSets" vkFreeDescriptorSets :: ("device" ::
 -- | vkUpdateDescriptorSets - Update the contents of a descriptor set object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that updates the descriptor sets.
 --
@@ -868,7 +842,6 @@ foreign import ccall "vkFreeDescriptorSets" vkFreeDescriptorSets :: ("device" ::
 --     copy between.
 --
 -- = Description
--- #_description#
 --
 -- The operations described by @pDescriptorWrites@ are performed first,
 -- followed by the operations described by @pDescriptorCopies@. Within each
@@ -884,17 +857,23 @@ foreign import ccall "vkFreeDescriptorSets" vkFreeDescriptorSets :: ("device" ::
 --
 -- If the @dstSet@ member of any element of @pDescriptorWrites@ or
 -- @pDescriptorCopies@ is bound, accessed, or modified by any command that
--- was recorded to a command buffer which is currently in the
--- <{html_spec_relative}#commandbuffers-lifecycle recording or executable state>,
+-- was recorded to a command buffer which is currently in the [recording or
+-- executable
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle),
+-- and any of the descriptor bindings that are updated were not created
+-- with the @VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT@ or
+-- @VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT@ bits set,
 -- that command buffer becomes
--- <{html_spec_relative}#commandbuffers-lifecycle invalid>.
+-- [invalid](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- == Valid Usage
 --
--- -   The @dstSet@ member of each element of @pDescriptorWrites@ or
---     @pDescriptorCopies@ /must/ not be used by any command that was
---     recorded to a command buffer which is in the
---     <{html_spec_relative}#commandbuffers-lifecycle pending state>.
+-- -   Descriptor bindings updated by this command which were created
+--     without the @VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT@ or
+--     @VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT@ bits set
+--     /must/ not be used by any command that was recorded to a command
+--     buffer which is in the [pending
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- == Valid Usage (Implicit)
 --
@@ -917,7 +896,6 @@ foreign import ccall "vkFreeDescriptorSets" vkFreeDescriptorSets :: ("device" ::
 --     synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCopyDescriptorSet',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -926,15 +904,14 @@ foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets :: ("device
 -- | VkDescriptorBufferInfo - Structure specifying descriptor buffer info
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
 -- When setting @range@ to @VK_WHOLE_SIZE@, the effective range /must/ not
 -- be larger than the maximum range for the descriptor type
--- (<{html_spec_relative}#features-limits-maxUniformBufferRange maxUniformBufferRange>
+-- ([maxUniformBufferRange](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits-maxUniformBufferRange)
 -- or
--- <{html_spec_relative}#features-limits-maxStorageBufferRange maxStorageBufferRange>).
+-- [maxStorageBufferRange](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits-maxStorageBufferRange)).
 -- This means that @VK_WHOLE_SIZE@ is not typically useful in the common
 -- case where uniform buffer descriptors are suballocated from a buffer
 -- that is much larger than @maxUniformBufferRange@.
@@ -959,16 +936,18 @@ foreign import ccall "vkUpdateDescriptorSets" vkUpdateDescriptorSets :: ("device
 -- -   @buffer@ /must/ be a valid @VkBuffer@ handle
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer', @VkDeviceSize@,
 -- 'VkWriteDescriptorSet'
 data VkDescriptorBufferInfo = VkDescriptorBufferInfo
-  { -- No documentation found for Nested "VkDescriptorBufferInfo" "vkBuffer"
+  { -- | @buffer@ is the buffer resource.
   vkBuffer :: VkBuffer
-  , -- No documentation found for Nested "VkDescriptorBufferInfo" "vkOffset"
+  , -- | @offset@ is the offset in bytes from the start of @buffer@. Access to
+  -- buffer memory via this descriptor uses addressing that is relative to
+  -- this starting offset.
   vkOffset :: VkDeviceSize
-  , -- No documentation found for Nested "VkDescriptorBufferInfo" "vkRange"
+  , -- | @range@ is the size in bytes that is used for this descriptor update, or
+  -- @VK_WHOLE_SIZE@ to use the range from @offset@ to the end of the buffer.
   vkRange :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -985,16 +964,56 @@ instance Storable VkDescriptorBufferInfo where
 -- | VkDescriptorImageInfo - Structure specifying descriptor image info
 --
 -- = Description
--- #_description#
 --
 -- Members of @VkDescriptorImageInfo@ that are not used in an update (as
 -- described above) are ignored.
 --
 -- == Valid Usage
 --
+-- -   @imageView@ /must/ not be 2D or 2D array image view created from a
+--     3D image
+--
 -- -   @imageLayout@ /must/ match the actual
 --     'Graphics.Vulkan.Core10.Image.VkImageLayout' of each subresource
 --     accessible from @imageView@ at the time this descriptor is accessed
+--
+-- -   If @sampler@ is used and enables [sampler Y’CBCR
+--     conversion](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion):
+--
+--     -   The @format@ of the @imageView@ /must/ be the same as the
+--         'Graphics.Vulkan.Core10.Core.VkFormat' of the image
+--
+--     -   The @aspectMask@ of the @imageView@ /must/ be
+--         @VK_IMAGE_ASPECT_COLOR_BIT@
+--
+--     -   The @components.a@ of the @imageView@ /must/ be
+--         @VK_COMPONENT_SWIZZLE_IDENTITY@
+--
+--     -   The @components.r@ of the @imageView@ /must/ be
+--         @VK_COMPONENT_SWIZZLE_IDENTITY@
+--
+--     -   The @components.g@ of the @imageView@ /must/ be
+--         @VK_COMPONENT_SWIZZLE_IDENTITY@
+--
+--     -   The @components.b@ of the @imageView@ /must/ be
+--         @VK_COMPONENT_SWIZZLE_IDENTITY@
+--
+--     -   The @pNext@ chain of the @imageView@ /must/ contain a
+--         @VkSamplerYcbcrConversionInfo@ which has a @conversion@ which is
+--         an /identically defined object/ to the @conversion@ of the
+--         @VkSamplerYcbcrConversionInfo@ which is in the @pNext@ chain of
+--         the @sampler@
+--
+-- -   If @sampler@ is used and does not enable [sampler Y’CBCR
+--     conversion](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion)
+--     and the 'Graphics.Vulkan.Core10.Core.VkFormat' of the image is a
+--     [multi-planar
+--     format](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion),
+--     the image /must/ have been created with
+--     @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@, and the @aspectMask@ of the
+--     @imageView@ /must/ be @VK_IMAGE_ASPECT_PLANE_0_BIT@,
+--     @VK_IMAGE_ASPECT_PLANE_1_BIT@ or (for three-plane formats only)
+--     @VK_IMAGE_ASPECT_PLANE_2_BIT@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1002,17 +1021,28 @@ instance Storable VkDescriptorBufferInfo where
 --     have been created, allocated, or retrieved from the same @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout',
 -- 'Graphics.Vulkan.Core10.ImageView.VkImageView',
 -- 'Graphics.Vulkan.Core10.Sampler.VkSampler', 'VkWriteDescriptorSet'
 data VkDescriptorImageInfo = VkDescriptorImageInfo
-  { -- No documentation found for Nested "VkDescriptorImageInfo" "vkSampler"
+  { -- | @sampler@ is a sampler handle, and is used in descriptor updates for
+  -- types @VK_DESCRIPTOR_TYPE_SAMPLER@ and
+  -- @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ if the binding being updated
+  -- does not use immutable samplers.
   vkSampler :: VkSampler
-  , -- No documentation found for Nested "VkDescriptorImageInfo" "vkImageView"
+  , -- | @imageView@ is an image view handle, and is used in descriptor updates
+  -- for types @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@,
+  -- @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@,
+  -- @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@, and
+  -- @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@.
   vkImageView :: VkImageView
-  , -- No documentation found for Nested "VkDescriptorImageInfo" "vkImageLayout"
+  , -- | @imageLayout@ is the layout that the image subresources accessible from
+  -- @imageView@ will be in at the time this descriptor is accessed.
+  -- @imageLayout@ is used in descriptor updates for types
+  -- @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@, @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@,
+  -- @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@, and
+  -- @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@.
   vkImageLayout :: VkImageLayout
   }
   deriving (Eq, Show)
@@ -1030,7 +1060,6 @@ instance Storable VkDescriptorImageInfo where
 -- descriptor set write operation
 --
 -- = Description
--- #_description#
 --
 -- Only one of @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
 -- is used according to the descriptor type specified in the
@@ -1071,7 +1100,7 @@ instance Storable VkDescriptorImageInfo where
 --     than or equal to the number of array elements in the descriptor set
 --     binding specified by @dstBinding@, and all applicable consecutive
 --     bindings, as described by
---     <{html_spec_relative}#descriptorsets-updates-consecutive {html_spec_relative}#descriptorsets-updates-consecutive>
+--     [{html_spec_relative}#descriptorsets-updates-consecutive](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive)
 --
 -- -   If @descriptorType@ is @VK_DESCRIPTOR_TYPE_SAMPLER@,
 --     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@,
@@ -1187,6 +1216,11 @@ instance Storable VkDescriptorImageInfo where
 --     @imageView@ member of each element of @pImageInfo@ /must/ have been
 --     created with @VK_IMAGE_USAGE_STORAGE_BIT@ set
 --
+-- -   All consecutive bindings updated via a single @VkWriteDescriptorSet@
+--     structure, except those with a @descriptorCount@ of zero, /must/
+--     have identical
+--     'Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagBitsEXT'.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET@
@@ -1202,7 +1236,6 @@ instance Storable VkDescriptorImageInfo where
 --     the same @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.BufferView.VkBufferView',
 -- 'VkDescriptorBufferInfo', 'VkDescriptorImageInfo', 'VkDescriptorSet',
@@ -1210,25 +1243,36 @@ instance Storable VkDescriptorImageInfo where
 -- 'Graphics.Vulkan.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetKHR',
 -- 'vkUpdateDescriptorSets'
 data VkWriteDescriptorSet = VkWriteDescriptorSet
-  { -- No documentation found for Nested "VkWriteDescriptorSet" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkWriteDescriptorSet" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkWriteDescriptorSet" "vkDstSet"
+  , -- | @dstSet@ is the destination descriptor set to update.
   vkDstSet :: VkDescriptorSet
-  , -- No documentation found for Nested "VkWriteDescriptorSet" "vkDstBinding"
+  , -- | @dstBinding@ is the descriptor binding within that set.
   vkDstBinding :: Word32
-  , -- No documentation found for Nested "VkWriteDescriptorSet" "vkDstArrayElement"
+  , -- | @dstArrayElement@ is the starting element in that array.
   vkDstArrayElement :: Word32
-  , -- No documentation found for Nested "VkWriteDescriptorSet" "vkDescriptorCount"
+  , -- | @descriptorCount@ is the number of descriptors to update (the number of
+  -- elements in @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@).
   vkDescriptorCount :: Word32
-  , -- No documentation found for Nested "VkWriteDescriptorSet" "vkDescriptorType"
+  , -- | @descriptorType@ is a 'VkDescriptorType' specifying the type of each
+  -- descriptor in @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@, as
+  -- described below. It /must/ be the same type as that specified in
+  -- @VkDescriptorSetLayoutBinding@ for @dstSet@ at @dstBinding@. The type of
+  -- the descriptor also controls which array the descriptors are taken from.
   vkDescriptorType :: VkDescriptorType
-  , -- No documentation found for Nested "VkWriteDescriptorSet" "vkPImageInfo"
+  , -- | @pImageInfo@ points to an array of 'VkDescriptorImageInfo' structures or
+  -- is ignored, as described below.
   vkPImageInfo :: Ptr VkDescriptorImageInfo
-  , -- No documentation found for Nested "VkWriteDescriptorSet" "vkPBufferInfo"
+  , -- | @pBufferInfo@ points to an array of 'VkDescriptorBufferInfo' structures
+  -- or is ignored, as described below.
   vkPBufferInfo :: Ptr VkDescriptorBufferInfo
-  , -- No documentation found for Nested "VkWriteDescriptorSet" "vkPTexelBufferView"
+  , -- | @pTexelBufferView@ points to an array of
+  -- 'Graphics.Vulkan.Core10.BufferView.VkBufferView' handles as described in
+  -- the [Buffer
+  -- Views](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-buffer-views)
+  -- section or is ignored, as described below.
   vkPTexelBufferView :: Ptr VkBufferView
   }
   deriving (Eq, Show)
@@ -1259,9 +1303,6 @@ instance Storable VkWriteDescriptorSet where
 -- | VkCopyDescriptorSet - Structure specifying a copy descriptor set
 -- operation
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @srcBinding@ /must/ be a valid binding within @srcSet@
@@ -1270,7 +1311,7 @@ instance Storable VkWriteDescriptorSet where
 --     than or equal to the number of array elements in the descriptor set
 --     binding specified by @srcBinding@, and all applicable consecutive
 --     bindings, as described by
---     <{html_spec_relative}#descriptorsets-updates-consecutive {html_spec_relative}#descriptorsets-updates-consecutive>
+--     [{html_spec_relative}#descriptorsets-updates-consecutive](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive)
 --
 -- -   @dstBinding@ /must/ be a valid binding within @dstSet@
 --
@@ -1278,12 +1319,37 @@ instance Storable VkWriteDescriptorSet where
 --     than or equal to the number of array elements in the descriptor set
 --     binding specified by @dstBinding@, and all applicable consecutive
 --     bindings, as described by
---     <{html_spec_relative}#descriptorsets-updates-consecutive {html_spec_relative}#descriptorsets-updates-consecutive>
+--     [{html_spec_relative}#descriptorsets-updates-consecutive](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive)
 --
 -- -   If @srcSet@ is equal to @dstSet@, then the source and destination
 --     ranges of descriptors /must/ not overlap, where the ranges /may/
 --     include array elements from consecutive bindings as described by
---     <{html_spec_relative}#descriptorsets-updates-consecutive {html_spec_relative}#descriptorsets-updates-consecutive>
+--     [{html_spec_relative}#descriptorsets-updates-consecutive](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive)
+--
+-- -   If @srcSet@’s layout was created with the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
+--     flag set, then @dstSet@’s layout /must/ also have been created with
+--     the @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
+--     flag set
+--
+-- -   If @srcSet@’s layout was created without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
+--     flag set, then @dstSet@’s layout /must/ also have been created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
+--     flag set
+--
+-- -   If the descriptor pool from which @srcSet@ was allocated was created
+--     with the @VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT@ flag
+--     set, then the descriptor pool from which @dstSet@ was allocated
+--     /must/ also have been created with the
+--     @VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT@ flag set
+--
+-- -   If the descriptor pool from which @srcSet@ was allocated was created
+--     without the @VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT@
+--     flag set, then the descriptor pool from which @dstSet@ was allocated
+--     /must/ also have been created without the
+--     @VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT@ flag set
 --
 -- == Valid Usage (Implicit)
 --
@@ -1299,28 +1365,33 @@ instance Storable VkWriteDescriptorSet where
 --     or retrieved from the same @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorSet', 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkUpdateDescriptorSets'
 data VkCopyDescriptorSet = VkCopyDescriptorSet
-  { -- No documentation found for Nested "VkCopyDescriptorSet" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCopyDescriptorSet" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCopyDescriptorSet" "vkSrcSet"
+  , -- | @srcSet@, @srcBinding@, and @srcArrayElement@ are the source set,
+  -- binding, and array element, respectively.
   vkSrcSet :: VkDescriptorSet
-  , -- No documentation found for Nested "VkCopyDescriptorSet" "vkSrcBinding"
+  , -- No documentation found for Nested "VkCopyDescriptorSet" "srcBinding"
   vkSrcBinding :: Word32
-  , -- No documentation found for Nested "VkCopyDescriptorSet" "vkSrcArrayElement"
+  , -- No documentation found for Nested "VkCopyDescriptorSet" "srcArrayElement"
   vkSrcArrayElement :: Word32
-  , -- No documentation found for Nested "VkCopyDescriptorSet" "vkDstSet"
+  , -- | @dstSet@, @dstBinding@, and @dstArrayElement@ are the destination set,
+  -- binding, and array element, respectively.
   vkDstSet :: VkDescriptorSet
-  , -- No documentation found for Nested "VkCopyDescriptorSet" "vkDstBinding"
+  , -- No documentation found for Nested "VkCopyDescriptorSet" "dstBinding"
   vkDstBinding :: Word32
-  , -- No documentation found for Nested "VkCopyDescriptorSet" "vkDstArrayElement"
+  , -- No documentation found for Nested "VkCopyDescriptorSet" "dstArrayElement"
   vkDstArrayElement :: Word32
-  , -- No documentation found for Nested "VkCopyDescriptorSet" "vkDescriptorCount"
+  , -- | @descriptorCount@ is the number of descriptors to copy from the source
+  -- to destination. If @descriptorCount@ is greater than the number of
+  -- remaining array elements in the source or destination binding, those
+  -- affect consecutive bindings in a manner similar to
+  -- 'VkWriteDescriptorSet' above.
   vkDescriptorCount :: Word32
   }
   deriving (Eq, Show)
@@ -1350,7 +1421,6 @@ instance Storable VkCopyDescriptorSet where
 -- layout binding
 --
 -- = Members
--- #_members#
 --
 -- -   @binding@ is the binding number of this entry and corresponds to a
 --     resource of the same binding number in the shader stages.
@@ -1380,7 +1450,6 @@ instance Storable VkCopyDescriptorSet where
 --     compute stage.
 --
 -- = Description
--- #_description#
 --
 -- -   @pImmutableSamplers@ affects initialization of samplers. If
 --     @descriptorType@ specifies a @VK_DESCRIPTOR_TYPE_SAMPLER@ or
@@ -1433,21 +1502,20 @@ instance Storable VkCopyDescriptorSet where
 -- -   @descriptorType@ /must/ be a valid 'VkDescriptorType' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorSetLayoutCreateInfo', 'VkDescriptorType',
 -- 'Graphics.Vulkan.Core10.Sampler.VkSampler',
 -- 'Graphics.Vulkan.Core10.PipelineLayout.VkShaderStageFlags'
 data VkDescriptorSetLayoutBinding = VkDescriptorSetLayoutBinding
-  { -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "vkBinding"
+  { -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "binding"
   vkBinding :: Word32
-  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "vkDescriptorType"
+  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "descriptorType"
   vkDescriptorType :: VkDescriptorType
-  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "vkDescriptorCount"
+  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "descriptorCount"
   vkDescriptorCount :: Word32
-  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "vkStageFlags"
+  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "stageFlags"
   vkStageFlags :: VkShaderStageFlags
-  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "vkPImmutableSamplers"
+  , -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "pImmutableSamplers"
   vkPImmutableSamplers :: Ptr VkSampler
   }
   deriving (Eq, Show)
@@ -1468,13 +1536,33 @@ instance Storable VkDescriptorSetLayoutBinding where
 -- | VkDescriptorSetLayoutCreateInfo - Structure specifying parameters of a
 -- newly created descriptor set layout
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   The 'VkDescriptorSetLayoutBinding'::@binding@ members of the
 --     elements of the @pBindings@ array /must/ each have different values.
+--
+-- -   If @flags@ contains
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@, then all
+--     elements of @pBindings@ /must/ not have a @descriptorType@ of
+--     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ or
+--     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@
+--
+-- -   If @flags@ contains
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@, then the
+--     total number of elements of all bindings /must/ be less than or
+--     equal to
+--     'Graphics.Vulkan.Extensions.VK_KHR_push_descriptor.VkPhysicalDevicePushDescriptorPropertiesKHR'::@maxPushDescriptors@
+--
+-- -   If any binding has the
+--     @VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT@ bit set, @flags@
+--     /must/ include
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
+--
+-- -   If any binding has the
+--     @VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT@ bit set, then all
+--     bindings /must/ not have @descriptorType@ of
+--     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ or
+--     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1492,7 +1580,6 @@ instance Storable VkDescriptorSetLayoutBinding where
 --     structures
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorSetLayoutBinding', 'VkDescriptorSetLayoutCreateFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
@@ -1500,15 +1587,17 @@ instance Storable VkDescriptorSetLayoutBinding where
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupport',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupportKHR'
 data VkDescriptorSetLayoutCreateInfo = VkDescriptorSetLayoutCreateInfo
-  { -- No documentation found for Nested "VkDescriptorSetLayoutCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDescriptorSetLayoutCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDescriptorSetLayoutCreateInfo" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkDescriptorSetLayoutCreateFlagBits' specifying
+  -- options for descriptor set layout creation.
   vkFlags :: VkDescriptorSetLayoutCreateFlags
-  , -- No documentation found for Nested "VkDescriptorSetLayoutCreateInfo" "vkBindingCount"
+  , -- | @bindingCount@ is the number of elements in @pBindings@.
   vkBindingCount :: Word32
-  , -- No documentation found for Nested "VkDescriptorSetLayoutCreateInfo" "vkPBindings"
+  , -- | @pBindings@ is a pointer to an array of 'VkDescriptorSetLayoutBinding'
+  -- structures.
   vkPBindings :: Ptr VkDescriptorSetLayoutBinding
   }
   deriving (Eq, Show)
@@ -1528,9 +1617,6 @@ instance Storable VkDescriptorSetLayoutCreateInfo where
                 *> poke (ptr `plusPtr` 24) (vkPBindings (poked :: VkDescriptorSetLayoutCreateInfo))
 -- | VkDescriptorPoolSize - Structure specifying descriptor pool size
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @descriptorCount@ /must/ be greater than @0@
@@ -1540,13 +1626,12 @@ instance Storable VkDescriptorSetLayoutCreateInfo where
 -- -   @type@ /must/ be a valid 'VkDescriptorType' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorPoolCreateInfo', 'VkDescriptorType'
 data VkDescriptorPoolSize = VkDescriptorPoolSize
-  { -- No documentation found for Nested "VkDescriptorPoolSize" "vkType"
+  { -- | @type@ is the type of descriptor.
   vkType :: VkDescriptorType
-  , -- No documentation found for Nested "VkDescriptorPoolSize" "vkDescriptorCount"
+  , -- | @descriptorCount@ is the number of descriptors of that type to allocate.
   vkDescriptorCount :: Word32
   }
   deriving (Eq, Show)
@@ -1562,7 +1647,6 @@ instance Storable VkDescriptorPoolSize where
 -- created descriptor pool
 --
 -- = Description
--- #_description#
 --
 -- If multiple @VkDescriptorPoolSize@ structures appear in the @pPoolSizes@
 -- array then the pool will be created with enough storage for the total
@@ -1591,6 +1675,13 @@ instance Storable VkDescriptorPoolSize where
 -- /can/ create an additional descriptor pool to perform further descriptor
 -- set allocations.
 --
+-- If @flags@ has the @VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT@
+-- bit set, descriptor pool creation /may/ fail with the error
+-- @VK_ERROR_FRAGMENTATION_EXT@ if the total number of descriptors across
+-- all pools (including this one) created with this bit set exceeds
+-- @maxUpdateAfterBindDescriptorsInAllPools@, or if fragmentation of the
+-- underlying hardware resources occurs.
+--
 -- == Valid Usage
 --
 -- -   @maxSets@ /must/ be greater than @0@
@@ -1610,22 +1701,25 @@ instance Storable VkDescriptorPoolSize where
 -- -   @poolSizeCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorPoolCreateFlags', 'VkDescriptorPoolSize',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateDescriptorPool'
 data VkDescriptorPoolCreateInfo = VkDescriptorPoolCreateInfo
-  { -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkDescriptorPoolCreateFlagBits' specifying
+  -- certain supported operations on the pool.
   vkFlags :: VkDescriptorPoolCreateFlags
-  , -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "vkMaxSets"
+  , -- | @maxSets@ is the maximum number of descriptor sets that /can/ be
+  -- allocated from the pool.
   vkMaxSets :: Word32
-  , -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "vkPoolSizeCount"
+  , -- | @poolSizeCount@ is the number of elements in @pPoolSizes@.
   vkPoolSizeCount :: Word32
-  , -- No documentation found for Nested "VkDescriptorPoolCreateInfo" "vkPPoolSizes"
+  , -- | @pPoolSizes@ is a pointer to an array of @VkDescriptorPoolSize@
+  -- structures, each containing a descriptor type and number of descriptors
+  -- of that type to be allocated in the pool.
   vkPPoolSizes :: Ptr VkDescriptorPoolSize
   }
   deriving (Eq, Show)
@@ -1648,16 +1742,15 @@ instance Storable VkDescriptorPoolCreateInfo where
 -- | VkDescriptorSetAllocateInfo - Structure specifying the allocation
 -- parameters for descriptor sets
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
--- -   @descriptorSetCount@ /must/ not be greater than the number of sets
---     that are currently available for allocation in @descriptorPool@
+-- -   Each element of @pSetLayouts@ /must/ not have been created with
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@ set
 --
--- -   @descriptorPool@ /must/ have enough free descriptor capacity
---     remaining to allocate the descriptor sets of the specified layouts
+-- -   If any element of @pSetLayouts@ was created with the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set, @descriptorPool@ /must/ have been created with the
+--     @VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT@ flag set
 --
 -- == Valid Usage (Implicit)
 --
@@ -1677,22 +1770,23 @@ instance Storable VkDescriptorPoolCreateInfo where
 --     have been created, allocated, or retrieved from the same @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorPool',
 -- 'Graphics.Vulkan.Core10.PipelineLayout.VkDescriptorSetLayout',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkAllocateDescriptorSets'
 data VkDescriptorSetAllocateInfo = VkDescriptorSetAllocateInfo
-  { -- No documentation found for Nested "VkDescriptorSetAllocateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDescriptorSetAllocateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDescriptorSetAllocateInfo" "vkDescriptorPool"
+  , -- | @descriptorPool@ is the pool which the sets will be allocated from.
   vkDescriptorPool :: VkDescriptorPool
-  , -- No documentation found for Nested "VkDescriptorSetAllocateInfo" "vkDescriptorSetCount"
+  , -- | @descriptorSetCount@ determines the number of descriptor sets to be
+  -- allocated from the pool.
   vkDescriptorSetCount :: Word32
-  , -- No documentation found for Nested "VkDescriptorSetAllocateInfo" "vkPSetLayouts"
+  , -- | @pSetLayouts@ is an array of descriptor set layouts, with each member
+  -- specifying how the corresponding descriptor set is allocated.
   vkPSetLayouts :: Ptr VkDescriptorSetLayout
   }
   deriving (Eq, Show)
@@ -1714,26 +1808,22 @@ instance Storable VkDescriptorSetAllocateInfo where
 -- VkDescriptorSetLayoutCreateFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkDescriptorSetLayoutCreateFlags@ is a bitmask type for setting a mask
 -- of zero or more 'VkDescriptorSetLayoutCreateFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorSetLayoutCreateFlagBits', 'VkDescriptorSetLayoutCreateInfo'
 type VkDescriptorSetLayoutCreateFlags = VkDescriptorSetLayoutCreateFlagBits
 -- | VkDescriptorPoolCreateFlags - Bitmask of VkDescriptorPoolCreateFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkDescriptorPoolCreateFlags@ is a bitmask type for setting a mask of
 -- zero or more 'VkDescriptorPoolCreateFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorPoolCreateFlagBits', 'VkDescriptorPoolCreateInfo'
 type VkDescriptorPoolCreateFlags = VkDescriptorPoolCreateFlagBits

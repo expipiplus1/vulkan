@@ -72,13 +72,11 @@ import Graphics.Vulkan.Core10.Pipeline
 -- | VkPipelineLayoutCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineLayoutCreateFlags@ is a bitmask type for setting a mask, but
 -- is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineLayoutCreateInfo'
 newtype VkPipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags VkFlags
@@ -103,11 +101,7 @@ instance Read VkPipelineLayoutCreateFlags where
 data VkDescriptorSetLayout_T
 -- | VkDescriptorSetLayout - Opaque handle to a descriptor set layout object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSetAllocateInfo',
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo',
@@ -118,7 +112,6 @@ type VkDescriptorSetLayout = Ptr VkDescriptorSetLayout_T
 -- | vkCreatePipelineLayout - Creates a new pipeline layout object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the pipeline layout.
 --
@@ -127,13 +120,12 @@ type VkDescriptorSetLayout = Ptr VkDescriptorSetLayout_T
 --     pipeline layout object.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pPipelineLayout@ points to a @VkPipelineLayout@ handle in which the
 --     resulting pipeline layout object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -150,16 +142,15 @@ type VkDescriptorSetLayout = Ptr VkDescriptorSetLayout_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -169,17 +160,15 @@ foreign import ccall "vkCreatePipelineLayout" vkCreatePipelineLayout :: ("device
 -- | vkDestroyPipelineLayout - Destroy a pipeline layout object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the pipeline layout.
 --
 -- -   @pipelineLayout@ is the pipeline layout to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -208,16 +197,12 @@ foreign import ccall "vkCreatePipelineLayout" vkCreatePipelineLayout :: ("device
 -- -   Host access to @pipelineLayout@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout'
 foreign import ccall "vkDestroyPipelineLayout" vkDestroyPipelineLayout :: ("device" ::: VkDevice) -> ("pipelineLayout" ::: VkPipelineLayout) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkPushConstantRange - Structure specifying a push constant range
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -241,15 +226,21 @@ foreign import ccall "vkDestroyPipelineLayout" vkDestroyPipelineLayout :: ("devi
 -- -   @stageFlags@ /must/ not be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineLayoutCreateInfo', 'VkShaderStageFlags'
 data VkPushConstantRange = VkPushConstantRange
-  { -- No documentation found for Nested "VkPushConstantRange" "vkStageFlags"
+  { -- | @stageFlags@ is a set of stage flags describing the shader stages that
+  -- will access a range of push constants. If a particular stage is not
+  -- included in the range, then accessing members of that range of push
+  -- constants from the corresponding shader stage will result in undefined
+  -- data being read.
   vkStageFlags :: VkShaderStageFlags
-  , -- No documentation found for Nested "VkPushConstantRange" "vkOffset"
+  , -- | @offset@ and @size@ are the start offset and size, respectively,
+  -- consumed by the range. Both @offset@ and @size@ are in units of bytes
+  -- and /must/ be a multiple of 4. The layout of the push constant variables
+  -- is specified in the shader.
   vkOffset :: Word32
-  , -- No documentation found for Nested "VkPushConstantRange" "vkSize"
+  , -- No documentation found for Nested "VkPushConstantRange" "size"
   vkSize :: Word32
   }
   deriving (Eq, Show)
@@ -267,7 +258,6 @@ instance Storable VkPushConstantRange where
 -- newly created pipeline layout object
 --
 -- = Members
--- #_members#
 --
 -- -   @sType@ is the type of this structure.
 --
@@ -296,87 +286,155 @@ instance Storable VkPushConstantRange where
 --     in pipelines that is expected to outperform memory-backed resource
 --     updates.
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @setLayoutCount@ /must/ be less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxBoundDescriptorSets@
 --
--- -   The total number of descriptors of the type
---     @VK_DESCRIPTOR_TYPE_SAMPLER@ and
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ accessible to any shader
---     stage across all elements of @pSetLayouts@ /must/ be less than or
---     equal to @VkPhysicalDeviceLimits@::@maxPerStageDescriptorSamplers@
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_SAMPLER@ and
+--     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ accessible to any given
+--     shader stage across all elements of @pSetLayouts@ /must/ be less
+--     than or equal to
+--     @VkPhysicalDeviceLimits@::@maxPerStageDescriptorSamplers@
 --
--- -   The total number of descriptors of the type
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ and
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ accessible to any shader
---     stage across all elements of @pSetLayouts@ /must/ be less than or
---     equal to
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@
+--     and @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ accessible to any
+--     given shader stage across all elements of @pSetLayouts@ /must/ be
+--     less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxPerStageDescriptorUniformBuffers@
 --
--- -   The total number of descriptors of the type
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ and
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ accessible to any shader
---     stage across all elements of @pSetLayouts@ /must/ be less than or
---     equal to
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@
+--     and @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ accessible to any
+--     given shader stage across all elements of @pSetLayouts@ /must/ be
+--     less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxPerStageDescriptorStorageBuffers@
 --
--- -   The total number of descriptors of the type
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of
 --     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@,
 --     @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@, and
---     @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ accessible to any shader
---     stage across all elements of @pSetLayouts@ /must/ be less than or
---     equal to
+--     @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ accessible to any given
+--     shader stage across all elements of @pSetLayouts@ /must/ be less
+--     than or equal to
 --     @VkPhysicalDeviceLimits@::@maxPerStageDescriptorSampledImages@
 --
--- -   The total number of descriptors of the type
---     @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@, and
---     @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ accessible to any shader
---     stage across all elements of @pSetLayouts@ /must/ be less than or
---     equal to
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@,
+--     and @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ accessible to any
+--     given shader stage across all elements of @pSetLayouts@ /must/ be
+--     less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxPerStageDescriptorStorageImages@
 --
--- -   The total number of descriptors of the type
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@
+--     accessible to any given shader stage across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     @VkPhysicalDeviceLimits@::@maxPerStageDescriptorInputAttachments@
+--
+-- -   The total number of descriptors with a @descriptorType@ of
+--     @VK_DESCRIPTOR_TYPE_SAMPLER@ and
+--     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ accessible to any given
+--     shader stage across all elements of @pSetLayouts@ /must/ be less
+--     than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxPerStageDescriptorUpdateAfterBindSamplers@
+--
+-- -   The total number of descriptors with a @descriptorType@ of
+--     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ and
+--     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ accessible to any given
+--     shader stage across all elements of @pSetLayouts@ /must/ be less
+--     than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxPerStageDescriptorUpdateAfterBindUniformBuffers@
+--
+-- -   The total number of descriptors with a @descriptorType@ of
+--     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ and
+--     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ accessible to any given
+--     shader stage across all elements of @pSetLayouts@ /must/ be less
+--     than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxPerStageDescriptorUpdateAfterBindStorageBuffers@
+--
+-- -   The total number of descriptors with a @descriptorType@ of
+--     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@,
+--     @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@, and
+--     @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ accessible to any given
+--     shader stage across all elements of @pSetLayouts@ /must/ be less
+--     than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxPerStageDescriptorUpdateAfterBindSampledImages@
+--
+-- -   The total number of descriptors with a @descriptorType@ of
+--     @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@, and
+--     @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ accessible to any given
+--     shader stage across all elements of @pSetLayouts@ /must/ be less
+--     than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxPerStageDescriptorUpdateAfterBindStorageImages@
+--
+-- -   The total number of descriptors with a @descriptorType@ of
 --     @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@ accessible to any given shader
 --     stage across all elements of @pSetLayouts@ /must/ be less than or
 --     equal to
---     @VkPhysicalDeviceLimits@::@maxPerStageDescriptorInputAttachments@
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxPerStageDescriptorUpdateAfterBindInputAttachments@
 --
--- -   The total number of descriptors of the type
---     @VK_DESCRIPTOR_TYPE_SAMPLER@ and
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_SAMPLER@ and
 --     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ accessible across all
 --     shader stages and across all elements of @pSetLayouts@ /must/ be
 --     less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxDescriptorSetSamplers@
 --
--- -   The total number of descriptors of the type
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ accessible across all shader
---     stagess and and across all elements of @pSetLayouts@ /must/ be less
---     than or equal to
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@
+--     accessible across all shader stagess and and across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxDescriptorSetUniformBuffers@
 --
--- -   The total number of descriptors of the type
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of
 --     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ accessible across all
 --     shader stages and across all elements of @pSetLayouts@ /must/ be
 --     less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxDescriptorSetUniformBuffersDynamic@
 --
--- -   The total number of descriptors of the type
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ accessible across all shader
---     stages and across all elements of @pSetLayouts@ /must/ be less than
---     or equal to
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@
+--     accessible across all shader stages and across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxDescriptorSetStorageBuffers@
 --
--- -   The total number of descriptors of the type
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of
 --     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ accessible across all
 --     shader stages and across all elements of @pSetLayouts@ /must/ be
 --     less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxDescriptorSetStorageBuffersDynamic@
 --
--- -   The total number of descriptors of the type
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of
 --     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@,
 --     @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@, and
 --     @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ accessible across all
@@ -384,21 +442,81 @@ instance Storable VkPushConstantRange where
 --     less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxDescriptorSetSampledImages@
 --
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@,
+--     and @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ accessible across all
+--     shader stages and across all elements of @pSetLayouts@ /must/ be
+--     less than or equal to
+--     @VkPhysicalDeviceLimits@::@maxDescriptorSetStorageImages@
+--
+-- -   The total number of descriptors in descriptor set layouts created
+--     without the
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+--     set with a @descriptorType@ of @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@
+--     accessible across all shader stages and across all elements of
+--     @pSetLayouts@ /must/ be less than or equal to
+--     @VkPhysicalDeviceLimits@::@maxDescriptorSetInputAttachments@
+--
+-- -   The total number of descriptors of the type
+--     @VK_DESCRIPTOR_TYPE_SAMPLER@ and
+--     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ accessible across all
+--     shader stages and across all elements of @pSetLayouts@ /must/ be
+--     less than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxDescriptorSetUpdateAfterBindSamplers@
+--
+-- -   The total number of descriptors of the type
+--     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ accessible across all shader
+--     stagess and and across all elements of @pSetLayouts@ /must/ be less
+--     than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxDescriptorSetUpdateAfterBindUniformBuffers@
+--
+-- -   The total number of descriptors of the type
+--     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ accessible across all
+--     shader stages and across all elements of @pSetLayouts@ /must/ be
+--     less than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxDescriptorSetUpdateAfterBindUniformBuffersDynamic@
+--
+-- -   The total number of descriptors of the type
+--     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ accessible across all shader
+--     stages and across all elements of @pSetLayouts@ /must/ be less than
+--     or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxDescriptorSetUpdateAfterBindStorageBuffers@
+--
+-- -   The total number of descriptors of the type
+--     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ accessible across all
+--     shader stages and across all elements of @pSetLayouts@ /must/ be
+--     less than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxDescriptorSetUpdateAfterBindStorageBuffersDynamic@
+--
+-- -   The total number of descriptors of the type
+--     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@,
+--     @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@, and
+--     @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ accessible across all
+--     shader stages and across all elements of @pSetLayouts@ /must/ be
+--     less than or equal to
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxDescriptorSetUpdateAfterBindSampledImages@
+--
 -- -   The total number of descriptors of the type
 --     @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@, and
 --     @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ accessible across all
 --     shader stages and across all elements of @pSetLayouts@ /must/ be
 --     less than or equal to
---     @VkPhysicalDeviceLimits@::@maxDescriptorSetStorageImages@
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxDescriptorSetUpdateAfterBindStorageImages@
 --
 -- -   The total number of descriptors of the type
 --     @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@ accessible across all shader
 --     stages and across all elements of @pSetLayouts@ /must/ be less than
 --     or equal to
---     @VkPhysicalDeviceLimits@::@maxDescriptorSetInputAttachments@
+--     @VkPhysicalDeviceDescriptorIndexingPropertiesEXT@::@maxDescriptorSetUpdateAfterBindInputAttachments@
 --
 -- -   Any two elements of @pPushConstantRanges@ /must/ not include the
 --     same stage in @stageFlags@
+--
+-- -   @pSetLayouts@ /must/ not contain more than one descriptor set layout
+--     that was created with
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@ set
 --
 -- == Valid Usage (Implicit)
 --
@@ -417,25 +535,24 @@ instance Storable VkPushConstantRange where
 --     @VkPushConstantRange@ structures
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDescriptorSetLayout', 'VkPipelineLayoutCreateFlags',
 -- 'VkPushConstantRange', 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreatePipelineLayout'
 data VkPipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo
-  { -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "vkSType"
+  { -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "vkPNext"
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "vkFlags"
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "flags"
   vkFlags :: VkPipelineLayoutCreateFlags
-  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "vkSetLayoutCount"
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "setLayoutCount"
   vkSetLayoutCount :: Word32
-  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "vkPSetLayouts"
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "pSetLayouts"
   vkPSetLayouts :: Ptr VkDescriptorSetLayout
-  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "vkPushConstantRangeCount"
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "pushConstantRangeCount"
   vkPushConstantRangeCount :: Word32
-  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "vkPPushConstantRanges"
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "pPushConstantRanges"
   vkPPushConstantRanges :: Ptr VkPushConstantRange
   }
   deriving (Eq, Show)
@@ -460,13 +577,11 @@ instance Storable VkPipelineLayoutCreateInfo where
 -- | VkShaderStageFlags - Bitmask of VkShaderStageFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkShaderStageFlags@ is a bitmask type for setting a mask of zero or
 -- more 'Graphics.Vulkan.Core10.Pipeline.VkShaderStageFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
 -- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkObjectTablePushConstantEntryNVX',

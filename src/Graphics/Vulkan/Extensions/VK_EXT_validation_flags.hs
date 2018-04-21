@@ -60,7 +60,6 @@ import Graphics.Vulkan.Core10.Core
 -- | VkValidationCheckEXT - Specify validation checks to disable
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkValidationFlagsEXT'
 newtype VkValidationCheckEXT = VkValidationCheckEXT Int32
@@ -103,9 +102,6 @@ pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME = "VK_EXT_validation_flags"
 -- | VkValidationFlagsEXT - Specify validation checks to disable for a Vulkan
 -- instance
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT@
@@ -116,17 +112,18 @@ pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME = "VK_EXT_validation_flags"
 -- -   @disabledValidationCheckCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkValidationCheckEXT'
 data VkValidationFlagsEXT = VkValidationFlagsEXT
-  { -- No documentation found for Nested "VkValidationFlagsEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkValidationFlagsEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkValidationFlagsEXT" "vkDisabledValidationCheckCount"
+  , -- | @disabledValidationCheckCount@ is the number of checks to disable.
   vkDisabledValidationCheckCount :: Word32
-  , -- No documentation found for Nested "VkValidationFlagsEXT" "vkPDisabledValidationChecks"
+  , -- | @pDisabledValidationChecks@ is a pointer to an array of
+  -- 'VkValidationCheckEXT' values specifying the validation checks to be
+  -- disabled.
   vkPDisabledValidationChecks :: Ptr VkValidationCheckEXT
   }
   deriving (Eq, Show)

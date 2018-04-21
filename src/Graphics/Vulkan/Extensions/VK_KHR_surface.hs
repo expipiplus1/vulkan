@@ -112,8 +112,117 @@ import Graphics.Vulkan.Core10.Pipeline
 
 -- | VkColorSpaceKHR - supported color space of the presentation engine
 --
+-- = Description
+--
+-- -   @VK_COLOR_SPACE_SRGB_NONLINEAR_KHR@ specifies support for the sRGB
+--     color space.
+--
+-- -   @VK_COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT@ specifies support for the
+--     Display-P3 color space and applies an sRGB-like transfer function
+--     (defined below).
+--
+-- -   @VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT@ specifies support for the
+--     extended sRGB color space and applies a linear transfer function.
+--
+-- -   @VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT@ specifies support for
+--     the extended sRGB color space and applies an sRGB transfer function.
+--
+-- -   @VK_COLOR_SPACE_DCI_P3_LINEAR_EXT@ specifies support for the DCI-P3
+--     color space and applies a linear OETF.
+--
+-- -   @VK_COLOR_SPACE_DCI_P3_NONLINEAR_EXT@ specifies support for the
+--     DCI-P3 color space and applies the Gamma 2.6 OETF.
+--
+-- -   @VK_COLOR_SPACE_BT709_LINEAR_EXT@ specifies support for the BT709
+--     color space and applies a linear OETF.
+--
+-- -   @VK_COLOR_SPACE_BT709_NONLINEAR_EXT@ specifies support for the BT709
+--     color space and applies the SMPTE 170M OETF.
+--
+-- -   @VK_COLOR_SPACE_BT2020_LINEAR_EXT@ specifies support for the BT2020
+--     color space and applies a linear OETF.
+--
+-- -   @VK_COLOR_SPACE_HDR10_ST2084_EXT@ specifies support for the HDR10
+--     (BT2020 color) space and applies the SMPTE ST2084 Perceptual
+--     Quantizer (PQ) OETF.
+--
+-- -   @VK_COLOR_SPACE_DOLBYVISION_EXT@ specifies support for the Dolby
+--     Vision (BT2020 color space), proprietary encoding, and applies the
+--     SMPTE ST2084 OETF.
+--
+-- -   @VK_COLOR_SPACE_HDR10_HLG_EXT@ specifies support for the HDR10
+--     (BT2020 color space) and applies the Hybrid Log Gamma (HLG) OETF.
+--
+-- -   @VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT@ specifies support for the
+--     AdobeRGB color space and applies a linear OETF.
+--
+-- -   @VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT@ specifies support for the
+--     AdobeRGB color space and applies the Gamma 2.2 OETF.
+--
+-- -   @VK_COLOR_SPACE_PASS_THROUGH_EXT@ specifies that color components
+--     are used “as is”. This is intended to allow applications to supply
+--     data for color spaces not described here.
+--
+-- The color components of Non-linear color space swap chain images have
+-- had the appropriate transfer function applied. Vulkan requires that all
+-- implementations support the sRGB transfer function when using an SRGB
+-- pixel format. Other transfer functions, such as SMPTE 170M or SMPTE2084,
+-- /must/ not be performed by the implementation, but /can/ be performed by
+-- the application shader. This extension defines enums for
+-- 'VkColorSpaceKHR' that correspond to the following color spaces:
+--
+-- +--------------+----------+----------+----------+-------------+------------+
+-- | Name         | Red      | Green    | Blue     | White-point | Transfer   |
+-- |              | Primary  | Primary  | Primary  |             | function   |
+-- +==============+==========+==========+==========+=============+============+
+-- | DCI-P3       | 0.680,   | 0.265,   | 0.150,   | 0.3127,     | Gamma 2.6  |
+-- |              | 0.320    | 0.690    | 0.060    | 0.3290      |            |
+-- |              |          |          |          | (D65)       |            |
+-- +--------------+----------+----------+----------+-------------+------------+
+-- | Display-P3   | 0.680,   | 0.265,   | 0.150,   | 0.3127,     | Display-P3 |
+-- |              | 0.320    | 0.690    | 0.060    | 0.3290      |            |
+-- |              |          |          |          | (D65)       |            |
+-- +--------------+----------+----------+----------+-------------+------------+
+-- | BT709        | 0.640,   | 0.300,   | 0.150,   | 0.3127,     | SMPTE 170M |
+-- |              | 0.330    | 0.600    | 0.060    | 0.3290      |            |
+-- |              |          |          |          | (D65)       |            |
+-- +--------------+----------+----------+----------+-------------+------------+
+-- | sRGB         | 0.640,   | 0.300,   | 0.150,   | 0.3127,     | sRGB       |
+-- |              | 0.330    | 0.600    | 0.060    | 0.3290      |            |
+-- |              |          |          |          | (D65)       |            |
+-- +--------------+----------+----------+----------+-------------+------------+
+-- | extended     | 0.640,   | 0.300,   | 0.150,   | 0.3127,     | extended   |
+-- | sRGB         | 0.330    | 0.600    | 0.060    | 0.3290      | sRGB       |
+-- |              |          |          |          | (D65)       |            |
+-- +--------------+----------+----------+----------+-------------+------------+
+-- | HDR10_ST2084 | 0.708,   | 0.170,   | 0.131,   | 0.3127,     | ST2084     |
+-- |              | 0.292    | 0.797    | 0.046    | 0.3290      |            |
+-- |              |          |          |          | (D65)       |            |
+-- +--------------+----------+----------+----------+-------------+------------+
+-- | DOLBYVISION  | 0.708,   | 0.170,   | 0.131,   | 0.3127,     | ST2084     |
+-- |              | 0.292    | 0.797    | 0.046    | 0.3290      |            |
+-- |              |          |          |          | (D65)       |            |
+-- +--------------+----------+----------+----------+-------------+------------+
+-- | HDR10_HLG    | 0.708,   | 0.170,   | 0.131,   | 0.3127,     | HLG        |
+-- |              | 0.292    | 0.797    | 0.046    | 0.3290      |            |
+-- |              |          |          |          | (D65)       |            |
+-- +--------------+----------+----------+----------+-------------+------------+
+-- | AdobeRGB     | 0.640,   | 0.210,   | 0.150,   | 0.3127,     | AdobeRGB   |
+-- |              | 0.330    | 0.710    | 0.060    | 0.3290      |            |
+-- |              |          |          |          | (D65)       |            |
+-- +--------------+----------+----------+----------+-------------+------------+
+--
+-- Color Spaces and Attributes
+--
+-- For Opto-Electrical Transfer Function (OETF), unless otherwise
+-- specified, the values of L and E are defined as:
+--
+-- L - linear luminance of image \(0 \leq L \leq 1\) for conventional
+-- colorimetry
+--
+-- E - corresponding electrical signal (value stored in memory)
+--
 -- = See Also
--- #_see_also#
 --
 -- 'VkSurfaceFormatKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
@@ -164,8 +273,7 @@ instance Read VkColorSpaceKHR where
                         )
                     )
 
--- | @VK_COLOR_SPACE_SRGB_NONLINEAR_KHR@ specifies support for the sRGB color
--- space.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_SRGB_NONLINEAR_KHR"
 pattern VK_COLOR_SPACE_SRGB_NONLINEAR_KHR :: VkColorSpaceKHR
 pattern VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = VkColorSpaceKHR 0
 -- ** VkPresentModeKHR
@@ -173,7 +281,6 @@ pattern VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = VkColorSpaceKHR 0
 -- | VkPresentModeKHR - presentation mode supported for a surface
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_PRESENT_MODE_IMMEDIATE_KHR@ specifies that the presentation
 --     engine does not wait for a vertical blanking period to update the
@@ -216,6 +323,53 @@ pattern VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = VkColorSpaceKHR 0
 --     during or after each vertical blanking period in which the queue is
 --     non-empty.
 --
+-- -   @VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR@ specifies that the
+--     presentation engine and application have concurrent access to a
+--     single image, which is referred to as a /shared presentable image/.
+--     The presentation engine is only required to update the current image
+--     after a new presentation request is received. Therefore the
+--     application /must/ make a presentation request whenever an update is
+--     required. However, the presentation engine /may/ update the current
+--     image at any point, meaning this mode /may/ result in visible
+--     tearing.
+--
+-- -   @VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR@ specifies that the
+--     presentation engine and application have concurrent access to a
+--     single image, which is referred to as a /shared presentable image/.
+--     The presentation engine periodically updates the current image on
+--     its regular refresh cycle. The application is only required to make
+--     one initial presentation request, after which the presentation
+--     engine /must/ update the current image without any need for further
+--     presentation requests. The application /can/ indicate the image
+--     contents have been updated by making a presentation request, but
+--     this does not guarantee the timing of when it will be updated. This
+--     mode /may/ result in visible tearing if rendering to the image is
+--     not timed correctly.
+--
+-- The supported
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageUsageFlagBits' of
+-- the presentable images of a swapchain created for a surface /may/ differ
+-- depending on the presentation mode, and can be determined as per the
+-- table below:
+--
+-- +-------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | Presentation mode                               | Image usage flags                                                                                                                      |
+-- +=================================================+========================================================================================================================================+
+-- | @VK_PRESENT_MODE_IMMEDIATE_KHR@                 | 'VkSurfaceCapabilitiesKHR'::@supportedUsageFlags@                                                                                      |
+-- +-------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | @VK_PRESENT_MODE_MAILBOX_KHR@                   | 'VkSurfaceCapabilitiesKHR'::@supportedUsageFlags@                                                                                      |
+-- +-------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | @VK_PRESENT_MODE_FIFO_KHR@                      | 'VkSurfaceCapabilitiesKHR'::@supportedUsageFlags@                                                                                      |
+-- +-------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | @VK_PRESENT_MODE_FIFO_RELAXED_KHR@              | 'VkSurfaceCapabilitiesKHR'::@supportedUsageFlags@                                                                                      |
+-- +-------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | @VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR@     | 'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR'::@sharedPresentSupportedUsageFlags@ |
+-- +-------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+-- | @VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR@ | 'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR'::@sharedPresentSupportedUsageFlags@ |
+-- +-------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+--
+-- Presentable image usage queries
+--
 -- __Note__
 --
 -- For reference, the mode indicated by @VK_PRESENT_MODE_FIFO_KHR@ is
@@ -226,7 +380,6 @@ pattern VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = VkColorSpaceKHR 0
 -- {WGL|GLX}_EXT_swap_control_tear extensions).
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
 -- 'vkGetPhysicalDeviceSurfacePresentModesKHR'
@@ -280,7 +433,6 @@ pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR = VkPresentModeKHR 3
 -- device
 --
 -- = Description
--- #_description#
 --
 -- These values are described as follows:
 --
@@ -309,7 +461,6 @@ pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR = VkPresentModeKHR 3
 --     default will be used.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCompositeAlphaFlagsKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
@@ -357,7 +508,6 @@ pattern VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x00000
 -- device
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplaySurfaceCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
@@ -467,7 +617,6 @@ data VkSurfaceKHR_T
 -- | VkSurfaceKHR - Opaque handle to a surface object
 --
 -- = Description
--- #_description#
 --
 -- The @VK_KHR_surface@ extension declares the @VkSurfaceKHR@ object, and
 -- provides a function for destroying @VkSurfaceKHR@ objects. Separate
@@ -477,7 +626,6 @@ data VkSurfaceKHR_T
 -- handles of other Vulkan objects.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
@@ -503,7 +651,6 @@ type VkSurfaceKHR = Ptr VkSurfaceKHR_T
 -- | vkDestroySurfaceKHR - Destroy a VkSurfaceKHR object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the instance used to create the surface.
 --
@@ -511,10 +658,10 @@ type VkSurfaceKHR = Ptr VkSurfaceKHR_T
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- = Description
--- #_description#
 --
 -- Destroying a @VkSurfaceKHR@ merely severs the connection between Vulkan
 -- and the native surface, and does not imply destroying the native
@@ -550,7 +697,6 @@ type VkSurfaceKHR = Ptr VkSurfaceKHR_T
 -- -   Host access to @surface@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance', 'VkSurfaceKHR'
@@ -559,7 +705,6 @@ foreign import ccall "vkDestroySurfaceKHR" vkDestroySurfaceKHR :: ("instance" ::
 -- supported
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device.
 --
@@ -569,9 +714,6 @@ foreign import ccall "vkDestroySurfaceKHR" vkDestroySurfaceKHR :: ("instance" ::
 --
 -- -   @pSupported@ is a pointer to a @VkBool32@, which is set to @VK_TRUE@
 --     to indicate support, and @VK_FALSE@ otherwise.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -592,10 +734,10 @@ foreign import ccall "vkDestroySurfaceKHR" vkDestroySurfaceKHR :: ("instance" ::
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -603,7 +745,6 @@ foreign import ccall "vkDestroySurfaceKHR" vkDestroySurfaceKHR :: ("instance" ::
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@,
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
@@ -612,7 +753,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceS
 -- | vkGetPhysicalDeviceSurfaceCapabilitiesKHR - Query surface capabilities
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device that will be associated with
 --     the swapchain to be created, as described for
@@ -623,9 +763,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceS
 -- -   @pSurfaceCapabilities@ is a pointer to an instance of the
 --     'VkSurfaceCapabilitiesKHR' structure in which the capabilities are
 --     returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -641,10 +778,10 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceS
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -652,7 +789,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceS
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkSurfaceCapabilitiesKHR', 'VkSurfaceKHR'
@@ -661,7 +797,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDe
 -- surface
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device that will be associated with
 --     the swapchain to be created, as described for
@@ -676,7 +811,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDe
 --     @VkSurfaceFormatKHR@ structures.
 --
 -- = Description
--- #_description#
 --
 -- If @pSurfaceFormats@ is @NULL@, then the number of format pairs
 -- supported for the given @surface@ is returned in @pSurfaceFormatCount@.
@@ -711,12 +845,12 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDe
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -724,7 +858,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDe
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkSurfaceFormatKHR', 'VkSurfaceKHR'
@@ -733,7 +866,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceS
 -- modes
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device that will be associated with
 --     the swapchain to be created, as described for
@@ -749,7 +881,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceS
 --     modes.
 --
 -- = Description
--- #_description#
 --
 -- If @pPresentModes@ is @NULL@, then the number of presentation modes
 -- supported for the given @surface@ is returned in @pPresentModeCount@.
@@ -780,12 +911,12 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceS
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -793,7 +924,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceS
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPresentModeKHR', 'VkSurfaceKHR'
@@ -802,7 +932,14 @@ foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDe
 -- surface
 --
 -- = Description
--- #_description#
+--
+-- __Note__
+--
+-- Supported usage flags of a presentable image when using
+-- @VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR@ or
+-- @VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR@ presentation mode are
+-- provided by
+-- 'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR'::@sharedPresentSupportedUsageFlags@.
 --
 -- __Note__
 --
@@ -810,7 +947,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDe
 -- @maxImageCount@ /may/ be zero.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCompositeAlphaFlagsKHR',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
@@ -819,25 +955,63 @@ foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDe
 -- 'VkSurfaceTransformFlagBitsKHR', 'VkSurfaceTransformFlagsKHR',
 -- 'vkGetPhysicalDeviceSurfaceCapabilitiesKHR'
 data VkSurfaceCapabilitiesKHR = VkSurfaceCapabilitiesKHR
-  { -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkMinImageCount"
+  { -- | @minImageCount@ is the minimum number of images the specified device
+  -- supports for a swapchain created for the surface, and will be at least
+  -- one.
   vkMinImageCount :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkMaxImageCount"
+  , -- | @maxImageCount@ is the maximum number of images the specified device
+  -- supports for a swapchain created for the surface, and will be either 0,
+  -- or greater than or equal to @minImageCount@. A value of 0 means that
+  -- there is no limit on the number of images, though there /may/ be limits
+  -- related to the total amount of memory used by presentable images.
   vkMaxImageCount :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkCurrentExtent"
+  , -- | @currentExtent@ is the current width and height of the surface, or the
+  -- special value (0xFFFFFFFF, 0xFFFFFFFF) indicating that the surface size
+  -- will be determined by the extent of a swapchain targeting the surface.
   vkCurrentExtent :: VkExtent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkMinImageExtent"
+  , -- | @minImageExtent@ contains the smallest valid swapchain extent for the
+  -- surface on the specified device. The @width@ and @height@ of the extent
+  -- will each be less than or equal to the corresponding @width@ and
+  -- @height@ of @currentExtent@, unless @currentExtent@ has the special
+  -- value described above.
   vkMinImageExtent :: VkExtent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkMaxImageExtent"
+  , -- | @maxImageExtent@ contains the largest valid swapchain extent for the
+  -- surface on the specified device. The @width@ and @height@ of the extent
+  -- will each be greater than or equal to the corresponding @width@ and
+  -- @height@ of @minImageExtent@. The @width@ and @height@ of the extent
+  -- will each be greater than or equal to the corresponding @width@ and
+  -- @height@ of @currentExtent@, unless @currentExtent@ has the special
+  -- value described above.
   vkMaxImageExtent :: VkExtent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkMaxImageArrayLayers"
+  , -- | @maxImageArrayLayers@ is the maximum number of layers presentable images
+  -- /can/ have for a swapchain created for this device and surface, and will
+  -- be at least one.
   vkMaxImageArrayLayers :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkSupportedTransforms"
+  , -- | @supportedTransforms@ is a bitmask of 'VkSurfaceTransformFlagBitsKHR'
+  -- indicating the presentation transforms supported for the surface on the
+  -- specified device. At least one bit will be set.
   vkSupportedTransforms :: VkSurfaceTransformFlagsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkCurrentTransform"
+  , -- | @currentTransform@ is 'VkSurfaceTransformFlagBitsKHR' value indicating
+  -- the surface’s current transform relative to the presentation engine’s
+  -- natural orientation.
   vkCurrentTransform :: VkSurfaceTransformFlagBitsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkSupportedCompositeAlpha"
+  , -- | @supportedCompositeAlpha@ is a bitmask of 'VkCompositeAlphaFlagBitsKHR',
+  -- representing the alpha compositing modes supported by the presentation
+  -- engine for the surface on the specified device, and at least one bit
+  -- will be set. Opaque composition /can/ be achieved in any alpha
+  -- compositing mode by either using an image format that has no alpha
+  -- component, or by ensuring that all pixels in the presentable images have
+  -- an alpha value of 1.0.
   vkSupportedCompositeAlpha :: VkCompositeAlphaFlagsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesKHR" "vkSupportedUsageFlags"
+  , -- | @supportedUsageFlags@ is a bitmask of
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageUsageFlagBits'
+  -- representing the ways the application /can/ use the presentable images
+  -- of a swapchain created with 'VkPresentModeKHR' set to
+  -- @VK_PRESENT_MODE_IMMEDIATE_KHR@, @VK_PRESENT_MODE_MAILBOX_KHR@,
+  -- @VK_PRESENT_MODE_FIFO_KHR@ or @VK_PRESENT_MODE_FIFO_RELAXED_KHR@ for the
+  -- surface on the specified device. @VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT@
+  -- /must/ be included in the set but implementations /may/ support
+  -- additional usages.
   vkSupportedUsageFlags :: VkImageUsageFlags
   }
   deriving (Eq, Show)
@@ -868,19 +1042,17 @@ instance Storable VkSurfaceCapabilitiesKHR where
 -- | VkSurfaceFormatKHR - Structure describing a supported swapchain
 -- format-color space pair
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkColorSpaceKHR', 'Graphics.Vulkan.Core10.Core.VkFormat',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceFormat2KHR',
 -- 'vkGetPhysicalDeviceSurfaceFormatsKHR'
 data VkSurfaceFormatKHR = VkSurfaceFormatKHR
-  { -- No documentation found for Nested "VkSurfaceFormatKHR" "vkFormat"
+  { -- | @format@ is a 'Graphics.Vulkan.Core10.Core.VkFormat' that is compatible
+  -- with the specified surface.
   vkFormat :: VkFormat
-  , -- No documentation found for Nested "VkSurfaceFormatKHR" "vkColorSpace"
+  , -- | @colorSpace@ is a presentation 'VkColorSpaceKHR' that is compatible with
+  -- the surface.
   vkColorSpace :: VkColorSpaceKHR
   }
   deriving (Eq, Show)
@@ -895,13 +1067,11 @@ instance Storable VkSurfaceFormatKHR where
 -- | VkCompositeAlphaFlagsKHR - Bitmask of VkCompositeAlphaFlagBitsKHR
 --
 -- = Description
--- #_description#
 --
 -- @VkCompositeAlphaFlagsKHR@ is a bitmask type for setting a mask of zero
 -- or more 'VkCompositeAlphaFlagBitsKHR'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCompositeAlphaFlagBitsKHR',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
@@ -910,13 +1080,11 @@ type VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagBitsKHR
 -- | VkSurfaceTransformFlagsKHR - Bitmask of VkSurfaceTransformFlagBitsKHR
 --
 -- = Description
--- #_description#
 --
 -- @VkSurfaceTransformFlagsKHR@ is a bitmask type for setting a mask of
 -- zero or more 'VkSurfaceTransformFlagBitsKHR'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayPropertiesKHR',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',

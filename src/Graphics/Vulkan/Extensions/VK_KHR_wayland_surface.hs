@@ -113,7 +113,6 @@ pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME = "VK_KHR_wayland_surface"
 -- Wayland window
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the instance to associate the surface with.
 --
@@ -123,13 +122,11 @@ pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME = "VK_KHR_wayland_surface"
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
 --     surface object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -145,16 +142,15 @@ pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME = "VK_KHR_wayland_surface"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
@@ -165,7 +161,6 @@ foreign import ccall "vkCreateWaylandSurfaceKHR" vkCreateWaylandSurfaceKHR :: ("
 -- for presentation to Wayland
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device.
 --
@@ -175,7 +170,6 @@ foreign import ccall "vkCreateWaylandSurfaceKHR" vkCreateWaylandSurfaceKHR :: ("
 --     compositor.
 --
 -- = Description
--- #_description#
 --
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
@@ -193,15 +187,11 @@ foreign import ccall "vkCreateWaylandSurfaceKHR" vkCreateWaylandSurfaceKHR :: ("
 -- -   @display@ /must/ be a valid pointer to a @wl_display@ value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall "vkGetPhysicalDeviceWaylandPresentationSupportKHR" vkGetPhysicalDeviceWaylandPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("display" ::: Ptr Wl_display) -> IO VkBool32
 -- | VkWaylandSurfaceCreateInfoKHR - Structure specifying parameters of a
 -- newly created Wayland surface object
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -219,20 +209,20 @@ foreign import ccall "vkGetPhysicalDeviceWaylandPresentationSupportKHR" vkGetPhy
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkWaylandSurfaceCreateFlagsKHR', 'vkCreateWaylandSurfaceKHR'
 data VkWaylandSurfaceCreateInfoKHR = VkWaylandSurfaceCreateInfoKHR
-  { -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkWaylandSurfaceCreateFlagsKHR
-  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkDisplay"
+  , -- | @display@ and @surface@ are pointers to the Wayland @wl_display@ and
+  -- @wl_surface@ to associate the surface with.
   vkDisplay :: Ptr Wl_display
-  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "vkSurface"
+  , -- No documentation found for Nested "VkWaylandSurfaceCreateInfoKHR" "surface"
   vkSurface :: Ptr Wl_surface
   }
   deriving (Eq, Show)

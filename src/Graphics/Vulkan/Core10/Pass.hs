@@ -131,7 +131,6 @@ import Graphics.Vulkan.Core10.Queue
 -- at the beginning of a subpass
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAttachmentDescription'
 newtype VkAttachmentLoadOp = VkAttachmentLoadOp Int32
@@ -189,7 +188,6 @@ pattern VK_ATTACHMENT_LOAD_OP_DONT_CARE = VkAttachmentLoadOp 2
 -- at the end of a subpass
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAttachmentDescription'
 newtype VkAttachmentStoreOp = VkAttachmentStoreOp Int32
@@ -235,7 +233,6 @@ pattern VK_ATTACHMENT_STORE_OP_DONT_CARE = VkAttachmentStoreOp 1
 -- command buffer
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsLayoutCreateInfoNVX',
@@ -276,13 +273,11 @@ pattern VK_PIPELINE_BIND_POINT_COMPUTE = VkPipelineBindPoint 1
 -- | VkFramebufferCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkFramebufferCreateFlags@ is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkFramebufferCreateInfo'
 newtype VkFramebufferCreateFlags = VkFramebufferCreateFlags VkFlags
@@ -308,13 +303,11 @@ instance Read VkFramebufferCreateFlags where
 -- | VkRenderPassCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkRenderPassCreateFlags@ is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkRenderPassCreateInfo'
 newtype VkRenderPassCreateFlags = VkRenderPassCreateFlags VkFlags
@@ -341,7 +334,6 @@ instance Read VkRenderPassCreateFlags where
 -- participate in a memory dependency
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_ACCESS_INDIRECT_COMMAND_READ_BIT@ specifies read access to an
 --     indirect command structure read as part of an indirect drawing or
@@ -355,57 +347,84 @@ instance Read VkRenderPassCreateFlags where
 --     vertex buffer as part of a drawing command, bound by
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdBindVertexBuffers'.
 --
--- -   @VK_ACCESS_UNIFORM_READ_BIT@ specifies read access to a
---     <{html_spec_relative}#descriptorsets-uniformbuffer uniform buffer>.
+-- -   @VK_ACCESS_UNIFORM_READ_BIT@ specifies read access to a [uniform
+--     buffer](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbuffer).
 --
 -- -   @VK_ACCESS_INPUT_ATTACHMENT_READ_BIT@ specifies read access to an
---     <{html_spec_relative}#renderpass input attachment> within a render
---     pass during fragment shading.
+--     [input
+--     attachment](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass)
+--     within a render pass during fragment shading.
 --
--- -   @VK_ACCESS_SHADER_READ_BIT@ specifies read access to a
---     <{html_spec_relative}#descriptorsets-storagebuffer storage buffer>,
---     <{html_spec_relative}#descriptorsets-uniformtexelbuffer uniform texel buffer>,
---     <{html_spec_relative}#descriptorsets-storagetexelbuffer storage texel buffer>,
---     <{html_spec_relative}#descriptorsets-sampledimage sampled image>, or
---     <{html_spec_relative}#descriptorsets-storageimage storage image>.
+-- -   @VK_ACCESS_SHADER_READ_BIT@ specifies read access to a [storage
+--     buffer](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebuffer),
+--     [uniform texel
+--     buffer](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer),
+--     [storage texel
+--     buffer](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer),
+--     [sampled
+--     image](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampledimage),
+--     or [storage
+--     image](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storageimage).
 --
--- -   @VK_ACCESS_SHADER_WRITE_BIT@ specifies write access to a
---     <{html_spec_relative}#descriptorsets-storagebuffer storage buffer>,
---     <{html_spec_relative}#descriptorsets-storagetexelbuffer storage texel buffer>,
---     or <{html_spec_relative}#descriptorsets-storageimage storage image>.
+-- -   @VK_ACCESS_SHADER_WRITE_BIT@ specifies write access to a [storage
+--     buffer](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebuffer),
+--     [storage texel
+--     buffer](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer),
+--     or [storage
+--     image](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storageimage).
 --
 -- -   @VK_ACCESS_COLOR_ATTACHMENT_READ_BIT@ specifies read access to a
---     <{html_spec_relative}#renderpass color attachment>, such as via
---     <{html_spec_relative}#framebuffer-blending blending>,
---     <{html_spec_relative}#framebuffer-logicop logic operations>, or via
---     certain
---     <{html_spec_relative}#renderpass-load-store-ops subpass load operations>.
+--     [color
+--     attachment](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass),
+--     such as via
+--     [blending](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blending),
+--     [logic
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-logicop),
+--     or via certain [subpass load
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops).
+--     It does not include [advanced blend
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced).
+--
+-- -   @VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT@ is similar to
+--     @VK_ACCESS_COLOR_ATTACHMENT_READ_BIT@, but also includes [advanced
+--     blend
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced).
 --
 -- -   @VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT@ specifies write access to a
---     <{html_spec_relative}#renderpass color or resolve attachment> during
---     a <{html_spec_relative}#renderpass render pass> or via certain
---     <{html_spec_relative}#renderpass-load-store-ops subpass load and store operations>.
+--     [color or resolve
+--     attachment](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass)
+--     during a [render
+--     pass](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass)
+--     or via certain [subpass load and store
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops).
 --
 -- -   @VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT@ specifies read access
---     to a <{html_spec_relative}#renderpass depth\/stencil attachment>,
---     via
---     <{html_spec_relative}#fragops-ds-state depth or stencil operations>
---     or via certain
---     <{html_spec_relative}#renderpass-load-store-ops subpass load operations>.
+--     to a [depth\/stencil
+--     attachment](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass),
+--     via [depth or stencil
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-ds-state)
+--     or via certain [subpass load
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops).
 --
 -- -   @VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT@ specifies write
---     access to a
---     <{html_spec_relative}#renderpass depth\/stencil attachment>, via
---     <{html_spec_relative}#fragops-ds-state depth or stencil operations>
---     or via certain
---     <{html_spec_relative}#renderpass-load-store-ops subpass load and store operations>.
+--     access to a [depth\/stencil
+--     attachment](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass),
+--     via [depth or stencil
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-ds-state)
+--     or via certain [subpass load and store
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops).
 --
 -- -   @VK_ACCESS_TRANSFER_READ_BIT@ specifies read access to an image or
---     buffer in a <{html_spec_relative}#copies copy> operation.
+--     buffer in a
+--     [copy](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies)
+--     operation.
 --
 -- -   @VK_ACCESS_TRANSFER_WRITE_BIT@ specifies write access to an image or
---     buffer in a <{html_spec_relative}#clears clear> or
---     <{html_spec_relative}#copies copy> operation.
+--     buffer in a
+--     [clear](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears)
+--     or
+--     [copy](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies)
+--     operation.
 --
 -- -   @VK_ACCESS_HOST_READ_BIT@ specifies read access by a host operation.
 --     Accesses of this type are not performed through a resource, but
@@ -431,10 +450,18 @@ instance Read VkRenderPassCreateFlags where
 --     destination access mask, makes all available writes visible to all
 --     future write accesses on entities known to the Vulkan device.
 --
+-- -   @VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX@ specifies reads from
+--     @VkBuffer@ inputs to
+--     'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.vkCmdProcessCommandsNVX'.
+--
+-- -   @VK_ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX@ specifies writes to the
+--     target command buffer in
+--     'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.vkCmdProcessCommandsNVX'.
+--
 -- Certain access types are only performed by a subset of pipeline stages.
 -- Any synchronization command that takes both stage masks and access masks
--- uses both to define the
--- <{html_spec_relative}#synchronization-dependencies-access-scopes access scopes>
+-- uses both to define the [access
+-- scopes](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes)
 -- - only the specified access types performed by the specified stages are
 -- included in the access scope. An application /must/ not specify an
 -- access flag in a synchronization command if it does not include a
@@ -442,124 +469,100 @@ instance Read VkRenderPassCreateFlags where
 -- accesses of that type. The following table lists, for each access flag,
 -- which pipeline stages /can/ perform that type of access.
 --
--- > +-----------------------------------+-----------------------------------+
--- > | Access flag                       | Supported pipeline stages         |
--- > +===================================+===================================+
--- > | @VK_ACCESS_INDIRECT_COMMAND_READ_ | @VK_PIPELINE_STAGE_DRAW_INDIRECT_ |
--- > | BIT@                              | BIT@                              |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_INDEX_READ_BIT@        | @VK_PIPELINE_STAGE_VERTEX_INPUT_B |
--- > |                                   | IT@                               |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_VERTEX_ATTRIBUTE_READ_ | @VK_PIPELINE_STAGE_VERTEX_INPUT_B |
--- > | BIT@                              | IT@                               |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_UNIFORM_READ_BIT@      | @VK_PIPELINE_STAGE_VERTEX_SHADER_ |
--- > |                                   | BIT@,                             |
--- > |                                   | @VK_PIPELINE_STAGE_TESSELLATION_C |
--- > |                                   | ONTROL_SHADER_BIT@,               |
--- > |                                   | @VK_PIPELINE_STAGE_TESSELLATION_E |
--- > |                                   | VALUATION_SHADER_BIT@,            |
--- > |                                   | @VK_PIPELINE_STAGE_GEOMETRY_SHADE |
--- > |                                   | R_BIT@,                           |
--- > |                                   | @VK_PIPELINE_STAGE_FRAGMENT_SHADE |
--- > |                                   | R_BIT@,                           |
--- > |                                   | or                                |
--- > |                                   | @VK_PIPELINE_STAGE_COMPUTE_SHADER |
--- > |                                   | _BIT@                             |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_INPUT_ATTACHMENT_READ_ | @VK_PIPELINE_STAGE_FRAGMENT_SHADE |
--- > | BIT@                              | R_BIT@                            |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_SHADER_READ_BIT@       | @VK_PIPELINE_STAGE_VERTEX_SHADER_ |
--- > |                                   | BIT@,                             |
--- > |                                   | @VK_PIPELINE_STAGE_TESSELLATION_C |
--- > |                                   | ONTROL_SHADER_BIT@,               |
--- > |                                   | @VK_PIPELINE_STAGE_TESSELLATION_E |
--- > |                                   | VALUATION_SHADER_BIT@,            |
--- > |                                   | @VK_PIPELINE_STAGE_GEOMETRY_SHADE |
--- > |                                   | R_BIT@,                           |
--- > |                                   | @VK_PIPELINE_STAGE_FRAGMENT_SHADE |
--- > |                                   | R_BIT@,                           |
--- > |                                   | or                                |
--- > |                                   | @VK_PIPELINE_STAGE_COMPUTE_SHADER |
--- > |                                   | _BIT@                             |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_SHADER_WRITE_BIT@      | @VK_PIPELINE_STAGE_VERTEX_SHADER_ |
--- > |                                   | BIT@,                             |
--- > |                                   | @VK_PIPELINE_STAGE_TESSELLATION_C |
--- > |                                   | ONTROL_SHADER_BIT@,               |
--- > |                                   | @VK_PIPELINE_STAGE_TESSELLATION_E |
--- > |                                   | VALUATION_SHADER_BIT@,            |
--- > |                                   | @VK_PIPELINE_STAGE_GEOMETRY_SHADE |
--- > |                                   | R_BIT@,                           |
--- > |                                   | @VK_PIPELINE_STAGE_FRAGMENT_SHADE |
--- > |                                   | R_BIT@,                           |
--- > |                                   | or                                |
--- > |                                   | @VK_PIPELINE_STAGE_COMPUTE_SHADER |
--- > |                                   | _BIT@                             |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_COLOR_ATTACHMENT_READ_ | @VK_PIPELINE_STAGE_COLOR_ATTACHME |
--- > | BIT@                              | NT_OUTPUT_BIT@                    |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_COLOR_ATTACHMENT_WRITE | @VK_PIPELINE_STAGE_COLOR_ATTACHME |
--- > | _BIT@                             | NT_OUTPUT_BIT@                    |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_DEPTH_STENCIL_ATTACHME | @VK_PIPELINE_STAGE_EARLY_FRAGMENT |
--- > | NT_READ_BIT@                      | _TESTS_BIT@,                      |
--- > |                                   | or                                |
--- > |                                   | @VK_PIPELINE_STAGE_LATE_FRAGMENT_ |
--- > |                                   | TESTS_BIT@                        |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_DEPTH_STENCIL_ATTACHME | @VK_PIPELINE_STAGE_EARLY_FRAGMENT |
--- > | NT_WRITE_BIT@                     | _TESTS_BIT@,                      |
--- > |                                   | or                                |
--- > |                                   | @VK_PIPELINE_STAGE_LATE_FRAGMENT_ |
--- > |                                   | TESTS_BIT@                        |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_TRANSFER_READ_BIT@     | @VK_PIPELINE_STAGE_TRANSFER_BIT@  |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_TRANSFER_WRITE_BIT@    | @VK_PIPELINE_STAGE_TRANSFER_BIT@  |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_HOST_READ_BIT@         | @VK_PIPELINE_STAGE_HOST_BIT@      |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_HOST_WRITE_BIT@        | @VK_PIPELINE_STAGE_HOST_BIT@      |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_MEMORY_READ_BIT@       | N\/A                              |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ACCESS_MEMORY_WRITE_BIT@      | N\/A                              |
--- > +-----------------------------------+-----------------------------------+
--- >
--- > Supported access types
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | Access flag                                           | Supported pipeline stages                               |
+-- +=======================================================+=========================================================+
+-- | @VK_ACCESS_INDIRECT_COMMAND_READ_BIT@                 | @VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT@                   |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_INDEX_READ_BIT@                            | @VK_PIPELINE_STAGE_VERTEX_INPUT_BIT@                    |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT@                 | @VK_PIPELINE_STAGE_VERTEX_INPUT_BIT@                    |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_UNIFORM_READ_BIT@                          | @VK_PIPELINE_STAGE_VERTEX_SHADER_BIT@,                  |
+-- |                                                       | @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@,    |
+-- |                                                       | @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@, |
+-- |                                                       | @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@,                |
+-- |                                                       | @VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT@, or             |
+-- |                                                       | @VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT@                  |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_INPUT_ATTACHMENT_READ_BIT@                 | @VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT@                 |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_SHADER_READ_BIT@                           | @VK_PIPELINE_STAGE_VERTEX_SHADER_BIT@,                  |
+-- |                                                       | @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@,    |
+-- |                                                       | @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@, |
+-- |                                                       | @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@,                |
+-- |                                                       | @VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT@, or             |
+-- |                                                       | @VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT@                  |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_SHADER_WRITE_BIT@                          | @VK_PIPELINE_STAGE_VERTEX_SHADER_BIT@,                  |
+-- |                                                       | @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@,    |
+-- |                                                       | @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@, |
+-- |                                                       | @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@,                |
+-- |                                                       | @VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT@, or             |
+-- |                                                       | @VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT@                  |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_COLOR_ATTACHMENT_READ_BIT@                 | @VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT@         |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT@ | @VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT@         |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT@                | @VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT@         |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT@         | @VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT@, or        |
+-- |                                                       | @VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT@             |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT@        | @VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT@, or        |
+-- |                                                       | @VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT@             |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_TRANSFER_READ_BIT@                         | @VK_PIPELINE_STAGE_TRANSFER_BIT@                        |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_TRANSFER_WRITE_BIT@                        | @VK_PIPELINE_STAGE_TRANSFER_BIT@                        |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_HOST_READ_BIT@                             | @VK_PIPELINE_STAGE_HOST_BIT@                            |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_HOST_WRITE_BIT@                            | @VK_PIPELINE_STAGE_HOST_BIT@                            |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_MEMORY_READ_BIT@                           | N\/A                                                    |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_MEMORY_WRITE_BIT@                          | N\/A                                                    |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX@              | @VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX@             |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+-- | @VK_ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX@             | @VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX@             |
+-- +-------------------------------------------------------+---------------------------------------------------------+
+--
+-- Supported access types
 --
 -- If a memory object does not have the
 -- @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@ property, then
 -- 'Graphics.Vulkan.Core10.Memory.vkFlushMappedMemoryRanges' /must/ be
 -- called in order to guarantee that writes to the memory object from the
--- host are made visible to the @VK_ACCESS_HOST_WRITE_BIT@
--- <{html_spec_relative}#synchronization-access-types access type>, where
--- it /can/ be further made available to the device by
--- <{html_spec_relative}#synchronization synchronization commands>.
+-- host are made visible to the @VK_ACCESS_HOST_WRITE_BIT@ [access
+-- type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types),
+-- where it /can/ be further made available to the device by
+-- [synchronization
+-- commands](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization).
 -- Similarly,
 -- 'Graphics.Vulkan.Core10.Memory.vkInvalidateMappedMemoryRanges' /must/ be
 -- called to guarantee that writes which are visible to the
--- @VK_ACCESS_HOST_READ_BIT@
--- <{html_spec_relative}#synchronization-access-types access type> are made
--- visible to host operations.
+-- @VK_ACCESS_HOST_READ_BIT@ [access
+-- type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types)
+-- are made visible to host operations.
 --
 -- If the memory object does have the
 -- @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@ property flag, writes to the
 -- memory object from the host are automatically made visible to the
--- @VK_ACCESS_HOST_WRITE_BIT@
--- <{html_spec_relative}#synchronization-access-types access type>.
--- Similarly, writes made visible to the @VK_ACCESS_HOST_READ_BIT@
--- <{html_spec_relative}#synchronization-access-types access type> are
--- automatically made visible to the host.
+-- @VK_ACCESS_HOST_WRITE_BIT@ [access
+-- type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types).
+-- Similarly, writes made visible to the @VK_ACCESS_HOST_READ_BIT@ [access
+-- type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types)
+-- are automatically made visible to the host.
 --
 -- __Note__
 --
--- The 'Graphics.Vulkan.Core10.Queue.vkQueueSubmit' command
--- <{html_spec_relative}#synchronization-submission-host-writes automatically guarantees that host writes flushed to VK_ACCESS_HOST_WRITE_BIT are made available>
+-- The 'Graphics.Vulkan.Core10.Queue.vkQueueSubmit' command [automatically
+-- guarantees that host writes flushed to @VK_ACCESS_HOST_WRITE_BIT@ are
+-- made
+-- available](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-host-writes)
 -- if they were flushed before the command executed, so in most cases an
 -- explicit memory barrier is not needed for this case. In the few
 -- circumstances where a submit does not occur between the host write and
@@ -567,7 +570,6 @@ instance Read VkRenderPassCreateFlags where
 -- explicit memory barrier.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAccessFlags'
 newtype VkAccessFlagBits = VkAccessFlagBits VkFlags
@@ -698,16 +700,7 @@ pattern VK_ACCESS_MEMORY_WRITE_BIT = VkAccessFlagBits 0x00010000
 
 -- | VkSubpassDescriptionFlagBits - Bitmask specifying usage of a subpass
 --
--- = Description
--- #_description#
---
--- __Note__
---
--- All bits for this type are defined by extensions, and none of those
--- extensions are enabled in this build of the specification.
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkSubpassDescriptionFlags'
 newtype VkSubpassDescriptionFlagBits = VkSubpassDescriptionFlagBits VkFlags
@@ -738,7 +731,6 @@ instance Read VkSubpassDescriptionFlagBits where
 -- properties of an attachment
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAttachmentDescriptionFlags'
 newtype VkAttachmentDescriptionFlagBits = VkAttachmentDescriptionFlagBits VkFlags
@@ -768,7 +760,6 @@ pattern VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = VkAttachmentDescriptionFlagBit
 -- dependencies are formed
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDependencyFlags'
 newtype VkDependencyFlagBits = VkDependencyFlagBits VkFlags
@@ -795,18 +786,14 @@ instance Read VkDependencyFlagBits where
                     )
 
 -- | @VK_DEPENDENCY_BY_REGION_BIT@ specifies that dependencies will be
--- <{html_spec_relative}#synchronization-framebuffer-regions framebuffer-local>.
+-- [framebuffer-local](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-framebuffer-regions).
 pattern VK_DEPENDENCY_BY_REGION_BIT :: VkDependencyFlagBits
 pattern VK_DEPENDENCY_BY_REGION_BIT = VkDependencyFlagBits 0x00000001
 -- | Dummy data to tag the 'Ptr' with
 data VkFramebuffer_T
 -- | VkFramebuffer - Opaque handle to a framebuffer object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkRenderPassBeginInfo',
@@ -815,7 +802,6 @@ type VkFramebuffer = Ptr VkFramebuffer_T
 -- | vkCreateFramebuffer - Create a new framebuffer object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the framebuffer.
 --
@@ -823,13 +809,12 @@ type VkFramebuffer = Ptr VkFramebuffer_T
 --     describes additional information about framebuffer creation.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pFramebuffer@ points to a @VkFramebuffer@ handle in which the
 --     resulting framebuffer object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -845,16 +830,15 @@ type VkFramebuffer = Ptr VkFramebuffer_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkFramebuffer',
@@ -863,17 +847,15 @@ foreign import ccall "vkCreateFramebuffer" vkCreateFramebuffer :: ("device" ::: 
 -- | vkDestroyFramebuffer - Destroy a framebuffer object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the framebuffer.
 --
 -- -   @framebuffer@ is the handle of the framebuffer to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -905,7 +887,6 @@ foreign import ccall "vkCreateFramebuffer" vkCreateFramebuffer :: ("device" ::: 
 -- -   Host access to @framebuffer@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkFramebuffer'
@@ -913,7 +894,6 @@ foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer :: ("device" ::
 -- | vkCreateRenderPass - Create a new render pass object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the render pass.
 --
@@ -922,13 +902,12 @@ foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer :: ("device" ::
 --     the render pass.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pRenderPass@ points to a @VkRenderPass@ handle in which the
 --     resulting render pass object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -944,16 +923,15 @@ foreign import ccall "vkDestroyFramebuffer" vkDestroyFramebuffer :: ("device" ::
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -962,17 +940,15 @@ foreign import ccall "vkCreateRenderPass" vkCreateRenderPass :: ("device" ::: Vk
 -- | vkDestroyRenderPass - Destroy a render pass object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the render pass.
 --
 -- -   @renderPass@ is the handle of the render pass to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -1004,7 +980,6 @@ foreign import ccall "vkCreateRenderPass" vkCreateRenderPass :: ("device" ::: Vk
 -- -   Host access to @renderPass@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -1014,7 +989,6 @@ foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass :: ("device" ::: 
 -- area
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the render pass.
 --
@@ -1025,7 +999,6 @@ foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass :: ("device" ::: 
 --     granularity is returned.
 --
 -- = Description
--- #_description#
 --
 -- The conditions leading to an optimal @renderArea@ are:
 --
@@ -1049,8 +1022,8 @@ foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass :: ("device" ::: 
 --
 -- Subpass dependencies are not affected by the render area, and apply to
 -- the entire image subresources attached to the framebuffer as specified
--- in the description of
--- <{html_spec_relative}#renderpass-layout-transitions automatic layout transitions>.
+-- in the description of [automatic layout
+-- transitions](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-layout-transitions).
 -- Similarly, pipeline barriers are valid even if their effect extends
 -- outside the render area.
 --
@@ -1066,7 +1039,6 @@ foreign import ccall "vkDestroyRenderPass" vkDestroyRenderPass :: ("device" ::: 
 --     @device@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
@@ -1075,7 +1047,6 @@ foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity :: 
 -- | VkAttachmentDescription - Structure specifying an attachment description
 --
 -- = Description
--- #_description#
 --
 -- If the attachment uses a color format, then @loadOp@ and @storeOp@ are
 -- used, and @stencilLoadOp@ and @stencilStoreOp@ are ignored. If the
@@ -1108,6 +1079,12 @@ foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity :: 
 -- memory contents will not be modified by execution of a render pass
 -- instance.
 --
+-- The load and store operations apply on the first and last use of each
+-- view in the render pass, respectively. If a view index of an attachment
+-- is not included in the view mask in any subpass that uses it, then the
+-- load and store operations are ignored, and the attachment’s memory
+-- contents will not be modified by execution of a render pass instance.
+--
 -- During a render pass instance, input\/color attachments with color
 -- formats that have a component size of 8, 16, or 32 bits /must/ be
 -- represented in the attachment’s format throughout the instance.
@@ -1119,10 +1096,10 @@ foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity :: 
 -- pass. Such components /must/ be converted from the render pass format,
 -- to the format of the attachment, before they are resolved or stored at
 -- the end of a render pass instance via @storeOp@. Conversions occur as
--- described in
--- <{html_spec_relative}#fundamentals-numerics Numeric Representation and Computation>
--- and
--- <{html_spec_relative}#fundamentals-fixedconv Fixed-Point Data Conversions>.
+-- described in [Numeric Representation and
+-- Computation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-numerics)
+-- and [Fixed-Point Data
+-- Conversions](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-fixedconv).
 --
 -- If @flags@ includes @VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT@, then the
 -- attachment is treated as if it shares physical memory with another
@@ -1164,30 +1141,44 @@ foreign import ccall "vkGetRenderAreaGranularity" vkGetRenderAreaGranularity :: 
 --     'Graphics.Vulkan.Core10.Image.VkImageLayout' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAttachmentDescriptionFlags', 'VkAttachmentLoadOp',
 -- 'VkAttachmentStoreOp', 'Graphics.Vulkan.Core10.Core.VkFormat',
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout', 'VkRenderPassCreateInfo',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlagBits'
 data VkAttachmentDescription = VkAttachmentDescription
-  { -- No documentation found for Nested "VkAttachmentDescription" "vkFlags"
+  { -- | @flags@ is a bitmask of 'VkAttachmentDescriptionFlagBits' specifying
+  -- additional properties of the attachment.
   vkFlags :: VkAttachmentDescriptionFlags
-  , -- No documentation found for Nested "VkAttachmentDescription" "vkFormat"
+  , -- | @format@ is a 'Graphics.Vulkan.Core10.Core.VkFormat' value specifying
+  -- the format of the image that will be used for the attachment.
   vkFormat :: VkFormat
-  , -- No documentation found for Nested "VkAttachmentDescription" "vkSamples"
+  , -- | @samples@ is the number of samples of the image as defined in
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlagBits'.
   vkSamples :: VkSampleCountFlagBits
-  , -- No documentation found for Nested "VkAttachmentDescription" "vkLoadOp"
+  , -- | @loadOp@ is a 'VkAttachmentLoadOp' value specifying how the contents of
+  -- color and depth components of the attachment are treated at the
+  -- beginning of the subpass where it is first used.
   vkLoadOp :: VkAttachmentLoadOp
-  , -- No documentation found for Nested "VkAttachmentDescription" "vkStoreOp"
+  , -- | @storeOp@ is a 'VkAttachmentStoreOp' value specifying how the contents
+  -- of color and depth components of the attachment are treated at the end
+  -- of the subpass where it is last used.
   vkStoreOp :: VkAttachmentStoreOp
-  , -- No documentation found for Nested "VkAttachmentDescription" "vkStencilLoadOp"
+  , -- | @stencilLoadOp@ is a 'VkAttachmentLoadOp' value specifying how the
+  -- contents of stencil components of the attachment are treated at the
+  -- beginning of the subpass where it is first used.
   vkStencilLoadOp :: VkAttachmentLoadOp
-  , -- No documentation found for Nested "VkAttachmentDescription" "vkStencilStoreOp"
+  , -- | @stencilStoreOp@ is a 'VkAttachmentStoreOp' value specifying how the
+  -- contents of stencil components of the attachment are treated at the end
+  -- of the last subpass where it is used.
   vkStencilStoreOp :: VkAttachmentStoreOp
-  , -- No documentation found for Nested "VkAttachmentDescription" "vkInitialLayout"
+  , -- | @initialLayout@ is the layout the attachment image subresource will be
+  -- in when a render pass instance begins.
   vkInitialLayout :: VkImageLayout
-  , -- No documentation found for Nested "VkAttachmentDescription" "vkFinalLayout"
+  , -- | @finalLayout@ is the layout the attachment image subresource will be
+  -- transitioned to when a render pass instance ends. During a render pass
+  -- instance, an attachment /can/ use a different layout in each subpass, if
+  -- desired.
   vkFinalLayout :: VkImageLayout
   }
   deriving (Eq, Show)
@@ -1215,9 +1206,6 @@ instance Storable VkAttachmentDescription where
                 *> poke (ptr `plusPtr` 32) (vkFinalLayout (poked :: VkAttachmentDescription))
 -- | VkAttachmentReference - Structure specifying an attachment reference
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @layout@ /must/ not be @VK_IMAGE_LAYOUT_UNDEFINED@ or
@@ -1229,13 +1217,17 @@ instance Storable VkAttachmentDescription where
 --     'Graphics.Vulkan.Core10.Image.VkImageLayout' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout', 'VkSubpassDescription'
 data VkAttachmentReference = VkAttachmentReference
-  { -- No documentation found for Nested "VkAttachmentReference" "vkAttachment"
+  { -- | @attachment@ is the index of the attachment of the render pass, and
+  -- corresponds to the index of the corresponding element in the
+  -- @pAttachments@ array of the @VkRenderPassCreateInfo@ structure. If any
+  -- color or depth\/stencil attachments are @VK_ATTACHMENT_UNUSED@, then no
+  -- writes occur for those attachments.
   vkAttachment :: Word32
-  , -- No documentation found for Nested "VkAttachmentReference" "vkLayout"
+  , -- | @layout@ is a 'Graphics.Vulkan.Core10.Image.VkImageLayout' value
+  -- specifying the layout the attachment uses during the subpass.
   vkLayout :: VkImageLayout
   }
   deriving (Eq, Show)
@@ -1250,7 +1242,6 @@ instance Storable VkAttachmentReference where
 -- | VkSubpassDescription - Structure specifying a subpass description
 --
 -- = Description
--- #_description#
 --
 -- The contents of an attachment within the render area become undefined at
 -- the start of a subpass __S__ if all of the following conditions are
@@ -1301,9 +1292,10 @@ instance Storable VkAttachmentReference where
 -- -   All attachments in @pColorAttachments@ that are not
 --     @VK_ATTACHMENT_UNUSED@ /must/ have the same sample count
 --
--- -   If @pDepthStencilAttachment@ is not @VK_ATTACHMENT_UNUSED@ and any
---     attachments in @pColorAttachments@ are not @VK_ATTACHMENT_UNUSED@,
---     they /must/ have the same sample count
+-- -   All attachments in @pColorAttachments@ that are not
+--     @VK_ATTACHMENT_UNUSED@ /must/ have a sample count that is smaller
+--     than or equal to the sample count of @pDepthStencilAttachment@ if it
+--     is not @VK_ATTACHMENT_UNUSED@
 --
 -- -   If any input attachments are @VK_ATTACHMENT_UNUSED@, then any
 --     pipelines bound during the subpass /must/ not access those input
@@ -1318,6 +1310,10 @@ instance Storable VkAttachmentReference where
 -- -   If any attachment is used as both an input attachment and a color or
 --     depth\/stencil attachment, then each use /must/ use the same
 --     @layout@
+--
+-- -   If @flags@ includes
+--     @VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX@, it /must/
+--     also include @VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX@.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1348,30 +1344,71 @@ instance Storable VkAttachmentReference where
 --     @uint32_t@ values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAttachmentReference', 'VkPipelineBindPoint',
 -- 'VkRenderPassCreateInfo', 'VkSubpassDescriptionFlags'
 data VkSubpassDescription = VkSubpassDescription
-  { -- No documentation found for Nested "VkSubpassDescription" "vkFlags"
+  { -- | @flags@ is a bitmask of 'VkSubpassDescriptionFlagBits' specifying usage
+  -- of the subpass.
   vkFlags :: VkSubpassDescriptionFlags
-  , -- No documentation found for Nested "VkSubpassDescription" "vkPipelineBindPoint"
+  , -- | @pipelineBindPoint@ is a 'VkPipelineBindPoint' value specifying whether
+  -- this is a compute or graphics subpass. Currently, only graphics
+  -- subpasses are supported.
   vkPipelineBindPoint :: VkPipelineBindPoint
-  , -- No documentation found for Nested "VkSubpassDescription" "vkInputAttachmentCount"
+  , -- | @inputAttachmentCount@ is the number of input attachments.
   vkInputAttachmentCount :: Word32
-  , -- No documentation found for Nested "VkSubpassDescription" "vkPInputAttachments"
+  , -- | @pInputAttachments@ is an array of 'VkAttachmentReference' structures
+  -- (defined below) that lists which of the render pass’s attachments /can/
+  -- be read in the fragment shader stage during the subpass, and what layout
+  -- each attachment will be in during the subpass. Each element of the array
+  -- corresponds to an input attachment unit number in the shader, i.e. if
+  -- the shader declares an input variable
+  -- @layout(input_attachment_index=X, set=Y, binding=Z)@ then it uses the
+  -- attachment provided in @pInputAttachments@[X]. Input attachments /must/
+  -- also be bound to the pipeline with a descriptor set, with the input
+  -- attachment descriptor written in the location (set=Y, binding=Z).
+  -- Fragment shaders /can/ use subpass input variables to access the
+  -- contents of an input attachment at the fragment’s (x, y, layer)
+  -- framebuffer coordinates.
   vkPInputAttachments :: Ptr VkAttachmentReference
-  , -- No documentation found for Nested "VkSubpassDescription" "vkColorAttachmentCount"
+  , -- | @colorAttachmentCount@ is the number of color attachments.
   vkColorAttachmentCount :: Word32
-  , -- No documentation found for Nested "VkSubpassDescription" "vkPColorAttachments"
+  , -- | @pColorAttachments@ is an array of @colorAttachmentCount@
+  -- 'VkAttachmentReference' structures that lists which of the render pass’s
+  -- attachments will be used as color attachments in the subpass, and what
+  -- layout each attachment will be in during the subpass. Each element of
+  -- the array corresponds to a fragment shader output location, i.e. if the
+  -- shader declared an output variable @layout(location=X)@ then it uses the
+  -- attachment provided in @pColorAttachments@[X].
   vkPColorAttachments :: Ptr VkAttachmentReference
-  , -- No documentation found for Nested "VkSubpassDescription" "vkPResolveAttachments"
+  , -- | @pResolveAttachments@ is @NULL@ or an array of @colorAttachmentCount@
+  -- 'VkAttachmentReference' structures that lists which of the render pass’s
+  -- attachments are resolved to at the end of the subpass, and what layout
+  -- each attachment will be in during the multisample resolve operation. If
+  -- @pResolveAttachments@ is not @NULL@, each of its elements corresponds to
+  -- a color attachment (the element in @pColorAttachments@ at the same
+  -- index), and a multisample resolve operation is defined for each
+  -- attachment. At the end of each subpass, multisample resolve operations
+  -- read the subpass’s color attachments, and resolve the samples for each
+  -- pixel to the same pixel location in the corresponding resolve
+  -- attachments, unless the resolve attachment index is
+  -- @VK_ATTACHMENT_UNUSED@. If the first use of an attachment in a render
+  -- pass is as a resolve attachment, then the @loadOp@ is effectively
+  -- ignored as the resolve is guaranteed to overwrite all pixels in the
+  -- render area.
   vkPResolveAttachments :: Ptr VkAttachmentReference
-  , -- No documentation found for Nested "VkSubpassDescription" "vkPDepthStencilAttachment"
+  , -- | @pDepthStencilAttachment@ is a pointer to a 'VkAttachmentReference'
+  -- specifying which attachment will be used for depth\/stencil data and the
+  -- layout it will be in during the subpass. Setting the attachment index to
+  -- @VK_ATTACHMENT_UNUSED@ or leaving this pointer as @NULL@ indicates that
+  -- no depth\/stencil attachment will be used in the subpass.
   vkPDepthStencilAttachment :: Ptr VkAttachmentReference
-  , -- No documentation found for Nested "VkSubpassDescription" "vkPreserveAttachmentCount"
+  , -- | @preserveAttachmentCount@ is the number of preserved attachments.
   vkPreserveAttachmentCount :: Word32
-  , -- No documentation found for Nested "VkSubpassDescription" "vkPPreserveAttachments"
+  , -- | @pPreserveAttachments@ is an array of @preserveAttachmentCount@ render
+  -- pass attachment indices describing the attachments that are not used by
+  -- a subpass, but whose contents /must/ be preserved throughout the
+  -- subpass.
   vkPPreserveAttachments :: Ptr Word32
   }
   deriving (Eq, Show)
@@ -1402,11 +1439,10 @@ instance Storable VkSubpassDescription where
 -- | VkSubpassDependency - Structure specifying a subpass dependency
 --
 -- = Description
--- #_description#
 --
 -- If @srcSubpass@ is equal to @dstSubpass@ then the 'VkSubpassDependency'
--- describes a
--- <{html_spec_relative}#synchronization-pipeline-barriers-subpass-self-dependencies subpass self-dependency>,
+-- describes a [subpass
+-- self-dependency](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies),
 -- and only constrains the pipeline barriers allowed within a subpass
 -- instance. Otherwise, when a render pass instance which includes a
 -- subpass dependency is submitted to a queue, it defines a memory
@@ -1414,9 +1450,10 @@ instance Storable VkSubpassDescription where
 -- @dstSubpass@.
 --
 -- If @srcSubpass@ is equal to @VK_SUBPASS_EXTERNAL@, the first
--- <{html_spec_relative}#synchronization-dependencies-scopes synchronization scope>
--- includes commands that occur earlier in
--- <{html_spec_relative}#synchronization-submission-order submission order>
+-- [synchronization
+-- scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes)
+-- includes commands that occur earlier in [submission
+-- order](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order)
 -- than the
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdBeginRenderPass' used
 -- to begin the render pass instance. Otherwise, the first set of commands
@@ -1424,14 +1461,15 @@ instance Storable VkSubpassDescription where
 -- identified by @srcSubpass@ and any load, store or multisample resolve
 -- operations on attachments used in @srcSubpass@. In either case, the
 -- first synchronization scope is limited to operations on the pipeline
--- stages determined by the
--- <{html_spec_relative}#synchronization-pipeline-stages-masks source stage mask>
+-- stages determined by the [source stage
+-- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks)
 -- specified by @srcStageMask@.
 --
 -- If @dstSubpass@ is equal to @VK_SUBPASS_EXTERNAL@, the second
--- <{html_spec_relative}#synchronization-dependencies-scopes synchronization scope>
--- includes commands that occur later in
--- <{html_spec_relative}#synchronization-submission-order submission order>
+-- [synchronization
+-- scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes)
+-- includes commands that occur later in [submission
+-- order](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order)
 -- than the
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdEndRenderPass' used
 -- to end the render pass instance. Otherwise, the second set of commands
@@ -1439,30 +1477,34 @@ instance Storable VkSubpassDescription where
 -- identified by @dstSubpass@ and any load, store or multisample resolve
 -- operations on attachments used in @dstSubpass@. In either case, the
 -- second synchronization scope is limited to operations on the pipeline
--- stages determined by the
--- <{html_spec_relative}#synchronization-pipeline-stages-masks destination stage mask>
+-- stages determined by the [destination stage
+-- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks)
 -- specified by @dstStageMask@.
 --
--- The first
--- <{html_spec_relative}#synchronization-dependencies-access-scopes access scope>
--- is limited to access in the pipeline stages determined by the
--- <{html_spec_relative}#synchronization-pipeline-stages-masks source stage mask>
+-- The first [access
+-- scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes)
+-- is limited to access in the pipeline stages determined by the [source
+-- stage
+-- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks)
 -- specified by @srcStageMask@. It is also limited to access types in the
--- <{html_spec_relative}#synchronization-access-masks source access mask>
+-- [source access
+-- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks)
 -- specified by @srcAccessMask@.
 --
--- The second
--- <{html_spec_relative}#synchronization-dependencies-access-scopes access scope>
+-- The second [access
+-- scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes)
 -- is limited to access in the pipeline stages determined by the
--- <{html_spec_relative}#synchronization-pipeline-stages-masks destination stage mask>
+-- [destination stage
+-- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks)
 -- specified by @dstStageMask@. It is also limited to access types in the
--- <{html_spec_relative}#synchronization-access-masks destination access mask>
+-- [destination access
+-- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks)
 -- specified by @dstAccessMask@.
 --
--- The
--- <{html_spec_relative}#synchronization-dependencies-available-and-visible availability and visibility operations>
--- defined by a subpass dependency affect the execution of
--- <{html_spec_relative}#renderpass-layout-transitions image layout transitions>
+-- The [availability and visibility
+-- operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible)
+-- defined by a subpass dependency affect the execution of [image layout
+-- transitions](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-layout-transitions)
 -- within the render pass.
 --
 -- __Note__
@@ -1498,24 +1540,24 @@ instance Storable VkSubpassDescription where
 -- -   If @dstSubpass@ is not @VK_SUBPASS_EXTERNAL@, @dstStageMask@ /must/
 --     not include @VK_PIPELINE_STAGE_HOST_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-geometryShader geometry shaders>
+-- -   If the [geometry
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-geometryShader)
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-geometryShader geometry shaders>
+-- -   If the [geometry
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-geometryShader)
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-tessellationShader tessellation shaders>
+-- -   If the [tessellation
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-tessellationShader)
 --     feature is not enabled, @srcStageMask@ /must/ not contain
 --     @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@ or
 --     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-tessellationShader tessellation shaders>
+-- -   If the [tessellation
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-tessellationShader)
 --     feature is not enabled, @dstStageMask@ /must/ not contain
 --     @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@ or
 --     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@
@@ -1544,23 +1586,36 @@ instance Storable VkSubpassDescription where
 --     @VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT@
 --
 -- -   If @srcSubpass@ is equal to @dstSubpass@ and not all of the stages
---     in @srcStageMask@ and @dstStageMask@ are
---     <{html_spec_relative}#synchronization-framebuffer-regions framebuffer-space stages>,
---     the
---     <{html_spec_relative}#synchronization-pipeline-stages-order logically latest>
---     pipeline stage in @srcStageMask@ /must/ be
---     <{html_spec_relative}#synchronization-pipeline-stages-order logically earlier>
---     than or equal to the
---     <{html_spec_relative}#synchronization-pipeline-stages-order logically earliest>
+--     in @srcStageMask@ and @dstStageMask@ are [framebuffer-space
+--     stages](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-framebuffer-regions),
+--     the [logically
+--     latest](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order)
+--     pipeline stage in @srcStageMask@ /must/ be [logically
+--     earlier](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order)
+--     than or equal to the [logically
+--     earliest](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order)
 --     pipeline stage in @dstStageMask@
 --
 -- -   Any access flag included in @srcAccessMask@ /must/ be supported by
 --     one of the pipeline stages in @srcStageMask@, as specified in the
---     <{html_spec_relative}#synchronization-access-types-supported table of supported access types>.
+--     [table of supported access
+--     types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types-supported).
 --
 -- -   Any access flag included in @dstAccessMask@ /must/ be supported by
 --     one of the pipeline stages in @dstStageMask@, as specified in the
---     <{html_spec_relative}#synchronization-access-types-supported table of supported access types>.
+--     [table of supported access
+--     types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types-supported).
+--
+-- -   If @dependencyFlags@ includes @VK_DEPENDENCY_VIEW_LOCAL_BIT@, then
+--     both @srcSubpass@ and @dstSubpass@ /must/ not equal
+--     @VK_SUBPASS_EXTERNAL@
+--
+-- -   If @dependencyFlags@ includes @VK_DEPENDENCY_VIEW_LOCAL_BIT@, then
+--     the render pass /must/ have multiview enabled
+--
+-- -   If @srcSubpass@ equals @dstSubpass@ and that subpass has more than
+--     one bit set in the view mask, then @dependencyFlags@ /must/ include
+--     @VK_DEPENDENCY_VIEW_LOCAL_BIT@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1584,25 +1639,36 @@ instance Storable VkSubpassDescription where
 --     'VkDependencyFlagBits' values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAccessFlags', 'VkDependencyFlags',
 -- 'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlags',
 -- 'VkRenderPassCreateInfo'
 data VkSubpassDependency = VkSubpassDependency
-  { -- No documentation found for Nested "VkSubpassDependency" "vkSrcSubpass"
+  { -- | @srcSubpass@ is the subpass index of the first subpass in the
+  -- dependency, or @VK_SUBPASS_EXTERNAL@.
   vkSrcSubpass :: Word32
-  , -- No documentation found for Nested "VkSubpassDependency" "vkDstSubpass"
+  , -- | @dstSubpass@ is the subpass index of the second subpass in the
+  -- dependency, or @VK_SUBPASS_EXTERNAL@.
   vkDstSubpass :: Word32
-  , -- No documentation found for Nested "VkSubpassDependency" "vkSrcStageMask"
+  , -- | @srcStageMask@ is a bitmask of
+  -- 'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlagBits' specifying the
+  -- [source stage
+  -- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks).
   vkSrcStageMask :: VkPipelineStageFlags
-  , -- No documentation found for Nested "VkSubpassDependency" "vkDstStageMask"
+  , -- | @dstStageMask@ is a bitmask of
+  -- 'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlagBits' specifying the
+  -- [destination stage
+  -- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks)
   vkDstStageMask :: VkPipelineStageFlags
-  , -- No documentation found for Nested "VkSubpassDependency" "vkSrcAccessMask"
+  , -- | @srcAccessMask@ is a bitmask of 'VkAccessFlagBits' specifying a [source
+  -- access
+  -- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks).
   vkSrcAccessMask :: VkAccessFlags
-  , -- No documentation found for Nested "VkSubpassDependency" "vkDstAccessMask"
+  , -- | @dstAccessMask@ is a bitmask of 'VkAccessFlagBits' specifying a
+  -- [destination access
+  -- mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks).
   vkDstAccessMask :: VkAccessFlags
-  , -- No documentation found for Nested "VkSubpassDependency" "vkDependencyFlags"
+  , -- | @dependencyFlags@ is a bitmask of 'VkDependencyFlagBits'.
   vkDependencyFlags :: VkDependencyFlags
   }
   deriving (Eq, Show)
@@ -1626,9 +1692,6 @@ instance Storable VkSubpassDependency where
                 *> poke (ptr `plusPtr` 24) (vkDependencyFlags (poked :: VkSubpassDependency))
 -- | VkRenderPassCreateInfo - Structure specifying parameters of a newly
 -- created render pass
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -1662,18 +1725,28 @@ instance Storable VkSubpassDependency where
 --     @VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL@ or
 --     @VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL@.
 --
+-- -   For any member of @pAttachments@ with a @loadOp@ equal to
+--     @VK_ATTACHMENT_LOAD_OP_CLEAR@, the first use of that attachment
+--     /must/ not specify a @layout@ equal to
+--     @VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL@.
+--
+-- -   For any member of @pAttachments@ with a @stencilLoadOp@ equal to
+--     @VK_ATTACHMENT_LOAD_OP_CLEAR@, the first use of that attachment
+--     /must/ not specify a @layout@ equal to
+--     @VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL@.
+--
 -- -   For any element of @pDependencies@, if the @srcSubpass@ is not
 --     @VK_SUBPASS_EXTERNAL@, all stage flags included in the
 --     @srcStageMask@ member of that dependency /must/ be a pipeline stage
 --     supported by the
---     <{html_spec_relative}#synchronization-pipeline-stages-types pipeline>
+--     [pipeline](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types)
 --     identified by the @pipelineBindPoint@ member of the source subpass.
 --
 -- -   For any element of @pDependencies@, if the @dstSubpass@ is not
 --     @VK_SUBPASS_EXTERNAL@, all stage flags included in the
 --     @dstStageMask@ member of that dependency /must/ be a pipeline stage
 --     supported by the
---     <{html_spec_relative}#synchronization-pipeline-stages-types pipeline>
+--     [pipeline](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types)
 --     identified by the @pipelineBindPoint@ member of the source subpass.
 --
 -- == Valid Usage (Implicit)
@@ -1705,29 +1778,39 @@ instance Storable VkSubpassDependency where
 -- -   @subpassCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAttachmentDescription', 'VkRenderPassCreateFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkSubpassDependency',
 -- 'VkSubpassDescription', 'vkCreateRenderPass'
 data VkRenderPassCreateInfo = VkRenderPassCreateInfo
-  { -- No documentation found for Nested "VkRenderPassCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkRenderPassCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkRenderPassCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkRenderPassCreateFlags
-  , -- No documentation found for Nested "VkRenderPassCreateInfo" "vkAttachmentCount"
+  , -- | @attachmentCount@ is the number of attachments used by this render pass,
+  -- or zero indicating no attachments. Attachments are referred to by
+  -- zero-based indices in the range [0,@attachmentCount@).
   vkAttachmentCount :: Word32
-  , -- No documentation found for Nested "VkRenderPassCreateInfo" "vkPAttachments"
+  , -- | @pAttachments@ points to an array of @attachmentCount@ number of
+  -- 'VkAttachmentDescription' structures describing properties of the
+  -- attachments, or @NULL@ if @attachmentCount@ is zero.
   vkPAttachments :: Ptr VkAttachmentDescription
-  , -- No documentation found for Nested "VkRenderPassCreateInfo" "vkSubpassCount"
+  , -- | @subpassCount@ is the number of subpasses to create for this render
+  -- pass. Subpasses are referred to by zero-based indices in the range
+  -- [0,@subpassCount@). A render pass /must/ have at least one subpass.
   vkSubpassCount :: Word32
-  , -- No documentation found for Nested "VkRenderPassCreateInfo" "vkPSubpasses"
+  , -- | @pSubpasses@ points to an array of @subpassCount@ number of
+  -- 'VkSubpassDescription' structures describing properties of the
+  -- subpasses.
   vkPSubpasses :: Ptr VkSubpassDescription
-  , -- No documentation found for Nested "VkRenderPassCreateInfo" "vkDependencyCount"
+  , -- | @dependencyCount@ is the number of dependencies between pairs of
+  -- subpasses, or zero indicating no dependencies.
   vkDependencyCount :: Word32
-  , -- No documentation found for Nested "VkRenderPassCreateInfo" "vkPDependencies"
+  , -- | @pDependencies@ points to an array of @dependencyCount@ number of
+  -- 'VkSubpassDependency' structures describing dependencies between pairs
+  -- of subpasses, or @NULL@ if @dependencyCount@ is zero.
   vkPDependencies :: Ptr VkSubpassDependency
   }
   deriving (Eq, Show)
@@ -1757,19 +1840,30 @@ instance Storable VkRenderPassCreateInfo where
 -- created framebuffer
 --
 -- = Description
--- #_description#
 --
 -- Applications /must/ ensure that all accesses to memory that backs image
 -- subresources used as attachments in a given renderpass instance either
--- happen-before the
--- <{html_spec_relative}#renderpass-load-store-ops load operations> for
--- those attachments, or happen-after the
--- <{html_spec_relative}#renderpass-load-store-ops store operations> for
--- those attachments.
+-- happen-before the [load
+-- operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops)
+-- for those attachments, or happen-after the [store
+-- operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops)
+-- for those attachments.
+--
+-- For depth\/stencil attachments, each aspect /can/ be used separately as
+-- attachments and non-attachments as long as the non-attachment accesses
+-- are also via an image subresource in either the
+-- @VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL@ layout or
+-- the @VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL@ layout,
+-- and the attachment resource uses whichever of those two layouts the
+-- image accesses do not. Use of non-attachment aspects in this case is
+-- only well defined if the attachment is used in the subpass where the
+-- non-attachment access is being made, or the layout of the image
+-- subresource is constant throughout the entire render pass instance,
+-- including the @initialLayout@ and @finalLayout@.
 --
 -- __Note__
 --
--- This restriction means that the render pass has full knowledge of all
+-- These restrictions mean that the render pass has full knowledge of all
 -- uses of all of the attachments, so that the implementation is able to
 -- make correct decisions about when and how to perform layout transitions,
 -- when to overlap execution of subpasses, etc.
@@ -1837,6 +1931,9 @@ instance Storable VkRenderPassCreateInfo where
 -- -   @layers@ /must/ be less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxFramebufferLayers@
 --
+-- -   Each element of @pAttachments@ that is a 2D or 2D array image view
+--     taken from a 3D image /must/ not be a depth\/stencil format
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO@
@@ -1855,30 +1952,36 @@ instance Storable VkRenderPassCreateInfo where
 --     the same @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkFramebufferCreateFlags',
 -- 'Graphics.Vulkan.Core10.ImageView.VkImageView',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkRenderPass',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateFramebuffer'
 data VkFramebufferCreateInfo = VkFramebufferCreateInfo
-  { -- No documentation found for Nested "VkFramebufferCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkFramebufferCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkFramebufferCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkFramebufferCreateFlags
-  , -- No documentation found for Nested "VkFramebufferCreateInfo" "vkRenderPass"
+  , -- | @renderPass@ is a render pass that defines what render passes the
+  -- framebuffer will be compatible with. See [Render Pass
+  -- Compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility)
+  -- for details.
   vkRenderPass :: VkRenderPass
-  , -- No documentation found for Nested "VkFramebufferCreateInfo" "vkAttachmentCount"
+  , -- | @attachmentCount@ is the number of attachments.
   vkAttachmentCount :: Word32
-  , -- No documentation found for Nested "VkFramebufferCreateInfo" "vkPAttachments"
+  , -- | @pAttachments@ is an array of @VkImageView@ handles, each of which will
+  -- be used as the corresponding attachment in a render pass instance.
   vkPAttachments :: Ptr VkImageView
-  , -- No documentation found for Nested "VkFramebufferCreateInfo" "vkWidth"
+  , -- | @width@, @height@ and @layers@ define the dimensions of the framebuffer.
+  -- If the render pass uses multiview, then @layers@ /must/ be one and each
+  -- attachment requires a number of layers that is greater than the maximum
+  -- bit index set in the view mask in the subpasses in which it is used.
   vkWidth :: Word32
-  , -- No documentation found for Nested "VkFramebufferCreateInfo" "vkHeight"
+  , -- No documentation found for Nested "VkFramebufferCreateInfo" "height"
   vkHeight :: Word32
-  , -- No documentation found for Nested "VkFramebufferCreateInfo" "vkLayers"
+  , -- No documentation found for Nested "VkFramebufferCreateInfo" "layers"
   vkLayers :: Word32
   }
   deriving (Eq, Show)
@@ -1907,13 +2010,11 @@ instance Storable VkFramebufferCreateInfo where
 -- | VkAccessFlags - Bitmask of VkAccessFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkAccessFlags@ is a bitmask type for setting a mask of zero or more
 -- 'VkAccessFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAccessFlagBits',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkBufferMemoryBarrier',
@@ -1924,13 +2025,11 @@ type VkAccessFlags = VkAccessFlagBits
 -- | VkSubpassDescriptionFlags - Bitmask of VkSubpassDescriptionFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkSubpassDescriptionFlags@ is a bitmask type for setting a mask of zero
 -- or more 'VkSubpassDescriptionFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSubpassDescription', 'VkSubpassDescriptionFlagBits'
 type VkSubpassDescriptionFlags = VkSubpassDescriptionFlagBits
@@ -1938,26 +2037,22 @@ type VkSubpassDescriptionFlags = VkSubpassDescriptionFlagBits
 -- VkAttachmentDescriptionFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkAttachmentDescriptionFlags@ is a bitmask type for setting a mask of
 -- zero or more 'VkAttachmentDescriptionFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAttachmentDescription', 'VkAttachmentDescriptionFlagBits'
 type VkAttachmentDescriptionFlags = VkAttachmentDescriptionFlagBits
 -- | VkDependencyFlags - Bitmask of VkDependencyFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkDependencyFlags@ is a bitmask type for setting a mask of zero or more
 -- 'VkDependencyFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDependencyFlagBits', 'VkSubpassDependency',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdPipelineBarrier'

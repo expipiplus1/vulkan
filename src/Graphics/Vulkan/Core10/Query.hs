@@ -97,7 +97,6 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- | VkQueryType - Specify the type of queries managed by a query pool
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkQueryPoolCreateInfo'
 newtype VkQueryType = VkQueryType Int32
@@ -121,18 +120,18 @@ instance Read VkQueryType where
                         )
                     )
 
--- | @VK_QUERY_TYPE_OCCLUSION@ specifies an
--- <{html_spec_relative}#queries-occlusion occlusion query>.
+-- | @VK_QUERY_TYPE_OCCLUSION@ specifies an [occlusion
+-- query](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-occlusion).
 pattern VK_QUERY_TYPE_OCCLUSION :: VkQueryType
 pattern VK_QUERY_TYPE_OCCLUSION = VkQueryType 0
 
--- | @VK_QUERY_TYPE_PIPELINE_STATISTICS@ specifies a
--- <{html_spec_relative}#queries-pipestats pipeline statistics query>.
+-- | @VK_QUERY_TYPE_PIPELINE_STATISTICS@ specifies a [pipeline statistics
+-- query](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-pipestats).
 pattern VK_QUERY_TYPE_PIPELINE_STATISTICS :: VkQueryType
 pattern VK_QUERY_TYPE_PIPELINE_STATISTICS = VkQueryType 1
 
--- | @VK_QUERY_TYPE_TIMESTAMP@ specifies a
--- <{html_spec_relative}#queries-timestamps timestamp query>.
+-- | @VK_QUERY_TYPE_TIMESTAMP@ specifies a [timestamp
+-- query](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-timestamps).
 pattern VK_QUERY_TYPE_TIMESTAMP :: VkQueryType
 pattern VK_QUERY_TYPE_TIMESTAMP = VkQueryType 2
 -- ** VkQueryPoolCreateFlags
@@ -140,13 +139,11 @@ pattern VK_QUERY_TYPE_TIMESTAMP = VkQueryType 2
 -- | VkQueryPoolCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkQueryPoolCreateFlags@ is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkQueryPoolCreateInfo'
 newtype VkQueryPoolCreateFlags = VkQueryPoolCreateFlags VkFlags
@@ -173,7 +170,6 @@ instance Read VkQueryPoolCreateFlags where
 -- are returned
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkQueryResultFlags'
 newtype VkQueryResultFlagBits = VkQueryResultFlagBits VkFlags
@@ -225,34 +221,35 @@ pattern VK_QUERY_RESULT_PARTIAL_BIT = VkQueryResultFlagBits 0x00000008
 -- statistics
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT@ specifies
 --     that queries managed by the pool will count the number of vertices
---     processed by the <{html_spec_relative}#drawing input assembly>
+--     processed by the [input
+--     assembly](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#drawing)
 --     stage. Vertices corresponding to incomplete primitives /may/
 --     contribute to the count.
 --
 -- -   @VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT@
 --     specifies that queries managed by the pool will count the number of
---     primitives processed by the
---     <{html_spec_relative}#drawing input assembly> stage. If primitive
---     restart is enabled, restarting the primitive topology has no effect
---     on the count. Incomplete primitives /may/ be counted.
+--     primitives processed by the [input
+--     assembly](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#drawing)
+--     stage. If primitive restart is enabled, restarting the primitive
+--     topology has no effect on the count. Incomplete primitives /may/ be
+--     counted.
 --
 -- -   @VK_QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT@
 --     specifies that queries managed by the pool will count the number of
 --     vertex shader invocations. This counter’s value is incremented each
 --     time a vertex shader is
---     <{html_spec_relative}#shaders-vertex-execution invoked>.
+--     [invoked](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-vertex-execution).
 --
 -- -   @VK_QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT@
 --     specifies that queries managed by the pool will count the number of
 --     geometry shader invocations. This counter’s value is incremented
 --     each time a geometry shader is
---     <{html_spec_relative}#shaders-geometry-execution invoked>. In the
---     case of
---     <{html_spec_relative}#geometry-invocations instanced geometry shaders>,
+--     [invoked](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-geometry-execution).
+--     In the case of [instanced geometry
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#geometry-invocations),
 --     the geometry shader invocations count is incremented for each
 --     separate instanced invocation.
 --
@@ -266,15 +263,15 @@ pattern VK_QUERY_RESULT_PARTIAL_BIT = VkQueryResultFlagBits 0x00000008
 --
 -- -   @VK_QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT@ specifies
 --     that queries managed by the pool will count the number of primitives
---     processed by the
---     <{html_spec_relative}#vertexpostproc-clipping Primitive Clipping>
+--     processed by the [Primitive
+--     Clipping](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-clipping)
 --     stage of the pipeline. The counter’s value is incremented each time
 --     a primitive reaches the primitive clipping stage.
 --
 -- -   @VK_QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT@ specifies that
 --     queries managed by the pool will count the number of primitives
---     output by the
---     <{html_spec_relative}#vertexpostproc-clipping Primitive Clipping>
+--     output by the [Primitive
+--     Clipping](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-clipping)
 --     stage of the pipeline. The counter’s value is incremented each time
 --     a primitive passes the primitive clipping stage. The actual number
 --     of primitives output by the primitive clipping stage for a
@@ -290,20 +287,20 @@ pattern VK_QUERY_RESULT_PARTIAL_BIT = VkQueryResultFlagBits 0x00000008
 --     specifies that queries managed by the pool will count the number of
 --     fragment shader invocations. The counter’s value is incremented each
 --     time the fragment shader is
---     <{html_spec_relative}#shaders-fragment-execution invoked>.
+--     [invoked](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-fragment-execution).
 --
 -- -   @VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT@
 --     specifies that queries managed by the pool will count the number of
 --     patches processed by the tessellation control shader. The counter’s
 --     value is incremented once for each patch for which a tessellation
 --     control shader is
---     <{html_spec_relative}#shaders-tessellation-control-execution invoked>.
+--     [invoked](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-tessellation-control-execution).
 --
 -- -   @VK_QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT@
 --     specifies that queries managed by the pool will count the number of
 --     invocations of the tessellation evaluation shader. The counter’s
 --     value is incremented each time the tessellation evaluation shader is
---     <{html_spec_relative}#shaders-tessellation-evaluation-execution invoked>.
+--     [invoked](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-tessellation-evaluation-execution).
 --
 -- -   @VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT@
 --     specifies that queries managed by the pool will count the number of
@@ -317,8 +314,8 @@ pattern VK_QUERY_RESULT_PARTIAL_BIT = VkQueryResultFlagBits 0x00000008
 -- These values are intended to measure relative statistics on one
 -- implementation. Various device architectures will count these values
 -- differently. Any or all counters /may/ be affected by the issues
--- described in
--- <{html_spec_relative}#queries-operation-undefined Query Operation>.
+-- described in [Query
+-- Operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-undefined).
 --
 -- __Note__
 --
@@ -336,7 +333,6 @@ pattern VK_QUERY_RESULT_PARTIAL_BIT = VkQueryResultFlagBits 0x00000008
 -- (via @vkGetQueryPoolResults@).
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkQueryPipelineStatisticFlags'
 newtype VkQueryPipelineStatisticFlagBits = VkQueryPipelineStatisticFlagBits VkFlags
@@ -423,11 +419,7 @@ pattern VK_QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT = VkQueryPipe
 data VkQueryPool_T
 -- | VkQueryPool - Opaque handle to a query pool object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdBeginQuery',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
@@ -439,7 +431,6 @@ type VkQueryPool = Ptr VkQueryPool_T
 -- | vkCreateQueryPool - Create a new query pool object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the query pool.
 --
@@ -448,13 +439,12 @@ type VkQueryPool = Ptr VkQueryPool_T
 --     queries to be managed by the pool.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pQueryPool@ is a pointer to a @VkQueryPool@ handle in which the
 --     resulting query pool object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -470,16 +460,15 @@ type VkQueryPool = Ptr VkQueryPool_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkQueryPool',
@@ -488,17 +477,15 @@ foreign import ccall "vkCreateQueryPool" vkCreateQueryPool :: ("device" ::: VkDe
 -- | vkDestroyQueryPool - Destroy a query pool object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the query pool.
 --
 -- -   @queryPool@ is the query pool to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -530,7 +517,6 @@ foreign import ccall "vkCreateQueryPool" vkCreateQueryPool :: ("device" ::: VkDe
 -- -   Host access to @queryPool@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkQueryPool'
@@ -539,7 +525,6 @@ foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool :: ("device" ::: Vk
 -- host memory region
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the query pool.
 --
@@ -566,12 +551,12 @@ foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool :: ("device" ::: Vk
 --     when results are returned.
 --
 -- = Description
--- #_description#
 --
 -- If no bits are set in @flags@, and all requested queries are in the
 -- available state, results are written as an array of 32-bit unsigned
 -- integer values. The behavior when not all queries are available, is
--- described <{html_spec_relative}#queries-wait-bit-not-set below>.
+-- described
+-- [below](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-wait-bit-not-set).
 --
 -- If @VK_QUERY_RESULT_64_BIT@ is not set and the result overflows a 32-bit
 -- value, the value /may/ either wrap or saturate. Similarly, if
@@ -656,7 +641,7 @@ foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool :: ("device" ::: Vk
 --
 -- -   @dataSize@ /must/ be large enough to contain the result of each
 --     query, as described
---     <{html_spec_relative}#queries-operation-memorylayout here>
+--     [here](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-memorylayout)
 --
 -- -   If the @queryType@ used to create @queryPool@ was
 --     @VK_QUERY_TYPE_TIMESTAMP@, @flags@ /must/ not contain
@@ -680,12 +665,12 @@ foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool :: ("device" ::: Vk
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_NOT_READY@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -693,7 +678,6 @@ foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool :: ("device" ::: Vk
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', @VkDeviceSize@,
 -- 'VkQueryPool', 'VkQueryResultFlags'
@@ -702,15 +686,14 @@ foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults :: ("device" 
 -- created query pool
 --
 -- = Description
--- #_description#
 --
 -- @pipelineStatistics@ is ignored if @queryType@ is not
 -- @VK_QUERY_TYPE_PIPELINE_STATISTICS@.
 --
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-pipelineStatisticsQuery pipeline statistics queries>
+-- -   If the [pipeline statistics
+--     queries](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-pipelineStatisticsQuery)
 --     feature is not enabled, @queryType@ /must/ not be
 --     @VK_QUERY_TYPE_PIPELINE_STATISTICS@
 --
@@ -729,23 +712,26 @@ foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults :: ("device" 
 -- -   @queryType@ /must/ be a valid 'VkQueryType' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkQueryPipelineStatisticFlags', 'VkQueryPoolCreateFlags',
 -- 'VkQueryType', 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateQueryPool'
 data VkQueryPoolCreateInfo = VkQueryPoolCreateInfo
-  { -- No documentation found for Nested "VkQueryPoolCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkQueryPoolCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkQueryPoolCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkQueryPoolCreateFlags
-  , -- No documentation found for Nested "VkQueryPoolCreateInfo" "vkQueryType"
+  , -- | @queryType@ is a 'VkQueryType' value specifying the type of queries
+  -- managed by the pool.
   vkQueryType :: VkQueryType
-  , -- No documentation found for Nested "VkQueryPoolCreateInfo" "vkQueryCount"
+  , -- | @queryCount@ is the number of queries managed by the pool.
   vkQueryCount :: Word32
-  , -- No documentation found for Nested "VkQueryPoolCreateInfo" "vkPipelineStatistics"
+  , -- | @pipelineStatistics@ is a bitmask of 'VkQueryPipelineStatisticFlagBits'
+  -- specifying which counters will be returned in queries on the new pool,
+  -- as described below in
+  -- [{html_spec_relative}#queries-pipestats](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-pipestats).
   vkPipelineStatistics :: VkQueryPipelineStatisticFlags
   }
   deriving (Eq, Show)
@@ -768,13 +754,11 @@ instance Storable VkQueryPoolCreateInfo where
 -- | VkQueryResultFlags - Bitmask of VkQueryResultFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkQueryResultFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkQueryResultFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkQueryResultFlagBits',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
@@ -784,13 +768,11 @@ type VkQueryResultFlags = VkQueryResultFlagBits
 -- VkQueryPipelineStatisticFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkQueryPipelineStatisticFlags@ is a bitmask type for setting a mask of
 -- zero or more 'VkQueryPipelineStatisticFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
 -- 'VkQueryPipelineStatisticFlagBits', 'VkQueryPoolCreateInfo'

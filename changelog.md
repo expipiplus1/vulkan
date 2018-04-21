@@ -1,5 +1,9 @@
 # Change Log
 
+## [2.0.0.1] - 2018-04-21
+  - Improved documentation (links, tables, math)
+  - Use cpphs for preprocessing
+
 ## [2.0.0.0] - 2018-04-20
   - Total rewrite of the generator
   - All extensions are in here

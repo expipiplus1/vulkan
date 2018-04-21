@@ -68,13 +68,11 @@ import Graphics.Vulkan.Core10.MemoryManagement
 -- | VkBufferViewCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkBufferViewCreateFlags@ is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBufferViewCreateInfo'
 newtype VkBufferViewCreateFlags = VkBufferViewCreateFlags VkFlags
@@ -99,11 +97,7 @@ instance Read VkBufferViewCreateFlags where
 data VkBufferView_T
 -- | VkBufferView - Opaque handle to a buffer view object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DescriptorSet.VkWriteDescriptorSet',
 -- 'vkCreateBufferView', 'vkDestroyBufferView'
@@ -111,7 +105,6 @@ type VkBufferView = Ptr VkBufferView_T
 -- | vkCreateBufferView - Create a new buffer view object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the buffer view.
 --
@@ -120,13 +113,12 @@ type VkBufferView = Ptr VkBufferView_T
 --     to create the buffer.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pView@ points to a @VkBufferView@ handle in which the resulting
 --     buffer view object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -142,16 +134,15 @@ type VkBufferView = Ptr VkBufferView_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkBufferView', 'VkBufferViewCreateInfo',
@@ -160,17 +151,15 @@ foreign import ccall "vkCreateBufferView" vkCreateBufferView :: ("device" ::: Vk
 -- | vkDestroyBufferView - Destroy a buffer view object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the buffer view.
 --
 -- -   @bufferView@ is the buffer view to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -202,16 +191,12 @@ foreign import ccall "vkCreateBufferView" vkCreateBufferView :: ("device" ::: Vk
 -- -   Host access to @bufferView@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkBufferView', 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
 foreign import ccall "vkDestroyBufferView" vkDestroyBufferView :: ("device" ::: VkDevice) -> ("bufferView" ::: VkBufferView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkBufferViewCreateInfo - Structure specifying parameters of a newly
 -- created buffer view
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -268,26 +253,32 @@ foreign import ccall "vkDestroyBufferView" vkDestroyBufferView :: ("device" ::: 
 --     value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'VkBufferViewCreateFlags', @VkDeviceSize@,
 -- 'Graphics.Vulkan.Core10.Core.VkFormat',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateBufferView'
 data VkBufferViewCreateInfo = VkBufferViewCreateInfo
-  { -- No documentation found for Nested "VkBufferViewCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkBufferViewCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkBufferViewCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkBufferViewCreateFlags
-  , -- No documentation found for Nested "VkBufferViewCreateInfo" "vkBuffer"
+  , -- | @buffer@ is a @VkBuffer@ on which the view will be created.
   vkBuffer :: VkBuffer
-  , -- No documentation found for Nested "VkBufferViewCreateInfo" "vkFormat"
+  , -- | @format@ is a 'Graphics.Vulkan.Core10.Core.VkFormat' describing the
+  -- format of the data elements in the buffer.
   vkFormat :: VkFormat
-  , -- No documentation found for Nested "VkBufferViewCreateInfo" "vkOffset"
+  , -- | @offset@ is an offset in bytes from the base address of the buffer.
+  -- Accesses to the buffer view from shaders use addressing that is relative
+  -- to this starting offset.
   vkOffset :: VkDeviceSize
-  , -- No documentation found for Nested "VkBufferViewCreateInfo" "vkRange"
+  , -- | @range@ is a size in bytes of the buffer view. If @range@ is equal to
+  -- @VK_WHOLE_SIZE@, the range from @offset@ to the end of the buffer is
+  -- used. If @VK_WHOLE_SIZE@ is used and the remaining size of the buffer is
+  -- not a multiple of the element size of @format@, then the nearest smaller
+  -- multiple is used.
   vkRange :: VkDeviceSize
   }
   deriving (Eq, Show)

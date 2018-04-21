@@ -112,7 +112,6 @@ import Graphics.Vulkan.Core10.Queue
 -- included in a view
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo',
 -- 'VkImageAspectFlags',
@@ -161,7 +160,9 @@ pattern VK_IMAGE_ASPECT_STENCIL_BIT :: VkImageAspectFlagBits
 pattern VK_IMAGE_ASPECT_STENCIL_BIT = VkImageAspectFlagBits 0x00000004
 
 -- | @VK_IMAGE_ASPECT_METADATA_BIT@ specifies the metadata aspect, used for
--- sparse <{html_spec_relative}#sparsememory sparse resource> operations.
+-- sparse [sparse
+-- resource](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory)
+-- operations.
 pattern VK_IMAGE_ASPECT_METADATA_BIT :: VkImageAspectFlagBits
 pattern VK_IMAGE_ASPECT_METADATA_BIT = VkImageAspectFlagBits 0x00000008
 -- ** VkSparseMemoryBindFlagBits
@@ -170,7 +171,6 @@ pattern VK_IMAGE_ASPECT_METADATA_BIT = VkImageAspectFlagBits 0x00000008
 -- binding operation
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSparseMemoryBindFlags'
 newtype VkSparseMemoryBindFlagBits = VkSparseMemoryBindFlagBits VkFlags
@@ -200,7 +200,6 @@ pattern VK_SPARSE_MEMORY_BIND_METADATA_BIT = VkSparseMemoryBindFlagBits 0x000000
 -- about a sparse image resource
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSparseImageFormatFlags'
 newtype VkSparseImageFormatFlagBits = VkSparseImageFormatFlagBits VkFlags
@@ -246,7 +245,6 @@ pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = VkSparseImageFormatF
 -- sparse image
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the image.
 --
@@ -260,7 +258,6 @@ pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = VkSparseImageFormatF
 --     array of @VkSparseImageMemoryRequirements@ structures.
 --
 -- = Description
--- #_description#
 --
 -- If @pSparseMemoryRequirements@ is @NULL@, then the number of sparse
 -- memory requirements available is returned in
@@ -305,7 +302,6 @@ pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = VkSparseImageFormatF
 --     @device@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
@@ -315,7 +311,6 @@ foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemory
 -- an image format applied to sparse images
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device from which to query the
 --     sparse image capabilities.
@@ -338,7 +333,6 @@ foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemory
 --     'VkSparseImageFormatProperties' structures.
 --
 -- = Description
--- #_description#
 --
 -- If @pProperties@ is @NULL@, then the number of sparse format properties
 -- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
@@ -402,7 +396,6 @@ foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemory
 --     structures
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkFormat',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageTiling',
@@ -415,7 +408,6 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
 -- | vkQueueBindSparse - Bind device memory to a sparse resource object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @queue@ is the queue that the sparse binding operations will be
 --     submitted to.
@@ -427,14 +419,13 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
 --
 -- -   @fence@ is an /optional/ handle to a fence to be signaled. If
 --     @fence@ is not 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', it
---     defines a
---     <{html_spec_relative}#synchronization-fences-signaling fence signal operation>.
+--     defines a [fence signal
+--     operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-signaling).
 --
 -- = Description
--- #_description#
 --
--- @vkQueueBindSparse@ is a
--- <{html_spec_relative}#devsandqueues-submission queue submission command>,
+-- @vkQueueBindSparse@ is a [queue submission
+-- command](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-submission),
 -- with each batch defined by an element of @pBindInfo@ as an instance of
 -- the 'VkBindSparseInfo' structure. Batches begin execution in the order
 -- they appear in @pBindInfo@, but /may/ complete out of order.
@@ -451,7 +442,8 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
 -- effectively only define execution dependencies.
 --
 -- Additional information about fence and semaphore operation is described
--- in <{html_spec_relative}#synchronization the synchronization chapter>.
+-- in [the synchronization
+-- chapter](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization).
 --
 -- == Valid Usage
 --
@@ -472,7 +464,8 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
 --
 -- -   All elements of the @pWaitSemaphores@ member of all elements of
 --     @pBindInfo@ /must/ be semaphores that are signaled, or have
---     <{html_spec_relative}#synchronization-semaphores-signaling semaphore signal operations>
+--     [semaphore signal
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-signaling)
 --     previously submitted for execution.
 --
 -- == Valid Usage (Implicit)
@@ -513,21 +506,21 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | -               | -               | SPARSE_BINDING  | -               |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | -                                                                                                           | -                                                                                                          | SPARSE_BINDING                                                                                        | -                                                                                                                          |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -535,18 +528,13 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBindSparseInfo', 'Graphics.Vulkan.Core10.Queue.VkFence',
 -- 'Graphics.Vulkan.Core10.Queue.VkQueue'
 foreign import ccall "vkQueueBindSparse" vkQueueBindSparse :: ("queue" ::: VkQueue) -> ("bindInfoCount" ::: Word32) -> ("pBindInfo" ::: Ptr VkBindSparseInfo) -> ("fence" ::: VkFence) -> IO VkResult
 -- | VkOffset3D - Structure specifying a three-dimensional offset
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkBufferImageCopy',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkImageBlit',
@@ -554,11 +542,11 @@ foreign import ccall "vkQueueBindSparse" vkQueueBindSparse :: ("queue" ::: VkQue
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkImageResolve',
 -- 'VkSparseImageMemoryBind'
 data VkOffset3D = VkOffset3D
-  { -- No documentation found for Nested "VkOffset3D" "vkX"
+  { -- | @x@ is the x offset.
   vkX :: Int32
-  , -- No documentation found for Nested "VkOffset3D" "vkY"
+  , -- | @y@ is the y offset.
   vkY :: Int32
-  , -- No documentation found for Nested "VkOffset3D" "vkZ"
+  , -- | @z@ is the z offset.
   vkZ :: Int32
   }
   deriving (Eq, Show)
@@ -575,11 +563,7 @@ instance Storable VkOffset3D where
 -- | VkSparseImageFormatProperties - Structure specifying sparse image format
 -- properties
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkExtent3D',
 -- 'VkImageAspectFlags', 'VkSparseImageFormatFlags',
@@ -587,11 +571,14 @@ instance Storable VkOffset3D where
 -- 'VkSparseImageMemoryRequirements',
 -- 'vkGetPhysicalDeviceSparseImageFormatProperties'
 data VkSparseImageFormatProperties = VkSparseImageFormatProperties
-  { -- No documentation found for Nested "VkSparseImageFormatProperties" "vkAspectMask"
+  { -- | @aspectMask@ is a bitmask 'VkImageAspectFlagBits' specifying which
+  -- aspects of the image the properties apply to.
   vkAspectMask :: VkImageAspectFlags
-  , -- No documentation found for Nested "VkSparseImageFormatProperties" "vkImageGranularity"
+  , -- | @imageGranularity@ is the width, height, and depth of the sparse image
+  -- block in texels or compressed texel blocks.
   vkImageGranularity :: VkExtent3D
-  , -- No documentation found for Nested "VkSparseImageFormatProperties" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkSparseImageFormatFlagBits' specifying
+  -- additional information about the sparse resource.
   vkFlags :: VkSparseImageFormatFlags
   }
   deriving (Eq, Show)
@@ -609,7 +596,6 @@ instance Storable VkSparseImageFormatProperties where
 -- memory requirements
 --
 -- = Members
--- #_members#
 --
 -- -   @formatProperties.aspectMask@ is the set of aspects of the image
 --     that this sparse memory requirement applies to. This will usually
@@ -658,25 +644,21 @@ instance Storable VkSparseImageFormatProperties where
 --     @VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT@ (otherwise the value is
 --     undefined).
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- @VkDeviceSize@, 'VkSparseImageFormatProperties',
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkSparseImageMemoryRequirements2',
 -- 'vkGetImageSparseMemoryRequirements'
 data VkSparseImageMemoryRequirements = VkSparseImageMemoryRequirements
-  { -- No documentation found for Nested "VkSparseImageMemoryRequirements" "vkFormatProperties"
+  { -- No documentation found for Nested "VkSparseImageMemoryRequirements" "formatProperties"
   vkFormatProperties :: VkSparseImageFormatProperties
-  , -- No documentation found for Nested "VkSparseImageMemoryRequirements" "vkImageMipTailFirstLod"
+  , -- No documentation found for Nested "VkSparseImageMemoryRequirements" "imageMipTailFirstLod"
   vkImageMipTailFirstLod :: Word32
-  , -- No documentation found for Nested "VkSparseImageMemoryRequirements" "vkImageMipTailSize"
+  , -- No documentation found for Nested "VkSparseImageMemoryRequirements" "imageMipTailSize"
   vkImageMipTailSize :: VkDeviceSize
-  , -- No documentation found for Nested "VkSparseImageMemoryRequirements" "vkImageMipTailOffset"
+  , -- No documentation found for Nested "VkSparseImageMemoryRequirements" "imageMipTailOffset"
   vkImageMipTailOffset :: VkDeviceSize
-  , -- No documentation found for Nested "VkSparseImageMemoryRequirements" "vkImageMipTailStride"
+  , -- No documentation found for Nested "VkSparseImageMemoryRequirements" "imageMipTailStride"
   vkImageMipTailStride :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -696,9 +678,6 @@ instance Storable VkSparseImageMemoryRequirements where
                 *> poke (ptr `plusPtr` 40) (vkImageMipTailStride (poked :: VkSparseImageMemoryRequirements))
 -- | VkImageSubresource - Structure specifying a image subresource
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @aspectMask@ /must/ be a valid combination of
@@ -707,16 +686,15 @@ instance Storable VkSparseImageMemoryRequirements where
 -- -   @aspectMask@ /must/ not be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkImageAspectFlags', 'VkSparseImageMemoryBind',
 -- 'Graphics.Vulkan.Core10.Image.vkGetImageSubresourceLayout'
 data VkImageSubresource = VkImageSubresource
-  { -- No documentation found for Nested "VkImageSubresource" "vkAspectMask"
+  { -- | @aspectMask@ is a 'VkImageAspectFlags' selecting the image /aspect/.
   vkAspectMask :: VkImageAspectFlags
-  , -- No documentation found for Nested "VkImageSubresource" "vkMipLevel"
+  , -- | @mipLevel@ selects the mipmap level.
   vkMipLevel :: Word32
-  , -- No documentation found for Nested "VkImageSubresource" "vkArrayLayer"
+  , -- | @arrayLayer@ selects the array layer.
   vkArrayLayer :: Word32
   }
   deriving (Eq, Show)
@@ -733,7 +711,6 @@ instance Storable VkImageSubresource where
 -- | VkSparseMemoryBind - Structure specifying a sparse memory bind operation
 --
 -- = Description
--- #_description#
 --
 -- The /binding range/ [@resourceOffset@, @resourceOffset@ + @size@) has
 -- different constraints based on @flags@. If @flags@ contains
@@ -741,11 +718,9 @@ instance Storable VkImageSubresource where
 -- the mip tail region of the metadata aspect. This metadata region is
 -- defined by:
 --
--- []
---     metadataRegion = [base, base + @imageMipTailSize@)
+-- -   metadataRegion = [base, base + @imageMipTailSize@)
 --
--- []
---     base = @imageMipTailOffset@ + @imageMipTailStride@ × n
+-- -   base = @imageMipTailOffset@ + @imageMipTailStride@ × n
 --
 -- and @imageMipTailOffset@, @imageMipTailSize@, and @imageMipTailStride@
 -- values are from the 'VkSparseImageMemoryRequirements' corresponding to
@@ -766,7 +741,7 @@ instance Storable VkImageSubresource where
 --     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', @memory@ and
 --     @memoryOffset@ /must/ match the memory requirements of the resource,
 --     as described in section
---     <{html_spec_relative}#resources-association {html_spec_relative}#resources-association>
+--     [{html_spec_relative}#resources-association](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-association)
 --
 -- -   If @memory@ is not
 --     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', @memory@ /must/
@@ -795,21 +770,26 @@ instance Storable VkImageSubresource where
 --     'VkSparseMemoryBindFlagBits' values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory', @VkDeviceSize@,
 -- 'VkSparseBufferMemoryBindInfo', 'VkSparseImageOpaqueMemoryBindInfo',
 -- 'VkSparseMemoryBindFlags'
 data VkSparseMemoryBind = VkSparseMemoryBind
-  { -- No documentation found for Nested "VkSparseMemoryBind" "vkResourceOffset"
+  { -- | @resourceOffset@ is the offset into the resource.
   vkResourceOffset :: VkDeviceSize
-  , -- No documentation found for Nested "VkSparseMemoryBind" "vkSize"
+  , -- | @size@ is the size of the memory region to be bound.
   vkSize :: VkDeviceSize
-  , -- No documentation found for Nested "VkSparseMemoryBind" "vkMemory"
+  , -- | @memory@ is the @VkDeviceMemory@ object that the range of the resource
+  -- is bound to. If @memory@ is
+  -- 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', the range is unbound.
   vkMemory :: VkDeviceMemory
-  , -- No documentation found for Nested "VkSparseMemoryBind" "vkMemoryOffset"
+  , -- | @memoryOffset@ is the offset into the @VkDeviceMemory@ object to bind
+  -- the resource range to. If @memory@ is
+  -- 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', this value is
+  -- ignored.
   vkMemoryOffset :: VkDeviceSize
-  , -- No documentation found for Nested "VkSparseMemoryBind" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkSparseMemoryBindFlagBits' specifying usage of
+  -- the binding operation.
   vkFlags :: VkSparseMemoryBindFlags
   }
   deriving (Eq, Show)
@@ -829,23 +809,20 @@ instance Storable VkSparseMemoryBind where
                 *> poke (ptr `plusPtr` 32) (vkFlags (poked :: VkSparseMemoryBind))
 -- | VkSparseImageMemoryBind - Structure specifying sparse image memory bind
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidencyAliased sparse aliased residency>
+-- -   If the [sparse aliased
+--     residency](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidencyAliased)
 --     feature is not enabled, and if any other resources are bound to
 --     ranges of @memory@, the range of @memory@ being bound /must/ not
 --     overlap with those bound ranges
 --
 -- -   @memory@ and @memoryOffset@ /must/ match the memory requirements of
 --     the calling command’s @image@, as described in section
---     <{html_spec_relative}#resources-association {html_spec_relative}#resources-association>
+--     [{html_spec_relative}#resources-association](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-association)
 --
 -- -   @subresource@ /must/ be a valid image subresource for @image@ (see
---     <{html_spec_relative}#resources-image-views {html_spec_relative}#resources-image-views>)
+--     [{html_spec_relative}#resources-image-views](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views))
 --
 -- -   @offset.x@ /must/ be a multiple of the sparse image block width
 --     (@VkSparseImageFormatProperties@::@imageGranularity.width@) of the
@@ -883,24 +860,34 @@ instance Storable VkSparseMemoryBind where
 --     'VkSparseMemoryBindFlagBits' values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory', @VkDeviceSize@,
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkExtent3D',
 -- 'VkImageSubresource', 'VkOffset3D', 'VkSparseImageMemoryBindInfo',
 -- 'VkSparseMemoryBindFlags'
 data VkSparseImageMemoryBind = VkSparseImageMemoryBind
-  { -- No documentation found for Nested "VkSparseImageMemoryBind" "vkSubresource"
+  { -- | @subresource@ is the aspectMask and region of interest in the image.
   vkSubresource :: VkImageSubresource
-  , -- No documentation found for Nested "VkSparseImageMemoryBind" "vkOffset"
+  , -- | @offset@ are the coordinates of the first texel within the image
+  -- subresource to bind.
   vkOffset :: VkOffset3D
-  , -- No documentation found for Nested "VkSparseImageMemoryBind" "vkExtent"
+  , -- | @extent@ is the size in texels of the region within the image
+  -- subresource to bind. The extent /must/ be a multiple of the sparse image
+  -- block dimensions, except when binding sparse image blocks along the edge
+  -- of an image subresource it /can/ instead be such that any coordinate of
+  -- @offset@ + @extent@ equals the corresponding dimensions of the image
+  -- subresource.
   vkExtent :: VkExtent3D
-  , -- No documentation found for Nested "VkSparseImageMemoryBind" "vkMemory"
+  , -- | @memory@ is the @VkDeviceMemory@ object that the sparse image blocks of
+  -- the image are bound to. If @memory@ is
+  -- 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', the sparse image
+  -- blocks are unbound.
   vkMemory :: VkDeviceMemory
-  , -- No documentation found for Nested "VkSparseImageMemoryBind" "vkMemoryOffset"
+  , -- | @memoryOffset@ is an offset into @VkDeviceMemory@ object. If @memory@ is
+  -- 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', this value is
+  -- ignored.
   vkMemoryOffset :: VkDeviceSize
-  , -- No documentation found for Nested "VkSparseImageMemoryBind" "vkFlags"
+  , -- | @flags@ are sparse memory binding flags.
   vkFlags :: VkSparseMemoryBindFlags
   }
   deriving (Eq, Show)
@@ -923,9 +910,6 @@ instance Storable VkSparseImageMemoryBind where
 -- | VkSparseBufferMemoryBindInfo - Structure specifying a sparse buffer
 -- memory bind operation
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @buffer@ /must/ be a valid @VkBuffer@ handle
@@ -936,16 +920,16 @@ instance Storable VkSparseImageMemoryBind where
 -- -   @bindCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBindSparseInfo', 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'VkSparseMemoryBind'
 data VkSparseBufferMemoryBindInfo = VkSparseBufferMemoryBindInfo
-  { -- No documentation found for Nested "VkSparseBufferMemoryBindInfo" "vkBuffer"
+  { -- | @buffer@ is the @VkBuffer@ object to be bound.
   vkBuffer :: VkBuffer
-  , -- No documentation found for Nested "VkSparseBufferMemoryBindInfo" "vkBindCount"
+  , -- | @bindCount@ is the number of @VkSparseMemoryBind@ structures in the
+  -- @pBinds@ array.
   vkBindCount :: Word32
-  , -- No documentation found for Nested "VkSparseBufferMemoryBindInfo" "vkPBinds"
+  , -- | @pBinds@ is a pointer to array of @VkSparseMemoryBind@ structures.
   vkPBinds :: Ptr VkSparseMemoryBind
   }
   deriving (Eq, Show)
@@ -961,9 +945,6 @@ instance Storable VkSparseBufferMemoryBindInfo where
                 *> poke (ptr `plusPtr` 16) (vkPBinds (poked :: VkSparseBufferMemoryBindInfo))
 -- | VkSparseImageOpaqueMemoryBindInfo - Structure specifying sparse image
 -- opaque memory bind info
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -982,16 +963,16 @@ instance Storable VkSparseBufferMemoryBindInfo where
 -- -   @bindCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBindSparseInfo', 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'VkSparseMemoryBind'
 data VkSparseImageOpaqueMemoryBindInfo = VkSparseImageOpaqueMemoryBindInfo
-  { -- No documentation found for Nested "VkSparseImageOpaqueMemoryBindInfo" "vkImage"
+  { -- | @image@ is the @VkImage@ object to be bound.
   vkImage :: VkImage
-  , -- No documentation found for Nested "VkSparseImageOpaqueMemoryBindInfo" "vkBindCount"
+  , -- | @bindCount@ is the number of @VkSparseMemoryBind@ structures in the
+  -- @pBinds@ array.
   vkBindCount :: Word32
-  , -- No documentation found for Nested "VkSparseImageOpaqueMemoryBindInfo" "vkPBinds"
+  , -- | @pBinds@ is a pointer to array of @VkSparseMemoryBind@ structures.
   vkPBinds :: Ptr VkSparseMemoryBind
   }
   deriving (Eq, Show)
@@ -1007,9 +988,6 @@ instance Storable VkSparseImageOpaqueMemoryBindInfo where
                 *> poke (ptr `plusPtr` 16) (vkPBinds (poked :: VkSparseImageOpaqueMemoryBindInfo))
 -- | VkSparseImageMemoryBindInfo - Structure specifying sparse image memory
 -- bind info
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -1033,16 +1011,16 @@ instance Storable VkSparseImageOpaqueMemoryBindInfo where
 -- -   @bindCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBindSparseInfo', 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'VkSparseImageMemoryBind'
 data VkSparseImageMemoryBindInfo = VkSparseImageMemoryBindInfo
-  { -- No documentation found for Nested "VkSparseImageMemoryBindInfo" "vkImage"
+  { -- | @image@ is the @VkImage@ object to be bound
   vkImage :: VkImage
-  , -- No documentation found for Nested "VkSparseImageMemoryBindInfo" "vkBindCount"
+  , -- | @bindCount@ is the number of @VkSparseImageMemoryBind@ structures in
+  -- pBinds array
   vkBindCount :: Word32
-  , -- No documentation found for Nested "VkSparseImageMemoryBindInfo" "vkPBinds"
+  , -- | @pBinds@ is a pointer to array of @VkSparseImageMemoryBind@ structures
   vkPBinds :: Ptr VkSparseImageMemoryBind
   }
   deriving (Eq, Show)
@@ -1057,9 +1035,6 @@ instance Storable VkSparseImageMemoryBindInfo where
                 *> poke (ptr `plusPtr` 8) (vkBindCount (poked :: VkSparseImageMemoryBindInfo))
                 *> poke (ptr `plusPtr` 16) (vkPBinds (poked :: VkSparseImageMemoryBindInfo))
 -- | VkBindSparseInfo - Structure specifying a sparse binding operation
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -1093,36 +1068,52 @@ instance Storable VkSparseImageMemoryBindInfo where
 --     allocated, or retrieved from the same @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkSemaphore',
 -- 'VkSparseBufferMemoryBindInfo', 'VkSparseImageMemoryBindInfo',
 -- 'VkSparseImageOpaqueMemoryBindInfo',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkQueueBindSparse'
 data VkBindSparseInfo = VkBindSparseInfo
-  { -- No documentation found for Nested "VkBindSparseInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkWaitSemaphoreCount"
+  , -- | @waitSemaphoreCount@ is the number of semaphores upon which to wait
+  -- before executing the sparse binding operations for the batch.
   vkWaitSemaphoreCount :: Word32
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkPWaitSemaphores"
+  , -- | @pWaitSemaphores@ is a pointer to an array of semaphores upon which to
+  -- wait on before the sparse binding operations for this batch begin
+  -- execution. If semaphores to wait on are provided, they define a
+  -- [semaphore wait
+  -- operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-waiting).
   vkPWaitSemaphores :: Ptr VkSemaphore
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkBufferBindCount"
+  , -- | @bufferBindCount@ is the number of sparse buffer bindings to perform in
+  -- the batch.
   vkBufferBindCount :: Word32
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkPBufferBinds"
+  , -- | @pBufferBinds@ is a pointer to an array of
+  -- 'VkSparseBufferMemoryBindInfo' structures.
   vkPBufferBinds :: Ptr VkSparseBufferMemoryBindInfo
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkImageOpaqueBindCount"
+  , -- | @imageOpaqueBindCount@ is the number of opaque sparse image bindings to
+  -- perform.
   vkImageOpaqueBindCount :: Word32
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkPImageOpaqueBinds"
+  , -- | @pImageOpaqueBinds@ is a pointer to an array of
+  -- 'VkSparseImageOpaqueMemoryBindInfo' structures, indicating opaque sparse
+  -- image bindings to perform.
   vkPImageOpaqueBinds :: Ptr VkSparseImageOpaqueMemoryBindInfo
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkImageBindCount"
+  , -- | @imageBindCount@ is the number of sparse image bindings to perform.
   vkImageBindCount :: Word32
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkPImageBinds"
+  , -- | @pImageBinds@ is a pointer to an array of 'VkSparseImageMemoryBindInfo'
+  -- structures, indicating sparse image bindings to perform.
   vkPImageBinds :: Ptr VkSparseImageMemoryBindInfo
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkSignalSemaphoreCount"
+  , -- | @signalSemaphoreCount@ is the number of semaphores to be signaled once
+  -- the sparse binding operations specified by the structure have completed
+  -- execution.
   vkSignalSemaphoreCount :: Word32
-  , -- No documentation found for Nested "VkBindSparseInfo" "vkPSignalSemaphores"
+  , -- | @pSignalSemaphores@ is a pointer to an array of semaphores which will be
+  -- signaled when the sparse binding operations for this batch have
+  -- completed execution. If semaphores to be signaled are provided, they
+  -- define a [semaphore signal
+  -- operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-signaling).
   vkPSignalSemaphores :: Ptr VkSemaphore
   }
   deriving (Eq, Show)
@@ -1157,13 +1148,11 @@ instance Storable VkBindSparseInfo where
 -- | VkImageAspectFlags - Bitmask of VkImageAspectFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkImageAspectFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkImageAspectFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkClearAttachment',
 -- 'VkImageAspectFlagBits', 'VkImageSubresource',
@@ -1175,13 +1164,11 @@ type VkImageAspectFlags = VkImageAspectFlagBits
 -- | VkSparseMemoryBindFlags - Bitmask of VkSparseMemoryBindFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkSparseMemoryBindFlags@ is a bitmask type for setting a mask of zero
 -- or more 'VkSparseMemoryBindFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSparseImageMemoryBind', 'VkSparseMemoryBind',
 -- 'VkSparseMemoryBindFlagBits'
@@ -1189,13 +1176,11 @@ type VkSparseMemoryBindFlags = VkSparseMemoryBindFlagBits
 -- | VkSparseImageFormatFlags - Bitmask of VkSparseImageFormatFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkSparseImageFormatFlags@ is a bitmask type for setting a mask of zero
 -- or more 'VkSparseImageFormatFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSparseImageFormatFlagBits', 'VkSparseImageFormatProperties'
 type VkSparseImageFormatFlags = VkSparseImageFormatFlagBits

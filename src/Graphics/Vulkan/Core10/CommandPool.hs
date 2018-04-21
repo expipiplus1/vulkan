@@ -74,7 +74,6 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- command pool
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandPoolCreateFlags'
 newtype VkCommandPoolCreateFlagBits = VkCommandPoolCreateFlagBits VkFlags
@@ -109,10 +108,11 @@ pattern VK_COMMAND_POOL_CREATE_TRANSIENT_BIT :: VkCommandPoolCreateFlagBits
 pattern VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = VkCommandPoolCreateFlagBits 0x00000001
 
 -- | @VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT@ allows any command
--- buffer allocated from a pool to be individually reset to the
--- <{html_spec_relative}#commandbuffers-lifecycle initial state>; either by
--- calling 'Graphics.Vulkan.Core10.CommandBuffer.vkResetCommandBuffer', or
--- via the implicit reset when calling
+-- buffer allocated from a pool to be individually reset to the [initial
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle);
+-- either by calling
+-- 'Graphics.Vulkan.Core10.CommandBuffer.vkResetCommandBuffer', or via the
+-- implicit reset when calling
 -- 'Graphics.Vulkan.Core10.CommandBuffer.vkBeginCommandBuffer'. If this
 -- flag is not set on a pool, then @vkResetCommandBuffer@ /must/ not be
 -- called for any command buffer allocated from that pool.
@@ -124,7 +124,6 @@ pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = VkCommandPoolCreateFla
 -- pool reset
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandPoolResetFlags'
 newtype VkCommandPoolResetFlagBits = VkCommandPoolResetFlagBits VkFlags
@@ -153,11 +152,7 @@ pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = VkCommandPoolResetFlagBits
 data VkCommandPool_T
 -- | VkCommandPool - Opaque handle to a command pool object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferAllocateInfo',
 -- 'vkCreateCommandPool', 'vkDestroyCommandPool',
@@ -169,20 +164,18 @@ type VkCommandPool = Ptr VkCommandPool_T
 -- | vkCreateCommandPool - Create a new command pool object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the command pool.
 --
 -- -   @pCreateInfo@ contains information used to create the command pool.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pCommandPool@ points to a @VkCommandPool@ handle in which the
 --     created pool is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -198,16 +191,15 @@ type VkCommandPool = Ptr VkCommandPool_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkCommandPool', 'VkCommandPoolCreateInfo',
@@ -216,33 +208,34 @@ foreign import ccall "vkCreateCommandPool" vkCreateCommandPool :: ("device" ::: 
 -- | vkDestroyCommandPool - Destroy a command pool object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the command pool.
 --
 -- -   @commandPool@ is the handle of the command pool to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- = Description
--- #_description#
 --
 -- When a pool is destroyed, all command buffers allocated from the pool
--- are <{html_spec_relative}#vkFreeCommandBuffers freed>.
+-- are
+-- [freed](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkFreeCommandBuffers).
 --
 -- Any primary command buffer allocated from another 'VkCommandPool' that
--- is in the
--- <{html_spec_relative}#commandbuffers-lifecycle recording or executable state>
+-- is in the [recording or executable
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 -- and has a secondary command buffer allocated from @commandPool@ recorded
 -- into it, becomes
--- <{html_spec_relative}#commandbuffers-lifecycle invalid>.
+-- [invalid](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- == Valid Usage
 --
 -- -   All @VkCommandBuffer@ objects allocated from @commandPool@ /must/
---     not be in the
---     <{html_spec_relative}#commandbuffers-lifecycle pending state>.
+--     not be in the [pending
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- -   If @VkAllocationCallbacks@ were provided when @commandPool@ was
 --     created, a compatible set of callbacks /must/ be provided here
@@ -269,7 +262,6 @@ foreign import ccall "vkCreateCommandPool" vkCreateCommandPool :: ("device" ::: 
 -- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkCommandPool', 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
@@ -277,7 +269,6 @@ foreign import ccall "vkDestroyCommandPool" vkDestroyCommandPool :: ("device" ::
 -- | vkResetCommandPool - Reset a command pool
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the command pool.
 --
@@ -287,26 +278,25 @@ foreign import ccall "vkDestroyCommandPool" vkDestroyCommandPool :: ("device" ::
 --     reset operation.
 --
 -- = Description
--- #_description#
 --
 -- Resetting a command pool recycles all of the resources from all of the
 -- command buffers allocated from the command pool back to the command
 -- pool. All command buffers that have been allocated from the command pool
--- are put in the
--- <{html_spec_relative}#commandbuffers-lifecycle initial state>.
+-- are put in the [initial
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- Any primary command buffer allocated from another 'VkCommandPool' that
--- is in the
--- <{html_spec_relative}#commandbuffers-lifecycle recording or executable state>
+-- is in the [recording or executable
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 -- and has a secondary command buffer allocated from @commandPool@ recorded
 -- into it, becomes
--- <{html_spec_relative}#commandbuffers-lifecycle invalid>.
+-- [invalid](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- == Valid Usage
 --
 -- -   All @VkCommandBuffer@ objects allocated from @commandPool@ /must/
---     not be in the
---     <{html_spec_relative}#commandbuffers-lifecycle pending state>
+--     not be in the [pending
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- == Valid Usage (Implicit)
 --
@@ -326,25 +316,21 @@ foreign import ccall "vkDestroyCommandPool" vkDestroyCommandPool :: ("device" ::
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandPool', 'VkCommandPoolResetFlags',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
 foreign import ccall "vkResetCommandPool" vkResetCommandPool :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("flags" ::: VkCommandPoolResetFlags) -> IO VkResult
 -- | VkCommandPoolCreateInfo - Structure specifying parameters of a newly
 -- created command pool
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -361,18 +347,22 @@ foreign import ccall "vkResetCommandPool" vkResetCommandPool :: ("device" ::: Vk
 --     'VkCommandPoolCreateFlagBits' values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandPoolCreateFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateCommandPool'
 data VkCommandPoolCreateInfo = VkCommandPoolCreateInfo
-  { -- No documentation found for Nested "VkCommandPoolCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCommandPoolCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCommandPoolCreateInfo" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkCommandPoolCreateFlagBits' indicating usage
+  -- behavior for the pool and command buffers allocated from it.
   vkFlags :: VkCommandPoolCreateFlags
-  , -- No documentation found for Nested "VkCommandPoolCreateInfo" "vkQueueFamilyIndex"
+  , -- | @queueFamilyIndex@ designates a queue family as described in section
+  -- [Queue Family
+  -- Properties](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-queueprops).
+  -- All command buffers allocated from this command pool /must/ be submitted
+  -- on queues from the same queue family.
   vkQueueFamilyIndex :: Word32
   }
   deriving (Eq, Show)
@@ -391,26 +381,22 @@ instance Storable VkCommandPoolCreateInfo where
 -- | VkCommandPoolCreateFlags - Bitmask of VkCommandPoolCreateFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkCommandPoolCreateFlags@ is a bitmask type for setting a mask of zero
 -- or more 'VkCommandPoolCreateFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandPoolCreateFlagBits', 'VkCommandPoolCreateInfo'
 type VkCommandPoolCreateFlags = VkCommandPoolCreateFlagBits
 -- | VkCommandPoolResetFlags - Bitmask of VkCommandPoolResetFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkCommandPoolResetFlags@ is a bitmask type for setting a mask of zero
 -- or more 'VkCommandPoolResetFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandPoolResetFlagBits', 'vkResetCommandPool'
 type VkCommandPoolResetFlags = VkCommandPoolResetFlagBits

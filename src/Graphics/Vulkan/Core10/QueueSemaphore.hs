@@ -65,13 +65,11 @@ import Graphics.Vulkan.Core10.Queue
 -- | VkSemaphoreCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkSemaphoreCreateFlags@ is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSemaphoreCreateInfo'
 newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
@@ -95,7 +93,6 @@ instance Read VkSemaphoreCreateFlags where
 -- | vkCreateSemaphore - Create a new queue semaphore object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the semaphore.
 --
@@ -104,13 +101,14 @@ instance Read VkSemaphoreCreateFlags where
 --     how the semaphore is to be created.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pSemaphore@ points to a handle in which the resulting semaphore
 --     object is returned.
 --
 -- = Description
--- #_description#
 --
 -- When created, the semaphore is in the unsignaled state.
 --
@@ -128,16 +126,15 @@ instance Read VkSemaphoreCreateFlags where
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -146,17 +143,15 @@ foreign import ccall "vkCreateSemaphore" vkCreateSemaphore :: ("device" ::: VkDe
 -- | vkDestroySemaphore - Destroy a semaphore object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the semaphore.
 --
 -- -   @semaphore@ is the handle of the semaphore to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -188,7 +183,6 @@ foreign import ccall "vkCreateSemaphore" vkCreateSemaphore :: ("device" ::: VkDe
 -- -   Host access to @semaphore@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -196,9 +190,6 @@ foreign import ccall "vkCreateSemaphore" vkCreateSemaphore :: ("device" ::: VkDe
 foreign import ccall "vkDestroySemaphore" vkDestroySemaphore :: ("device" ::: VkDevice) -> ("semaphore" ::: VkSemaphore) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkSemaphoreCreateInfo - Structure specifying parameters of a newly
 -- created semaphore
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -216,16 +207,15 @@ foreign import ccall "vkDestroySemaphore" vkDestroySemaphore :: ("device" ::: Vk
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSemaphoreCreateFlags', 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateSemaphore'
 data VkSemaphoreCreateInfo = VkSemaphoreCreateInfo
-  { -- No documentation found for Nested "VkSemaphoreCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSemaphoreCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSemaphoreCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkSemaphoreCreateFlags
   }
   deriving (Eq, Show)

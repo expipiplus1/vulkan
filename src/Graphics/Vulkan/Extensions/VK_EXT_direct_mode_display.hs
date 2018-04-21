@@ -39,14 +39,10 @@ pattern VK_EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME = "VK_EXT_direct_mode_display"
 -- | vkReleaseDisplayEXT - Release access to an acquired VkDisplayKHR
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ The physical device the display is on.
 --
 -- -   @display@ The display to release control of.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -56,11 +52,10 @@ pattern VK_EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME = "VK_EXT_direct_mode_display"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'

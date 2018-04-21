@@ -52,7 +52,6 @@ pattern VK_MAX_EXTENSION_NAME_SIZE = 256
 -- of global extension properties
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @pLayerName@ is either @NULL@ or a pointer to a null-terminated
 --     UTF-8 string naming the layer to retrieve extensions from.
@@ -64,7 +63,6 @@ pattern VK_MAX_EXTENSION_NAME_SIZE = 256
 --     'VkExtensionProperties' structures.
 --
 -- = Description
--- #_description#
 --
 -- When @pLayerName@ parameter is @NULL@, only extensions provided by the
 -- Vulkan implementation or by implicitly enabled layers are returned. When
@@ -102,12 +100,12 @@ pattern VK_MAX_EXTENSION_NAME_SIZE = 256
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -115,7 +113,6 @@ pattern VK_MAX_EXTENSION_NAME_SIZE = 256
 --     -   @VK_ERROR_LAYER_NOT_PRESENT@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkExtensionProperties'
 foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanceExtensionProperties :: ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult
@@ -123,7 +120,6 @@ foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanc
 -- physical device extensions
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device that will be queried.
 --
@@ -140,7 +136,6 @@ foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanc
 --     'VkExtensionProperties' structures.
 --
 -- = Description
--- #_description#
 --
 -- When @pLayerName@ parameter is @NULL@, only extensions provided by the
 -- Vulkan implementation or by implicitly enabled layers are returned. When
@@ -162,12 +157,12 @@ foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanc
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -175,25 +170,22 @@ foreign import ccall "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanc
 --     -   @VK_ERROR_LAYER_NOT_PRESENT@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkExtensionProperties',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall "vkEnumerateDeviceExtensionProperties" vkEnumerateDeviceExtensionProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult
 -- | VkExtensionProperties - Structure specifying a extension properties
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'vkEnumerateDeviceExtensionProperties',
 -- 'vkEnumerateInstanceExtensionProperties'
 data VkExtensionProperties = VkExtensionProperties
-  { -- No documentation found for Nested "VkExtensionProperties" "vkExtensionName"
+  { -- | @extensionName@ is a null-terminated string specifying the name of the
+  -- extension.
   vkExtensionName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar
-  , -- No documentation found for Nested "VkExtensionProperties" "vkSpecVersion"
+  , -- | @specVersion@ is the version of this extension. It is an integer,
+  -- incremented with backward compatible changes.
   vkSpecVersion :: Word32
   }
   deriving (Eq, Show)

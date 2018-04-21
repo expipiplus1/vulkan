@@ -101,7 +101,6 @@ pattern VK_NN_VI_SURFACE_EXTENSION_NAME = "VK_NN_vi_surface"
 -- layer
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the instance with which to associate the surface.
 --
@@ -111,13 +110,13 @@ pattern VK_NN_VI_SURFACE_EXTENSION_NAME = "VK_NN_vi_surface"
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
 --     surface object is returned.
 --
 -- = Description
--- #_description#
 --
 -- During the lifetime of a surface created using a particular
 -- @nn@::@vi@::@NativeWindowHandle@ any attempts to create another surface
@@ -144,10 +143,10 @@ pattern VK_NN_VI_SURFACE_EXTENSION_NAME = "VK_NN_vi_surface"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -155,7 +154,6 @@ pattern VK_NN_VI_SURFACE_EXTENSION_NAME = "VK_NN_vi_surface"
 --     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
@@ -164,9 +162,6 @@ pattern VK_NN_VI_SURFACE_EXTENSION_NAME = "VK_NN_vi_surface"
 foreign import ccall "vkCreateViSurfaceNN" vkCreateViSurfaceNN :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkViSurfaceCreateInfoNN) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 -- | VkViSurfaceCreateInfoNN - Structure specifying parameters of a newly
 -- created VI surface object
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -181,18 +176,18 @@ foreign import ccall "vkCreateViSurfaceNN" vkCreateViSurfaceNN :: ("instance" ::
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkViSurfaceCreateFlagsNN', 'vkCreateViSurfaceNN'
 data VkViSurfaceCreateInfoNN = VkViSurfaceCreateInfoNN
-  { -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkViSurfaceCreateFlagsNN
-  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "vkWindow"
+  , -- | @window@ is the @nn@::@vi@::@NativeWindowHandle@ for the
+  -- @nn@::@vi@::@Layer@ with which to associate the surface.
   vkWindow :: Ptr ()
   }
   deriving (Eq, Show)

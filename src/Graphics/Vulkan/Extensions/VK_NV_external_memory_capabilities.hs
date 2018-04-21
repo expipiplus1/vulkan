@@ -84,7 +84,6 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- memory handle types
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkExternalMemoryHandleTypeFlagsNV'
 newtype VkExternalMemoryHandleTypeFlagBitsNV = VkExternalMemoryHandleTypeFlagBitsNV VkFlags
@@ -139,7 +138,6 @@ pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = VkExternalMemory
 -- features
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkExternalImageFormatPropertiesNV', 'VkExternalMemoryFeatureFlagsNV',
 -- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
@@ -189,7 +187,6 @@ pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME = "VK_NV_external_memo
 -- capabilities compatible with external memory handle types
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device from which to query the
 --     image capabilities
@@ -218,7 +215,6 @@ pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME = "VK_NV_external_memo
 --     are returned.
 --
 -- = Description
--- #_description#
 --
 -- If @externalHandleType@ is 0,
 -- @pExternalImageFormatProperties@::imageFormatProperties will return the
@@ -259,10 +255,10 @@ pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME = "VK_NV_external_memo
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -270,7 +266,6 @@ pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME = "VK_NV_external_memo
 --     -   @VK_ERROR_FORMAT_NOT_SUPPORTED@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkExternalImageFormatPropertiesNV',
 -- 'VkExternalMemoryHandleTypeFlagsNV',
@@ -284,23 +279,39 @@ foreign import ccall "vkGetPhysicalDeviceExternalImageFormatPropertiesNV" vkGetP
 -- | VkExternalImageFormatPropertiesNV - Structure specifying external image
 -- format properties
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkExternalMemoryFeatureFlagsNV', 'VkExternalMemoryHandleTypeFlagsNV',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageFormatProperties',
 -- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
 data VkExternalImageFormatPropertiesNV = VkExternalImageFormatPropertiesNV
-  { -- No documentation found for Nested "VkExternalImageFormatPropertiesNV" "vkImageFormatProperties"
+  { -- | @imageFormatProperties@ will be filled in as when calling
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties',
+  -- but the values returned /may/ vary depending on the external handle type
+  -- requested.
   vkImageFormatProperties :: VkImageFormatProperties
-  , -- No documentation found for Nested "VkExternalImageFormatPropertiesNV" "vkExternalMemoryFeatures"
+  , -- | @externalMemoryFeatures@ is a bitmask of
+  -- 'VkExternalMemoryFeatureFlagBitsNV', indicating properties of the
+  -- external memory handle type
+  -- ('vkGetPhysicalDeviceExternalImageFormatPropertiesNV'::@externalHandleType@)
+  -- being queried, or 0 if the external memory handle type is 0.
   vkExternalMemoryFeatures :: VkExternalMemoryFeatureFlagsNV
-  , -- No documentation found for Nested "VkExternalImageFormatPropertiesNV" "vkExportFromImportedHandleTypes"
+  , -- | @exportFromImportedHandleTypes@ is a bitmask of
+  -- 'VkExternalMemoryHandleTypeFlagBitsNV' containing a bit set for every
+  -- external handle type that /may/ be used to create memory from which the
+  -- handles of the type specified in
+  -- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'::@externalHandleType@
+  -- /can/ be exported, or 0 if the external memory handle type is 0.
   vkExportFromImportedHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
-  , -- No documentation found for Nested "VkExternalImageFormatPropertiesNV" "vkCompatibleHandleTypes"
+  , -- | @compatibleHandleTypes@ is a bitmask of
+  -- 'VkExternalMemoryHandleTypeFlagBitsNV' containing a bit set for every
+  -- external handle type that /may/ be specified simultaneously with the
+  -- handle type specified by
+  -- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'::@externalHandleType@
+  -- when calling 'Graphics.Vulkan.Core10.Memory.vkAllocateMemory', or 0 if
+  -- the external memory handle type is 0. @compatibleHandleTypes@ will
+  -- always contain
+  -- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'::@externalHandleType@
   vkCompatibleHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
   }
   deriving (Eq, Show)
@@ -320,13 +331,11 @@ instance Storable VkExternalImageFormatPropertiesNV where
 -- VkExternalMemoryHandleTypeFlagBitsNV
 --
 -- = Description
--- #_description#
 --
 -- @VkExternalMemoryHandleTypeFlagsNV@ is a bitmask type for setting a mask
 -- of zero or more 'VkExternalMemoryHandleTypeFlagBitsNV'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV',
 -- 'VkExternalImageFormatPropertiesNV',
@@ -340,13 +349,11 @@ type VkExternalMemoryHandleTypeFlagsNV = VkExternalMemoryHandleTypeFlagBitsNV
 -- VkExternalMemoryFeatureFlagBitsNV
 --
 -- = Description
--- #_description#
 --
 -- @VkExternalMemoryFeatureFlagsNV@ is a bitmask type for setting a mask of
 -- zero or more 'VkExternalMemoryFeatureFlagBitsNV'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkExternalImageFormatPropertiesNV', 'VkExternalMemoryFeatureFlagBitsNV'
 type VkExternalMemoryFeatureFlagsNV = VkExternalMemoryFeatureFlagBitsNV

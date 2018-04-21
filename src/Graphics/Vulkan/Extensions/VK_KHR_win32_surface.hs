@@ -113,7 +113,6 @@ pattern VK_KHR_WIN32_SURFACE_EXTENSION_NAME = "VK_KHR_win32_surface"
 -- Win32 native window
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the instance to associate the surface with.
 --
@@ -123,13 +122,11 @@ pattern VK_KHR_WIN32_SURFACE_EXTENSION_NAME = "VK_KHR_win32_surface"
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
 --     surface object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -145,16 +142,15 @@ pattern VK_KHR_WIN32_SURFACE_EXTENSION_NAME = "VK_KHR_win32_surface"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
@@ -165,14 +161,12 @@ foreign import ccall "vkCreateWin32SurfaceKHR" vkCreateWin32SurfaceKHR :: ("inst
 -- support for presentation on a Win32 display
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device.
 --
 -- -   @queueFamilyIndex@ is the queue family index.
 --
 -- = Description
--- #_description#
 --
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
@@ -188,15 +182,11 @@ foreign import ccall "vkCreateWin32SurfaceKHR" vkCreateWin32SurfaceKHR :: ("inst
 -- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall "vkGetPhysicalDeviceWin32PresentationSupportKHR" vkGetPhysicalDeviceWin32PresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> IO VkBool32
 -- | VkWin32SurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Win32 surface object
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -213,20 +203,20 @@ foreign import ccall "vkGetPhysicalDeviceWin32PresentationSupportKHR" vkGetPhysi
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkWin32SurfaceCreateFlagsKHR', 'vkCreateWin32SurfaceKHR'
 data VkWin32SurfaceCreateInfoKHR = VkWin32SurfaceCreateInfoKHR
-  { -- No documentation found for Nested "VkWin32SurfaceCreateInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkWin32SurfaceCreateInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkWin32SurfaceCreateInfoKHR" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkWin32SurfaceCreateFlagsKHR
-  , -- No documentation found for Nested "VkWin32SurfaceCreateInfoKHR" "vkHinstance"
+  , -- | @hinstance@ and @hwnd@ are the Win32 @HINSTANCE@ and @HWND@ for the
+  -- window to associate the surface with.
   vkHinstance :: HINSTANCE
-  , -- No documentation found for Nested "VkWin32SurfaceCreateInfoKHR" "vkHwnd"
+  , -- No documentation found for Nested "VkWin32SurfaceCreateInfoKHR" "hwnd"
   vkHwnd :: HWND
   }
   deriving (Eq, Show)

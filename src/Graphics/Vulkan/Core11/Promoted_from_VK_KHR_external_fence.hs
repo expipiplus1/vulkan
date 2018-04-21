@@ -55,6 +55,10 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities
 
 -- | VkFenceImportFlagBits - Bitmask specifying additional parameters of
 -- fence payload import
+--
+-- = See Also
+--
+-- 'VkFenceImportFlags'
 newtype VkFenceImportFlagBits = VkFenceImportFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
@@ -72,7 +76,10 @@ instance Read VkFenceImportFlagBits where
                         )
                     )
 
--- No documentation found for Nested "VkFenceImportFlagBits" "VK_FENCE_IMPORT_TEMPORARY_BIT"
+-- | @VK_FENCE_IMPORT_TEMPORARY_BIT@ specifies that the fence payload will be
+-- imported only temporarily, as described in [Importing Fence
+-- Payloads](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing),
+-- regardless of the permanence of @handleType@.
 pattern VK_FENCE_IMPORT_TEMPORARY_BIT :: VkFenceImportFlagBits
 pattern VK_FENCE_IMPORT_TEMPORARY_BIT = VkFenceImportFlagBits 0x00000001
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO"
@@ -80,12 +87,35 @@ pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO = VkStructureType 1000113000
 -- | VkExportFenceCreateInfo - Structure specifying handle types that can be
 -- exported from a fence
+--
+-- == Valid Usage
+--
+-- -   The bits in @handleTypes@ must be supported and compatible, as
+--     reported by
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties'.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO@
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
+--     values
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlags',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkExportFenceCreateInfo = VkExportFenceCreateInfo
-  { -- No documentation found for Nested "VkExportFenceCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExportFenceCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExportFenceCreateInfo" "vkHandleTypes"
+  , -- | @handleTypes@ is a bitmask of
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
+  -- specifying one or more fence handle types the application /can/ export
+  -- from the resulting fence. The application /can/ request multiple handle
+  -- types for the same fence.
   vkHandleTypes :: VkExternalFenceHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -100,4 +130,15 @@ instance Storable VkExportFenceCreateInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportFenceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportFenceCreateInfo))
 -- | VkFenceImportFlags - Bitmask of VkFenceImportFlagBits
+--
+-- = Description
+--
+-- @VkFenceImportFlags@ is a bitmask type for setting a mask of zero or
+-- more 'VkFenceImportFlagBits'.
+--
+-- = See Also
+--
+-- 'VkFenceImportFlagBits',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR'
 type VkFenceImportFlags = VkFenceImportFlagBits

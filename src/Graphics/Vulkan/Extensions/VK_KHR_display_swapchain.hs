@@ -68,7 +68,6 @@ pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_display_swapchain"
 -- presentable images
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device to create the swapchains for.
 --
@@ -80,13 +79,13 @@ pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_display_swapchain"
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     swapchain objects when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- -   @pSwapchains@ is a pointer to an array of @VkSwapchainKHR@ handles
 --     in which the created swapchain objects will be returned.
 --
 -- = Description
--- #_description#
 --
 -- @vkCreateSharedSwapchains@ is similar to
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR',
@@ -130,10 +129,10 @@ pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_display_swapchain"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -145,7 +144,6 @@ pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_display_swapchain"
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -156,7 +154,6 @@ foreign import ccall "vkCreateSharedSwapchainsKHR" vkCreateSharedSwapchainsKHR :
 -- presentation to a swapchain
 --
 -- = Description
--- #_description#
 --
 -- If the extent of the @srcRect@ and @dstRect@ are not equal, the
 -- presented pixels will be scaled accordingly.
@@ -180,20 +177,37 @@ foreign import ccall "vkCreateSharedSwapchainsKHR" vkCreateSharedSwapchainsKHR :
 -- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Pipeline.VkRect2D',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkDisplayPresentInfoKHR = VkDisplayPresentInfoKHR
-  { -- No documentation found for Nested "VkDisplayPresentInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDisplayPresentInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDisplayPresentInfoKHR" "vkSrcRect"
+  , -- | @srcRect@ is a rectangular region of pixels to present. It /must/ be a
+  -- subset of the image being presented. If @VkDisplayPresentInfoKHR@ is not
+  -- specified, this region will be assumed to be the entire presentable
+  -- image.
   vkSrcRect :: VkRect2D
-  , -- No documentation found for Nested "VkDisplayPresentInfoKHR" "vkDstRect"
+  , -- | @dstRect@ is a rectangular region within the visible region of the
+  -- swapchain’s display mode. If @VkDisplayPresentInfoKHR@ is not specified,
+  -- this region will be assumed to be the entire visible region of the
+  -- visible region of the swapchain’s mode. If the specified rectangle is a
+  -- subset of the display mode’s visible region, content from display planes
+  -- below the swapchain’s plane will be visible outside the rectangle. If
+  -- there are no planes below the swapchain’s, the area outside the
+  -- specified rectangle will be black. If portions of the specified
+  -- rectangle are outside of the display’s visible region, pixels mapping
+  -- only to those portions of the rectangle will be discarded.
   vkDstRect :: VkRect2D
-  , -- No documentation found for Nested "VkDisplayPresentInfoKHR" "vkPersistent"
+  , -- | @persistent@: If this is @VK_TRUE@, the display engine will enable
+  -- buffered mode on displays that support it. This allows the display
+  -- engine to stop sending content to the display until a new image is
+  -- presented. The display will instead maintain a copy of the last
+  -- presented image. This allows less power to be used, but /may/ increase
+  -- presentation latency. If @VkDisplayPresentInfoKHR@ is not specified,
+  -- persistent mode will not be used.
   vkPersistent :: VkBool32
   }
   deriving (Eq, Show)

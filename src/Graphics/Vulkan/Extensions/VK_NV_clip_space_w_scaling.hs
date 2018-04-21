@@ -50,7 +50,13 @@ import Graphics.Vulkan.Core10.Queue
   )
 
 
--- No documentation found for Nested "VkDynamicState" "VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV"
+-- | @VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV@ specifies that the
+-- @pViewportScalings@ state in
+-- @VkPipelineViewportWScalingStateCreateInfoNV@ will be ignored and /must/
+-- be set dynamically with 'vkCmdSetViewportWScalingNV' before any draws
+-- are performed with a pipeline state with
+-- @VkPipelineViewportWScalingStateCreateInfo@ member
+-- @viewportScalingEnable@ set to @VK_TRUE@
 pattern VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV :: VkDynamicState
 pattern VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV = VkDynamicState 1000087000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV"
@@ -66,7 +72,6 @@ pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME = "VK_NV_clip_space_w_scaling"
 -- buffer
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer into which the command will be
 --     recorded.
@@ -81,7 +86,6 @@ pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME = "VK_NV_clip_space_w_scaling"
 --     'VkViewportWScalingNV' structures specifying viewport parameters.
 --
 -- = Description
--- #_description#
 --
 -- The viewport parameters taken from element i of @pViewportWScalings@
 -- replace the current state for the viewport index @firstViewport@ + i,
@@ -107,8 +111,8 @@ pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME = "VK_NV_clip_space_w_scaling"
 -- -   @pViewportWScalings@ /must/ be a valid pointer to an array of
 --     @viewportCount@ @VkViewportWScalingNV@ structures
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics operations
@@ -124,35 +128,31 @@ pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME = "VK_NV_clip_space_w_scaling"
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
+-- | Secondary                                                                                                   |                                                                                                            |                                                                                                       |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkViewportWScalingNV'
 foreign import ccall "vkCmdSetViewportWScalingNV" vkCmdSetViewportWScalingNV :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewportWScalings" ::: Ptr VkViewportWScalingNV) -> IO ()
 -- | VkViewportWScalingNV - Structure specifying a viewport
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineViewportWScalingStateCreateInfoNV',
 -- 'vkCmdSetViewportWScalingNV'
 data VkViewportWScalingNV = VkViewportWScalingNV
-  { -- No documentation found for Nested "VkViewportWScalingNV" "vkXcoeff"
+  { -- | @xcoeff@ and @ycoeff@ are the viewport’s W scaling factor for x and y
+  -- respectively.
   vkXcoeff :: CFloat
-  , -- No documentation found for Nested "VkViewportWScalingNV" "vkYcoeff"
+  , -- No documentation found for Nested "VkViewportWScalingNV" "ycoeff"
   vkYcoeff :: CFloat
   }
   deriving (Eq, Show)
@@ -167,9 +167,6 @@ instance Storable VkViewportWScalingNV where
 -- | VkPipelineViewportWScalingStateCreateInfoNV - Structure specifying
 -- parameters of a newly created pipeline viewport W scaling state
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -178,20 +175,25 @@ instance Storable VkViewportWScalingNV where
 -- -   @viewportCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkViewportWScalingNV'
 data VkPipelineViewportWScalingStateCreateInfoNV = VkPipelineViewportWScalingStateCreateInfoNV
-  { -- No documentation found for Nested "VkPipelineViewportWScalingStateCreateInfoNV" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineViewportWScalingStateCreateInfoNV" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineViewportWScalingStateCreateInfoNV" "vkViewportWScalingEnable"
+  , -- | @viewportWScalingEnable@ controls whether viewport __W__ scaling is
+  -- enabled.
   vkViewportWScalingEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineViewportWScalingStateCreateInfoNV" "vkViewportCount"
+  , -- | @viewportCount@ is the number of viewports used by __W__ scaling, and
+  -- /must/ match the number of viewports in the pipeline if viewport __W__
+  -- scaling is enabled.
   vkViewportCount :: Word32
-  , -- No documentation found for Nested "VkPipelineViewportWScalingStateCreateInfoNV" "vkPViewportWScalings"
+  , -- | @pViewportWScalings@ is a pointer to an array of @VkViewportWScalingNV@
+  -- structures, which define the __W__ scaling parameters for the
+  -- corresponding viewport. If the viewport __W__ scaling state is dynamic,
+  -- this member is ignored.
   vkPViewportWScalings :: Ptr VkViewportWScalingNV
   }
   deriving (Eq, Show)

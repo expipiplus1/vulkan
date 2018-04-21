@@ -38,10 +38,18 @@ import Graphics.Vulkan.Core10.Pass
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX = VkStructureType 1000097000
--- No documentation found for Nested "VkSubpassDescriptionFlagBits" "VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX"
+-- | @VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX@ specifies that
+-- shaders compiled for this subpass write the attributes for all views in
+-- a single invocation of each vertex processing stage. All pipelines
+-- compiled against a subpass that includes this bit /must/ write per-view
+-- attributes to the code:*PerViewNV[] shader outputs, in addition to the
+-- non-per-view (e.g. @Position@) outputs.
 pattern VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX :: VkSubpassDescriptionFlagBits
 pattern VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX = VkSubpassDescriptionFlagBits 0x00000001
--- No documentation found for Nested "VkSubpassDescriptionFlagBits" "VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX"
+-- | @VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX@ specifies that
+-- shaders compiled for this subpass use per-view positions which only
+-- differ in value in the x component. Per-view viewport mask /can/ also be
+-- used.
 pattern VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX :: VkSubpassDescriptionFlagBits
 pattern VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX = VkSubpassDescriptionFlagBits 0x00000002
 -- No documentation found for TopLevel "VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_SPEC_VERSION"
@@ -54,14 +62,12 @@ pattern VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME = "VK_NVX_multiview_
 -- describing multiview limits that can be supported by an implementation
 --
 -- = Members
--- #_members#
 --
 -- The members of the
 -- @VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX@ structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
--- #_description#
 --
 -- -   @perViewPositionAllComponents@ is @VK_TRUE@ if the implementation
 --     supports per-view position values that differ in components other
@@ -78,15 +84,14 @@ pattern VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME = "VK_NVX_multiview_
 -- it is filled with the implementation-dependent limits.
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX = VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
-  { -- No documentation found for Nested "VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX" "vkPerViewPositionAllComponents"
+  , -- No documentation found for Nested "VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX" "perViewPositionAllComponents"
   vkPerViewPositionAllComponents :: VkBool32
   }
   deriving (Eq, Show)

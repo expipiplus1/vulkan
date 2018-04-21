@@ -124,7 +124,6 @@ import Graphics.Vulkan.Core10.Queue
 -- severities of events cause a debug messenger callback
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsMessageSeverityFlagsEXT', 'vkSubmitDebugUtilsMessageEXT'
 newtype VkDebugUtilsMessageSeverityFlagBitsEXT = VkDebugUtilsMessageSeverityFlagBitsEXT VkFlags
@@ -182,7 +181,6 @@ pattern VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT = VkDebugUtilsMessageSever
 -- events cause a debug messenger callback
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsMessageTypeFlagsEXT'
 newtype VkDebugUtilsMessageTypeFlagBitsEXT = VkDebugUtilsMessageTypeFlagBitsEXT VkFlags
@@ -295,7 +293,6 @@ pattern VK_EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils"
 -- messenger callback function
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @messageSeverity@ specifies the
 --     'VkDebugUtilsMessageSeverityFlagBitsEXT' that triggered this
@@ -311,7 +308,6 @@ pattern VK_EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils"
 --     'VkDebugUtilsMessengerEXT' was created.
 --
 -- = Description
--- #_description#
 --
 -- The callback /must/ not call 'vkDestroyDebugUtilsMessengerEXT'.
 --
@@ -321,7 +317,6 @@ pattern VK_EXT_DEBUG_UTILS_EXTENSION_NAME = "VK_EXT_debug_utils"
 -- development.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsMessengerCreateInfoEXT'
 type PFN_vkDebugUtilsMessengerCallbackEXT = Ptr (("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageType" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO VkBool32)
@@ -330,7 +325,6 @@ data VkDebugUtilsMessengerEXT_T
 -- | VkDebugUtilsMessengerEXT - Opaque handle to a debug messenger object
 --
 -- = Description
--- #_description#
 --
 -- The debug messenger will provide detailed feedback on the application’s
 -- use of Vulkan when events of interest occur. When an event of interest
@@ -341,23 +335,18 @@ data VkDebugUtilsMessengerEXT_T
 -- messages.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'vkCreateDebugUtilsMessengerEXT', 'vkDestroyDebugUtilsMessengerEXT'
 type VkDebugUtilsMessengerEXT = Ptr VkDebugUtilsMessengerEXT_T
 -- | vkSetDebugUtilsObjectNameEXT - Give a user-friendly name to an object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device that created the object.
 --
 -- -   @pNameInfo@ is a pointer to an instance of the
 --     'VkDebugUtilsObjectNameInfoEXT' structure specifying the parameters
 --     of the name to set on the object.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -373,16 +362,15 @@ type VkDebugUtilsMessengerEXT = Ptr VkDebugUtilsMessengerEXT_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsObjectNameInfoEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
@@ -390,16 +378,12 @@ foreign import ccall "vkSetDebugUtilsObjectNameEXT" vkSetDebugUtilsObjectNameEXT
 -- | vkSetDebugUtilsObjectTagEXT - Attach arbitrary data to an object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device that created the object.
 --
 -- -   @pTagInfo@ is a pointer to an instance of the
 --     'VkDebugUtilsObjectTagInfoEXT' structure specifying the parameters
 --     of the tag to attach to the object.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -415,16 +399,15 @@ foreign import ccall "vkSetDebugUtilsObjectNameEXT" vkSetDebugUtilsObjectNameEXT
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsObjectTagInfoEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
@@ -432,16 +415,12 @@ foreign import ccall "vkSetDebugUtilsObjectTagEXT" vkSetDebugUtilsObjectTagEXT :
 -- | vkQueueBeginDebugUtilsLabelEXT - Open a queue debug label region
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @queue@ is the queue in which to start a debug label region.
 --
 -- -   @pLabelInfo@ is a pointer to an instance of the
 --     'VkDebugUtilsLabelEXT' structure specifying the parameters of the
 --     label region to open.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -452,29 +431,26 @@ foreign import ccall "vkSetDebugUtilsObjectTagEXT" vkSetDebugUtilsObjectTagEXT :
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | -               | -               | Any             | -               |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | -                                                                                                           | -                                                                                                          | Any                                                                                                   | -                                                                                                                          |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsLabelEXT', 'Graphics.Vulkan.Core10.Queue.VkQueue'
 foreign import ccall "vkQueueBeginDebugUtilsLabelEXT" vkQueueBeginDebugUtilsLabelEXT :: ("queue" ::: VkQueue) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
 -- | vkQueueEndDebugUtilsLabelEXT - Close a queue debug label region
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @queue@ is the queue in which a debug label region should be closed.
 --
 -- = Description
--- #_description#
 --
 -- The calls to 'vkQueueBeginDebugUtilsLabelEXT' and
 -- 'vkQueueEndDebugUtilsLabelEXT' /must/ be matched and balanced.
@@ -490,33 +466,28 @@ foreign import ccall "vkQueueBeginDebugUtilsLabelEXT" vkQueueBeginDebugUtilsLabe
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | -               | -               | Any             | -               |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | -                                                                                                           | -                                                                                                          | Any                                                                                                   | -                                                                                                                          |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkQueue'
 foreign import ccall "vkQueueEndDebugUtilsLabelEXT" vkQueueEndDebugUtilsLabelEXT :: ("queue" ::: VkQueue) -> IO ()
 -- | vkQueueInsertDebugUtilsLabelEXT - Insert a label into a queue
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @queue@ is the queue into which a debug label will be inserted.
 --
 -- -   @pLabelInfo@ is a pointer to an instance of the
 --     'VkDebugUtilsLabelEXT' structure specifying the parameters of the
 --     label to insert.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -527,24 +498,22 @@ foreign import ccall "vkQueueEndDebugUtilsLabelEXT" vkQueueEndDebugUtilsLabelEXT
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | -               | -               | Any             | -               |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | -                                                                                                           | -                                                                                                          | Any                                                                                                   | -                                                                                                                          |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsLabelEXT', 'Graphics.Vulkan.Core10.Queue.VkQueue'
 foreign import ccall "vkQueueInsertDebugUtilsLabelEXT" vkQueueInsertDebugUtilsLabelEXT :: ("queue" ::: VkQueue) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
 -- | vkCmdBeginDebugUtilsLabelEXT - Open a command buffer debug label region
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer into which the command is
 --     recorded.
@@ -553,9 +522,6 @@ foreign import ccall "vkQueueInsertDebugUtilsLabelEXT" vkQueueInsertDebugUtilsLa
 --     'VkDebugUtilsLabelEXT' structure specifying the parameters of the
 --     label region to open.
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
@@ -563,8 +529,8 @@ foreign import ccall "vkQueueInsertDebugUtilsLabelEXT" vkQueueInsertDebugUtilsLa
 -- -   @pLabelInfo@ /must/ be a valid pointer to a valid
 --     @VkDebugUtilsLabelEXT@ structure
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics, or compute operations
@@ -576,31 +542,28 @@ foreign import ccall "vkQueueInsertDebugUtilsLabelEXT" vkQueueInsertDebugUtilsLa
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
+-- | Secondary                                                                                                   |                                                                                                            | Compute                                                                                               |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkDebugUtilsLabelEXT'
 foreign import ccall "vkCmdBeginDebugUtilsLabelEXT" vkCmdBeginDebugUtilsLabelEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
 -- | vkCmdEndDebugUtilsLabelEXT - Close a command buffer label region
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer into which the command is
 --     recorded.
 --
 -- = Description
--- #_description#
 --
 -- An application /may/ open a debug label region in one command buffer and
 -- close it in another, or otherwise split debug label regions across
@@ -624,8 +587,8 @@ foreign import ccall "vkCmdBeginDebugUtilsLabelEXT" vkCmdBeginDebugUtilsLabelEXT
 --
 -- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics, or compute operations
@@ -637,34 +600,29 @@ foreign import ccall "vkCmdBeginDebugUtilsLabelEXT" vkCmdBeginDebugUtilsLabelEXT
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
+-- | Secondary                                                                                                   |                                                                                                            | Compute                                                                                               |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
 foreign import ccall "vkCmdEndDebugUtilsLabelEXT" vkCmdEndDebugUtilsLabelEXT :: ("commandBuffer" ::: VkCommandBuffer) -> IO ()
 -- | vkCmdInsertDebugUtilsLabelEXT - Insert a label into a command buffer
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer into which the command is
 --     recorded.
 --
 -- -   @pInfo@ is a pointer to an instance of the 'VkDebugUtilsLabelEXT'
 --     structure specifying the parameters of the label to insert.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -673,8 +631,8 @@ foreign import ccall "vkCmdEndDebugUtilsLabelEXT" vkCmdEndDebugUtilsLabelEXT :: 
 -- -   @pLabelInfo@ /must/ be a valid pointer to a valid
 --     @VkDebugUtilsLabelEXT@ structure
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics, or compute operations
@@ -686,25 +644,23 @@ foreign import ccall "vkCmdEndDebugUtilsLabelEXT" vkCmdEndDebugUtilsLabelEXT :: 
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
+-- | Secondary                                                                                                   |                                                                                                            | Compute                                                                                               |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkDebugUtilsLabelEXT'
 foreign import ccall "vkCmdInsertDebugUtilsLabelEXT" vkCmdInsertDebugUtilsLabelEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
 -- | vkCreateDebugUtilsMessengerEXT - Create a debug messenger object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ the instance the messenger will be used with.
 --
@@ -713,13 +669,12 @@ foreign import ccall "vkCmdInsertDebugUtilsLabelEXT" vkCmdInsertDebugUtilsLabelE
 --     conditions under which this messenger will trigger the callback.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pMessenger@ is a pointer to record the @VkDebugUtilsMessengerEXT@
 --     object created.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -736,14 +691,13 @@ foreign import ccall "vkCmdInsertDebugUtilsLabelEXT" vkCmdInsertDebugUtilsLabelE
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkDebugUtilsMessengerCreateInfoEXT', 'VkDebugUtilsMessengerEXT',
@@ -752,7 +706,6 @@ foreign import ccall "vkCreateDebugUtilsMessengerEXT" vkCreateDebugUtilsMessenge
 -- | vkDestroyDebugUtilsMessengerEXT - Destroy a debug messenger object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ the instance where the callback was created.
 --
@@ -763,10 +716,9 @@ foreign import ccall "vkCreateDebugUtilsMessengerEXT" vkCreateDebugUtilsMessenge
 --     callback is active.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -793,7 +745,6 @@ foreign import ccall "vkCreateDebugUtilsMessengerEXT" vkCreateDebugUtilsMessenge
 -- -   Host access to @messenger@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkDebugUtilsMessengerEXT',
@@ -802,7 +753,6 @@ foreign import ccall "vkDestroyDebugUtilsMessengerEXT" vkDestroyDebugUtilsMessen
 -- | vkSubmitDebugUtilsMessageEXT - Inject a message into a debug stream
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the debug stream’s @VkInstance@.
 --
@@ -816,7 +766,6 @@ foreign import ccall "vkDestroyDebugUtilsMessengerEXT" vkDestroyDebugUtilsMessen
 --     'VkDebugUtilsMessengerCallbackDataEXT' structure.
 --
 -- = Description
--- #_description#
 --
 -- The call will propagate through the layers and generate callback(s) as
 -- indicated by the message’s flags. The parameters are passed on to the
@@ -839,7 +788,6 @@ foreign import ccall "vkDestroyDebugUtilsMessengerEXT" vkDestroyDebugUtilsMessen
 --     @VkDebugUtilsMessengerCallbackDataEXT@ structure
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsMessageSeverityFlagBitsEXT',
 -- 'VkDebugUtilsMessageTypeFlagsEXT',
@@ -850,7 +798,6 @@ foreign import ccall "vkSubmitDebugUtilsMessageEXT" vkSubmitDebugUtilsMessageEXT
 -- an object
 --
 -- = Description
--- #_description#
 --
 -- Applications /may/ change the name associated with an object simply by
 -- calling @vkSetDebugUtilsObjectNameEXT@ again with a new string. If
@@ -866,7 +813,7 @@ foreign import ccall "vkSubmitDebugUtilsMessageEXT" vkSubmitDebugUtilsMessageEXT
 --
 -- -   @objectHandle@ /must/ be a Vulkan object of the type associated with
 --     @objectType@ as defined in
---     <{html_spec_relative}#debugging-object-types {html_spec_relative}#debugging-object-types>.
+--     [{html_spec_relative}#debugging-object-types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#debugging-object-types).
 --
 -- == Valid Usage (Implicit)
 --
@@ -882,22 +829,23 @@ foreign import ccall "vkSubmitDebugUtilsMessageEXT" vkSubmitDebugUtilsMessageEXT
 --     null-terminated UTF-8 string
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsMessengerCallbackDataEXT',
 -- 'Graphics.Vulkan.Core10.Core.VkObjectType',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkSetDebugUtilsObjectNameEXT'
 data VkDebugUtilsObjectNameInfoEXT = VkDebugUtilsObjectNameInfoEXT
-  { -- No documentation found for Nested "VkDebugUtilsObjectNameInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDebugUtilsObjectNameInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDebugUtilsObjectNameInfoEXT" "vkObjectType"
+  , -- | @objectType@ is a 'Graphics.Vulkan.Core10.Core.VkObjectType' specifying
+  -- the type of the object to be named.
   vkObjectType :: VkObjectType
-  , -- No documentation found for Nested "VkDebugUtilsObjectNameInfoEXT" "vkObjectHandle"
+  , -- | @objectHandle@ is the object to be named.
   vkObjectHandle :: Word64
-  , -- No documentation found for Nested "VkDebugUtilsObjectNameInfoEXT" "vkPObjectName"
+  , -- | @pObjectName@ is a null-terminated UTF-8 string specifying the name to
+  -- apply to @objectHandle@.
   vkPObjectName :: Ptr CChar
   }
   deriving (Eq, Show)
@@ -919,7 +867,6 @@ instance Storable VkDebugUtilsObjectNameInfoEXT where
 -- an object
 --
 -- = Description
--- #_description#
 --
 -- The @tagName@ parameter gives a name or identifier to the type of data
 -- being tagged. This can be used by debugging layers to easily filter for
@@ -934,7 +881,7 @@ instance Storable VkDebugUtilsObjectNameInfoEXT where
 --
 -- -   @objectHandle@ /must/ be a Vulkan object of the type associated with
 --     @objectType@ as defined in
---     <{html_spec_relative}#debugging-object-types {html_spec_relative}#debugging-object-types>.
+--     [{html_spec_relative}#debugging-object-types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#debugging-object-types).
 --
 -- == Valid Usage (Implicit)
 --
@@ -951,25 +898,26 @@ instance Storable VkDebugUtilsObjectNameInfoEXT where
 -- -   @tagSize@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkObjectType',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkSetDebugUtilsObjectTagEXT'
 data VkDebugUtilsObjectTagInfoEXT = VkDebugUtilsObjectTagInfoEXT
-  { -- No documentation found for Nested "VkDebugUtilsObjectTagInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDebugUtilsObjectTagInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDebugUtilsObjectTagInfoEXT" "vkObjectType"
+  , -- | @objectType@ is a 'Graphics.Vulkan.Core10.Core.VkObjectType' specifying
+  -- the type of the object to be named.
   vkObjectType :: VkObjectType
-  , -- No documentation found for Nested "VkDebugUtilsObjectTagInfoEXT" "vkObjectHandle"
+  , -- | @objectHandle@ is the object to be tagged.
   vkObjectHandle :: Word64
-  , -- No documentation found for Nested "VkDebugUtilsObjectTagInfoEXT" "vkTagName"
+  , -- | @tagName@ is a numerical identifier of the tag.
   vkTagName :: Word64
-  , -- No documentation found for Nested "VkDebugUtilsObjectTagInfoEXT" "vkTagSize"
+  , -- | @tagSize@ is the number of bytes of data to attach to the object.
   vkTagSize :: CSize
-  , -- No documentation found for Nested "VkDebugUtilsObjectTagInfoEXT" "vkPTag"
+  , -- | @pTag@ is an array of @tagSize@ bytes containing the data to be
+  -- associated with the object.
   vkPTag :: Ptr ()
   }
   deriving (Eq, Show)
@@ -993,9 +941,6 @@ instance Storable VkDebugUtilsObjectTagInfoEXT where
                 *> poke (ptr `plusPtr` 48) (vkPTag (poked :: VkDebugUtilsObjectTagInfoEXT))
 -- | VkDebugUtilsLabelEXT - Specify parameters of a label region
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT@
@@ -1005,20 +950,23 @@ instance Storable VkDebugUtilsObjectTagInfoEXT where
 -- -   @pLabelName@ /must/ be a null-terminated UTF-8 string
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsMessengerCallbackDataEXT',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCmdBeginDebugUtilsLabelEXT', 'vkCmdInsertDebugUtilsLabelEXT',
 -- 'vkQueueBeginDebugUtilsLabelEXT', 'vkQueueInsertDebugUtilsLabelEXT'
 data VkDebugUtilsLabelEXT = VkDebugUtilsLabelEXT
-  { -- No documentation found for Nested "VkDebugUtilsLabelEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDebugUtilsLabelEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDebugUtilsLabelEXT" "vkPLabelName"
+  , -- | @pLabelName@ is a pointer to a null-terminated UTF-8 string that
+  -- contains the name of the label.
   vkPLabelName :: Ptr CChar
-  , -- No documentation found for Nested "VkDebugUtilsLabelEXT" "vkColor"
+  , -- | @color@ is an optional RGBA color value that can be associated with the
+  -- label. A particular implementation /may/ choose to ignore this color
+  -- value. The values contain RGBA values in order, in the range 0.0 to 1.0.
+  -- If all elements in @color@ are set to 0.0 then it is ignored.
   vkColor :: Vector 4 CFloat
   }
   deriving (Eq, Show)
@@ -1038,7 +986,6 @@ instance Storable VkDebugUtilsLabelEXT where
 -- a newly created debug messenger
 --
 -- = Description
--- #_description#
 --
 -- For each @VkDebugUtilsMessengerEXT@ that is created the
 -- @VkDebugUtilsMessengerCreateInfoEXT@::@messageSeverity@ and
@@ -1095,7 +1042,6 @@ instance Storable VkDebugUtilsLabelEXT where
 -- -   @messageType@ /must/ not be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'PFN_vkDebugUtilsMessengerCallbackEXT',
 -- 'VkDebugUtilsMessageSeverityFlagsEXT',
@@ -1104,19 +1050,21 @@ instance Storable VkDebugUtilsLabelEXT where
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateDebugUtilsMessengerEXT'
 data VkDebugUtilsMessengerCreateInfoEXT = VkDebugUtilsMessengerCreateInfoEXT
-  { -- No documentation found for Nested "VkDebugUtilsMessengerCreateInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCreateInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCreateInfoEXT" "vkFlags"
+  , -- | @flags@ is 0 and reserved for future use.
   vkFlags :: VkDebugUtilsMessengerCreateFlagsEXT
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCreateInfoEXT" "vkMessageSeverity"
+  , -- | @messageSeverity@ is a bitmask of
+  -- 'VkDebugUtilsMessageSeverityFlagBitsEXT' specifying which severity of
+  -- event(s) will cause this callback to be called.
   vkMessageSeverity :: VkDebugUtilsMessageSeverityFlagsEXT
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCreateInfoEXT" "vkMessageType"
+  , -- No documentation found for Nested "VkDebugUtilsMessengerCreateInfoEXT" "messageType"
   vkMessageType :: VkDebugUtilsMessageTypeFlagsEXT
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCreateInfoEXT" "vkPfnUserCallback"
+  , -- | @pfnUserCallback@ is the application callback function to call.
   vkPfnUserCallback :: PFN_vkDebugUtilsMessengerCallbackEXT
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCreateInfoEXT" "vkPUserData"
+  , -- | @pUserData@ is user data to be passed to the callback.
   vkPUserData :: Ptr ()
   }
   deriving (Eq, Show)
@@ -1142,7 +1090,6 @@ instance Storable VkDebugUtilsMessengerCreateInfoEXT where
 -- returned to the callback
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -1189,36 +1136,55 @@ instance Storable VkDebugUtilsMessengerCreateInfoEXT where
 -- -   @objectCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugUtilsLabelEXT', 'VkDebugUtilsMessengerCallbackDataFlagsEXT',
 -- 'VkDebugUtilsObjectNameInfoEXT',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkSubmitDebugUtilsMessageEXT'
 data VkDebugUtilsMessengerCallbackDataEXT = VkDebugUtilsMessengerCallbackDataEXT
-  { -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkFlags"
+  , -- | @flags@ is 0 and reserved for future use.
   vkFlags :: VkDebugUtilsMessengerCallbackDataFlagsEXT
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkPMessageIdName"
+  , -- | @pMessageIdName@ is a null-terminated string that identifies the the
+  -- particular message ID that is associated with the provided message. If
+  -- the message corresponds to a validation layer message, then this string
+  -- may contain the portion of the Vulkan specification that is believed to
+  -- have been violated.
   vkPMessageIdName :: Ptr CChar
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkMessageIdNumber"
+  , -- | @messageIdNumber@ is the ID number of the triggering message. If the
+  -- message corresponds to a validation layer message, then this number is
+  -- related to the internal number associated with the message being
+  -- triggered.
   vkMessageIdNumber :: Int32
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkPMessage"
+  , -- | @pMessage@ is a null-terminated string detailing the trigger conditions.
   vkPMessage :: Ptr CChar
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkQueueLabelCount"
+  , -- | @queueLabelCount@ is a count of items contained in the @pQueueLabels@
+  -- array.
   vkQueueLabelCount :: Word32
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkPQueueLabels"
+  , -- | @pQueueLabels@ is NULL or a pointer to an array of
+  -- 'VkDebugUtilsLabelEXT' active in the current @VkQueue@ at the time the
+  -- callback was triggered. Refer to [Queue
+  -- Labels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#debugging-queue-labels)
+  -- for more information.
   vkPQueueLabels :: Ptr VkDebugUtilsLabelEXT
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkCmdBufLabelCount"
+  , -- | @cmdBufLabelCount@ is a count of items contained in the @pCmdBufLabels@
+  -- array.
   vkCmdBufLabelCount :: Word32
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkPCmdBufLabels"
+  , -- | @pCmdBufLabels@ is NULL or a pointer to an array of
+  -- 'VkDebugUtilsLabelEXT' active in the current @VkCommandBuffer@ at the
+  -- time the callback was triggered. Refer to [Command Buffer
+  -- Labels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#debugging-command-buffer-labels)
+  -- for more information.
   vkPCmdBufLabels :: Ptr VkDebugUtilsLabelEXT
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkObjectCount"
+  , -- | @objectCount@ is a count of items contained in the @pObjects@ array.
   vkObjectCount :: Word32
-  , -- No documentation found for Nested "VkDebugUtilsMessengerCallbackDataEXT" "vkPObjects"
+  , -- | @pObjects@ is a pointer to an array of 'VkDebugUtilsObjectNameInfoEXT'
+  -- objects related to the detected issue. The array is roughly in order or
+  -- importance, but the 0th element is always guaranteed to be the most
+  -- important object for this message.
   vkPObjects :: Ptr VkDebugUtilsObjectNameInfoEXT
   }
   deriving (Eq, Show)

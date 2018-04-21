@@ -55,7 +55,6 @@ pattern VK_MAX_DESCRIPTION_SIZE = 256
 -- global layer properties
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     layer properties available or queried, as described below.
@@ -64,7 +63,6 @@ pattern VK_MAX_DESCRIPTION_SIZE = 256
 --     'VkLayerProperties' structures.
 --
 -- = Description
--- #_description#
 --
 -- If @pProperties@ is @NULL@, then the number of layer properties
 -- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
@@ -96,18 +94,17 @@ pattern VK_MAX_DESCRIPTION_SIZE = 256
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkLayerProperties'
 foreign import ccall "vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLayerProperties :: ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkLayerProperties) -> IO VkResult
@@ -115,7 +112,6 @@ foreign import ccall "vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLay
 -- physical device layers
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     layer properties available or queried.
@@ -124,7 +120,6 @@ foreign import ccall "vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLay
 --     'VkLayerProperties' structures.
 --
 -- = Description
--- #_description#
 --
 -- If @pProperties@ is @NULL@, then the number of layer properties
 -- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
@@ -155,39 +150,42 @@ foreign import ccall "vkEnumerateInstanceLayerProperties" vkEnumerateInstanceLay
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkLayerProperties',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall "vkEnumerateDeviceLayerProperties" vkEnumerateDeviceLayerProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkLayerProperties) -> IO VkResult
 -- | VkLayerProperties - Structure specifying layer properties
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'vkEnumerateDeviceLayerProperties', 'vkEnumerateInstanceLayerProperties'
 data VkLayerProperties = VkLayerProperties
-  { -- No documentation found for Nested "VkLayerProperties" "vkLayerName"
+  { -- | @layerName@ is a null-terminated UTF-8 string specifying the name of the
+  -- layer. Use this name in the @ppEnabledLayerNames@ array passed in the
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstanceCreateInfo'
+  -- structure to enable this layer for an instance.
   vkLayerName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar
-  , -- No documentation found for Nested "VkLayerProperties" "vkSpecVersion"
+  , -- | @specVersion@ is the Vulkan version the layer was written to, encoded as
+  -- described in the [API Version Numbers and
+  -- Semantics](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-versionnum)
+  -- section.
   vkSpecVersion :: Word32
-  , -- No documentation found for Nested "VkLayerProperties" "vkImplementationVersion"
+  , -- | @implementationVersion@ is the version of this layer. It is an integer,
+  -- increasing with backward compatible changes.
   vkImplementationVersion :: Word32
-  , -- No documentation found for Nested "VkLayerProperties" "vkDescription"
+  , -- | @description@ is a null-terminated UTF-8 string providing additional
+  -- details that /can/ be used by the application to identify the layer.
   vkDescription :: Vector VK_MAX_DESCRIPTION_SIZE CChar
   }
   deriving (Eq, Show)

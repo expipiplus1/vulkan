@@ -113,7 +113,6 @@ pattern VK_KHR_MIR_SURFACE_EXTENSION_NAME = "VK_KHR_mir_surface"
 -- Mir window
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the instance to associate the surface with.
 --
@@ -123,13 +122,11 @@ pattern VK_KHR_MIR_SURFACE_EXTENSION_NAME = "VK_KHR_mir_surface"
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
 --     surface object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -145,16 +142,15 @@ pattern VK_KHR_MIR_SURFACE_EXTENSION_NAME = "VK_KHR_mir_surface"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
@@ -165,7 +161,6 @@ foreign import ccall "vkCreateMirSurfaceKHR" vkCreateMirSurfaceKHR :: ("instance
 -- presentation to Mir
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device.
 --
@@ -175,7 +170,6 @@ foreign import ccall "vkCreateMirSurfaceKHR" vkCreateMirSurfaceKHR :: ("instance
 --     desired Mir compositor.
 --
 -- = Description
--- #_description#
 --
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
@@ -193,15 +187,11 @@ foreign import ccall "vkCreateMirSurfaceKHR" vkCreateMirSurfaceKHR :: ("instance
 -- -   @connection@ /must/ be a valid pointer to a @MirConnection@ value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall "vkGetPhysicalDeviceMirPresentationSupportKHR" vkGetPhysicalDeviceMirPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr MirConnection) -> IO VkBool32
 -- | VkMirSurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Mir surface object
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -218,20 +208,20 @@ foreign import ccall "vkGetPhysicalDeviceMirPresentationSupportKHR" vkGetPhysica
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkMirSurfaceCreateFlagsKHR',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateMirSurfaceKHR'
 data VkMirSurfaceCreateInfoKHR = VkMirSurfaceCreateInfoKHR
-  { -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkMirSurfaceCreateFlagsKHR
-  , -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkConnection"
+  , -- | @connection@ and @surface@ are pointers to the @MirConnection@ and
+  -- @MirSurface@ for the window to associate the surface with.
   vkConnection :: Ptr MirConnection
-  , -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "vkMirSurface"
+  , -- No documentation found for Nested "VkMirSurfaceCreateInfoKHR" "mirSurface"
   vkMirSurface :: Ptr MirSurface
   }
   deriving (Eq, Show)

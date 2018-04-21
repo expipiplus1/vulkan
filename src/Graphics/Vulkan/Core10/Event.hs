@@ -66,13 +66,11 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- | VkEventCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkEventCreateFlags@ is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkEventCreateInfo'
 newtype VkEventCreateFlags = VkEventCreateFlags VkFlags
@@ -97,11 +95,7 @@ instance Read VkEventCreateFlags where
 data VkEvent_T
 -- | VkEvent - Opaque handle to a event object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdResetEvent',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdSetEvent',
@@ -112,7 +106,6 @@ type VkEvent = Ptr VkEvent_T
 -- | vkCreateEvent - Create a new event object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the event.
 --
@@ -121,13 +114,14 @@ type VkEvent = Ptr VkEvent_T
 --     created.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pEvent@ points to a handle in which the resulting event object is
 --     returned.
 --
 -- = Description
--- #_description#
 --
 -- When created, the event object is in the unsignaled state.
 --
@@ -145,16 +139,15 @@ type VkEvent = Ptr VkEvent_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent',
@@ -163,17 +156,15 @@ foreign import ccall "vkCreateEvent" vkCreateEvent :: ("device" ::: VkDevice) ->
 -- | vkDestroyEvent - Destroy an event object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the event.
 --
 -- -   @event@ is the handle of the event to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -204,7 +195,6 @@ foreign import ccall "vkCreateEvent" vkCreateEvent :: ("device" ::: VkDevice) ->
 -- -   Host access to @event@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
@@ -212,34 +202,33 @@ foreign import ccall "vkDestroyEvent" vkDestroyEvent :: ("device" ::: VkDevice) 
 -- | vkGetEventStatus - Retrieve the status of an event object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the event.
 --
 -- -   @event@ is the handle of the event to query.
 --
 -- = Description
--- #_description#
 --
 -- Upon success, @vkGetEventStatus@ returns the state of the event object
 -- with the following return codes:
 --
--- > +-----------------------------------+-----------------------------------+
--- > | Status                            | Meaning                           |
--- > +===================================+===================================+
--- > | @VK_EVENT_SET@                    | The event specified by @event@ is |
--- > |                                   | signaled.                         |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_EVENT_RESET@                  | The event specified by @event@ is |
--- > |                                   | unsignaled.                       |
--- > +-----------------------------------+-----------------------------------+
--- >
--- > Event Object Status Codes
+-- +-----------------------------------+-----------------------------------+
+-- | Status                            | Meaning                           |
+-- +===================================+===================================+
+-- | @VK_EVENT_SET@                    | The event specified by @event@ is |
+-- |                                   | signaled.                         |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_EVENT_RESET@                  | The event specified by @event@ is |
+-- |                                   | unsignaled.                       |
+-- +-----------------------------------+-----------------------------------+
+--
+-- Event Object Status Codes
 --
 -- If a @vkCmdSetEvent@ or @vkCmdResetEvent@ command is in a command buffer
--- that is in the
--- <{html_spec_relative}#commandbuffers-lifecycle pending state>, then the
--- value returned by this command /may/ immediately be out of date.
+-- that is in the [pending
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle),
+-- then the value returned by this command /may/ immediately be out of
+-- date.
 --
 -- The state of an event /can/ be updated by the host. The state of the
 -- event is immediately changed, and subsequent calls to @vkGetEventStatus@
@@ -257,12 +246,12 @@ foreign import ccall "vkDestroyEvent" vkDestroyEvent :: ("device" ::: VkDevice) 
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_EVENT_SET@
 --
 --     -   @VK_EVENT_RESET@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -270,21 +259,18 @@ foreign import ccall "vkDestroyEvent" vkDestroyEvent :: ("device" ::: VkDevice) 
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
 foreign import ccall "vkGetEventStatus" vkGetEventStatus :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
 -- | vkSetEvent - Set an event to signaled state
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the event.
 --
 -- -   @event@ is the event to set.
 --
 -- = Description
--- #_description#
 --
 -- When 'vkSetEvent' is executed on the host, it defines an /event signal
 -- operation/ which sets the event to the signaled state.
@@ -308,30 +294,27 @@ foreign import ccall "vkGetEventStatus" vkGetEventStatus :: ("device" ::: VkDevi
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
 foreign import ccall "vkSetEvent" vkSetEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
 -- | vkResetEvent - Reset an event to non-signaled state
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the event.
 --
 -- -   @event@ is the event to reset.
 --
 -- = Description
--- #_description#
 --
 -- When 'vkResetEvent' is executed on the host, it defines an /event
 -- unsignal operation/ which resets the event to the unsignaled state.
@@ -360,24 +343,20 @@ foreign import ccall "vkSetEvent" vkSetEvent :: ("device" ::: VkDevice) -> ("eve
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
 foreign import ccall "vkResetEvent" vkResetEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
 -- | VkEventCreateInfo - Structure specifying parameters of a newly created
 -- event
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -388,16 +367,15 @@ foreign import ccall "vkResetEvent" vkResetEvent :: ("device" ::: VkDevice) -> (
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkEventCreateFlags', 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateEvent'
 data VkEventCreateInfo = VkEventCreateInfo
-  { -- No documentation found for Nested "VkEventCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkEventCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkEventCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkEventCreateFlags
   }
   deriving (Eq, Show)

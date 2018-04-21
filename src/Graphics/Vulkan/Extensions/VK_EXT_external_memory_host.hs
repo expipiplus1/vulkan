@@ -77,7 +77,6 @@ pattern VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME = "VK_EXT_external_memory_hos
 -- host pointer
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that will be importing
 --     @pHostPointer@.
@@ -85,9 +84,6 @@ pattern VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME = "VK_EXT_external_memory_hos
 -- -   @handleType@ is the type of the handle @pHostPointer@.
 --
 -- -   @pHostPointer@ is the host pointer to import from.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -119,14 +115,13 @@ pattern VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME = "VK_EXT_external_memory_hos
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_INVALID_EXTERNAL_HANDLE@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
@@ -135,14 +130,13 @@ foreign import ccall "vkGetMemoryHostPointerPropertiesEXT" vkGetMemoryHostPointe
 -- | VkImportMemoryHostPointerInfoEXT - import memory from a host pointer
 --
 -- = Description
--- #_description#
 --
 -- Importing memory from a host pointer shares ownership of the memory
 -- between the host and the Vulkan implementation. The application /can/
 -- continue to access the memory through the host pointer but it is the
 -- application’s responsibility to synchronize device and non-device access
--- to the underlying memory as defined in
--- <{html_spec_relative}#memory-device-hostaccess Host Access to Device Memory Objects>.
+-- to the underlying memory as defined in [Host Access to Device Memory
+-- Objects](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-hostaccess).
 --
 -- Applications /can/ import the same underlying memory into multiple
 -- instances of Vulkan and multiple times into a given Vulkan instance.
@@ -194,18 +188,17 @@ foreign import ccall "vkGetMemoryHostPointerPropertiesEXT" vkGetMemoryHostPointe
 --     value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkImportMemoryHostPointerInfoEXT = VkImportMemoryHostPointerInfoEXT
-  { -- No documentation found for Nested "VkImportMemoryHostPointerInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImportMemoryHostPointerInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImportMemoryHostPointerInfoEXT" "vkHandleType"
+  , -- | @handleType@ specifies the handle type.
   vkHandleType :: VkExternalMemoryHandleTypeFlagBits
-  , -- No documentation found for Nested "VkImportMemoryHostPointerInfoEXT" "vkPHostPointer"
+  , -- | @pHostPointer@ is the host pointer to import from.
   vkPHostPointer :: Ptr ()
   }
   deriving (Eq, Show)
@@ -223,11 +216,11 @@ instance Storable VkImportMemoryHostPointerInfoEXT where
                 *> poke (ptr `plusPtr` 24) (vkPHostPointer (poked :: VkImportMemoryHostPointerInfoEXT))
 -- No documentation found for TopLevel "VkMemoryHostPointerPropertiesEXT"
 data VkMemoryHostPointerPropertiesEXT = VkMemoryHostPointerPropertiesEXT
-  { -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "vkSType"
+  { -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "vkPNext"
+  , -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "vkMemoryTypeBits"
+  , -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "memoryTypeBits"
   vkMemoryTypeBits :: Word32
   }
   deriving (Eq, Show)
@@ -246,13 +239,11 @@ instance Storable VkMemoryHostPointerPropertiesEXT where
 -- implementation
 --
 -- = Members
--- #_members#
 --
 -- The members of the @VkPhysicalDeviceExternalMemoryHostPropertiesEXT@
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
--- #_description#
 --
 -- -   @minImportedHostPointerAlignment@ is the minimum /required/
 --     alignment, in bytes, for the base address and size of host pointers
@@ -269,15 +260,14 @@ instance Storable VkMemoryHostPointerPropertiesEXT where
 -- it is filled with the implementation-dependent limits.
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkDeviceSize@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceExternalMemoryHostPropertiesEXT = VkPhysicalDeviceExternalMemoryHostPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "vkMinImportedHostPointerAlignment"
+  , -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "minImportedHostPointerAlignment"
   vkMinImportedHostPointerAlignment :: VkDeviceSize
   }
   deriving (Eq, Show)

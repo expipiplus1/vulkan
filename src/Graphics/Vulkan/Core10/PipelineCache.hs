@@ -71,13 +71,11 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- | VkPipelineCacheCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineCacheCreateFlags@ is a bitmask type for setting a mask, but
 -- is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineCacheCreateInfo'
 newtype VkPipelineCacheCreateFlags = VkPipelineCacheCreateFlags VkFlags
@@ -102,11 +100,7 @@ instance Read VkPipelineCacheCreateFlags where
 data VkPipelineCache_T
 -- | VkPipelineCache - Opaque handle to a pipeline cache object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Pipeline.vkCreateComputePipelines',
 -- 'Graphics.Vulkan.Core10.Pipeline.vkCreateGraphicsPipelines',
@@ -116,7 +110,6 @@ type VkPipelineCache = Ptr VkPipelineCache_T
 -- | vkCreatePipelineCache - Creates a new pipeline cache
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the pipeline cache
 --     object.
@@ -126,13 +119,14 @@ type VkPipelineCache = Ptr VkPipelineCache_T
 --     cache object.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pPipelineCache@ is a pointer to a @VkPipelineCache@ handle in which
 --     the resulting pipeline cache object is returned.
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -174,16 +168,15 @@ type VkPipelineCache = Ptr VkPipelineCache_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -192,7 +185,6 @@ foreign import ccall "vkCreatePipelineCache" vkCreatePipelineCache :: ("device" 
 -- | vkDestroyPipelineCache - Destroy a pipeline cache object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the pipeline cache
 --     object.
@@ -200,10 +192,9 @@ foreign import ccall "vkCreatePipelineCache" vkCreatePipelineCache :: ("device" 
 -- -   @pipelineCache@ is the handle of the pipeline cache to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -232,7 +223,6 @@ foreign import ccall "vkCreatePipelineCache" vkCreatePipelineCache :: ("device" 
 -- -   Host access to @pipelineCache@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -241,7 +231,6 @@ foreign import ccall "vkDestroyPipelineCache" vkDestroyPipelineCache :: ("device
 -- | vkGetPipelineCacheData - Get the data store from a pipeline cache
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the pipeline cache.
 --
@@ -253,7 +242,6 @@ foreign import ccall "vkDestroyPipelineCache" vkDestroyPipelineCache :: ("device
 -- -   @pData@ is either @NULL@ or a pointer to a buffer.
 --
 -- = Description
--- #_description#
 --
 -- If @pData@ is @NULL@, then the maximum size of the data that /can/ be
 -- retrieved from the pipeline cache, in bytes, is returned in @pDataSize@.
@@ -282,38 +270,31 @@ foreign import ccall "vkDestroyPipelineCache" vkDestroyPipelineCache :: ("device
 -- written to @pData@ /must/ be a header consisting of the following
 -- members:
 --
--- > +----+--------------+--------------------------------------------------+
--- > | Of | Size         | Meaning                                          |
--- > | fs |              |                                                  |
--- > | et |              |                                                  |
--- > +====+==============+==================================================+
--- > | 0  | 4            | length in bytes of the entire pipeline cache     |
--- > |    |              | header written as a stream of bytes, with the    |
--- > |    |              | least significant byte first                     |
--- > +----+--------------+--------------------------------------------------+
--- > | 4  | 4            | a                                                |
--- > |    |              | 'Graphics.Vulkan.Core10.Constants.VkPipelineCach |
--- > |    |              | eHeaderVersion'                                  |
--- > |    |              | value written as a stream of bytes, with the     |
--- > |    |              | least significant byte first                     |
--- > +----+--------------+--------------------------------------------------+
--- > | 8  | 4            | a vendor ID equal to                             |
--- > |    |              | @VkPhysicalDeviceProperties@::@vendorID@ written |
--- > |    |              | as a stream of bytes, with the least significant |
--- > |    |              | byte first                                       |
--- > +----+--------------+--------------------------------------------------+
--- > | 12 | 4            | a device ID equal to                             |
--- > |    |              | @VkPhysicalDeviceProperties@::@deviceID@ written |
--- > |    |              | as a stream of bytes, with the least significant |
--- > |    |              | byte first                                       |
--- > +----+--------------+--------------------------------------------------+
--- > | 16 | @VK_UUID_SIZ | a pipeline cache ID equal to                     |
--- > |    | E@           | @VkPhysicalDeviceProperties@::@pipelineCacheUUID |
--- > |    |              | @                                                |
--- > +----+--------------+--------------------------------------------------+
--- >
--- > Layout for pipeline cache header version
--- > @VK_PIPELINE_CACHE_HEADER_VERSION_ONE@
+-- +--------+----------------+-----------------------------------------------------------------+
+-- | Offset | Size           | Meaning                                                         |
+-- +========+================+=================================================================+
+-- | 0      | 4              | length in bytes of the entire pipeline cache header written as  |
+-- |        |                | a stream of bytes, with the least significant byte first        |
+-- +--------+----------------+-----------------------------------------------------------------+
+-- | 4      | 4              | a                                                               |
+-- |        |                | 'Graphics.Vulkan.Core10.Constants.VkPipelineCacheHeaderVersion' |
+-- |        |                | value written as a stream of bytes, with the least significant  |
+-- |        |                | byte first                                                      |
+-- +--------+----------------+-----------------------------------------------------------------+
+-- | 8      | 4              | a vendor ID equal to @VkPhysicalDeviceProperties@::@vendorID@   |
+-- |        |                | written as a stream of bytes, with the least significant byte   |
+-- |        |                | first                                                           |
+-- +--------+----------------+-----------------------------------------------------------------+
+-- | 12     | 4              | a device ID equal to @VkPhysicalDeviceProperties@::@deviceID@   |
+-- |        |                | written as a stream of bytes, with the least significant byte   |
+-- |        |                | first                                                           |
+-- +--------+----------------+-----------------------------------------------------------------+
+-- | 16     | @VK_UUID_SIZE@ | a pipeline cache ID equal to                                    |
+-- |        |                | @VkPhysicalDeviceProperties@::@pipelineCacheUUID@               |
+-- +--------+----------------+-----------------------------------------------------------------+
+--
+-- Layout for pipeline cache header version
+-- @VK_PIPELINE_CACHE_HEADER_VERSION_ONE@
 --
 -- The first four bytes encode the length of the entire pipeline cache
 -- header, in bytes. This value includes all fields in the header including
@@ -345,18 +326,17 @@ foreign import ccall "vkDestroyPipelineCache" vkDestroyPipelineCache :: ("device
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkPipelineCache'
@@ -364,7 +344,6 @@ foreign import ccall "vkGetPipelineCacheData" vkGetPipelineCacheData :: ("device
 -- | vkMergePipelineCaches - Combine the data stores of pipeline caches
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the pipeline cache objects.
 --
@@ -378,7 +357,6 @@ foreign import ccall "vkGetPipelineCacheData" vkGetPipelineCacheData :: ("device
 --     included after the merge.
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -413,25 +391,21 @@ foreign import ccall "vkGetPipelineCacheData" vkGetPipelineCacheData :: ("device
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkPipelineCache'
 foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches :: ("device" ::: VkDevice) -> ("dstCache" ::: VkPipelineCache) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkPipelineCache) -> IO VkResult
 -- | VkPipelineCacheCreateInfo - Structure specifying parameters of a newly
 -- created pipeline cache
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -454,20 +428,23 @@ foreign import ccall "vkMergePipelineCaches" vkMergePipelineCaches :: ("device" 
 --     pointer to an array of @initialDataSize@ bytes
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineCacheCreateFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreatePipelineCache'
 data VkPipelineCacheCreateInfo = VkPipelineCacheCreateInfo
-  { -- No documentation found for Nested "VkPipelineCacheCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineCacheCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineCacheCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineCacheCreateFlags
-  , -- No documentation found for Nested "VkPipelineCacheCreateInfo" "vkInitialDataSize"
+  , -- | @initialDataSize@ is the number of bytes in @pInitialData@. If
+  -- @initialDataSize@ is zero, the pipeline cache will initially be empty.
   vkInitialDataSize :: CSize
-  , -- No documentation found for Nested "VkPipelineCacheCreateInfo" "vkPInitialData"
+  , -- | @pInitialData@ is a pointer to previously retrieved pipeline cache data.
+  -- If the pipeline cache data is incompatible (as defined below) with the
+  -- device, the pipeline cache will be initially empty. If @initialDataSize@
+  -- is zero, @pInitialData@ is ignored.
   vkPInitialData :: Ptr ()
   }
   deriving (Eq, Show)

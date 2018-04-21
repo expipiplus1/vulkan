@@ -76,7 +76,6 @@ import Graphics.Vulkan.Core10.Queue
 -- a fence
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkFenceCreateFlags'
 newtype VkFenceCreateFlagBits = VkFenceCreateFlagBits VkFlags
@@ -104,7 +103,6 @@ pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlagBits 0x00000001
 -- | vkCreateFence - Create a new fence object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the fence.
 --
@@ -113,13 +111,12 @@ pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlagBits 0x00000001
 --     created.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pFence@ points to a handle in which the resulting fence object is
 --     returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -135,16 +132,15 @@ pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlagBits 0x00000001
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -153,21 +149,20 @@ foreign import ccall "vkCreateFence" vkCreateFence :: ("device" ::: VkDevice) ->
 -- | vkDestroyFence - Destroy a fence object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the fence.
 --
 -- -   @fence@ is the handle of the fence to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
--- -   All <{html_spec_relative}#devsandqueues-submission queue submission>
+-- -   All [queue
+--     submission](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-submission)
 --     commands that refer to @fence@ /must/ have completed execution
 --
 -- -   If @VkAllocationCallbacks@ were provided when @fence@ was created, a
@@ -194,7 +189,6 @@ foreign import ccall "vkCreateFence" vkCreateFence :: ("device" ::: VkDevice) ->
 -- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -203,7 +197,6 @@ foreign import ccall "vkDestroyFence" vkDestroyFence :: ("device" ::: VkDevice) 
 -- | vkResetFences - Resets one or more fence objects
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the fences.
 --
@@ -212,7 +205,12 @@ foreign import ccall "vkDestroyFence" vkDestroyFence :: ("device" ::: VkDevice) 
 -- -   @pFences@ is a pointer to an array of fence handles to reset.
 --
 -- = Description
--- #_description#
+--
+-- If any member of @pFences@ currently has its [payload
+-- imported](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing)
+-- with temporary permanence, that fence’s prior permanent payload is first
+-- restored. The remaining operations described therefore operate on the
+-- restored payload.
 --
 -- When 'vkResetFences' is executed on the host, it defines a /fence
 -- unsignal operation/ for each fence, which resets the fence to the
@@ -246,16 +244,15 @@ foreign import ccall "vkDestroyFence" vkDestroyFence :: ("device" ::: VkDevice) 
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Queue.VkFence'
@@ -263,40 +260,36 @@ foreign import ccall "vkResetFences" vkResetFences :: ("device" ::: VkDevice) ->
 -- | vkGetFenceStatus - Return the status of a fence
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the fence.
 --
 -- -   @fence@ is the handle of the fence to query.
 --
 -- = Description
--- #_description#
 --
 -- Upon success, @vkGetFenceStatus@ returns the status of the fence object,
 -- with the following return codes:
 --
--- > +-----------------------------------+-----------------------------------+
--- > | Status                            | Meaning                           |
--- > +===================================+===================================+
--- > | @VK_SUCCESS@                      | The fence specified by @fence@ is |
--- > |                                   | signaled.                         |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_NOT_READY@                    | The fence specified by @fence@ is |
--- > |                                   | unsignaled.                       |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_ERROR_DEVICE_LOST@            | The device has been lost. See     |
--- > |                                   | <{html_spec_relative}#devsandqueu |
--- > |                                   | es-lost-device Lost Device>.      |
--- > +-----------------------------------+-----------------------------------+
--- >
--- > Fence Object Status Codes
+-- +-----------------------------------+-------------------------------------------------------------------------------------------------------------------+
+-- | Status                            | Meaning                                                                                                           |
+-- +===================================+===================================================================================================================+
+-- | @VK_SUCCESS@                      | The fence specified by @fence@ is signaled.                                                                       |
+-- +-----------------------------------+-------------------------------------------------------------------------------------------------------------------+
+-- | @VK_NOT_READY@                    | The fence specified by @fence@ is unsignaled.                                                                     |
+-- +-----------------------------------+-------------------------------------------------------------------------------------------------------------------+
+-- | @VK_ERROR_DEVICE_LOST@            | The device has been lost. See [Lost                                                                               |
+-- |                                   | Device](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device). |
+-- +-----------------------------------+-------------------------------------------------------------------------------------------------------------------+
 --
--- If a <{html_spec_relative}#devsandqueues-submission queue submission>
+-- Fence Object Status Codes
+--
+-- If a [queue
+-- submission](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-submission)
 -- command is pending execution, then the value returned by this command
 -- /may/ immediately be out of date.
 --
--- If the device has been lost (see
--- <{html_spec_relative}#devsandqueues-lost-device Lost Device>),
+-- If the device has been lost (see [Lost
+-- Device](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device)),
 -- @vkGetFenceStatus@ /may/ return any of the above status codes. If the
 -- device has been lost and @vkGetFenceStatus@ is called repeatedly, it
 -- will eventually return either @VK_SUCCESS@ or @VK_ERROR_DEVICE_LOST@.
@@ -312,12 +305,12 @@ foreign import ccall "vkResetFences" vkResetFences :: ("device" ::: VkDevice) ->
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_NOT_READY@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -325,7 +318,6 @@ foreign import ccall "vkResetFences" vkResetFences :: ("device" ::: VkDevice) ->
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Queue.VkFence'
@@ -333,7 +325,6 @@ foreign import ccall "vkGetFenceStatus" vkGetFenceStatus :: ("device" ::: VkDevi
 -- | vkWaitForFences - Wait for one or more fences to become signaled
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the fences.
 --
@@ -353,7 +344,6 @@ foreign import ccall "vkGetFenceStatus" vkGetFenceStatus :: ("device" ::: VkDevi
 --     the requested period.
 --
 -- = Description
--- #_description#
 --
 -- If the condition is satisfied when @vkWaitForFences@ is called, then
 -- @vkWaitForFences@ returns immediately. If the condition is not satisfied
@@ -371,10 +361,10 @@ foreign import ccall "vkGetFenceStatus" vkGetFenceStatus :: ("device" ::: VkDevi
 -- satisfied before @timeout@ nanoseconds has expired, @vkWaitForFences@
 -- returns @VK_SUCCESS@.
 --
--- If device loss occurs (see
--- <{html_spec_relative}#devsandqueues-lost-device Lost Device>) before the
--- timeout has expired, @vkWaitForFences@ /must/ return in finite time with
--- either @VK_SUCCESS@ or @VK_ERROR_DEVICE_LOST@.
+-- If device loss occurs (see [Lost
+-- Device](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device))
+-- before the timeout has expired, @vkWaitForFences@ /must/ return in
+-- finite time with either @VK_SUCCESS@ or @VK_ERROR_DEVICE_LOST@.
 --
 -- __Note__
 --
@@ -398,12 +388,12 @@ foreign import ccall "vkGetFenceStatus" vkGetFenceStatus :: ("device" ::: VkDevi
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_TIMEOUT@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -411,16 +401,12 @@ foreign import ccall "vkGetFenceStatus" vkGetFenceStatus :: ("device" ::: VkDevi
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Queue.VkFence'
 foreign import ccall "vkWaitForFences" vkWaitForFences :: ("device" ::: VkDevice) -> ("fenceCount" ::: Word32) -> ("pFences" ::: Ptr VkFence) -> ("waitAll" ::: VkBool32) -> ("timeout" ::: Word64) -> IO VkResult
 -- | VkFenceCreateInfo - Structure specifying parameters of a newly created
 -- fence
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -439,16 +425,16 @@ foreign import ccall "vkWaitForFences" vkWaitForFences :: ("device" ::: VkDevice
 --     values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkFenceCreateFlags', 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateFence'
 data VkFenceCreateInfo = VkFenceCreateInfo
-  { -- No documentation found for Nested "VkFenceCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkFenceCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkFenceCreateInfo" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkFenceCreateFlagBits' specifying the initial
+  -- state and behavior of the fence.
   vkFlags :: VkFenceCreateFlags
   }
   deriving (Eq, Show)
@@ -465,13 +451,11 @@ instance Storable VkFenceCreateInfo where
 -- | VkFenceCreateFlags - Bitmask of VkFenceCreateFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkFenceCreateFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkFenceCreateFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkFenceCreateFlagBits', 'VkFenceCreateInfo'
 type VkFenceCreateFlags = VkFenceCreateFlagBits

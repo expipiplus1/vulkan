@@ -60,7 +60,6 @@ pattern VK_EXT_HDR_METADATA_EXTENSION_NAME = "VK_EXT_hdr_metadata"
 -- | vkSetHdrMetadataEXT - function to set Hdr metadata
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device where the swapchain(s) were created.
 --
@@ -72,9 +71,6 @@ pattern VK_EXT_HDR_METADATA_EXTENSION_NAME = "VK_EXT_hdr_metadata"
 --
 -- -   @pMetadata@ is a pointer to the array of @swapchainCount@
 --     @VkHdrMetadataEXT@ structures.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -92,7 +88,6 @@ pattern VK_EXT_HDR_METADATA_EXTENSION_NAME = "VK_EXT_hdr_metadata"
 --     created, allocated, or retrieved from the same @VkInstance@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkHdrMetadataEXT',
@@ -100,20 +95,13 @@ pattern VK_EXT_HDR_METADATA_EXTENSION_NAME = "VK_EXT_hdr_metadata"
 foreign import ccall "vkSetHdrMetadataEXT" vkSetHdrMetadataEXT :: ("device" ::: VkDevice) -> ("swapchainCount" ::: Word32) -> ("pSwapchains" ::: Ptr VkSwapchainKHR) -> ("pMetadata" ::: Ptr VkHdrMetadataEXT) -> IO ()
 -- | VkXYColorEXT - structure to specify X,Y chromaticity coordinates
 --
--- = Members
--- #_members#
---
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkHdrMetadataEXT'
 data VkXYColorEXT = VkXYColorEXT
-  { -- No documentation found for Nested "VkXYColorEXT" "vkX"
+  { -- No documentation found for Nested "VkXYColorEXT" "x"
   vkX :: CFloat
-  , -- No documentation found for Nested "VkXYColorEXT" "vkY"
+  , -- No documentation found for Nested "VkXYColorEXT" "y"
   vkY :: CFloat
   }
   deriving (Eq, Show)
@@ -128,7 +116,6 @@ instance Storable VkXYColorEXT where
 -- | VkHdrMetadataEXT - structure to specify Hdr metadata
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -136,30 +123,34 @@ instance Storable VkXYColorEXT where
 -- thus no Valid Usage is given.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkXYColorEXT',
 -- 'vkSetHdrMetadataEXT'
 data VkHdrMetadataEXT = VkHdrMetadataEXT
-  { -- No documentation found for Nested "VkHdrMetadataEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkDisplayPrimaryRed"
+  , -- | @displayPrimaryRed@ is the mastering display’s red primary in
+  -- chromaticity coordinates
   vkDisplayPrimaryRed :: VkXYColorEXT
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkDisplayPrimaryGreen"
+  , -- | @displayPrimaryGreen@ is the mastering display’s green primary in
+  -- chromaticity coordinates
   vkDisplayPrimaryGreen :: VkXYColorEXT
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkDisplayPrimaryBlue"
+  , -- | @displayPrimaryBlue@ is the mastering display’s blue primary in
+  -- chromaticity coordinates
   vkDisplayPrimaryBlue :: VkXYColorEXT
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkWhitePoint"
+  , -- | @whitePoint@ is the mastering display’s white-point in chromaticity
+  -- coordinates
   vkWhitePoint :: VkXYColorEXT
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkMaxLuminance"
+  , -- | @maxLuminance@ is the maximum luminance of the mastering display in nits
   vkMaxLuminance :: CFloat
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkMinLuminance"
+  , -- | @minLuminance@ is the minimum luminance of the mastering display in nits
   vkMinLuminance :: CFloat
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkMaxContentLightLevel"
+  , -- | @maxContentLightLevel@ is content’s maximum luminance in nits
   vkMaxContentLightLevel :: CFloat
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "vkMaxFrameAverageLightLevel"
+  , -- | @maxFrameAverageLightLevel@ is the maximum frame average light level in
+  -- nits
   vkMaxFrameAverageLightLevel :: CFloat
   }
   deriving (Eq, Show)

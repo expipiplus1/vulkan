@@ -117,7 +117,6 @@ pattern VK_KHR_XLIB_SURFACE_EXTENSION_NAME = "VK_KHR_xlib_surface"
 -- X11 window, using the Xlib client-side library
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the instance to associate the surface with.
 --
@@ -127,13 +126,11 @@ pattern VK_KHR_XLIB_SURFACE_EXTENSION_NAME = "VK_KHR_xlib_surface"
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
 --     surface object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -149,16 +146,15 @@ pattern VK_KHR_XLIB_SURFACE_EXTENSION_NAME = "VK_KHR_xlib_surface"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
@@ -169,7 +165,6 @@ foreign import ccall "vkCreateXlibSurfaceKHR" vkCreateXlibSurfaceKHR :: ("instan
 -- for presentation to X11 server using Xlib
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device.
 --
@@ -180,7 +175,6 @@ foreign import ccall "vkCreateXlibSurfaceKHR" vkCreateXlibSurfaceKHR :: ("instan
 -- -   @visualId@ is an X11 visual (@VisualID@).
 --
 -- = Description
--- #_description#
 --
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
@@ -198,15 +192,11 @@ foreign import ccall "vkCreateXlibSurfaceKHR" vkCreateXlibSurfaceKHR :: ("instan
 -- -   @dpy@ /must/ be a valid pointer to a @Display@ value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall "vkGetPhysicalDeviceXlibPresentationSupportKHR" vkGetPhysicalDeviceXlibPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("dpy" ::: Ptr Display) -> ("visualID" ::: VisualID) -> IO VkBool32
 -- | VkXlibSurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Xlib surface object
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -223,20 +213,19 @@ foreign import ccall "vkGetPhysicalDeviceXlibPresentationSupportKHR" vkGetPhysic
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkXlibSurfaceCreateFlagsKHR', 'vkCreateXlibSurfaceKHR'
 data VkXlibSurfaceCreateInfoKHR = VkXlibSurfaceCreateInfoKHR
-  { -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkXlibSurfaceCreateFlagsKHR
-  , -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "vkDpy"
+  , -- | @dpy@ is a pointer to an Xlib @Display@ connection to the X server.
   vkDpy :: Ptr Display
-  , -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "vkWindow"
+  , -- | @window@ is an Xlib @Window@ to associate the surface with.
   vkWindow :: Window
   }
   deriving (Eq, Show)

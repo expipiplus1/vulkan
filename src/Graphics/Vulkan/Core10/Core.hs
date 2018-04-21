@@ -327,7 +327,6 @@ import Text.Read.Lex
 -- | VkBool32 - Vulkan boolean type
 --
 -- = Description
--- #_description#
 --
 -- @VK_TRUE@ represents a boolean __True__ (integer 1) value, and
 -- @VK_FALSE@ a boolean __False__ (integer 0) value.
@@ -339,7 +338,6 @@ import Text.Read.Lex
 -- @VK_FALSE@ into a Vulkan implementation where a @VkBool32@ is expected.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
 -- 'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV',
@@ -419,7 +417,6 @@ pattern VK_TRUE = VkBool32 1
 -- | VkFormat - Available image formats
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Graphics.Vulkan.Core10.Pass.VkAttachmentDescription',
@@ -1692,9 +1689,9 @@ pattern VK_FORMAT_R64G64B64A64_SFLOAT = VkFormat 121
 -- packed unsigned floating-point format that has a 10-bit B component in
 -- bits 22..31, an 11-bit G component in bits 11..21, an 11-bit R component
 -- in bits 0..10. See
--- <{html_spec_relative}#fundamentals-fp10 {html_spec_relative}#fundamentals-fp10>
+-- [{html_spec_relative}#fundamentals-fp10](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-fp10)
 -- and
--- <{html_spec_relative}#fundamentals-fp11 {html_spec_relative}#fundamentals-fp11>.
+-- [{html_spec_relative}#fundamentals-fp11](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-fp11).
 pattern VK_FORMAT_B10G11R11_UFLOAT_PACK32 :: VkFormat
 pattern VK_FORMAT_B10G11R11_UFLOAT_PACK32 = VkFormat 122
 
@@ -2109,7 +2106,6 @@ pattern VK_FORMAT_ASTC_12x12_SRGB_BLOCK = VkFormat 184
 -- | VkResult - Vulkan command return codes
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_SUCCESS@ Command successfully completed
 --
@@ -2124,6 +2120,10 @@ pattern VK_FORMAT_ASTC_12x12_SRGB_BLOCK = VkFormat 184
 --
 -- -   @VK_INCOMPLETE@ A return array was too small for the result
 --
+-- -   @VK_SUBOPTIMAL_KHR@ A swapchain no longer matches the surface
+--     properties exactly, but /can/ still be used to present to the
+--     surface successfully.
+--
 -- -   @VK_ERROR_OUT_OF_HOST_MEMORY@ A host memory allocation has failed.
 --
 -- -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@ A device memory allocation has
@@ -2133,7 +2133,8 @@ pattern VK_FORMAT_ASTC_12x12_SRGB_BLOCK = VkFormat 184
 --     not be completed for implementation-specific reasons.
 --
 -- -   @VK_ERROR_DEVICE_LOST@ The logical or physical device has been lost.
---     See <{html_spec_relative}#devsandqueues-lost-device Lost Device>
+--     See [Lost
+--     Device](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device)
 --
 -- -   @VK_ERROR_MEMORY_MAP_FAILED@ Mapping of a memory object has failed.
 --
@@ -2158,7 +2159,41 @@ pattern VK_FORMAT_ASTC_12x12_SRGB_BLOCK = VkFormat 184
 -- -   @VK_ERROR_FRAGMENTED_POOL@ A pool allocation has failed due to
 --     fragmentation of the pool’s memory. This /must/ only be returned if
 --     no attempt to allocate host or device memory was made to accomodate
---     the new allocation.
+--     the new allocation. This /should/ be returned in preference to
+--     @VK_ERROR_OUT_OF_POOL_MEMORY@, but only if the implementation is
+--     certain that the pool allocation failure was due to fragmentation.
+--
+-- -   @VK_ERROR_SURFACE_LOST_KHR@ A surface is no longer available.
+--
+-- -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@ The requested window is already
+--     in use by Vulkan or another API in a manner which prevents it from
+--     being used again.
+--
+-- -   @VK_ERROR_OUT_OF_DATE_KHR@ A surface has changed in such a way that
+--     it is no longer compatible with the swapchain, and further
+--     presentation requests using the swapchain will fail. Applications
+--     /must/ query the new surface properties and recreate their swapchain
+--     if they wish to continue presenting to the surface.
+--
+-- -   @VK_ERROR_INCOMPATIBLE_DISPLAY_KHR@ The display used by a swapchain
+--     does not use the same presentable image layout, or is incompatible
+--     in a way that prevents sharing an image.
+--
+-- -   @VK_ERROR_INVALID_SHADER_NV@ One or more shaders failed to compile
+--     or link. More details are reported back to the application via
+--     @{html_spec_relative}#VK_EXT_debug_report@ if enabled.
+--
+-- -   @VK_ERROR_OUT_OF_POOL_MEMORY@ A pool memory allocation has failed.
+--     This /must/ only be returned if no attempt to allocate host or
+--     device memory was made to accomodate the new allocation. If the
+--     failure was definitely due to fragmentation of the pool,
+--     @VK_ERROR_FRAGMENTED_POOL@ /should/ be returned instead.
+--
+-- -   @VK_ERROR_INVALID_EXTERNAL_HANDLE@ An external handle is not a valid
+--     handle of the specified type.
+--
+-- -   @VK_ERROR_FRAGMENTATION_EXT@ A descriptor pool creation has failed
+--     due to fragmentation.
 --
 -- If a command returns a run time error, unless otherwise specified any
 -- output parameters will have undefined contents, except that if the
@@ -2178,7 +2213,6 @@ pattern VK_FORMAT_ASTC_12x12_SRGB_BLOCK = VkFormat 184
 -- @vkEndCommandBuffer@.
 --
 -- = See Also
--- #_see_also#
 --
 -- No cross-references are available,
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'
@@ -2333,7 +2367,6 @@ pattern VK_ERROR_FRAGMENTED_POOL = VkResult (-12)
 -- | VkStructureType - Vulkan structure types (@stype@)
 --
 -- = Description
--- #_description#
 --
 -- Each value corresponds to a particular structure with a @sType@ member
 -- with a matching name. As a general rule, the name of each
@@ -2351,7 +2384,6 @@ pattern VK_ERROR_FRAGMENTED_POOL = VkResult (-12)
 -- this Specification.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkAcquireNextImageInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
@@ -3272,100 +3304,86 @@ pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = VkStructureType 48
 -- | VkObjectType - Specify an enumeration to track object handle types
 --
 -- = Description
--- #_description#
 --
--- > +------------------------------------------+---------------------------+
--- > | 'VkObjectType'                           | Vulkan Handle Type        |
--- > +==========================================+===========================+
--- > | @VK_OBJECT_TYPE_UNKNOWN@                 | Unknown\/Undefined Handle |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_INSTANCE@                | 'Graphics.Vulkan.Core10.D |
--- > |                                          | eviceInitialization.VkIns |
--- > |                                          | tance'                    |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_PHYSICAL_DEVICE@         | 'Graphics.Vulkan.Core10.D |
--- > |                                          | eviceInitialization.VkPhy |
--- > |                                          | sicalDevice'              |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_DEVICE@                  | 'Graphics.Vulkan.Core10.D |
--- > |                                          | eviceInitialization.VkDev |
--- > |                                          | ice'                      |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_QUEUE@                   | 'Graphics.Vulkan.Core10.Q |
--- > |                                          | ueue.VkQueue'             |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_SEMAPHORE@               | 'Graphics.Vulkan.Core10.Q |
--- > |                                          | ueue.VkSemaphore'         |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_COMMAND_BUFFER@          | 'Graphics.Vulkan.Core10.Q |
--- > |                                          | ueue.VkCommandBuffer'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_FENCE@                   | 'Graphics.Vulkan.Core10.Q |
--- > |                                          | ueue.VkFence'             |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_DEVICE_MEMORY@           | 'Graphics.Vulkan.Core10.M |
--- > |                                          | emory.VkDeviceMemory'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_BUFFER@                  | 'Graphics.Vulkan.Core10.M |
--- > |                                          | emoryManagement.VkBuffer' |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_IMAGE@                   | 'Graphics.Vulkan.Core10.M |
--- > |                                          | emoryManagement.VkImage'  |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_EVENT@                   | 'Graphics.Vulkan.Core10.E |
--- > |                                          | vent.VkEvent'             |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_QUERY_POOL@              | 'Graphics.Vulkan.Core10.Q |
--- > |                                          | uery.VkQueryPool'         |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_BUFFER_VIEW@             | 'Graphics.Vulkan.Core10.B |
--- > |                                          | ufferView.VkBufferView'   |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_IMAGE_VIEW@              | 'Graphics.Vulkan.Core10.I |
--- > |                                          | mageView.VkImageView'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_SHADER_MODULE@           | 'Graphics.Vulkan.Core10.S |
--- > |                                          | hader.VkShaderModule'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_PIPELINE_CACHE@          | 'Graphics.Vulkan.Core10.P |
--- > |                                          | ipelineCache.VkPipelineCa |
--- > |                                          | che'                      |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_PIPELINE_LAYOUT@         | 'Graphics.Vulkan.Core10.P |
--- > |                                          | ipeline.VkPipelineLayout' |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_RENDER_PASS@             | 'Graphics.Vulkan.Core10.P |
--- > |                                          | ipeline.VkRenderPass'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_PIPELINE@                | 'Graphics.Vulkan.Core10.P |
--- > |                                          | ipeline.VkPipeline'       |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT@   | 'Graphics.Vulkan.Core10.P |
--- > |                                          | ipelineLayout.VkDescripto |
--- > |                                          | rSetLayout'               |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_SAMPLER@                 | 'Graphics.Vulkan.Core10.S |
--- > |                                          | ampler.VkSampler'         |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_DESCRIPTOR_POOL@         | 'Graphics.Vulkan.Core10.D |
--- > |                                          | escriptorSet.VkDescriptor |
--- > |                                          | Pool'                     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_DESCRIPTOR_SET@          | 'Graphics.Vulkan.Core10.D |
--- > |                                          | escriptorSet.VkDescriptor |
--- > |                                          | Set'                      |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_FRAMEBUFFER@             | 'Graphics.Vulkan.Core10.P |
--- > |                                          | ass.VkFramebuffer'        |
--- > +------------------------------------------+---------------------------+
--- > | @VK_OBJECT_TYPE_COMMAND_POOL@            | 'Graphics.Vulkan.Core10.C |
--- > |                                          | ommandPool.VkCommandPool' |
--- > +------------------------------------------+---------------------------+
--- >
--- > VkObjectType and Vulkan Handle Relationship
+-- \'
+--
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | 'VkObjectType'                                | Vulkan Handle Type                                                                                  |
+-- +===============================================+=====================================================================================================+
+-- | @VK_OBJECT_TYPE_UNKNOWN@                      | Unknown\/Undefined Handle                                                                           |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_INSTANCE@                     | 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance'                                            |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_PHYSICAL_DEVICE@              | 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'                                      |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_DEVICE@                       | 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'                                              |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_QUEUE@                        | 'Graphics.Vulkan.Core10.Queue.VkQueue'                                                              |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_SEMAPHORE@                    | 'Graphics.Vulkan.Core10.Queue.VkSemaphore'                                                          |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_COMMAND_BUFFER@               | 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'                                                      |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_FENCE@                        | 'Graphics.Vulkan.Core10.Queue.VkFence'                                                              |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_DEVICE_MEMORY@                | 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory'                                                      |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_BUFFER@                       | 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer'                                                  |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_IMAGE@                        | 'Graphics.Vulkan.Core10.MemoryManagement.VkImage'                                                   |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_EVENT@                        | 'Graphics.Vulkan.Core10.Event.VkEvent'                                                              |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_QUERY_POOL@                   | 'Graphics.Vulkan.Core10.Query.VkQueryPool'                                                          |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_BUFFER_VIEW@                  | 'Graphics.Vulkan.Core10.BufferView.VkBufferView'                                                    |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_IMAGE_VIEW@                   | 'Graphics.Vulkan.Core10.ImageView.VkImageView'                                                      |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_SHADER_MODULE@                | 'Graphics.Vulkan.Core10.Shader.VkShaderModule'                                                      |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_PIPELINE_CACHE@               | 'Graphics.Vulkan.Core10.PipelineCache.VkPipelineCache'                                              |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_PIPELINE_LAYOUT@              | 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout'                                                  |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_RENDER_PASS@                  | 'Graphics.Vulkan.Core10.Pipeline.VkRenderPass'                                                      |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_PIPELINE@                     | 'Graphics.Vulkan.Core10.Pipeline.VkPipeline'                                                        |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT@        | 'Graphics.Vulkan.Core10.PipelineLayout.VkDescriptorSetLayout'                                       |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_SAMPLER@                      | 'Graphics.Vulkan.Core10.Sampler.VkSampler'                                                          |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_DESCRIPTOR_POOL@              | 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorPool'                                             |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_DESCRIPTOR_SET@               | 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSet'                                              |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_FRAMEBUFFER@                  | 'Graphics.Vulkan.Core10.Pass.VkFramebuffer'                                                         |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_COMMAND_POOL@                 | 'Graphics.Vulkan.Core10.CommandPool.VkCommandPool'                                                  |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_SURFACE_KHR@                  | 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'                                            |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_SWAPCHAIN_KHR@                | 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'                                        |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_DISPLAY_KHR@                  | 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR'                                            |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_DISPLAY_MODE_KHR@             | 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayModeKHR'                                        |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT@    | 'Graphics.Vulkan.Extensions.VK_EXT_debug_report.VkDebugReportCallbackEXT'                           |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE@   | 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate' |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_OBJECT_TABLE_NVX@             | 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkObjectTableNVX'                      |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX@ | 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsLayoutNVX'           |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_OBJECT_TYPE_VALIDATION_CACHE_EXT@         | 'Graphics.Vulkan.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'                           |
+-- +-----------------------------------------------+-----------------------------------------------------------------------------------------------------+
+--
+-- VkObjectType and Vulkan Handle Relationship
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectNameInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectTagInfoEXT'
@@ -3566,7 +3584,6 @@ pattern VK_OBJECT_TYPE_COMMAND_POOL = VkObjectType 25
 -- | VkFlags - Vulkan bitmasks
 --
 -- = Description
--- #_description#
 --
 -- Bitmasks are passed to many commands and structures to compactly
 -- represent options, but @VkFlags@ is not used directly in the API.
@@ -3575,7 +3592,6 @@ pattern VK_OBJECT_TYPE_COMMAND_POOL = VkObjectType 25
 -- type, is used.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Pipeline.VkColorComponentFlags'
 type VkFlags = Word32

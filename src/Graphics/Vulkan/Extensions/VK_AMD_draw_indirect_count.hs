@@ -44,7 +44,6 @@ pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
 -- sourced from a buffer
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer into which the command is
 --     recorded.
@@ -66,7 +65,6 @@ pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
 --     parameters.
 --
 -- = Description
--- #_description#
 --
 -- @vkCmdDrawIndirectCountAMD@ behaves similarly to
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdDrawIndirect' except
@@ -101,15 +99,15 @@ pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
 --     /must/ be less than or equal to the size of @buffer@
 --
 -- -   If the
---     <{html_spec_relative}#features-features-drawIndirectFirstInstance drawIndirectFirstInstance>
+--     [drawIndirectFirstInstance](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-drawIndirectFirstInstance)
 --     feature is not enabled, all the @firstInstance@ members of the
 --     @VkDrawIndirectCommand@ structures accessed by this command /must/
 --     be @0@
 --
 -- -   The current render pass /must/ be
---     <{html_spec_relative}#renderpass-compatibility compatible> with the
---     @renderPass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ bound to
+--     [compatible](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility)
+--     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
+--     structure specified when creating the @VkPipeline@ bound to
 --     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
@@ -123,7 +121,7 @@ pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
 --     @VkPipelineLayout@ that is compatible for set /n/, with the
 --     @VkPipelineLayout@ used to create the current @VkPipeline@, as
 --     described in
---     <{html_spec_relative}#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
+--     [{html_spec_relative}#descriptorsets-compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility)
 --
 -- -   For each push constant that is statically used by the @VkPipeline@
 --     bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push constant value
@@ -131,7 +129,7 @@ pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
 --     @VkPipelineLayout@ that is compatible for push constants, with the
 --     @VkPipelineLayout@ used to create the current @VkPipeline@, as
 --     described in
---     <{html_spec_relative}#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
+--     [{html_spec_relative}#descriptorsets-compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility)
 --
 -- -   Descriptors in each bound descriptor set, specified via
 --     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
@@ -183,15 +181,15 @@ pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
 --     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   If the
---     <{html_spec_relative}#features-features-robustBufferAccess robust buffer access>
+-- -   If the [robust buffer
+--     access](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess)
 --     feature is not enabled, and any shader stage in the @VkPipeline@
 --     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a uniform
 --     buffer, it /must/ not access values outside of the range of that
 --     buffer specified in the bound descriptor set
 --
--- -   If the
---     <{html_spec_relative}#features-features-robustBufferAccess robust buffer access>
+-- -   If the [robust buffer
+--     access](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess)
 --     feature is not enabled, and any shader stage in the @VkPipeline@
 --     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a storage
 --     buffer, it /must/ not access values outside of the range of that
@@ -209,6 +207,16 @@ pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
 --     /must/ not be accessed in any way other than as an attachment by
 --     this command.
 --
+-- -   If the draw is recorded in a render pass instance with multiview
+--     enabled, the maximum instance index /must/ be less than or equal to
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--
+-- -   If the bound graphics pipeline was created with
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     set to @VK_TRUE@ and the current subpass has a depth\/stencil
+--     attachment, then that attachment /must/ have been created with the
+--     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
@@ -217,8 +225,8 @@ pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
 --
 -- -   @countBuffer@ /must/ be a valid @VkBuffer@ handle
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics operations
@@ -237,18 +245,17 @@ pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Inside                                                                                                     | Graphics                                                                                              | Graphics                                                                                                                   |
+-- | Secondary                                                                                                   |                                                                                                            |                                                                                                       |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
@@ -257,7 +264,6 @@ foreign import ccall "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("
 -- the draw count sourced from a buffer
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer into which the command is
 --     recorded.
@@ -279,7 +285,6 @@ foreign import ccall "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("
 --     parameters.
 --
 -- = Description
--- #_description#
 --
 -- @vkCmdDrawIndexedIndirectCountAMD@ behaves similarly to
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect'
@@ -314,15 +319,15 @@ foreign import ccall "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("
 --     /must/ be less than or equal to the size of @buffer@
 --
 -- -   If the
---     <{html_spec_relative}#features-features-drawIndirectFirstInstance drawIndirectFirstInstance>
+--     [drawIndirectFirstInstance](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-drawIndirectFirstInstance)
 --     feature is not enabled, all the @firstInstance@ members of the
 --     @VkDrawIndexedIndirectCommand@ structures accessed by this command
 --     /must/ be @0@
 --
 -- -   The current render pass /must/ be
---     <{html_spec_relative}#renderpass-compatibility compatible> with the
---     @renderPass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ bound to
+--     [compatible](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility)
+--     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
+--     structure specified when creating the @VkPipeline@ bound to
 --     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
@@ -336,7 +341,7 @@ foreign import ccall "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("
 --     @VkPipelineLayout@ that is compatible for set /n/, with the
 --     @VkPipelineLayout@ used to create the current @VkPipeline@, as
 --     described in
---     <{html_spec_relative}#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
+--     [{html_spec_relative}#descriptorsets-compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility)
 --
 -- -   For each push constant that is statically used by the @VkPipeline@
 --     bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push constant value
@@ -344,7 +349,7 @@ foreign import ccall "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("
 --     @VkPipelineLayout@ that is compatible for push constants, with the
 --     @VkPipelineLayout@ used to create the current @VkPipeline@, as
 --     described in
---     <{html_spec_relative}#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
+--     [{html_spec_relative}#descriptorsets-compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility)
 --
 -- -   Descriptors in each bound descriptor set, specified via
 --     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
@@ -397,15 +402,15 @@ foreign import ccall "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("
 --     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
--- -   If the
---     <{html_spec_relative}#features-features-robustBufferAccess robust buffer access>
+-- -   If the [robust buffer
+--     access](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess)
 --     feature is not enabled, and any shader stage in the @VkPipeline@
 --     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a uniform
 --     buffer, it /must/ not access values outside of the range of that
 --     buffer specified in the bound descriptor set
 --
--- -   If the
---     <{html_spec_relative}#features-features-robustBufferAccess robust buffer access>
+-- -   If the [robust buffer
+--     access](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess)
 --     feature is not enabled, and any shader stage in the @VkPipeline@
 --     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a storage
 --     buffer, it /must/ not access values outside of the range of that
@@ -423,6 +428,16 @@ foreign import ccall "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("
 --     /must/ not be accessed in any way other than as an attachment by
 --     this command.
 --
+-- -   If the draw is recorded in a render pass instance with multiview
+--     enabled, the maximum instance index /must/ be less than or equal to
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
+--
+-- -   If the bound graphics pipeline was created with
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
+--     set to @VK_TRUE@ and the current subpass has a depth\/stencil
+--     attachment, then that attachment /must/ have been created with the
+--     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
@@ -431,8 +446,8 @@ foreign import ccall "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("
 --
 -- -   @countBuffer@ /must/ be a valid @VkBuffer@ handle
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics operations
@@ -451,18 +466,17 @@ foreign import ccall "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Inside                                                                                                     | Graphics                                                                                              | Graphics                                                                                                                   |
+-- | Secondary                                                                                                   |                                                                                                            |                                                                                                       |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@

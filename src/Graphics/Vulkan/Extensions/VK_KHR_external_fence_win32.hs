@@ -79,7 +79,6 @@ pattern VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME = "VK_KHR_external_fence_win3
 -- | vkGetFenceWin32HandleKHR - Get a Windows HANDLE for a fence
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that created the fence being
 --     exported.
@@ -92,7 +91,6 @@ pattern VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME = "VK_KHR_external_fence_win3
 --     state.
 --
 -- = Description
--- #_description#
 --
 -- For handle types defined as NT handles, the handles returned by
 -- @vkGetFenceWin32HandleKHR@ are owned by the application. To avoid
@@ -101,8 +99,8 @@ pattern VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME = "VK_KHR_external_fence_win3
 --
 -- Exporting a Windows handle from a fence /may/ have side effects
 -- depending on the transference of the specified handle type, as described
--- in
--- <{html_spec_relative}#synchronization-fences-importing Importing Fence Payloads>.
+-- in [Importing Fence
+-- Payloads](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing).
 --
 -- == Valid Usage (Implicit)
 --
@@ -115,16 +113,15 @@ pattern VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME = "VK_KHR_external_fence_win3
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_TOO_MANY_OBJECTS@
 --
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkFenceGetWin32HandleInfoKHR'
@@ -132,7 +129,6 @@ foreign import ccall "vkGetFenceWin32HandleKHR" vkGetFenceWin32HandleKHR :: ("de
 -- | vkImportFenceWin32HandleKHR - Import a fence from a Windows HANDLE
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that created the fence.
 --
@@ -141,7 +137,6 @@ foreign import ccall "vkGetFenceWin32HandleKHR" vkGetFenceWin32HandleKHR :: ("de
 --     import parameters.
 --
 -- = Description
--- #_description#
 --
 -- Importing a fence payload from Windows handles does not transfer
 -- ownership of the handle to the Vulkan implementation. For handle types
@@ -161,16 +156,15 @@ foreign import ccall "vkGetFenceWin32HandleKHR" vkGetFenceWin32HandleKHR :: ("de
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_INVALID_EXTERNAL_HANDLE@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkImportFenceWin32HandleInfoKHR'
@@ -178,28 +172,24 @@ foreign import ccall "vkImportFenceWin32HandleKHR" vkImportFenceWin32HandleKHR :
 -- | VkImportFenceWin32HandleInfoKHR - (None)
 --
 -- = Description
--- #_description#
 --
 -- The handle types supported by @handleType@ are:
 --
--- > +-----------------------+-----------------------+-----------------------+
--- > | Handle Type           | Transference          | Permanence Supported  |
--- > +=======================+=======================+=======================+
--- > | @VK_EXTERNAL_FENCE_HA | Reference             | Temporary,Permanent   |
--- > | NDLE_TYPE_OPAQUE_WIN3 |                       |                       |
--- > | 2_BIT@                |                       |                       |
--- > +-----------------------+-----------------------+-----------------------+
--- > | @VK_EXTERNAL_FENCE_HA | Reference             | Temporary,Permanent   |
--- > | NDLE_TYPE_OPAQUE_WIN3 |                       |                       |
--- > | 2_KMT_BIT@            |                       |                       |
--- > +-----------------------+-----------------------+-----------------------+
--- >
--- > Handle Types Supported by VkImportFenceWin32HandleInfoKHR
+-- +------------------------------------------------------+-----------------------+-----------------------+
+-- | Handle Type                                          | Transference          | Permanence Supported  |
+-- +======================================================+=======================+=======================+
+-- | @VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT@     | Reference             | Temporary,Permanent   |
+-- +------------------------------------------------------+-----------------------+-----------------------+
+-- | @VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT@ | Reference             | Temporary,Permanent   |
+-- +------------------------------------------------------+-----------------------+-----------------------+
+--
+-- Handle Types Supported by VkImportFenceWin32HandleInfoKHR
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ be a value included in the
---     <{html_spec_relative}#synchronization-fence-handletypes-win32 Handle Types Supported by VkImportFenceWin32HandleInfoKHR>
+-- -   @handleType@ /must/ be a value included in the [Handle Types
+--     Supported by
+--     VkImportFenceWin32HandleInfoKHR](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fence-handletypes-win32)
 --     table.
 --
 -- -   If @handleType@ is not
@@ -216,12 +206,12 @@ foreign import ccall "vkImportFenceWin32HandleKHR" vkImportFenceWin32HandleKHR :
 -- -   If @handle@ is not @NULL@, @name@ must be @NULL@.
 --
 -- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
---     for @handleType@ in
---     <{html_spec_relative}#external-fence-handle-types-compatibility external fence handle types compatibility>.
+--     for @handleType@ in [external fence handle types
+--     compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-fence-handle-types-compatibility).
 --
 -- -   If @name@ is not @NULL@, it /must/ obey any requirements listed for
---     @handleType@ in
---     <{html_spec_relative}#external-fence-handle-types-compatibility external fence handle types compatibility>.
+--     @handleType@ in [external fence handle types
+--     compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-fence-handle-types-compatibility).
 --
 -- == Valid Usage (Implicit)
 --
@@ -245,7 +235,6 @@ foreign import ccall "vkImportFenceWin32HandleKHR" vkImportFenceWin32HandleKHR :
 -- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits',
 -- 'Graphics.Vulkan.Core10.Queue.VkFence',
@@ -253,19 +242,22 @@ foreign import ccall "vkImportFenceWin32HandleKHR" vkImportFenceWin32HandleKHR :
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkImportFenceWin32HandleKHR'
 data VkImportFenceWin32HandleInfoKHR = VkImportFenceWin32HandleInfoKHR
-  { -- No documentation found for Nested "VkImportFenceWin32HandleInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImportFenceWin32HandleInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImportFenceWin32HandleInfoKHR" "vkFence"
+  , -- | @fence@ is the fence into which the state will be imported.
   vkFence :: VkFence
-  , -- No documentation found for Nested "VkImportFenceWin32HandleInfoKHR" "vkFlags"
+  , -- | @flags@ is a bitmask of
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'
+  -- specifying additional parameters for the fence payload import operation.
   vkFlags :: VkFenceImportFlags
-  , -- No documentation found for Nested "VkImportFenceWin32HandleInfoKHR" "vkHandleType"
+  , -- | @handleType@ specifies the type of @handle@.
   vkHandleType :: VkExternalFenceHandleTypeFlagBits
-  , -- No documentation found for Nested "VkImportFenceWin32HandleInfoKHR" "vkHandle"
+  , -- | @handle@ is the external handle to import, or @NULL@.
   vkHandle :: HANDLE
-  , -- No documentation found for Nested "VkImportFenceWin32HandleInfoKHR" "vkName"
+  , -- | @name@ is the NULL-terminated UTF-16 string naming the underlying
+  -- synchronization primitive to import, or @NULL@.
   vkName :: LPCWSTR
   }
   deriving (Eq, Show)
@@ -291,7 +283,6 @@ instance Storable VkImportFenceWin32HandleInfoKHR where
 -- attributes of Windows handles exported from a fence
 --
 -- = Description
--- #_description#
 --
 -- If this structure is not present, or if @pAttributes@ is set to @NULL@,
 -- default security descriptor values will be used, and child processes
@@ -326,19 +317,21 @@ instance Storable VkImportFenceWin32HandleInfoKHR where
 --     pointer to a valid @SECURITY_ATTRIBUTES@ value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkExportFenceWin32HandleInfoKHR = VkExportFenceWin32HandleInfoKHR
-  { -- No documentation found for Nested "VkExportFenceWin32HandleInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExportFenceWin32HandleInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExportFenceWin32HandleInfoKHR" "vkPAttributes"
+  , -- | @pAttributes@ is a pointer to a Windows @SECURITY_ATTRIBUTES@ structure
+  -- specifying security attributes of the handle.
   vkPAttributes :: Ptr SECURITY_ATTRIBUTES
-  , -- No documentation found for Nested "VkExportFenceWin32HandleInfoKHR" "vkDwAccess"
+  , -- | @dwAccess@ is a @DWORD@ specifying access rights of the handle.
   vkDwAccess :: DWORD
-  , -- No documentation found for Nested "VkExportFenceWin32HandleInfoKHR" "vkName"
+  , -- | @name@ is a NULL-terminated UTF-16 string to associate with the
+  -- underlying synchronization primitive referenced by NT handles exported
+  -- from the created fence.
   vkName :: LPCWSTR
   }
   deriving (Eq, Show)
@@ -360,7 +353,6 @@ instance Storable VkExportFenceWin32HandleInfoKHR where
 -- export operation
 --
 -- = Description
--- #_description#
 --
 -- The properties of the handle returned depend on the value of
 -- @handleType@. See
@@ -379,16 +371,16 @@ instance Storable VkExportFenceWin32HandleInfoKHR where
 --     each valid unique combination of @fence@ and @handleType@.
 --
 -- -   @fence@ /must/ not currently have its payload replaced by an
---     imported payload as described below in
---     <{html_spec_relative}#synchronization-fences-importing Importing Fence Payloads>
+--     imported payload as described below in [Importing Fence
+--     Payloads](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing)
 --     unless that imported payload’s handle type was included in
 --     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@.
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @fence@ /must/ be signaled, or have an
---     associated
---     <{html_spec_relative}#synchronization-fences-signaling fence signal operation>
+--     associated [fence signal
+--     operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-signaling)
 --     pending execution.
 --
 -- -   @handleType@ /must/ be defined as an NT handle or a global share
@@ -408,20 +400,19 @@ instance Storable VkExportFenceWin32HandleInfoKHR where
 --     value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits',
 -- 'Graphics.Vulkan.Core10.Queue.VkFence',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkGetFenceWin32HandleKHR'
 data VkFenceGetWin32HandleInfoKHR = VkFenceGetWin32HandleInfoKHR
-  { -- No documentation found for Nested "VkFenceGetWin32HandleInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkFenceGetWin32HandleInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkFenceGetWin32HandleInfoKHR" "vkFence"
+  , -- | @fence@ is the fence from which state will be exported.
   vkFence :: VkFence
-  , -- No documentation found for Nested "VkFenceGetWin32HandleInfoKHR" "vkHandleType"
+  , -- | @handleType@ is the type of handle requested.
   vkHandleType :: VkExternalFenceHandleTypeFlagBits
   }
   deriving (Eq, Show)

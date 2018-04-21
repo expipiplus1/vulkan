@@ -61,10 +61,14 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR = VkStructureType 1000080000
--- No documentation found for Nested "VkDescriptorUpdateTemplateType" "VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR"
+-- | @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@ specifies that
+-- the descriptor update template will be used for push descriptor updates
+-- only.
 pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR :: VkDescriptorUpdateTemplateType
 pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = VkDescriptorUpdateTemplateType 1
--- No documentation found for Nested "VkDescriptorSetLayoutCreateFlagBits" "VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR"
+-- | @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@ specifies that
+-- descriptor sets /must/ not be allocated using this layout, and
+-- descriptors are instead pushed by 'vkCmdPushDescriptorSetKHR'.
 pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR :: VkDescriptorSetLayoutCreateFlagBits
 pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = VkDescriptorSetLayoutCreateFlagBits 0x00000001
 -- No documentation found for TopLevel "VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION"
@@ -77,7 +81,6 @@ pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
 -- buffer
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer that the descriptors will be
 --     recorded in.
@@ -103,7 +106,6 @@ pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
 --     structures describing the descriptors to be updated.
 --
 -- = Description
--- #_description#
 --
 -- /Push descriptors/ are a small bank of descriptors whose storage is
 -- internally managed by the command buffer rather than being written into
@@ -116,8 +118,8 @@ pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
 -- cause shaders to use the updated descriptors for subsequent rendering
 -- commands (either compute or graphics, according to the
 -- @pipelineBindPoint@) until the descriptor is overwritten, or else until
--- the set is disturbed as described in
--- <{html_spec_relative}#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- the set is disturbed as described in [Pipeline Layout
+-- Compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility).
 -- When the set is disturbed or push descriptors with a different
 -- descriptor set layout are set, all push descriptors become invalid.
 --
@@ -174,8 +176,8 @@ pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
 -- -   @pDescriptorWrites@ /must/ be a valid pointer to an array of
 --     @descriptorWriteCount@ valid @VkWriteDescriptorSet@ structures
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics, or compute operations
@@ -194,18 +196,17 @@ pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
+-- | Secondary                                                                                                   |                                                                                                            | Compute                                                                                               |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Pass.VkPipelineBindPoint',
@@ -216,7 +217,6 @@ foreign import ccall "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("
 -- command buffer using a descriptor update template
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer that the descriptors will be
 --     recorded in.
@@ -234,9 +234,6 @@ foreign import ccall "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("
 --
 -- -   @pData@ Points to memory which contains the descriptors for the
 --     templated update.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -261,8 +258,8 @@ foreign import ccall "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("
 --
 -- -   @layout@ /must/ be a valid @VkPipelineLayout@ handle
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics, or compute operations
@@ -280,15 +277,15 @@ foreign import ccall "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
+-- | Secondary                                                                                                   |                                                                                                            | Compute                                                                                               |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- __API example.__
 --
@@ -345,7 +342,6 @@ foreign import ccall "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("
 -- > vkCmdPushDescriptorSetWithTemplateKHR(myCmdBuffer, myDescriptorUpdateTemplate, myPipelineLayout, 0,&appData);
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate',
@@ -355,13 +351,11 @@ foreign import ccall "vkCmdPushDescriptorSetWithTemplateKHR" vkCmdPushDescriptor
 -- descriptor limits that can be supported by an implementation
 --
 -- = Members
--- #_members#
 --
 -- The members of the @VkPhysicalDevicePushDescriptorPropertiesKHR@
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
--- #_description#
 --
 -- -   @maxPushDescriptors@ is the maximum number of descriptors that /can/
 --     be used in a descriptor set created with
@@ -373,15 +367,14 @@ foreign import ccall "vkCmdPushDescriptorSetWithTemplateKHR" vkCmdPushDescriptor
 --     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDevicePushDescriptorPropertiesKHR = VkPhysicalDevicePushDescriptorPropertiesKHR
-  { -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "vkMaxPushDescriptors"
+  , -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "maxPushDescriptors"
   vkMaxPushDescriptors :: Word32
   }
   deriving (Eq, Show)
