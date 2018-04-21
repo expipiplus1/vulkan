@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}, compiler ? "ghc822" }:
+{ pkgs ? import <nixpkgs> {}, compiler ? "ghc841" }:
 
 # Strip out the irrelevant parts of the source
 let src = with pkgs.lib;
