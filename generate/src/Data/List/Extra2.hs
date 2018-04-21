@@ -1,3 +1,5 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Data.List.Extra2
   ( iterateSuffixes
   , iterateSuffixesM
