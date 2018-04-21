@@ -52,8 +52,24 @@ documentationToHaddock getModule Documentation {..} =
         )
 
 prepareForHaddock :: Pandoc -> Pandoc
-prepareForHaddock = topDown fixupBlock
+prepareForHaddock =
+  topDown haddock801 . topDown removeEmptySections . topDown fixupBlock
   where
+    haddock801 :: [Block] -> [Block]
+    haddock801 = foldr go []
+      where
+        dummy = Para [Str "'"]
+        go :: Block -> [Block] -> [Block]
+        go h@(Header{}) (t@(Table{}) : bs) = h : dummy : t : bs
+        go b            bs                 = b : bs
+
+    removeEmptySections :: [Block] -> [Block]
+    removeEmptySections = foldr go []
+      where
+        go :: Block -> [Block] -> [Block]
+        go (Header n1 _ _) (h@(Header n2 _ _) : bs) | n1 <= n2 = h : bs
+        go b               bs                       = b : bs
+
     fixupBlock :: Block -> Block
     fixupBlock = \case
       -- Remove idents from headers
