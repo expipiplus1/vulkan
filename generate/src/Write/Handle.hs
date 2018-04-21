@@ -25,6 +25,8 @@ writeHandle h@Handle {..} = do
       weExtensions = []
       weImports    = [Import "Foreign.Ptr" ["Ptr"]]
       weDepends    = []
+      weReexports = []
+      weReexportable = []
   pure WriteElement {..}
 
 hDoc :: Handle -> Either [SpecError] (DocMap -> Doc ())

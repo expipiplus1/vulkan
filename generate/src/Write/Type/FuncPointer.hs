@@ -22,9 +22,11 @@ import           Write.Util
 writeFuncPointer :: FuncPointer -> Either [SpecError] WriteElement
 writeFuncPointer fp@FuncPointer {..} = do
   (weDoc, weImports, weExtensions) <- fpDoc fp
-  let weName     = "FuncPointer: " <> fpName
-      weProvides = [TypeAlias fpName]
-      weDepends  = typeDepends fpType
+  let weName         = "FuncPointer: " <> fpName
+      weProvides     = [TypeAlias fpName]
+      weDepends      = typeDepends fpType
+      weReexports    = []
+      weReexportable = []
   pure WriteElement {..}
 
 fpDoc :: FuncPointer -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])

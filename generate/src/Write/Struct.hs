@@ -39,6 +39,8 @@ writeStruct s@Struct {..} = case sStructOrUnion of
                ]
         weProvides = [TypeConstructor sName, Term sName]
         weDepends  = nubOrd (concatMap (typeDepends . smType) sMembers)
+        weReexports = []
+        weReexportable = []
     pure WriteElement {..}
   AUnion -> do
     (weDoc, imports, extensions) <- unionDoc s
@@ -52,6 +54,8 @@ writeStruct s@Struct {..} = case sStructOrUnion of
                ]
         weProvides = TypeConstructor sName : (Term <$> smNames)
         weDepends  = nubOrd $ concatMap (typeDepends . smType) sMembers
+        weReexports = []
+        weReexportable = []
     pure WriteElement {..}
 
 ----------------------------------------------------------------

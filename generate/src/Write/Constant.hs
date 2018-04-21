@@ -22,6 +22,8 @@ writeAPIConstant ac@APIConstant {..} =
   let weName    = "APIConstant: " <> acName
       weDoc     = constantDoc ac
       weDepends = []
+      weReexports    = []
+      weReexportable = []
   in  case acValue of
         IntegralValue _ ->
           let weExtensions = ["PatternSynonyms", "DataKinds"]

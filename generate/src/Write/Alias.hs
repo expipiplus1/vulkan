@@ -56,6 +56,8 @@ writeValueAlias getType alias@Alias{..} = eitherToValidation $ do
       weName       = "Value Alias: " <> aName
       weProvides   = [Term aName]
       weDepends    = [TermName aAliasName] ++ typeDepends (getType target)
+      weReexports = []
+      weReexportable = []
   pure WriteElement {..}
 
 writePatternAlias
@@ -75,6 +77,8 @@ writePatternAlias getType alias@Alias{..} = eitherToValidation $ do
       weName       = "Pattern Alias: " <> aName
       weProvides   = [Pattern aName]
       weDepends    = PatternName aAliasName : typeDepends (getType target)
+      weReexports = []
+      weReexportable = []
   pure WriteElement {..}
 
 writeTypeAlias
@@ -90,6 +94,8 @@ writeTypeAlias Alias{..} =
       weName       = "Type Alias: " <> aName
       weProvides   = [TypeAlias aName]
       weDepends    = [WE.TypeName aAliasName]
+      weReexports = []
+      weReexportable = []
   in WriteElement {..}
 
 writeStructPatternAlias :: Alias Struct -> Validation [SpecError] WriteElement
@@ -110,6 +116,8 @@ writeStructPatternAlias alias@Alias{..} = eitherToValidation $ do
       weDepends    = -- This is not correct if we have a struct alias of a struct alias
                      [WE.TypeName aAliasName] ++
                        (typeDepends . smType =<< sMembers)
+      weReexports = []
+      weReexportable = []
   pure WriteElement {..}
 
 writeConstantAlias :: Alias APIConstant -> Validation [SpecError] WriteElement

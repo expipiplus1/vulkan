@@ -25,6 +25,8 @@ writeBaseType bt@BaseType {..} = do
   let weName     = "BaseType: " <> btName
       weProvides = [TypeAlias btName]
       weDepends  = typeDepends btType
+      weReexports = []
+      weReexportable = []
   pure WriteElement {..}
 
 hDoc :: BaseType -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])

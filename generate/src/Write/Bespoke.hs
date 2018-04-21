@@ -30,6 +30,8 @@ namedType =
       weName = "NamedType"
       weProvides = [ TypeAlias "(:::)" ]
       weDepends = []
+      weReexports = []
+      weReexportable = []
   in WriteElement{..}
 
 versions :: WriteElement
@@ -74,6 +76,8 @@ versions =
                    , Term "_VK_VERSION_PATCH"
                    ]
       weDepends = []
+      weReexports = []
+      weReexportable = []
   in WriteElement{..}
 
 nullHandle :: WriteElement
@@ -89,6 +93,8 @@ nullHandle =
       weName = "Null handle"
       weProvides = [Pattern "VK_NULL_HANDLE"]
       weDepends = []
+      weReexports = []
+      weReexportable = []
   in WriteElement{..}
 
 bools :: WriteElement
@@ -114,6 +120,8 @@ voidDataWriteElement n =
       weName = n
       weProvides = [WithoutConstructors (TypeName n)]
       weDepends = []
+      weReexports = []
+      weReexportable = []
   in WriteElement{..}
 
 unitPtrAliasWriteElement :: Text -> WriteElement
@@ -167,6 +175,8 @@ newtypeOrTypeWriteElement decl n t is =
                      then [WithConstructors (TypeName n)]
                      else [WithoutConstructors (TypeName n)]
       weDepends = []
+      weReexports = []
+      weReexportable = []
   in WriteElement{..}
 
 win32 :: [WriteElement]
