@@ -27,16 +27,12 @@ import Graphics.Vulkan.Core10.Core
 -- instance creation
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @pApiVersion@ points to a @uint32_t@, which is the version of Vulkan
 --     supported by instance-level functionality, encoded as described in
---     the
---     <{html_spec_relative}#fundamentals-versionnum API Version Numbers and Semantics>
+--     the [API Version Numbers and
+--     Semantics](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-versionnum)
 --     section.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -44,11 +40,10 @@ import Graphics.Vulkan.Core10.Core
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 -- = See Also
--- #_see_also#
 --
 -- No cross-references are available
 foreign import ccall "vkEnumerateInstanceVersion" vkEnumerateInstanceVersion :: ("pApiVersion" ::: Ptr Word32) -> IO VkResult

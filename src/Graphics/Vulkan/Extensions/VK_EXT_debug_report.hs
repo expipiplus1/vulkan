@@ -131,101 +131,82 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- | VkDebugReportObjectTypeEXT - Specify the type of an object handle
 --
 -- = Description
--- #_description#
 --
--- > +------------------------------------------+---------------------------+
--- > | 'VkDebugReportObjectTypeEXT'             | Vulkan Handle Type        |
--- > +==========================================+===========================+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT | Unknown\/Undefined Handle |
--- > | @                                        |                           |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EX | 'Graphics.Vulkan.Core10.D |
--- > | T@                                       | eviceInitialization.VkIns |
--- > |                                          | tance'                    |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DE | 'Graphics.Vulkan.Core10.D |
--- > | VICE_EXT@                                | eviceInitialization.VkPhy |
--- > |                                          | sicalDevice'              |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT@ | 'Graphics.Vulkan.Core10.D |
--- > |                                          | eviceInitialization.VkDev |
--- > |                                          | ice'                      |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT@  | 'Graphics.Vulkan.Core10.Q |
--- > |                                          | ueue.VkQueue'             |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_E | 'Graphics.Vulkan.Core10.Q |
--- > | XT@                                      | ueue.VkSemaphore'         |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUF | 'Graphics.Vulkan.Core10.Q |
--- > | FER_EXT@                                 | ueue.VkCommandBuffer'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT@  | 'Graphics.Vulkan.Core10.Q |
--- > |                                          | ueue.VkFence'             |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMO | 'Graphics.Vulkan.Core10.M |
--- > | RY_EXT@                                  | emory.VkDeviceMemory'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT@ | 'Graphics.Vulkan.Core10.M |
--- > |                                          | emoryManagement.VkBuffer' |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT@  | 'Graphics.Vulkan.Core10.M |
--- > |                                          | emoryManagement.VkImage'  |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT@  | 'Graphics.Vulkan.Core10.E |
--- > |                                          | vent.VkEvent'             |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_ | 'Graphics.Vulkan.Core10.Q |
--- > | EXT@                                     | uery.VkQueryPool'         |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW | 'Graphics.Vulkan.Core10.B |
--- > | _EXT@                                    | ufferView.VkBufferView'   |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_ | 'Graphics.Vulkan.Core10.I |
--- > | EXT@                                     | mageView.VkImageView'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODU | 'Graphics.Vulkan.Core10.S |
--- > | LE_EXT@                                  | hader.VkShaderModule'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CA | 'Graphics.Vulkan.Core10.P |
--- > | CHE_EXT@                                 | ipelineCache.VkPipelineCa |
--- > |                                          | che'                      |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LA | 'Graphics.Vulkan.Core10.P |
--- > | YOUT_EXT@                                | ipeline.VkPipelineLayout' |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS | 'Graphics.Vulkan.Core10.P |
--- > | _EXT@                                    | ipeline.VkRenderPass'     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EX | 'Graphics.Vulkan.Core10.P |
--- > | T@                                       | ipeline.VkPipeline'       |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_ | 'Graphics.Vulkan.Core10.P |
--- > | SET_LAYOUT_EXT@                          | ipelineLayout.VkDescripto |
--- > |                                          | rSetLayout'               |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT | 'Graphics.Vulkan.Core10.S |
--- > | @                                        | ampler.VkSampler'         |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_ | 'Graphics.Vulkan.Core10.D |
--- > | POOL_EXT@                                | escriptorSet.VkDescriptor |
--- > |                                          | Pool'                     |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_ | 'Graphics.Vulkan.Core10.D |
--- > | SET_EXT@                                 | escriptorSet.VkDescriptor |
--- > |                                          | Set'                      |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER | 'Graphics.Vulkan.Core10.P |
--- > | _EXT@                                    | ass.VkFramebuffer'        |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POO | 'Graphics.Vulkan.Core10.C |
--- > | L_EXT@                                   | ommandPool.VkCommandPool' |
--- > +------------------------------------------+---------------------------+
--- > | @VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPOR | 'VkDebugReportCallbackEXT |
--- > | T_CALLBACK_EXT_EXT@                      | '                         |
--- > +------------------------------------------+---------------------------+
--- >
--- > VkDebugReportObjectTypeEXT and Vulkan Handle Relationship
+-- \'
+--
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | 'VkDebugReportObjectTypeEXT'                                     | Vulkan Handle Type                                                                                  |
+-- +==================================================================+=====================================================================================================+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT@                        | Unknown\/Undefined Handle                                                                           |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT@                       | 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance'                                            |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT@                | 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'                                      |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT@                         | 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'                                              |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT@                          | 'Graphics.Vulkan.Core10.Queue.VkQueue'                                                              |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT@                      | 'Graphics.Vulkan.Core10.Queue.VkSemaphore'                                                          |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT@                 | 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'                                                      |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT@                          | 'Graphics.Vulkan.Core10.Queue.VkFence'                                                              |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT@                  | 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory'                                                      |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT@                         | 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer'                                                  |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT@                          | 'Graphics.Vulkan.Core10.MemoryManagement.VkImage'                                                   |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT@                          | 'Graphics.Vulkan.Core10.Event.VkEvent'                                                              |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT@                     | 'Graphics.Vulkan.Core10.Query.VkQueryPool'                                                          |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT@                    | 'Graphics.Vulkan.Core10.BufferView.VkBufferView'                                                    |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT@                     | 'Graphics.Vulkan.Core10.ImageView.VkImageView'                                                      |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT@                  | 'Graphics.Vulkan.Core10.Shader.VkShaderModule'                                                      |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT@                 | 'Graphics.Vulkan.Core10.PipelineCache.VkPipelineCache'                                              |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT@                | 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout'                                                  |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT@                    | 'Graphics.Vulkan.Core10.Pipeline.VkRenderPass'                                                      |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT@                       | 'Graphics.Vulkan.Core10.Pipeline.VkPipeline'                                                        |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT@          | 'Graphics.Vulkan.Core10.PipelineLayout.VkDescriptorSetLayout'                                       |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT@                        | 'Graphics.Vulkan.Core10.Sampler.VkSampler'                                                          |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT@                | 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorPool'                                             |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT@                 | 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSet'                                              |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT@                    | 'Graphics.Vulkan.Core10.Pass.VkFramebuffer'                                                         |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT@                   | 'Graphics.Vulkan.Core10.CommandPool.VkCommandPool'                                                  |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT@                    | 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'                                            |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT@                  | 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'                                        |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT@      | 'VkDebugReportCallbackEXT'                                                                          |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT@                    | 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR'                                            |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT@               | 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayModeKHR'                                        |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT@               | 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkObjectTableNVX'                      |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT@   | 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsLayoutNVX'           |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+-- | @VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT@ | 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate' |
+-- +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------+
+--
+-- VkDebugReportObjectTypeEXT and Vulkan Handle Relationship
 --
 -- __Note__
 --
@@ -234,7 +215,6 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- see this error code during normal use of the validation layers.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectNameInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectTagInfoEXT',
@@ -470,7 +450,6 @@ pattern VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = VkDebugReportObje
 -- report callback
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugReportFlagsEXT'
 newtype VkDebugReportFlagBitsEXT = VkDebugReportFlagBitsEXT VkFlags
@@ -562,7 +541,6 @@ pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = VK_DEBUG_REPORT_OBJECT_TY
 -- function
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @flags@ specifies the 'VkDebugReportFlagBitsEXT' that triggered this
 --     callback.
@@ -593,7 +571,6 @@ pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = VK_DEBUG_REPORT_OBJECT_TY
 --     'VkDebugReportCallbackEXT' was created.
 --
 -- = Description
--- #_description#
 --
 -- The callback /must/ not call @vkDestroyDebugReportCallbackEXT@.
 --
@@ -606,10 +583,9 @@ pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT = VK_DEBUG_REPORT_OBJECT_TY
 -- is not @VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT@ and @object@ is not
 -- @VK_NULL_HANDLE@, @object@ /must/ be a Vulkan object of the
 -- corresponding type associated with @objectType@ as defined in
--- <{html_spec_relative}#debug-report-object-types {html_spec_relative}#debug-report-object-types>.
+-- [{html_spec_relative}#debug-report-object-types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#debug-report-object-types).
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugReportCallbackCreateInfoEXT'
 type PFN_vkDebugReportCallbackEXT = Ptr (("flags" ::: VkDebugReportFlagsEXT) -> ("objectType" ::: VkDebugReportObjectTypeEXT) -> ("object" ::: Word64) -> ("location" ::: CSize) -> ("messageCode" ::: Int32) -> ("pLayerPrefix" ::: Ptr CChar) -> ("pMessage" ::: Ptr CChar) -> ("pUserData" ::: Ptr ()) -> IO VkBool32)
@@ -618,18 +594,13 @@ data VkDebugReportCallbackEXT_T
 -- | VkDebugReportCallbackEXT - Opaque handle to a debug report callback
 -- object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'vkCreateDebugReportCallbackEXT', 'vkDestroyDebugReportCallbackEXT'
 type VkDebugReportCallbackEXT = Ptr VkDebugReportCallbackEXT_T
 -- | vkCreateDebugReportCallbackEXT - Create a debug report callback object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ the instance the callback will be logged on.
 --
@@ -638,13 +609,12 @@ type VkDebugReportCallbackEXT = Ptr VkDebugReportCallbackEXT_T
 --     will be called.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pCallback@ is a pointer to record the @VkDebugReportCallbackEXT@
 --     object created.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -661,14 +631,13 @@ type VkDebugReportCallbackEXT = Ptr VkDebugReportCallbackEXT_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkDebugReportCallbackCreateInfoEXT', 'VkDebugReportCallbackEXT',
@@ -677,7 +646,6 @@ foreign import ccall "vkCreateDebugReportCallbackEXT" vkCreateDebugReportCallbac
 -- | vkDestroyDebugReportCallbackEXT - Destroy a debug report callback object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ the instance where the callback was created.
 --
@@ -688,10 +656,9 @@ foreign import ccall "vkCreateDebugReportCallbackEXT" vkCreateDebugReportCallbac
 --     callback is active.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -718,7 +685,6 @@ foreign import ccall "vkCreateDebugReportCallbackEXT" vkCreateDebugReportCallbac
 -- -   Host access to @callback@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkDebugReportCallbackEXT',
@@ -727,7 +693,6 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallb
 -- | vkDebugReportMessageEXT - Inject a message into a debug stream
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the debug stream’s @VkInstance@.
 --
@@ -752,7 +717,6 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallb
 --     conditions.
 --
 -- = Description
--- #_description#
 --
 -- The call will propagate through the layers and generate callback(s) as
 -- indicated by the message’s flags. The parameters are passed on to the
@@ -766,7 +730,7 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallb
 -- -   If @objectType@ is not @VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT@ and
 --     @object@ is not @VK_NULL_HANDLE@, @object@ /must/ be a Vulkan object
 --     of the corresponding type associated with @objectType@ as defined in
---     <{html_spec_relative}#debug-report-object-types {html_spec_relative}#debug-report-object-types>.
+--     [{html_spec_relative}#debug-report-object-types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#debug-report-object-types).
 --
 -- == Valid Usage (Implicit)
 --
@@ -784,7 +748,6 @@ foreign import ccall "vkDestroyDebugReportCallbackEXT" vkDestroyDebugReportCallb
 -- -   @pMessage@ /must/ be a null-terminated UTF-8 string
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugReportFlagsEXT', 'VkDebugReportObjectTypeEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance'
@@ -793,7 +756,6 @@ foreign import ccall "vkDebugReportMessageEXT" vkDebugReportMessageEXT :: ("inst
 -- a newly created debug report callback
 --
 -- = Description
--- #_description#
 --
 -- For each @VkDebugReportCallbackEXT@ that is created the
 -- @VkDebugReportCallbackCreateInfoEXT@::@flags@ determine when that
@@ -826,21 +788,21 @@ foreign import ccall "vkDebugReportMessageEXT" vkDebugReportMessageEXT :: ("inst
 --     values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'PFN_vkDebugReportCallbackEXT', 'VkDebugReportFlagsEXT',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateDebugReportCallbackEXT'
 data VkDebugReportCallbackCreateInfoEXT = VkDebugReportCallbackCreateInfoEXT
-  { -- No documentation found for Nested "VkDebugReportCallbackCreateInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDebugReportCallbackCreateInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDebugReportCallbackCreateInfoEXT" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkDebugReportFlagBitsEXT' specifying which
+  -- event(s) will cause this callback to be called.
   vkFlags :: VkDebugReportFlagsEXT
-  , -- No documentation found for Nested "VkDebugReportCallbackCreateInfoEXT" "vkPfnCallback"
+  , -- | @pfnCallback@ is the application callback function to call.
   vkPfnCallback :: PFN_vkDebugReportCallbackEXT
-  , -- No documentation found for Nested "VkDebugReportCallbackCreateInfoEXT" "vkPUserData"
+  , -- | @pUserData@ is user data to be passed to the callback.
   vkPUserData :: Ptr ()
   }
   deriving (Eq, Show)
@@ -861,13 +823,11 @@ instance Storable VkDebugReportCallbackCreateInfoEXT where
 -- | VkDebugReportFlagsEXT - Bitmask of VkDebugReportFlagBitsEXT
 --
 -- = Description
--- #_description#
 --
 -- @VkDebugReportFlagsEXT@ is a bitmask type for setting a mask of zero or
 -- more 'VkDebugReportFlagBitsEXT'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDebugReportCallbackCreateInfoEXT', 'VkDebugReportFlagBitsEXT',
 -- 'vkDebugReportMessageEXT'

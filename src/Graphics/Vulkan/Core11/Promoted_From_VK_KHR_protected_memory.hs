@@ -100,7 +100,6 @@ pattern VK_COMMAND_POOL_CREATE_PROTECTED_BIT = VkCommandPoolCreateFlagBits 0x000
 -- | vkGetDeviceQueue2 - Get a queue handle from a device
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the queue.
 --
@@ -110,9 +109,6 @@ pattern VK_COMMAND_POOL_CREATE_PROTECTED_BIT = VkCommandPoolCreateFlagBits 0x000
 --
 -- -   @pQueue@ is a pointer to a @VkQueue@ object that will be filled with
 --     the handle for the requested queue.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -124,16 +120,12 @@ pattern VK_COMMAND_POOL_CREATE_PROTECTED_BIT = VkCommandPoolCreateFlagBits 0x000
 -- -   @pQueue@ /must/ be a valid pointer to a @VkQueue@ handle
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkDeviceQueueInfo2', 'Graphics.Vulkan.Core10.Queue.VkQueue'
 foreign import ccall "vkGetDeviceQueue2" vkGetDeviceQueue2 :: ("device" ::: VkDevice) -> ("pQueueInfo" ::: Ptr VkDeviceQueueInfo2) -> ("pQueue" ::: Ptr VkQueue) -> IO ()
 -- | VkProtectedSubmitInfo - Structure indicating whether the submission is
 -- protected
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -156,15 +148,18 @@ foreign import ccall "vkGetDeviceQueue2" vkGetDeviceQueue2 :: ("device" ::: VkDe
 -- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkProtectedSubmitInfo = VkProtectedSubmitInfo
-  { -- No documentation found for Nested "VkProtectedSubmitInfo" "vkSType"
+  { -- No documentation found for Nested "VkProtectedSubmitInfo" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkProtectedSubmitInfo" "vkPNext"
+  , -- No documentation found for Nested "VkProtectedSubmitInfo" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkProtectedSubmitInfo" "vkProtectedSubmit"
+  , -- | @protectedSubmit@ specifies whether the batch is protected. If
+  -- @protectedSubmit@ is @VK_TRUE@, the batch is protected. If
+  -- @protectedSubmit@ is @VK_FALSE@, the batch is unprotected. If the
+  -- @VkSubmitInfo@::@pNext@ chain does not contain this structure, the batch
+  -- is unprotected.
   vkProtectedSubmit :: VkBool32
   }
   deriving (Eq, Show)
@@ -182,7 +177,6 @@ instance Storable VkProtectedSubmitInfo where
 -- memory features that can be supported by an implementation
 --
 -- = Description
--- #_description#
 --
 -- If the @VkPhysicalDeviceProtectedMemoryFeatures@ structure is included
 -- in the @pNext@ chain of
@@ -195,15 +189,14 @@ instance Storable VkProtectedSubmitInfo where
 --     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceProtectedMemoryFeatures = VkPhysicalDeviceProtectedMemoryFeatures
-  { -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryFeatures" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryFeatures" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryFeatures" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryFeatures" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryFeatures" "vkProtectedMemory"
+  , -- | @protectedMemory@ specifies whether protected memory is supported.
   vkProtectedMemory :: VkBool32
   }
   deriving (Eq, Show)
@@ -221,7 +214,6 @@ instance Storable VkPhysicalDeviceProtectedMemoryFeatures where
 -- protected memory properties that can be supported by an implementation
 --
 -- = Description
--- #_description#
 --
 -- If the @VkPhysicalDeviceProtectedMemoryProperties@ structure is included
 -- in the @pNext@ chain of
@@ -235,15 +227,18 @@ instance Storable VkPhysicalDeviceProtectedMemoryFeatures where
 --     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceProtectedMemoryProperties = VkPhysicalDeviceProtectedMemoryProperties
-  { -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryProperties" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryProperties" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryProperties" "vkProtectedNoFault"
+  , -- | @protectedNoFault@ specifies whether the undefined behavior will not
+  -- include process termination or device loss. If @protectedNoFault@ is
+  -- @VK_FALSE@, undefined behavior /may/ include process termination or
+  -- device loss. If @protectedNoFault@ is @VK_TRUE@, undefined behavior will
+  -- not include process termination or device loss.
   vkProtectedNoFault :: VkBool32
   }
   deriving (Eq, Show)
@@ -261,7 +256,6 @@ instance Storable VkPhysicalDeviceProtectedMemoryProperties where
 -- queue creation
 --
 -- = Description
--- #_description#
 --
 -- The queue returned by @vkGetDeviceQueue2@ /must/ have the same @flags@
 -- value from this structure as that used at device creation time in a
@@ -293,20 +287,24 @@ instance Storable VkPhysicalDeviceProtectedMemoryProperties where
 -- -   @flags@ /must/ not be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Device.VkDeviceQueueCreateFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkGetDeviceQueue2'
 data VkDeviceQueueInfo2 = VkDeviceQueueInfo2
-  { -- No documentation found for Nested "VkDeviceQueueInfo2" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDeviceQueueInfo2" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure. The
+  -- @pNext@ chain of @VkDeviceQueueInfo2@ is used to provide additional
+  -- image parameters to @vkGetDeviceQueue2@.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDeviceQueueInfo2" "vkFlags"
+  , -- | @flags@ is a 'Graphics.Vulkan.Core10.Device.VkDeviceQueueCreateFlags'
+  -- value indicating the flags used to create the device queue.
   vkFlags :: VkDeviceQueueCreateFlags
-  , -- No documentation found for Nested "VkDeviceQueueInfo2" "vkQueueFamilyIndex"
+  , -- | @queueFamilyIndex@ is the index of the queue family to which the queue
+  -- belongs.
   vkQueueFamilyIndex :: Word32
-  , -- No documentation found for Nested "VkDeviceQueueInfo2" "vkQueueIndex"
+  , -- | @queueIndex@ is the index within this queue family of the queue to
+  -- retrieve.
   vkQueueIndex :: Word32
   }
   deriving (Eq, Show)

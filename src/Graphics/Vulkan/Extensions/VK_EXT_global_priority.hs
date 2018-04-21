@@ -62,7 +62,6 @@ import Graphics.Vulkan.Core10.Core
 -- priority
 --
 -- = Description
--- #_description#
 --
 -- Priority values are sorted in ascending order. A comparison operation on
 -- the enum values can be used to determine the priority order.
@@ -79,7 +78,6 @@ import Graphics.Vulkan.Core10.Core
 --     Useful for critical tasks.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDeviceQueueGlobalPriorityCreateInfoEXT'
 newtype VkQueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT Int32
@@ -136,7 +134,6 @@ pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME = "VK_EXT_global_priority"
 -- priority
 --
 -- = Description
--- #_description#
 --
 -- A queue created without specifying
 -- @VkDeviceQueueGlobalPriorityCreateInfoEXT@ will default to
@@ -150,16 +147,16 @@ pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME = "VK_EXT_global_priority"
 -- -   @globalPriority@ /must/ be a valid 'VkQueueGlobalPriorityEXT' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkQueueGlobalPriorityEXT',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkDeviceQueueGlobalPriorityCreateInfoEXT = VkDeviceQueueGlobalPriorityCreateInfoEXT
-  { -- No documentation found for Nested "VkDeviceQueueGlobalPriorityCreateInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDeviceQueueGlobalPriorityCreateInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDeviceQueueGlobalPriorityCreateInfoEXT" "vkGlobalPriority"
+  , -- | @globalPriority@ is the system-wide priority associated to this queue as
+  -- specified by 'VkQueueGlobalPriorityEXT'
   vkGlobalPriority :: VkQueueGlobalPriorityEXT
   }
   deriving (Eq, Show)

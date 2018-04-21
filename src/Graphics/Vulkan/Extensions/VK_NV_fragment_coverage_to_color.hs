@@ -61,13 +61,11 @@ import Graphics.Vulkan.Core10.Core
 -- | VkPipelineCoverageToColorStateCreateFlagsNV - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineCoverageToColorStateCreateFlagsNV@ is a bitmask type for
 -- setting a mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineCoverageToColorStateCreateInfoNV'
 newtype VkPipelineCoverageToColorStateCreateFlagsNV = VkPipelineCoverageToColorStateCreateFlagsNV VkFlags
@@ -101,22 +99,24 @@ pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME = "VK_NV_fragment_covera
 -- whether fragment coverage replaces a color
 --
 -- = Description
--- #_description#
 --
 -- If @coverageToColorEnable@ is @VK_TRUE@, the fragment coverage
 -- information is treated as a bitmask with one bit for each sample (as in
--- the <{html_spec_relative}#fragops-samplemask Sample Mask> section), and
--- this bitmask replaces the first component of the color value
--- corresponding to the fragment shader output location with @Location@
--- equal to @coverageToColorLocation@ and @Index@ equal to zero. If the
--- color attachment format has fewer bits than the sample coverage, the low
--- bits of the sample coverage bitmask are taken without any clamping. If
--- the color attachment format has more bits than the sample coverage, the
--- high bits of the sample coverage bitmask are filled with zeros.
+-- the [Sample
+-- Mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-samplemask)
+-- section), and this bitmask replaces the first component of the color
+-- value corresponding to the fragment shader output location with
+-- @Location@ equal to @coverageToColorLocation@ and @Index@ equal to zero.
+-- If the color attachment format has fewer bits than the sample coverage,
+-- the low bits of the sample coverage bitmask are taken without any
+-- clamping. If the color attachment format has more bits than the sample
+-- coverage, the high bits of the sample coverage bitmask are filled with
+-- zeros.
 --
--- If <{html_spec_relative}#primsrast-sampleshading Sample Shading> is in
--- use, the coverage bitmask only has bits set for samples that correspond
--- to the fragment shader invocation that shades those samples.
+-- If [Sample
+-- Shading](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-sampleshading)
+-- is in use, the coverage bitmask only has bits set for samples that
+-- correspond to the fragment shader invocation that shades those samples.
 --
 -- This pipeline stage occurs after sample counting and before blending,
 -- and is always performed after fragment shading regardless of the setting
@@ -147,20 +147,21 @@ pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME = "VK_NV_fragment_covera
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'VkPipelineCoverageToColorStateCreateFlagsNV',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineCoverageToColorStateCreateInfoNV = VkPipelineCoverageToColorStateCreateInfoNV
-  { -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "vkSType"
+  { -- | @sType@ is the type of this structure
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineCoverageToColorStateCreateFlagsNV
-  , -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "vkCoverageToColorEnable"
+  , -- | @coverageToColorEnable@ controls whether the fragment coverage value
+  -- replaces a fragment color output.
   vkCoverageToColorEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "vkCoverageToColorLocation"
+  , -- | @coverageToColorLocation@ controls which fragment shader color output
+  -- value is replaced.
   vkCoverageToColorLocation :: Word32
   }
   deriving (Eq, Show)

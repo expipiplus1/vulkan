@@ -52,7 +52,6 @@ pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = "VK_EXT_acquire_xlib_displa
 -- | vkAcquireXlibDisplayEXT - Acquire access to a VkDisplayKHR using Xlib
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ The physical device the display is on.
 --
@@ -61,7 +60,6 @@ pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = "VK_EXT_acquire_xlib_displa
 -- -   @display@ The display the caller wishes to control in Vulkan.
 --
 -- = Description
--- #_description#
 --
 -- All permissions necessary to control the display are granted to the
 -- Vulkan instance associated with @physicalDevice@ until the display is
@@ -89,14 +87,13 @@ pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = "VK_EXT_acquire_xlib_displa
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_INITIALIZATION_FAILED@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
@@ -105,7 +102,6 @@ foreign import ccall "vkAcquireXlibDisplayEXT" vkAcquireXlibDisplayEXT :: ("phys
 -- X11 RandR Output
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ The physical device to query the display handle on.
 --
@@ -119,7 +115,6 @@ foreign import ccall "vkAcquireXlibDisplayEXT" vkAcquireXlibDisplayEXT :: ("phys
 --     be returned here.
 --
 -- = Description
--- #_description#
 --
 -- If there is no 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR'
 -- corresponding to @rrOutput@ on @physicalDevice@,
@@ -136,11 +131,10 @@ foreign import ccall "vkAcquireXlibDisplayEXT" vkAcquireXlibDisplayEXT :: ("phys
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'

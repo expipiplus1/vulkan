@@ -91,7 +91,6 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
 -- | VkImageLayout - Layout of image and image subresources
 --
 -- = Description
--- #_description#
 --
 -- The type(s) of device access supported by each layout are:
 --
@@ -139,6 +138,36 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
 --     @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@ /can/ be used as input
 --     attachments.
 --
+-- -   @VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL@: /must/
+--     only be used as a depth\/stencil attachment in a @VkFramebuffer@,
+--     where the depth aspect is read-only, and\/or as a read-only image in
+--     a shader (which /can/ be read as a sampled image, combined
+--     image\/sampler and\/or input attachment) where only the depth aspect
+--     is accessed. This layout is valid only for image subresources of
+--     images created with the
+--     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@ usage bit enabled.
+--     Only image subresources of images created with
+--     @VK_IMAGE_USAGE_SAMPLED_BIT@ /can/ be used as a sampled image or
+--     combined image\/sampler in a shader. Similarly, only image
+--     subresources of images created with
+--     @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@ /can/ be used as input
+--     attachments.
+--
+-- -   @VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL@: /must/
+--     only be used as a depth\/stencil attachment in a @VkFramebuffer@,
+--     where the stencil aspect is read-only, and\/or as a read-only image
+--     in a shader (which /can/ be read as a sampled image, combined
+--     image\/sampler and\/or input attachment) where only the stencil
+--     aspect is accessed. This layout is valid only for image subresources
+--     of images created with the
+--     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@ usage bit enabled.
+--     Only image subresources of images created with
+--     @VK_IMAGE_USAGE_SAMPLED_BIT@ /can/ be used as a sampled image or
+--     combined image\/sampler in a shader. Similarly, only image
+--     subresources of images created with
+--     @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@ /can/ be used as input
+--     attachments.
+--
 -- -   @VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL@ /must/ only be used as a
 --     read-only image in a shader (which /can/ be read as a sampled image,
 --     combined image\/sampler and\/or input attachment). This layout is
@@ -148,7 +177,7 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
 --
 -- -   @VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL@ /must/ only be used as a
 --     source image of a transfer command (see the definition of
---     <{html_spec_relative}#synchronization-pipeline-stages-transfer VK_PIPELINE_STAGE_TRANSFER_BIT>).
+--     [@VK_PIPELINE_STAGE_TRANSFER_BIT@](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-transfer)).
 --     This layout is valid only for image subresources of images created
 --     with the @VK_IMAGE_USAGE_TRANSFER_SRC_BIT@ usage bit enabled.
 --
@@ -157,6 +186,17 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
 --     for image subresources of images created with the
 --     @VK_IMAGE_USAGE_TRANSFER_DST_BIT@ usage bit enabled.
 --
+-- -   @VK_IMAGE_LAYOUT_PRESENT_SRC_KHR@ /must/ only be used for presenting
+--     a presentable image for display. A swapchain’s image /must/ be
+--     transitioned to this layout before calling
+--     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkQueuePresentKHR', and
+--     /must/ be transitioned away from this layout after calling
+--     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkAcquireNextImageKHR'.
+--
+-- -   @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@ is valid only for shared
+--     presentable images, and /must/ be used for any usage the image
+--     supports.
+--
 -- The layout of each image subresource is not a state of the image
 -- subresource itself, but is rather a property of how the data in memory
 -- is organized, and thus for each mechanism of accessing an image in the
@@ -164,13 +204,15 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
 -- indicates which image layout the image subresource(s) are considered to
 -- be in when the image will be accessed. For transfer commands, this is a
 -- parameter to the command (see
--- <{html_spec_relative}#clears {html_spec_relative}#clears> and
--- <{html_spec_relative}#copies {html_spec_relative}#copies>). For use as a
--- framebuffer attachment, this is a member in the substructures of the
--- @VkRenderPassCreateInfo@ (see
--- <{html_spec_relative}#renderpass Render Pass>). For use in a descriptor
--- set, this is a member in the @VkDescriptorImageInfo@ structure (see
--- <{html_spec_relative}#descriptorsets-updates {html_spec_relative}#descriptorsets-updates>).
+-- [{html_spec_relative}#clears](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears)
+-- and
+-- [{html_spec_relative}#copies](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies)).
+-- For use as a framebuffer attachment, this is a member in the
+-- substructures of the @VkRenderPassCreateInfo@ (see [Render
+-- Pass](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass)).
+-- For use in a descriptor set, this is a member in the
+-- @VkDescriptorImageInfo@ structure (see
+-- [{html_spec_relative}#descriptorsets-updates](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates)).
 -- At the time that any command buffer command accessing an image executes
 -- on any queue, the layouts of the image subresources that are accessed
 -- /must/ all match the layout specified via the API controlling those
@@ -184,8 +226,31 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
 -- /must/ not be @VK_IMAGE_LAYOUT_UNDEFINED@ or
 -- @VK_IMAGE_LAYOUT_PREINITIALIZED@.
 --
+-- The image layout of each image subresource of a depth\/stencil image
+-- created with @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@
+-- is dependent on the last sample locations used to render to the image
+-- subresource as a depth\/stencil attachment, thus applications /must/
+-- provide the same sample locations that were last used to render to the
+-- given image subresource whenever a layout transition of the image
+-- subresource happens, otherwise the contents of the depth aspect of the
+-- image subresource become undefined.
+--
+-- In addition, depth reads from a depth\/stencil attachment referring to
+-- an image subresource range of a depth\/stencil image created with
+-- @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ using
+-- different sample locations than what have been last used to perform
+-- depth writes to the image subresources of the same image subresource
+-- range produce undefined results.
+--
+-- Similarly, depth writes to a depth\/stencil attachment referring to an
+-- image subresource range of a depth\/stencil image created with
+-- @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ using
+-- different sample locations than what have been last used to perform
+-- depth writes to the image subresources of the same image subresource
+-- range make the contents of the depth aspect of those image subresources
+-- undefined.
+--
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Pass.VkAttachmentDescription',
 -- 'Graphics.Vulkan.Core10.Pass.VkAttachmentReference',
@@ -280,7 +345,6 @@ pattern VK_IMAGE_LAYOUT_PREINITIALIZED = VkImageLayout 8
 -- | vkCreateImage - Create a new image object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the image.
 --
@@ -288,13 +352,12 @@ pattern VK_IMAGE_LAYOUT_PREINITIALIZED = VkImageLayout 8
 --     structure containing parameters to be used to create the image.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pImage@ points to a @VkImage@ handle in which the resulting image
 --     object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -318,16 +381,15 @@ pattern VK_IMAGE_LAYOUT_PREINITIALIZED = VkImageLayout 8
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -336,17 +398,15 @@ foreign import ccall "vkCreateImage" vkCreateImage :: ("device" ::: VkDevice) ->
 -- | vkDestroyImage - Destroy an image object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the image.
 --
 -- -   @image@ is the image to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -377,7 +437,6 @@ foreign import ccall "vkCreateImage" vkCreateImage :: ("device" ::: VkDevice) ->
 -- -   Host access to @image@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -387,7 +446,6 @@ foreign import ccall "vkDestroyImage" vkDestroyImage :: ("device" ::: VkDevice) 
 -- subresource
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the image.
 --
@@ -401,10 +459,17 @@ foreign import ccall "vkDestroyImage" vkDestroyImage :: ("device" ::: VkDevice) 
 --     layout is returned.
 --
 -- = Description
--- #_description#
+--
+-- If the 'Graphics.Vulkan.Core10.Core.VkFormat' of @image@ is a
+-- [multi-planar
+-- format](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion),
+-- @vkGetImageSubresourceLayout@ describes one plane of the image.
 --
 -- 'vkGetImageSubresourceLayout' is invariant for the lifetime of a single
--- image.
+-- image. However, the subresource layout of images in Android hardware
+-- buffer external memory isn’t known until the image has been bound to
+-- memory, so calling @vkGetImageSubresourceLayout@ for such an image
+-- before it has been bound will result in undefined behavior.
 --
 -- == Valid Usage
 --
@@ -422,6 +487,21 @@ foreign import ccall "vkDestroyImage" vkDestroyImage :: ("device" ::: VkDevice) 
 --     @arrayLayers@ specified in 'VkImageCreateInfo' when @image@ was
 --     created
 --
+-- -   If the @format@ of @image@ is a [multi-planar
+--     format](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion)
+--     with two planes, the @aspectMask@ member of @pSubresource@ /must/ be
+--     @VK_IMAGE_ASPECT_PLANE_0_BIT@ or @VK_IMAGE_ASPECT_PLANE_1_BIT@
+--
+-- -   If the @format@ of @image@ is a [multi-planar
+--     format](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion)
+--     with three planes, the @aspectMask@ member of @pSubresource@ /must/
+--     be @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@ or
+--     @VK_IMAGE_ASPECT_PLANE_2_BIT@
+--
+-- -   If @image@ was created with the
+--     VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID
+--     external memory handle type, then @image@ /must/ be bound to memory.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @device@ /must/ be a valid @VkDevice@ handle
@@ -438,7 +518,6 @@ foreign import ccall "vkDestroyImage" vkDestroyImage :: ("device" ::: VkDevice) 
 --     @device@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
@@ -449,7 +528,6 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 -- created image object
 --
 -- = Description
--- #_description#
 --
 -- Images created with @tiling@ equal to @VK_IMAGE_TILING_LINEAR@ have
 -- further restrictions on their limits and capabilities compared to images
@@ -474,14 +552,15 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 -- those listed above.
 --
 -- To query an implementation’s specific capabilities for a given
--- combination of @format@, @imageType@, @tiling@, @usage@, and @flags@,
--- call
--- 'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties'.
+-- combination of @format@, @imageType@, @tiling@, @usage@,
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo'::@handleTypes@
+-- and @flags@, call
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'.
 -- The return value specifies whether that combination of image settings is
 -- supported. On success, the @VkImageFormatProperties@ output parameter
 -- specifies the set of valid @samples@ bits and the limits for @extent@,
 -- @mipLevels@, @arrayLayers@, and @maxResourceSize@. Even if
--- 'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties'.
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'.
 -- returns success and the parameters to vkCreateImage are all within the
 -- returned limits, @vkCreateImage@ /must/ fail and return
 -- @VK_ERROR_OUT_OF_DEVICE_MEMORY@ if the resulting size of the image would
@@ -490,12 +569,27 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 -- To determine the set of valid @usage@ bits for a given format, call
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceFormatProperties'.
 --
+-- __Note__
+--
+-- For images created without @VK_IMAGE_CREATE_EXTENDED_USAGE_BIT@ a
+-- @usage@ bit is valid if it is supported for the format the image is
+-- created with.
+--
+-- For images created with @VK_IMAGE_CREATE_EXTENDED_USAGE_BIT@ a @usage@
+-- bit is valid if it is supported for at least one of the formats a
+-- @VkImageView@ created from the image /can/ have (see [Image
+-- Views](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views)
+-- for more detail).
+--
 -- == Valid Usage
 --
--- -   The combination of @format@, @imageType@, @tiling@, @usage@, and
---     @flags@ /must/ be supported, as indicated by a @VK_SUCCESS@ return
---     value from @vkGetPhysicalDeviceImageFormatProperties@ invoked with
---     the same values passed to the corresponding parameters.
+-- -   If the @pNext@ chain doesn’t contain an instance of
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkExternalFormatANDROID',
+--     or if @format@ is not VK_FORMAT_UNDEFINED, the combination of
+--     @format@, @imageType@, @tiling@, @usage@, and @flags@ /must/ be
+--     supported, as indicated by a @VK_SUCCESS@ return value from
+--     @vkGetPhysicalDeviceImageFormatProperties@ invoked with the same
+--     values passed to the corresponding parameters.
 --
 -- -   If @sharingMode@ is @VK_SHARING_MODE_CONCURRENT@,
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
@@ -506,8 +600,10 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 --
 -- -   If @sharingMode@ is @VK_SHARING_MODE_CONCURRENT@, each element of
 --     @pQueueFamilyIndices@ /must/ be unique and /must/ be less than
---     @pQueueFamilyPropertyCount@ returned by
+--     @pQueueFamilyPropertyCount@ returned by either
 --     'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'
+--     or
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@
 --
 -- -   @format@ /must/ not be @VK_FORMAT_UNDEFINED@
@@ -524,6 +620,9 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 --
 -- -   If @flags@ contains @VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT@,
 --     @imageType@ /must/ be @VK_IMAGE_TYPE_2D@
+--
+-- -   If @flags@ contains @VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT@,
+--     @imageType@ /must/ be @VK_IMAGE_TYPE_3D@
 --
 -- -   If @imageType@ is @VK_IMAGE_TYPE_1D@, @extent.width@ /must/ be less
 --     than or equal to @VkPhysicalDeviceLimits@::@maxImageDimension1D@, or
@@ -620,55 +719,55 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 --     @imageType@, @tiling@, @usage@, and @flags@ equal to those in this
 --     structure
 --
--- -   If the
---     <{html_spec_relative}#features-features-shaderStorageImageMultisample multisampled storage images>
+-- -   If the [multisampled storage
+--     images](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-shaderStorageImageMultisample)
 --     feature is not enabled, and @usage@ contains
 --     @VK_IMAGE_USAGE_STORAGE_BIT@, @samples@ /must/ be
 --     @VK_SAMPLE_COUNT_1_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseBinding sparse bindings>
+-- -   If the [sparse
+--     bindings](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseBinding)
 --     feature is not enabled, @flags@ /must/ not contain
 --     @VK_IMAGE_CREATE_SPARSE_BINDING_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidencyAliased sparse aliased residency>
+-- -   If the [sparse aliased
+--     residency](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidencyAliased)
 --     feature is not enabled, @flags@ /must/ not contain
 --     @VK_IMAGE_CREATE_SPARSE_ALIASED_BIT@
 --
 -- -   If @imageType@ is @VK_IMAGE_TYPE_1D@, @flags@ /must/ not contain
 --     @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidencyImage2D sparse residency for 2D images>
+-- -   If the [sparse residency for 2D
+--     images](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidencyImage2D)
 --     feature is not enabled, and @imageType@ is @VK_IMAGE_TYPE_2D@,
 --     @flags@ /must/ not contain @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidencyImage3D sparse residency for 3D images>
+-- -   If the [sparse residency for 3D
+--     images](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidencyImage3D)
 --     feature is not enabled, and @imageType@ is @VK_IMAGE_TYPE_3D@,
 --     @flags@ /must/ not contain @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidency2Samples sparse residency for images with 2 samples>
+-- -   If the [sparse residency for images with 2
+--     samples](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidency2Samples)
 --     feature is not enabled, @imageType@ is @VK_IMAGE_TYPE_2D@, and
 --     @samples@ is @VK_SAMPLE_COUNT_2_BIT@, @flags@ /must/ not contain
 --     @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidency4Samples sparse residency for images with 4 samples>
+-- -   If the [sparse residency for images with 4
+--     samples](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidency4Samples)
 --     feature is not enabled, @imageType@ is @VK_IMAGE_TYPE_2D@, and
 --     @samples@ is @VK_SAMPLE_COUNT_4_BIT@, @flags@ /must/ not contain
 --     @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidency8Samples sparse residency for images with 8 samples>
+-- -   If the [sparse residency for images with 8
+--     samples](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidency8Samples)
 --     feature is not enabled, @imageType@ is @VK_IMAGE_TYPE_2D@, and
 --     @samples@ is @VK_SAMPLE_COUNT_8_BIT@, @flags@ /must/ not contain
 --     @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidency16Samples sparse residency for images with 16 samples>
+-- -   If the [sparse residency for images with 16
+--     samples](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidency16Samples)
 --     feature is not enabled, @imageType@ is @VK_IMAGE_TYPE_2D@, and
 --     @samples@ is @VK_SAMPLE_COUNT_16_BIT@, @flags@ /must/ not contain
 --     @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
@@ -744,8 +843,136 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 --     @VK_IMAGE_CREATE_SPARSE_ALIASED_BIT@ are set,
 --     @VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT@ /must/ not also be set
 --
+-- -   If the @pNext@ chain contains an instance of
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV',
+--     it /must/ not contain an instance of
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo'.
+--
+-- -   If the @pNext@ chain contains an instance of
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo',
+--     its @handleTypes@ member /must/ only contain bits that are also in
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalImageFormatProperties'::@externalMemoryProperties@::@compatibleHandleTypes@,
+--     as returned by
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'
+--     with @format@, @imageType@, @tiling@, @usage@, and @flags@ equal to
+--     those in this structure, and with an instance of
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo'
+--     in the @pNext@ chain, with a @handleType@ equal to any one of the
+--     handle types specified in
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo'::@handleTypes@
+--
+-- -   If the @pNext@ chain contains an instance of
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV',
+--     its @handleTypes@ member /must/ only contain bits that are also in
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.VkExternalImageFormatPropertiesNV'::@externalMemoryProperties@::@compatibleHandleTypes@,
+--     as returned by
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
+--     with @format@, @imageType@, @tiling@, @usage@, and @flags@ equal to
+--     those in this structure, and with @externalHandleType@ equal to any
+--     one of the handle types specified in
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV'::@handleTypes@
+--
+-- -   If the logical device was created with
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_creation.VkDeviceGroupDeviceCreateInfo'::@physicalDeviceCount@
+--     equal to 1, @flags@ /must/ not contain
+--     @VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT@
+--
+-- -   If @flags@ contains
+--     @VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT@, then @mipLevels@
+--     /must/ be one, @arrayLayers@ /must/ be one, @imageType@ /must/ be
+--     @VK_IMAGE_TYPE_2D@, and @tiling@ /must/ be @VK_IMAGE_TILING_OPTIMAL@
+--
+-- -   If @flags@ contains
+--     @VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT@, then @format@
+--     /must/ be a [block-compressed image
+--     format](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#appendix-compressedtex-bc),
+--     an [ETC compressed image
+--     format](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#appendix-compressedtex-etc2),
+--     or an [ASTC compressed image
+--     format](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#appendix-compressedtex-astc).
+--
+-- -   If @flags@ contains
+--     @VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT@, then @flags@
+--     /must/ also contain @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@.
+--
 -- -   @initialLayout@ /must/ be @VK_IMAGE_LAYOUT_UNDEFINED@ or
 --     @VK_IMAGE_LAYOUT_PREINITIALIZED@.
+--
+-- -   If the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo'
+--     or
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV'
+--     structure whose @handleTypes@ member is not @0@, @initialLayout@
+--     /must/ be @VK_IMAGE_LAYOUT_UNDEFINED@
+--
+-- -   If the image @format@ is one of those listed in
+--     [{html_spec_relative}#features-formats-requiring-sampler-ycbcr-conversion](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion):
+--
+--     -   @mipLevels@ /must/ be 1
+--
+--     -   @samples@ must be @VK_SAMPLE_COUNT_1_BIT@
+--
+--     -   @imageType@ /must/ be @VK_IMAGE_TYPE_2D@
+--
+--     -   @arrayLayers@ /must/ be 1
+--
+-- -   If @tiling@ is @VK_IMAGE_TILING_OPTIMAL@, @format@ is a
+--     /multi-planar/ format, and
+--     @VkFormatProperties@::@optimalTilingFeatures@ (as returned by
+--     @vkGetPhysicalDeviceFormatProperties@ with the same value of
+--     @format@) does not include @VK_FORMAT_FEATURE_DISJOINT_BIT@, @flags@
+--     /must/ not contain @VK_IMAGE_CREATE_DISJOINT_BIT@
+--
+-- -   If @tiling@ is @VK_IMAGE_TILING_LINEAR@, @format@ is a
+--     /multi-planar/ format, and
+--     @VkFormatProperties@::@linearTilingFeatures@ (as returned by
+--     @vkGetPhysicalDeviceFormatProperties@ with the same value of
+--     @format@) does not include @VK_FORMAT_FEATURE_DISJOINT_BIT@, @flags@
+--     /must/ not contain @VK_IMAGE_CREATE_DISJOINT_BIT@
+--
+-- -   If @format@ is not a /multi-planar/ format, and @flags@ does not
+--     include @VK_IMAGE_CREATE_ALIAS_BIT@, @flags@ /must/ not contain
+--     @VK_IMAGE_CREATE_DISJOINT_BIT@
+--
+-- -   If @flags@ contains
+--     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ @format@
+--     /must/ be a depth or depth\/stencil format
+--
+-- -   If the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo'
+--     structure whose @handleTypes@ member includes
+--     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID@:
+--
+--     -   @imageType@ /must/ be @VK_IMAGE_TYPE_2D@
+--
+--     -   @mipLevels@ /must/ either be @1@ or equal to
+--         ⌊log2(max(@extent.width@, @extent.height@, @extent.depth@))⌋ +
+--         1.
+--
+--     -   If @format@ is not @VK_FORMAT_UNDEFINED@, then @format@,
+--         @imageType@, @tiling@, @usage@, @flags@, @mipLevels@, and
+--         @samples@ /must/ be supported with
+--         @VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID@
+--         external memory handle types according to
+--         'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'
+--
+--     -   If @format@ is @VK_FORMAT_UNDEFINED@, then the @pNext@ chain
+--         /must/ include a
+--         'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkExternalFormatANDROID'
+--         structure whose @externalFormat@ member is not @0@
+--
+-- -   If the @pNext@ chain includes a
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkExternalFormatANDROID'
+--     structure whose @externalFormat@ member is not @0@:
+--
+--     -   @format@ /must/ be @VK_FORMAT_UNDEFINED@
+--
+--     -   @flags@ /must/ not include VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
+--
+--     -   @usage@ /must/ not include any usages except
+--         @VK_IMAGE_USAGE_SAMPLED_BIT@
+--
+--     -   @tiling@ /must/ be @VK_IMAGE_TILING_OPTIMAL@
 --
 -- == Valid Usage (Implicit)
 --
@@ -793,7 +1020,6 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 -- -   @initialLayout@ /must/ be a valid 'VkImageLayout' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkExtent3D',
 -- 'Graphics.Vulkan.Core10.Core.VkFormat',
@@ -806,35 +1032,58 @@ foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :
 -- 'Graphics.Vulkan.Core10.Buffer.VkSharingMode',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateImage'
 data VkImageCreateInfo = VkImageCreateInfo
-  { -- No documentation found for Nested "VkImageCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkFlags"
+  , -- | @flags@ is a bitmask of
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageCreateFlagBits'
+  -- describing additional parameters of the image.
   vkFlags :: VkImageCreateFlags
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkImageType"
+  , -- | @imageType@ is a
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageType' value
+  -- specifying the basic dimensionality of the image. Layers in array
+  -- textures do not count as a dimension for the purposes of the image type.
   vkImageType :: VkImageType
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkFormat"
+  , -- | @format@ is a 'Graphics.Vulkan.Core10.Core.VkFormat' describing the
+  -- format and type of the data elements that will be contained in the
+  -- image.
   vkFormat :: VkFormat
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkExtent"
+  , -- | @extent@ is a 'Graphics.Vulkan.Core10.DeviceInitialization.VkExtent3D'
+  -- describing the number of data elements in each dimension of the base
+  -- level.
   vkExtent :: VkExtent3D
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkMipLevels"
+  , -- | @mipLevels@ describes the number of levels of detail available for
+  -- minified sampling of the image.
   vkMipLevels :: Word32
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkArrayLayers"
+  , -- | @arrayLayers@ is the number of layers in the image.
   vkArrayLayers :: Word32
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkSamples"
+  , -- | @samples@ is the number of sub-data element samples in the image as
+  -- defined in
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlagBits'. See
+  -- [Multisampling](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-multisampling).
   vkSamples :: VkSampleCountFlagBits
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkTiling"
+  , -- | @tiling@ is a
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageTiling' value
+  -- specifying the tiling arrangement of the data elements in memory.
   vkTiling :: VkImageTiling
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkUsage"
+  , -- | @usage@ is a bitmask of
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageUsageFlagBits'
+  -- describing the intended usage of the image.
   vkUsage :: VkImageUsageFlags
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkSharingMode"
+  , -- | @sharingMode@ is a 'Graphics.Vulkan.Core10.Buffer.VkSharingMode' value
+  -- specifying the sharing mode of the image when it will be accessed by
+  -- multiple queue families.
   vkSharingMode :: VkSharingMode
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkQueueFamilyIndexCount"
+  , -- | @queueFamilyIndexCount@ is the number of entries in the
+  -- @pQueueFamilyIndices@ array.
   vkQueueFamilyIndexCount :: Word32
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkPQueueFamilyIndices"
+  , -- | @pQueueFamilyIndices@ is a list of queue families that will access this
+  -- image (ignored if @sharingMode@ is not @VK_SHARING_MODE_CONCURRENT@).
   vkPQueueFamilyIndices :: Ptr Word32
-  , -- No documentation found for Nested "VkImageCreateInfo" "vkInitialLayout"
+  , -- | @initialLayout@ is a 'VkImageLayout' value specifying the initial
+  -- 'VkImageLayout' of all image subresources of the image. See [Image
+  -- Layouts](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-layouts).
   vkInitialLayout :: VkImageLayout
   }
   deriving (Eq, Show)
@@ -875,7 +1124,6 @@ instance Storable VkImageCreateInfo where
 -- | VkSubresourceLayout - Structure specifying subresource layout
 --
 -- = Description
--- #_description#
 --
 -- For images created with linear tiling, @rowPitch@, @arrayPitch@ and
 -- @depthPitch@ describe the layout of the image subresource in linear
@@ -904,30 +1152,43 @@ instance Storable VkImageCreateInfo where
 -- @arrayPitch@ is undefined for images that were not created as arrays.
 -- @depthPitch@ is defined only for 3D images.
 --
--- For color formats, the @aspectMask@ member of @VkImageSubresource@
--- /must/ be @VK_IMAGE_ASPECT_COLOR_BIT@. For depth\/stencil formats,
--- @aspectMask@ /must/ be either @VK_IMAGE_ASPECT_DEPTH_BIT@ or
--- @VK_IMAGE_ASPECT_STENCIL_BIT@. On implementations that store depth and
--- stencil aspects separately, querying each of these image subresource
--- layouts will return a different @offset@ and @size@ representing the
--- region of memory used for that aspect. On implementations that store
--- depth and stencil aspects interleaved, the same @offset@ and @size@ are
--- returned and represent the interleaved memory allocation.
+-- For /single-plane/ color formats, the @aspectMask@ member of
+-- @VkImageSubresource@ /must/ be @VK_IMAGE_ASPECT_COLOR_BIT@. For
+-- depth\/stencil formats, @aspectMask@ /must/ be either
+-- @VK_IMAGE_ASPECT_DEPTH_BIT@ or @VK_IMAGE_ASPECT_STENCIL_BIT@. On
+-- implementations that store depth and stencil aspects separately,
+-- querying each of these image subresource layouts will return a different
+-- @offset@ and @size@ representing the region of memory used for that
+-- aspect. On implementations that store depth and stencil aspects
+-- interleaved, the same @offset@ and @size@ are returned and represent the
+-- interleaved memory allocation.
+--
+-- For [multi-planar
+-- formats](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion),
+-- the @aspectMask@ member of @VkImageSubresource@ /must/ be
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or (for
+-- 3-plane formats only) @VK_IMAGE_ASPECT_PLANE_2_BIT@. Querying each of
+-- these image subresource layouts will return a different @offset@ and
+-- @size@ representing the region of memory used for that plane.
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkDeviceSize@, 'vkGetImageSubresourceLayout'
 data VkSubresourceLayout = VkSubresourceLayout
-  { -- No documentation found for Nested "VkSubresourceLayout" "vkOffset"
+  { -- | @offset@ is the byte offset from the start of the image where the image
+  -- subresource begins.
   vkOffset :: VkDeviceSize
-  , -- No documentation found for Nested "VkSubresourceLayout" "vkSize"
+  , -- | @size@ is the size in bytes of the image subresource. @size@ includes
+  -- any extra memory that is required based on @rowPitch@.
   vkSize :: VkDeviceSize
-  , -- No documentation found for Nested "VkSubresourceLayout" "vkRowPitch"
+  , -- | @rowPitch@ describes the number of bytes between each row of texels in
+  -- an image.
   vkRowPitch :: VkDeviceSize
-  , -- No documentation found for Nested "VkSubresourceLayout" "vkArrayPitch"
+  , -- | @arrayPitch@ describes the number of bytes between each array layer of
+  -- an image.
   vkArrayPitch :: VkDeviceSize
-  , -- No documentation found for Nested "VkSubresourceLayout" "vkDepthPitch"
+  , -- | @depthPitch@ describes the number of bytes between each slice of 3D
+  -- image.
   vkDepthPitch :: VkDeviceSize
   }
   deriving (Eq, Show)

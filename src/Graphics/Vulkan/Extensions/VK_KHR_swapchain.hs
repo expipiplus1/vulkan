@@ -143,11 +143,7 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
 
 -- | VkSwapchainCreateFlagBitsKHR - Bitmask controlling swapchain creation
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkSwapchainCreateFlagsKHR'
 newtype VkSwapchainCreateFlagBitsKHR = VkSwapchainCreateFlagBitsKHR VkFlags
@@ -179,7 +175,6 @@ instance Read VkSwapchainCreateFlagBitsKHR where
 -- device group present modes
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDeviceGroupPresentInfoKHR', 'VkDeviceGroupPresentModeFlagsKHR'
 newtype VkDeviceGroupPresentModeFlagBitsKHR = VkDeviceGroupPresentModeFlagBitsKHR VkFlags
@@ -264,7 +259,10 @@ pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR = VkStructureTy
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SWAPCHAIN_KHR"
 pattern VK_OBJECT_TYPE_SWAPCHAIN_KHR :: VkObjectType
 pattern VK_OBJECT_TYPE_SWAPCHAIN_KHR = VkObjectType 1000001000
--- No documentation found for Nested "VkSwapchainCreateFlagBitsKHR" "VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"
+-- | @VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR@ specifies that
+-- images created from the swapchain (i.e. with the @swapchain@ member of
+-- 'VkImageSwapchainCreateInfoKHR' set to this swapchain’s handle) /must/
+-- use @VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT@.
 pattern VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR :: VkSwapchainCreateFlagBitsKHR
 pattern VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = VkSwapchainCreateFlagBitsKHR 0x00000001
 -- No documentation found for Nested "VkSwapchainCreateFlagBitsKHR" "VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR"
@@ -281,7 +279,6 @@ data VkSwapchainKHR_T
 -- | VkSwapchainKHR - Opaque handle to a swapchain object
 --
 -- = Description
--- #_description#
 --
 -- A swapchain is an abstraction for an array of presentable images that
 -- are associated with a surface. The presentable images are represented by
@@ -333,7 +330,6 @@ data VkSwapchainKHR_T
 -- the swapchain at initialization time, rather than in its main loop.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAcquireNextImageInfoKHR', 'VkBindImageMemorySwapchainInfoKHR',
 -- 'VkImageSwapchainCreateInfoKHR', 'VkPresentInfoKHR',
@@ -350,7 +346,6 @@ type VkSwapchainKHR = Ptr VkSwapchainKHR_T
 -- | vkCreateSwapchainKHR - Create a swapchain
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device to create the swapchain for.
 --
@@ -360,13 +355,11 @@ type VkSwapchainKHR = Ptr VkSwapchainKHR_T
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     swapchain object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- -   @pSwapchain@ is a pointer to a @VkSwapchainKHR@ handle in which the
 --     created swapchain object will be returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -390,10 +383,10 @@ type VkSwapchainKHR = Ptr VkSwapchainKHR_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -405,7 +398,6 @@ type VkSwapchainKHR = Ptr VkSwapchainKHR_T
 --     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -414,7 +406,6 @@ foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR :: ("device" ::
 -- | vkDestroySwapchainKHR - Destroy a swapchain object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the @VkDevice@ associated with @swapchain@.
 --
@@ -422,10 +413,10 @@ foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR :: ("device" ::
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     swapchain object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- = Description
--- #_description#
 --
 -- The application /must/ not destroy a swapchain until after completion of
 -- all outstanding operations on images that were acquired from the
@@ -438,6 +429,14 @@ foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR :: ("device" ::
 -- swapchain is created for the window. Destroying the swapchain does not
 -- invalidate the parent @VkSurfaceKHR@, and a new swapchain /can/ be
 -- created with it.
+--
+-- When a swapchain associated with a display surface is destroyed, if the
+-- image most recently presented to the display surface is from the
+-- swapchain being destroyed, then either any display resources modified by
+-- presenting images from any swapchain associated with the display surface
+-- /must/ be reverted by the implementation to their state prior to the
+-- first present performed on one of these swapchains, or such resources
+-- /must/ be left in their current state.
 --
 -- == Valid Usage
 --
@@ -469,7 +468,6 @@ foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR :: ("device" ::
 -- -   Host access to @swapchain@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkSwapchainKHR'
@@ -478,7 +476,6 @@ foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR :: ("device" 
 -- associated with a swapchain
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device associated with @swapchain@.
 --
@@ -492,7 +489,6 @@ foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR :: ("device" 
 --     @VkImage@ handles.
 --
 -- = Description
--- #_description#
 --
 -- If @pSwapchainImages@ is @NULL@, then the number of presentable images
 -- for @swapchain@ is returned in @pSwapchainImageCount@. Otherwise,
@@ -526,18 +522,17 @@ foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR :: ("device" 
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage', 'VkSwapchainKHR'
@@ -546,7 +541,6 @@ foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR :: ("devi
 -- presentable image
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device associated with @swapchain@.
 --
@@ -565,9 +559,6 @@ foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR :: ("devi
 -- -   @pImageIndex@ is a pointer to a @uint32_t@ that is set to the index
 --     of the next image to use (i.e. an index into the array of images
 --     returned by @vkGetSwapchainImagesKHR@).
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -631,7 +622,7 @@ foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR :: ("devi
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_TIMEOUT@
@@ -640,7 +631,7 @@ foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR :: ("devi
 --
 --     -   @VK_SUBOPTIMAL_KHR@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -652,7 +643,6 @@ foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR :: ("devi
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Queue.VkFence',
@@ -661,7 +651,6 @@ foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR :: ("device" 
 -- | vkQueuePresentKHR - Queue an image for presentation
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @queue@ is a queue that is capable of presentation to the target
 --     surface’s platform on the same device as the image’s swapchain.
@@ -670,7 +659,6 @@ foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR :: ("device" 
 --     structure specifying the parameters of the presentation.
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -685,13 +673,17 @@ foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR :: ("device" 
 --     supported from @queue@ as determined using a call to
 --     @vkGetPhysicalDeviceSurfaceSupportKHR@
 --
+-- -   If more than one member of @pSwapchains@ was created from a display
+--     surface, all display surfaces referenced that refer to the same
+--     display /must/ use the same display mode
+--
 -- -   When a semaphore unsignal operation defined by the elements of the
 --     @pWaitSemaphores@ member of @pPresentInfo@ executes on @queue@, no
 --     other queue /must/ be waiting on the same semaphore.
 --
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
---     /must/ be semaphores that are signaled, or have
---     <{html_spec_relative}#synchronization-semaphores-signaling semaphore signal operations>
+--     /must/ be semaphores that are signaled, or have [semaphore signal
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-signaling)
 --     previously submitted for execution.
 --
 -- Any writes to memory backing the images referenced by the
@@ -743,23 +735,23 @@ foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR :: ("device" 
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | -               | -               | Any             | -               |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | -                                                                                                           | -                                                                                                          | Any                                                                                                   | -                                                                                                                          |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_SUBOPTIMAL_KHR@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -771,7 +763,6 @@ foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR :: ("device" 
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPresentInfoKHR', 'Graphics.Vulkan.Core10.Queue.VkQueue'
 foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR :: ("queue" ::: VkQueue) -> ("pPresentInfo" ::: Ptr VkPresentInfoKHR) -> IO VkResult
@@ -779,16 +770,12 @@ foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR :: ("queue" ::: VkQue
 -- other physical devices
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device.
 --
 -- -   @pDeviceGroupPresentCapabilities@ is a pointer to a structure of
 --     type 'VkDeviceGroupPresentCapabilitiesKHR' that is filled with the
 --     logical device’s capabilities.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -799,16 +786,15 @@ foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR :: ("queue" ::: VkQue
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkDeviceGroupPresentCapabilitiesKHR'
@@ -817,7 +803,6 @@ foreign import ccall "vkGetDeviceGroupPresentCapabilitiesKHR" vkGetDeviceGroupPr
 -- a surface
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device.
 --
@@ -828,7 +813,6 @@ foreign import ccall "vkGetDeviceGroupPresentCapabilitiesKHR" vkGetDeviceGroupPr
 --     device group present modes for the surface.
 --
 -- = Description
--- #_description#
 --
 -- The modes returned by this command are not invariant, and /may/ change
 -- in response to the surface being moved, resized, or occluded. These
@@ -853,10 +837,10 @@ foreign import ccall "vkGetDeviceGroupPresentCapabilitiesKHR" vkGetDeviceGroupPr
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -864,7 +848,6 @@ foreign import ccall "vkGetDeviceGroupPresentCapabilitiesKHR" vkGetDeviceGroupPr
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkDeviceGroupPresentModeFlagsKHR',
@@ -874,7 +857,6 @@ foreign import ccall "vkGetDeviceGroupSurfacePresentModesKHR" vkGetDeviceGroupSu
 -- presentable image
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device associated with @swapchain@.
 --
@@ -883,9 +865,6 @@ foreign import ccall "vkGetDeviceGroupSurfacePresentModesKHR" vkGetDeviceGroupSu
 --
 -- -   @pImageIndex@ is a pointer to a @uint32_t@ that is set to the index
 --     of the next image to use.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -909,7 +888,7 @@ foreign import ccall "vkGetDeviceGroupSurfacePresentModesKHR" vkGetDeviceGroupSu
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_TIMEOUT@
@@ -918,7 +897,7 @@ foreign import ccall "vkGetDeviceGroupSurfacePresentModesKHR" vkGetDeviceGroupSu
 --
 --     -   @VK_SUBOPTIMAL_KHR@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -930,7 +909,6 @@ foreign import ccall "vkGetDeviceGroupSurfacePresentModesKHR" vkGetDeviceGroupSu
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAcquireNextImageInfoKHR',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
@@ -939,7 +917,6 @@ foreign import ccall "vkAcquireNextImage2KHR" vkAcquireNextImage2KHR :: ("device
 -- surface on a physical device
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device.
 --
@@ -952,7 +929,6 @@ foreign import ccall "vkAcquireNextImage2KHR" vkAcquireNextImage2KHR :: ("device
 --     structures.
 --
 -- = Description
--- #_description#
 --
 -- If @pRects@ is @NULL@, then the number of rectangles used when
 -- presenting the given @surface@ is returned in @pRectCount@. Otherwise,
@@ -991,18 +967,17 @@ foreign import ccall "vkAcquireNextImage2KHR" vkAcquireNextImage2KHR :: ("device
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkRect2D',
@@ -1012,7 +987,6 @@ foreign import ccall "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevi
 -- created swapchain object
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -1116,6 +1090,11 @@ foreign import ccall "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevi
 -- has entered a state that causes @VK_ERROR_OUT_OF_DATE_KHR@ to be
 -- returned.
 --
+-- The application /can/ continue to use a shared presentable image
+-- obtained from @oldSwapchain@ until a presentable image is acquired from
+-- the new swapchain, as long as it has not entered a state that causes it
+-- to return @VK_ERROR_OUT_OF_DATE_KHR@.
+--
 -- == Valid Usage
 --
 -- -   @surface@ /must/ be a surface that is supported by the device as
@@ -1130,6 +1109,10 @@ foreign import ccall "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevi
 --     in the @maxImageCount@ member of the @VkSurfaceCapabilitiesKHR@
 --     structure returned by @vkGetPhysicalDeviceSurfaceCapabilitiesKHR@
 --     for the surface if the returned @maxImageCount@ is not zero
+--
+-- -   @minImageCount@ /must/ be @1@ if @presentMode@ is either
+--     @VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR@ or
+--     @VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR@
 --
 -- -   @imageFormat@ and @imageColorSpace@ /must/ match the @format@ and
 --     @colorSpace@ members, respectively, of one of the
@@ -1149,10 +1132,24 @@ foreign import ccall "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevi
 --     @VkSurfaceCapabilitiesKHR@ structure returned by
 --     @vkGetPhysicalDeviceSurfaceCapabilitiesKHR@ for the surface
 --
--- -   @imageUsage@ /must/ be a subset of the supported usage flags present
---     in the @supportedUsageFlags@ member of the
---     @VkSurfaceCapabilitiesKHR@ structure returned by
---     @vkGetPhysicalDeviceSurfaceCapabilitiesKHR@ for the surface
+-- -   If @presentMode@ is @VK_PRESENT_MODE_IMMEDIATE_KHR@,
+--     @VK_PRESENT_MODE_MAILBOX_KHR@, @VK_PRESENT_MODE_FIFO_KHR@ or
+--     @VK_PRESENT_MODE_FIFO_RELAXED_KHR@, @imageUsage@ /must/ be a subset
+--     of the supported usage flags present in the @supportedUsageFlags@
+--     member of the
+--     'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR'
+--     structure returned by
+--     'Graphics.Vulkan.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR'
+--     for @surface@
+--
+-- -   If @presentMode@ is @VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR@ or
+--     @VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR@, @imageUsage@ /must/
+--     be a subset of the supported usage flags present in the
+--     @sharedPresentSupportedUsageFlags@ member of the
+--     'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR'
+--     structure returned by
+--     'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.vkGetPhysicalDeviceSurfaceCapabilities2KHR'
+--     for @surface@
 --
 -- -   If @imageSharingMode@ is @VK_SHARING_MODE_CONCURRENT@,
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
@@ -1163,8 +1160,10 @@ foreign import ccall "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevi
 --
 -- -   If @imageSharingMode@ is @VK_SHARING_MODE_CONCURRENT@, each element
 --     of @pQueueFamilyIndices@ /must/ be unique and /must/ be less than
---     @pQueueFamilyPropertyCount@ returned by
+--     @pQueueFamilyPropertyCount@ returned by either
 --     'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'
+--     or
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@
 --
 -- -   @preTransform@ /must/ be one of the bits present in the
@@ -1181,6 +1180,11 @@ foreign import ccall "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevi
 --     'Graphics.Vulkan.Extensions.VK_KHR_surface.VkPresentModeKHR' values
 --     returned by @vkGetPhysicalDeviceSurfacePresentModesKHR@ for the
 --     surface
+--
+-- -   If the logical device was created with
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_creation.VkDeviceGroupDeviceCreateInfo'::@physicalDeviceCount@
+--     equal to 1, @flags@ /must/ not contain
+--     @VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR@
 --
 -- -   @oldSwapchain@ /must/ not be in the retired state
 --
@@ -1243,7 +1247,6 @@ foreign import ccall "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevi
 --     @VkInstance@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkColorSpaceKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkCompositeAlphaFlagBitsKHR',
@@ -1259,41 +1262,52 @@ foreign import ccall "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevi
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display_swapchain.vkCreateSharedSwapchainsKHR',
 -- 'vkCreateSwapchainKHR'
 data VkSwapchainCreateInfoKHR = VkSwapchainCreateInfoKHR
-  { -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkSwapchainCreateFlagBitsKHR' indicating
+  -- parameters of the swapchain creation.
   vkFlags :: VkSwapchainCreateFlagsKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkSurface"
+  , -- | @surface@ is the surface onto which the swapchain will present images.
+  -- If the creation succeeds, the swapchain becomes associated with
+  -- @surface@.
   vkSurface :: VkSurfaceKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkMinImageCount"
+  , -- | @minImageCount@ is the minimum number of presentable images that the
+  -- application needs. The implementation will either create the swapchain
+  -- with at least that many images, or it will fail to create the swapchain.
   vkMinImageCount :: Word32
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkImageFormat"
+  , -- | @imageFormat@ is a 'Graphics.Vulkan.Core10.Core.VkFormat' value
+  -- specifying the format the swapchain image(s) will be created with.
   vkImageFormat :: VkFormat
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkImageColorSpace"
+  , -- | @imageColorSpace@ is a
+  -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkColorSpaceKHR' value
+  -- specifying the way the swapchain interprets image data.
   vkImageColorSpace :: VkColorSpaceKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkImageExtent"
+  , -- | @imageExtent@ is the size (in pixels) of the swapchain image(s). The
+  -- behavior is platform-dependent if the image extent does not match the
+  -- surface’s @currentExtent@ as returned by
+  -- @vkGetPhysicalDeviceSurfaceCapabilitiesKHR@.
   vkImageExtent :: VkExtent2D
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkImageArrayLayers"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "imageArrayLayers"
   vkImageArrayLayers :: Word32
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkImageUsage"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "imageUsage"
   vkImageUsage :: VkImageUsageFlags
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkImageSharingMode"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "imageSharingMode"
   vkImageSharingMode :: VkSharingMode
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkQueueFamilyIndexCount"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "queueFamilyIndexCount"
   vkQueueFamilyIndexCount :: Word32
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkPQueueFamilyIndices"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "pQueueFamilyIndices"
   vkPQueueFamilyIndices :: Ptr Word32
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkPreTransform"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "preTransform"
   vkPreTransform :: VkSurfaceTransformFlagBitsKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkCompositeAlpha"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "compositeAlpha"
   vkCompositeAlpha :: VkCompositeAlphaFlagBitsKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkPresentMode"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "presentMode"
   vkPresentMode :: VkPresentModeKHR
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkClipped"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "clipped"
   vkClipped :: VkBool32
-  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "vkOldSwapchain"
+  , -- No documentation found for Nested "VkSwapchainCreateInfoKHR" "oldSwapchain"
   vkOldSwapchain :: VkSwapchainKHR
   }
   deriving (Eq, Show)
@@ -1341,17 +1355,19 @@ instance Storable VkSwapchainCreateInfoKHR where
 -- presentation
 --
 -- = Description
--- #_description#
 --
 -- Before an application /can/ present an image, the image’s layout /must/
--- be transitioned to the @VK_IMAGE_LAYOUT_PRESENT_SRC_KHR@ layout.
+-- be transitioned to the @VK_IMAGE_LAYOUT_PRESENT_SRC_KHR@ layout, or for
+-- a shared presentable image the @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@
+-- layout.
 --
 -- __Note__
 --
--- When transitioning the image to @VK_IMAGE_LAYOUT_PRESENT_SRC_KHR@, there
--- is no need to delay subsequent processing, or perform any visibility
--- operations (as 'vkQueuePresentKHR' performs automatic visibility
--- operations). To achieve this, the @dstAccessMask@ member of the
+-- When transitioning the image to @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@ or
+-- @VK_IMAGE_LAYOUT_PRESENT_SRC_KHR@, there is no need to delay subsequent
+-- processing, or perform any visibility operations (as 'vkQueuePresentKHR'
+-- performs automatic visibility operations). To achieve this, the
+-- @dstAccessMask@ member of the
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkImageMemoryBarrier'
 -- /should/ be set to @0@, and the @dstStageMask@ parameter /should/ be set
 -- to @VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT@.
@@ -1361,8 +1377,9 @@ instance Storable VkSwapchainCreateInfoKHR where
 -- -   Each element of @pImageIndices@ /must/ be the index of a presentable
 --     image acquired from the swapchain specified by the corresponding
 --     element of the @pSwapchains@ array, and the presented image
---     subresource /must/ be in the @VK_IMAGE_LAYOUT_PRESENT_SRC_KHR@
---     layout at the time the operation is executed on a @VkDevice@
+--     subresource /must/ be in the @VK_IMAGE_LAYOUT_PRESENT_SRC_KHR@ or
+--     @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@ layout at the time the
+--     operation is executed on a @VkDevice@
 --
 -- == Valid Usage (Implicit)
 --
@@ -1399,28 +1416,41 @@ instance Storable VkSwapchainCreateInfoKHR where
 --     allocated, or retrieved from the same @VkInstance@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkResult',
 -- 'Graphics.Vulkan.Core10.Queue.VkSemaphore',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkSwapchainKHR',
 -- 'vkQueuePresentKHR'
 data VkPresentInfoKHR = VkPresentInfoKHR
-  { -- No documentation found for Nested "VkPresentInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPresentInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPresentInfoKHR" "vkWaitSemaphoreCount"
+  , -- | @waitSemaphoreCount@ is the number of semaphores to wait for before
+  -- issuing the present request. The number /may/ be zero.
   vkWaitSemaphoreCount :: Word32
-  , -- No documentation found for Nested "VkPresentInfoKHR" "vkPWaitSemaphores"
+  , -- | @pWaitSemaphores@, if not @NULL@, is an array of @VkSemaphore@ objects
+  -- with @waitSemaphoreCount@ entries, and specifies the semaphores to wait
+  -- for before issuing the present request.
   vkPWaitSemaphores :: Ptr VkSemaphore
-  , -- No documentation found for Nested "VkPresentInfoKHR" "vkSwapchainCount"
+  , -- | @swapchainCount@ is the number of swapchains being presented to by this
+  -- command.
   vkSwapchainCount :: Word32
-  , -- No documentation found for Nested "VkPresentInfoKHR" "vkPSwapchains"
+  , -- | @pSwapchains@ is an array of @VkSwapchainKHR@ objects with
+  -- @swapchainCount@ entries. A given swapchain /must/ not appear in this
+  -- list more than once.
   vkPSwapchains :: Ptr VkSwapchainKHR
-  , -- No documentation found for Nested "VkPresentInfoKHR" "vkPImageIndices"
+  , -- | @pImageIndices@ is an array of indices into the array of each
+  -- swapchain’s presentable images, with @swapchainCount@ entries. Each
+  -- entry in this array identifies the image to present on the corresponding
+  -- entry in the @pSwapchains@ array.
   vkPImageIndices :: Ptr Word32
-  , -- No documentation found for Nested "VkPresentInfoKHR" "vkPResults"
+  , -- | @pResults@ is an array of 'Graphics.Vulkan.Core10.Core.VkResult' typed
+  -- elements with @swapchainCount@ entries. Applications that do not need
+  -- per-swapchain results /can/ use @NULL@ for @pResults@. If non-@NULL@,
+  -- each entry in @pResults@ will be set to the
+  -- 'Graphics.Vulkan.Core10.Core.VkResult' for presenting the swapchain
+  -- corresponding to the same index in @pSwapchains@.
   vkPResults :: Ptr VkResult
   }
   deriving (Eq, Show)
@@ -1448,7 +1478,6 @@ instance Storable VkPresentInfoKHR where
 -- physical devices
 --
 -- = Description
--- #_description#
 --
 -- @modes@ always has @VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR@ set.
 --
@@ -1466,19 +1495,23 @@ instance Storable VkPresentInfoKHR where
 -- -   @pNext@ /must/ be @NULL@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDeviceGroupPresentModeFlagsKHR',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkGetDeviceGroupPresentCapabilitiesKHR'
 data VkDeviceGroupPresentCapabilitiesKHR = VkDeviceGroupPresentCapabilitiesKHR
-  { -- No documentation found for Nested "VkDeviceGroupPresentCapabilitiesKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDeviceGroupPresentCapabilitiesKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDeviceGroupPresentCapabilitiesKHR" "vkPresentMask"
+  , -- | @presentMask@ is an array of masks, where the mask at element i is
+  -- non-zero if physical device i has a presentation engine, and where bit j
+  -- is set in element i if physical device i /can/ present swapchain images
+  -- from physical device j. If element i is non-zero, then bit i /must/ be
+  -- set.
   vkPresentMask :: Vector VK_MAX_DEVICE_GROUP_SIZE Word32
-  , -- No documentation found for Nested "VkDeviceGroupPresentCapabilitiesKHR" "vkModes"
+  , -- | @modes@ is a bitmask of 'VkDeviceGroupPresentModeFlagBitsKHR' indicating
+  -- which device group presentation modes are supported.
   vkModes :: VkDeviceGroupPresentModeFlagsKHR
   }
   deriving (Eq, Show)
@@ -1497,15 +1530,13 @@ instance Storable VkDeviceGroupPresentCapabilitiesKHR where
 -- | VkImageSwapchainCreateInfoKHR - Specify that an image will be bound to
 -- swapchain memory
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   If @swapchain@ is not
 --     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', the fields of
 --     'Graphics.Vulkan.Core10.Image.VkImageCreateInfo' /must/ match the
---     <{html_spec_relative}#swapchain-wsi-image-create-info implied image creation parameters>
+--     [implied image creation
+--     parameters](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#swapchain-wsi-image-create-info)
 --     of the swapchain
 --
 -- == Valid Usage (Implicit)
@@ -1518,15 +1549,15 @@ instance Storable VkDeviceGroupPresentCapabilitiesKHR where
 --     /must/ be a valid @VkSwapchainKHR@ handle
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkSwapchainKHR'
 data VkImageSwapchainCreateInfoKHR = VkImageSwapchainCreateInfoKHR
-  { -- No documentation found for Nested "VkImageSwapchainCreateInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImageSwapchainCreateInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImageSwapchainCreateInfoKHR" "vkSwapchain"
+  , -- | @swapchain@ is 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE' or a
+  -- handle of a swapchain that the image will be bound to.
   vkSwapchain :: VkSwapchainKHR
   }
   deriving (Eq, Show)
@@ -1544,7 +1575,6 @@ instance Storable VkImageSwapchainCreateInfoKHR where
 -- memory to bind to
 --
 -- = Description
--- #_description#
 --
 -- If @swapchain@ is not @NULL@, the @swapchain@ and @imageIndex@ are used
 -- to determine the memory that the image is bound to, instead of @memory@
@@ -1570,17 +1600,17 @@ instance Storable VkImageSwapchainCreateInfoKHR where
 -- -   Host access to @swapchain@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkSwapchainKHR'
 data VkBindImageMemorySwapchainInfoKHR = VkBindImageMemorySwapchainInfoKHR
-  { -- No documentation found for Nested "VkBindImageMemorySwapchainInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkBindImageMemorySwapchainInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkBindImageMemorySwapchainInfoKHR" "vkSwapchain"
+  , -- | @swapchain@ is 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE' or a
+  -- swapchain handle.
   vkSwapchain :: VkSwapchainKHR
-  , -- No documentation found for Nested "VkBindImageMemorySwapchainInfoKHR" "vkImageIndex"
+  , -- | @imageIndex@ is an image index within @swapchain@.
   vkImageIndex :: Word32
   }
   deriving (Eq, Show)
@@ -1600,7 +1630,6 @@ instance Storable VkBindImageMemorySwapchainInfoKHR where
 -- acquire
 --
 -- = Description
--- #_description#
 --
 -- If 'vkAcquireNextImageKHR' is used, the device mask is considered to
 -- include all physical devices in the logical device.
@@ -1671,26 +1700,27 @@ instance Storable VkBindImageMemorySwapchainInfoKHR where
 -- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkFence',
 -- 'Graphics.Vulkan.Core10.Queue.VkSemaphore',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkSwapchainKHR',
 -- 'vkAcquireNextImage2KHR'
 data VkAcquireNextImageInfoKHR = VkAcquireNextImageInfoKHR
-  { -- No documentation found for Nested "VkAcquireNextImageInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkAcquireNextImageInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkAcquireNextImageInfoKHR" "vkSwapchain"
+  , -- | @swapchain@ is a non-retired swapchain from which an image is acquired.
   vkSwapchain :: VkSwapchainKHR
-  , -- No documentation found for Nested "VkAcquireNextImageInfoKHR" "vkTimeout"
+  , -- | @timeout@ specifies how long the function waits, in nanoseconds, if no
+  -- image is available.
   vkTimeout :: Word64
-  , -- No documentation found for Nested "VkAcquireNextImageInfoKHR" "vkSemaphore"
+  , -- | @semaphore@ is @VK_NULL_HANDLE@ or a semaphore to signal.
   vkSemaphore :: VkSemaphore
-  , -- No documentation found for Nested "VkAcquireNextImageInfoKHR" "vkFence"
+  , -- | @fence@ is @VK_NULL_HANDLE@ or a fence to signal.
   vkFence :: VkFence
-  , -- No documentation found for Nested "VkAcquireNextImageInfoKHR" "vkDeviceMask"
+  , -- | @deviceMask@ is a mask of physical devices for which the swapchain image
+  -- will be ready to use when the semaphore or fence is signaled.
   vkDeviceMask :: Word32
   }
   deriving (Eq, Show)
@@ -1716,7 +1746,6 @@ instance Storable VkAcquireNextImageInfoKHR where
 -- devices\' images are presented
 --
 -- = Description
--- #_description#
 --
 -- If @mode@ is @VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR@, then each
 -- element of @pDeviceMasks@ selects which instance of the swapchain image
@@ -1794,20 +1823,21 @@ instance Storable VkAcquireNextImageInfoKHR where
 -- -   @mode@ /must/ be a valid 'VkDeviceGroupPresentModeFlagBitsKHR' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDeviceGroupPresentModeFlagBitsKHR',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkDeviceGroupPresentInfoKHR = VkDeviceGroupPresentInfoKHR
-  { -- No documentation found for Nested "VkDeviceGroupPresentInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDeviceGroupPresentInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDeviceGroupPresentInfoKHR" "vkSwapchainCount"
+  , -- | @swapchainCount@ is zero or the number of elements in @pDeviceMasks@.
   vkSwapchainCount :: Word32
-  , -- No documentation found for Nested "VkDeviceGroupPresentInfoKHR" "vkPDeviceMasks"
+  , -- | @pDeviceMasks@ is an array of device masks, one for each element of
+  -- 'VkPresentInfoKHR'::pSwapchains.
   vkPDeviceMasks :: Ptr Word32
-  , -- No documentation found for Nested "VkDeviceGroupPresentInfoKHR" "vkMode"
+  , -- | @mode@ is the device group present mode that will be used for this
+  -- present.
   vkMode :: VkDeviceGroupPresentModeFlagBitsKHR
   }
   deriving (Eq, Show)
@@ -1829,7 +1859,6 @@ instance Storable VkDeviceGroupPresentInfoKHR where
 -- a newly created swapchain object
 --
 -- = Description
--- #_description#
 --
 -- If this structure is not present, @modes@ is considered to be
 -- @VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR@.
@@ -1845,16 +1874,15 @@ instance Storable VkDeviceGroupPresentInfoKHR where
 -- -   @modes@ /must/ not be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDeviceGroupPresentModeFlagsKHR',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkDeviceGroupSwapchainCreateInfoKHR = VkDeviceGroupSwapchainCreateInfoKHR
-  { -- No documentation found for Nested "VkDeviceGroupSwapchainCreateInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDeviceGroupSwapchainCreateInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDeviceGroupSwapchainCreateInfoKHR" "vkModes"
+  , -- | @modes@ is a bitfield of modes that the swapchain /can/ be used with.
   vkModes :: VkDeviceGroupPresentModeFlagsKHR
   }
   deriving (Eq, Show)
@@ -1871,13 +1899,11 @@ instance Storable VkDeviceGroupSwapchainCreateInfoKHR where
 -- | VkSwapchainCreateFlagsKHR - Bitmask of VkSwapchainCreateFlagBitsKHR
 --
 -- = Description
--- #_description#
 --
 -- @VkSwapchainCreateFlagsKHR@ is a bitmask type for setting a mask of zero
 -- or more 'VkSwapchainCreateFlagBitsKHR'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSwapchainCreateFlagBitsKHR', 'VkSwapchainCreateInfoKHR'
 type VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagBitsKHR
@@ -1885,13 +1911,11 @@ type VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagBitsKHR
 -- VkDeviceGroupPresentModeFlagBitsKHR
 --
 -- = Description
--- #_description#
 --
 -- @VkDeviceGroupPresentModeFlagsKHR@ is a bitmask type for setting a mask
 -- of zero or more 'VkDeviceGroupPresentModeFlagBitsKHR'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDeviceGroupPresentCapabilitiesKHR',
 -- 'VkDeviceGroupPresentModeFlagBitsKHR',

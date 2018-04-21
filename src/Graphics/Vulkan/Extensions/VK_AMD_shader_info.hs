@@ -122,7 +122,6 @@ pattern VK_AMD_SHADER_INFO_EXTENSION_NAME = "VK_AMD_shader_info"
 -- | vkGetShaderInfoAMD - Get information about a shader in a pipeline
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device that created @pipeline@.
 --
@@ -139,7 +138,6 @@ pattern VK_AMD_SHADER_INFO_EXTENSION_NAME = "VK_AMD_shader_info"
 -- -   @pInfo@ is either NULL or a pointer to a buffer.
 --
 -- = Description
--- #_description#
 --
 -- If @pInfo@ is @NULL@, then the maximum size of the information that
 -- /can/ be retrieved about the shader, in bytes, is returned in
@@ -196,18 +194,17 @@ pattern VK_AMD_SHADER_INFO_EXTENSION_NAME = "VK_AMD_shader_info"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_FEATURE_NOT_PRESENT@
 --
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkPipeline', 'VkShaderInfoTypeAMD',
@@ -216,23 +213,24 @@ foreign import ccall "vkGetShaderInfoAMD" vkGetShaderInfoAMD :: ("device" ::: Vk
 -- | VkShaderResourceUsageAMD - Resource usage information about a particular
 -- shader within a pipeline
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkShaderStatisticsInfoAMD'
 data VkShaderResourceUsageAMD = VkShaderResourceUsageAMD
-  { -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkNumUsedVgprs"
+  { -- | @numUsedVgprs@ is the number of vector instruction general-purpose
+  -- registers used by this shader.
   vkNumUsedVgprs :: Word32
-  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkNumUsedSgprs"
+  , -- | @numUsedSgprs@ is the number of scalar instruction general-purpose
+  -- registers used by this shader.
   vkNumUsedSgprs :: Word32
-  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkLdsSizePerLocalWorkGroup"
+  , -- | @ldsSizePerLocalWorkGroup@ is the maximum local data store size per work
+  -- group in bytes.
   vkLdsSizePerLocalWorkGroup :: Word32
-  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkLdsUsageSizeInBytes"
+  , -- | @ldsUsageSizeInBytes@ is the LDS usage size in bytes per work group by
+  -- this shader.
   vkLdsUsageSizeInBytes :: CSize
-  , -- No documentation found for Nested "VkShaderResourceUsageAMD" "vkScratchMemUsageInBytes"
+  , -- | @scratchMemUsageInBytes@ is the scratch memory usage in bytes by this
+  -- shader.
   vkScratchMemUsageInBytes :: CSize
   }
   deriving (Eq, Show)
@@ -254,7 +252,6 @@ instance Storable VkShaderResourceUsageAMD where
 -- shader within a pipeline
 --
 -- = Description
--- #_description#
 --
 -- Some implementations may merge multiple logical shader stages together
 -- in a single shader. In such cases, @shaderStageMask@ will contain a
@@ -270,24 +267,30 @@ instance Storable VkShaderResourceUsageAMD where
 -- to performance optimizations where register pressure is a bottleneck.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkShaderResourceUsageAMD',
 -- 'Graphics.Vulkan.Core10.PipelineLayout.VkShaderStageFlags'
 data VkShaderStatisticsInfoAMD = VkShaderStatisticsInfoAMD
-  { -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkShaderStageMask"
+  { -- | @shaderStageMask@ are the combination of logical shader stages contained
+  -- within this shader.
   vkShaderStageMask :: VkShaderStageFlags
-  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkResourceUsage"
+  , -- | @resourceUsage@ is an instance of 'VkShaderResourceUsageAMD' describing
+  -- internal physical device resources used by this shader.
   vkResourceUsage :: VkShaderResourceUsageAMD
-  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkNumPhysicalVgprs"
+  , -- | @numPhysicalVgprs@ is the maximum number of vector instruction
+  -- general-purpose registers (VGPRs) available to the physical device.
   vkNumPhysicalVgprs :: Word32
-  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkNumPhysicalSgprs"
+  , -- | @numPhysicalSgprs@ is the maximum number of scalar instruction
+  -- general-purpose registers (SGPRs) available to the physical device.
   vkNumPhysicalSgprs :: Word32
-  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkNumAvailableVgprs"
+  , -- | @numAvailableVgprs@ is the maximum limit of VGPRs made available to the
+  -- shader compiler.
   vkNumAvailableVgprs :: Word32
-  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkNumAvailableSgprs"
+  , -- | @numAvailableSgprs@ is the maximum limit of SGPRs made available to the
+  -- shader compiler.
   vkNumAvailableSgprs :: Word32
-  , -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "vkComputeWorkGroupSize"
+  , -- | @computeWorkGroupSize@ is the local workgroup size of this shader in {
+  -- X, Y, Z } dimensions.
   vkComputeWorkGroupSize :: Vector 3 Word32
   }
   deriving (Eq, Show)

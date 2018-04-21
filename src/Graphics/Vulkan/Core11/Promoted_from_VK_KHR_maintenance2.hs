@@ -76,6 +76,10 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
 -- ** VkPointClippingBehavior
 
 -- | VkPointClippingBehavior - Enum specifying the point clipping behaviour
+--
+-- = See Also
+--
+-- 'VkPhysicalDevicePointClippingProperties'
 newtype VkPointClippingBehavior = VkPointClippingBehavior Int32
   deriving (Eq, Ord, Storable)
 
@@ -95,16 +99,38 @@ instance Read VkPointClippingBehavior where
                         )
                     )
 
--- No documentation found for Nested "VkPointClippingBehavior" "VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES"
+-- | @VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES@ specifies that the
+-- primitive is discarded if the vertex lies outside any clip plane,
+-- including the planes bounding the view volume.
 pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES :: VkPointClippingBehavior
 pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = VkPointClippingBehavior 0
 
--- No documentation found for Nested "VkPointClippingBehavior" "VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY"
+-- | @VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY@ specifies that the
+-- primitive is discarded only if the vertex lies outside any user clip
+-- plane.
 pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY :: VkPointClippingBehavior
 pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = VkPointClippingBehavior 1
 -- ** VkTessellationDomainOrigin
 
 -- | VkTessellationDomainOrigin - Enum describing tessellation domain origin
+--
+-- = Description
+--
+-- -   @VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT@ specifies that the origin
+--     of the domain space is in the upper left corner, as shown in figure
+--     [{html_spec_relative}#img-tessellation-topology-ul](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#img-tessellation-topology-ul).
+--
+-- -   @VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT@ specifies that the origin
+--     of the domain space is in the lower left corner, as shown in figure
+--     [{html_spec_relative}#img-tessellation-topology-ll](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#img-tessellation-topology-ll).
+--
+-- This enum affects how the @VertexOrderCw@ and @VertexOrderCcw@
+-- tessellation execution modes are interpreted, since the winding is
+-- defined relative to the orientation of the domain.
+--
+-- = See Also
+--
+-- 'VkPipelineTessellationDomainOriginStateCreateInfo'
 newtype VkTessellationDomainOrigin = VkTessellationDomainOrigin Int32
   deriving (Eq, Ord, Storable)
 
@@ -157,12 +183,39 @@ pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT = VkImageCreateFlagBits 0x00000100
 -- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
 -- attachment pair and an aspect mask that /can/ be read.
+--
+-- == Valid Usage
+--
+-- -   There /must/ be an input attachment at
+--     @pCreateInfo@::@pSubpasses@[@subpass@].@pInputAttachments@[@inputAttachmentIndex@].
+--
+-- -   The specified input attachment /must/ have more than one aspect
+--     mask.
+--
+-- -   @aspectMask@ /must/ be a subset of the aspect masks in the specified
+--     input attachment.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @aspectMask@ /must/ be a valid combination of
+--     'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits'
+--     values
+--
+-- -   @aspectMask@ /must/ not be @0@
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.VkImageAspectFlags',
+-- 'VkRenderPassInputAttachmentAspectCreateInfo'
 data VkInputAttachmentAspectReference = VkInputAttachmentAspectReference
-  { -- No documentation found for Nested "VkInputAttachmentAspectReference" "vkSubpass"
+  { -- | @subpass@ is an index into the @pSubpasses@ array of the parent
+  -- @VkRenderPassCreateInfo@ structure.
   vkSubpass :: Word32
-  , -- No documentation found for Nested "VkInputAttachmentAspectReference" "vkInputAttachmentIndex"
+  , -- | @inputAttachmentIndex@ is an index into the @pInputAttachments@ of the
+  -- specified subpass.
   vkInputAttachmentIndex :: Word32
-  , -- No documentation found for Nested "VkInputAttachmentAspectReference" "vkAspectMask"
+  , -- | @aspectMask@ is a mask of which aspect(s) /can/ be accessed within the
+  -- specified subpass.
   vkAspectMask :: VkImageAspectFlags
   }
   deriving (Eq, Show)
@@ -178,14 +231,34 @@ instance Storable VkInputAttachmentAspectReference where
                 *> poke (ptr `plusPtr` 8) (vkAspectMask (poked :: VkInputAttachmentAspectReference))
 -- | VkRenderPassInputAttachmentAspectCreateInfo - Structure specifying, for
 -- a given subpass\/input attachment pair, which aspect /can/ be read.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO@
+--
+-- -   @pAspectReferences@ /must/ be a valid pointer to an array of
+--     @aspectReferenceCount@ valid @VkInputAttachmentAspectReference@
+--     structures
+--
+-- -   @aspectReferenceCount@ /must/ be greater than @0@
+--
+-- = See Also
+--
+-- 'VkInputAttachmentAspectReference',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkRenderPassInputAttachmentAspectCreateInfo = VkRenderPassInputAttachmentAspectCreateInfo
-  { -- No documentation found for Nested "VkRenderPassInputAttachmentAspectCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkRenderPassInputAttachmentAspectCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkRenderPassInputAttachmentAspectCreateInfo" "vkAspectReferenceCount"
+  , -- | @aspectReferenceCount@ is the number of elements in the
+  -- pAspectReferences array.
   vkAspectReferenceCount :: Word32
-  , -- No documentation found for Nested "VkRenderPassInputAttachmentAspectCreateInfo" "vkPAspectReferences"
+  , -- | @pAspectReferences@ points to an array of @aspectReferenceCount@ number
+  -- of 'VkInputAttachmentAspectReference' structures describing which
+  -- aspect(s) /can/ be accessed for a given input attachment within a given
+  -- subpass.
   vkPAspectReferences :: Ptr VkInputAttachmentAspectReference
   }
   deriving (Eq, Show)
@@ -203,12 +276,40 @@ instance Storable VkRenderPassInputAttachmentAspectCreateInfo where
                 *> poke (ptr `plusPtr` 24) (vkPAspectReferences (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
 -- | VkPhysicalDevicePointClippingProperties - Structure describing the point
 -- clipping behavior supported by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDevicePointClippingProperties@ structure
+-- describe the following implementation-dependent limit:
+--
+-- = Description
+--
+-- -   @sType@ is the type of this structure.
+--
+-- -   @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+--
+-- -   @pointClippingBehavior@ is the point clipping behavior supported by
+--     the implementation, and is of type 'VkPointClippingBehavior'.
+--
+-- If the @VkPhysicalDevicePointClippingProperties@ structure is included
+-- in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES@
+--
+-- = See Also
+--
+-- 'VkPointClippingBehavior', 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDevicePointClippingProperties = VkPhysicalDevicePointClippingProperties
-  { -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "vkPointClippingBehavior"
+  , -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "pointClippingBehavior"
   vkPointClippingBehavior :: VkPointClippingBehavior
   }
   deriving (Eq, Show)
@@ -223,12 +324,44 @@ instance Storable VkPhysicalDevicePointClippingProperties where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDevicePointClippingProperties))
                 *> poke (ptr `plusPtr` 16) (vkPointClippingBehavior (poked :: VkPhysicalDevicePointClippingProperties))
 -- | VkImageViewUsageCreateInfo - Specify the intended usage of an image view
+--
+-- = Description
+--
+-- When this structure is chained to @VkImageViewCreateInfo@ the @usage@
+-- field overrides the implicit @usage@ parameter inherited from image
+-- creation time and its value is used instead for the purposes of
+-- determining the valid usage conditions of
+-- 'Graphics.Vulkan.Core10.ImageView.VkImageViewCreateInfo'.
+--
+-- == Valid Usage
+--
+-- -   @usage@ /must/ not include any set bits that were not set in the
+--     @usage@ member of the
+--     'Graphics.Vulkan.Core10.Image.VkImageCreateInfo' structure used to
+--     create the image this image view is created from.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO@
+--
+-- -   @usage@ /must/ be a valid combination of
+--     'Graphics.Vulkan.Core10.DeviceInitialization.VkImageUsageFlagBits'
+--     values
+--
+-- -   @usage@ /must/ not be @0@
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageUsageFlags',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkImageViewUsageCreateInfo = VkImageViewUsageCreateInfo
-  { -- No documentation found for Nested "VkImageViewUsageCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImageViewUsageCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImageViewUsageCreateInfo" "vkUsage"
+  , -- | @usage@ is a bitmask describing the allowed usages of the image view.
+  -- See 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageUsageFlagBits'
+  -- for a description of the supported bits.
   vkUsage :: VkImageUsageFlags
   }
   deriving (Eq, Show)
@@ -244,12 +377,34 @@ instance Storable VkImageViewUsageCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkUsage (poked :: VkImageViewUsageCreateInfo))
 -- | VkPipelineTessellationDomainOriginStateCreateInfo - Structure specifying
 -- the orientation of the tessellation domain
+--
+-- = Description
+--
+-- If the @VkPipelineTessellationDomainOriginStateCreateInfo@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineTessellationStateCreateInfo',
+-- it controls the origin of the tessellation domain. If this structure is
+-- not present, it is as if @domainOrigin@ were
+-- @VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO@
+--
+-- -   @domainOrigin@ /must/ be a valid 'VkTessellationDomainOrigin' value
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType',
+-- 'VkTessellationDomainOrigin'
 data VkPipelineTessellationDomainOriginStateCreateInfo = VkPipelineTessellationDomainOriginStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineTessellationDomainOriginStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineTessellationDomainOriginStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineTessellationDomainOriginStateCreateInfo" "vkDomainOrigin"
+  , -- | @domainOrigin@ controls the origin of the tessellation domain space, and
+  -- is of type 'VkTessellationDomainOrigin'.
   vkDomainOrigin :: VkTessellationDomainOrigin
   }
   deriving (Eq, Show)

@@ -29,18 +29,48 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES :: VkStructureT
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES = VkStructureType 1000083000
 -- | VkPhysicalDevice16BitStorageFeatures - Structure describing features
 -- supported by VK_KHR_16bit_storage
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES@
+--
+-- = See Also
+--
+-- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDevice16BitStorageFeatures = VkPhysicalDevice16BitStorageFeatures
-  { -- No documentation found for Nested "VkPhysicalDevice16BitStorageFeatures" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDevice16BitStorageFeatures" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDevice16BitStorageFeatures" "vkStorageBuffer16BitAccess"
+  , -- | @storageBuffer16BitAccess@ specifies whether objects in the
+  -- @StorageBuffer@ storage class with the @Block@ decoration /can/ have
+  -- 16-bit integer and 16-bit floating-point members. If this feature is not
+  -- enabled, 16-bit integer or 16-bit floating-point members /must/ not be
+  -- used in such objects. This also specifies whether shader modules /can/
+  -- declare the @StorageBuffer16BitAccess@ capability.
   vkStorageBuffer16BitAccess :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDevice16BitStorageFeatures" "vkUniformAndStorageBuffer16BitAccess"
+  , -- | @uniformAndStorageBuffer16BitAccess@ specifies whether objects in the
+  -- @Uniform@ storage class with the @Block@ decoration and in the
+  -- @StorageBuffer@ storage class with the same decoration /can/ have 16-bit
+  -- integer and 16-bit floating-point members. If this feature is not
+  -- enabled, 16-bit integer or 16-bit floating-point members /must/ not be
+  -- used in such objects. This also specifies whether shader modules /can/
+  -- declare the @UniformAndStorageBuffer16BitAccess@ capability.
   vkUniformAndStorageBuffer16BitAccess :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDevice16BitStorageFeatures" "vkStoragePushConstant16"
+  , -- | @storagePushConstant16@ specifies whether objects in the @PushConstant@
+  -- storage class /can/ have 16-bit integer and 16-bit floating-point
+  -- members. If this feature is not enabled, 16-bit integer or
+  -- floating-point members /must/ not be used in such objects. This also
+  -- specifies whether shader modules /can/ declare the
+  -- @StoragePushConstant16@ capability.
   vkStoragePushConstant16 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDevice16BitStorageFeatures" "vkStorageInputOutput16"
+  , -- | @storageInputOutput16@ specifies whether objects in the @Input@ and
+  -- @Output@ storage classes /can/ have 16-bit integer and 16-bit
+  -- floating-point members. If this feature is not enabled, 16-bit integer
+  -- or 16-bit floating-point members /must/ not be used in such objects.
+  -- This also specifies whether shader modules /can/ declare the
+  -- @StorageInputOutput16@ capability.
   vkStorageInputOutput16 :: VkBool32
   }
   deriving (Eq, Show)

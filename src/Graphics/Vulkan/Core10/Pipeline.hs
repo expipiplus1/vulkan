@@ -239,64 +239,57 @@ import Graphics.Vulkan.Core10.Shader
 -- | VkBlendFactor - Framebuffer blending factors
 --
 -- = Description
--- #_description#
 --
 -- The semantics of each enum value is described in the table below:
 --
--- > +-----------------------------------------+-------------------+--------+
--- > | VkBlendFactor                           | RGB Blend Factors | Alpha  |
--- > |                                         | (Sr,Sg,Sb) or     | Blend  |
--- > |                                         | (Dr,Dg,Db)        | Factor |
--- > |                                         |                   | (Sa or |
--- > |                                         |                   | Da)    |
--- > +=========================================+===================+========+
--- > | @VK_BLEND_FACTOR_ZERO@                  | (0,0,0)           | 0      |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_ONE@                   | (1,1,1)           | 1      |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_SRC_COLOR@             | (Rs0,Gs0,Bs0)     | As0    |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR@   | (1-Rs0,1-Gs0,1-Bs | 1-As0  |
--- > |                                         | 0)                |        |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_DST_COLOR@             | (Rd,Gd,Bd)        | Ad     |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR@   | (1-Rd,1-Gd,1-Bd)  | 1-Ad   |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_SRC_ALPHA@             | (As0,As0,As0)     | As0    |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA@   | (1-As0,1-As0,1-As | 1-As0  |
--- > |                                         | 0)                |        |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_DST_ALPHA@             | (Ad,Ad,Ad)        | Ad     |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA@   | (1-Ad,1-Ad,1-Ad)  | 1-Ad   |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_CONSTANT_COLOR@        | (Rc,Gc,Bc)        | Ac     |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COL | (1-Rc,1-Gc,1-Bc)  | 1-Ac   |
--- > | OR@                                     |                   |        |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_CONSTANT_ALPHA@        | (Ac,Ac,Ac)        | Ac     |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALP | (1-Ac,1-Ac,1-Ac)  | 1-Ac   |
--- > | HA@                                     |                   |        |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_SRC_ALPHA_SATURATE@    | (f,f,f); f =      | 1      |
--- > |                                         | min(As0,1-Ad)     |        |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_SRC1_COLOR@            | (Rs1,Gs1,Bs1)     | As1    |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR@  | (1-Rs1,1-Gs1,1-Bs | 1-As1  |
--- > |                                         | 1)                |        |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_SRC1_ALPHA@            | (As1,As1,As1)     | As1    |
--- > +-----------------------------------------+-------------------+--------+
--- > | @VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA@  | (1-As1,1-As1,1-As | 1-As1  |
--- > |                                         | 1)                |        |
--- > +-----------------------------------------+-------------------+--------+
--- >
--- > Blend Factors
+-- +--------------------------------------------+---------------------+--------+
+-- | VkBlendFactor                              | RGB Blend Factors   | Alpha  |
+-- |                                            | (Sr,Sg,Sb) or       | Blend  |
+-- |                                            | (Dr,Dg,Db)          | Factor |
+-- |                                            |                     | (Sa or |
+-- |                                            |                     | Da)    |
+-- +============================================+=====================+========+
+-- | @VK_BLEND_FACTOR_ZERO@                     | (0,0,0)             | 0      |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_ONE@                      | (1,1,1)             | 1      |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_SRC_COLOR@                | (Rs0,Gs0,Bs0)       | As0    |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR@      | (1-Rs0,1-Gs0,1-Bs0) | 1-As0  |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_DST_COLOR@                | (Rd,Gd,Bd)          | Ad     |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR@      | (1-Rd,1-Gd,1-Bd)    | 1-Ad   |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_SRC_ALPHA@                | (As0,As0,As0)       | As0    |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA@      | (1-As0,1-As0,1-As0) | 1-As0  |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_DST_ALPHA@                | (Ad,Ad,Ad)          | Ad     |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA@      | (1-Ad,1-Ad,1-Ad)    | 1-Ad   |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_CONSTANT_COLOR@           | (Rc,Gc,Bc)          | Ac     |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR@ | (1-Rc,1-Gc,1-Bc)    | 1-Ac   |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_CONSTANT_ALPHA@           | (Ac,Ac,Ac)          | Ac     |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA@ | (1-Ac,1-Ac,1-Ac)    | 1-Ac   |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_SRC_ALPHA_SATURATE@       | (f,f,f); f =        | 1      |
+-- |                                            | min(As0,1-Ad)       |        |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_SRC1_COLOR@               | (Rs1,Gs1,Bs1)       | As1    |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR@     | (1-Rs1,1-Gs1,1-Bs1) | 1-As1  |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_SRC1_ALPHA@               | (As1,As1,As1)       | As1    |
+-- +--------------------------------------------+---------------------+--------+
+-- | @VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA@     | (1-As1,1-As1,1-As1) | 1-As1  |
+-- +--------------------------------------------+---------------------+--------+
+--
+-- Blend Factors
 --
 -- In this table, the following conventions are used:
 --
@@ -317,7 +310,6 @@ import Graphics.Vulkan.Core10.Shader
 --     components, respectively.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineColorBlendAttachmentState'
 newtype VkBlendFactor = VkBlendFactor Int32
@@ -453,46 +445,45 @@ pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = VkBlendFactor 18
 -- | VkBlendOp - Framebuffer blending operations
 --
 -- = Description
--- #_description#
 --
 -- The semantics of each basic blend operations is described in the table
 -- below:
 --
--- > +-------------------------------+--------------------+----------------+
--- > | VkBlendOp                     | RGB Components     | Alpha          |
--- > |                               |                    | Component      |
--- > +===============================+====================+================+
--- > | @VK_BLEND_OP_ADD@             | R = Rs0 × Sr + Rd  | A = As0 × Sa + |
--- > |                               | × Dr               | Ad × Da        |
--- > |                               | G = Gs0 × Sg + Gd  |                |
--- > |                               | × Dg               |                |
--- > |                               | B = Bs0 × Sb + Bd  |                |
--- > |                               | × Db               |                |
--- > +-------------------------------+--------------------+----------------+
--- > | @VK_BLEND_OP_SUBTRACT@        | R = Rs0 × Sr - Rd  | A = As0 × Sa - |
--- > |                               | × Dr               | Ad × Da        |
--- > |                               | G = Gs0 × Sg - Gd  |                |
--- > |                               | × Dg               |                |
--- > |                               | B = Bs0 × Sb - Bd  |                |
--- > |                               | × Db               |                |
--- > +-------------------------------+--------------------+----------------+
--- > | @VK_BLEND_OP_REVERSE_SUBTRACT | R = Rd × Dr - Rs0  | A = Ad × Da -  |
--- > | @                             | × Sr               | As0 × Sa       |
--- > |                               | G = Gd × Dg - Gs0  |                |
--- > |                               | × Sg               |                |
--- > |                               | B = Bd × Db - Bs0  |                |
--- > |                               | × Sb               |                |
--- > +-------------------------------+--------------------+----------------+
--- > | @VK_BLEND_OP_MIN@             | R = min(Rs0,Rd)    | A =            |
--- > |                               | G = min(Gs0,Gd)    | min(As0,Ad)    |
--- > |                               | B = min(Bs0,Bd)    |                |
--- > +-------------------------------+--------------------+----------------+
--- > | @VK_BLEND_OP_MAX@             | R = max(Rs0,Rd)    | A =            |
--- > |                               | G = max(Gs0,Gd)    | max(As0,Ad)    |
--- > |                               | B = max(Bs0,Bd)    |                |
--- > +-------------------------------+--------------------+----------------+
--- >
--- > Basic Blend Operations
+-- +--------------------------------+--------------------+----------------+
+-- | VkBlendOp                      | RGB Components     | Alpha          |
+-- |                                |                    | Component      |
+-- +================================+====================+================+
+-- | @VK_BLEND_OP_ADD@              | R = Rs0 × Sr + Rd  | A = As0 × Sa + |
+-- |                                | × Dr               | Ad × Da        |
+-- |                                | G = Gs0 × Sg + Gd  |                |
+-- |                                | × Dg               |                |
+-- |                                | B = Bs0 × Sb + Bd  |                |
+-- |                                | × Db               |                |
+-- +--------------------------------+--------------------+----------------+
+-- | @VK_BLEND_OP_SUBTRACT@         | R = Rs0 × Sr - Rd  | A = As0 × Sa - |
+-- |                                | × Dr               | Ad × Da        |
+-- |                                | G = Gs0 × Sg - Gd  |                |
+-- |                                | × Dg               |                |
+-- |                                | B = Bs0 × Sb - Bd  |                |
+-- |                                | × Db               |                |
+-- +--------------------------------+--------------------+----------------+
+-- | @VK_BLEND_OP_REVERSE_SUBTRACT@ | R = Rd × Dr - Rs0  | A = Ad × Da -  |
+-- |                                | × Sr               | As0 × Sa       |
+-- |                                | G = Gd × Dg - Gs0  |                |
+-- |                                | × Sg               |                |
+-- |                                | B = Bd × Db - Bs0  |                |
+-- |                                | × Sb               |                |
+-- +--------------------------------+--------------------+----------------+
+-- | @VK_BLEND_OP_MIN@              | R = min(Rs0,Rd)    | A =            |
+-- |                                | G = min(Gs0,Gd)    | min(As0,Ad)    |
+-- |                                | B = min(Bs0,Bd)    |                |
+-- +--------------------------------+--------------------+----------------+
+-- | @VK_BLEND_OP_MAX@              | R = max(Rs0,Rd)    | A =            |
+-- |                                | G = max(Gs0,Gd)    | max(As0,Ad)    |
+-- |                                | B = max(Bs0,Bd)    |                |
+-- +--------------------------------+--------------------+----------------+
+--
+-- Basic Blend Operations
 --
 -- In this table, the following conventions are used:
 --
@@ -521,7 +512,6 @@ pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = VkBlendFactor 18
 -- attachment is floating-point, no clamping occurs.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineColorBlendAttachmentState'
 newtype VkBlendOp = VkBlendOp Int32
@@ -667,7 +657,6 @@ pattern VK_BLEND_OP_MAX = VkBlendOp 4
 -- | VkCompareOp - Stencil comparison function
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineDepthStencilStateCreateInfo',
 -- 'Graphics.Vulkan.Core10.Sampler.VkSamplerCreateInfo', 'VkStencilOpState'
@@ -740,7 +729,6 @@ pattern VK_COMPARE_OP_ALWAYS = VkCompareOp 7
 -- state commands
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineDynamicStateCreateInfo'
 newtype VkDynamicState = VkDynamicState Int32
@@ -876,7 +864,6 @@ pattern VK_DYNAMIC_STATE_STENCIL_REFERENCE = VkDynamicState 8
 -- | VkPolygonMode - Control polygon rasterization mode
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_POLYGON_MODE_POINT@ specifies that polygon vertices are drawn as
 --     points.
@@ -887,12 +874,31 @@ pattern VK_DYNAMIC_STATE_STENCIL_REFERENCE = VkDynamicState 8
 -- -   @VK_POLYGON_MODE_FILL@ specifies that polygons are rendered using
 --     the polygon rasterization rules in this section.
 --
+-- -   @VK_POLYGON_MODE_FILL_RECTANGLE_NV@ specifies that polygons are
+--     rendered using polygon rasterization rules, modified to consider a
+--     sample within the primitive if the sample location is inside the
+--     axis-aligned bounding box of the triangle after projection. Note
+--     that the barycentric weights used in attribute interpolation /can/
+--     extend outside the range [0,1] when these primitives are shaded.
+--     Special treatment is given to a sample position on the boundary edge
+--     of the bounding box. In such a case, if two rectangles lie on either
+--     side of a common edge (with identical endpoints) on which a sample
+--     position lies, then exactly one of the triangles /must/ produce a
+--     fragment that covers that sample during rasterization.
+--
+--     Polygons rendered in @VK_POLYGON_MODE_FILL_RECTANGLE_NV@ mode /may/
+--     be clipped by the frustum or by user clip planes. If clipping is
+--     applied, the triangle is culled rather than clipped.
+--
+--     Area calculation and facingness are determined for
+--     @VK_POLYGON_MODE_FILL_RECTANGLE_NV@ mode using the triangle’s
+--     vertices.
+--
 -- These modes affect only the final rasterization of polygons: in
 -- particular, a polygon’s vertices are shaded and the polygon is clipped
 -- and possibly culled before these modes are applied.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineRasterizationStateCreateInfo'
 newtype VkPolygonMode = VkPolygonMode Int32
@@ -936,7 +942,6 @@ pattern VK_POLYGON_MODE_POINT = VkPolygonMode 2
 -- | VkFrontFace - Interpret polygon front-facing orientation
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_FRONT_FACE_COUNTER_CLOCKWISE@ specifies that a triangle with
 --     positive area is considered front-facing.
@@ -948,7 +953,6 @@ pattern VK_POLYGON_MODE_POINT = VkPolygonMode 2
 -- zero-area triangles.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineRasterizationStateCreateInfo'
 newtype VkFrontFace = VkFrontFace Int32
@@ -982,7 +986,6 @@ pattern VK_FRONT_FACE_CLOCKWISE = VkFrontFace 1
 -- | VkLogicOp - Framebuffer logical operations
 --
 -- = Description
--- #_description#
 --
 -- The logical operations supported by Vulkan are summarized in the
 -- following table in which
@@ -1001,50 +1004,50 @@ pattern VK_FRONT_FACE_CLOCKWISE = VkFrontFace 1
 --
 -- -   d is the color attachment’s R, G, B or A component value:
 --
--- > +-----------------------------------+-----------------------------------+
--- > | Mode                              | Operation                         |
--- > +===================================+===================================+
--- > | @VK_LOGIC_OP_CLEAR@               | 0                                 |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_AND@                 | s ∧ d                             |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_AND_REVERSE@         | s ∧ ¬ d                           |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_COPY@                | s                                 |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_AND_INVERTED@        | ¬ s ∧ d                           |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_NO_OP@               | d                                 |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_XOR@                 | s ⊕ d                             |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_OR@                  | s ∨ d                             |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_NOR@                 | ¬ (s ∨ d)                         |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_EQUIVALENT@          | ¬ (s ⊕ d)                         |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_INVERT@              | ¬ d                               |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_OR_REVERSE@          | s ∨ ¬ d                           |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_COPY_INVERTED@       | ¬ s                               |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_OR_INVERTED@         | ¬ s ∨ d                           |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_NAND@                | ¬ (s ∧ d)                         |
--- > +-----------------------------------+-----------------------------------+
--- > | @VK_LOGIC_OP_SET@                 | all 1s                            |
--- > +-----------------------------------+-----------------------------------+
--- >
--- > Logical Operations
+-- +-----------------------------------+-----------------------------------+
+-- | Mode                              | Operation                         |
+-- +===================================+===================================+
+-- | @VK_LOGIC_OP_CLEAR@               | 0                                 |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_AND@                 | s ∧ d                             |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_AND_REVERSE@         | s ∧ ¬ d                           |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_COPY@                | s                                 |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_AND_INVERTED@        | ¬ s ∧ d                           |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_NO_OP@               | d                                 |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_XOR@                 | s ⊕ d                             |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_OR@                  | s ∨ d                             |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_NOR@                 | ¬ (s ∨ d)                         |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_EQUIVALENT@          | ¬ (s ⊕ d)                         |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_INVERT@              | ¬ d                               |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_OR_REVERSE@          | s ∨ ¬ d                           |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_COPY_INVERTED@       | ¬ s                               |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_OR_INVERTED@         | ¬ s ∨ d                           |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_NAND@                | ¬ (s ∧ d)                         |
+-- +-----------------------------------+-----------------------------------+
+-- | @VK_LOGIC_OP_SET@                 | all 1s                            |
+-- +-----------------------------------+-----------------------------------+
+--
+-- Logical Operations
 --
 -- The result of the logical operation is then written to the color
 -- attachment as controlled by the component write mask, described in
--- <{html_spec_relative}#framebuffer-blendoperations Blend Operations>.
+-- [Blend
+-- Operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blendoperations).
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineColorBlendStateCreateInfo'
 newtype VkLogicOp = VkLogicOp Int32
@@ -1161,11 +1164,7 @@ pattern VK_LOGIC_OP_SET = VkLogicOp 15
 
 -- | VkPrimitiveTopology - Supported primitive topologies
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineInputAssemblyStateCreateInfo'
 newtype VkPrimitiveTopology = VkPrimitiveTopology Int32
@@ -1253,7 +1252,6 @@ pattern VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = VkPrimitiveTopology 10
 -- | VkStencilOp - Stencil comparison function
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_STENCIL_OP_KEEP@ keeps the current value.
 --
@@ -1298,7 +1296,6 @@ pattern VK_PRIMITIVE_TOPOLOGY_PATCH_LIST = VkPrimitiveTopology 10
 -- mask.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkStencilOpState'
 newtype VkStencilOp = VkStencilOp Int32
@@ -1369,7 +1366,6 @@ pattern VK_STENCIL_OP_DECREMENT_AND_WRAP = VkStencilOp 7
 -- from buffers
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkVertexInputBindingDescription'
 newtype VkVertexInputRate = VkVertexInputRate Int32
@@ -1405,13 +1401,11 @@ pattern VK_VERTEX_INPUT_RATE_INSTANCE = VkVertexInputRate 1
 -- | VkPipelineDepthStencilStateCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineDepthStencilStateCreateFlags@ is a bitmask type for setting a
 -- mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineDepthStencilStateCreateInfo'
 newtype VkPipelineDepthStencilStateCreateFlags = VkPipelineDepthStencilStateCreateFlags VkFlags
@@ -1437,13 +1431,11 @@ instance Read VkPipelineDepthStencilStateCreateFlags where
 -- | VkPipelineDynamicStateCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineDynamicStateCreateFlags@ is a bitmask type for setting a
 -- mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineDynamicStateCreateInfo'
 newtype VkPipelineDynamicStateCreateFlags = VkPipelineDynamicStateCreateFlags VkFlags
@@ -1469,13 +1461,11 @@ instance Read VkPipelineDynamicStateCreateFlags where
 -- | VkPipelineColorBlendStateCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineColorBlendStateCreateFlags@ is a bitmask type for setting a
 -- mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineColorBlendStateCreateInfo'
 newtype VkPipelineColorBlendStateCreateFlags = VkPipelineColorBlendStateCreateFlags VkFlags
@@ -1501,13 +1491,11 @@ instance Read VkPipelineColorBlendStateCreateFlags where
 -- | VkPipelineMultisampleStateCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineMultisampleStateCreateFlags@ is a bitmask type for setting a
 -- mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineMultisampleStateCreateInfo'
 newtype VkPipelineMultisampleStateCreateFlags = VkPipelineMultisampleStateCreateFlags VkFlags
@@ -1533,13 +1521,11 @@ instance Read VkPipelineMultisampleStateCreateFlags where
 -- | VkPipelineRasterizationStateCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineRasterizationStateCreateFlags@ is a bitmask type for setting
 -- a mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineRasterizationStateCreateInfo'
 newtype VkPipelineRasterizationStateCreateFlags = VkPipelineRasterizationStateCreateFlags VkFlags
@@ -1565,13 +1551,11 @@ instance Read VkPipelineRasterizationStateCreateFlags where
 -- | VkPipelineViewportStateCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineViewportStateCreateFlags@ is a bitmask type for setting a
 -- mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineViewportStateCreateInfo'
 newtype VkPipelineViewportStateCreateFlags = VkPipelineViewportStateCreateFlags VkFlags
@@ -1597,13 +1581,11 @@ instance Read VkPipelineViewportStateCreateFlags where
 -- | VkPipelineTessellationStateCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineTessellationStateCreateFlags@ is a bitmask type for setting a
 -- mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineTessellationStateCreateInfo'
 newtype VkPipelineTessellationStateCreateFlags = VkPipelineTessellationStateCreateFlags VkFlags
@@ -1629,13 +1611,11 @@ instance Read VkPipelineTessellationStateCreateFlags where
 -- | VkPipelineInputAssemblyStateCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineInputAssemblyStateCreateFlags@ is a bitmask type for setting
 -- a mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineInputAssemblyStateCreateInfo'
 newtype VkPipelineInputAssemblyStateCreateFlags = VkPipelineInputAssemblyStateCreateFlags VkFlags
@@ -1661,13 +1641,11 @@ instance Read VkPipelineInputAssemblyStateCreateFlags where
 -- | VkPipelineVertexInputStateCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineVertexInputStateCreateFlags@ is a bitmask type for setting a
 -- mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineVertexInputStateCreateInfo'
 newtype VkPipelineVertexInputStateCreateFlags = VkPipelineVertexInputStateCreateFlags VkFlags
@@ -1693,13 +1671,11 @@ instance Read VkPipelineVertexInputStateCreateFlags where
 -- | VkPipelineShaderStageCreateFlags - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineShaderStageCreateFlags@ is a bitmask type for setting a mask,
 -- but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineShaderStageCreateInfo'
 newtype VkPipelineShaderStageCreateFlags = VkPipelineShaderStageCreateFlags VkFlags
@@ -1725,7 +1701,6 @@ instance Read VkPipelineShaderStageCreateFlags where
 -- | VkShaderStageFlagBits - Bitmask specifying a pipeline stage
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineShaderStageCreateInfo',
 -- 'Graphics.Vulkan.Core10.PipelineLayout.VkShaderStageFlags',
@@ -1803,7 +1778,6 @@ pattern VK_SHADER_STAGE_ALL = VkShaderStageFlagBits 0x7fffffff
 -- | VkPipelineCreateFlagBits - Bitmask controlling how a pipeline is created
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT@ specifies that the
 --     created pipeline will not be optimized. Using this flag /may/ reduce
@@ -1817,14 +1791,22 @@ pattern VK_SHADER_STAGE_ALL = VkShaderStageFlagBits 0x7fffffff
 -- -   @VK_PIPELINE_CREATE_DERIVATIVE_BIT@ specifies that the pipeline to
 --     be created will be a child of a previously created parent pipeline.
 --
+-- -   @VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT@ specifies that
+--     any shader input variables decorated as @DeviceIndex@ will be
+--     assigned values as if they were decorated as @ViewIndex@.
+--
+-- -   @VK_PIPELINE_CREATE_DISPATCH_BASE@ specifies that a compute pipeline
+--     /can/ be used with
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group.vkCmdDispatchBase'
+--     with a non-zero base workgroup.
+--
 -- It is valid to set both @VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT@ and
 -- @VK_PIPELINE_CREATE_DERIVATIVE_BIT@. This allows a pipeline to be both a
--- parent and possibly a child in a pipeline hierarchy. See
--- <{html_spec_relative}#pipelines-pipeline-derivatives Pipeline Derivatives>
+-- parent and possibly a child in a pipeline hierarchy. See [Pipeline
+-- Derivatives](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-pipeline-derivatives)
 -- for more information.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineCreateFlags'
 newtype VkPipelineCreateFlagBits = VkPipelineCreateFlagBits VkFlags
@@ -1871,7 +1853,6 @@ pattern VK_PIPELINE_CREATE_DERIVATIVE_BIT = VkPipelineCreateFlagBits 0x00000004
 -- written to the framebuffer
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_COLOR_COMPONENT_R_BIT@ specifies that the R value is written to
 --     the color attachment for the appropriate sample. Otherwise, the
@@ -1893,7 +1874,6 @@ pattern VK_PIPELINE_CREATE_DERIVATIVE_BIT = VkPipelineCreateFlagBits 0x00000004
 -- is enabled.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkColorComponentFlags'
 newtype VkColorComponentFlagBits = VkColorComponentFlagBits VkFlags
@@ -1939,7 +1919,6 @@ pattern VK_COLOR_COMPONENT_A_BIT = VkColorComponentFlagBits 0x00000008
 -- | VkCullModeFlagBits - Bitmask controlling triangle culling
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_CULL_MODE_NONE@ specifies that no triangles are discarded
 --
@@ -1956,7 +1935,6 @@ pattern VK_COLOR_COMPONENT_A_BIT = VkColorComponentFlagBits 0x00000008
 -- not been discarded.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCullModeFlags'
 newtype VkCullModeFlagBits = VkCullModeFlagBits VkFlags
@@ -2001,11 +1979,7 @@ pattern VK_CULL_MODE_FRONT_AND_BACK = VkCullModeFlagBits 0x00000003
 data VkPipeline_T
 -- | VkPipeline - Opaque handle to a pipeline object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkComputePipelineCreateInfo', 'VkGraphicsPipelineCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkObjectTablePipelineEntryNVX',
@@ -2018,11 +1992,7 @@ type VkPipeline = Ptr VkPipeline_T
 data VkPipelineLayout_T
 -- | VkPipelineLayout - Opaque handle to a pipeline layout object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkComputePipelineCreateInfo',
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo',
@@ -2040,11 +2010,7 @@ type VkPipelineLayout = Ptr VkPipelineLayout_T
 data VkRenderPass_T
 -- | VkRenderPass - Opaque handle to a render pass object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
 -- 'Graphics.Vulkan.Core10.Pass.VkFramebufferCreateInfo',
@@ -2057,16 +2023,15 @@ type VkRenderPass = Ptr VkRenderPass_T
 -- | vkCreateGraphicsPipelines - Create graphics pipelines
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the graphics pipelines.
 --
 -- -   @pipelineCache@ is either
 --     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', indicating that
---     pipeline caching is disabled; or the handle of a valid
---     <{html_spec_relative}#pipelines-cache pipeline cache> object, in
---     which case use of that cache is enabled for the duration of the
---     command.
+--     pipeline caching is disabled; or the handle of a valid [pipeline
+--     cache](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-cache)
+--     object, in which case use of that cache is enabled for the duration
+--     of the command.
 --
 -- -   @createInfoCount@ is the length of the @pCreateInfos@ and
 --     @pPipelines@ arrays.
@@ -2075,13 +2040,14 @@ type VkRenderPass = Ptr VkRenderPass_T
 --     structures.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pPipelines@ is a pointer to an array in which the resulting
 --     graphics pipeline objects are returned.
 --
 -- = Description
--- #_description#
 --
 -- The 'VkGraphicsPipelineCreateInfo' structure includes an array of shader
 -- create info structures containing all the desired active shader stages,
@@ -2125,10 +2091,10 @@ type VkRenderPass = Ptr VkRenderPass_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -2136,7 +2102,6 @@ type VkRenderPass = Ptr VkRenderPass_T
 --     -   @VK_ERROR_INVALID_SHADER_NV@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -2146,16 +2111,15 @@ foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines :: ("
 -- | vkCreateComputePipelines - Creates a new compute pipeline object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the compute pipelines.
 --
 -- -   @pipelineCache@ is either
 --     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', indicating that
---     pipeline caching is disabled; or the handle of a valid
---     <{html_spec_relative}#pipelines-cache pipeline cache> object, in
---     which case use of that cache is enabled for the duration of the
---     command.
+--     pipeline caching is disabled; or the handle of a valid [pipeline
+--     cache](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-cache)
+--     object, in which case use of that cache is enabled for the duration
+--     of the command.
 --
 -- -   @createInfoCount@ is the length of the @pCreateInfos@ and
 --     @pPipelines@ arrays.
@@ -2164,13 +2128,12 @@ foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines :: ("
 --     structures.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pPipelines@ is a pointer to an array in which the resulting compute
 --     pipeline objects are returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -2209,10 +2172,10 @@ foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines :: ("
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -2220,7 +2183,6 @@ foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines :: ("
 --     -   @VK_ERROR_INVALID_SHADER_NV@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkComputePipelineCreateInfo',
@@ -2230,17 +2192,15 @@ foreign import ccall "vkCreateComputePipelines" vkCreateComputePipelines :: ("de
 -- | vkDestroyPipeline - Destroy a pipeline object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the pipeline.
 --
 -- -   @pipeline@ is the handle of the pipeline to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -2272,26 +2232,21 @@ foreign import ccall "vkCreateComputePipelines" vkCreateComputePipelines :: ("de
 -- -   Host access to @pipeline@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkPipeline'
 foreign import ccall "vkDestroyPipeline" vkDestroyPipeline :: ("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkOffset2D - Structure specifying a two-dimensional offset
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayPlaneCapabilitiesKHR',
 -- 'VkRect2D',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_incremental_present.VkRectLayerKHR'
 data VkOffset2D = VkOffset2D
-  { -- No documentation found for Nested "VkOffset2D" "vkX"
+  { -- | @x@ is the x offset.
   vkX :: Int32
-  , -- No documentation found for Nested "VkOffset2D" "vkY"
+  , -- | @y@ is the y offset.
   vkY :: Int32
   }
   deriving (Eq, Show)
@@ -2305,11 +2260,7 @@ instance Storable VkOffset2D where
                 *> poke (ptr `plusPtr` 4) (vkY (poked :: VkOffset2D))
 -- | VkExtent2D - Structure specifying a two-dimensional extent
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayModeParametersKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayPlaneCapabilitiesKHR',
@@ -2325,9 +2276,9 @@ instance Storable VkOffset2D where
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
 -- 'Graphics.Vulkan.Core10.Pass.vkGetRenderAreaGranularity'
 data VkExtent2D = VkExtent2D
-  { -- No documentation found for Nested "VkExtent2D" "vkWidth"
+  { -- | @width@ is the width of the extent.
   vkWidth :: Word32
-  , -- No documentation found for Nested "VkExtent2D" "vkHeight"
+  , -- | @height@ is the height of the extent.
   vkHeight :: Word32
   }
   deriving (Eq, Show)
@@ -2342,45 +2293,47 @@ instance Storable VkExtent2D where
 -- | VkViewport - Structure specifying a viewport
 --
 -- = Description
--- #_description#
 --
 -- The framebuffer depth coordinate @z@f /may/ be represented using either
 -- a fixed-point or floating-point representation. However, a
 -- floating-point representation /must/ be used if the depth\/stencil
 -- attachment has a floating-point depth component. If an m-bit fixed-point
 -- representation is used, we assume that it represents each value
--- <<data:image/png;base64,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 stem 64a1b37b405b2e2dc919e83a12e9feba>>,
--- where k ∈ { 0, 1, …​, 2m-1 }, as k (e.g. 1.0 is represented in binary as
--- a string of all ones).
+-- \(\frac{k}{2^m - 1}\), where k ∈ { 0, 1, …​, 2m-1 }, as k (e.g. 1.0 is
+-- represented in binary as a string of all ones).
 --
 -- The viewport parameters shown in the above equations are found from
 -- these values as
 --
--- []
---     ox = @x@ + @width@ \/ 2
+-- -   ox = @x@ + @width@ \/ 2
 --
--- []
---     oy = @y@ + @height@ \/ 2
+-- -   oy = @y@ + @height@ \/ 2
 --
--- []
---     oz = @minDepth@
+-- -   oz = @minDepth@
 --
--- []
---     px = @width@
+-- -   px = @width@
 --
--- []
---     py = @height@
+-- -   py = @height@
 --
--- []
---     pz = @maxDepth@ - @minDepth@.
+-- -   pz = @maxDepth@ - @minDepth@.
 --
--- The width and height of the
--- <{html_spec_relative}#features-limits-maxViewportDimensions implementation-dependent maximum viewport dimensions>
+-- The application /can/ specify a negative term for @height@, which has
+-- the effect of negating the y coordinate in clip space before performing
+-- the transform. When using a negative @height@, the application /should/
+-- also adjust the @y@ value to point to the lower left corner of the
+-- viewport instead of the upper left corner. Using the negative @height@
+-- allows the application to avoid having to negate the y component of the
+-- @Position@ output from the last vertex processing stage in shaders that
+-- also target other graphics APIs.
+--
+-- The width and height of the [implementation-dependent maximum viewport
+-- dimensions](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits-maxViewportDimensions)
 -- /must/ be greater than or equal to the width and height of the largest
 -- image which /can/ be created and attached to a framebuffer.
 --
 -- The floating-point viewport bounds are represented with an
--- <{html_spec_relative}#features-limits-viewportSubPixelBits implementation-dependent precision>.
+-- [implementation-dependent
+-- precision](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits-viewportSubPixelBits).
 --
 -- == Valid Usage
 --
@@ -2388,8 +2341,6 @@ instance Storable VkExtent2D where
 --
 -- -   @width@ /must/ be less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxViewportDimensions@[0]
---
--- -   @height@ /must/ be greater than @0.0@
 --
 -- -   The absolute value of @height@ /must/ be less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxViewportDimensions@[1]
@@ -2401,30 +2352,39 @@ instance Storable VkExtent2D where
 --
 -- -   @y@ /must/ be greater than or equal to @viewportBoundsRange@[0]
 --
+-- -   @y@ /must/ be less than or equal to @viewportBoundsRange@[1]
+--
+-- -   (@y@ + @height@) /must/ be greater than or equal to
+--     @viewportBoundsRange@[0]
+--
 -- -   (@y@ + @height@) /must/ be less than or equal to
 --     @viewportBoundsRange@[1]
 --
--- -   @minDepth@ /must/ be between @0.0@ and @1.0@, inclusive
+-- -   Unless @{html_spec_relative}#VK_EXT_depth_range_unrestricted@
+--     extension is enabled @minDepth@ /must/ be between @0.0@ and @1.0@,
+--     inclusive
 --
--- -   @maxDepth@ /must/ be between @0.0@ and @1.0@, inclusive
+-- -   Unless @{html_spec_relative}#VK_EXT_depth_range_unrestricted@
+--     extension is enabled @maxDepth@ /must/ be between @0.0@ and @1.0@,
+--     inclusive
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineViewportStateCreateInfo',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdSetViewport'
 data VkViewport = VkViewport
-  { -- No documentation found for Nested "VkViewport" "vkX"
+  { -- | @x@ and @y@ are the viewport’s upper left corner (x,y).
   vkX :: CFloat
-  , -- No documentation found for Nested "VkViewport" "vkY"
+  , -- No documentation found for Nested "VkViewport" "y"
   vkY :: CFloat
-  , -- No documentation found for Nested "VkViewport" "vkWidth"
+  , -- | @width@ and @height@ are the viewport’s width and height, respectively.
   vkWidth :: CFloat
-  , -- No documentation found for Nested "VkViewport" "vkHeight"
+  , -- No documentation found for Nested "VkViewport" "height"
   vkHeight :: CFloat
-  , -- No documentation found for Nested "VkViewport" "vkMinDepth"
+  , -- | @minDepth@ and @maxDepth@ are the depth range for the viewport. It is
+  -- valid for @minDepth@ to be greater than or equal to @maxDepth@.
   vkMinDepth :: CFloat
-  , -- No documentation found for Nested "VkViewport" "vkMaxDepth"
+  , -- No documentation found for Nested "VkViewport" "maxDepth"
   vkMaxDepth :: CFloat
   }
   deriving (Eq, Show)
@@ -2446,11 +2406,7 @@ instance Storable VkViewport where
                 *> poke (ptr `plusPtr` 20) (vkMaxDepth (poked :: VkViewport))
 -- | VkRect2D - Structure specifying a two-dimensional subregion
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkClearRect',
@@ -2464,9 +2420,9 @@ instance Storable VkViewport where
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdSetScissor',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkGetPhysicalDevicePresentRectanglesKHR'
 data VkRect2D = VkRect2D
-  { -- No documentation found for Nested "VkRect2D" "vkOffset"
+  { -- | @offset@ is a 'VkOffset2D' specifying the rectangle offset.
   vkOffset :: VkOffset2D
-  , -- No documentation found for Nested "VkRect2D" "vkExtent"
+  , -- | @extent@ is a 'VkExtent2D' specifying the rectangle extent.
   vkExtent :: VkExtent2D
   }
   deriving (Eq, Show)
@@ -2482,7 +2438,6 @@ instance Storable VkRect2D where
 -- entry
 --
 -- = Description
--- #_description#
 --
 -- If a @constantID@ value is not a specialization constant ID used in the
 -- shader, that map entry does not affect the behavior of the pipeline.
@@ -2495,15 +2450,16 @@ instance Storable VkRect2D where
 --     byte size of @VkBool32@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSpecializationInfo'
 data VkSpecializationMapEntry = VkSpecializationMapEntry
-  { -- No documentation found for Nested "VkSpecializationMapEntry" "vkConstantID"
+  { -- | @constantID@ is the ID of the specialization constant in SPIR-V.
   vkConstantID :: Word32
-  , -- No documentation found for Nested "VkSpecializationMapEntry" "vkOffset"
+  , -- | @offset@ is the byte offset of the specialization constant value within
+  -- the supplied data buffer.
   vkOffset :: Word32
-  , -- No documentation found for Nested "VkSpecializationMapEntry" "vkSize"
+  , -- | @size@ is the byte size of the specialization constant value within the
+  -- supplied data buffer.
   vkSize :: CSize
   }
   deriving (Eq, Show)
@@ -2520,7 +2476,6 @@ instance Storable VkSpecializationMapEntry where
 -- | VkSpecializationInfo - Structure specifying specialization info
 --
 -- = Description
--- #_description#
 --
 -- @pMapEntries@ points to a structure of type 'VkSpecializationMapEntry'.
 --
@@ -2542,17 +2497,17 @@ instance Storable VkSpecializationMapEntry where
 --     array of @dataSize@ bytes
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineShaderStageCreateInfo', 'VkSpecializationMapEntry'
 data VkSpecializationInfo = VkSpecializationInfo
-  { -- No documentation found for Nested "VkSpecializationInfo" "vkMapEntryCount"
+  { -- | @mapEntryCount@ is the number of entries in the @pMapEntries@ array.
   vkMapEntryCount :: Word32
-  , -- No documentation found for Nested "VkSpecializationInfo" "vkPMapEntries"
+  , -- | @pMapEntries@ is a pointer to an array of @VkSpecializationMapEntry@
+  -- which maps constant IDs to offsets in @pData@.
   vkPMapEntries :: Ptr VkSpecializationMapEntry
-  , -- No documentation found for Nested "VkSpecializationInfo" "vkDataSize"
+  , -- | @dataSize@ is the byte size of the @pData@ buffer.
   vkDataSize :: CSize
-  , -- No documentation found for Nested "VkSpecializationInfo" "vkPData"
+  , -- | @pData@ contains the actual constant values to specialize with.
   vkPData :: Ptr ()
   }
   deriving (Eq, Show)
@@ -2571,18 +2526,15 @@ instance Storable VkSpecializationInfo where
 -- | VkPipelineShaderStageCreateInfo - Structure specifying parameters of a
 -- newly created pipeline shader stage
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-geometryShader geometry shaders>
+-- -   If the [geometry
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-geometryShader)
 --     feature is not enabled, @stage@ /must/ not be
 --     @VK_SHADER_STAGE_GEOMETRY_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-tessellationShader tessellation shaders>
+-- -   If the [tessellation
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-tessellationShader)
 --     feature is not enabled, @stage@ /must/ not be
 --     @VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT@ or
 --     @VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT@
@@ -2652,6 +2604,10 @@ instance Storable VkSpecializationInfo where
 --     entry point writes to @FragDepth@ in any execution path, it /must/
 --     write to @FragDepth@ in all execution paths
 --
+-- -   If @stage@ is @VK_SHADER_STAGE_FRAGMENT_BIT@, and the identified
+--     entry point writes to @FragStencilRefEXT@ in any execution path, it
+--     /must/ write to @FragStencilRefEXT@ in all execution paths
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -2671,26 +2627,31 @@ instance Storable VkSpecializationInfo where
 --     be a valid pointer to a valid @VkSpecializationInfo@ structure
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkComputePipelineCreateInfo', 'VkGraphicsPipelineCreateInfo',
 -- 'VkPipelineShaderStageCreateFlags',
 -- 'Graphics.Vulkan.Core10.Shader.VkShaderModule', 'VkShaderStageFlagBits',
 -- 'VkSpecializationInfo', 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineShaderStageCreateInfo = VkPipelineShaderStageCreateInfo
-  { -- No documentation found for Nested "VkPipelineShaderStageCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineShaderStageCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineShaderStageCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineShaderStageCreateFlags
-  , -- No documentation found for Nested "VkPipelineShaderStageCreateInfo" "vkStage"
+  , -- | @stage@ is a 'VkShaderStageFlagBits' value specifying a single pipeline
+  -- stage.
   vkStage :: VkShaderStageFlagBits
-  , -- No documentation found for Nested "VkPipelineShaderStageCreateInfo" "vkModule"
+  , -- | @module@ is a @VkShaderModule@ object that contains the shader for this
+  -- stage.
   vkModule :: VkShaderModule
-  , -- No documentation found for Nested "VkPipelineShaderStageCreateInfo" "vkPName"
+  , -- | @pName@ is a pointer to a null-terminated UTF-8 string specifying the
+  -- entry point name of the shader for this stage.
   vkPName :: Ptr CChar
-  , -- No documentation found for Nested "VkPipelineShaderStageCreateInfo" "vkPSpecializationInfo"
+  , -- | @pSpecializationInfo@ is a pointer to 'VkSpecializationInfo', as
+  -- described in [Specialization
+  -- Constants](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-specialization-constants),
+  -- and /can/ be @NULL@.
   vkPSpecializationInfo :: Ptr VkSpecializationInfo
   }
   deriving (Eq, Show)
@@ -2716,11 +2677,10 @@ instance Storable VkPipelineShaderStageCreateInfo where
 -- created compute pipeline
 --
 -- = Description
--- #_description#
 --
 -- The parameters @basePipelineHandle@ and @basePipelineIndex@ are
--- described in more detail in
--- <{html_spec_relative}#pipelines-pipeline-derivatives Pipeline Derivatives>.
+-- described in more detail in [Pipeline
+-- Derivatives](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-pipeline-derivatives).
 --
 -- @stage@ points to a structure of type @VkPipelineShaderStageCreateInfo@.
 --
@@ -2750,11 +2710,12 @@ instance Storable VkPipelineShaderStageCreateInfo where
 --
 -- -   The shader code for the entry point identified by @stage@ and the
 --     rest of the state identified by this structure /must/ adhere to the
---     pipeline linking rules described in the
---     <{html_spec_relative}#interfaces Shader Interfaces> chapter
+--     pipeline linking rules described in the [Shader
+--     Interfaces](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#interfaces)
+--     chapter
 --
 -- -   @layout@ /must/ be
---     <{html_spec_relative}#descriptorsets-pipelinelayout-consistency consistent>
+--     [consistent](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-pipelinelayout-consistency)
 --     with the layout of the compute shader specified in @stage@
 --
 -- -   The number of resources in @layout@ accessible to the compute shader
@@ -2780,26 +2741,29 @@ instance Storable VkPipelineShaderStageCreateInfo where
 --     @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipeline', 'VkPipelineCreateFlags', 'VkPipelineLayout',
 -- 'VkPipelineShaderStageCreateInfo',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateComputePipelines'
 data VkComputePipelineCreateInfo = VkComputePipelineCreateInfo
-  { -- No documentation found for Nested "VkComputePipelineCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkComputePipelineCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkComputePipelineCreateInfo" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkPipelineCreateFlagBits' specifying how the
+  -- pipeline will be generated.
   vkFlags :: VkPipelineCreateFlags
-  , -- No documentation found for Nested "VkComputePipelineCreateInfo" "vkStage"
+  , -- | @stage@ is a 'VkPipelineShaderStageCreateInfo' describing the compute
+  -- shader.
   vkStage :: VkPipelineShaderStageCreateInfo
-  , -- No documentation found for Nested "VkComputePipelineCreateInfo" "vkLayout"
+  , -- | @layout@ is the description of binding locations used by both the
+  -- pipeline and descriptor sets used with the pipeline.
   vkLayout :: VkPipelineLayout
-  , -- No documentation found for Nested "VkComputePipelineCreateInfo" "vkBasePipelineHandle"
+  , -- | @basePipelineHandle@ is a pipeline to derive from
   vkBasePipelineHandle :: VkPipeline
-  , -- No documentation found for Nested "VkComputePipelineCreateInfo" "vkBasePipelineIndex"
+  , -- | @basePipelineIndex@ is an index into the @pCreateInfos@ parameter to use
+  -- as a pipeline to derive from
   vkBasePipelineIndex :: Int32
   }
   deriving (Eq, Show)
@@ -2824,9 +2788,6 @@ instance Storable VkComputePipelineCreateInfo where
 -- | VkVertexInputBindingDescription - Structure specifying vertex input
 -- binding description
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @binding@ /must/ be less than
@@ -2840,15 +2801,17 @@ instance Storable VkComputePipelineCreateInfo where
 -- -   @inputRate@ /must/ be a valid 'VkVertexInputRate' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineVertexInputStateCreateInfo', 'VkVertexInputRate'
 data VkVertexInputBindingDescription = VkVertexInputBindingDescription
-  { -- No documentation found for Nested "VkVertexInputBindingDescription" "vkBinding"
+  { -- | @binding@ is the binding number that this structure describes.
   vkBinding :: Word32
-  , -- No documentation found for Nested "VkVertexInputBindingDescription" "vkStride"
+  , -- | @stride@ is the distance in bytes between two consecutive elements
+  -- within the buffer.
   vkStride :: Word32
-  , -- No documentation found for Nested "VkVertexInputBindingDescription" "vkInputRate"
+  , -- | @inputRate@ is a 'VkVertexInputRate' value specifying whether vertex
+  -- attribute addressing is a function of the vertex index or of the
+  -- instance index.
   vkInputRate :: VkVertexInputRate
   }
   deriving (Eq, Show)
@@ -2864,9 +2827,6 @@ instance Storable VkVertexInputBindingDescription where
                 *> poke (ptr `plusPtr` 8) (vkInputRate (poked :: VkVertexInputBindingDescription))
 -- | VkVertexInputAttributeDescription - Structure specifying vertex input
 -- attribute description
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -2890,18 +2850,19 @@ instance Storable VkVertexInputBindingDescription where
 --     value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkFormat',
 -- 'VkPipelineVertexInputStateCreateInfo'
 data VkVertexInputAttributeDescription = VkVertexInputAttributeDescription
-  { -- No documentation found for Nested "VkVertexInputAttributeDescription" "vkLocation"
+  { -- | @location@ is the shader binding location number for this attribute.
   vkLocation :: Word32
-  , -- No documentation found for Nested "VkVertexInputAttributeDescription" "vkBinding"
+  , -- | @binding@ is the binding number which this attribute takes its data
+  -- from.
   vkBinding :: Word32
-  , -- No documentation found for Nested "VkVertexInputAttributeDescription" "vkFormat"
+  , -- | @format@ is the size and type of the vertex attribute data.
   vkFormat :: VkFormat
-  , -- No documentation found for Nested "VkVertexInputAttributeDescription" "vkOffset"
+  , -- | @offset@ is a byte offset of this attribute relative to the start of an
+  -- element in the vertex input binding.
   vkOffset :: Word32
   }
   deriving (Eq, Show)
@@ -2919,9 +2880,6 @@ instance Storable VkVertexInputAttributeDescription where
                 *> poke (ptr `plusPtr` 12) (vkOffset (poked :: VkVertexInputAttributeDescription))
 -- | VkPipelineVertexInputStateCreateInfo - Structure specifying parameters
 -- of a newly created pipeline vertex input state
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -2963,25 +2921,28 @@ instance Storable VkVertexInputAttributeDescription where
 --     @VkVertexInputAttributeDescription@ structures
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkGraphicsPipelineCreateInfo', 'VkPipelineVertexInputStateCreateFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkVertexInputAttributeDescription', 'VkVertexInputBindingDescription'
 data VkPipelineVertexInputStateCreateInfo = VkPipelineVertexInputStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineVertexInputStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineVertexInputStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineVertexInputStateCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineVertexInputStateCreateFlags
-  , -- No documentation found for Nested "VkPipelineVertexInputStateCreateInfo" "vkVertexBindingDescriptionCount"
+  , -- | @vertexBindingDescriptionCount@ is the number of vertex binding
+  -- descriptions provided in @pVertexBindingDescriptions@.
   vkVertexBindingDescriptionCount :: Word32
-  , -- No documentation found for Nested "VkPipelineVertexInputStateCreateInfo" "vkPVertexBindingDescriptions"
+  , -- | @pVertexBindingDescriptions@ is a pointer to an array of
+  -- @VkVertexInputBindingDescription@ structures.
   vkPVertexBindingDescriptions :: Ptr VkVertexInputBindingDescription
-  , -- No documentation found for Nested "VkPipelineVertexInputStateCreateInfo" "vkVertexAttributeDescriptionCount"
+  , -- | @vertexAttributeDescriptionCount@ is the number of vertex attribute
+  -- descriptions provided in @pVertexAttributeDescriptions@.
   vkVertexAttributeDescriptionCount :: Word32
-  , -- No documentation found for Nested "VkPipelineVertexInputStateCreateInfo" "vkPVertexAttributeDescriptions"
+  , -- | @pVertexAttributeDescriptions@ is a pointer to an array of
+  -- @VkVertexInputAttributeDescription@ structures.
   vkPVertexAttributeDescriptions :: Ptr VkVertexInputAttributeDescription
   }
   deriving (Eq, Show)
@@ -3007,7 +2968,6 @@ instance Storable VkPipelineVertexInputStateCreateInfo where
 -- of a newly created pipeline input assembly state
 --
 -- = Description
--- #_description#
 --
 -- Restarting the assembly of primitives discards the most recent index
 -- values if those elements formed an incomplete primitive, and restarts
@@ -3026,16 +2986,16 @@ instance Storable VkPipelineVertexInputStateCreateInfo where
 --     @VK_PRIMITIVE_TOPOLOGY_PATCH_LIST@, @primitiveRestartEnable@ /must/
 --     be @VK_FALSE@
 --
--- -   If the
---     <{html_spec_relative}#features-features-geometryShader geometry shaders>
+-- -   If the [geometry
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-geometryShader)
 --     feature is not enabled, @topology@ /must/ not be any of
 --     @VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY@,
 --     @VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY@,
 --     @VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY@ or
 --     @VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY@
 --
--- -   If the
---     <{html_spec_relative}#features-features-tessellationShader tessellation shaders>
+-- -   If the [tessellation
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-tessellationShader)
 --     feature is not enabled, @topology@ /must/ not be
 --     @VK_PRIMITIVE_TOPOLOGY_PATCH_LIST@
 --
@@ -3051,21 +3011,29 @@ instance Storable VkPipelineVertexInputStateCreateInfo where
 -- -   @topology@ /must/ be a valid 'VkPrimitiveTopology' value
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'VkGraphicsPipelineCreateInfo',
 -- 'VkPipelineInputAssemblyStateCreateFlags', 'VkPrimitiveTopology',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineInputAssemblyStateCreateInfo = VkPipelineInputAssemblyStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineInputAssemblyStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineInputAssemblyStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineInputAssemblyStateCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineInputAssemblyStateCreateFlags
-  , -- No documentation found for Nested "VkPipelineInputAssemblyStateCreateInfo" "vkTopology"
+  , -- | @topology@ is a 'VkPrimitiveTopology' defining the primitive topology,
+  -- as described below.
   vkTopology :: VkPrimitiveTopology
-  , -- No documentation found for Nested "VkPipelineInputAssemblyStateCreateInfo" "vkPrimitiveRestartEnable"
+  , -- | @primitiveRestartEnable@ controls whether a special vertex index value
+  -- is treated as restarting the assembly of primitives. This enable only
+  -- applies to indexed draws
+  -- ('Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdDrawIndexed' and
+  -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect'),
+  -- and the special index value is either 0xFFFFFFFF when the @indexType@
+  -- parameter of @vkCmdBindIndexBuffer@ is equal to @VK_INDEX_TYPE_UINT32@,
+  -- or 0xFFFF when @indexType@ is equal to @VK_INDEX_TYPE_UINT16@. Primitive
+  -- restart is not allowed for “list” topologies.
   vkPrimitiveRestartEnable :: VkBool32
   }
   deriving (Eq, Show)
@@ -3086,9 +3054,6 @@ instance Storable VkPipelineInputAssemblyStateCreateInfo where
 -- | VkPipelineTessellationStateCreateInfo - Structure specifying parameters
 -- of a newly created pipeline tessellation state
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @patchControlPoints@ /must/ be greater than zero and less than or
@@ -3105,19 +3070,18 @@ instance Storable VkPipelineInputAssemblyStateCreateInfo where
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkGraphicsPipelineCreateInfo',
 -- 'VkPipelineTessellationStateCreateFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineTessellationStateCreateInfo = VkPipelineTessellationStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineTessellationStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineTessellationStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineTessellationStateCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineTessellationStateCreateFlags
-  , -- No documentation found for Nested "VkPipelineTessellationStateCreateInfo" "vkPatchControlPoints"
+  , -- | @patchControlPoints@ number of control points per patch.
   vkPatchControlPoints :: Word32
   }
   deriving (Eq, Show)
@@ -3136,17 +3100,14 @@ instance Storable VkPipelineTessellationStateCreateInfo where
 -- | VkPipelineViewportStateCreateInfo - Structure specifying parameters of a
 -- newly created pipeline viewport state
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-multiViewport multiple viewports>
+-- -   If the [multiple
+--     viewports](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-multiViewport)
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
--- -   If the
---     <{html_spec_relative}#features-features-multiViewport multiple viewports>
+-- -   If the [multiple
+--     viewports](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-multiViewport)
 --     feature is not enabled, @scissorCount@ /must/ be @1@
 --
 -- -   @viewportCount@ /must/ be between @1@ and
@@ -3156,6 +3117,13 @@ instance Storable VkPipelineTessellationStateCreateInfo where
 --     @VkPhysicalDeviceLimits@::@maxViewports@, inclusive
 --
 -- -   @scissorCount@ and @viewportCount@ /must/ be identical
+--
+-- -   If the @viewportWScalingEnable@ member of a
+--     'Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling.VkPipelineViewportWScalingStateCreateInfoNV'
+--     structure chained to the @pNext@ chain is @VK_TRUE@, the
+--     @viewportCount@ member of the
+--     'Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling.VkPipelineViewportWScalingStateCreateInfoNV'
+--     structure /must/ be equal to @viewportCount@
 --
 -- == Valid Usage (Implicit)
 --
@@ -3178,24 +3146,29 @@ instance Storable VkPipelineTessellationStateCreateInfo where
 -- -   @scissorCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkGraphicsPipelineCreateInfo', 'VkPipelineViewportStateCreateFlags',
 -- 'VkRect2D', 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkViewport'
 data VkPipelineViewportStateCreateInfo = VkPipelineViewportStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineViewportStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineViewportStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineViewportStateCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineViewportStateCreateFlags
-  , -- No documentation found for Nested "VkPipelineViewportStateCreateInfo" "vkViewportCount"
+  , -- | @viewportCount@ is the number of viewports used by the pipeline.
   vkViewportCount :: Word32
-  , -- No documentation found for Nested "VkPipelineViewportStateCreateInfo" "vkPViewports"
+  , -- | @pViewports@ is a pointer to an array of 'VkViewport' structures,
+  -- defining the viewport transforms. If the viewport state is dynamic, this
+  -- member is ignored.
   vkPViewports :: Ptr VkViewport
-  , -- No documentation found for Nested "VkPipelineViewportStateCreateInfo" "vkScissorCount"
+  , -- | @scissorCount@ is the number of
+  -- [scissors](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-scissor)
+  -- and /must/ match the number of viewports.
   vkScissorCount :: Word32
-  , -- No documentation found for Nested "VkPipelineViewportStateCreateInfo" "vkPScissors"
+  , -- | @pScissors@ is a pointer to an array of @VkRect2D@ structures which
+  -- define the rectangular bounds of the scissor for the corresponding
+  -- viewport. If the scissor state is dynamic, this member is ignored.
   vkPScissors :: Ptr VkRect2D
   }
   deriving (Eq, Show)
@@ -3221,18 +3194,29 @@ instance Storable VkPipelineViewportStateCreateInfo where
 -- of a newly created pipeline rasterization state
 --
 -- = Description
--- #_description#
+--
+-- The application /can/ also add a
+-- @VkPipelineRasterizationStateRasterizationOrderAMD@ structure to the
+-- @pNext@ chain of a @VkPipelineRasterizationStateCreateInfo@ structure.
+-- This structure enables selecting the rasterization order to use when
+-- rendering with the corresponding graphics pipeline as described in
+-- [Rasterization
+-- Order](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primrast-order).
 --
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-depthClamp depth clamping>
+-- -   If the [depth
+--     clamping](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-depthClamp)
 --     feature is not enabled, @depthClampEnable@ /must/ be @VK_FALSE@
 --
--- -   If the
---     <{html_spec_relative}#features-features-fillModeNonSolid non-solid fill modes>
+-- -   If the [non-solid fill
+--     modes](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-fillModeNonSolid)
 --     feature is not enabled, @polygonMode@ /must/ be
---     @VK_POLYGON_MODE_FILL@
+--     @VK_POLYGON_MODE_FILL@ or @VK_POLYGON_MODE_FILL_RECTANGLE_NV@
+--
+-- -   If the @{html_spec_relative}#VK_NV_fill_rectangle@ extension is not
+--     enabled, @polygonMode@ /must/ not be
+--     @VK_POLYGON_MODE_FILL_RECTANGLE_NV@
 --
 -- == Valid Usage (Implicit)
 --
@@ -3258,38 +3242,45 @@ instance Storable VkPipelineViewportStateCreateInfo where
 -- -   @frontFace@ /must/ be a valid 'VkFrontFace' value
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'VkCullModeFlags', 'VkFrontFace',
 -- 'VkGraphicsPipelineCreateInfo',
 -- 'VkPipelineRasterizationStateCreateFlags', 'VkPolygonMode',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineRasterizationStateCreateInfo = VkPipelineRasterizationStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineRasterizationStateCreateFlags
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkDepthClampEnable"
+  , -- | @depthClampEnable@ controls whether to clamp the fragment’s depth values
+  -- instead of clipping primitives to the z planes of the frustum, as
+  -- described in [Primitive
+  -- Clipping](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-clipping).
   vkDepthClampEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkRasterizerDiscardEnable"
+  , -- | @rasterizerDiscardEnable@ controls whether primitives are discarded
+  -- immediately before the rasterization stage.
   vkRasterizerDiscardEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkPolygonMode"
+  , -- | @polygonMode@ is the triangle rendering mode. See 'VkPolygonMode'.
   vkPolygonMode :: VkPolygonMode
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkCullMode"
+  , -- | @cullMode@ is the triangle facing direction used for primitive culling.
+  -- See 'VkCullModeFlagBits'.
   vkCullMode :: VkCullModeFlags
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkFrontFace"
+  , -- | @frontFace@ is a 'VkFrontFace' value specifying the front-facing
+  -- triangle orientation to be used for culling.
   vkFrontFace :: VkFrontFace
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkDepthBiasEnable"
+  , -- | @depthBiasEnable@ controls whether to bias fragment depth values.
   vkDepthBiasEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkDepthBiasConstantFactor"
+  , -- | @depthBiasConstantFactor@ is a scalar factor controlling the constant
+  -- depth value added to each fragment.
   vkDepthBiasConstantFactor :: CFloat
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkDepthBiasClamp"
+  , -- | @depthBiasClamp@ is the maximum (or minimum) depth bias of a fragment.
   vkDepthBiasClamp :: CFloat
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkDepthBiasSlopeFactor"
+  , -- | @depthBiasSlopeFactor@ is a scalar factor applied to a fragment’s slope
+  -- in depth bias calculations.
   vkDepthBiasSlopeFactor :: CFloat
-  , -- No documentation found for Nested "VkPipelineRasterizationStateCreateInfo" "vkLineWidth"
+  , -- | @lineWidth@ is the width of rasterized line segments.
   vkLineWidth :: CFloat
   }
   deriving (Eq, Show)
@@ -3326,20 +3317,21 @@ instance Storable VkPipelineRasterizationStateCreateInfo where
 -- | VkPipelineMultisampleStateCreateInfo - Structure specifying parameters
 -- of a newly created pipeline multisample state
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-sampleRateShading sample rate shading>
+-- -   If the [sample rate
+--     shading](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sampleRateShading)
 --     feature is not enabled, @sampleShadingEnable@ /must/ be @VK_FALSE@
 --
--- -   If the
---     <{html_spec_relative}#features-features-alphaToOne alpha to one>
+-- -   If the [alpha to
+--     one](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-alphaToOne)
 --     feature is not enabled, @alphaToOneEnable@ /must/ be @VK_FALSE@
 --
 -- -   @minSampleShading@ /must/ be in the range [0,1]
+--
+-- -   If the subpass has any color attachments and @rasterizationSamples@
+--     is greater than the number of color samples, then
+--     @sampleShadingEnable@ /must/ be @VK_FALSE@
 --
 -- == Valid Usage (Implicit)
 --
@@ -3364,34 +3356,47 @@ instance Storable VkPipelineRasterizationStateCreateInfo where
 --
 -- -   If @pSampleMask@ is not @NULL@, @pSampleMask@ /must/ be a valid
 --     pointer to an array of
---     <<data:image/png;base64,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 stem afc23f1498b2f7d63bea697fcc1fdc8e>>
+--     \(\lceil{\mathit{rasterizationSamples} \over 32}\rceil\)
 --     @VkSampleMask@ values
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'VkGraphicsPipelineCreateInfo',
 -- 'VkPipelineMultisampleStateCreateFlags',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlagBits',
 -- @VkSampleMask@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineMultisampleStateCreateInfo = VkPipelineMultisampleStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineMultisampleStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineMultisampleStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineMultisampleStateCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineMultisampleStateCreateFlags
-  , -- No documentation found for Nested "VkPipelineMultisampleStateCreateInfo" "vkRasterizationSamples"
+  , -- | @rasterizationSamples@ is a
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlagBits'
+  -- specifying the number of samples per pixel used in rasterization.
   vkRasterizationSamples :: VkSampleCountFlagBits
-  , -- No documentation found for Nested "VkPipelineMultisampleStateCreateInfo" "vkSampleShadingEnable"
+  , -- | @sampleShadingEnable@ /can/ be used to enable [Sample
+  -- Shading](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-sampleshading).
   vkSampleShadingEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineMultisampleStateCreateInfo" "vkMinSampleShading"
+  , -- | @minSampleShading@ specifies a minimum fraction of sample shading if
+  -- @sampleShadingEnable@ is set to @VK_TRUE@.
   vkMinSampleShading :: CFloat
-  , -- No documentation found for Nested "VkPipelineMultisampleStateCreateInfo" "vkPSampleMask"
+  , -- | @pSampleMask@ is a bitmask of static coverage information that is ANDed
+  -- with the coverage information generated during rasterization, as
+  -- described in [Sample
+  -- Mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-samplemask).
   vkPSampleMask :: Ptr VkSampleMask
-  , -- No documentation found for Nested "VkPipelineMultisampleStateCreateInfo" "vkAlphaToCoverageEnable"
+  , -- | @alphaToCoverageEnable@ controls whether a temporary coverage value is
+  -- generated based on the alpha component of the fragment’s first color
+  -- output as specified in the [Multisample
+  -- Coverage](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-covg)
+  -- section.
   vkAlphaToCoverageEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineMultisampleStateCreateInfo" "vkAlphaToOneEnable"
+  , -- | @alphaToOneEnable@ controls whether the alpha component of the
+  -- fragment’s first color output is replaced with one as described in
+  -- [Multisample
+  -- Coverage](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-covg).
   vkAlphaToOneEnable :: VkBool32
   }
   deriving (Eq, Show)
@@ -3420,42 +3425,83 @@ instance Storable VkPipelineMultisampleStateCreateInfo where
 -- | VkPipelineColorBlendAttachmentState - Structure specifying a pipeline
 -- color blend attachment state
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-dualSrcBlend dual source blending>
+-- -   If the [dual source
+--     blending](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-dualSrcBlend)
 --     feature is not enabled, @srcColorBlendFactor@ /must/ not be
 --     @VK_BLEND_FACTOR_SRC1_COLOR@,
 --     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR@,
 --     @VK_BLEND_FACTOR_SRC1_ALPHA@, or
 --     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA@
 --
--- -   If the
---     <{html_spec_relative}#features-features-dualSrcBlend dual source blending>
+-- -   If the [dual source
+--     blending](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-dualSrcBlend)
 --     feature is not enabled, @dstColorBlendFactor@ /must/ not be
 --     @VK_BLEND_FACTOR_SRC1_COLOR@,
 --     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR@,
 --     @VK_BLEND_FACTOR_SRC1_ALPHA@, or
 --     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA@
 --
--- -   If the
---     <{html_spec_relative}#features-features-dualSrcBlend dual source blending>
+-- -   If the [dual source
+--     blending](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-dualSrcBlend)
 --     feature is not enabled, @srcAlphaBlendFactor@ /must/ not be
 --     @VK_BLEND_FACTOR_SRC1_COLOR@,
 --     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR@,
 --     @VK_BLEND_FACTOR_SRC1_ALPHA@, or
 --     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA@
 --
--- -   If the
---     <{html_spec_relative}#features-features-dualSrcBlend dual source blending>
+-- -   If the [dual source
+--     blending](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-dualSrcBlend)
 --     feature is not enabled, @dstAlphaBlendFactor@ /must/ not be
 --     @VK_BLEND_FACTOR_SRC1_COLOR@,
 --     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR@,
 --     @VK_BLEND_FACTOR_SRC1_ALPHA@, or
 --     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA@
+--
+-- -   If either of @colorBlendOp@ or @alphaBlendOp@ is an [advanced blend
+--     operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced),
+--     then @colorBlendOp@ /must/ equal @alphaBlendOp@
+--
+-- -   If
+--     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendIndependentBlend@
+--     is @VK_FALSE@ and @colorBlendOp@ is an [advanced blend
+--     operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced),
+--     then @colorBlendOp@ /must/ be the same for all attachments.
+--
+-- -   If
+--     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendIndependentBlend@
+--     is @VK_FALSE@ and @alphaBlendOp@ is an [advanced blend
+--     operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced),
+--     then @alphaBlendOp@ /must/ be the same for all attachments.
+--
+-- -   If
+--     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT'::@advancedBlendAllOperations@
+--     is @VK_FALSE@, then @colorBlendOp@ /must/ not be
+--     @VK_BLEND_OP_ZERO_EXT@, @VK_BLEND_OP_SRC_EXT@,
+--     @VK_BLEND_OP_DST_EXT@, @VK_BLEND_OP_SRC_OVER_EXT@,
+--     @VK_BLEND_OP_DST_OVER_EXT@, @VK_BLEND_OP_SRC_IN_EXT@,
+--     @VK_BLEND_OP_DST_IN_EXT@, @VK_BLEND_OP_SRC_OUT_EXT@,
+--     @VK_BLEND_OP_DST_OUT_EXT@, @VK_BLEND_OP_SRC_ATOP_EXT@,
+--     @VK_BLEND_OP_DST_ATOP_EXT@, @VK_BLEND_OP_XOR_EXT@,
+--     @VK_BLEND_OP_INVERT_EXT@, @VK_BLEND_OP_INVERT_RGB_EXT@,
+--     @VK_BLEND_OP_LINEARDODGE_EXT@, @VK_BLEND_OP_LINEARBURN_EXT@,
+--     @VK_BLEND_OP_VIVIDLIGHT_EXT@, @VK_BLEND_OP_LINEARLIGHT_EXT@,
+--     @VK_BLEND_OP_PINLIGHT_EXT@, @VK_BLEND_OP_HARDMIX_EXT@,
+--     @VK_BLEND_OP_PLUS_EXT@, @VK_BLEND_OP_PLUS_CLAMPED_EXT@,
+--     @VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT@, @VK_BLEND_OP_PLUS_DARKER_EXT@,
+--     @VK_BLEND_OP_MINUS_EXT@, @VK_BLEND_OP_MINUS_CLAMPED_EXT@,
+--     @VK_BLEND_OP_CONTRAST_EXT@, @VK_BLEND_OP_INVERT_OVG_EXT@,
+--     @VK_BLEND_OP_RED_EXT@, @VK_BLEND_OP_GREEN_EXT@, or
+--     @VK_BLEND_OP_BLUE_EXT@
+--
+-- -   If @colorBlendOp@ or @alphaBlendOp@ is an [advanced blend
+--     operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced),
+--     then
+--     'Graphics.Vulkan.Core10.Pass.VkSubpassDescription'::@colorAttachmentCount@
+--     of the subpass this pipeline is compiled against /must/ be less than
+--     or equal to
+--     'Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT'::advancedBlendMaxColorAttachments
 --
 -- == Valid Usage (Implicit)
 --
@@ -3475,26 +3521,36 @@ instance Storable VkPipelineMultisampleStateCreateInfo where
 --     'VkColorComponentFlagBits' values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBlendFactor', 'VkBlendOp', @VkBool32@, 'VkColorComponentFlags',
 -- 'VkPipelineColorBlendStateCreateInfo'
 data VkPipelineColorBlendAttachmentState = VkPipelineColorBlendAttachmentState
-  { -- No documentation found for Nested "VkPipelineColorBlendAttachmentState" "vkBlendEnable"
+  { -- | @blendEnable@ controls whether blending is enabled for the corresponding
+  -- color attachment. If blending is not enabled, the source fragment’s
+  -- color for that attachment is passed through unmodified.
   vkBlendEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineColorBlendAttachmentState" "vkSrcColorBlendFactor"
+  , -- | @srcColorBlendFactor@ selects which blend factor is used to determine
+  -- the source factors (Sr,Sg,Sb).
   vkSrcColorBlendFactor :: VkBlendFactor
-  , -- No documentation found for Nested "VkPipelineColorBlendAttachmentState" "vkDstColorBlendFactor"
+  , -- | @dstColorBlendFactor@ selects which blend factor is used to determine
+  -- the destination factors (Dr,Dg,Db).
   vkDstColorBlendFactor :: VkBlendFactor
-  , -- No documentation found for Nested "VkPipelineColorBlendAttachmentState" "vkColorBlendOp"
+  , -- | @colorBlendOp@ selects which blend operation is used to calculate the
+  -- RGB values to write to the color attachment.
   vkColorBlendOp :: VkBlendOp
-  , -- No documentation found for Nested "VkPipelineColorBlendAttachmentState" "vkSrcAlphaBlendFactor"
+  , -- | @srcAlphaBlendFactor@ selects which blend factor is used to determine
+  -- the source factor Sa.
   vkSrcAlphaBlendFactor :: VkBlendFactor
-  , -- No documentation found for Nested "VkPipelineColorBlendAttachmentState" "vkDstAlphaBlendFactor"
+  , -- | @dstAlphaBlendFactor@ selects which blend factor is used to determine
+  -- the destination factor Da.
   vkDstAlphaBlendFactor :: VkBlendFactor
-  , -- No documentation found for Nested "VkPipelineColorBlendAttachmentState" "vkAlphaBlendOp"
+  , -- | @alphaBlendOp@ selects which blend operation is use to calculate the
+  -- alpha values to write to the color attachment.
   vkAlphaBlendOp :: VkBlendOp
-  , -- No documentation found for Nested "VkPipelineColorBlendAttachmentState" "vkColorWriteMask"
+  , -- | @colorWriteMask@ is a bitmask of 'VkColorComponentFlagBits' specifying
+  -- which of the R, G, B, and\/or A components are enabled for writing, as
+  -- described for the [Color Write
+  -- Mask](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-color-write-mask).
   vkColorWriteMask :: VkColorComponentFlags
   }
   deriving (Eq, Show)
@@ -3522,25 +3578,24 @@ instance Storable VkPipelineColorBlendAttachmentState where
 -- a newly created pipeline color blend state
 --
 -- = Description
--- #_description#
 --
 -- Each element of the @pAttachments@ array is a
 -- 'VkPipelineColorBlendAttachmentState' structure specifying per-target
--- blending state for each individual color attachment. If the
--- <{html_spec_relative}#features-features-independentBlend independent blending>
+-- blending state for each individual color attachment. If the [independent
+-- blending](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-independentBlend)
 -- feature is not enabled on the device, all
 -- 'VkPipelineColorBlendAttachmentState' elements in the @pAttachments@
 -- array /must/ be identical.
 --
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-independentBlend independent blending>
+-- -   If the [independent
+--     blending](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-independentBlend)
 --     feature is not enabled, all elements of @pAttachments@ /must/ be
 --     identical
 --
--- -   If the
---     <{html_spec_relative}#features-features-logicOp logic operations>
+-- -   If the [logic
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-logicOp)
 --     feature is not enabled, @logicOpEnable@ /must/ be @VK_FALSE@
 --
 -- -   If @logicOpEnable@ is @VK_TRUE@, @logicOp@ /must/ be a valid
@@ -3561,28 +3616,33 @@ instance Storable VkPipelineColorBlendAttachmentState where
 --     @VkPipelineColorBlendAttachmentState@ structures
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'VkGraphicsPipelineCreateInfo', 'VkLogicOp',
 -- 'VkPipelineColorBlendAttachmentState',
 -- 'VkPipelineColorBlendStateCreateFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineColorBlendStateCreateInfo = VkPipelineColorBlendStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineColorBlendStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineColorBlendStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineColorBlendStateCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineColorBlendStateCreateFlags
-  , -- No documentation found for Nested "VkPipelineColorBlendStateCreateInfo" "vkLogicOpEnable"
+  , -- | @logicOpEnable@ controls whether to apply [Logical
+  -- Operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-logicop).
   vkLogicOpEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineColorBlendStateCreateInfo" "vkLogicOp"
+  , -- | @logicOp@ selects which logical operation to apply.
   vkLogicOp :: VkLogicOp
-  , -- No documentation found for Nested "VkPipelineColorBlendStateCreateInfo" "vkAttachmentCount"
+  , -- | @attachmentCount@ is the number of @VkPipelineColorBlendAttachmentState@
+  -- elements in @pAttachments@. This value /must/ equal the
+  -- @colorAttachmentCount@ for the subpass in which this pipeline is used.
   vkAttachmentCount :: Word32
-  , -- No documentation found for Nested "VkPipelineColorBlendStateCreateInfo" "vkPAttachments"
+  , -- | @pAttachments@: is a pointer to array of per target attachment states.
   vkPAttachments :: Ptr VkPipelineColorBlendAttachmentState
-  , -- No documentation found for Nested "VkPipelineColorBlendStateCreateInfo" "vkBlendConstants"
+  , -- | @blendConstants@ is an array of four values used as the R, G, B, and A
+  -- components of the blend constant that are used in blending, depending on
+  -- the [blend
+  -- factor](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blendfactors).
   vkBlendConstants :: Vector 4 CFloat
   }
   deriving (Eq, Show)
@@ -3609,9 +3669,6 @@ instance Storable VkPipelineColorBlendStateCreateInfo where
 -- | VkPipelineDynamicStateCreateInfo - Structure specifying parameters of a
 -- newly created pipeline dynamic state
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   Each element of @pDynamicStates@ /must/ be unique
@@ -3631,21 +3688,23 @@ instance Storable VkPipelineColorBlendStateCreateInfo where
 -- -   @dynamicStateCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDynamicState', 'VkGraphicsPipelineCreateInfo',
 -- 'VkPipelineDynamicStateCreateFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineDynamicStateCreateInfo = VkPipelineDynamicStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineDynamicStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineDynamicStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineDynamicStateCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineDynamicStateCreateFlags
-  , -- No documentation found for Nested "VkPipelineDynamicStateCreateInfo" "vkDynamicStateCount"
+  , -- | @dynamicStateCount@ is the number of elements in the @pDynamicStates@
+  -- array.
   vkDynamicStateCount :: Word32
-  , -- No documentation found for Nested "VkPipelineDynamicStateCreateInfo" "vkPDynamicStates"
+  , -- | @pDynamicStates@ is an array of 'VkDynamicState' values specifying which
+  -- pieces of pipeline state will use the values from dynamic state commands
+  -- rather than from pipeline state creation info.
   vkPDynamicStates :: Ptr VkDynamicState
   }
   deriving (Eq, Show)
@@ -3665,9 +3724,6 @@ instance Storable VkPipelineDynamicStateCreateInfo where
                 *> poke (ptr `plusPtr` 24) (vkPDynamicStates (poked :: VkPipelineDynamicStateCreateInfo))
 -- | VkStencilOpState - Structure specifying stencil operation state
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @failOp@ /must/ be a valid 'VkStencilOp' value
@@ -3679,23 +3735,29 @@ instance Storable VkPipelineDynamicStateCreateInfo where
 -- -   @compareOp@ /must/ be a valid 'VkCompareOp' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCompareOp', 'VkPipelineDepthStencilStateCreateInfo', 'VkStencilOp'
 data VkStencilOpState = VkStencilOpState
-  { -- No documentation found for Nested "VkStencilOpState" "vkFailOp"
+  { -- | @failOp@ is a 'VkStencilOp' value specifying the action performed on
+  -- samples that fail the stencil test.
   vkFailOp :: VkStencilOp
-  , -- No documentation found for Nested "VkStencilOpState" "vkPassOp"
+  , -- | @passOp@ is a 'VkStencilOp' value specifying the action performed on
+  -- samples that pass both the depth and stencil tests.
   vkPassOp :: VkStencilOp
-  , -- No documentation found for Nested "VkStencilOpState" "vkDepthFailOp"
+  , -- | @depthFailOp@ is a 'VkStencilOp' value specifying the action performed
+  -- on samples that pass the stencil test and fail the depth test.
   vkDepthFailOp :: VkStencilOp
-  , -- No documentation found for Nested "VkStencilOpState" "vkCompareOp"
+  , -- | @compareOp@ is a 'VkCompareOp' value specifying the comparison operator
+  -- used in the stencil test.
   vkCompareOp :: VkCompareOp
-  , -- No documentation found for Nested "VkStencilOpState" "vkCompareMask"
+  , -- | @compareMask@ selects the bits of the unsigned integer stencil values
+  -- participating in the stencil test.
   vkCompareMask :: Word32
-  , -- No documentation found for Nested "VkStencilOpState" "vkWriteMask"
+  , -- | @writeMask@ selects the bits of the unsigned integer stencil values
+  -- updated by the stencil test in the stencil framebuffer attachment.
   vkWriteMask :: Word32
-  , -- No documentation found for Nested "VkStencilOpState" "vkReference"
+  , -- | @reference@ is an integer reference value that is used in the unsigned
+  -- stencil comparison.
   vkReference :: Word32
   }
   deriving (Eq, Show)
@@ -3720,13 +3782,10 @@ instance Storable VkStencilOpState where
 -- | VkPipelineDepthStencilStateCreateInfo - Structure specifying parameters
 -- of a newly created pipeline depth stencil state
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-depthBounds depth bounds testing>
+-- -   If the [depth bounds
+--     testing](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-depthBounds)
 --     feature is not enabled, @depthBoundsTestEnable@ /must/ be @VK_FALSE@
 --
 -- == Valid Usage (Implicit)
@@ -3745,35 +3804,47 @@ instance Storable VkStencilOpState where
 -- -   @back@ /must/ be a valid @VkStencilOpState@ structure
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'VkCompareOp', 'VkGraphicsPipelineCreateInfo',
 -- 'VkPipelineDepthStencilStateCreateFlags', 'VkStencilOpState',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineDepthStencilStateCreateInfo = VkPipelineDepthStencilStateCreateInfo
-  { -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineDepthStencilStateCreateFlags
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkDepthTestEnable"
+  , -- | @depthTestEnable@ controls whether [depth
+  -- testing](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-depth)
+  -- is enabled.
   vkDepthTestEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkDepthWriteEnable"
+  , -- | @depthWriteEnable@ controls whether [depth
+  -- writes](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-depth-write)
+  -- are enabled when @depthTestEnable@ is @VK_TRUE@. Depth writes are always
+  -- disabled when @depthTestEnable@ is @VK_FALSE@.
   vkDepthWriteEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkDepthCompareOp"
+  , -- | @depthCompareOp@ is the comparison operator used in the [depth
+  -- test](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-depth).
   vkDepthCompareOp :: VkCompareOp
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkDepthBoundsTestEnable"
+  , -- | @depthBoundsTestEnable@ controls whether [depth bounds
+  -- testing](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-dbt)
+  -- is enabled.
   vkDepthBoundsTestEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkStencilTestEnable"
+  , -- | @stencilTestEnable@ controls whether [stencil
+  -- testing](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-stencil)
+  -- is enabled.
   vkStencilTestEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkFront"
+  , -- | @front@ and @back@ control the parameters of the [stencil
+  -- test](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-stencil).
   vkFront :: VkStencilOpState
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkBack"
+  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "back"
   vkBack :: VkStencilOpState
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkMinDepthBounds"
+  , -- | @minDepthBounds@ and @maxDepthBounds@ define the range of values used in
+  -- the [depth bounds
+  -- test](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-dbt).
   vkMinDepthBounds :: CFloat
-  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "vkMaxDepthBounds"
+  , -- No documentation found for Nested "VkPipelineDepthStencilStateCreateInfo" "maxDepthBounds"
   vkMaxDepthBounds :: CFloat
   }
   deriving (Eq, Show)
@@ -3809,18 +3880,21 @@ instance Storable VkPipelineDepthStencilStateCreateInfo where
 -- newly created graphics pipeline
 --
 -- = Description
--- #_description#
 --
 -- The parameters @basePipelineHandle@ and @basePipelineIndex@ are
--- described in more detail in
--- <{html_spec_relative}#pipelines-pipeline-derivatives Pipeline Derivatives>.
+-- described in more detail in [Pipeline
+-- Derivatives](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-pipeline-derivatives).
 --
 -- @pStages@ points to an array of 'VkPipelineShaderStageCreateInfo'
--- structures, which were previously described in
--- <{html_spec_relative}#pipelines-compute Compute Pipelines>.
+-- structures, which were previously described in [Compute
+-- Pipelines](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-compute).
 --
 -- @pDynamicState@ points to a structure of type
 -- 'VkPipelineDynamicStateCreateInfo'.
+--
+-- If any shader stage fails to compile, the compile log will be reported
+-- back to the application, and @VK_ERROR_INVALID_SHADER_NV@ will be
+-- generated.
 --
 -- == Valid Usage
 --
@@ -3891,13 +3965,15 @@ instance Storable VkPipelineDepthStencilStateCreateInfo where
 -- -   If @pStages@ includes a geometry shader stage, and does not include
 --     any tessellation shader stages, its shader code /must/ contain an
 --     @OpExecutionMode@ instruction that specifies an input primitive type
---     that is <{html_spec_relative}#shaders-geometry-execution compatible>
+--     that is
+--     [compatible](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-geometry-execution)
 --     with the primitive topology specified in @pInputAssembly@
 --
 -- -   If @pStages@ includes a geometry shader stage, and also includes
 --     tessellation shader stages, its shader code /must/ contain an
 --     @OpExecutionMode@ instruction that specifies an input primitive type
---     that is <{html_spec_relative}#shaders-geometry-execution compatible>
+--     that is
+--     [compatible](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-geometry-execution)
 --     with the primitive topology that is output by the tessellation
 --     stages
 --
@@ -3913,18 +3989,21 @@ instance Storable VkPipelineDepthStencilStateCreateInfo where
 --
 -- -   The shader code for the entry points identified by @pStages@, and
 --     the rest of the state identified by this structure /must/ adhere to
---     the pipeline linking rules described in the
---     <{html_spec_relative}#interfaces Shader Interfaces> chapter
+--     the pipeline linking rules described in the [Shader
+--     Interfaces](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#interfaces)
+--     chapter
 --
 -- -   If rasterization is not disabled and @subpass@ uses a depth\/stencil
 --     attachment in @renderPass@ that has a layout of
---     @VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL@ in the
+--     @VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL@ or
+--     @VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL@ in the
 --     @VkAttachmentReference@ defined by @subpass@, the @depthWriteEnable@
 --     member of @pDepthStencilState@ /must/ be @VK_FALSE@
 --
 -- -   If rasterization is not disabled and @subpass@ uses a depth\/stencil
 --     attachment in @renderPass@ that has a layout of
---     @VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL@ in the
+--     @VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL@ or
+--     @VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL@ in the
 --     @VkAttachmentReference@ defined by @subpass@, the @failOp@, @passOp@
 --     and @depthFailOp@ members of each of the @front@ and @back@ members
 --     of @pDepthStencilState@ /must/ be @VK_STENCIL_OP_KEEP@
@@ -3984,30 +4063,121 @@ instance Storable VkPipelineDepthStencilStateCreateInfo where
 --     @pRasterizationState@ is @VK_TRUE@, the @depthBiasClamp@ member of
 --     @pRasterizationState@ /must/ be @0.0@
 --
+-- -   If the @{html_spec_relative}#VK_EXT_depth_range_unrestricted@
+--     extension is not enabled and no element of the @pDynamicStates@
+--     member of @pDynamicState@ is @VK_DYNAMIC_STATE_DEPTH_BOUNDS@, and
+--     the @depthBoundsTestEnable@ member of @pDepthStencilState@ is
+--     @VK_TRUE@, the @minDepthBounds@ and @maxDepthBounds@ members of
+--     @pDepthStencilState@ /must/ be between @0.0@ and @1.0@, inclusive
+--
 -- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
---     @VK_DYNAMIC_STATE_DEPTH_BOUNDS@, and the @depthBoundsTestEnable@
---     member of @pDepthStencilState@ is @VK_TRUE@, the @minDepthBounds@
---     and @maxDepthBounds@ members of @pDepthStencilState@ /must/ be
---     between @0.0@ and @1.0@, inclusive
+--     @VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT@, and the
+--     @sampleLocationsEnable@ member of a
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'
+--     structure chained to the @pNext@ chain of @pMultisampleState@ is
+--     @VK_TRUE@, @sampleLocationsInfo.sampleLocationGridSize.width@ /must/
+--     evenly divide
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkMultisamplePropertiesEXT'::@sampleLocationGridSize.width@
+--     as returned by
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.vkGetPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling @rasterizationSamples@
+--
+-- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
+--     @VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT@, and the
+--     @sampleLocationsEnable@ member of a
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'
+--     structure chained to the @pNext@ chain of @pMultisampleState@ is
+--     @VK_TRUE@, @sampleLocationsInfo.sampleLocationGridSize.height@
+--     /must/ evenly divide
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkMultisamplePropertiesEXT'::@sampleLocationGridSize.height@
+--     as returned by
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.vkGetPhysicalDeviceMultisamplePropertiesEXT'
+--     with a @samples@ parameter equaling @rasterizationSamples@
+--
+-- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
+--     @VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT@, and the
+--     @sampleLocationsEnable@ member of a
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'
+--     structure chained to the @pNext@ chain of @pMultisampleState@ is
+--     @VK_TRUE@, @sampleLocationsInfo.sampleLocationsPerPixel@ /must/
+--     equal @rasterizationSamples@
+--
+-- -   If the @sampleLocationsEnable@ member of a
+--     'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'
+--     structure chained to the @pNext@ chain of @pMultisampleState@ is
+--     @VK_TRUE@, the fragment shader code /must/ not statically use the
+--     extended instruction @InterpolateAtSample@
 --
 -- -   @layout@ /must/ be
---     <{html_spec_relative}#descriptorsets-pipelinelayout-consistency consistent>
+--     [consistent](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-pipelinelayout-consistency)
 --     with all shaders specified in @pStages@
 --
 -- -   If @subpass@ uses color and\/or depth\/stencil attachments, then the
+--     @rasterizationSamples@ member of @pMultisampleState@ /must/ equal
+--     the maximum of the sample counts of those subpass attachments
+--
+-- -   If @subpass@ has a depth\/stencil attachment and depth test, stencil
+--     test, or depth bounds test are enabled, then the
 --     @rasterizationSamples@ member of @pMultisampleState@ /must/ be the
---     same as the sample count for those subpass attachments
+--     same as the sample count of the depth\/stencil attachment
+--
+-- -   If @subpass@ has any color attachments, then the
+--     @rasterizationSamples@ member of @pMultisampleState@ /must/ be
+--     greater than or equal to the sample count for those subpass
+--     attachments
 --
 -- -   If @subpass@ does not use any color and\/or depth\/stencil
 --     attachments, then the @rasterizationSamples@ member of
---     @pMultisampleState@ /must/ follow the rules for a
---     <{html_spec_relative}#renderpass-noattachments zero-attachment subpass>
+--     @pMultisampleState@ /must/ follow the rules for a [zero-attachment
+--     subpass](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-noattachments)
 --
 -- -   @subpass@ /must/ be a valid subpass within @renderPass@
+--
+-- -   If the @renderPass@ has multiview enabled and @subpass@ has more
+--     than one bit set in the view mask and @multiviewTessellationShader@
+--     is not enabled, then @pStages@ /must/ not include tessellation
+--     shaders.
+--
+-- -   If the @renderPass@ has multiview enabled and @subpass@ has more
+--     than one bit set in the view mask and @multiviewGeometryShader@ is
+--     not enabled, then @pStages@ /must/ not include a geometry shader.
+--
+-- -   If the @renderPass@ has multiview enabled and @subpass@ has more
+--     than one bit set in the view mask, shaders in the pipeline /must/
+--     not write to the @Layer@ built-in output
+--
+-- -   If the @renderPass@ has multiview enabled, then all shaders /must/
+--     not include variables decorated with the @Layer@ built-in decoration
+--     in their interfaces.
+--
+-- -   @flags@ /must/ not contain the @VK_PIPELINE_CREATE_DISPATCH_BASE@
+--     flag.
+--
+-- -   If @pStages@ includes a fragment shader stage and an input
+--     attachment was referenced by the
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2.VkRenderPassInputAttachmentAspectCreateInfo'
+--     at @renderPass@ create time, its shader code /must/ not read from
+--     any aspect that was not specified in the @aspectMask@ of the
+--     corresponding
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2.VkInputAttachmentAspectReference'
+--     structure.
 --
 -- -   The number of resources in @layout@ accessible to each shader stage
 --     that is used by the pipeline /must/ be less than or equal to
 --     @VkPhysicalDeviceLimits@::@maxPerStageResources@
+--
+-- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
+--     @VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV@, and the
+--     @viewportWScalingEnable@ member of a
+--     'Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling.VkPipelineViewportWScalingStateCreateInfoNV'
+--     structure, chained to the @pNext@ chain of @pViewportState@, is
+--     @VK_TRUE@, the @pViewportWScalings@ member of the
+--     'Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling.VkPipelineViewportWScalingStateCreateInfoNV'
+--     /must/ be a pointer to an array of
+--     'Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling.VkPipelineViewportWScalingStateCreateInfoNV'::@viewportCount@
+--     valid
+--     'Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling.VkViewportWScalingNV'
+--     structures
 --
 -- == Valid Usage (Implicit)
 --
@@ -4045,7 +4215,6 @@ instance Storable VkPipelineDepthStencilStateCreateInfo where
 --     the same @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipeline', 'VkPipelineColorBlendStateCreateInfo',
 -- 'VkPipelineCreateFlags', 'VkPipelineDepthStencilStateCreateInfo',
@@ -4060,43 +4229,77 @@ instance Storable VkPipelineDepthStencilStateCreateInfo where
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateGraphicsPipelines'
 data VkGraphicsPipelineCreateInfo = VkGraphicsPipelineCreateInfo
-  { -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkPipelineCreateFlagBits' specifying how the
+  -- pipeline will be generated.
   vkFlags :: VkPipelineCreateFlags
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkStageCount"
+  , -- | @stageCount@ is the number of entries in the @pStages@ array.
   vkStageCount :: Word32
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPStages"
+  , -- | @pStages@ is an array of size @stageCount@ structures of type
+  -- 'VkPipelineShaderStageCreateInfo' describing the set of the shader
+  -- stages to be included in the graphics pipeline.
   vkPStages :: Ptr VkPipelineShaderStageCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPVertexInputState"
+  , -- | @pVertexInputState@ is a pointer to an instance of the
+  -- 'VkPipelineVertexInputStateCreateInfo' structure.
   vkPVertexInputState :: Ptr VkPipelineVertexInputStateCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPInputAssemblyState"
+  , -- | @pInputAssemblyState@ is a pointer to an instance of the
+  -- 'VkPipelineInputAssemblyStateCreateInfo' structure which determines
+  -- input assembly behavior, as described in [Drawing
+  -- Commands](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#drawing).
   vkPInputAssemblyState :: Ptr VkPipelineInputAssemblyStateCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPTessellationState"
+  , -- | @pTessellationState@ is a pointer to an instance of the
+  -- 'VkPipelineTessellationStateCreateInfo' structure, and is ignored if the
+  -- pipeline does not include a tessellation control shader stage and
+  -- tessellation evaluation shader stage.
   vkPTessellationState :: Ptr VkPipelineTessellationStateCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPViewportState"
+  , -- | @pViewportState@ is a pointer to an instance of the
+  -- 'VkPipelineViewportStateCreateInfo' structure, and is ignored if the
+  -- pipeline has rasterization disabled.
   vkPViewportState :: Ptr VkPipelineViewportStateCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPRasterizationState"
+  , -- | @pRasterizationState@ is a pointer to an instance of the
+  -- 'VkPipelineRasterizationStateCreateInfo' structure.
   vkPRasterizationState :: Ptr VkPipelineRasterizationStateCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPMultisampleState"
+  , -- | @pMultisampleState@ is a pointer to an instance of the
+  -- 'VkPipelineMultisampleStateCreateInfo', and is ignored if the pipeline
+  -- has rasterization disabled.
   vkPMultisampleState :: Ptr VkPipelineMultisampleStateCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPDepthStencilState"
+  , -- | @pDepthStencilState@ is a pointer to an instance of the
+  -- 'VkPipelineDepthStencilStateCreateInfo' structure, and is ignored if the
+  -- pipeline has rasterization disabled or if the subpass of the render pass
+  -- the pipeline is created against does not use a depth\/stencil
+  -- attachment.
   vkPDepthStencilState :: Ptr VkPipelineDepthStencilStateCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPColorBlendState"
+  , -- | @pColorBlendState@ is a pointer to an instance of the
+  -- 'VkPipelineColorBlendStateCreateInfo' structure, and is ignored if the
+  -- pipeline has rasterization disabled or if the subpass of the render pass
+  -- the pipeline is created against does not use any color attachments.
   vkPColorBlendState :: Ptr VkPipelineColorBlendStateCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkPDynamicState"
+  , -- | @pDynamicState@ is a pointer to 'VkPipelineDynamicStateCreateInfo' and
+  -- is used to indicate which properties of the pipeline state object are
+  -- dynamic and /can/ be changed independently of the pipeline state. This
+  -- /can/ be @NULL@, which means no state in the pipeline is considered
+  -- dynamic.
   vkPDynamicState :: Ptr VkPipelineDynamicStateCreateInfo
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkLayout"
+  , -- | @layout@ is the description of binding locations used by both the
+  -- pipeline and descriptor sets used with the pipeline.
   vkLayout :: VkPipelineLayout
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkRenderPass"
+  , -- | @renderPass@ is a handle to a render pass object describing the
+  -- environment in which the pipeline will be used; the pipeline /must/ only
+  -- be used with an instance of any render pass compatible with the one
+  -- provided. See [Render Pass
+  -- Compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility)
+  -- for more information.
   vkRenderPass :: VkRenderPass
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkSubpass"
+  , -- | @subpass@ is the index of the subpass in the render pass where this
+  -- pipeline will be used.
   vkSubpass :: Word32
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkBasePipelineHandle"
+  , -- | @basePipelineHandle@ is a pipeline to derive from.
   vkBasePipelineHandle :: VkPipeline
-  , -- No documentation found for Nested "VkGraphicsPipelineCreateInfo" "vkBasePipelineIndex"
+  , -- | @basePipelineIndex@ is an index into the @pCreateInfos@ parameter to use
+  -- as a pipeline to derive from.
   vkBasePipelineIndex :: Int32
   }
   deriving (Eq, Show)
@@ -4145,13 +4348,11 @@ instance Storable VkGraphicsPipelineCreateInfo where
 -- | VkPipelineCreateFlags - Bitmask of VkPipelineCreateFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineCreateFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkPipelineCreateFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkComputePipelineCreateInfo', 'VkGraphicsPipelineCreateInfo',
 -- 'VkPipelineCreateFlagBits'
@@ -4159,36 +4360,28 @@ type VkPipelineCreateFlags = VkPipelineCreateFlagBits
 -- | VkColorComponentFlags - Bitmask of VkColorComponentFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkColorComponentFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkColorComponentFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkColorComponentFlagBits', 'VkPipelineColorBlendAttachmentState'
 type VkColorComponentFlags = VkColorComponentFlagBits
 -- | VkCullModeFlags - Bitmask of VkCullModeFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkCullModeFlags@ is a bitmask type for setting a mask of zero or more
 -- 'VkCullModeFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCullModeFlagBits', 'VkPipelineRasterizationStateCreateInfo'
 type VkCullModeFlags = VkCullModeFlagBits
 -- | VkSampleMask - Mask of sample coverage information
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineMultisampleStateCreateInfo'
 type VkSampleMask = Word32

@@ -57,7 +57,6 @@ pattern VK_NV_DEDICATED_ALLOCATION_EXTENSION_NAME = "VK_NV_dedicated_allocation"
 -- to a dedicated memory resource
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -77,15 +76,15 @@ pattern VK_NV_DEDICATED_ALLOCATION_EXTENSION_NAME = "VK_NV_dedicated_allocation"
 --     @VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkDedicatedAllocationImageCreateInfoNV = VkDedicatedAllocationImageCreateInfoNV
-  { -- No documentation found for Nested "VkDedicatedAllocationImageCreateInfoNV" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDedicatedAllocationImageCreateInfoNV" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDedicatedAllocationImageCreateInfoNV" "vkDedicatedAllocation"
+  , -- | @dedicatedAllocation@ specifies whether the image will have a dedicated
+  -- allocation bound to it.
   vkDedicatedAllocation :: VkBool32
   }
   deriving (Eq, Show)
@@ -102,24 +101,21 @@ instance Storable VkDedicatedAllocationImageCreateInfoNV where
 -- | VkDedicatedAllocationBufferCreateInfoNV - Specify that a buffer is bound
 -- to a dedicated memory resource
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
 --     @VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkDedicatedAllocationBufferCreateInfoNV = VkDedicatedAllocationBufferCreateInfoNV
-  { -- No documentation found for Nested "VkDedicatedAllocationBufferCreateInfoNV" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDedicatedAllocationBufferCreateInfoNV" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDedicatedAllocationBufferCreateInfoNV" "vkDedicatedAllocation"
+  , -- | @dedicatedAllocation@ specifies whether the buffer will have a dedicated
+  -- allocation bound to it.
   vkDedicatedAllocation :: VkBool32
   }
   deriving (Eq, Show)
@@ -135,9 +131,6 @@ instance Storable VkDedicatedAllocationBufferCreateInfoNV where
                 *> poke (ptr `plusPtr` 16) (vkDedicatedAllocation (poked :: VkDedicatedAllocationBufferCreateInfoNV))
 -- | VkDedicatedAllocationMemoryAllocateInfoNV - Specify a dedicated memory
 -- allocation resource
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -164,6 +157,18 @@ instance Storable VkDedicatedAllocationBufferCreateInfoNV where
 --     @VkMemoryAllocateInfo@::@allocationSize@ /must/ equal the
 --     @VkMemoryRequirements@::@size@ of the buffer
 --
+-- -   If @image@ is not 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE'
+--     and 'Graphics.Vulkan.Core10.Memory.VkMemoryAllocateInfo' defines a
+--     memory import operation, the memory being imported /must/ also be a
+--     dedicated image allocation and @image@ /must/ be identical to the
+--     image associated with the imported memory.
+--
+-- -   If @buffer@ is not 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE'
+--     and 'Graphics.Vulkan.Core10.Memory.VkMemoryAllocateInfo' defines a
+--     memory import operation, the memory being imported /must/ also be a
+--     dedicated buffer allocation and @buffer@ /must/ be identical to the
+--     buffer associated with the imported memory.
+--
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -180,19 +185,20 @@ instance Storable VkDedicatedAllocationBufferCreateInfoNV where
 --     been created, allocated, or retrieved from the same @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkDedicatedAllocationMemoryAllocateInfoNV = VkDedicatedAllocationMemoryAllocateInfoNV
-  { -- No documentation found for Nested "VkDedicatedAllocationMemoryAllocateInfoNV" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDedicatedAllocationMemoryAllocateInfoNV" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDedicatedAllocationMemoryAllocateInfoNV" "vkImage"
+  , -- | @image@ is 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE' or a handle
+  -- of an image which this memory will be bound to.
   vkImage :: VkImage
-  , -- No documentation found for Nested "VkDedicatedAllocationMemoryAllocateInfoNV" "vkBuffer"
+  , -- | @buffer@ is 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE' or a
+  -- handle of a buffer which this memory will be bound to.
   vkBuffer :: VkBuffer
   }
   deriving (Eq, Show)

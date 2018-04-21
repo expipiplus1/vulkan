@@ -101,7 +101,6 @@ import Graphics.Vulkan.Core10.Queue
 -- | VkCommandBufferLevel - Enumerant specifying a command buffer level
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandBufferAllocateInfo'
 newtype VkCommandBufferLevel = VkCommandBufferLevel Int32
@@ -136,7 +135,6 @@ pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY = VkCommandBufferLevel 1
 -- | VkQueryControlFlagBits - Bitmask specifying constraints on a query
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkQueryControlFlags'
 newtype VkQueryControlFlagBits = VkQueryControlFlagBits VkFlags
@@ -156,8 +154,8 @@ instance Read VkQueryControlFlagBits where
                         )
                     )
 
--- | @VK_QUERY_CONTROL_PRECISE_BIT@ specifies the precision of
--- <{html_spec_relative}#queries-occlusion occlusion queries>.
+-- | @VK_QUERY_CONTROL_PRECISE_BIT@ specifies the precision of [occlusion
+-- queries](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-occlusion).
 pattern VK_QUERY_CONTROL_PRECISE_BIT :: VkQueryControlFlagBits
 pattern VK_QUERY_CONTROL_PRECISE_BIT = VkQueryControlFlagBits 0x00000001
 -- ** VkCommandBufferResetFlagBits
@@ -166,7 +164,6 @@ pattern VK_QUERY_CONTROL_PRECISE_BIT = VkQueryControlFlagBits 0x00000001
 -- buffer reset
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandBufferResetFlags'
 newtype VkCommandBufferResetFlagBits = VkCommandBufferResetFlagBits VkFlags
@@ -190,8 +187,8 @@ instance Read VkCommandBufferResetFlagBits where
 -- all memory resources currently owned by the command buffer /should/ be
 -- returned to the parent command pool. If this flag is not set, then the
 -- command buffer /may/ hold onto memory resources and reuse them when
--- recording commands. @commandBuffer@ is moved to the
--- <{html_spec_relative}#commandbuffers-lifecycle initial state>.
+-- recording commands. @commandBuffer@ is moved to the [initial
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT :: VkCommandBufferResetFlagBits
 pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = VkCommandBufferResetFlagBits 0x00000001
 -- ** VkCommandBufferUsageFlagBits
@@ -200,7 +197,6 @@ pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = VkCommandBufferResetFlag
 -- command buffer
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandBufferUsageFlags'
 newtype VkCommandBufferUsageFlagBits = VkCommandBufferUsageFlagBits VkFlags
@@ -245,7 +241,6 @@ pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = VkCommandBufferUsageFlagB
 -- command pool
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the command pool.
 --
@@ -260,10 +255,15 @@ pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = VkCommandBufferUsageFlagB
 --     command buffer begins in the initial state.
 --
 -- = Description
--- #_description#
 --
--- When command buffers are first allocated, they are in the
--- <{html_spec_relative}#commandbuffers-lifecycle initial state>.
+-- @vkAllocateCommandBuffers@ /can/ be used to create multiple command
+-- buffers. If the creation of any of those command buffers fails, the
+-- implementation /must/ destroy all successfully created command buffer
+-- objects from this command, set all entries of the @pCommandBuffers@
+-- array to @NULL@ and return the error.
+--
+-- When command buffers are first allocated, they are in the [initial
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- == Valid Usage (Implicit)
 --
@@ -282,16 +282,15 @@ pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = VkCommandBufferUsageFlagB
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkCommandBufferAllocateInfo',
@@ -300,7 +299,6 @@ foreign import ccall "vkAllocateCommandBuffers" vkAllocateCommandBuffers :: ("de
 -- | vkFreeCommandBuffers - Free command buffers
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the command pool.
 --
@@ -312,17 +310,16 @@ foreign import ccall "vkAllocateCommandBuffers" vkAllocateCommandBuffers :: ("de
 -- -   @pCommandBuffers@ is an array of handles of command buffers to free.
 --
 -- = Description
--- #_description#
 --
--- Any primary command buffer that is in the
--- <{html_spec_relative}#commandbuffers-lifecycle recording or executable state>
+-- Any primary command buffer that is in the [recording or executable
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 -- and has any element of @pCommandBuffers@ recorded into it, becomes
--- <{html_spec_relative}#commandbuffers-lifecycle invalid>.
+-- [invalid](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- == Valid Usage
 --
--- -   All elements of @pCommandBuffers@ /must/ not be in the
---     <{html_spec_relative}#commandbuffers-lifecycle pending state>
+-- -   All elements of @pCommandBuffers@ /must/ not be in the [pending
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   @pCommandBuffers@ /must/ be a valid pointer to an array of
 --     @commandBufferCount@ @VkCommandBuffer@ handles, each element of
@@ -350,7 +347,6 @@ foreign import ccall "vkAllocateCommandBuffers" vkAllocateCommandBuffers :: ("de
 --     synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.CommandPool.VkCommandPool',
@@ -359,7 +355,6 @@ foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers :: ("device" ::
 -- | vkBeginCommandBuffer - Start recording a command buffer
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the handle of the command buffer which is to be
 --     put in the recording state.
@@ -368,19 +363,16 @@ foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers :: ("device" ::
 --     structure, which defines additional information about how the
 --     command buffer begins recording.
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ not be in the
---     <{html_spec_relative}#commandbuffers-lifecycle recording or pending state>.
+-- -   @commandBuffer@ /must/ not be in the [recording or pending
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- -   If @commandBuffer@ was allocated from a
 --     'Graphics.Vulkan.Core10.CommandPool.VkCommandPool' which did not
 --     have the @VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT@ flag set,
---     @commandBuffer@ /must/ be in the
---     <{html_spec_relative}#commandbuffers-lifecycle initial state>.
+--     @commandBuffer@ /must/ be in the [initial
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- -   If @commandBuffer@ is a secondary command buffer, the
 --     @pInheritanceInfo@ member of @pBeginInfo@ /must/ be a valid
@@ -409,16 +401,15 @@ foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers :: ("device" ::
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkCommandBufferBeginInfo'
@@ -426,32 +417,45 @@ foreign import ccall "vkBeginCommandBuffer" vkBeginCommandBuffer :: ("commandBuf
 -- | vkEndCommandBuffer - Finish recording a command buffer
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer to complete recording.
 --
 -- = Description
--- #_description#
 --
 -- If there was an error during recording, the application will be notified
 -- by an unsuccessful return code returned by @vkEndCommandBuffer@. If the
 -- application wishes to further use the command buffer, the command buffer
--- /must/ be reset. The command buffer /must/ have been in the
--- <{html_spec_relative}#commandbuffers-lifecycle recording state>, and is
--- moved to the
--- <{html_spec_relative}#commandbuffers-lifecycle executable state>.
+-- /must/ be reset. The command buffer /must/ have been in the [recording
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle),
+-- and is moved to the [executable
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ be in the
---     <{html_spec_relative}#commandbuffers-lifecycle recording state>.
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- -   If @commandBuffer@ is a primary command buffer, there /must/ not be
 --     an active render pass instance
 --
 -- -   All queries made
---     <{html_spec_relative}#queries-operation-active active> during the
---     recording of @commandBuffer@ /must/ have been made inactive
+--     [active](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active)
+--     during the recording of @commandBuffer@ /must/ have been made
+--     inactive
+--
+-- -   If @commandBuffer@ is a secondary command buffer, there /must/ not
+--     be an outstanding
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.vkCmdBeginDebugUtilsLabelEXT'
+--     command recorded to @commandBuffer@ that has not previously been
+--     ended by a call to
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.vkCmdEndDebugUtilsLabelEXT'.
+--
+-- -   If @commandBuffer@ is a secondary command buffer, there /must/ not
+--     be an outstanding
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerBeginEXT'
+--     command recorded to @commandBuffer@ that has not previously been
+--     ended by a call to
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerEndEXT'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -466,45 +470,42 @@ foreign import ccall "vkBeginCommandBuffer" vkBeginCommandBuffer :: ("commandBuf
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
 foreign import ccall "vkEndCommandBuffer" vkEndCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> IO VkResult
 -- | vkResetCommandBuffer - Reset a command buffer to the initial state
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer to reset. The command buffer
 --     /can/ be in any state other than
---     <{html_spec_relative}#commandbuffers-lifecycle pending>, and is
---     moved into the
---     <{html_spec_relative}#commandbuffers-lifecycle initial state>.
+--     [pending](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle),
+--     and is moved into the [initial
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- -   @flags@ is a bitmask of 'VkCommandBufferResetFlagBits' controlling
 --     the reset operation.
 --
 -- = Description
--- #_description#
 --
--- Any primary command buffer that is in the
--- <{html_spec_relative}#commandbuffers-lifecycle recording or executable state>
+-- Any primary command buffer that is in the [recording or executable
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 -- and has @commandBuffer@ recorded into it, becomes
--- <{html_spec_relative}#commandbuffers-lifecycle invalid>.
+-- [invalid](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ not be in the
---     <{html_spec_relative}#commandbuffers-lifecycle pending state>
+-- -   @commandBuffer@ /must/ not be in the [pending
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   @commandBuffer@ /must/ have been allocated from a pool that was
 --     created with the @VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT@
@@ -522,25 +523,21 @@ foreign import ccall "vkEndCommandBuffer" vkEndCommandBuffer :: ("commandBuffer"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkCommandBufferResetFlags'
 foreign import ccall "vkResetCommandBuffer" vkResetCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("flags" ::: VkCommandBufferResetFlags) -> IO VkResult
 -- | VkCommandBufferAllocateInfo - Structure specifying the allocation
 -- parameters for command buffer object
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -557,22 +554,24 @@ foreign import ccall "vkResetCommandBuffer" vkResetCommandBuffer :: ("commandBuf
 -- -   @level@ /must/ be a valid 'VkCommandBufferLevel' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandBufferLevel',
 -- 'Graphics.Vulkan.Core10.CommandPool.VkCommandPool',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkAllocateCommandBuffers'
 data VkCommandBufferAllocateInfo = VkCommandBufferAllocateInfo
-  { -- No documentation found for Nested "VkCommandBufferAllocateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCommandBufferAllocateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCommandBufferAllocateInfo" "vkCommandPool"
+  , -- | @commandPool@ is the command pool from which the command buffers are
+  -- allocated.
   vkCommandPool :: VkCommandPool
-  , -- No documentation found for Nested "VkCommandBufferAllocateInfo" "vkLevel"
+  , -- | @level@ is an 'VkCommandBufferLevel' value specifying the command buffer
+  -- level.
   vkLevel :: VkCommandBufferLevel
-  , -- No documentation found for Nested "VkCommandBufferAllocateInfo" "vkCommandBufferCount"
+  , -- | @commandBufferCount@ is the number of command buffers to allocate from
+  -- the pool.
   vkCommandBufferCount :: Word32
   }
   deriving (Eq, Show)
@@ -594,7 +593,6 @@ instance Storable VkCommandBufferAllocateInfo where
 -- inheritance info
 --
 -- = Members
--- #_members#
 --
 -- -   @sType@ is the type of this structure.
 --
@@ -602,9 +600,9 @@ instance Storable VkCommandBufferAllocateInfo where
 --
 -- -   @renderPass@ is a @VkRenderPass@ object defining which render passes
 --     the @VkCommandBuffer@ will be
---     <{html_spec_relative}#renderpass-compatibility compatible> with and
---     /can/ be executed within. If the @VkCommandBuffer@ will not be
---     executed within a render pass instance, @renderPass@ is ignored.
+--     [compatible](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility)
+--     with and /can/ be executed within. If the @VkCommandBuffer@ will not
+--     be executed within a render pass instance, @renderPass@ is ignored.
 --
 -- -   @subpass@ is the index of the subpass within the render pass
 --     instance that the @VkCommandBuffer@ will be executed within. If the
@@ -650,22 +648,19 @@ instance Storable VkCommandBufferAllocateInfo where
 --     statistics query /must/ not be from a query pool that counts that
 --     statistic.
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
--- -   If the
---     <{html_spec_relative}#features-features-inheritedQueries inherited queries>
+-- -   If the [inherited
+--     queries](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-inheritedQueries)
 --     feature is not enabled, @occlusionQueryEnable@ /must/ be @VK_FALSE@
 --
--- -   If the
---     <{html_spec_relative}#features-features-inheritedQueries inherited queries>
+-- -   If the [inherited
+--     queries](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-inheritedQueries)
 --     feature is enabled, @queryFlags@ /must/ be a valid combination of
 --     'VkQueryControlFlagBits' values
 --
--- -   If the
---     <{html_spec_relative}#features-features-pipelineStatisticsQuery pipeline statistics queries>
+-- -   If the [pipeline statistics
+--     queries](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-pipelineStatisticsQuery)
 --     feature is not enabled, @pipelineStatistics@ /must/ be @0@
 --
 -- == Valid Usage (Implicit)
@@ -680,7 +675,6 @@ instance Storable VkCommandBufferAllocateInfo where
 --     @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'VkCommandBufferBeginInfo',
 -- 'Graphics.Vulkan.Core10.Pass.VkFramebuffer', 'VkQueryControlFlags',
@@ -688,21 +682,21 @@ instance Storable VkCommandBufferAllocateInfo where
 -- 'Graphics.Vulkan.Core10.Pipeline.VkRenderPass',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkCommandBufferInheritanceInfo = VkCommandBufferInheritanceInfo
-  { -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "vkSType"
+  { -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "vkPNext"
+  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "vkRenderPass"
+  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "renderPass"
   vkRenderPass :: VkRenderPass
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "vkSubpass"
+  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "subpass"
   vkSubpass :: Word32
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "vkFramebuffer"
+  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "framebuffer"
   vkFramebuffer :: VkFramebuffer
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "vkOcclusionQueryEnable"
+  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "occlusionQueryEnable"
   vkOcclusionQueryEnable :: VkBool32
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "vkQueryFlags"
+  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "queryFlags"
   vkQueryFlags :: VkQueryControlFlags
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "vkPipelineStatistics"
+  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "pipelineStatistics"
   vkPipelineStatistics :: VkQueryPipelineStatisticFlags
   }
   deriving (Eq, Show)
@@ -728,9 +722,6 @@ instance Storable VkCommandBufferInheritanceInfo where
                 *> poke (ptr `plusPtr` 48) (vkPipelineStatistics (poked :: VkCommandBufferInheritanceInfo))
 -- | VkCommandBufferBeginInfo - Structure specifying a command buffer begin
 -- operation
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -761,18 +752,20 @@ instance Storable VkCommandBufferInheritanceInfo where
 --     'VkCommandBufferUsageFlagBits' values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandBufferInheritanceInfo', 'VkCommandBufferUsageFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkBeginCommandBuffer'
 data VkCommandBufferBeginInfo = VkCommandBufferBeginInfo
-  { -- No documentation found for Nested "VkCommandBufferBeginInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCommandBufferBeginInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCommandBufferBeginInfo" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkCommandBufferUsageFlagBits' specifying usage
+  -- behavior for the command buffer.
   vkFlags :: VkCommandBufferUsageFlags
-  , -- No documentation found for Nested "VkCommandBufferBeginInfo" "vkPInheritanceInfo"
+  , -- | @pInheritanceInfo@ is a pointer to a @VkCommandBufferInheritanceInfo@
+  -- structure, which is used if @commandBuffer@ is a secondary command
+  -- buffer. If this is a primary command buffer, then this value is ignored.
   vkPInheritanceInfo :: Ptr VkCommandBufferInheritanceInfo
   }
   deriving (Eq, Show)
@@ -791,13 +784,11 @@ instance Storable VkCommandBufferBeginInfo where
 -- | VkQueryControlFlags - Bitmask of VkQueryControlFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkQueryControlFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkQueryControlFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandBufferInheritanceInfo', 'VkQueryControlFlagBits',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdBeginQuery'
@@ -805,26 +796,22 @@ type VkQueryControlFlags = VkQueryControlFlagBits
 -- | VkCommandBufferResetFlags - Bitmask of VkCommandBufferResetFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkCommandBufferResetFlags@ is a bitmask type for setting a mask of zero
 -- or more 'VkCommandBufferResetFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandBufferResetFlagBits', 'vkResetCommandBuffer'
 type VkCommandBufferResetFlags = VkCommandBufferResetFlagBits
 -- | VkCommandBufferUsageFlags - Bitmask of VkCommandBufferUsageFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkCommandBufferUsageFlags@ is a bitmask type for setting a mask of zero
 -- or more 'VkCommandBufferUsageFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandBufferBeginInfo', 'VkCommandBufferUsageFlagBits'
 type VkCommandBufferUsageFlags = VkCommandBufferUsageFlagBits

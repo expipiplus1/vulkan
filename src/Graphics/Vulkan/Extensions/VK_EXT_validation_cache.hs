@@ -92,7 +92,6 @@ import Graphics.Vulkan.Extensions.VK_EXT_debug_report
 -- | VkValidationCacheHeaderVersionEXT - Encode validation cache version
 --
 -- = See Also
--- #_see_also#
 --
 -- UNKNOWN:vkCreateValdiationCacheEXT, 'vkGetValidationCacheDataEXT'
 newtype VkValidationCacheHeaderVersionEXT = VkValidationCacheHeaderVersionEXT Int32
@@ -121,13 +120,11 @@ pattern VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = VkValidationCacheHeaderVers
 -- | VkValidationCacheCreateFlagsEXT - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkValidationCacheCreateFlagsEXT@ is a bitmask type for setting a mask,
 -- but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkValidationCacheCreateInfoEXT'
 newtype VkValidationCacheCreateFlagsEXT = VkValidationCacheCreateFlagsEXT VkFlags
@@ -170,11 +167,7 @@ pattern VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT = VK_DEBUG_REPORT_OBJEC
 data VkValidationCacheEXT_T
 -- | VkValidationCacheEXT - Opaque handle to a validation cache object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkShaderModuleValidationCacheCreateInfoEXT',
 -- 'vkCreateValidationCacheEXT', 'vkDestroyValidationCacheEXT',
@@ -183,7 +176,6 @@ type VkValidationCacheEXT = Ptr VkValidationCacheEXT_T
 -- | vkCreateValidationCacheEXT - Creates a new validation cache
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the validation cache
 --     object.
@@ -193,13 +185,14 @@ type VkValidationCacheEXT = Ptr VkValidationCacheEXT_T
 --     cache object.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pValidationCache@ is a pointer to a @VkValidationCacheEXT@ handle
 --     in which the resulting validation cache object is returned.
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -243,14 +236,13 @@ type VkValidationCacheEXT = Ptr VkValidationCacheEXT_T
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -259,7 +251,6 @@ foreign import ccall "vkCreateValidationCacheEXT" vkCreateValidationCacheEXT :: 
 -- | vkDestroyValidationCacheEXT - Destroy a validation cache object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the validation cache
 --     object.
@@ -267,10 +258,9 @@ foreign import ccall "vkCreateValidationCacheEXT" vkCreateValidationCacheEXT :: 
 -- -   @validationCache@ is the handle of the validation cache to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -299,7 +289,6 @@ foreign import ccall "vkCreateValidationCacheEXT" vkCreateValidationCacheEXT :: 
 -- -   Host access to @validationCache@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
@@ -308,7 +297,6 @@ foreign import ccall "vkDestroyValidationCacheEXT" vkDestroyValidationCacheEXT :
 -- | vkGetValidationCacheDataEXT - Get the data store from a validation cache
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the validation cache.
 --
@@ -320,7 +308,6 @@ foreign import ccall "vkDestroyValidationCacheEXT" vkDestroyValidationCacheEXT :
 -- -   @pData@ is either @NULL@ or a pointer to a buffer.
 --
 -- = Description
--- #_description#
 --
 -- If @pData@ is @NULL@, then the maximum size of the data that /can/ be
 -- retrieved from the validation cache, in bytes, is returned in
@@ -349,27 +336,25 @@ foreign import ccall "vkDestroyValidationCacheEXT" vkDestroyValidationCacheEXT :
 -- bytes written to @pData@ /must/ be a header consisting of the following
 -- members:
 --
--- > +----+--------------+--------------------------------------------------+
--- > | Of | Size         | Meaning                                          |
--- > | fs |              |                                                  |
--- > | et |              |                                                  |
--- > +====+==============+==================================================+
--- > | 0  | 4            | length in bytes of the entire validation cache   |
--- > |    |              | header written as a stream of bytes, with the    |
--- > |    |              | least significant byte first                     |
--- > +----+--------------+--------------------------------------------------+
--- > | 4  | 4            | a 'VkValidationCacheHeaderVersionEXT' value      |
--- > |    |              | written as a stream of bytes, with the least     |
--- > |    |              | significant byte first                           |
--- > +----+--------------+--------------------------------------------------+
--- > | 8  | @VK_UUID_SIZ | a layer commit ID expressed as a UUID, which     |
--- > |    | E@           | uniquely identifies the version of the           |
--- > |    |              | validation layers used to generate these         |
--- > |    |              | validation results                               |
--- > +----+--------------+--------------------------------------------------+
--- >
--- > Layout for validation cache header version
--- > @VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT@
+-- +--------+----------------+--------------------------------------------------+
+-- | Offset | Size           | Meaning                                          |
+-- +========+================+==================================================+
+-- | 0      | 4              | length in bytes of the entire validation cache   |
+-- |        |                | header written as a stream of bytes, with the    |
+-- |        |                | least significant byte first                     |
+-- +--------+----------------+--------------------------------------------------+
+-- | 4      | 4              | a 'VkValidationCacheHeaderVersionEXT' value      |
+-- |        |                | written as a stream of bytes, with the least     |
+-- |        |                | significant byte first                           |
+-- +--------+----------------+--------------------------------------------------+
+-- | 8      | @VK_UUID_SIZE@ | a layer commit ID expressed as a UUID, which     |
+-- |        |                | uniquely identifies the version of the           |
+-- |        |                | validation layers used to generate these         |
+-- |        |                | validation results                               |
+-- +--------+----------------+--------------------------------------------------+
+--
+-- Layout for validation cache header version
+-- @VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT@
 --
 -- The first four bytes encode the length of the entire validation cache
 -- header, in bytes. This value includes all fields in the header including
@@ -401,18 +386,17 @@ foreign import ccall "vkDestroyValidationCacheEXT" vkDestroyValidationCacheEXT :
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkValidationCacheEXT'
@@ -421,7 +405,6 @@ foreign import ccall "vkGetValidationCacheDataEXT" vkGetValidationCacheDataEXT :
 -- caches
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the validation cache
 --     objects.
@@ -436,7 +419,6 @@ foreign import ccall "vkGetValidationCacheDataEXT" vkGetValidationCacheDataEXT :
 --     included after the merge.
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -471,25 +453,21 @@ foreign import ccall "vkGetValidationCacheDataEXT" vkGetValidationCacheDataEXT :
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkValidationCacheEXT'
 foreign import ccall "vkMergeValidationCachesEXT" vkMergeValidationCachesEXT :: ("device" ::: VkDevice) -> ("dstCache" ::: VkValidationCacheEXT) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkValidationCacheEXT) -> IO VkResult
 -- | VkValidationCacheCreateInfoEXT - Structure specifying parameters of a
 -- newly created validation cache
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -513,20 +491,23 @@ foreign import ccall "vkMergeValidationCachesEXT" vkMergeValidationCachesEXT :: 
 --     pointer to an array of @initialDataSize@ bytes
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkValidationCacheCreateFlagsEXT', 'vkCreateValidationCacheEXT'
 data VkValidationCacheCreateInfoEXT = VkValidationCacheCreateInfoEXT
-  { -- No documentation found for Nested "VkValidationCacheCreateInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkValidationCacheCreateInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkValidationCacheCreateInfoEXT" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkValidationCacheCreateFlagsEXT
-  , -- No documentation found for Nested "VkValidationCacheCreateInfoEXT" "vkInitialDataSize"
+  , -- | @initialDataSize@ is the number of bytes in @pInitialData@. If
+  -- @initialDataSize@ is zero, the validation cache will initially be empty.
   vkInitialDataSize :: CSize
-  , -- No documentation found for Nested "VkValidationCacheCreateInfoEXT" "vkPInitialData"
+  , -- | @pInitialData@ is a pointer to previously retrieved validation cache
+  -- data. If the validation cache data is incompatible (as defined below)
+  -- with the device, the validation cache will be initially empty. If
+  -- @initialDataSize@ is zero, @pInitialData@ is ignored.
   vkPInitialData :: Ptr ()
   }
   deriving (Eq, Show)
@@ -547,9 +528,6 @@ instance Storable VkValidationCacheCreateInfoEXT where
 -- | VkShaderModuleValidationCacheCreateInfoEXT - Specify validation cache to
 -- use during shader module creation
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -558,15 +536,17 @@ instance Storable VkValidationCacheCreateInfoEXT where
 -- -   @validationCache@ /must/ be a valid @VkValidationCacheEXT@ handle
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkValidationCacheEXT'
 data VkShaderModuleValidationCacheCreateInfoEXT = VkShaderModuleValidationCacheCreateInfoEXT
-  { -- No documentation found for Nested "VkShaderModuleValidationCacheCreateInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkShaderModuleValidationCacheCreateInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkShaderModuleValidationCacheCreateInfoEXT" "vkValidationCache"
+  , -- | @validationCache@ is the validation cache object from which the results
+  -- of prior validation attempts will be written, and to which new
+  -- validation results for this VkShaderModule will be written (if not
+  -- already present).
   vkValidationCache :: VkValidationCacheEXT
   }
   deriving (Eq, Show)

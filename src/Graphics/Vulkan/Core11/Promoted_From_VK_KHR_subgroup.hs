@@ -68,7 +68,6 @@ import Graphics.Vulkan.Core10.PipelineLayout
 -- supported
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSubgroupFeatureFlags'
 newtype VkSubgroupFeatureFlagBits = VkSubgroupFeatureFlagBits VkFlags
@@ -156,13 +155,11 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = VkStructureType 
 -- support for an implementation
 --
 -- = Members
--- #_members#
 --
 -- The members of the @VkPhysicalDeviceSubgroupProperties@ structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
--- #_description#
 --
 -- -   @sType@ is the type of this structure.
 --
@@ -170,7 +167,7 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = VkStructureType 
 --
 -- -   @subgroupSize@ is the number of invocations in each subgroup. This
 --     will match any
---     <{html_spec_relative}#interfaces-builtin-variables-sgs SubgroupSize>
+--     [@SubgroupSize@](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#interfaces-builtin-variables-sgs)
 --     decorated variable used in any shader module created on this device.
 --     @subgroupSize@ is at least 1 if any of the physical device’s queues
 --     support @VK_QUEUE_GRAPHICS_BIT@ or @VK_QUEUE_COMPUTE_BIT@.
@@ -189,7 +186,8 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = VkStructureType 
 --     @VK_QUEUE_GRAPHICS_BIT@ or @VK_QUEUE_COMPUTE_BIT@.
 --
 -- -   @quadOperationsInAllStages@ is a boolean that specifies whether
---     <{html_spec_relative}#features-features-subgroup-quad quad subgroup operations>
+--     [quad subgroup
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-subgroup-quad)
 --     are available in all stages, or are restricted to fragment and
 --     compute stages.
 --
@@ -204,22 +202,21 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES = VkStructureType 
 -- it is filled with the implementation-dependent limits.
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.PipelineLayout.VkShaderStageFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkSubgroupFeatureFlags'
 data VkPhysicalDeviceSubgroupProperties = VkPhysicalDeviceSubgroupProperties
-  { -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "vkSubgroupSize"
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "subgroupSize"
   vkSubgroupSize :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "vkSupportedStages"
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "supportedStages"
   vkSupportedStages :: VkShaderStageFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "vkSupportedOperations"
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "supportedOperations"
   vkSupportedOperations :: VkSubgroupFeatureFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "vkQuadOperationsInAllStages"
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "quadOperationsInAllStages"
   vkQuadOperationsInAllStages :: VkBool32
   }
   deriving (Eq, Show)
@@ -242,13 +239,11 @@ instance Storable VkPhysicalDeviceSubgroupProperties where
 -- | VkSubgroupFeatureFlags - Bitmask of VkSubgroupFeatureFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkSubgroupFeatureFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkSubgroupFeatureFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPhysicalDeviceSubgroupProperties', 'VkSubgroupFeatureFlagBits'
 type VkSubgroupFeatureFlags = VkSubgroupFeatureFlagBits

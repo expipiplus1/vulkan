@@ -43,19 +43,18 @@ pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME = "VK_AMD_texture_gather_b
 -- not texture gather bias\/LOD functionality is supported for a given
 -- image format and a given physical device.
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkTextureLODGatherFormatPropertiesAMD = VkTextureLODGatherFormatPropertiesAMD
-  { -- No documentation found for Nested "VkTextureLODGatherFormatPropertiesAMD" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkTextureLODGatherFormatPropertiesAMD" "vkPNext"
+  , -- | @pNext@ is @NULL@.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkTextureLODGatherFormatPropertiesAMD" "vkSupportsTextureGatherLODBiasAMD"
+  , -- | @supportsTextureGatherLODBiasAMD@ tells if the image format can be used
+  -- with texture gather bias\/LOD functions, as introduced by the
+  -- @{html_spec_relative}#VK_AMD_texture_gather_bias_lod@ extension. This
+  -- field is set by the implementation. User-specified value is ignored.
   vkSupportsTextureGatherLODBiasAMD :: VkBool32
   }
   deriving (Eq, Show)

@@ -88,13 +88,19 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- | VkPipelineStageFlagBits - Bitmask specifying pipeline stages
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT@ specifies the stage of the
 --     pipeline where any commands are initially received by the queue.
 --
+-- -   @VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX@ specifies the stage of
+--     the pipeline where device-side generation of commands via
+--     'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.vkCmdProcessCommandsNVX'
+--     is handled.
+--
 -- -   @VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT@ specifies the stage of the
 --     pipeline where Draw\/DispatchIndirect data structures are consumed.
+--     This stage also includes reading commands written by
+--     'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.vkCmdProcessCommandsNVX'.
 --
 -- -   @VK_PIPELINE_STAGE_VERTEX_INPUT_BIT@ specifies the stage of the
 --     pipeline where vertex and index buffers are consumed.
@@ -117,26 +123,31 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- -   @VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT@ specifies the stage of
 --     the pipeline where early fragment tests (depth and stencil tests
 --     before fragment shading) are performed. This stage also includes
---     <{html_spec_relative}#renderpass-load-store-ops subpass load operations>
+--     [subpass load
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops)
 --     for framebuffer attachments with a depth\/stencil format.
 --
 -- -   @VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT@ specifies the stage of
 --     the pipeline where late fragment tests (depth and stencil tests
 --     after fragment shading) are performed. This stage also includes
---     <{html_spec_relative}#renderpass-load-store-ops subpass store operations>
+--     [subpass store
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops)
 --     for framebuffer attachments with a depth\/stencil format.
 --
 -- -   @VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT@ specifies the stage
 --     of the pipeline after blending where the final color values are
---     output from the pipeline. This stage also includes
---     <{html_spec_relative}#renderpass-load-store-ops subpass load and store operations>
+--     output from the pipeline. This stage also includes [subpass load and
+--     store
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops)
 --     and multisample resolve operations for framebuffer attachments with
 --     a color format.
 --
 -- -   @VK_PIPELINE_STAGE_TRANSFER_BIT@ specifies the execution of copy
---     commands. This includes the operations resulting from all
---     <{html_spec_relative}#copies copy commands>,
---     <{html_spec_relative}#clears clear commands> (with the exception of
+--     commands. This includes the operations resulting from all [copy
+--     commands](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies),
+--     [clear
+--     commands](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears)
+--     (with the exception of
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdClearAttachments'),
 --     and
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults'.
@@ -205,7 +216,6 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- operations between queues.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineStageFlags',
 -- 'Graphics.Vulkan.Extensions.VK_AMD_buffer_marker.vkCmdWriteBufferMarkerAMD',
@@ -334,11 +344,7 @@ pattern VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = VkPipelineStageFlagBits 0x00010000
 data VkQueue_T
 -- | VkQueue - Opaque handle to a queue object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'vkGetDeviceQueue',
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory.vkGetDeviceQueue2',
@@ -353,11 +359,7 @@ type VkQueue = Ptr VkQueue_T
 data VkCommandBuffer_T
 -- | VkCommandBuffer - Opaque handle to a command buffer object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.VkCmdProcessCommandsInfoNVX',
 -- 'VkSubmitInfo',
@@ -435,11 +437,7 @@ type VkCommandBuffer = Ptr VkCommandBuffer_T
 data VkFence_T
 -- | VkFence - Opaque handle to a fence object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkAcquireNextImageInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd.VkFenceGetFdInfoKHR',
@@ -461,11 +459,7 @@ type VkFence = Ptr VkFence_T
 data VkSemaphore_T
 -- | VkSemaphore - Opaque handle to a semaphore object
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkAcquireNextImageInfoKHR',
 -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.VkBindSparseInfo',
@@ -482,7 +476,6 @@ type VkSemaphore = Ptr VkSemaphore_T
 -- | vkGetDeviceQueue - Get a queue handle from a device
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the queue.
 --
@@ -494,9 +487,6 @@ type VkSemaphore = Ptr VkSemaphore_T
 --
 -- -   @pQueue@ is a pointer to a @VkQueue@ object that will be filled with
 --     the handle for the requested queue.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -518,7 +508,6 @@ type VkSemaphore = Ptr VkSemaphore_T
 -- -   @pQueue@ /must/ be a valid pointer to a @VkQueue@ handle
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkQueue'
 foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevice) -> ("queueFamilyIndex" ::: Word32) -> ("queueIndex" ::: Word32) -> ("pQueue" ::: Ptr VkQueue) -> IO ()
@@ -526,7 +515,6 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 -- queue
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @queue@ is the queue that the command buffers will be submitted to.
 --
@@ -538,10 +526,10 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 -- -   @fence@ is an /optional/ handle to a fence to be signaled once all
 --     submitted command buffers have completed execution. If @fence@ is
 --     not 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', it defines a
---     <{html_spec_relative}#synchronization-fences-signaling fence signal operation>.
+--     [fence signal
+--     operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-signaling).
 --
 -- = Description
--- #_description#
 --
 -- __Note__
 --
@@ -549,8 +537,8 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 -- attempt to batch work together into as few calls to @vkQueueSubmit@ as
 -- possible.
 --
--- @vkQueueSubmit@ is a
--- <{html_spec_relative}#devsandqueues-submission queue submission command>,
+-- @vkQueueSubmit@ is a [queue submission
+-- command](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-submission),
 -- with each batch defined by an element of @pSubmits@ as an instance of
 -- the 'VkSubmitInfo' structure. Batches begin execution in the order they
 -- appear in @pSubmits@, but /may/ complete out of order.
@@ -559,35 +547,41 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 -- additional ordering constraints compared to other submission commands,
 -- with dependencies involving previous and subsequent queue operations.
 -- Information about these additional constraints can be found in the
--- <{html_spec_relative}#synchronization-semaphores semaphore> and
--- <{html_spec_relative}#synchronization-fences fence> sections of
--- <{html_spec_relative}#synchronization the synchronization chapter>.
+-- [semaphore](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores)
+-- and
+-- [fence](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences)
+-- sections of [the synchronization
+-- chapter](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization).
 --
 -- Details on the interaction of @pWaitDstStageMask@ with synchronization
--- are described in the
--- <{html_spec_relative}#synchronization-semaphores-waiting semaphore wait operation>
--- section of
--- <{html_spec_relative}#synchronization the synchronization chapter>.
+-- are described in the [semaphore wait
+-- operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-waiting)
+-- section of [the synchronization
+-- chapter](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization).
 --
 -- The order that batches appear in @pSubmits@ is used to determine
--- <{html_spec_relative}#synchronization-submission-order submission order>,
--- and thus all the
--- <{html_spec_relative}#synchronization-implicit implicit ordering guarantees>
+-- [submission
+-- order](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order),
+-- and thus all the [implicit ordering
+-- guarantees](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-implicit)
 -- that respect it. Other than these implicit ordering guarantees and any
--- <{html_spec_relative}#synchronization explicit synchronization primitives>,
+-- [explicit synchronization
+-- primitives](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization),
 -- these batches /may/ overlap or otherwise execute out of order.
 --
--- If any command buffer submitted to this queue is in the
--- <{html_spec_relative}#commandbuffers-lifecycle executable state>, it is
--- moved to the
--- <{html_spec_relative}#commandbuffers-lifecycle pending state>. Once
--- execution of all submissions of a command buffer complete, it moves from
--- the <{html_spec_relative}#commandbuffers-lifecycle pending state>, back
--- to the <{html_spec_relative}#commandbuffers-lifecycle executable state>.
+-- If any command buffer submitted to this queue is in the [executable
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle),
+-- it is moved to the [pending
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- Once execution of all submissions of a command buffer complete, it moves
+-- from the [pending
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle),
+-- back to the [executable
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 -- If a command buffer was recorded with the
 -- @VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT@ flag, it instead moves
--- back to the
--- <{html_spec_relative}#commandbuffers-lifecycle invalid state>.
+-- back to the [invalid
+-- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- If @vkQueueSubmit@ fails, it /may/ return @VK_ERROR_OUT_OF_HOST_MEMORY@
 -- or @VK_ERROR_OUT_OF_DEVICE_MEMORY@. If it does, the implementation
@@ -596,8 +590,8 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 -- and any semaphores referenced by @pSubmits@ is unaffected by the call or
 -- its failure. If @vkQueueSubmit@ fails in such a way that the
 -- implementation is unable to make that guarantee, the implementation
--- /must/ return @VK_ERROR_DEVICE_LOST@. See
--- <{html_spec_relative}#devsandqueues-lost-device Lost Device>.
+-- /must/ return @VK_ERROR_DEVICE_LOST@. See [Lost
+-- Device](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device).
 --
 -- == Valid Usage
 --
@@ -621,7 +615,8 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 -- -   Any stage flag included in any element of the @pWaitDstStageMask@
 --     member of any element of @pSubmits@ /must/ be a pipeline stage
 --     supported by one of the capabilities of @queue@, as specified in the
---     <{html_spec_relative}#synchronization-pipeline-stages-supported table of supported pipeline stages>.
+--     [table of supported pipeline
+--     stages](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-supported).
 --
 -- -   Each element of the @pSignalSemaphores@ member of any element of
 --     @pSubmits@ /must/ be unsignaled when the semaphore signal operation
@@ -633,30 +628,33 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 --
 -- -   All elements of the @pWaitSemaphores@ member of all elements of
 --     @pSubmits@ /must/ be semaphores that are signaled, or have
---     <{html_spec_relative}#synchronization-semaphores-signaling semaphore signal operations>
+--     [semaphore signal
+--     operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-signaling)
 --     previously submitted for execution.
 --
 -- -   Each element of the @pCommandBuffers@ member of each element of
---     @pSubmits@ /must/ be in the
---     <{html_spec_relative}#commandbuffers-lifecycle pending or executable state>.
+--     @pSubmits@ /must/ be in the [pending or executable
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- -   If any element of the @pCommandBuffers@ member of any element of
 --     @pSubmits@ was not recorded with the
 --     @VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT@, it /must/ not be in
---     the <{html_spec_relative}#commandbuffers-lifecycle pending state>.
+--     the [pending
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
--- -   Any
---     <{html_spec_relative}#commandbuffers-secondary secondary command buffers recorded>
+-- -   Any [secondary command buffers
+--     recorded](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-secondary)
 --     into any element of the @pCommandBuffers@ member of any element of
---     @pSubmits@ /must/ be in the
---     <{html_spec_relative}#commandbuffers-lifecycle pending or executable state>.
+--     @pSubmits@ /must/ be in the [pending or executable
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
--- -   If any
---     <{html_spec_relative}#commandbuffers-secondary secondary command buffers recorded>
+-- -   If any [secondary command buffers
+--     recorded](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-secondary)
 --     into any element of the @pCommandBuffers@ member of any element of
 --     @pSubmits@ was not recorded with the
 --     @VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT@, it /must/ not be in
---     the <{html_spec_relative}#commandbuffers-lifecycle pending state>.
+--     the [pending
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
 --
 -- -   Each element of the @pCommandBuffers@ member of each element of
 --     @pSubmits@ /must/ have been allocated from a @VkCommandPool@ that
@@ -689,21 +687,21 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | -               | -               | Any             | -               |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | -                                                                                                           | -                                                                                                          | Any                                                                                                   | -                                                                                                                          |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -711,19 +709,16 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkFence', 'VkQueue', 'VkSubmitInfo'
 foreign import ccall "vkQueueSubmit" vkQueueSubmit :: ("queue" ::: VkQueue) -> ("submitCount" ::: Word32) -> ("pSubmits" ::: Ptr VkSubmitInfo) -> ("fence" ::: VkFence) -> IO VkResult
 -- | vkQueueWaitIdle - Wait for a queue to become idle
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @queue@ is the queue on which to wait.
 --
 -- = Description
--- #_description#
 --
 -- @vkQueueWaitIdle@ is equivalent to submitting a fence to a queue and
 -- waiting with an infinite timeout for that fence to signal.
@@ -734,21 +729,21 @@ foreign import ccall "vkQueueSubmit" vkQueueSubmit :: ("queue" ::: VkQueue) -> (
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | -               | -               | Any             | -               |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | -                                                                                                           | -                                                                                                          | Any                                                                                                   | -                                                                                                                          |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -756,19 +751,16 @@ foreign import ccall "vkQueueSubmit" vkQueueSubmit :: ("queue" ::: VkQueue) -> (
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkQueue'
 foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle :: ("queue" ::: VkQueue) -> IO VkResult
 -- | vkDeviceWaitIdle - Wait for a device to become idle
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device to idle.
 --
 -- = Description
--- #_description#
 --
 -- @vkDeviceWaitIdle@ is equivalent to calling @vkQueueWaitIdle@ for all
 -- queues owned by @device@.
@@ -784,10 +776,10 @@ foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle :: ("queue" ::: VkQueue) 
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -795,22 +787,21 @@ foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle :: ("queue" ::: VkQueue) 
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
 foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle :: ("device" ::: VkDevice) -> IO VkResult
 -- | VkSubmitInfo - Structure specifying a queue submit operation
 --
 -- = Description
--- #_description#
 --
 -- The order that command buffers appear in @pCommandBuffers@ is used to
--- determine
--- <{html_spec_relative}#synchronization-submission-order submission order>,
--- and thus all the
--- <{html_spec_relative}#synchronization-implicit implicit ordering guarantees>
+-- determine [submission
+-- order](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order),
+-- and thus all the [implicit ordering
+-- guarantees](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-implicit)
 -- that respect it. Other than these implicit ordering guarantees and any
--- <{html_spec_relative}#synchronization explicit synchronization primitives>,
+-- [explicit synchronization
+-- primitives](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization),
 -- these command buffers /may/ overlap or otherwise execute out of order.
 --
 -- == Valid Usage
@@ -818,13 +809,13 @@ foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle :: ("device" ::: VkDevi
 -- -   Each element of @pCommandBuffers@ /must/ not have been allocated
 --     with @VK_COMMAND_BUFFER_LEVEL_SECONDARY@
 --
--- -   If the
---     <{html_spec_relative}#features-features-geometryShader geometry shaders>
+-- -   If the [geometry
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-geometryShader)
 --     feature is not enabled, each element of @pWaitDstStageMask@ /must/
 --     not contain @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-tessellationShader tessellation shaders>
+-- -   If the [tessellation
+--     shaders](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-tessellationShader)
 --     feature is not enabled, each element of @pWaitDstStageMask@ /must/
 --     not contain @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@ or
 --     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@
@@ -872,28 +863,39 @@ foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle :: ("device" ::: VkDevi
 --     the same @VkDevice@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkCommandBuffer', 'VkPipelineStageFlags', 'VkSemaphore',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkQueueSubmit'
 data VkSubmitInfo = VkSubmitInfo
-  { -- No documentation found for Nested "VkSubmitInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSubmitInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSubmitInfo" "vkWaitSemaphoreCount"
+  , -- | @waitSemaphoreCount@ is the number of semaphores upon which to wait
+  -- before executing the command buffers for the batch.
   vkWaitSemaphoreCount :: Word32
-  , -- No documentation found for Nested "VkSubmitInfo" "vkPWaitSemaphores"
+  , -- | @pWaitSemaphores@ is a pointer to an array of semaphores upon which to
+  -- wait before the command buffers for this batch begin execution. If
+  -- semaphores to wait on are provided, they define a [semaphore wait
+  -- operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-waiting).
   vkPWaitSemaphores :: Ptr VkSemaphore
-  , -- No documentation found for Nested "VkSubmitInfo" "vkPWaitDstStageMask"
+  , -- | @pWaitDstStageMask@ is a pointer to an array of pipeline stages at which
+  -- each corresponding semaphore wait will occur.
   vkPWaitDstStageMask :: Ptr VkPipelineStageFlags
-  , -- No documentation found for Nested "VkSubmitInfo" "vkCommandBufferCount"
+  , -- | @commandBufferCount@ is the number of command buffers to execute in the
+  -- batch.
   vkCommandBufferCount :: Word32
-  , -- No documentation found for Nested "VkSubmitInfo" "vkPCommandBuffers"
+  , -- | @pCommandBuffers@ is a pointer to an array of command buffers to execute
+  -- in the batch.
   vkPCommandBuffers :: Ptr VkCommandBuffer
-  , -- No documentation found for Nested "VkSubmitInfo" "vkSignalSemaphoreCount"
+  , -- | @signalSemaphoreCount@ is the number of semaphores to be signaled once
+  -- the commands specified in @pCommandBuffers@ have completed execution.
   vkSignalSemaphoreCount :: Word32
-  , -- No documentation found for Nested "VkSubmitInfo" "vkPSignalSemaphores"
+  , -- | @pSignalSemaphores@ is a pointer to an array of semaphores which will be
+  -- signaled when the command buffers for this batch have completed
+  -- execution. If semaphores to be signaled are provided, they define a
+  -- [semaphore signal
+  -- operation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-signaling).
   vkPSignalSemaphores :: Ptr VkSemaphore
   }
   deriving (Eq, Show)
@@ -922,13 +924,11 @@ instance Storable VkSubmitInfo where
 -- | VkPipelineStageFlags - Bitmask of VkPipelineStageFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineStageFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkPipelineStageFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineStageFlagBits', 'VkSubmitInfo',
 -- 'Graphics.Vulkan.Core10.Pass.VkSubpassDependency',

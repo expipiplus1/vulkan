@@ -111,16 +111,16 @@ import Graphics.Vulkan.Core10.MemoryManagement
 -- acquired upon first use within a queue. Once a resource using
 -- @VK_SHARING_MODE_EXCLUSIVE@ is owned by some queue family, the
 -- application /must/ perform a [queue family ownership
--- transfer]({html_spec_relative}#synchronization-queue-transfers) to make
--- the memory contents of a range or image subresource accessible to a
--- different queue family.
+-- transfer](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers)
+-- to make the memory contents of a range or image subresource accessible
+-- to a different queue family.
 --
 -- __Note__
 --
 -- Images still require a [layout
--- transition]({html_spec_relative}#resources-image-layouts) from
--- @VK_IMAGE_LAYOUT_UNDEFINED@ or @VK_IMAGE_LAYOUT_PREINITIALIZED@ before
--- being used on the first queue.
+-- transition](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-layouts)
+-- from @VK_IMAGE_LAYOUT_UNDEFINED@ or @VK_IMAGE_LAYOUT_PREINITIALIZED@
+-- before being used on the first queue.
 --
 -- A queue family /can/ take ownership of an image subresource or buffer
 -- range of a resource created with @VK_SHARING_MODE_EXCLUSIVE@, without an
@@ -135,7 +135,6 @@ import Graphics.Vulkan.Core10.MemoryManagement
 -- structures.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBufferCreateInfo', 'Graphics.Vulkan.Core10.Image.VkImageCreateInfo',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
@@ -170,7 +169,6 @@ pattern VK_SHARING_MODE_CONCURRENT = VkSharingMode 1
 -- | VkBufferUsageFlagBits - Bitmask specifying allowed usage of a buffer
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBufferUsageFlags'
 newtype VkBufferUsageFlagBits = VkBufferUsageFlagBits VkFlags
@@ -208,7 +206,7 @@ instance Read VkBufferUsageFlagBits where
 
 -- | @VK_BUFFER_USAGE_TRANSFER_SRC_BIT@ specifies that the buffer /can/ be
 -- used as the source of a /transfer command/ (see the definition of
--- <{html_spec_relative}#synchronization-pipeline-stages-transfer VK_PIPELINE_STAGE_TRANSFER_BIT>).
+-- [@VK_PIPELINE_STAGE_TRANSFER_BIT@](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-transfer)).
 pattern VK_BUFFER_USAGE_TRANSFER_SRC_BIT :: VkBufferUsageFlagBits
 pattern VK_BUFFER_USAGE_TRANSFER_SRC_BIT = VkBufferUsageFlagBits 0x00000001
 
@@ -260,7 +258,10 @@ pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = VkBufferUsageFlagBits 0x00000080
 
 -- | @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ specifies that the buffer is
 -- suitable for passing as the @buffer@ parameter to @vkCmdDrawIndirect@,
--- @vkCmdDrawIndexedIndirect@, or @vkCmdDispatchIndirect@.
+-- @vkCmdDrawIndexedIndirect@, or @vkCmdDispatchIndirect@. It is also
+-- suitable for passing as the @buffer@ member of
+-- @VkIndirectCommandsTokenNVX@, or @sequencesCountBuffer@ or
+-- @sequencesIndexBuffer@ member of @VkCmdProcessCommandsInfoNVX@
 pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT :: VkBufferUsageFlagBits
 pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlagBits 0x00000100
 -- ** VkBufferCreateFlagBits
@@ -269,7 +270,6 @@ pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlagBits 0x00000100
 -- buffer
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@ specifies that the buffer will
 --     be backed using sparse memory binding.
@@ -285,13 +285,13 @@ pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlagBits 0x00000100
 --     the same buffer). Buffers created with this flag /must/ also be
 --     created with the @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@ flag.
 --
--- See
--- <{html_spec_relative}#sparsememory-sparseresourcefeatures Sparse Resource Features>
--- and <{html_spec_relative}#features-features Physical Device Features>
+-- See [Sparse Resource
+-- Features](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures)
+-- and [Physical Device
+-- Features](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features)
 -- for details of the sparse memory features supported on a device.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBufferCreateFlags'
 newtype VkBufferCreateFlagBits = VkBufferCreateFlagBits VkFlags
@@ -333,7 +333,6 @@ pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = VkBufferCreateFlagBits 0x00000004
 -- | vkCreateBuffer - Create a new buffer object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that creates the buffer object.
 --
@@ -342,13 +341,12 @@ pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = VkBufferCreateFlagBits 0x00000004
 --     creation of the buffer.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- -   @pBuffer@ points to a @VkBuffer@ handle in which the resulting
 --     buffer object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -372,16 +370,15 @@ pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = VkBufferCreateFlagBits 0x00000004
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
@@ -391,17 +388,15 @@ foreign import ccall "vkCreateBuffer" vkCreateBuffer :: ("device" ::: VkDevice) 
 -- | vkDestroyBuffer - Destroy a buffer object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that destroys the buffer.
 --
 -- -   @buffer@ is the buffer to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <{html_spec_relative}#memory-allocation Memory Allocation> chapter.
---
--- = Description
--- #_description#
+--     [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     chapter.
 --
 -- == Valid Usage
 --
@@ -433,7 +428,6 @@ foreign import ccall "vkCreateBuffer" vkCreateBuffer :: ("device" ::: VkDevice) 
 -- -   Host access to @buffer@ /must/ be externally synchronized
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
@@ -441,9 +435,6 @@ foreign import ccall "vkCreateBuffer" vkCreateBuffer :: ("device" ::: VkDevice) 
 foreign import ccall "vkDestroyBuffer" vkDestroyBuffer :: ("device" ::: VkDevice) -> ("buffer" ::: VkBuffer) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkBufferCreateInfo - Structure specifying the parameters of a newly
 -- created buffer object
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -458,28 +449,48 @@ foreign import ccall "vkDestroyBuffer" vkDestroyBuffer :: ("device" ::: VkDevice
 --
 -- -   If @sharingMode@ is @VK_SHARING_MODE_CONCURRENT@, each element of
 --     @pQueueFamilyIndices@ /must/ be unique and /must/ be less than
---     @pQueueFamilyPropertyCount@ returned by
+--     @pQueueFamilyPropertyCount@ returned by either
 --     'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'
+--     or
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseBinding sparse bindings>
+-- -   If the [sparse
+--     bindings](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseBinding)
 --     feature is not enabled, @flags@ /must/ not contain
 --     @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidencyBuffer sparse buffer residency>
+-- -   If the [sparse buffer
+--     residency](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidencyBuffer)
 --     feature is not enabled, @flags@ /must/ not contain
 --     @VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT@
 --
--- -   If the
---     <{html_spec_relative}#features-features-sparseResidencyAliased sparse aliased residency>
+-- -   If the [sparse aliased
+--     residency](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidencyAliased)
 --     feature is not enabled, @flags@ /must/ not contain
 --     @VK_BUFFER_CREATE_SPARSE_ALIASED_BIT@
 --
 -- -   If @flags@ contains @VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT@ or
 --     @VK_BUFFER_CREATE_SPARSE_ALIASED_BIT@, it /must/ also contain
 --     @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@
+--
+-- -   If the @pNext@ chain contains an instance of
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo',
+--     its @handleTypes@ member /must/ only contain bits that are also in
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'::@externalMemoryProperties.pname@:compatibleHandleTypes,
+--     as returned by
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties'
+--     with @pExternalBufferInfo@->@handleType@ equal to any one of the
+--     handle types specified in
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo'::@handleTypes@
+--
+-- -   If the @pNext@ chain contains an instance of
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV',
+--     and the @dedicatedAllocation@ member of the chained structure is
+--     @VK_TRUE@, then @flags@ /must/ not include
+--     @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@,
+--     @VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT@, or
+--     @VK_BUFFER_CREATE_SPARSE_ALIASED_BIT@
 --
 -- == Valid Usage (Implicit)
 --
@@ -505,27 +516,31 @@ foreign import ccall "vkDestroyBuffer" vkDestroyBuffer :: ("device" ::: VkDevice
 -- -   @sharingMode@ /must/ be a valid 'VkSharingMode' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBufferCreateFlags', 'VkBufferUsageFlags', @VkDeviceSize@,
 -- 'VkSharingMode', 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateBuffer'
 data VkBufferCreateInfo = VkBufferCreateInfo
-  { -- No documentation found for Nested "VkBufferCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkBufferCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkBufferCreateInfo" "vkFlags"
+  , -- | @flags@ is a bitmask of 'VkBufferCreateFlagBits' specifying additional
+  -- parameters of the buffer.
   vkFlags :: VkBufferCreateFlags
-  , -- No documentation found for Nested "VkBufferCreateInfo" "vkSize"
+  , -- | @size@ is the size in bytes of the buffer to be created.
   vkSize :: VkDeviceSize
-  , -- No documentation found for Nested "VkBufferCreateInfo" "vkUsage"
+  , -- | @usage@ is a bitmask of 'VkBufferUsageFlagBits' specifying allowed
+  -- usages of the buffer.
   vkUsage :: VkBufferUsageFlags
-  , -- No documentation found for Nested "VkBufferCreateInfo" "vkSharingMode"
+  , -- | @sharingMode@ is a 'VkSharingMode' value specifying the sharing mode of
+  -- the buffer when it will be accessed by multiple queue families.
   vkSharingMode :: VkSharingMode
-  , -- No documentation found for Nested "VkBufferCreateInfo" "vkQueueFamilyIndexCount"
+  , -- | @queueFamilyIndexCount@ is the number of entries in the
+  -- @pQueueFamilyIndices@ array.
   vkQueueFamilyIndexCount :: Word32
-  , -- No documentation found for Nested "VkBufferCreateInfo" "vkPQueueFamilyIndices"
+  , -- | @pQueueFamilyIndices@ is a list of queue families that will access this
+  -- buffer (ignored if @sharingMode@ is not @VK_SHARING_MODE_CONCURRENT@).
   vkPQueueFamilyIndices :: Ptr Word32
   }
   deriving (Eq, Show)
@@ -552,13 +567,11 @@ instance Storable VkBufferCreateInfo where
 -- | VkBufferUsageFlags - Bitmask of VkBufferUsageFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkBufferUsageFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkBufferUsageFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBufferCreateInfo', 'VkBufferUsageFlagBits',
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo'
@@ -566,13 +579,11 @@ type VkBufferUsageFlags = VkBufferUsageFlagBits
 -- | VkBufferCreateFlags - Bitmask of VkBufferCreateFlagBits
 --
 -- = Description
--- #_description#
 --
 -- @VkBufferCreateFlags@ is a bitmask type for setting a mask of zero or
 -- more 'VkBufferCreateFlagBits'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkBufferCreateFlagBits', 'VkBufferCreateInfo',
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo'

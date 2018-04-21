@@ -51,7 +51,6 @@ pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME = "VK_EXT_vertex_attribut
 -- divisor used in instanced rendering
 --
 -- = Description
--- #_description#
 --
 -- If this structure is not used to define a divisor value for an attribute
 -- then the divisor has a logical default value of 1.
@@ -70,13 +69,19 @@ pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME = "VK_EXT_vertex_attribut
 --     @binding@.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineVertexInputDivisorStateCreateInfoEXT'
 data VkVertexInputBindingDivisorDescriptionEXT = VkVertexInputBindingDivisorDescriptionEXT
-  { -- No documentation found for Nested "VkVertexInputBindingDivisorDescriptionEXT" "vkBinding"
+  { -- | @binding@ is the binding number for which the divisor is specified.
   vkBinding :: Word32
-  , -- No documentation found for Nested "VkVertexInputBindingDivisorDescriptionEXT" "vkDivisor"
+  , -- | @divisor@ is the the number of successive instances that will use the
+  -- same value of the vertex attribute when instanced rendering is enabled.
+  -- For example, if the divisor is N, the same vertex attribute will applied
+  -- to N successive instances before moving on to the next vertex attribute.
+  -- If a value of 0 is used for the divisor, then the first vertex attribute
+  -- will be applied to all instances. The maximum value of divisor is
+  -- implementation dependent and can be queried using
+  -- @VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT@::@maxVertexAttribDivisor@.
   vkDivisor :: Word32
   }
   deriving (Eq, Show)
@@ -91,9 +96,6 @@ instance Storable VkVertexInputBindingDivisorDescriptionEXT where
 -- | VkPipelineVertexInputDivisorStateCreateInfoEXT - Structure specifying
 -- vertex attributes assignment during instanced rendering
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -106,18 +108,20 @@ instance Storable VkVertexInputBindingDivisorDescriptionEXT where
 -- -   @vertexBindingDivisorCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkVertexInputBindingDivisorDescriptionEXT'
 data VkPipelineVertexInputDivisorStateCreateInfoEXT = VkPipelineVertexInputDivisorStateCreateInfoEXT
-  { -- No documentation found for Nested "VkPipelineVertexInputDivisorStateCreateInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineVertexInputDivisorStateCreateInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineVertexInputDivisorStateCreateInfoEXT" "vkVertexBindingDivisorCount"
+  , -- | @vertexBindingDivisorCount@ is the number of elements in the
+  -- @pVertexBindingDivisors@ array.
   vkVertexBindingDivisorCount :: Word32
-  , -- No documentation found for Nested "VkPipelineVertexInputDivisorStateCreateInfoEXT" "vkPVertexBindingDivisors"
+  , -- | @pVertexBindingDivisors@ is a pointer to an array of
+  -- @VkVertexInputBindingDivisorDescriptionEXT@ structures, which specifies
+  -- the divisor value for each binding.
   vkPVertexBindingDivisors :: Ptr VkVertexInputBindingDivisorDescriptionEXT
   }
   deriving (Eq, Show)
@@ -138,13 +142,11 @@ instance Storable VkPipelineVertexInputDivisorStateCreateInfoEXT where
 -- by an implementation
 --
 -- = Members
--- #_members#
 --
 -- The members of the @VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT@
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
--- #_description#
 --
 -- -   @maxVertexAttribDivisor@ is the maximum value of the number of
 --     instances that will repeat the value of vertex attribute data when
@@ -156,15 +158,14 @@ instance Storable VkPipelineVertexInputDivisorStateCreateInfoEXT where
 --     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT = VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "vkMaxVertexAttribDivisor"
+  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "maxVertexAttribDivisor"
   vkMaxVertexAttribDivisor :: Word32
   }
   deriving (Eq, Show)

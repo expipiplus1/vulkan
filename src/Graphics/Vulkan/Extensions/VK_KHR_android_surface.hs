@@ -104,7 +104,6 @@ pattern VK_KHR_ANDROID_SURFACE_EXTENSION_NAME = "VK_KHR_android_surface"
 -- Android native window
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the instance to associate the surface with.
 --
@@ -114,13 +113,13 @@ pattern VK_KHR_ANDROID_SURFACE_EXTENSION_NAME = "VK_KHR_android_surface"
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
 --     surface object is returned.
 --
 -- = Description
--- #_description#
 --
 -- During the lifetime of a surface created using a particular
 -- @ANativeWindow@ handle any attempts to create another surface for the
@@ -158,10 +157,10 @@ pattern VK_KHR_ANDROID_SURFACE_EXTENSION_NAME = "VK_KHR_android_surface"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -169,7 +168,6 @@ pattern VK_KHR_ANDROID_SURFACE_EXTENSION_NAME = "VK_KHR_android_surface"
 --     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkAndroidSurfaceCreateInfoKHR',
@@ -178,9 +176,6 @@ pattern VK_KHR_ANDROID_SURFACE_EXTENSION_NAME = "VK_KHR_android_surface"
 foreign import ccall "vkCreateAndroidSurfaceKHR" vkCreateAndroidSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkAndroidSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 -- | VkAndroidSurfaceCreateInfoKHR - Structure specifying parameters of a
 -- newly created Android surface object
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -196,19 +191,19 @@ foreign import ccall "vkCreateAndroidSurfaceKHR" vkCreateAndroidSurfaceKHR :: ("
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAndroidSurfaceCreateFlagsKHR',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkCreateAndroidSurfaceKHR'
 data VkAndroidSurfaceCreateInfoKHR = VkAndroidSurfaceCreateInfoKHR
-  { -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkAndroidSurfaceCreateFlagsKHR
-  , -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "vkWindow"
+  , -- | @window@ is a pointer to the @ANativeWindow@ to associate the surface
+  -- with.
   vkWindow :: Ptr ANativeWindow
   }
   deriving (Eq, Show)

@@ -76,7 +76,6 @@ pattern VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = "VK_NV_external_memory_win3
 -- object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that owns the memory.
 --
@@ -88,9 +87,6 @@ pattern VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = "VK_NV_external_memory_win3
 --
 -- -   @handle@ points to a Windows @HANDLE@ in which the handle is
 --     returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -117,16 +113,15 @@ pattern VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = "VK_NV_external_memory_win3
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_TOO_MANY_OBJECTS@
 --
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory',
@@ -136,7 +131,6 @@ foreign import ccall "vkGetMemoryWin32HandleNV" vkGetMemoryWin32HandleNV :: ("de
 -- same physical device
 --
 -- = Description
--- #_description#
 --
 -- If @handleType@ is @0@, this structure is ignored by consumers of the
 -- 'Graphics.Vulkan.Core10.Memory.VkMemoryAllocateInfo' structure it is
@@ -159,18 +153,19 @@ foreign import ccall "vkGetMemoryWin32HandleNV" vkGetMemoryWin32HandleNV :: ("de
 --     values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkImportMemoryWin32HandleInfoNV = VkImportMemoryWin32HandleInfoNV
-  { -- No documentation found for Nested "VkImportMemoryWin32HandleInfoNV" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImportMemoryWin32HandleInfoNV" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImportMemoryWin32HandleInfoNV" "vkHandleType"
+  , -- | @handleType@ is @0@ or a
+  -- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
+  -- value specifying the type of memory handle in @handle@.
   vkHandleType :: VkExternalMemoryHandleTypeFlagsNV
-  , -- No documentation found for Nested "VkImportMemoryWin32HandleInfoNV" "vkHandle"
+  , -- | @handle@ is a Windows @HANDLE@ referring to the memory.
   vkHandle :: HANDLE
   }
   deriving (Eq, Show)
@@ -190,7 +185,6 @@ instance Storable VkImportMemoryWin32HandleInfoNV where
 -- rights for Win32 memory handles
 --
 -- = Description
--- #_description#
 --
 -- If this structure is not present, or if @pAttributes@ is set to @NULL@,
 -- default security descriptor values will be used, and child processes
@@ -213,17 +207,17 @@ instance Storable VkImportMemoryWin32HandleInfoNV where
 --     pointer to a valid @SECURITY_ATTRIBUTES@ value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkExportMemoryWin32HandleInfoNV = VkExportMemoryWin32HandleInfoNV
-  { -- No documentation found for Nested "VkExportMemoryWin32HandleInfoNV" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExportMemoryWin32HandleInfoNV" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExportMemoryWin32HandleInfoNV" "vkPAttributes"
+  , -- | @pAttributes@ is a pointer to a Windows @SECURITY_ATTRIBUTES@ structure
+  -- specifying security attributes of the handle.
   vkPAttributes :: Ptr SECURITY_ATTRIBUTES
-  , -- No documentation found for Nested "VkExportMemoryWin32HandleInfoNV" "vkDwAccess"
+  , -- | @dwAccess@ is a @DWORD@ specifying access rights of the handle.
   vkDwAccess :: DWORD
   }
   deriving (Eq, Show)

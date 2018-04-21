@@ -53,12 +53,30 @@ pattern VK_QUEUE_FAMILY_EXTERNAL :: Word32
 pattern VK_QUEUE_FAMILY_EXTERNAL = 0xfffffffe
 -- | VkExternalMemoryImageCreateInfo - Specify that an image may be backed by
 -- external memory
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO@
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+--     values
+--
+-- -   @handleTypes@ /must/ not be @0@
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlags',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkExternalMemoryImageCreateInfo = VkExternalMemoryImageCreateInfo
-  { -- No documentation found for Nested "VkExternalMemoryImageCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExternalMemoryImageCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExternalMemoryImageCreateInfo" "vkHandleTypes"
+  , -- | @handleTypes@ is a bitmask of
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+  -- specifying one or more external memory handle types.
   vkHandleTypes :: VkExternalMemoryHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -74,12 +92,28 @@ instance Storable VkExternalMemoryImageCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryImageCreateInfo))
 -- | VkExternalMemoryBufferCreateInfo - Specify that a buffer may be backed
 -- by external memory
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO@
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+--     values
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlags',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkExternalMemoryBufferCreateInfo = VkExternalMemoryBufferCreateInfo
-  { -- No documentation found for Nested "VkExternalMemoryBufferCreateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExternalMemoryBufferCreateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExternalMemoryBufferCreateInfo" "vkHandleTypes"
+  , -- | @handleTypes@ is a bitmask of
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+  -- specifying one or more external memory handle types.
   vkHandleTypes :: VkExternalMemoryHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -95,12 +129,37 @@ instance Storable VkExternalMemoryBufferCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryBufferCreateInfo))
 -- | VkExportMemoryAllocateInfo - Specify exportable handle types for a
 -- device memory object
+--
+-- == Valid Usage
+--
+-- -   The bits in @handleTypes@ /must/ be supported and compatible, as
+--     reported by
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalImageFormatProperties'
+--     or
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO@
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+--     values
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlags',
+-- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkExportMemoryAllocateInfo = VkExportMemoryAllocateInfo
-  { -- No documentation found for Nested "VkExportMemoryAllocateInfo" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExportMemoryAllocateInfo" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExportMemoryAllocateInfo" "vkHandleTypes"
+  , -- | @handleTypes@ is a bitmask of
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+  -- specifying one or more memory handle types the application /can/ export
+  -- from the resulting allocation. The application /can/ request multiple
+  -- handle types for the same allocation.
   vkHandleTypes :: VkExternalMemoryHandleTypeFlags
   }
   deriving (Eq, Show)

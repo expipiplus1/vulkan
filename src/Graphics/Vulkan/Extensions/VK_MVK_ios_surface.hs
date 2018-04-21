@@ -99,7 +99,6 @@ pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME = "VK_MVK_ios_surface"
 -- | vkCreateIOSSurfaceMVK - Create a VkSurfaceKHR object for an iOS UIView
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @instance@ is the instance with which to associate the surface.
 --
@@ -109,13 +108,11 @@ pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME = "VK_MVK_ios_surface"
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
---     (see <{html_spec_relative}#memory-allocation Memory Allocation>).
+--     (see [Memory
+--     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
 --
 -- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
 --     surface object is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -131,10 +128,10 @@ pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME = "VK_MVK_ios_surface"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -142,7 +139,6 @@ pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME = "VK_MVK_ios_surface"
 --     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkIOSSurfaceCreateInfoMVK',
@@ -151,9 +147,6 @@ pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME = "VK_MVK_ios_surface"
 foreign import ccall "vkCreateIOSSurfaceMVK" vkCreateIOSSurfaceMVK :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkIOSSurfaceCreateInfoMVK) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 -- | VkIOSSurfaceCreateInfoMVK - Structure specifying parameters of a newly
 -- created iOS surface object
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -169,18 +162,19 @@ foreign import ccall "vkCreateIOSSurfaceMVK" vkCreateIOSSurfaceMVK :: ("instance
 -- -   @flags@ /must/ be @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkIOSSurfaceCreateFlagsMVK',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateIOSSurfaceMVK'
 data VkIOSSurfaceCreateInfoMVK = VkIOSSurfaceCreateInfoMVK
-  { -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkIOSSurfaceCreateFlagsMVK
-  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "vkPView"
+  , -- | @pView@ is a reference to a @UIView@ object which will display this
+  -- surface. This @UIView@ /must/ be backed by a @CALayer@ instance of type
+  -- @CAMetalLayer@.
   vkPView :: Ptr ()
   }
   deriving (Eq, Show)

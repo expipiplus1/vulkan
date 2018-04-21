@@ -63,7 +63,6 @@ pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME = "VK_GOOGLE_display_timing"
 -- display
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device associated with @swapchain@.
 --
@@ -71,9 +70,6 @@ pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME = "VK_GOOGLE_display_timing"
 --
 -- -   @pDisplayTimingProperties@ is a pointer to an instance of the
 --     @VkRefreshCycleDurationGOOGLE@ structure.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -93,16 +89,15 @@ pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME = "VK_GOOGLE_display_timing"
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkRefreshCycleDurationGOOGLE',
@@ -112,7 +107,6 @@ foreign import ccall "vkGetRefreshCycleDurationGOOGLE" vkGetRefreshCycleDuration
 -- previously-presented image
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device associated with @swapchain@.
 --
@@ -127,7 +121,6 @@ foreign import ccall "vkGetRefreshCycleDurationGOOGLE" vkGetRefreshCycleDuration
 --     of @VkPastPresentationTimingGOOGLE@ structures.
 --
 -- = Description
--- #_description#
 --
 -- If @pPresentationTimings@ is @NULL@, then the number of newly-available
 -- timing records for the given @swapchain@ is returned in
@@ -166,12 +159,12 @@ foreign import ccall "vkGetRefreshCycleDurationGOOGLE" vkGetRefreshCycleDuration
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_INCOMPLETE@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_DEVICE_LOST@
 --
 --     -   @VK_ERROR_OUT_OF_DATE_KHR@
@@ -179,7 +172,6 @@ foreign import ccall "vkGetRefreshCycleDurationGOOGLE" vkGetRefreshCycleDuration
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkPastPresentationTimingGOOGLE',
@@ -188,15 +180,12 @@ foreign import ccall "vkGetPastPresentationTimingGOOGLE" vkGetPastPresentationTi
 -- | VkRefreshCycleDurationGOOGLE - Structure containing the RC duration of a
 -- display
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'vkGetRefreshCycleDurationGOOGLE'
 data VkRefreshCycleDurationGOOGLE = VkRefreshCycleDurationGOOGLE
-  { -- No documentation found for Nested "VkRefreshCycleDurationGOOGLE" "vkRefreshDuration"
+  { -- | @refreshDuration@ is the number of nanoseconds from the start of one
+  -- refresh cycle to the next.
   vkRefreshDuration :: Word64
   }
   deriving (Eq, Show)
@@ -210,7 +199,6 @@ instance Storable VkRefreshCycleDurationGOOGLE where
 -- about a previously-presented image
 --
 -- = Description
--- #_description#
 --
 -- The results for a given @swapchain@ and @presentID@ are only returned
 -- once from @vkGetPastPresentationTimingGOOGLE@.
@@ -234,19 +222,33 @@ instance Storable VkRefreshCycleDurationGOOGLE where
 -- @presentMargin@ is satisfactory.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'vkGetPastPresentationTimingGOOGLE'
 data VkPastPresentationTimingGOOGLE = VkPastPresentationTimingGOOGLE
-  { -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "vkPresentID"
+  { -- | @presentID@ is an application-provided value that was given to a
+  -- previous @vkQueuePresentKHR@ command via
+  -- 'VkPresentTimeGOOGLE'::@presentID@ (see below). It /can/ be used to
+  -- uniquely identify a previous present with the
+  -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkQueuePresentKHR' command.
   vkPresentID :: Word32
-  , -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "vkDesiredPresentTime"
+  , -- | @desiredPresentTime@ is an application-provided value that was given to
+  -- a previous
+  -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkQueuePresentKHR' command
+  -- via 'VkPresentTimeGOOGLE'::@desiredPresentTime@. If non-zero, it was
+  -- used by the application to indicate that an image not be presented any
+  -- sooner than @desiredPresentTime@.
   vkDesiredPresentTime :: Word64
-  , -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "vkActualPresentTime"
+  , -- | @actualPresentTime@ is the time when the image of the @swapchain@ was
+  -- actually displayed.
   vkActualPresentTime :: Word64
-  , -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "vkEarliestPresentTime"
+  , -- | @earliestPresentTime@ is the time when the image of the @swapchain@
+  -- could have been displayed. This /may/ differ from @actualPresentTime@ if
+  -- the application requested that the image be presented no sooner than
+  -- 'VkPresentTimeGOOGLE'::@desiredPresentTime@.
   vkEarliestPresentTime :: Word64
-  , -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "vkPresentMargin"
+  , -- | @presentMargin@ is an indication of how early the @vkQueuePresentKHR@
+  -- command was processed compared to how soon it needed to be processed,
+  -- and still be presented at @earliestPresentTime@.
   vkPresentMargin :: Word64
   }
   deriving (Eq, Show)
@@ -267,9 +269,6 @@ instance Storable VkPastPresentationTimingGOOGLE where
 -- | VkPresentTimesInfoGOOGLE - The earliest time each image should be
 -- presented
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @swapchainCount@ /must/ be the same value as
@@ -286,17 +285,20 @@ instance Storable VkPastPresentationTimingGOOGLE where
 -- -   @swapchainCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPresentTimeGOOGLE', 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPresentTimesInfoGOOGLE = VkPresentTimesInfoGOOGLE
-  { -- No documentation found for Nested "VkPresentTimesInfoGOOGLE" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPresentTimesInfoGOOGLE" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPresentTimesInfoGOOGLE" "vkSwapchainCount"
+  , -- | @swapchainCount@ is the number of swapchains being presented to by this
+  -- command.
   vkSwapchainCount :: Word32
-  , -- No documentation found for Nested "VkPresentTimesInfoGOOGLE" "vkPTimes"
+  , -- | @pTimes@ is @NULL@ or a pointer to an array of @VkPresentTimeGOOGLE@
+  -- elements with @swapchainCount@ entries. If not @NULL@, each element of
+  -- @pTimes@ contains the earliest time to present the image corresponding
+  -- to the entry in the @VkPresentInfoKHR@::@pImageIndices@ array.
   vkPTimes :: Ptr VkPresentTimeGOOGLE
   }
   deriving (Eq, Show)
@@ -314,17 +316,23 @@ instance Storable VkPresentTimesInfoGOOGLE where
                 *> poke (ptr `plusPtr` 24) (vkPTimes (poked :: VkPresentTimesInfoGOOGLE))
 -- | VkPresentTimeGOOGLE - The earliest time image should be presented
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'VkPresentTimesInfoGOOGLE'
 data VkPresentTimeGOOGLE = VkPresentTimeGOOGLE
-  { -- No documentation found for Nested "VkPresentTimeGOOGLE" "vkPresentID"
+  { -- | @presentID@ is an application-provided identification value, that /can/
+  -- be used with the results of 'vkGetPastPresentationTimingGOOGLE', in
+  -- order to uniquely identify this present. In order to be useful to the
+  -- application, it /should/ be unique within some period of time that is
+  -- meaningful to the application.
   vkPresentID :: Word32
-  , -- No documentation found for Nested "VkPresentTimeGOOGLE" "vkDesiredPresentTime"
+  , -- | @desiredPresentTime@ specifies that the image given /should/ not be
+  -- displayed to the user any earlier than this time. @desiredPresentTime@
+  -- is a time in nanoseconds, relative to a monotonically-increasing clock
+  -- (e.g. @CLOCK_MONOTONIC@ (see clock_gettime(2)) on Android and Linux). A
+  -- value of zero specifies that the presentation engine /may/ display the
+  -- image at any time. This is useful when the application desires to
+  -- provide @presentID@, but doesn’t need a specific @desiredPresentTime@.
   vkDesiredPresentTime :: Word64
   }
   deriving (Eq, Show)

@@ -50,17 +50,106 @@ pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = VkStructureType 1000168001
 -- | vkGetDescriptorSetLayoutSupport - Query whether a descriptor set layout
 -- can be created
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that would create the descriptor set
+--     layout.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo'
+--     structure specifying the state of the descriptor set layout object.
+--
+-- -   @pSupport@ points to a 'VkDescriptorSetLayoutSupport' structure in
+--     which information about support for the descriptor set layout object
+--     is returned.
+--
+-- = Description
+--
+-- Some implementations have limitations on what fits in a descriptor set
+-- which are not easily expressible in terms of existing limits like
+-- @maxDescriptorSet@*, for example if all descriptor types share a limited
+-- space in memory but each descriptor is a different size or alignment.
+-- This command returns information about whether a descriptor set
+-- satisfies this limit. If the descriptor set layout satisfies the
+-- 'VkPhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,
+-- this command is guaranteed to return @VK_TRUE@ in
+-- 'VkDescriptorSetLayoutSupport'::@supported@. If the descriptor set
+-- layout exceeds the
+-- 'VkPhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,
+-- whether the descriptor set layout is supported is
+-- implementation-dependent and /may/ depend on whether the descriptor
+-- sizes and alignments cause the layout to exceed an internal limit.
+--
+-- This command does not consider other limits such as
+-- @maxPerStageDescriptor@*, and so a descriptor set layout that is
+-- supported according to this command /must/ still satisfy the pipeline
+-- layout limits such as @maxPerStageDescriptor@* in order to be used in a
+-- pipeline layout.
+--
+-- __Note__
+--
+-- This is a @VkDevice@ query rather than @VkPhysicalDevice@ because the
+-- answer /may/ depend on enabled features.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkDescriptorSetLayoutCreateInfo@ structure
+--
+-- -   @pSupport@ /must/ be a valid pointer to a
+--     @VkDescriptorSetLayoutSupport@ structure
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo',
+-- 'VkDescriptorSetLayoutSupport',
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
 foreign import ccall "vkGetDescriptorSetLayoutSupport" vkGetDescriptorSetLayoutSupport :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ()
 -- | VkPhysicalDeviceMaintenance3Properties - Structure describing descriptor
 -- set properties
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceMaintenance3Properties@ structure
+-- describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- -   @maxPerSetDescriptors@ is a maximum number of descriptors (summed
+--     over all descriptor types) in a single descriptor set that is
+--     guaranteed to satisfy any implementation-dependent constraints on
+--     the size of a descriptor set itself. Applications /can/ query
+--     whether a descriptor set that goes beyond this limit is supported
+--     using 'vkGetDescriptorSetLayoutSupport'.
+--
+-- -   @maxMemoryAllocationSize@ is the maximum size of a memory allocation
+--     that /can/ be created, even if there is more space available in the
+--     heap.
+--
+-- If the @VkPhysicalDeviceMaintenance3Properties@ structure is included in
+-- the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES@
+--
+-- = See Also
+--
+-- @VkDeviceSize@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceMaintenance3Properties = VkPhysicalDeviceMaintenance3Properties
-  { -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "vkMaxPerSetDescriptors"
+  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "maxPerSetDescriptors"
   vkMaxPerSetDescriptors :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "vkMaxMemoryAllocationSize"
+  , -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "maxMemoryAllocationSize"
   vkMaxMemoryAllocationSize :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -78,12 +167,31 @@ instance Storable VkPhysicalDeviceMaintenance3Properties where
                 *> poke (ptr `plusPtr` 24) (vkMaxMemoryAllocationSize (poked :: VkPhysicalDeviceMaintenance3Properties))
 -- | VkDescriptorSetLayoutSupport - Structure returning information about
 -- whether a descriptor set layout can be supported
+--
+-- = Description
+--
+-- @supported@ is set to @VK_TRUE@ if the descriptor set /can/ be created,
+-- or else is set to @VK_FALSE@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT@
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetVariableDescriptorCountLayoutSupportEXT'
+--
+-- = See Also
+--
+-- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType',
+-- 'vkGetDescriptorSetLayoutSupport',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupportKHR'
 data VkDescriptorSetLayoutSupport = VkDescriptorSetLayoutSupport
-  { -- No documentation found for Nested "VkDescriptorSetLayoutSupport" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDescriptorSetLayoutSupport" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDescriptorSetLayoutSupport" "vkSupported"
+  , -- | @supported@ specifies whether the descriptor set layout /can/ be
+  -- created.
   vkSupported :: VkBool32
   }
   deriving (Eq, Show)

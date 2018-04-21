@@ -29,11 +29,7 @@ import Data.Word
 
 -- | VK_HEADER_VERSION - Vulkan header file version number
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- No cross-references are available
 pattern VK_HEADER_VERSION :: Integral a => a
@@ -41,7 +37,6 @@ pattern VK_HEADER_VERSION = 73
 -- | VK_MAKE_VERSION - Construct an API version number
 --
 -- = Description
--- #_description#
 --
 -- -   @major@ is the major version number.
 --
@@ -55,7 +50,6 @@ pattern VK_HEADER_VERSION = 73
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.vkCreateInstance'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkApplicationInfo',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.vkCreateInstance'
@@ -66,11 +60,7 @@ pattern VK_MAKE_VERSION major minor patch <-
 
 -- | VK_API_VERSION_1_0 - Return API version number for Vulkan 1.0
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.vkCreateInstance',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceProperties'
@@ -79,11 +69,7 @@ pattern VK_API_VERSION_1_0 = VK_MAKE_VERSION 1 0 0
 
 -- | VK_API_VERSION_1_1 - Return API version number for Vulkan 1.1
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.vkCreateInstance',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceProperties'
@@ -92,11 +78,7 @@ pattern VK_API_VERSION_1_1 = VK_MAKE_VERSION 1 1 0
 
 -- | VK_VERSION_MAJOR - Extract API major version number
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- No cross-references are available
 _VK_VERSION_MAJOR :: Word32 -> Word32
@@ -104,11 +86,7 @@ _VK_VERSION_MAJOR v = v `shiftR` 22
 
 -- | VK_VERSION_MINOR - Extract API minor version number
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- No cross-references are available
 _VK_VERSION_MINOR :: Word32 -> Word32

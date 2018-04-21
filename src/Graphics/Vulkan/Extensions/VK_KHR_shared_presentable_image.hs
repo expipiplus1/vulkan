@@ -73,14 +73,10 @@ pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME = "VK_KHR_shared_presenta
 -- | vkGetSwapchainStatusKHR - Get a swapchain’s status
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to query.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -97,12 +93,12 @@ pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME = "VK_KHR_shared_presenta
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
 --     -   @VK_SUBOPTIMAL_KHR@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -114,7 +110,6 @@ pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME = "VK_KHR_shared_presenta
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
@@ -122,25 +117,29 @@ foreign import ccall "vkGetSwapchainStatusKHR" vkGetSwapchainStatusKHR :: ("devi
 -- | VkSharedPresentSurfaceCapabilitiesKHR - structure describing
 -- capabilities of a surface for shared presentation
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
 --     @VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageUsageFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkSharedPresentSurfaceCapabilitiesKHR = VkSharedPresentSurfaceCapabilitiesKHR
-  { -- No documentation found for Nested "VkSharedPresentSurfaceCapabilitiesKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSharedPresentSurfaceCapabilitiesKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSharedPresentSurfaceCapabilitiesKHR" "vkSharedPresentSupportedUsageFlags"
+  , -- | @sharedPresentSupportedUsageFlags@ is a bitmask of
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageUsageFlagBits'
+  -- representing the ways the application /can/ use the shared presentable
+  -- image from a swapchain created with
+  -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkPresentModeKHR' set to
+  -- @VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR@ or
+  -- @VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR@ for the surface on the
+  -- specified device. @VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT@ /must/ be
+  -- included in the set but implementations /may/ support additional usages.
   vkSharedPresentSupportedUsageFlags :: VkImageUsageFlags
   }
   deriving (Eq, Show)

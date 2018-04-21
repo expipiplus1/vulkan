@@ -74,13 +74,11 @@ import Graphics.Vulkan.Core10.Core
 -- swizzled
 --
 -- = Description
--- #_description#
 --
--- These values are described in detail in
--- <{html_spec_relative}#vertexpostproc-viewport-swizzle Viewport Swizzle>.
+-- These values are described in detail in [Viewport
+-- Swizzle](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-viewport-swizzle).
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkViewportSwizzleNV'
 newtype VkViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV Int32
@@ -150,13 +148,11 @@ pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = VkViewportCoordinateSwizz
 -- | VkPipelineViewportSwizzleStateCreateFlagsNV - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineViewportSwizzleStateCreateFlagsNV@ is a bitmask type for
 -- setting a mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineViewportSwizzleStateCreateInfoNV'
 newtype VkPipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateCreateFlagsNV VkFlags
@@ -188,9 +184,6 @@ pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME = "VK_NV_viewport_swizzle"
 -- | VkViewportSwizzleNV - Structure specifying a viewport swizzle
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @x@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
@@ -202,18 +195,21 @@ pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME = "VK_NV_viewport_swizzle"
 -- -   @w@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineViewportSwizzleStateCreateInfoNV',
 -- 'VkViewportCoordinateSwizzleNV'
 data VkViewportSwizzleNV = VkViewportSwizzleNV
-  { -- No documentation found for Nested "VkViewportSwizzleNV" "vkX"
+  { -- | @x@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
+  -- operation to apply to the x component of the primitive
   vkX :: VkViewportCoordinateSwizzleNV
-  , -- No documentation found for Nested "VkViewportSwizzleNV" "vkY"
+  , -- | @y@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
+  -- operation to apply to the y component of the primitive
   vkY :: VkViewportCoordinateSwizzleNV
-  , -- No documentation found for Nested "VkViewportSwizzleNV" "vkZ"
+  , -- | @z@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
+  -- operation to apply to the z component of the primitive
   vkZ :: VkViewportCoordinateSwizzleNV
-  , -- No documentation found for Nested "VkViewportSwizzleNV" "vkW"
+  , -- | @w@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
+  -- operation to apply to the w component of the primitive
   vkW :: VkViewportCoordinateSwizzleNV
   }
   deriving (Eq, Show)
@@ -232,9 +228,6 @@ instance Storable VkViewportSwizzleNV where
 -- | VkPipelineViewportSwizzleStateCreateInfoNV - Structure specifying
 -- swizzle applied to primitive clip coordinates
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @viewportCount@ /must/ match the @viewportCount@ set in
@@ -250,20 +243,20 @@ instance Storable VkViewportSwizzleNV where
 -- -   @viewportCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineViewportSwizzleStateCreateFlagsNV',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkViewportSwizzleNV'
 data VkPipelineViewportSwizzleStateCreateInfoNV = VkPipelineViewportSwizzleStateCreateInfoNV
-  { -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineViewportSwizzleStateCreateFlagsNV
-  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkViewportCount"
+  , -- | @viewportCount@ is the number of viewport swizzles used by the pipeline.
   vkViewportCount :: Word32
-  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "vkPViewportSwizzles"
+  , -- | @pViewportSwizzles@ is a pointer to an array of 'VkViewportSwizzleNV'
+  -- structures, defining the viewport swizzles.
   vkPViewportSwizzles :: Ptr VkViewportSwizzleNV
   }
   deriving (Eq, Show)

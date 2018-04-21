@@ -57,11 +57,7 @@ import Text.Read.Lex
 
 -- | VK_NULL_HANDLE - Reserved non-valid object handle
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- No cross-references are available
 pattern VK_NULL_HANDLE :: Ptr a
@@ -72,7 +68,6 @@ pattern VK_NULL_HANDLE <- ((== nullPtr) -> True)
 -- | VkPipelineCacheHeaderVersion - Encode pipeline cache version
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.PipelineCache.vkCreatePipelineCache',
 -- 'Graphics.Vulkan.Core10.PipelineCache.vkGetPipelineCacheData'

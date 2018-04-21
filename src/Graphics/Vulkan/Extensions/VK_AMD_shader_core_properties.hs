@@ -45,13 +45,11 @@ pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME = "VK_AMD_shader_core_prope
 -- core properties that can be supported by an implementation
 --
 -- = Members
--- #_members#
 --
 -- The members of the @VkPhysicalDeviceShaderCorePropertiesAMD@ structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
--- #_description#
 --
 -- -   @shaderEngineCount@ is an unsigned integer value indicating the
 --     number of shader engines found inside the shader core of the
@@ -112,41 +110,40 @@ pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME = "VK_AMD_shader_core_prope
 -- it is filled with the implementation-dependent limits.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceShaderCorePropertiesAMD = VkPhysicalDeviceShaderCorePropertiesAMD
-  { -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkShaderEngineCount"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "shaderEngineCount"
   vkShaderEngineCount :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkShaderArraysPerEngineCount"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "shaderArraysPerEngineCount"
   vkShaderArraysPerEngineCount :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkComputeUnitsPerShaderArray"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "computeUnitsPerShaderArray"
   vkComputeUnitsPerShaderArray :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkSimdPerComputeUnit"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "simdPerComputeUnit"
   vkSimdPerComputeUnit :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkWavefrontsPerSimd"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "wavefrontsPerSimd"
   vkWavefrontsPerSimd :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkWavefrontSize"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "wavefrontSize"
   vkWavefrontSize :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkSgprsPerSimd"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sgprsPerSimd"
   vkSgprsPerSimd :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkMinSgprAllocation"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "minSgprAllocation"
   vkMinSgprAllocation :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkMaxSgprAllocation"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "maxSgprAllocation"
   vkMaxSgprAllocation :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkSgprAllocationGranularity"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sgprAllocationGranularity"
   vkSgprAllocationGranularity :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkVgprsPerSimd"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vgprsPerSimd"
   vkVgprsPerSimd :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkMinVgprAllocation"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "minVgprAllocation"
   vkMinVgprAllocation :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkMaxVgprAllocation"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "maxVgprAllocation"
   vkMaxVgprAllocation :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vkVgprAllocationGranularity"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vgprAllocationGranularity"
   vkVgprAllocationGranularity :: Word32
   }
   deriving (Eq, Show)

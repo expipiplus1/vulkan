@@ -83,7 +83,6 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
 -- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSurfaceCounterFlagsEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_display_control.vkGetSwapchainCounterEXT'
@@ -124,7 +123,6 @@ pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = VK_STRUCTURE_TYPE_SURFACE_
 -- | vkGetPhysicalDeviceSurfaceCapabilities2EXT - Query surface capabilities
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device that will be associated with
 --     the swapchain to be created, as described for
@@ -137,7 +135,6 @@ pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = VK_STRUCTURE_TYPE_SURFACE_
 --     returned.
 --
 -- = Description
--- #_description#
 --
 -- @vkGetPhysicalDeviceSurfaceCapabilities2EXT@ behaves similarly to
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
@@ -158,10 +155,10 @@ pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = VK_STRUCTURE_TYPE_SURFACE_
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 --     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
@@ -169,7 +166,6 @@ pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = VK_STRUCTURE_TYPE_SURFACE_
 --     -   @VK_ERROR_SURFACE_LOST_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkSurfaceCapabilities2EXT',
@@ -179,7 +175,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalD
 -- surface
 --
 -- = Members
--- #_members#
 --
 -- All members of @VkSurfaceCapabilities2EXT@ are identical to the
 -- corresponding members of
@@ -187,7 +182,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalD
 -- where one exists. The remaining members are:
 --
 -- = Description
--- #_description#
 --
 -- -   @sType@ is the type of this structure.
 --
@@ -201,7 +195,8 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalD
 --
 -- -   @supportedSurfaceCounters@ /must/ not include
 --     @VK_SURFACE_COUNTER_VBLANK_EXT@ unless the surface queried is a
---     <{html_spec_relative}#wsi-display-surfaces display surface>.
+--     [display
+--     surface](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#wsi-display-surfaces).
 --
 -- == Valid Usage (Implicit)
 --
@@ -210,7 +205,6 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalD
 -- -   @pNext@ /must/ be @NULL@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkCompositeAlphaFlagsKHR',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
@@ -221,31 +215,31 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalD
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceTransformFlagsKHR',
 -- 'vkGetPhysicalDeviceSurfaceCapabilities2EXT'
 data VkSurfaceCapabilities2EXT = VkSurfaceCapabilities2EXT
-  { -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkSType"
+  { -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkPNext"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkMinImageCount"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageCount"
   vkMinImageCount :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkMaxImageCount"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "maxImageCount"
   vkMaxImageCount :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkCurrentExtent"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "currentExtent"
   vkCurrentExtent :: VkExtent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkMinImageExtent"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageExtent"
   vkMinImageExtent :: VkExtent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkMaxImageExtent"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "maxImageExtent"
   vkMaxImageExtent :: VkExtent2D
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkMaxImageArrayLayers"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "maxImageArrayLayers"
   vkMaxImageArrayLayers :: Word32
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkSupportedTransforms"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedTransforms"
   vkSupportedTransforms :: VkSurfaceTransformFlagsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkCurrentTransform"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "currentTransform"
   vkCurrentTransform :: VkSurfaceTransformFlagBitsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkSupportedCompositeAlpha"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedCompositeAlpha"
   vkSupportedCompositeAlpha :: VkCompositeAlphaFlagsKHR
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkSupportedUsageFlags"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedUsageFlags"
   vkSupportedUsageFlags :: VkImageUsageFlags
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "vkSupportedSurfaceCounters"
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedSurfaceCounters"
   vkSupportedSurfaceCounters :: VkSurfaceCounterFlagsEXT
   }
   deriving (Eq, Show)
@@ -282,13 +276,11 @@ instance Storable VkSurfaceCapabilities2EXT where
 -- | VkSurfaceCounterFlagsEXT - Bitmask of VkSurfaceCounterFlagBitsEXT
 --
 -- = Description
--- #_description#
 --
 -- @VkSurfaceCounterFlagsEXT@ is a bitmask type for setting a mask of zero
 -- or more 'VkSurfaceCounterFlagBitsEXT'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSurfaceCapabilities2EXT', 'VkSurfaceCounterFlagBitsEXT',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_display_control.VkSwapchainCounterCreateInfoEXT'

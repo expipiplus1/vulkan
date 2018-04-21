@@ -65,7 +65,6 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 -- | VkSamplerReductionModeEXT - Specify reduction mode for texture filtering
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSamplerReductionModeCreateInfoEXT'
 newtype VkSamplerReductionModeEXT = VkSamplerReductionModeEXT Int32
@@ -91,8 +90,8 @@ instance Read VkSamplerReductionModeEXT where
 
 -- | @VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT@ specifies that texel
 -- values are combined by computing a weighted average of values in the
--- footprint, using weights as specified in
--- <{html_spec_relative}#textures-unnormalized-to-integer the image operations chapter>.
+-- footprint, using weights as specified in [the image operations
+-- chapter](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-unnormalized-to-integer).
 pattern VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT :: VkSamplerReductionModeEXT
 pattern VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT = VkSamplerReductionModeEXT 0
 
@@ -126,13 +125,11 @@ pattern VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME = "VK_EXT_sampler_filter_min
 -- sampler filter minmax limits that can be supported by an implementation
 --
 -- = Members
--- #_members#
 --
 -- The members of the @VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT@
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
--- #_description#
 --
 -- -   @filterMinmaxSingleComponentFormats@ is a boolean value indicating
 --     whether a minimum set of required formats support min\/max
@@ -196,17 +193,16 @@ pattern VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME = "VK_EXT_sampler_filter_min
 --     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT = VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "vkFilterMinmaxSingleComponentFormats"
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "filterMinmaxSingleComponentFormats"
   vkFilterMinmaxSingleComponentFormats :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "vkFilterMinmaxImageComponentMapping"
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "filterMinmaxImageComponentMapping"
   vkFilterMinmaxImageComponentMapping :: VkBool32
   }
   deriving (Eq, Show)
@@ -226,7 +222,6 @@ instance Storable VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
 -- reduction mode
 --
 -- = Description
--- #_description#
 --
 -- If this structure is not present, @reductionMode@ is considered to be
 -- @VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT@.
@@ -239,16 +234,16 @@ instance Storable VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
 -- -   @reductionMode@ /must/ be a valid 'VkSamplerReductionModeEXT' value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSamplerReductionModeEXT',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkSamplerReductionModeCreateInfoEXT = VkSamplerReductionModeCreateInfoEXT
-  { -- No documentation found for Nested "VkSamplerReductionModeCreateInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSamplerReductionModeCreateInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSamplerReductionModeCreateInfoEXT" "vkReductionMode"
+  , -- | @reductionMode@ is an enum of type 'VkSamplerReductionModeEXT' that
+  -- controls how texture filtering combines texel values.
   vkReductionMode :: VkSamplerReductionModeEXT
   }
   deriving (Eq, Show)

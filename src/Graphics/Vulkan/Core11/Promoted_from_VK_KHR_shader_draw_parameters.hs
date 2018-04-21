@@ -32,7 +32,6 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = VkStr
 -- implementation
 --
 -- = Description
--- #_description#
 --
 -- If the @VkPhysicalDeviceShaderDrawParameterFeatures@ structure is
 -- included in the @pNext@ chain of
@@ -45,15 +44,15 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = VkStr
 --     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES@
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceShaderDrawParameterFeatures = VkPhysicalDeviceShaderDrawParameterFeatures
-  { -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParameterFeatures" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParameterFeatures" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParameterFeatures" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParameterFeatures" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParameterFeatures" "vkShaderDrawParameters"
+  , -- | @shaderDrawParameters@ specifies whether shader draw parameters are
+  -- supported.
   vkShaderDrawParameters :: VkBool32
   }
   deriving (Eq, Show)

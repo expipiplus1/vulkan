@@ -72,7 +72,13 @@ import Graphics.Vulkan.Core10.Queue
   )
 
 
--- No documentation found for Nested "VkDynamicState" "VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"
+-- | @VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT@ specifies that the
+-- @sampleLocationsInfo@ state in
+-- 'VkPipelineSampleLocationsStateCreateInfoEXT' will be ignored and /must/
+-- be set dynamically with 'vkCmdSetSampleLocationsEXT' before any draw or
+-- clear commands. Enabling custom sample locations is still indicated by
+-- the @sampleLocationsEnable@ member of
+-- @VkPipelineSampleLocationsStateCreateInfoEXT@.
 pattern VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT :: VkDynamicState
 pattern VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT = VkDynamicState 1000143000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT"
@@ -102,15 +108,11 @@ pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME = "VK_EXT_sample_locations"
 -- | vkCmdSetSampleLocationsEXT - Set the dynamic sample locations state
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer into which the command will be
 --     recorded.
 --
 -- -   @pSampleLocationsInfo@ is the sample locations state to set.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -138,8 +140,8 @@ pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME = "VK_EXT_sample_locations"
 -- -   @pSampleLocationsInfo@ /must/ be a valid pointer to a valid
 --     @VkSampleLocationsInfoEXT@ structure
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics operations
@@ -153,18 +155,17 @@ pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME = "VK_EXT_sample_locations"
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
+-- | Secondary                                                                                                   |                                                                                                            |                                                                                                       |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkSampleLocationsInfoEXT'
@@ -173,7 +174,6 @@ foreign import ccall "vkCmdSetSampleLocationsEXT" vkCmdSetSampleLocationsEXT :: 
 -- specific multisampling capabilities of a physical device
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @physicalDevice@ is the physical device from which to query the
 --     additional multisampling capabilities.
@@ -184,9 +184,6 @@ foreign import ccall "vkCmdSetSampleLocationsEXT" vkCmdSetSampleLocationsEXT :: 
 --     'VkMultisamplePropertiesEXT', in which information about the
 --     additional multisampling capabilities specific to the sample count
 --     is returned.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -200,7 +197,6 @@ foreign import ccall "vkCmdSetSampleLocationsEXT" vkCmdSetSampleLocationsEXT :: 
 --     @VkMultisamplePropertiesEXT@ structure
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkMultisamplePropertiesEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
@@ -210,7 +206,6 @@ foreign import ccall "vkGetPhysicalDeviceMultisamplePropertiesEXT" vkGetPhysical
 -- location
 --
 -- = Description
--- #_description#
 --
 -- The domain space of the sample location coordinates has an upper-left
 -- origin within the pixel in framebuffer space.
@@ -224,13 +219,12 @@ foreign import ccall "vkGetPhysicalDeviceMultisamplePropertiesEXT" vkGetPhysical
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2'.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkSampleLocationsInfoEXT'
 data VkSampleLocationEXT = VkSampleLocationEXT
-  { -- No documentation found for Nested "VkSampleLocationEXT" "vkX"
+  { -- | @x@ is the horizontal coordinate of the sample’s location.
   vkX :: CFloat
-  , -- No documentation found for Nested "VkSampleLocationEXT" "vkY"
+  , -- | @y@ is the vertical coordinate of the sample’s location.
   vkY :: CFloat
   }
   deriving (Eq, Show)
@@ -246,7 +240,6 @@ instance Storable VkSampleLocationEXT where
 -- locations
 --
 -- = Description
--- #_description#
 --
 -- This structure /can/ be used either to specify the sample locations to
 -- be used for rendering or to specify the set of sample locations an image
@@ -283,7 +276,6 @@ instance Storable VkSampleLocationEXT where
 -- -   @sampleLocationsCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAttachmentSampleLocationsEXT',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
@@ -292,17 +284,22 @@ instance Storable VkSampleLocationEXT where
 -- 'VkSampleLocationEXT', 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkSubpassSampleLocationsEXT', 'vkCmdSetSampleLocationsEXT'
 data VkSampleLocationsInfoEXT = VkSampleLocationsInfoEXT
-  { -- No documentation found for Nested "VkSampleLocationsInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSampleLocationsInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSampleLocationsInfoEXT" "vkSampleLocationsPerPixel"
+  , -- | @sampleLocationsPerPixel@ is a
+  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlagBits'
+  -- specifying the number of sample locations per pixel.
   vkSampleLocationsPerPixel :: VkSampleCountFlagBits
-  , -- No documentation found for Nested "VkSampleLocationsInfoEXT" "vkSampleLocationGridSize"
+  , -- | @sampleLocationGridSize@ is the size of the sample location grid to
+  -- select custom sample locations for.
   vkSampleLocationGridSize :: VkExtent2D
-  , -- No documentation found for Nested "VkSampleLocationsInfoEXT" "vkSampleLocationsCount"
+  , -- | @sampleLocationsCount@ is the number of sample locations in
+  -- @pSampleLocations@.
   vkSampleLocationsCount :: Word32
-  , -- No documentation found for Nested "VkSampleLocationsInfoEXT" "vkPSampleLocations"
+  , -- | @pSampleLocations@ is an array of @sampleLocationsCount@
+  -- 'VkSampleLocationEXT' structures.
   vkPSampleLocations :: Ptr VkSampleLocationEXT
   }
   deriving (Eq, Show)
@@ -326,7 +323,6 @@ instance Storable VkSampleLocationsInfoEXT where
 -- locations state to use in the initial layout transition of attachments
 --
 -- = Description
--- #_description#
 --
 -- If the image referenced by the framebuffer attachment at index
 -- @attachmentIndex@ was not created with
@@ -347,13 +343,16 @@ instance Storable VkSampleLocationsInfoEXT where
 --     structure
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkRenderPassSampleLocationsBeginInfoEXT', 'VkSampleLocationsInfoEXT'
 data VkAttachmentSampleLocationsEXT = VkAttachmentSampleLocationsEXT
-  { -- No documentation found for Nested "VkAttachmentSampleLocationsEXT" "vkAttachmentIndex"
+  { -- | @attachmentIndex@ is the index of the attachment for which the sample
+  -- locations state is provided.
   vkAttachmentIndex :: Word32
-  , -- No documentation found for Nested "VkAttachmentSampleLocationsEXT" "vkSampleLocationsInfo"
+  , -- | @sampleLocationsInfo@ is the sample locations state to use for the
+  -- layout transition of the given attachment from the initial layout of the
+  -- attachment to the image layout specified for the attachment in the first
+  -- subpass using it.
   vkSampleLocationsInfo :: VkSampleLocationsInfoEXT
   }
   deriving (Eq, Show)
@@ -370,7 +369,6 @@ instance Storable VkAttachmentSampleLocationsEXT where
 -- given subpass
 --
 -- = Description
--- #_description#
 --
 -- If the image referenced by the depth\/stencil attachment used in the
 -- subpass identified by @subpassIndex@ was not created with
@@ -394,13 +392,16 @@ instance Storable VkAttachmentSampleLocationsEXT where
 --     structure
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkRenderPassSampleLocationsBeginInfoEXT', 'VkSampleLocationsInfoEXT'
 data VkSubpassSampleLocationsEXT = VkSubpassSampleLocationsEXT
-  { -- No documentation found for Nested "VkSubpassSampleLocationsEXT" "vkSubpassIndex"
+  { -- | @subpassIndex@ is the index of the subpass for which the sample
+  -- locations state is provided.
   vkSubpassIndex :: Word32
-  , -- No documentation found for Nested "VkSubpassSampleLocationsEXT" "vkSampleLocationsInfo"
+  , -- | @sampleLocationsInfo@ is the sample locations state to use for the
+  -- layout transition of the depth\/stencil attachment away from the image
+  -- layout the attachment is used with in the subpass specified in
+  -- @subpassIndex@.
   vkSampleLocationsInfo :: VkSampleLocationsInfoEXT
   }
   deriving (Eq, Show)
@@ -415,9 +416,6 @@ instance Storable VkSubpassSampleLocationsEXT where
 -- | VkRenderPassSampleLocationsBeginInfoEXT - Structure specifying sample
 -- locations to use for the layout transition of custom sample locations
 -- compatible depth\/stencil attachments
---
--- = Description
--- #_description#
 --
 -- == Valid Usage (Implicit)
 --
@@ -435,23 +433,47 @@ instance Storable VkSubpassSampleLocationsEXT where
 --     @VkSubpassSampleLocationsEXT@ structures
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAttachmentSampleLocationsEXT',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'VkSubpassSampleLocationsEXT'
 data VkRenderPassSampleLocationsBeginInfoEXT = VkRenderPassSampleLocationsBeginInfoEXT
-  { -- No documentation found for Nested "VkRenderPassSampleLocationsBeginInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkRenderPassSampleLocationsBeginInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkRenderPassSampleLocationsBeginInfoEXT" "vkAttachmentInitialSampleLocationsCount"
+  , -- | @attachmentInitialSampleLocationsCount@ is the number of elements in the
+  -- @pAttachmentInitialSampleLocations@ array.
   vkAttachmentInitialSampleLocationsCount :: Word32
-  , -- No documentation found for Nested "VkRenderPassSampleLocationsBeginInfoEXT" "vkPAttachmentInitialSampleLocations"
+  , -- | @pAttachmentInitialSampleLocations@ is an array of
+  -- @attachmentInitialSampleLocationsCount@ 'VkAttachmentSampleLocationsEXT'
+  -- structures specifying the attachment indices and their corresponding
+  -- sample location state. Each element of
+  -- @pAttachmentInitialSampleLocations@ /can/ specify the sample location
+  -- state to use in the automatic layout transition performed to transition
+  -- a depth\/stencil attachment from the initial layout of the attachment to
+  -- the image layout specified for the attachment in the first subpass using
+  -- it.
   vkPAttachmentInitialSampleLocations :: Ptr VkAttachmentSampleLocationsEXT
-  , -- No documentation found for Nested "VkRenderPassSampleLocationsBeginInfoEXT" "vkPostSubpassSampleLocationsCount"
+  , -- | @postSubpassSampleLocationsCount@ is the number of elements in the
+  -- @pPostSubpassSampleLocations@ array.
   vkPostSubpassSampleLocationsCount :: Word32
-  , -- No documentation found for Nested "VkRenderPassSampleLocationsBeginInfoEXT" "vkPPostSubpassSampleLocations"
+  , -- | @pPostSubpassSampleLocations@ is an array of
+  -- @postSubpassSampleLocationsCount@ 'VkSubpassSampleLocationsEXT'
+  -- structures specifying the subpass indices and their corresponding sample
+  -- location state. Each element of @pPostSubpassSampleLocations@ /can/
+  -- specify the sample location state to use in the automatic layout
+  -- transition performed to transition the depth\/stencil attachment used by
+  -- the specified subpass to the image layout specified in a dependent
+  -- subpass or to the final layout of the attachment in case the specified
+  -- subpass is the last subpass using that attachment. In addition, if
+  -- 'VkPhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
+  -- is @VK_FALSE@, each element of @pPostSubpassSampleLocations@ /must/
+  -- specify the sample location state that matches the sample locations used
+  -- by all pipelines that will be bound to a command buffer during the
+  -- specified subpass. If @variableSampleLocations@ is @VK_TRUE@, the sample
+  -- locations used for rasterization do not depend on
+  -- @pPostSubpassSampleLocations@.
   vkPPostSubpassSampleLocations :: Ptr VkSubpassSampleLocationsEXT
   }
   deriving (Eq, Show)
@@ -474,9 +496,6 @@ instance Storable VkRenderPassSampleLocationsBeginInfoEXT where
 -- | VkPipelineSampleLocationsStateCreateInfoEXT - Structure specifying
 -- sample locations for a pipeline
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
@@ -486,18 +505,22 @@ instance Storable VkRenderPassSampleLocationsBeginInfoEXT where
 --     structure
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'VkSampleLocationsInfoEXT',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineSampleLocationsStateCreateInfoEXT = VkPipelineSampleLocationsStateCreateInfoEXT
-  { -- No documentation found for Nested "VkPipelineSampleLocationsStateCreateInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineSampleLocationsStateCreateInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineSampleLocationsStateCreateInfoEXT" "vkSampleLocationsEnable"
+  , -- | @sampleLocationsEnable@ controls whether custom sample locations are
+  -- used. If @sampleLocationsEnable@ is @VK_FALSE@, the default sample
+  -- locations are used and the values specified in @sampleLocationsInfo@ are
+  -- ignored.
   vkSampleLocationsEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineSampleLocationsStateCreateInfoEXT" "vkSampleLocationsInfo"
+  , -- | @sampleLocationsInfo@ is the sample locations to use during
+  -- rasterization if @sampleLocationsEnable@ is @VK_TRUE@ and the graphics
+  -- pipeline isn’t created with @VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT@.
   vkSampleLocationsInfo :: VkSampleLocationsInfoEXT
   }
   deriving (Eq, Show)
@@ -517,13 +540,11 @@ instance Storable VkPipelineSampleLocationsStateCreateInfoEXT where
 -- sample location limits that can be supported by an implementation
 --
 -- = Members
--- #_members#
 --
 -- The members of the @VkPhysicalDeviceSampleLocationsPropertiesEXT@
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
--- #_description#
 --
 -- -   @sampleLocationSampleCounts@ is a bitmask of
 --     'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlagBits'
@@ -557,25 +578,24 @@ instance Storable VkPipelineSampleLocationsStateCreateInfoEXT where
 -- it is filled with the implementation-dependent limits.
 --
 -- = See Also
--- #_see_also#
 --
 -- @VkBool32@, 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlags',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceSampleLocationsPropertiesEXT = VkPhysicalDeviceSampleLocationsPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "vkSampleLocationSampleCounts"
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "sampleLocationSampleCounts"
   vkSampleLocationSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "vkMaxSampleLocationGridSize"
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "maxSampleLocationGridSize"
   vkMaxSampleLocationGridSize :: VkExtent2D
-  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "vkSampleLocationCoordinateRange"
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "sampleLocationCoordinateRange"
   vkSampleLocationCoordinateRange :: Vector 2 CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "vkSampleLocationSubPixelBits"
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "sampleLocationSubPixelBits"
   vkSampleLocationSubPixelBits :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "vkVariableSampleLocations"
+  , -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "variableSampleLocations"
   vkVariableSampleLocations :: VkBool32
   }
   deriving (Eq, Show)
@@ -600,9 +620,6 @@ instance Storable VkPhysicalDeviceSampleLocationsPropertiesEXT where
 -- | VkMultisamplePropertiesEXT - Structure returning information about
 -- sample count specific additional multisampling capabilities
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT@
@@ -610,17 +627,17 @@ instance Storable VkPhysicalDeviceSampleLocationsPropertiesEXT where
 -- -   @pNext@ /must/ be @NULL@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkGetPhysicalDeviceMultisamplePropertiesEXT'
 data VkMultisamplePropertiesEXT = VkMultisamplePropertiesEXT
-  { -- No documentation found for Nested "VkMultisamplePropertiesEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkMultisamplePropertiesEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkMultisamplePropertiesEXT" "vkMaxSampleLocationGridSize"
+  , -- | @maxSampleLocationGridSize@ is the maximum size of the pixel grid in
+  -- which sample locations /can/ vary.
   vkMaxSampleLocationGridSize :: VkExtent2D
   }
   deriving (Eq, Show)

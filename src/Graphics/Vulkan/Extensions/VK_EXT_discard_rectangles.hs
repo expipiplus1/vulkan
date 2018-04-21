@@ -82,7 +82,6 @@ import Graphics.Vulkan.Core10.Queue
 -- | VkDiscardRectangleModeEXT - Specify the discard rectangle mode
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineDiscardRectangleStateCreateInfoEXT'
 newtype VkDiscardRectangleModeEXT = VkDiscardRectangleModeEXT Int32
@@ -118,13 +117,11 @@ pattern VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = VkDiscardRectangleModeEXT 1
 -- | VkPipelineDiscardRectangleStateCreateFlagsEXT - Reserved for future use
 --
 -- = Description
--- #_description#
 --
 -- @VkPipelineDiscardRectangleStateCreateFlagsEXT@ is a bitmask type for
 -- setting a mask, but is currently reserved for future use.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPipelineDiscardRectangleStateCreateInfoEXT'
 newtype VkPipelineDiscardRectangleStateCreateFlagsEXT = VkPipelineDiscardRectangleStateCreateFlagsEXT VkFlags
@@ -163,7 +160,6 @@ pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME = "VK_EXT_discard_rectangles"
 -- | vkCmdSetDiscardRectangleEXT - Set discard rectangles dynamically
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @commandBuffer@ is the command buffer into which the command will be
 --     recorded.
@@ -179,7 +175,6 @@ pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME = "VK_EXT_discard_rectangles"
 --     discard rectangles.
 --
 -- = Description
--- #_description#
 --
 -- The discard rectangle taken from element i of @pDiscardRectangles@
 -- replace the current state for the discard rectangle index
@@ -215,8 +210,8 @@ pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME = "VK_EXT_discard_rectangles"
 -- -   @pDiscardRectangles@ /must/ be a valid pointer to an array of
 --     @discardRectangleCount@ @VkRect2D@ structures
 --
--- -   @commandBuffer@ /must/ be in the
---     <#commandbuffers-lifecycle recording state>
+-- -   @commandBuffer@ /must/ be in the [recording
+--     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
 --
 -- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
 --     support graphics operations
@@ -232,18 +227,17 @@ pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME = "VK_EXT_discard_rectangles"
 --
 -- == Command Properties
 --
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <#VkCommandBuff | <#vkCmdBeginRen | <#VkQueueFlagBi | <#synchronizati |
--- > | erLevel Command | derPass Render  | ts Supported Qu | on-pipeline-sta |
--- > |  Buffer Levels> | Pass Scope>     | eue Types>      | ges-types Pipel |
--- > |                 |                 |                 | ine Type>       |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- \'
+--
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
+-- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
+-- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
+-- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
+-- | Secondary                                                                                                   |                                                                                                            |                                                                                                       |                                                                                                                            |
+-- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkRect2D'
@@ -252,13 +246,11 @@ foreign import ccall "vkCmdSetDiscardRectangleEXT" vkCmdSetDiscardRectangleEXT :
 -- discard rectangle limits that can be supported by an implementation
 --
 -- = Members
--- #_members#
 --
 -- The members of the @VkPhysicalDeviceDiscardRectanglePropertiesEXT@
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
--- #_description#
 --
 -- -   @maxDiscardRectangles@ is the maximum number of discard rectangles
 --     that /can/ be specified.
@@ -274,15 +266,14 @@ foreign import ccall "vkCmdSetDiscardRectangleEXT" vkCmdSetDiscardRectangleEXT :
 -- it is filled with the implementation-dependent limits.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPhysicalDeviceDiscardRectanglePropertiesEXT = VkPhysicalDeviceDiscardRectanglePropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "vkSType"
+  { -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "vkPNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "vkMaxDiscardRectangles"
+  , -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "maxDiscardRectangles"
   vkMaxDiscardRectangles :: Word32
   }
   deriving (Eq, Show)
@@ -298,9 +289,6 @@ instance Storable VkPhysicalDeviceDiscardRectanglePropertiesEXT where
                 *> poke (ptr `plusPtr` 16) (vkMaxDiscardRectangles (poked :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
 -- | VkPipelineDiscardRectangleStateCreateInfoEXT - Structure specifying
 -- discard rectangle
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -319,24 +307,28 @@ instance Storable VkPhysicalDeviceDiscardRectanglePropertiesEXT where
 --     value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkDiscardRectangleModeEXT',
 -- 'VkPipelineDiscardRectangleStateCreateFlagsEXT',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkRect2D',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPipelineDiscardRectangleStateCreateInfoEXT = VkPipelineDiscardRectangleStateCreateInfoEXT
-  { -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "vkFlags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineDiscardRectangleStateCreateFlagsEXT
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "vkDiscardRectangleMode"
+  , -- | @discardRectangleMode@ is the mode used to determine whether fragments
+  -- that lie within the discard rectangle are discarded or not.
   vkDiscardRectangleMode :: VkDiscardRectangleModeEXT
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "vkDiscardRectangleCount"
+  , -- | @discardRectangleCount@ is the number of discard rectangles used by the
+  -- pipeline.
   vkDiscardRectangleCount :: Word32
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "vkPDiscardRectangles"
+  , -- | @pDiscardRectangles@ is a pointer to an array of
+  -- 'Graphics.Vulkan.Core10.Pipeline.VkRect2D' structures, defining the
+  -- discard rectangles. If the discard rectangle state is dynamic, this
+  -- member is ignored.
   vkPDiscardRectangles :: Ptr VkRect2D
   }
   deriving (Eq, Show)

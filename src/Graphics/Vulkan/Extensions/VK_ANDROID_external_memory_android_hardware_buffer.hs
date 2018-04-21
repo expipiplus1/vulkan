@@ -106,16 +106,12 @@ pattern VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME = "VK_
 -- Memory Android Hardware Buffers
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that will be importing @buffer@.
 --
 -- -   @buffer@ is the Android hardware buffer which will be imported.
 --
 -- -   @pProperties@ will return properties of @buffer@.
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -134,14 +130,13 @@ pattern VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME = "VK_
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkAndroidHardwareBufferPropertiesANDROID',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
@@ -150,7 +145,6 @@ foreign import ccall "vkGetAndroidHardwareBufferPropertiesANDROID" vkGetAndroidH
 -- for a memory object
 --
 -- = Parameters
--- #_parameters#
 --
 -- -   @device@ is the logical device that created the device memory being
 --     exported.
@@ -163,7 +157,6 @@ foreign import ccall "vkGetAndroidHardwareBufferPropertiesANDROID" vkGetAndroidH
 --     underlying resources of the device memory object.
 --
 -- = Description
--- #_description#
 --
 -- Each call to @vkGetMemoryAndroidHardwareBufferANDROID@ /must/ return an
 -- Android hardware buffer with a new reference acquired in addition to the
@@ -189,16 +182,15 @@ foreign import ccall "vkGetAndroidHardwareBufferPropertiesANDROID" vkGetAndroidH
 --
 -- == Return Codes
 --
--- [<#fundamentals-successcodes Success>]
+-- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
 --     -   @VK_SUCCESS@
 --
--- [<#fundamentals-errorcodes Failure>]
+-- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
 --     -   @VK_ERROR_TOO_MANY_OBJECTS@
 --
 --     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkMemoryGetAndroidHardwareBufferInfoANDROID'
@@ -207,7 +199,6 @@ foreign import ccall "vkGetMemoryAndroidHardwareBufferANDROID" vkGetMemoryAndroi
 -- hardware buffer
 --
 -- = Description
--- #_description#
 --
 -- If the @vkAllocateMemory@ command succeeds, the implementation /must/
 -- acquire a reference to the imported hardware buffer, which it /must/
@@ -235,15 +226,14 @@ foreign import ccall "vkGetMemoryAndroidHardwareBufferANDROID" vkGetMemoryAndroi
 -- -   @buffer@ /must/ be a valid pointer to a @AHardwareBuffer@ value
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkImportAndroidHardwareBufferInfoANDROID = VkImportAndroidHardwareBufferInfoANDROID
-  { -- No documentation found for Nested "VkImportAndroidHardwareBufferInfoANDROID" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImportAndroidHardwareBufferInfoANDROID" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImportAndroidHardwareBufferInfoANDROID" "vkBuffer"
+  , -- | @buffer@ is the Android hardware buffer to import.
   vkBuffer :: Ptr AHardwareBuffer
   }
   deriving (Eq, Show)
@@ -261,11 +251,10 @@ instance Storable VkImportAndroidHardwareBufferInfoANDROID where
 -- buffer usage flags
 --
 -- = Description
--- #_description#
 --
 -- The @androidHardwareBufferUsage@ field /must/ include Android hardware
--- buffer usage flags listed in the
--- <{html_spec_relative}#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>
+-- buffer usage flags listed in the [AHardwareBuffer Usage
+-- Equivalence](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage)
 -- table when the corresponding Vulkan image usage or image creation flags
 -- are included in the @usage@ or @flags@ fields of
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'.
@@ -291,15 +280,15 @@ instance Storable VkImportAndroidHardwareBufferInfoANDROID where
 --     @VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkAndroidHardwareBufferUsageANDROID = VkAndroidHardwareBufferUsageANDROID
-  { -- No documentation found for Nested "VkAndroidHardwareBufferUsageANDROID" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkAndroidHardwareBufferUsageANDROID" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkAndroidHardwareBufferUsageANDROID" "vkAndroidHardwareBufferUsage"
+  , -- | @androidHardwareBufferUsage@ returns the the Android hardware buffer
+  -- usage flags.
   vkAndroidHardwareBufferUsage :: Word64
   }
   deriving (Eq, Show)
@@ -316,22 +305,19 @@ instance Storable VkAndroidHardwareBufferUsageANDROID where
 -- | VkAndroidHardwareBufferPropertiesANDROID - Properties of External Memory
 -- Android Hardware Buffers
 --
--- = Description
--- #_description#
---
 -- = See Also
--- #_see_also#
 --
 -- @VkDeviceSize@, 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkGetAndroidHardwareBufferPropertiesANDROID'
 data VkAndroidHardwareBufferPropertiesANDROID = VkAndroidHardwareBufferPropertiesANDROID
-  { -- No documentation found for Nested "VkAndroidHardwareBufferPropertiesANDROID" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkAndroidHardwareBufferPropertiesANDROID" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkAndroidHardwareBufferPropertiesANDROID" "vkAllocationSize"
+  , -- | @allocationSize@ is the size of the external memory
   vkAllocationSize :: VkDeviceSize
-  , -- No documentation found for Nested "VkAndroidHardwareBufferPropertiesANDROID" "vkMemoryTypeBits"
+  , -- | @memoryTypeBits@ is a bitmask containing one bit set for every memory
+  -- type which the specified Android hardware buffer /can/ be imported as.
   vkMemoryTypeBits :: Word32
   }
   deriving (Eq, Show)
@@ -350,9 +336,6 @@ instance Storable VkAndroidHardwareBufferPropertiesANDROID where
 -- | VkMemoryGetAndroidHardwareBufferInfoANDROID - Structure describing an
 -- Android hardware buffer memory export operation
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID@
@@ -366,17 +349,17 @@ instance Storable VkAndroidHardwareBufferPropertiesANDROID where
 --     @memory@.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType',
 -- 'vkGetMemoryAndroidHardwareBufferANDROID'
 data VkMemoryGetAndroidHardwareBufferInfoANDROID = VkMemoryGetAndroidHardwareBufferInfoANDROID
-  { -- No documentation found for Nested "VkMemoryGetAndroidHardwareBufferInfoANDROID" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkMemoryGetAndroidHardwareBufferInfoANDROID" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkMemoryGetAndroidHardwareBufferInfoANDROID" "vkMemory"
+  , -- | @memory@ is the memory object from which the Android hardware buffer
+  -- will be exported.
   vkMemory :: VkDeviceMemory
   }
   deriving (Eq, Show)
@@ -394,10 +377,10 @@ instance Storable VkMemoryGetAndroidHardwareBufferInfoANDROID where
 -- the image format properties of an Android hardware buffer
 --
 -- = Description
--- #_description#
 --
 -- If the Android hardware buffer has one of the formats listed in the
--- <{html_spec_relative}#memory-external-android-hardware-buffer-formats Format Equivalence table>,
+-- [Format Equivalence
+-- table](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-external-android-hardware-buffer-formats),
 -- then @format@ /must/ have the equivalent Vulkan format listed in the
 -- table. Otherwise, @format@ /may/ be @VK_FORMAT_UNDEFINED@, indicating
 -- the Android hardware buffer can only be used with an external format.
@@ -454,7 +437,6 @@ instance Storable VkMemoryGetAndroidHardwareBufferInfoANDROID where
 --     @VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkChromaLocation',
 -- 'Graphics.Vulkan.Core10.ImageView.VkComponentMapping',
@@ -464,25 +446,35 @@ instance Storable VkMemoryGetAndroidHardwareBufferInfoANDROID where
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrRange',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkAndroidHardwareBufferFormatPropertiesANDROID = VkAndroidHardwareBufferFormatPropertiesANDROID
-  { -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkFormat"
+  , -- | @format@ is the Vulkan format corresponding to the Android hardware
+  -- buffer’s format, or @VK_FORMAT_UNDEFINED@ if there isn’t an equivalent
+  -- Vulkan format.
   vkFormat :: VkFormat
-  , -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkExternalFormat"
+  , -- | @externalFormat@ is an implementation-defined external format identifier
+  -- for use with 'VkExternalFormatANDROID'. It /must/ not be zero.
   vkExternalFormat :: Word64
-  , -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkFormatFeatures"
+  , -- | @formatFeatures@ describes the capabilities of this external format when
+  -- used with an image bound to memory imported from @buffer@.
   vkFormatFeatures :: VkFormatFeatureFlags
-  , -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkSamplerYcbcrConversionComponents"
+  , -- | @samplerYcbcrConversionComponents@ is the component swizzle that
+  -- /should/ be used in
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'.
   vkSamplerYcbcrConversionComponents :: VkComponentMapping
-  , -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkSuggestedYcbcrModel"
+  , -- | @suggestedYcbcrModel@ is a suggested color model to use in the
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'.
   vkSuggestedYcbcrModel :: VkSamplerYcbcrModelConversion
-  , -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkSuggestedYcbcrRange"
+  , -- | @suggestedYcbcrRange@ is a suggested numerical value range to use in
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'.
   vkSuggestedYcbcrRange :: VkSamplerYcbcrRange
-  , -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkSuggestedXChromaOffset"
+  , -- | @suggestedXChromaOffset@ is a suggested X chroma offset to use in
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'.
   vkSuggestedXChromaOffset :: VkChromaLocation
-  , -- No documentation found for Nested "VkAndroidHardwareBufferFormatPropertiesANDROID" "vkSuggestedYChromaOffset"
+  , -- | @suggestedYChromaOffset@ is a suggested Y chroma offset to use in
+  -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'.
   vkSuggestedYChromaOffset :: VkChromaLocation
   }
   deriving (Eq, Show)
@@ -514,7 +506,6 @@ instance Storable VkAndroidHardwareBufferFormatPropertiesANDROID where
 -- buffer external format
 --
 -- = Description
--- #_description#
 --
 -- If @externalFormat@ is zero, the effect is as if the
 -- @VkExternalFormatANDROID@ structure was not present. Otherwise, the
@@ -533,15 +524,15 @@ instance Storable VkAndroidHardwareBufferFormatPropertiesANDROID where
 -- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkExternalFormatANDROID = VkExternalFormatANDROID
-  { -- No documentation found for Nested "VkExternalFormatANDROID" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExternalFormatANDROID" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExternalFormatANDROID" "vkExternalFormat"
+  , -- | @externalFormat@ is an implementation-defined identifier for the
+  -- external format
   vkExternalFormat :: Word64
   }
   deriving (Eq, Show)

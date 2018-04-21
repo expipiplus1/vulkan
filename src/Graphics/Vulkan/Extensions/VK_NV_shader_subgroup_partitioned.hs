@@ -19,7 +19,9 @@ import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_subgroup
   )
 
 
--- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV"
+-- | @VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV@ specifies the device will
+-- accept SPIR-V shader modules that contain the
+-- @GroupNonUniformPartitionedNV@ capability.
 pattern VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV = VkSubgroupFeatureFlagBits 0x00000100
 -- No documentation found for TopLevel "VK_NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION"

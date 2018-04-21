@@ -46,7 +46,6 @@ pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME = "VK_KHR_image_format_list"
 -- with a particular set of formats
 --
 -- = Description
--- #_description#
 --
 -- If @viewFormatCount@ is zero, @pViewFormats@ is ignored and the image is
 -- created as if the @VkImageFormatListCreateInfoKHR@ structure were not
@@ -58,7 +57,8 @@ pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME = "VK_KHR_image_format_list"
 -- -   If @viewFormatCount@ is not @0@, all of the formats in the
 --     @pViewFormats@ array /must/ be compatible with the format specified
 --     in the @format@ field of @VkImageCreateInfo@, as described in the
---     <{html_spec_relative}#resources-image-views-compatibility compatibility table>.
+--     [compatibility
+--     table](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views-compatibility).
 --
 -- -   If @VkImageCreateInfo@::@flags@ does not contain
 --     @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@, @viewFormatCount@ /must/ be
@@ -77,18 +77,18 @@ pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME = "VK_KHR_image_format_list"
 --     'Graphics.Vulkan.Core10.Core.VkFormat' values
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Core.VkFormat',
 -- 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkImageFormatListCreateInfoKHR = VkImageFormatListCreateInfoKHR
-  { -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "vkViewFormatCount"
+  , -- | @viewFormatCount@ is the number of entries in the @pViewFormats@ array.
   vkViewFormatCount :: Word32
-  , -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "vkPViewFormats"
+  , -- | @pViewFormats@ is an array which lists of all formats which /can/ be
+  -- used when creating views of this image.
   vkPViewFormats :: Ptr VkFormat
   }
   deriving (Eq, Show)

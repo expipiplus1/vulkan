@@ -50,9 +50,6 @@ pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME = "VK_KHR_incremental_present"
 -- | VkPresentRegionsKHR - Structure hint of rectangular regions changed by
 -- vkQueuePresentKHR
 --
--- = Description
--- #_description#
---
 -- == Valid Usage
 --
 -- -   @swapchainCount@ /must/ be the same value as
@@ -69,17 +66,21 @@ pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME = "VK_KHR_incremental_present"
 -- -   @swapchainCount@ /must/ be greater than @0@
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPresentRegionKHR', 'Graphics.Vulkan.Core10.Core.VkStructureType'
 data VkPresentRegionsKHR = VkPresentRegionsKHR
-  { -- No documentation found for Nested "VkPresentRegionsKHR" "vkSType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPresentRegionsKHR" "vkPNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPresentRegionsKHR" "vkSwapchainCount"
+  , -- | @swapchainCount@ is the number of swapchains being presented to by this
+  -- command.
   vkSwapchainCount :: Word32
-  , -- No documentation found for Nested "VkPresentRegionsKHR" "vkPRegions"
+  , -- | @pRegions@ is @NULL@ or a pointer to an array of @VkPresentRegionKHR@
+  -- elements with @swapchainCount@ entries. If not @NULL@, each element of
+  -- @pRegions@ contains the region that has changed since the last present
+  -- to the swapchain in the corresponding entry in the
+  -- @VkPresentInfoKHR@::@pSwapchains@ array.
   vkPRegions :: Ptr VkPresentRegionKHR
   }
   deriving (Eq, Show)
@@ -98,9 +99,6 @@ instance Storable VkPresentRegionsKHR where
 -- | VkPresentRegionKHR - Structure containing rectangular region changed by
 -- vkQueuePresentKHR for a given VkImage
 --
--- = Description
--- #_description#
---
 -- == Valid Usage (Implicit)
 --
 -- -   If @rectangleCount@ is not @0@, and @pRectangles@ is not @NULL@,
@@ -108,13 +106,18 @@ instance Storable VkPresentRegionsKHR where
 --     @rectangleCount@ @VkRectLayerKHR@ structures
 --
 -- = See Also
--- #_see_also#
 --
 -- 'VkPresentRegionsKHR', 'VkRectLayerKHR'
 data VkPresentRegionKHR = VkPresentRegionKHR
-  { -- No documentation found for Nested "VkPresentRegionKHR" "vkRectangleCount"
+  { -- | @rectangleCount@ is the number of rectangles in @pRectangles@, or zero
+  -- if the entire image has changed and should be presented.
   vkRectangleCount :: Word32
-  , -- No documentation found for Nested "VkPresentRegionKHR" "vkPRectangles"
+  , -- | @pRectangles@ is either @NULL@ or a pointer to an array of
+  -- @VkRectLayerKHR@ structures. The @VkRectLayerKHR@ structure is the
+  -- framebuffer coordinates, plus layer, of a portion of a presentable image
+  -- that has changed and /must/ be presented. If non-@NULL@, each entry in
+  -- @pRectangles@ is a rectangle of the given image that has changed since
+  -- the last image was presented to the given swapchain.
   vkPRectangles :: Ptr VkRectLayerKHR
   }
   deriving (Eq, Show)
@@ -128,9 +131,6 @@ instance Storable VkPresentRegionKHR where
                 *> poke (ptr `plusPtr` 8) (vkPRectangles (poked :: VkPresentRegionKHR))
 -- | VkRectLayerKHR - Structure containing a rectangle, including layer,
 -- changed by vkQueuePresentKHR for a given VkImage
---
--- = Description
--- #_description#
 --
 -- == Valid Usage
 --
@@ -149,16 +149,16 @@ instance Storable VkPresentRegionKHR where
 -- of the swapchain.
 --
 -- = See Also
--- #_see_also#
 --
 -- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkOffset2D', 'VkPresentRegionKHR'
 data VkRectLayerKHR = VkRectLayerKHR
-  { -- No documentation found for Nested "VkRectLayerKHR" "vkOffset"
+  { -- | @offset@ is the origin of the rectangle, in pixels.
   vkOffset :: VkOffset2D
-  , -- No documentation found for Nested "VkRectLayerKHR" "vkExtent"
+  , -- | @extent@ is the size of the rectangle, in pixels.
   vkExtent :: VkExtent2D
-  , -- No documentation found for Nested "VkRectLayerKHR" "vkLayer"
+  , -- | @layer@ is the layer of the image. For images with only one layer, the
+  -- value of @layer@ /must/ be 0.
   vkLayer :: Word32
   }
   deriving (Eq, Show)
