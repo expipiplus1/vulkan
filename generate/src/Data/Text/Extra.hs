@@ -8,12 +8,15 @@ module Data.Text.Extra
   , tShow
   , pattern Cons
   , upperCaseFirst
+  , lowerCaseFirst
   , dropPrefix
+  , dropPrefix'
   , (<+>)
   , module Data.Text
   ) where
 
 import           Data.Char
+import           Data.Maybe
 import           Data.Semigroup
 import           Data.String    (IsString)
 import           Data.Text
@@ -31,6 +34,9 @@ tShow = pack . show
 upperCaseFirst :: Text -> Text
 upperCaseFirst = onFirst Data.Char.toUpper
 
+lowerCaseFirst :: Text -> Text
+lowerCaseFirst = onFirst Data.Char.toLower
+
 onFirst :: (Char -> Char) -> Text -> Text
 onFirst f = \case
   Cons c cs -> Cons (f c) cs
@@ -44,6 +50,9 @@ dropPrefix :: Text -> Text -> Maybe Text
 dropPrefix prefix s = if prefix `T.isPrefixOf` s
                         then Just (T.drop (T.length prefix) s)
                         else Nothing
+
+dropPrefix' :: Text -> Text -> Text
+dropPrefix' prefix s = fromMaybe s (dropPrefix prefix s)
 
 (<+>) :: (IsString a, Semigroup a) => a -> a -> a
 a <+> b = a <> " " <> b
