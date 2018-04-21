@@ -1,0 +1,128 @@
+diff --git a/src/Text/Pandoc/Writers/Haddock.hs b/src/Text/Pandoc/Writers/Haddock.hs
+index 688c1f390..f81fae123 100644
+--- a/src/Text/Pandoc/Writers/Haddock.hs
++++ b/src/Text/Pandoc/Writers/Haddock.hs
+@@ -142,23 +142,12 @@ blockToHaddock opts (Table caption aligns widths headers rows) = do
+   let caption'' = if null caption
+                      then empty
+                      else blankline <> caption' <> blankline
+-  rawHeaders <- mapM (blockListToHaddock opts) headers
+-  rawRows <- mapM (mapM (blockListToHaddock opts)) rows
+-  let isSimple = all (==0) widths
+-  let isPlainBlock (Plain _) = True
+-      isPlainBlock _         = False
+-  let hasBlocks = not (all isPlainBlock $ concat . concat $ headers:rows)
+-  (nst,tbl) <- case True of
+-                _ | isSimple -> (nest 2,) <$>
+-                         pandocTable opts (all null headers) aligns widths
+-                             rawHeaders rawRows
+-                  | not hasBlocks -> (nest 2,) <$>
+-                         pandocTable opts (all null headers) aligns widths
+-                             rawHeaders rawRows
+-                  | otherwise -> (id,) <$>
+-                         gridTable opts blockListToHaddock
+-                          (all null headers) aligns widths headers rows
+-  return $ prefixed "> " (nst $ tbl $$ blankline $$ caption'') $$ blankline
++  let strictWrapping = False -- Haddock doesn't handle intra-word splitting well
++  tbl <- gridTable opts blockListToHaddock
++              (all null headers) strictWrapping
++              (map (const AlignDefault) aligns)
++              widths headers rows
++  return $ (tbl $$ blankline $$ caption'') $$ blankline
+ blockToHaddock opts (BulletList items) = do
+   contents <- mapM (bulletListItemToHaddock opts) items
+   return $ cat contents <> blankline
+@@ -322,14 +311,18 @@ inlineToHaddock opts SoftBreak =
+        WrapPreserve -> return cr
+ inlineToHaddock _ Space = return space
+ inlineToHaddock opts (Cite _ lst) = inlineListToHaddock opts lst
+-inlineToHaddock _ (Link _ txt (src, _)) = do
++inlineToHaddock opts (Link _ txt (src, _)) = do
+   let linktext = text $ escapeString $ stringify txt
+   let useAuto = isURI src &&
+                 case txt of
+                       [Str s] | escapeURI s == src -> True
+                       _       -> False
+-  return $ nowrap $ "<" <> text src <>
+-           (if useAuto then empty else space <> linktext) <> ">"
++  if useAuto
++    then return $ nowrap $ "<" <> text src <> ">"
++    -- else "[" <> linktext <> "]" <> "(" <> text src <> ")"
++    else do
++      t <- inlineListToHaddock opts txt
++      pure $ "[" <> t <> "]" <> "(" <> text src <> ")"
+ inlineToHaddock opts (Image attr alternate (source, tit)) = do
+   linkhaddock <- inlineToHaddock opts (Link attr alternate (source, tit))
+   return $ "<" <> linkhaddock <> ">"
+diff --git a/src/Text/Pandoc/Writers/Markdown.hs b/src/Text/Pandoc/Writers/Markdown.hs
+index cdd8f3b66..5c0936967 100644
+--- a/src/Text/Pandoc/Writers/Markdown.hs
++++ b/src/Text/Pandoc/Writers/Markdown.hs
+@@ -614,7 +614,7 @@ blockToMarkdown' opts t@(Table caption aligns widths headers rows) =  do
+             | isEnabled Ext_grid_tables opts &&
+                writerColumns opts >= 8 * numcols -> (id,) <$>
+                 gridTable opts blockListToMarkdown
+-                  (all null headers) aligns' widths' headers rows
++                  (all null headers) True aligns' widths' headers rows
+             | isEnabled Ext_raw_html opts -> fmap (id,) $
+                    (text . T.unpack) <$>
+                    (writeHtml5String def $ Pandoc nullMeta [t])
+diff --git a/src/Text/Pandoc/Writers/RST.hs b/src/Text/Pandoc/Writers/RST.hs
+index 95cb46643..381075ed3 100644
+--- a/src/Text/Pandoc/Writers/RST.hs
++++ b/src/Text/Pandoc/Writers/RST.hs
+@@ -287,7 +287,8 @@ blockToRST (Table caption aligns widths headers rows) = do
+          modify $ \st -> st{ stOptions = oldOpts }
+          return result
+   opts <- gets stOptions
+-  tbl <- gridTable opts blocksToDoc (all null headers)
++  let strictWrapping = True
++  tbl <- gridTable opts blocksToDoc (all null headers) strictWrapping
+             (map (const AlignDefault) aligns) widths
+             headers rows
+   return $ if null caption
+diff --git a/src/Text/Pandoc/Writers/Shared.hs b/src/Text/Pandoc/Writers/Shared.hs
+index ae4cc5cc5..f7039e79a 100644
+--- a/src/Text/Pandoc/Writers/Shared.hs
++++ b/src/Text/Pandoc/Writers/Shared.hs
+@@ -233,13 +233,21 @@ unsmartify _ [] = []
+ gridTable :: Monad m
+           => WriterOptions
+           -> (WriterOptions -> [Block] -> m Doc)
+-          -> Bool -- ^ headless
++          -- ^ blocksToDoc
++          -> Bool
++          -- ^ headless
++          -> Bool
++          -- ^ strict wrapping, this applies when wrapping with given widths.
++          -- If it is false then the columns may be wider than specified. They
++          -- may be widened to accomodate the contents generated by blocksToDoc
++          -- at their minimum width rendering.
+           -> [Alignment]
+           -> [Double]
+           -> [[Block]]
+           -> [[[Block]]]
+           -> m Doc
+-gridTable opts blocksToDoc headless aligns widths headers rows = do
++gridTable opts blocksToDoc headless strictWrapping aligns widths headers rows = do
++  -- the number of columns will be used in case of even widths
+   let numcols = maximum (length aligns : length widths :
+                            map length (headers:rows))
+   let handleGivenWidths widths' = do
+@@ -258,7 +266,15 @@ gridTable opts blocksToDoc headless aligns widths headers rows = do
+                          min (w - 2) (writerColumns opts)}) widthsInChars')
+                cs)
+              rows
+-        return (widthsInChars', rawHeaders', rawRows')
++        let numChars [] = 0
++            numChars xs = maximum . map minOffset $ xs
++            realWidthsInChars =
++                map numChars $ transpose (rawHeaders' : rawRows')
++            wrapWidths =
++              if strictWrapping
++                then widthsInChars'
++                else zipWith max widthsInChars' realWidthsInChars
++        return (wrapWidths, rawHeaders', rawRows')
+   let handleZeroWidths = do
+         rawHeaders' <- mapM (blocksToDoc opts) headers
+         rawRows' <- mapM (mapM (blocksToDoc opts)) rows
