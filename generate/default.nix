@@ -15,9 +15,9 @@ let
     overrides = self: super: {
       pandoc = pkgs.haskell.lib.appendPatches
                  super.pandoc_2_1_2
-                 [ ./pandoc-math.patch
-                   ./pandoc-haddock-math.patch
-                   ./pandoc-haddock-table.patch
+                 [ ./pandoc-patches/pandoc-math.patch
+                   ./pandoc-patches/pandoc-haddock-math.patch
+                   ./pandoc-patches/pandoc-haddock-table.patch
                  ];
     };
   };
