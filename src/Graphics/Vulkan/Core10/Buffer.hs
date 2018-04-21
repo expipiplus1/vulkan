@@ -90,7 +90,6 @@ import Graphics.Vulkan.Core10.MemoryManagement
 -- | VkSharingMode - Buffer and image sharing modes
 --
 -- = Description
--- #_description#
 --
 -- -   @VK_SHARING_MODE_EXCLUSIVE@ specifies that access to any range or
 --     image subresource of the object will be exclusive to a single queue
@@ -111,15 +110,15 @@ import Graphics.Vulkan.Core10.MemoryManagement
 -- resources are not owned by any queue family; ownership is implicitly
 -- acquired upon first use within a queue. Once a resource using
 -- @VK_SHARING_MODE_EXCLUSIVE@ is owned by some queue family, the
--- application /must/ perform a
--- <{html_spec_relative}#synchronization-queue-transfers queue family ownership transfer>
--- to make the memory contents of a range or image subresource accessible
--- to a different queue family.
+-- application /must/ perform a [queue family ownership
+-- transfer]({html_spec_relative}#synchronization-queue-transfers) to make
+-- the memory contents of a range or image subresource accessible to a
+-- different queue family.
 --
 -- __Note__
 --
--- Images still require a
--- <{html_spec_relative}#resources-image-layouts layout transition> from
+-- Images still require a [layout
+-- transition]({html_spec_relative}#resources-image-layouts) from
 -- @VK_IMAGE_LAYOUT_UNDEFINED@ or @VK_IMAGE_LAYOUT_PREINITIALIZED@ before
 -- being used on the first queue.
 --
