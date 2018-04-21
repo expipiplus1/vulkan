@@ -142,13 +142,21 @@ isConstructor = \case
   _                      -> False
 
 moduleImports :: Module -> [Doc ()]
-moduleImports Module{..} =
-  let importMap = Map.fromListWith union ((iModule &&& iImports) <$> (weImports =<< mWriteElements))
-  in  Map.assocs importMap <&> \(moduleName, is) -> [qci|
-        import {pretty moduleName}
-          ( {indent (-2) . vcat . intercalatePrepend "," $ pretty <$> is}
-          )
-      |]
+moduleImports Module {..} =
+  let unqualifiedImportMap = Map.fromListWith
+        union
+        ((iModule &&& iImports) <$> [i | i@Import{} <- weImports =<< mWriteElements])
+      qualifiedImportMap = Map.fromListWith
+        union
+        ((iModule &&& iImports) <$> [i | i@QualifiedImport{} <- weImports =<< mWriteElements])
+      makeImport :: Doc () -> (Text, [Text]) -> Doc ()
+      makeImport qualifier (moduleName, is) = [qci|
+         import{qualifier}{pretty moduleName}
+           ( {indent (-2) . vcat . intercalatePrepend "," $ pretty <$> is}
+           )
+       |]
+  in (makeImport " "           <$> Map.assocs unqualifiedImportMap) ++
+     (makeImport " qualified " <$> Map.assocs qualifiedImportMap)
 
 findModuleHN :: [Module] -> HaskellName -> Maybe (Text, Export)
 findModuleHN ms =

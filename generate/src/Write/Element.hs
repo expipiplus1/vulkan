@@ -56,10 +56,15 @@ pattern TypeConstructor n = WithConstructors (TypeName n)
 pattern TypeAlias :: Text -> Export
 pattern TypeAlias n = WithoutConstructors (TypeName n)
 
-data Import = Import
-  { iModule  :: Text
-  , iImports :: [Text]
-  }
+data Import
+  = Import
+    { iModule  :: Text
+    , iImports :: [Text]
+    }
+  | QualifiedImport
+    { iModule  :: Text
+    , iImports :: [Text]
+    }
   deriving (Show, Eq, Ord)
 
 type DocMap = Documentee -> Maybe Haddock
