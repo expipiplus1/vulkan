@@ -4,6 +4,7 @@
 
 module Graphics.Vulkan
   (     module Graphics.Vulkan.NamedType
+  , module Graphics.Vulkan.Dynamic
   , module Graphics.Vulkan.Core10
   , module Graphics.Vulkan.Core11
   , module Graphics.Vulkan.Extensions
@@ -11,6 +12,7 @@ module Graphics.Vulkan
 
 
 import Graphics.Vulkan.NamedType
+import Graphics.Vulkan.Dynamic
 import Graphics.Vulkan.Core10
 import Graphics.Vulkan.Core11
 import Graphics.Vulkan.Extensions

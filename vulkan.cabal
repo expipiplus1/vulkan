@@ -216,6 +216,7 @@ library
                      , Graphics.Vulkan.Extensions.VK_AMD_shader_core_properties
                      , Graphics.Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
                      , Graphics.Vulkan.Extensions.VK_NV_shader_subgroup_partitioned
+                     , Graphics.Vulkan.Dynamic
                      , Graphics.Vulkan
                      , Graphics.Vulkan.Core10
                      , Graphics.Vulkan.Core11
