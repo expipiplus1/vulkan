@@ -11,7 +11,7 @@ module Write.Seed
 import           Control.Bool
 import           Data.Char
 import           Data.Text                 (Text)
-import qualified Data.Text.Extra                 as T
+import qualified Data.Text.Extra           as T
 import           Data.Text.Prettyprint.Doc
 import           Text.Regex.Applicative
 
@@ -28,6 +28,7 @@ specSeeds s =
     ++ featureToSeeds (vulkan10Feature (sFeatures s))
     ++ featureToSeeds (vulkan11Feature (sFeatures s))
     ++ (extensionToSeed <$> sExtensions s)
+    ++ [dynamicLoaderSeed] -- It's very important for this to come last
 
 bespokeSeeds :: [ModuleSeed]
 bespokeSeeds =
@@ -45,6 +46,10 @@ bespokeSeeds =
     ]
     Nothing
   ]
+
+dynamicLoaderSeed :: ModuleSeed
+dynamicLoaderSeed =
+  ModuleSeed "Graphics.Vulkan.Dynamic" [TypeName "DeviceCmds"] Nothing
 
 featureToSeeds :: Feature -> [ModuleSeed]
 featureToSeeds Feature {..} =
