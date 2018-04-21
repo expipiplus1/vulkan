@@ -19,7 +19,7 @@ import           Data.Bifunctor
 import           Data.Default
 import           Data.Either.Combinators
 import           Data.Foldable
-import           Data.List
+import           Data.List.Extra2
 import           Data.Maybe
 import           Data.Semigroup
 import           Data.Text                    (Text)
@@ -72,7 +72,7 @@ guessDocumentee (Pandoc _ bs) = do
 -- Return the original documentation with the new document sections removed
 splitDocumentation :: Text -> Pandoc -> Either Text (Pandoc, [Documentation])
 splitDocumentation parent (Pandoc meta bs) = do
-  (es, bs') <- extractMatchesM (splitPrefix meta) bs
+  (es, bs') <- iterateSuffixesM (splitPrefix meta) bs
   pure (Pandoc meta bs', join (catMaybes es))
   where
     splitPrefix m = \case
@@ -150,31 +150,3 @@ main = do
         --   Left e -> sayErrShow e
 
 
-extractMatches
-  :: forall a b
-   . ([a] -> (b, [a]))
-  -- ^ A function which takes a list transforming it and returning something
-  -> [a]
-  -- ^ A list to extract parts from
-  -> ([b], [a])
-  -- ^ (The list of (non-empty) extracted prefixes, the list without those
-  -- prefixes)
-extractMatches split = foldr go ([], [])
-  where
-    go :: a -> ([b], [a]) -> ([b], [a])
-    go x (ss, xs) = first (: ss) $ split (x : xs)
-
-extractMatchesM
-  :: forall m a b
-   . Monad m
-  => ([a] -> m (b, [a]))
-  -- ^ A function which takes a list transforming it and returning something
-  -> [a]
-  -- ^ A list to extract parts from
-  -> m ([b], [a])
-  -- ^ (The list of (non-empty) extracted prefixes, the list without those
-  -- prefixes)
-extractMatchesM split = foldrM go ([], [])
-  where
-    go :: a -> ([b], [a]) -> m ([b], [a])
-    go x (ss, xs) = first (: ss) <$> split (x : xs)
