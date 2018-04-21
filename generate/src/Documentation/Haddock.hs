@@ -91,4 +91,24 @@ fixLinks findDocs = topDown fixInlines
           ThisModule -> RawInline "haddock" ("'" <> name <> "'")
           OtherModule m ->
             RawInline "haddock" ("'" <> T.unpack m <> "." <> name <> "'")
+      -- Because of https://github.com/haskell/haddock/issues/802 the best we
+      -- can do is link to the spec
+      Link attrs t (tag, title)
+        | Just fragment <- T.dropPrefix "#" (T.pack tag) -> Link
+          attrs
+          t
+          (externalSpecHTML <> "#" <> T.unpack fragment, title)
+      Link attrs t (tag, title)
+        | Just fragment <- T.dropPrefix "{html_spec_relative}#" (T.pack tag) -> Link
+          attrs
+          t
+          (externalSpecHTML <> "#" <> T.unpack fragment, title)
       i -> i
+
+f = Link ("", [], [])
+         [Str "depth", Space, Str "bias", Space, Str "clamping"]
+         ("{html_spec_relative}#features-features-depthBiasClamp", "")
+
+externalSpecHTML :: String
+externalSpecHTML
+  = "https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html"
