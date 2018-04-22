@@ -85,7 +85,9 @@ writePlatformFlag platform = [qci|
     flag {pName platform}
         description:
           Enable {pName platform} specific extensions
-        default: False
+        -- These are on by default, if lazy-loading or manual dynamic loading
+        -- is used then it shouldn't be a problem exposing these.
+        default: True
   |]
 
 writeGuardedModules :: ((Text, Text), [Module]) -> Doc ()
