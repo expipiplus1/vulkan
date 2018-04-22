@@ -83,6 +83,7 @@ writeModule
   -> Doc ()
 writeModule getDoc getModule m@Module{..} = [qci|
   \{-# language Strict #-}
+  \{-# language CPP #-}
   {vcat $ moduleExtensions m}
 
   module {mName}
