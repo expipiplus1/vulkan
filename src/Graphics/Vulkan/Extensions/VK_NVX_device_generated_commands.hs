@@ -87,16 +87,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -120,8 +120,8 @@ import Graphics.Vulkan.Core10.CommandBufferBuilding
   )
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
-  , VkResult(..)
   , VkObjectType(..)
+  , VkResult(..)
   , VkStructureType(..)
   , VkFlags
   )
@@ -129,28 +129,28 @@ import Graphics.Vulkan.Core10.DescriptorSet
   ( VkDescriptorSet
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDeviceSize
-  , VkPhysicalDevice
-  , VkAllocationCallbacks(..)
+  ( VkAllocationCallbacks(..)
   , VkDevice
+  , VkDeviceSize
+  , VkPhysicalDevice
   )
 import Graphics.Vulkan.Core10.MemoryManagement
   ( VkBuffer
   )
 import Graphics.Vulkan.Core10.Pass
-  ( VkPipelineBindPoint(..)
-  , VkAccessFlagBits(..)
+  ( VkAccessFlagBits(..)
+  , VkPipelineBindPoint(..)
   )
 import Graphics.Vulkan.Core10.Pipeline
-  ( VkPipelineLayout
-  , VkPipeline
+  ( VkPipeline
+  , VkPipelineLayout
   )
 import Graphics.Vulkan.Core10.PipelineLayout
   ( VkShaderStageFlags
   )
 import Graphics.Vulkan.Core10.Queue
-  ( VkCommandBuffer
-  , VkPipelineStageFlagBits(..)
+  ( VkPipelineStageFlagBits(..)
+  , VkCommandBuffer
   )
 
 
@@ -511,7 +511,11 @@ type VkIndirectCommandsLayoutNVX = Ptr VkIndirectCommandsLayoutNVX_T
 --
 -- 'VkCmdProcessCommandsInfoNVX',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdProcessCommandsNVX" vkCmdProcessCommandsNVX :: ("commandBuffer" ::: VkCommandBuffer) -> ("pProcessCommandsInfo" ::: Ptr VkCmdProcessCommandsInfoNVX) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdProcessCommandsNVX" vkCmdProcessCommandsNVX :: ("commandBuffer" ::: VkCommandBuffer) -> ("pProcessCommandsInfo" ::: Ptr VkCmdProcessCommandsInfoNVX) -> IO ()
 -- | vkCmdReserveSpaceForCommandsNVX - Perform a reservation of command
 -- buffer space
 --
@@ -573,7 +577,11 @@ foreign import ccall "vkCmdProcessCommandsNVX" vkCmdProcessCommandsNVX :: ("comm
 --
 -- 'VkCmdReserveSpaceForCommandsInfoNVX',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdReserveSpaceForCommandsNVX" vkCmdReserveSpaceForCommandsNVX :: ("commandBuffer" ::: VkCommandBuffer) -> ("pReserveSpaceInfo" ::: Ptr VkCmdReserveSpaceForCommandsInfoNVX) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdReserveSpaceForCommandsNVX" vkCmdReserveSpaceForCommandsNVX :: ("commandBuffer" ::: VkCommandBuffer) -> ("pReserveSpaceInfo" ::: Ptr VkCmdReserveSpaceForCommandsInfoNVX) -> IO ()
 -- | vkCreateIndirectCommandsLayoutNVX - Create an indirect command layout
 -- object
 --
@@ -622,7 +630,11 @@ foreign import ccall "vkCmdReserveSpaceForCommandsNVX" vkCmdReserveSpaceForComma
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkIndirectCommandsLayoutCreateInfoNVX', 'VkIndirectCommandsLayoutNVX'
-foreign import ccall "vkCreateIndirectCommandsLayoutNVX" vkCreateIndirectCommandsLayoutNVX :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkIndirectCommandsLayoutCreateInfoNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pIndirectCommandsLayout" ::: Ptr VkIndirectCommandsLayoutNVX) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateIndirectCommandsLayoutNVX" vkCreateIndirectCommandsLayoutNVX :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkIndirectCommandsLayoutCreateInfoNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pIndirectCommandsLayout" ::: Ptr VkIndirectCommandsLayoutNVX) -> IO VkResult
 -- | vkDestroyIndirectCommandsLayoutNVX - Destroy a object table
 --
 -- = Parameters
@@ -665,7 +677,11 @@ foreign import ccall "vkCreateIndirectCommandsLayoutNVX" vkCreateIndirectCommand
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkIndirectCommandsLayoutNVX'
-foreign import ccall "vkDestroyIndirectCommandsLayoutNVX" vkDestroyIndirectCommandsLayoutNVX :: ("device" ::: VkDevice) -> ("indirectCommandsLayout" ::: VkIndirectCommandsLayoutNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyIndirectCommandsLayoutNVX" vkDestroyIndirectCommandsLayoutNVX :: ("device" ::: VkDevice) -> ("indirectCommandsLayout" ::: VkIndirectCommandsLayoutNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | vkCreateObjectTableNVX - Create an object table
 --
 -- = Parameters
@@ -712,7 +728,11 @@ foreign import ccall "vkDestroyIndirectCommandsLayoutNVX" vkDestroyIndirectComma
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkObjectTableCreateInfoNVX', 'VkObjectTableNVX'
-foreign import ccall "vkCreateObjectTableNVX" vkCreateObjectTableNVX :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkObjectTableCreateInfoNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pObjectTable" ::: Ptr VkObjectTableNVX) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateObjectTableNVX" vkCreateObjectTableNVX :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkObjectTableCreateInfoNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pObjectTable" ::: Ptr VkObjectTableNVX) -> IO VkResult
 -- | vkDestroyObjectTableNVX - Destroy a object table
 --
 -- = Parameters
@@ -758,7 +778,11 @@ foreign import ccall "vkCreateObjectTableNVX" vkCreateObjectTableNVX :: ("device
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkObjectTableNVX'
-foreign import ccall "vkDestroyObjectTableNVX" vkDestroyObjectTableNVX :: ("device" ::: VkDevice) -> ("objectTable" ::: VkObjectTableNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyObjectTableNVX" vkDestroyObjectTableNVX :: ("device" ::: VkDevice) -> ("objectTable" ::: VkObjectTableNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | vkRegisterObjectsNVX - Register resource bindings in an object table
 --
 -- = Parameters
@@ -827,7 +851,11 @@ foreign import ccall "vkDestroyObjectTableNVX" vkDestroyObjectTableNVX :: ("devi
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkObjectTableEntryNVX', 'VkObjectTableNVX'
-foreign import ccall "vkRegisterObjectsNVX" vkRegisterObjectsNVX :: ("device" ::: VkDevice) -> ("objectTable" ::: VkObjectTableNVX) -> ("objectCount" ::: Word32) -> ("ppObjectTableEntries" ::: Ptr (Ptr VkObjectTableEntryNVX)) -> ("pObjectIndices" ::: Ptr Word32) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkRegisterObjectsNVX" vkRegisterObjectsNVX :: ("device" ::: VkDevice) -> ("objectTable" ::: VkObjectTableNVX) -> ("objectCount" ::: Word32) -> ("ppObjectTableEntries" ::: Ptr (Ptr VkObjectTableEntryNVX)) -> ("pObjectIndices" ::: Ptr Word32) -> IO VkResult
 -- | vkUnregisterObjectsNVX - Unregister resource bindings in an object table
 --
 -- = Parameters
@@ -891,7 +919,11 @@ foreign import ccall "vkRegisterObjectsNVX" vkRegisterObjectsNVX :: ("device" ::
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkObjectEntryTypeNVX', 'VkObjectTableNVX'
-foreign import ccall "vkUnregisterObjectsNVX" vkUnregisterObjectsNVX :: ("device" ::: VkDevice) -> ("objectTable" ::: VkObjectTableNVX) -> ("objectCount" ::: Word32) -> ("pObjectEntryTypes" ::: Ptr VkObjectEntryTypeNVX) -> ("pObjectIndices" ::: Ptr Word32) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkUnregisterObjectsNVX" vkUnregisterObjectsNVX :: ("device" ::: VkDevice) -> ("objectTable" ::: VkObjectTableNVX) -> ("objectCount" ::: Word32) -> ("pObjectEntryTypes" ::: Ptr VkObjectEntryTypeNVX) -> ("pObjectIndices" ::: Ptr Word32) -> IO VkResult
 -- | vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX - Returns
 -- device-generated commands related properties of a physical device
 --
@@ -923,7 +955,11 @@ foreign import ccall "vkUnregisterObjectsNVX" vkUnregisterObjectsNVX :: ("device
 -- 'VkDeviceGeneratedCommandsFeaturesNVX',
 -- 'VkDeviceGeneratedCommandsLimitsNVX',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
-foreign import ccall "vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX" vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkDeviceGeneratedCommandsFeaturesNVX) -> ("pLimits" ::: Ptr VkDeviceGeneratedCommandsLimitsNVX) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX" vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkDeviceGeneratedCommandsFeaturesNVX) -> ("pLimits" ::: Ptr VkDeviceGeneratedCommandsLimitsNVX) -> IO ()
 -- | VkDeviceGeneratedCommandsFeaturesNVX - Structure specifying physical
 -- device support
 --

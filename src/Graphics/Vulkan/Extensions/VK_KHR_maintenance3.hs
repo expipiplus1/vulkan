@@ -39,15 +39,15 @@ import Graphics.Vulkan.Core10.DescriptorSet
   ( VkDescriptorSetLayoutCreateInfo(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDeviceSize
-  , VkDevice
+  ( VkDevice
+  , VkDeviceSize
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3
-  ( pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
+  ( VkDescriptorSetLayoutSupport(..)
   , VkPhysicalDeviceMaintenance3Properties(..)
-  , VkDescriptorSetLayoutSupport(..)
   , vkGetDescriptorSetLayoutSupport
+  , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
   )
 
 

@@ -42,16 +42,16 @@ import Data.Word
   ( Word64
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -82,8 +82,8 @@ import Graphics.Vulkan.Core10.Queue
   ( VkFence
   )
 import Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter
-  ( VkSurfaceCounterFlagsEXT
-  , VkSurfaceCounterFlagBitsEXT(..)
+  ( VkSurfaceCounterFlagBitsEXT(..)
+  , VkSurfaceCounterFlagsEXT
   )
 import Graphics.Vulkan.Extensions.VK_KHR_display
   ( VkDisplayKHR
@@ -245,7 +245,11 @@ pattern VK_EXT_DISPLAY_CONTROL_EXTENSION_NAME = "VK_EXT_display_control"
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR',
 -- 'VkDisplayPowerInfoEXT'
-foreign import ccall "vkDisplayPowerControlEXT" vkDisplayPowerControlEXT :: ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayPowerInfo" ::: Ptr VkDisplayPowerInfoEXT) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDisplayPowerControlEXT" vkDisplayPowerControlEXT :: ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayPowerInfo" ::: Ptr VkDisplayPowerInfoEXT) -> IO VkResult
 -- | vkRegisterDeviceEventEXT - Signal a fence when a device event occurs
 --
 -- = Parameters
@@ -286,7 +290,11 @@ foreign import ccall "vkDisplayPowerControlEXT" vkDisplayPowerControlEXT :: ("de
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkDeviceEventInfoEXT', 'Graphics.Vulkan.Core10.Queue.VkFence'
-foreign import ccall "vkRegisterDeviceEventEXT" vkRegisterDeviceEventEXT :: ("device" ::: VkDevice) -> ("pDeviceEventInfo" ::: Ptr VkDeviceEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkRegisterDeviceEventEXT" vkRegisterDeviceEventEXT :: ("device" ::: VkDevice) -> ("pDeviceEventInfo" ::: Ptr VkDeviceEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
 -- | vkRegisterDisplayEventEXT - Signal a fence when a display event occurs
 --
 -- = Parameters
@@ -333,7 +341,11 @@ foreign import ccall "vkRegisterDeviceEventEXT" vkRegisterDeviceEventEXT :: ("de
 -- 'VkDisplayEventInfoEXT',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR',
 -- 'Graphics.Vulkan.Core10.Queue.VkFence'
-foreign import ccall "vkRegisterDisplayEventEXT" vkRegisterDisplayEventEXT :: ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayEventInfo" ::: Ptr VkDisplayEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkRegisterDisplayEventEXT" vkRegisterDisplayEventEXT :: ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayEventInfo" ::: Ptr VkDisplayEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
 -- | vkGetSwapchainCounterEXT - Query the current value of a surface counter
 --
 -- = Parameters
@@ -386,7 +398,11 @@ foreign import ccall "vkRegisterDisplayEventEXT" vkRegisterDisplayEventEXT :: ("
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.VkSurfaceCounterFlagBitsEXT',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
-foreign import ccall "vkGetSwapchainCounterEXT" vkGetSwapchainCounterEXT :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("counter" ::: VkSurfaceCounterFlagBitsEXT) -> ("pCounterValue" ::: Ptr Word64) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetSwapchainCounterEXT" vkGetSwapchainCounterEXT :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("counter" ::: VkSurfaceCounterFlagBitsEXT) -> ("pCounterValue" ::: Ptr Word64) -> IO VkResult
 -- | VkDisplayPowerInfoEXT - Describe the power state of a display
 --
 -- == Valid Usage (Implicit)

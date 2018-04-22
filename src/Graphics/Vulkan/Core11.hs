@@ -3,7 +3,7 @@
 
 
 module Graphics.Vulkan.Core11
-  (     module Graphics.Vulkan.Core11.DeviceInitialization
+  ( module Graphics.Vulkan.Core11.DeviceInitialization
   , module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_subgroup
   , module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_bind_memory2
   , module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_16bit_storage

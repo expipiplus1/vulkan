@@ -29,8 +29,8 @@ import Graphics.Vulkan.Core10.Core
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_variable_pointers
-  ( pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES
-  , VkPhysicalDeviceVariablePointerFeatures(..)
+  ( VkPhysicalDeviceVariablePointerFeatures(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES
   )
 
 

@@ -37,12 +37,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -50,22 +50,22 @@ import Graphics.Vulkan.NamedType
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkFormat(..)
+  ( VkFormat(..)
+  , VkResult(..)
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkSampleCountFlagBits(..)
-  , VkPhysicalDeviceMemoryProperties(..)
-  , VkQueueFamilyProperties(..)
-  , VkImageCreateFlags
-  , VkImageUsageFlags
+  ( VkFormatProperties(..)
+  , VkImageFormatProperties(..)
   , VkImageTiling(..)
   , VkImageType(..)
-  , VkImageFormatProperties(..)
-  , VkFormatProperties(..)
-  , VkPhysicalDeviceProperties(..)
   , VkPhysicalDeviceFeatures(..)
+  , VkPhysicalDeviceMemoryProperties(..)
+  , VkPhysicalDeviceProperties(..)
+  , VkQueueFamilyProperties(..)
+  , VkSampleCountFlagBits(..)
+  , VkImageCreateFlags
+  , VkImageUsageFlags
   , VkPhysicalDevice
   )
 import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
@@ -128,7 +128,11 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2 = VkStructu
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPhysicalDeviceFeatures2'
-foreign import ccall "vkGetPhysicalDeviceFeatures2" vkGetPhysicalDeviceFeatures2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkPhysicalDeviceFeatures2) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceFeatures2" vkGetPhysicalDeviceFeatures2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkPhysicalDeviceFeatures2) -> IO ()
 -- | vkGetPhysicalDeviceProperties2 - Returns properties of a physical device
 --
 -- = Parameters
@@ -158,7 +162,11 @@ foreign import ccall "vkGetPhysicalDeviceFeatures2" vkGetPhysicalDeviceFeatures2
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPhysicalDeviceProperties2'
-foreign import ccall "vkGetPhysicalDeviceProperties2" vkGetPhysicalDeviceProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pProperties" ::: Ptr VkPhysicalDeviceProperties2) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceProperties2" vkGetPhysicalDeviceProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pProperties" ::: Ptr VkPhysicalDeviceProperties2) -> IO ()
 -- | vkGetPhysicalDeviceFormatProperties2 - Lists physical device’s format
 -- capabilities
 --
@@ -194,7 +202,11 @@ foreign import ccall "vkGetPhysicalDeviceProperties2" vkGetPhysicalDevicePropert
 --
 -- 'Graphics.Vulkan.Core10.Core.VkFormat', 'VkFormatProperties2',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
-foreign import ccall "vkGetPhysicalDeviceFormatProperties2" vkGetPhysicalDeviceFormatProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("pFormatProperties" ::: Ptr VkFormatProperties2) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceFormatProperties2" vkGetPhysicalDeviceFormatProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("pFormatProperties" ::: Ptr VkFormatProperties2) -> IO ()
 -- | vkGetPhysicalDeviceImageFormatProperties2 - Lists physical device’s
 -- image format capabilities
 --
@@ -257,7 +269,11 @@ foreign import ccall "vkGetPhysicalDeviceFormatProperties2" vkGetPhysicalDeviceF
 -- 'VkImageFormatProperties2',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPhysicalDeviceImageFormatInfo2'
-foreign import ccall "vkGetPhysicalDeviceImageFormatProperties2" vkGetPhysicalDeviceImageFormatProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pImageFormatInfo" ::: Ptr VkPhysicalDeviceImageFormatInfo2) -> ("pImageFormatProperties" ::: Ptr VkImageFormatProperties2) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceImageFormatProperties2" vkGetPhysicalDeviceImageFormatProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pImageFormatInfo" ::: Ptr VkPhysicalDeviceImageFormatInfo2) -> ("pImageFormatProperties" ::: Ptr VkImageFormatProperties2) -> IO VkResult
 -- | vkGetPhysicalDeviceQueueFamilyProperties2 - Reports properties of the
 -- queues of the specified physical device
 --
@@ -296,7 +312,11 @@ foreign import ccall "vkGetPhysicalDeviceImageFormatProperties2" vkGetPhysicalDe
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkQueueFamilyProperties2'
-foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties2" vkGetPhysicalDeviceQueueFamilyProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pQueueFamilyPropertyCount" ::: Ptr Word32) -> ("pQueueFamilyProperties" ::: Ptr VkQueueFamilyProperties2) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceQueueFamilyProperties2" vkGetPhysicalDeviceQueueFamilyProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pQueueFamilyPropertyCount" ::: Ptr Word32) -> ("pQueueFamilyProperties" ::: Ptr VkQueueFamilyProperties2) -> IO ()
 -- | vkGetPhysicalDeviceMemoryProperties2 - Reports memory information for
 -- the specified physical device
 --
@@ -326,7 +346,11 @@ foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties2" vkGetPhysicalDe
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPhysicalDeviceMemoryProperties2'
-foreign import ccall "vkGetPhysicalDeviceMemoryProperties2" vkGetPhysicalDeviceMemoryProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pMemoryProperties" ::: Ptr VkPhysicalDeviceMemoryProperties2) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceMemoryProperties2" vkGetPhysicalDeviceMemoryProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pMemoryProperties" ::: Ptr VkPhysicalDeviceMemoryProperties2) -> IO ()
 -- | vkGetPhysicalDeviceSparseImageFormatProperties2 - Retrieve properties of
 -- an image format applied to sparse images
 --
@@ -371,7 +395,11 @@ foreign import ccall "vkGetPhysicalDeviceMemoryProperties2" vkGetPhysicalDeviceM
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPhysicalDeviceSparseImageFormatInfo2',
 -- 'VkSparseImageFormatProperties2'
-foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties2" vkGetPhysicalDeviceSparseImageFormatProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFormatInfo" ::: Ptr VkPhysicalDeviceSparseImageFormatInfo2) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkSparseImageFormatProperties2) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceSparseImageFormatProperties2" vkGetPhysicalDeviceSparseImageFormatProperties2 :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFormatInfo" ::: Ptr VkPhysicalDeviceSparseImageFormatInfo2) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkSparseImageFormatProperties2) -> IO ()
 -- | VkPhysicalDeviceFeatures2 - Structure describing the fine-grained
 -- features that can be supported by an implementation
 --

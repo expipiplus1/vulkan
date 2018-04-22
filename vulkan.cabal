@@ -2,7 +2,7 @@
 -- Any changes made here will be overwritten when 'generate' is run
 -- again.
 name:                vulkan
-version:             2.0.0.1
+version:             2.1.0.0
 synopsis:            Bindings to the Vulkan graphics API.
 description:         Please see readme.md
 homepage:            http://github.com/expipiplus1/vulkan#readme
@@ -20,42 +20,69 @@ cabal-version:       >=1.10
 flag xlib
     description:
       Enable xlib specific extensions
-    default: False
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
 flag xlib_xrandr
     description:
       Enable xlib_xrandr specific extensions
-    default: False
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
 flag xcb
     description:
       Enable xcb specific extensions
-    default: False
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
 flag wayland
     description:
       Enable wayland specific extensions
-    default: False
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
 flag mir
     description:
       Enable mir specific extensions
-    default: False
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
 flag android
     description:
       Enable android specific extensions
-    default: False
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
 flag win32
     description:
       Enable win32 specific extensions
-    default: False
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
 flag vi
     description:
       Enable vi specific extensions
-    default: False
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
 flag ios
     description:
       Enable ios specific extensions
-    default: False
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
 flag macos
     description:
       Enable macos specific extensions
+    -- These are on by default, if lazy-loading or manual dynamic loading
+    -- is used then it shouldn't be a problem exposing these.
+    default: True
+
+flag safe-foreign-calls
+    description:
+      Do not mark foreign imports as 'unsafe'. This means that
+      callbacks from Vulkan to Haskell will work. If you are using
+      these then make sure this flag is enabled.
     default: False
 
 library
@@ -221,6 +248,9 @@ library
                      , Graphics.Vulkan.Core10
                      , Graphics.Vulkan.Core11
                      , Graphics.Vulkan.Extensions
+
+  if flag(safe-foreign-calls)
+    cpp-options: -DSAFE_FOREIGN_CALLS
 
   if flag(android)
     cpp-options: -DVK_USE_PLATFORM_ANDROID_KHR

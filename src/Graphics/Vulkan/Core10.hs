@@ -3,7 +3,7 @@
 
 
 module Graphics.Vulkan.Core10
-  (     module Graphics.Vulkan.Core10.Core
+  ( module Graphics.Vulkan.Core10.Core
   , module Graphics.Vulkan.Core10.Version
   , module Graphics.Vulkan.Core10.Constants
   , module Graphics.Vulkan.Core10.DeviceInitialization

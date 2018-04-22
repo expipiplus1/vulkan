@@ -89,16 +89,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -119,16 +119,16 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
-  , VkResult(..)
-  , VkObjectType(..)
-  , VkStructureType(..)
   , VkFormat(..)
+  , VkObjectType(..)
+  , VkResult(..)
+  , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
-  , VkDevice
   , VkFormatFeatureFlagBits(..)
   , VkImageCreateFlagBits(..)
+  , VkDevice
   )
 import Graphics.Vulkan.Core10.ImageView
   ( VkComponentMapping(..)
@@ -958,7 +958,11 @@ type VkSamplerYcbcrConversion = Ptr VkSamplerYcbcrConversion_T
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkSamplerYcbcrConversion', 'VkSamplerYcbcrConversionCreateInfo'
-foreign import ccall "vkCreateSamplerYcbcrConversion" vkCreateSamplerYcbcrConversion :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSamplerYcbcrConversionCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pYcbcrConversion" ::: Ptr VkSamplerYcbcrConversion) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateSamplerYcbcrConversion" vkCreateSamplerYcbcrConversion :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSamplerYcbcrConversionCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pYcbcrConversion" ::: Ptr VkSamplerYcbcrConversion) -> IO VkResult
 -- | vkDestroySamplerYcbcrConversion - Destroy a created Y’CbCr conversion
 --
 -- = Parameters
@@ -995,7 +999,11 @@ foreign import ccall "vkCreateSamplerYcbcrConversion" vkCreateSamplerYcbcrConver
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkSamplerYcbcrConversion'
-foreign import ccall "vkDestroySamplerYcbcrConversion" vkDestroySamplerYcbcrConversion :: ("device" ::: VkDevice) -> ("ycbcrConversion" ::: VkSamplerYcbcrConversion) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroySamplerYcbcrConversion" vkDestroySamplerYcbcrConversion :: ("device" ::: VkDevice) -> ("ycbcrConversion" ::: VkSamplerYcbcrConversion) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkSamplerYcbcrConversionInfo - Structure specifying Y’CbCr conversion to
 -- a sampler or image view
 --

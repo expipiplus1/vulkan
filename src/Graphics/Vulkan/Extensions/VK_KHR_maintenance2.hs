@@ -62,25 +62,25 @@ import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
   ( VkImageAspectFlags
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2
-  ( pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
-  , pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
-  , pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
-  , pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
+  ( VkImageViewUsageCreateInfo(..)
+  , VkInputAttachmentAspectReference(..)
+  , VkPhysicalDevicePointClippingProperties(..)
+  , VkPipelineTessellationDomainOriginStateCreateInfo(..)
+  , VkPointClippingBehavior(..)
+  , VkRenderPassInputAttachmentAspectCreateInfo(..)
+  , VkTessellationDomainOrigin(..)
+  , pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
+  , pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
   , pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
   , pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
+  , pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
+  , pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
   , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
-  , pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
-  , pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
-  , VkPipelineTessellationDomainOriginStateCreateInfo(..)
-  , VkImageViewUsageCreateInfo(..)
-  , VkPhysicalDevicePointClippingProperties(..)
-  , VkRenderPassInputAttachmentAspectCreateInfo(..)
-  , VkInputAttachmentAspectReference(..)
-  , VkTessellationDomainOrigin(..)
-  , VkPointClippingBehavior(..)
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
+  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
+  , pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
+  , pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
   )
 
 

@@ -45,13 +45,13 @@ import Graphics.Vulkan.Core10.Pass
   ( VkDependencyFlagBits(..)
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_multiview
-  ( pattern VK_DEPENDENCY_VIEW_LOCAL_BIT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
-  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
-  , VkRenderPassMultiviewCreateInfo(..)
+  ( VkPhysicalDeviceMultiviewFeatures(..)
   , VkPhysicalDeviceMultiviewProperties(..)
-  , VkPhysicalDeviceMultiviewFeatures(..)
+  , VkRenderPassMultiviewCreateInfo(..)
+  , pattern VK_DEPENDENCY_VIEW_LOCAL_BIT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
+  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
   )
 
 

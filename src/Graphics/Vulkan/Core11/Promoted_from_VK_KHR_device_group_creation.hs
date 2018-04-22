@@ -23,12 +23,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -41,9 +41,9 @@ import Graphics.Vulkan.Core10.Core
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkPhysicalDevice
+  ( VkMemoryHeapFlagBits(..)
   , VkInstance
-  , VkMemoryHeapFlagBits(..)
+  , VkPhysicalDevice
   )
 
 
@@ -128,7 +128,11 @@ pattern VK_MAX_DEVICE_GROUP_SIZE = 32
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
 -- 'VkPhysicalDeviceGroupProperties'
-foreign import ccall "vkEnumeratePhysicalDeviceGroups" vkEnumeratePhysicalDeviceGroups :: ("instance" ::: VkInstance) -> ("pPhysicalDeviceGroupCount" ::: Ptr Word32) -> ("pPhysicalDeviceGroupProperties" ::: Ptr VkPhysicalDeviceGroupProperties) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkEnumeratePhysicalDeviceGroups" vkEnumeratePhysicalDeviceGroups :: ("instance" ::: VkInstance) -> ("pPhysicalDeviceGroupCount" ::: Ptr Word32) -> ("pPhysicalDeviceGroupProperties" ::: Ptr VkPhysicalDeviceGroupProperties) -> IO VkResult
 -- | VkPhysicalDeviceGroupProperties - Structure specifying physical device
 -- group properties
 --

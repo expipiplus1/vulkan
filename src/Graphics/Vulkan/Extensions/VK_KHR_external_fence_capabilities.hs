@@ -45,21 +45,21 @@ import Graphics.Vulkan.Core10.DeviceInitialization
   ( VkPhysicalDevice
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities
-  ( pattern VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
-  , pattern VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
-  , pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
-  , pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
-  , pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
-  , pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO
-  , VkExternalFenceFeatureFlags
-  , VkExternalFenceHandleTypeFlags
-  , VkExternalFenceFeatureFlagBits(..)
+  ( VkExternalFenceFeatureFlagBits(..)
   , VkExternalFenceHandleTypeFlagBits(..)
   , VkExternalFenceProperties(..)
   , VkPhysicalDeviceExternalFenceInfo(..)
+  , VkExternalFenceFeatureFlags
+  , VkExternalFenceHandleTypeFlags
   , vkGetPhysicalDeviceExternalFenceProperties
+  , pattern VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
+  , pattern VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
+  , pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
+  , pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+  , pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+  , pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
+  , pattern VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO
   )
 
 

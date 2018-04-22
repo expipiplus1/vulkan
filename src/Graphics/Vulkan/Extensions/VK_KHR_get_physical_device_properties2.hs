@@ -59,53 +59,53 @@ import Graphics.Vulkan.NamedType
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
+  ( VkFormat(..)
   , VkResult(..)
-  , VkFormat(..)
+  , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkSampleCountFlagBits(..)
-  , VkPhysicalDeviceMemoryProperties(..)
-  , VkQueueFamilyProperties(..)
-  , VkImageCreateFlags
-  , VkImageUsageFlags
+  ( VkFormatProperties(..)
+  , VkImageFormatProperties(..)
   , VkImageTiling(..)
   , VkImageType(..)
-  , VkImageFormatProperties(..)
-  , VkFormatProperties(..)
-  , VkPhysicalDeviceProperties(..)
   , VkPhysicalDeviceFeatures(..)
+  , VkPhysicalDeviceMemoryProperties(..)
+  , VkPhysicalDeviceProperties(..)
+  , VkQueueFamilyProperties(..)
+  , VkSampleCountFlagBits(..)
+  , VkImageCreateFlags
+  , VkImageUsageFlags
   , VkPhysicalDevice
   )
 import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
   ( VkSparseImageFormatProperties(..)
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2
-  ( pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2
-  , pattern VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
-  , pattern VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2
-  , pattern VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2
-  , pattern VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
-  , VkSparseImageFormatProperties2(..)
-  , VkPhysicalDeviceSparseImageFormatInfo2(..)
-  , vkGetPhysicalDeviceSparseImageFormatProperties2
-  , VkPhysicalDeviceMemoryProperties2(..)
-  , vkGetPhysicalDeviceMemoryProperties2
-  , VkQueueFamilyProperties2(..)
-  , vkGetPhysicalDeviceQueueFamilyProperties2
+  ( VkFormatProperties2(..)
   , VkImageFormatProperties2(..)
-  , VkPhysicalDeviceImageFormatInfo2(..)
-  , vkGetPhysicalDeviceImageFormatProperties2
-  , VkFormatProperties2(..)
-  , vkGetPhysicalDeviceFormatProperties2
-  , VkPhysicalDeviceProperties2(..)
-  , vkGetPhysicalDeviceProperties2
   , VkPhysicalDeviceFeatures2(..)
+  , VkPhysicalDeviceImageFormatInfo2(..)
+  , VkPhysicalDeviceMemoryProperties2(..)
+  , VkPhysicalDeviceProperties2(..)
+  , VkPhysicalDeviceSparseImageFormatInfo2(..)
+  , VkQueueFamilyProperties2(..)
+  , VkSparseImageFormatProperties2(..)
   , vkGetPhysicalDeviceFeatures2
+  , vkGetPhysicalDeviceFormatProperties2
+  , vkGetPhysicalDeviceImageFormatProperties2
+  , vkGetPhysicalDeviceMemoryProperties2
+  , vkGetPhysicalDeviceProperties2
+  , vkGetPhysicalDeviceQueueFamilyProperties2
+  , vkGetPhysicalDeviceSparseImageFormatProperties2
+  , pattern VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2
+  , pattern VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2
+  , pattern VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2
+  , pattern VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2
   )
 
 

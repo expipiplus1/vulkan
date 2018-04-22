@@ -79,38 +79,38 @@ import Graphics.Vulkan.Core10.Queue
   ( VkCommandBuffer
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group
-  ( pattern VK_DEPENDENCY_DEVICE_GROUP_BIT
-  , pattern VK_PIPELINE_CREATE_DISPATCH_BASE
-  , pattern VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
-  , pattern VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT
-  , pattern VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT
-  , pattern VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
-  , pattern VK_PEER_MEMORY_FEATURE_COPY_DST_BIT
-  , pattern VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
-  , pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
-  , VkDeviceGroupBindSparseInfo(..)
-  , VkDeviceGroupSubmitInfo(..)
+  ( VkDeviceGroupBindSparseInfo(..)
   , VkDeviceGroupCommandBufferBeginInfo(..)
   , VkDeviceGroupRenderPassBeginInfo(..)
-  , VkMemoryAllocateFlagsInfo(..)
-  , VkMemoryAllocateFlags
+  , VkDeviceGroupSubmitInfo(..)
   , VkMemoryAllocateFlagBits(..)
+  , VkMemoryAllocateFlagsInfo(..)
   , VkPeerMemoryFeatureFlagBits(..)
+  , VkMemoryAllocateFlags
+  , VkPeerMemoryFeatureFlags
   , vkCmdDispatchBase
   , vkCmdSetDeviceMask
-  , VkPeerMemoryFeatureFlags
   , vkGetDeviceGroupPeerMemoryFeatures
+  , pattern VK_DEPENDENCY_DEVICE_GROUP_BIT
+  , pattern VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT
+  , pattern VK_PEER_MEMORY_FEATURE_COPY_DST_BIT
+  , pattern VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT
+  , pattern VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT
+  , pattern VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
+  , pattern VK_PIPELINE_CREATE_DISPATCH_BASE
+  , pattern VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
+  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
+  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO
+  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
+  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
+  , pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2
-  ( pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
-  , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
-  , pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
+  ( VkBindBufferMemoryDeviceGroupInfo(..)
   , VkBindImageMemoryDeviceGroupInfo(..)
-  , VkBindBufferMemoryDeviceGroupInfo(..)
+  , pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+  , pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
+  , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
   )
 
 

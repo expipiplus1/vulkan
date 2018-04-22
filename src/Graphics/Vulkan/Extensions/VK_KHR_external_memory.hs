@@ -40,14 +40,14 @@ import Graphics.Vulkan.Core10.Core
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory
-  ( pattern VK_ERROR_INVALID_EXTERNAL_HANDLE
-  , pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO
-  , pattern VK_QUEUE_FAMILY_EXTERNAL
-  , VkExportMemoryAllocateInfo(..)
+  ( VkExportMemoryAllocateInfo(..)
   , VkExternalMemoryBufferCreateInfo(..)
   , VkExternalMemoryImageCreateInfo(..)
+  , pattern VK_ERROR_INVALID_EXTERNAL_HANDLE
+  , pattern VK_QUEUE_FAMILY_EXTERNAL
+  , pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO
+  , pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO
+  , pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities
   ( VkExternalMemoryHandleTypeFlags

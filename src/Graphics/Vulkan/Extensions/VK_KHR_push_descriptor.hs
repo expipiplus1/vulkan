@@ -24,12 +24,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -40,8 +40,8 @@ import Graphics.Vulkan.Core10.Core
   ( VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DescriptorSet
-  ( VkWriteDescriptorSet(..)
-  , VkDescriptorSetLayoutCreateFlagBits(..)
+  ( VkDescriptorSetLayoutCreateFlagBits(..)
+  , VkWriteDescriptorSet(..)
   )
 import Graphics.Vulkan.Core10.Pass
   ( VkPipelineBindPoint(..)
@@ -53,8 +53,8 @@ import Graphics.Vulkan.Core10.Queue
   ( VkCommandBuffer
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
-  ( VkDescriptorUpdateTemplate
-  , VkDescriptorUpdateTemplateType(..)
+  ( VkDescriptorUpdateTemplateType(..)
+  , VkDescriptorUpdateTemplate
   )
 
 
@@ -212,7 +212,11 @@ pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
 -- 'Graphics.Vulkan.Core10.Pass.VkPipelineBindPoint',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout',
 -- 'Graphics.Vulkan.Core10.DescriptorSet.VkWriteDescriptorSet'
-foreign import ccall "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("descriptorWriteCount" ::: Word32) -> ("pDescriptorWrites" ::: Ptr VkWriteDescriptorSet) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("descriptorWriteCount" ::: Word32) -> ("pDescriptorWrites" ::: Ptr VkWriteDescriptorSet) -> IO ()
 -- | vkCmdPushDescriptorSetWithTemplateKHR - Pushes descriptor updates into a
 -- command buffer using a descriptor update template
 --
@@ -346,7 +350,11 @@ foreign import ccall "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout'
-foreign import ccall "vkCmdPushDescriptorSetWithTemplateKHR" vkCmdPushDescriptorSetWithTemplateKHR :: ("commandBuffer" ::: VkCommandBuffer) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("pData" ::: Ptr ()) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdPushDescriptorSetWithTemplateKHR" vkCmdPushDescriptorSetWithTemplateKHR :: ("commandBuffer" ::: VkCommandBuffer) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("pData" ::: Ptr ()) -> IO ()
 -- | VkPhysicalDevicePushDescriptorPropertiesKHR - Structure describing push
 -- descriptor limits that can be supported by an implementation
 --

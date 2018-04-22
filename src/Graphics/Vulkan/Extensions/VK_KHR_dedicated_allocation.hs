@@ -36,10 +36,10 @@ import Graphics.Vulkan.Core10.MemoryManagement
   , VkImage
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation
-  ( pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO
-  , pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS
-  , VkMemoryDedicatedAllocateInfo(..)
+  ( VkMemoryDedicatedAllocateInfo(..)
   , VkMemoryDedicatedRequirements(..)
+  , pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO
+  , pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS
   )
 
 

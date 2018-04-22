@@ -32,17 +32,17 @@ import Data.Word
   ( Word64
   )
 import Foreign.C.Types
-  ( CFloat(..)
-  , CChar(..)
+  ( CChar(..)
+  , CFloat(..)
   , CSize(..)
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -114,7 +114,11 @@ pattern VK_EXT_DEBUG_MARKER_EXTENSION_NAME = "VK_EXT_debug_marker"
 --
 -- 'VkDebugMarkerObjectNameInfoEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkDebugMarkerSetObjectNameEXT" vkDebugMarkerSetObjectNameEXT :: ("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugMarkerObjectNameInfoEXT) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDebugMarkerSetObjectNameEXT" vkDebugMarkerSetObjectNameEXT :: ("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugMarkerObjectNameInfoEXT) -> IO VkResult
 -- | vkDebugMarkerSetObjectTagEXT - Attach arbitrary data to an object
 --
 -- = Parameters
@@ -150,7 +154,11 @@ foreign import ccall "vkDebugMarkerSetObjectNameEXT" vkDebugMarkerSetObjectNameE
 --
 -- 'VkDebugMarkerObjectTagInfoEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkDebugMarkerSetObjectTagEXT" vkDebugMarkerSetObjectTagEXT :: ("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugMarkerObjectTagInfoEXT) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDebugMarkerSetObjectTagEXT" vkDebugMarkerSetObjectTagEXT :: ("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugMarkerObjectTagInfoEXT) -> IO VkResult
 -- | vkCmdDebugMarkerBeginEXT - Open a command buffer marker region
 --
 -- = Parameters
@@ -196,7 +204,11 @@ foreign import ccall "vkDebugMarkerSetObjectTagEXT" vkDebugMarkerSetObjectTagEXT
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkDebugMarkerMarkerInfoEXT'
-foreign import ccall "vkCmdDebugMarkerBeginEXT" vkCmdDebugMarkerBeginEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdDebugMarkerBeginEXT" vkCmdDebugMarkerBeginEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
 -- | vkCmdDebugMarkerEndEXT - Close a command buffer marker region
 --
 -- = Parameters
@@ -254,7 +266,11 @@ foreign import ccall "vkCmdDebugMarkerBeginEXT" vkCmdDebugMarkerBeginEXT :: ("co
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdDebugMarkerEndEXT" vkCmdDebugMarkerEndEXT :: ("commandBuffer" ::: VkCommandBuffer) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdDebugMarkerEndEXT" vkCmdDebugMarkerEndEXT :: ("commandBuffer" ::: VkCommandBuffer) -> IO ()
 -- | vkCmdDebugMarkerInsertEXT - Insert a marker label into a command buffer
 --
 -- = Parameters
@@ -300,7 +316,11 @@ foreign import ccall "vkCmdDebugMarkerEndEXT" vkCmdDebugMarkerEndEXT :: ("comman
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkDebugMarkerMarkerInfoEXT'
-foreign import ccall "vkCmdDebugMarkerInsertEXT" vkCmdDebugMarkerInsertEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdDebugMarkerInsertEXT" vkCmdDebugMarkerInsertEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
 -- | VkDebugMarkerObjectNameInfoEXT - Specify parameters of a name to give to
 -- an object
 --

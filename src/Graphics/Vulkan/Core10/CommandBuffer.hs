@@ -42,16 +42,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -75,8 +75,8 @@ import Graphics.Vulkan.Core10.CommandPool
   )
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
-  , VkStructureType(..)
   , VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -295,7 +295,11 @@ pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = VkCommandBufferUsageFlagB
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkCommandBufferAllocateInfo',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkAllocateCommandBuffers" vkAllocateCommandBuffers :: ("device" ::: VkDevice) -> ("pAllocateInfo" ::: Ptr VkCommandBufferAllocateInfo) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkAllocateCommandBuffers" vkAllocateCommandBuffers :: ("device" ::: VkDevice) -> ("pAllocateInfo" ::: Ptr VkCommandBufferAllocateInfo) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO VkResult
 -- | vkFreeCommandBuffers - Free command buffers
 --
 -- = Parameters
@@ -351,7 +355,11 @@ foreign import ccall "vkAllocateCommandBuffers" vkAllocateCommandBuffers :: ("de
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.CommandPool.VkCommandPool',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkFreeCommandBuffers" vkFreeCommandBuffers :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ()
 -- | vkBeginCommandBuffer - Start recording a command buffer
 --
 -- = Parameters
@@ -413,7 +421,11 @@ foreign import ccall "vkFreeCommandBuffers" vkFreeCommandBuffers :: ("device" ::
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkCommandBufferBeginInfo'
-foreign import ccall "vkBeginCommandBuffer" vkBeginCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("pBeginInfo" ::: Ptr VkCommandBufferBeginInfo) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkBeginCommandBuffer" vkBeginCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("pBeginInfo" ::: Ptr VkCommandBufferBeginInfo) -> IO VkResult
 -- | vkEndCommandBuffer - Finish recording a command buffer
 --
 -- = Parameters
@@ -481,7 +493,11 @@ foreign import ccall "vkBeginCommandBuffer" vkBeginCommandBuffer :: ("commandBuf
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkEndCommandBuffer" vkEndCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkEndCommandBuffer" vkEndCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> IO VkResult
 -- | vkResetCommandBuffer - Reset a command buffer to the initial state
 --
 -- = Parameters
@@ -535,7 +551,11 @@ foreign import ccall "vkEndCommandBuffer" vkEndCommandBuffer :: ("commandBuffer"
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkCommandBufferResetFlags'
-foreign import ccall "vkResetCommandBuffer" vkResetCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("flags" ::: VkCommandBufferResetFlags) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkResetCommandBuffer" vkResetCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("flags" ::: VkCommandBufferResetFlags) -> IO VkResult
 -- | VkCommandBufferAllocateInfo - Structure specifying the allocation
 -- parameters for command buffer object
 --

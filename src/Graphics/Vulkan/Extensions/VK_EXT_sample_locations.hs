@@ -41,12 +41,12 @@ import Foreign.C.Types
   ( CFloat(..)
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -58,14 +58,14 @@ import Graphics.Vulkan.Core10.Core
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkSampleCountFlags
+  ( VkImageCreateFlagBits(..)
   , VkSampleCountFlagBits(..)
   , VkPhysicalDevice
-  , VkImageCreateFlagBits(..)
+  , VkSampleCountFlags
   )
 import Graphics.Vulkan.Core10.Pipeline
-  ( VkExtent2D(..)
-  , VkDynamicState(..)
+  ( VkDynamicState(..)
+  , VkExtent2D(..)
   )
 import Graphics.Vulkan.Core10.Queue
   ( VkCommandBuffer
@@ -169,7 +169,11 @@ pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME = "VK_EXT_sample_locations"
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'VkSampleLocationsInfoEXT'
-foreign import ccall "vkCmdSetSampleLocationsEXT" vkCmdSetSampleLocationsEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pSampleLocationsInfo" ::: Ptr VkSampleLocationsInfoEXT) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetSampleLocationsEXT" vkCmdSetSampleLocationsEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pSampleLocationsInfo" ::: Ptr VkSampleLocationsInfoEXT) -> IO ()
 -- | vkGetPhysicalDeviceMultisamplePropertiesEXT - Report sample count
 -- specific multisampling capabilities of a physical device
 --
@@ -201,7 +205,11 @@ foreign import ccall "vkCmdSetSampleLocationsEXT" vkCmdSetSampleLocationsEXT :: 
 -- 'VkMultisamplePropertiesEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlagBits'
-foreign import ccall "vkGetPhysicalDeviceMultisamplePropertiesEXT" vkGetPhysicalDeviceMultisamplePropertiesEXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("samples" ::: VkSampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr VkMultisamplePropertiesEXT) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceMultisamplePropertiesEXT" vkGetPhysicalDeviceMultisamplePropertiesEXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("samples" ::: VkSampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr VkMultisamplePropertiesEXT) -> IO ()
 -- | VkSampleLocationEXT - Structure specifying the coordinates of a sample
 -- location
 --

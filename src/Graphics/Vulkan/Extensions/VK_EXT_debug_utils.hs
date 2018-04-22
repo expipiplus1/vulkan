@@ -72,16 +72,16 @@ import Foreign.C.Types
   , CSize(..)
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -101,16 +101,16 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkBool32(..)
+  ( VkBool32(..)
   , VkObjectType(..)
+  , VkResult(..)
   , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
-  , VkInstance
   , VkDevice
+  , VkInstance
   )
 import Graphics.Vulkan.Core10.Queue
   ( VkCommandBuffer
@@ -374,7 +374,11 @@ type VkDebugUtilsMessengerEXT = Ptr VkDebugUtilsMessengerEXT_T
 --
 -- 'VkDebugUtilsObjectNameInfoEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkSetDebugUtilsObjectNameEXT" vkSetDebugUtilsObjectNameEXT :: ("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugUtilsObjectNameInfoEXT) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkSetDebugUtilsObjectNameEXT" vkSetDebugUtilsObjectNameEXT :: ("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugUtilsObjectNameInfoEXT) -> IO VkResult
 -- | vkSetDebugUtilsObjectTagEXT - Attach arbitrary data to an object
 --
 -- = Parameters
@@ -411,7 +415,11 @@ foreign import ccall "vkSetDebugUtilsObjectNameEXT" vkSetDebugUtilsObjectNameEXT
 --
 -- 'VkDebugUtilsObjectTagInfoEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkSetDebugUtilsObjectTagEXT" vkSetDebugUtilsObjectTagEXT :: ("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugUtilsObjectTagInfoEXT) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkSetDebugUtilsObjectTagEXT" vkSetDebugUtilsObjectTagEXT :: ("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugUtilsObjectTagInfoEXT) -> IO VkResult
 -- | vkQueueBeginDebugUtilsLabelEXT - Open a queue debug label region
 --
 -- = Parameters
@@ -443,7 +451,11 @@ foreign import ccall "vkSetDebugUtilsObjectTagEXT" vkSetDebugUtilsObjectTagEXT :
 -- = See Also
 --
 -- 'VkDebugUtilsLabelEXT', 'Graphics.Vulkan.Core10.Queue.VkQueue'
-foreign import ccall "vkQueueBeginDebugUtilsLabelEXT" vkQueueBeginDebugUtilsLabelEXT :: ("queue" ::: VkQueue) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkQueueBeginDebugUtilsLabelEXT" vkQueueBeginDebugUtilsLabelEXT :: ("queue" ::: VkQueue) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
 -- | vkQueueEndDebugUtilsLabelEXT - Close a queue debug label region
 --
 -- = Parameters
@@ -478,7 +490,11 @@ foreign import ccall "vkQueueBeginDebugUtilsLabelEXT" vkQueueBeginDebugUtilsLabe
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkQueue'
-foreign import ccall "vkQueueEndDebugUtilsLabelEXT" vkQueueEndDebugUtilsLabelEXT :: ("queue" ::: VkQueue) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkQueueEndDebugUtilsLabelEXT" vkQueueEndDebugUtilsLabelEXT :: ("queue" ::: VkQueue) -> IO ()
 -- | vkQueueInsertDebugUtilsLabelEXT - Insert a label into a queue
 --
 -- = Parameters
@@ -510,7 +526,11 @@ foreign import ccall "vkQueueEndDebugUtilsLabelEXT" vkQueueEndDebugUtilsLabelEXT
 -- = See Also
 --
 -- 'VkDebugUtilsLabelEXT', 'Graphics.Vulkan.Core10.Queue.VkQueue'
-foreign import ccall "vkQueueInsertDebugUtilsLabelEXT" vkQueueInsertDebugUtilsLabelEXT :: ("queue" ::: VkQueue) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkQueueInsertDebugUtilsLabelEXT" vkQueueInsertDebugUtilsLabelEXT :: ("queue" ::: VkQueue) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
 -- | vkCmdBeginDebugUtilsLabelEXT - Open a command buffer debug label region
 --
 -- = Parameters
@@ -555,7 +575,11 @@ foreign import ccall "vkQueueInsertDebugUtilsLabelEXT" vkQueueInsertDebugUtilsLa
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkDebugUtilsLabelEXT'
-foreign import ccall "vkCmdBeginDebugUtilsLabelEXT" vkCmdBeginDebugUtilsLabelEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdBeginDebugUtilsLabelEXT" vkCmdBeginDebugUtilsLabelEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
 -- | vkCmdEndDebugUtilsLabelEXT - Close a command buffer label region
 --
 -- = Parameters
@@ -613,7 +637,11 @@ foreign import ccall "vkCmdBeginDebugUtilsLabelEXT" vkCmdBeginDebugUtilsLabelEXT
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdEndDebugUtilsLabelEXT" vkCmdEndDebugUtilsLabelEXT :: ("commandBuffer" ::: VkCommandBuffer) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdEndDebugUtilsLabelEXT" vkCmdEndDebugUtilsLabelEXT :: ("commandBuffer" ::: VkCommandBuffer) -> IO ()
 -- | vkCmdInsertDebugUtilsLabelEXT - Insert a label into a command buffer
 --
 -- = Parameters
@@ -657,7 +685,11 @@ foreign import ccall "vkCmdEndDebugUtilsLabelEXT" vkCmdEndDebugUtilsLabelEXT :: 
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkDebugUtilsLabelEXT'
-foreign import ccall "vkCmdInsertDebugUtilsLabelEXT" vkCmdInsertDebugUtilsLabelEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdInsertDebugUtilsLabelEXT" vkCmdInsertDebugUtilsLabelEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ()
 -- | vkCreateDebugUtilsMessengerEXT - Create a debug messenger object
 --
 -- = Parameters
@@ -702,7 +734,11 @@ foreign import ccall "vkCmdInsertDebugUtilsLabelEXT" vkCmdInsertDebugUtilsLabelE
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkDebugUtilsMessengerCreateInfoEXT', 'VkDebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance'
-foreign import ccall "vkCreateDebugUtilsMessengerEXT" vkCreateDebugUtilsMessengerEXT :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDebugUtilsMessengerCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pMessenger" ::: Ptr VkDebugUtilsMessengerEXT) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateDebugUtilsMessengerEXT" vkCreateDebugUtilsMessengerEXT :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDebugUtilsMessengerCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pMessenger" ::: Ptr VkDebugUtilsMessengerEXT) -> IO VkResult
 -- | vkDestroyDebugUtilsMessengerEXT - Destroy a debug messenger object
 --
 -- = Parameters
@@ -749,7 +785,11 @@ foreign import ccall "vkCreateDebugUtilsMessengerEXT" vkCreateDebugUtilsMessenge
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkDebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance'
-foreign import ccall "vkDestroyDebugUtilsMessengerEXT" vkDestroyDebugUtilsMessengerEXT :: ("instance" ::: VkInstance) -> ("messenger" ::: VkDebugUtilsMessengerEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyDebugUtilsMessengerEXT" vkDestroyDebugUtilsMessengerEXT :: ("instance" ::: VkInstance) -> ("messenger" ::: VkDebugUtilsMessengerEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | vkSubmitDebugUtilsMessageEXT - Inject a message into a debug stream
 --
 -- = Parameters
@@ -793,7 +833,11 @@ foreign import ccall "vkDestroyDebugUtilsMessengerEXT" vkDestroyDebugUtilsMessen
 -- 'VkDebugUtilsMessageTypeFlagsEXT',
 -- 'VkDebugUtilsMessengerCallbackDataEXT',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance'
-foreign import ccall "vkSubmitDebugUtilsMessageEXT" vkSubmitDebugUtilsMessageEXT :: ("instance" ::: VkInstance) -> ("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageTypes" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkSubmitDebugUtilsMessageEXT" vkSubmitDebugUtilsMessageEXT :: ("instance" ::: VkInstance) -> ("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageTypes" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> IO ()
 -- | VkDebugUtilsObjectNameInfoEXT - Specify parameters of a name to give to
 -- an object
 --

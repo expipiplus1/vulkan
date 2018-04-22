@@ -31,11 +31,11 @@ import Graphics.Vulkan.Core10.Core
   ( VkStructureType(..)
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence
-  ( pattern VK_FENCE_IMPORT_TEMPORARY_BIT
-  , pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
-  , VkExportFenceCreateInfo(..)
-  , VkFenceImportFlags
+  ( VkExportFenceCreateInfo(..)
   , VkFenceImportFlagBits(..)
+  , VkFenceImportFlags
+  , pattern VK_FENCE_IMPORT_TEMPORARY_BIT
+  , pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities
   ( VkExternalFenceHandleTypeFlags

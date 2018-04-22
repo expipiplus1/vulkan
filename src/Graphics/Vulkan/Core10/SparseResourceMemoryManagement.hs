@@ -47,16 +47,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -76,21 +76,21 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
+  ( VkFormat(..)
   , VkResult(..)
-  , VkFormat(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDeviceSize
-  , VkExtent3D(..)
-  , VkImageUsageFlagBits(..)
+  ( VkExtent3D(..)
   , VkImageTiling(..)
-  , VkImageUsageFlags
-  , VkSampleCountFlagBits(..)
   , VkImageType(..)
-  , VkPhysicalDevice
+  , VkImageUsageFlagBits(..)
+  , VkSampleCountFlagBits(..)
   , VkDevice
+  , VkDeviceSize
+  , VkImageUsageFlags
+  , VkPhysicalDevice
   )
 import Graphics.Vulkan.Core10.Memory
   ( VkDeviceMemory
@@ -100,9 +100,9 @@ import Graphics.Vulkan.Core10.MemoryManagement
   , VkImage
   )
 import Graphics.Vulkan.Core10.Queue
-  ( VkSemaphore
-  , VkFence
+  ( VkFence
   , VkQueue
+  , VkSemaphore
   )
 
 
@@ -306,7 +306,11 @@ pattern VK_SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT = VkSparseImageFormatF
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'VkSparseImageMemoryRequirements'
-foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemoryRequirements :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pSparseMemoryRequirementCount" ::: Ptr Word32) -> ("pSparseMemoryRequirements" ::: Ptr VkSparseImageMemoryRequirements) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemoryRequirements :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pSparseMemoryRequirementCount" ::: Ptr Word32) -> ("pSparseMemoryRequirements" ::: Ptr VkSparseImageMemoryRequirements) -> IO ()
 -- | vkGetPhysicalDeviceSparseImageFormatProperties - Retrieve properties of
 -- an image format applied to sparse images
 --
@@ -404,7 +408,11 @@ foreign import ccall "vkGetImageSparseMemoryRequirements" vkGetImageSparseMemory
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkSampleCountFlagBits',
 -- 'VkSparseImageFormatProperties'
-foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysicalDeviceSparseImageFormatProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("samples" ::: VkSampleCountFlagBits) -> ("usage" ::: VkImageUsageFlags) -> ("tiling" ::: VkImageTiling) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkSparseImageFormatProperties) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysicalDeviceSparseImageFormatProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("samples" ::: VkSampleCountFlagBits) -> ("usage" ::: VkImageUsageFlags) -> ("tiling" ::: VkImageTiling) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkSparseImageFormatProperties) -> IO ()
 -- | vkQueueBindSparse - Bind device memory to a sparse resource object
 --
 -- = Parameters
@@ -531,7 +539,11 @@ foreign import ccall "vkGetPhysicalDeviceSparseImageFormatProperties" vkGetPhysi
 --
 -- 'VkBindSparseInfo', 'Graphics.Vulkan.Core10.Queue.VkFence',
 -- 'Graphics.Vulkan.Core10.Queue.VkQueue'
-foreign import ccall "vkQueueBindSparse" vkQueueBindSparse :: ("queue" ::: VkQueue) -> ("bindInfoCount" ::: Word32) -> ("pBindInfo" ::: Ptr VkBindSparseInfo) -> ("fence" ::: VkFence) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkQueueBindSparse" vkQueueBindSparse :: ("queue" ::: VkQueue) -> ("bindInfoCount" ::: Word32) -> ("pBindInfo" ::: Ptr VkBindSparseInfo) -> ("fence" ::: VkFence) -> IO VkResult
 -- | VkOffset3D - Structure specifying a three-dimensional offset
 --
 -- = See Also

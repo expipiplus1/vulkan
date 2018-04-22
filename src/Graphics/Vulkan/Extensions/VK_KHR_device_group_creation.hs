@@ -39,23 +39,23 @@ import Graphics.Vulkan.NamedType
 
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
-  , VkStructureType(..)
   , VkResult(..)
+  , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( VkMemoryHeapFlagBits(..)
-  , VkPhysicalDevice
   , VkInstance
+  , VkPhysicalDevice
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_creation
-  ( pattern VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
+  ( VkDeviceGroupDeviceCreateInfo(..)
+  , VkPhysicalDeviceGroupProperties(..)
+  , VK_MAX_DEVICE_GROUP_SIZE
+  , vkEnumeratePhysicalDeviceGroups
+  , pattern VK_MAX_DEVICE_GROUP_SIZE
+  , pattern VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
   , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES
-  , pattern VK_MAX_DEVICE_GROUP_SIZE
-  , VkDeviceGroupDeviceCreateInfo(..)
-  , VK_MAX_DEVICE_GROUP_SIZE
-  , VkPhysicalDeviceGroupProperties(..)
-  , vkEnumeratePhysicalDeviceGroups
   )
 
 

@@ -22,16 +22,16 @@ import Data.Bits
   , FiniteBits
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -51,8 +51,8 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  , VkResult(..)
+  ( VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -152,7 +152,11 @@ type VkEvent = Ptr VkEvent_T
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent',
 -- 'VkEventCreateInfo'
-foreign import ccall "vkCreateEvent" vkCreateEvent :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkEventCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pEvent" ::: Ptr VkEvent) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateEvent" vkCreateEvent :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkEventCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pEvent" ::: Ptr VkEvent) -> IO VkResult
 -- | vkDestroyEvent - Destroy an event object
 --
 -- = Parameters
@@ -198,7 +202,11 @@ foreign import ccall "vkCreateEvent" vkCreateEvent :: ("device" ::: VkDevice) ->
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
-foreign import ccall "vkDestroyEvent" vkDestroyEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyEvent" vkDestroyEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | vkGetEventStatus - Retrieve the status of an event object
 --
 -- = Parameters
@@ -261,7 +269,11 @@ foreign import ccall "vkDestroyEvent" vkDestroyEvent :: ("device" ::: VkDevice) 
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
-foreign import ccall "vkGetEventStatus" vkGetEventStatus :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetEventStatus" vkGetEventStatus :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
 -- | vkSetEvent - Set an event to signaled state
 --
 -- = Parameters
@@ -305,7 +317,11 @@ foreign import ccall "vkGetEventStatus" vkGetEventStatus :: ("device" ::: VkDevi
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
-foreign import ccall "vkSetEvent" vkSetEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkSetEvent" vkSetEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
 -- | vkResetEvent - Reset an event to non-signaled state
 --
 -- = Parameters
@@ -354,7 +370,11 @@ foreign import ccall "vkSetEvent" vkSetEvent :: ("device" ::: VkDevice) -> ("eve
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
-foreign import ccall "vkResetEvent" vkResetEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkResetEvent" vkResetEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
 -- | VkEventCreateInfo - Structure specifying parameters of a newly created
 -- event
 --

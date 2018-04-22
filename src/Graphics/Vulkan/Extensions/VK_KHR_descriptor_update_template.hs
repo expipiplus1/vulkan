@@ -43,8 +43,8 @@ import Graphics.Vulkan.NamedType
 
 import Graphics.Vulkan.Core10.Core
   ( VkObjectType(..)
-  , VkStructureType(..)
   , VkResult(..)
+  , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DescriptorSet
   ( VkDescriptorType(..)
@@ -64,17 +64,17 @@ import Graphics.Vulkan.Core10.PipelineLayout
   ( VkDescriptorSetLayout
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
-  ( pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+  ( VkDescriptorUpdateTemplateCreateFlags(..)
+  , VkDescriptorUpdateTemplateCreateInfo(..)
+  , VkDescriptorUpdateTemplateEntry(..)
+  , VkDescriptorUpdateTemplateType(..)
+  , VkDescriptorUpdateTemplate
+  , vkCreateDescriptorUpdateTemplate
+  , vkDestroyDescriptorUpdateTemplate
+  , vkUpdateDescriptorSetWithTemplate
+  , pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
   , pattern VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
-  , VkDescriptorUpdateTemplateEntry(..)
-  , VkDescriptorUpdateTemplateCreateFlags(..)
-  , VkDescriptorUpdateTemplateType(..)
-  , vkUpdateDescriptorSetWithTemplate
-  , vkDestroyDescriptorUpdateTemplate
-  , VkDescriptorUpdateTemplate
-  , VkDescriptorUpdateTemplateCreateInfo(..)
-  , vkCreateDescriptorUpdateTemplate
   )
 import Graphics.Vulkan.Extensions.VK_EXT_debug_report
   ( VkDebugReportObjectTypeEXT(..)

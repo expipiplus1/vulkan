@@ -34,29 +34,29 @@ import Graphics.Vulkan.NamedType
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  , VkResult(..)
+  ( VkResult(..)
+  , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( VkImageCreateFlagBits(..)
-  , VkDeviceSize
   , VkDevice
+  , VkDeviceSize
   )
 import Graphics.Vulkan.Core10.Memory
   ( VkDeviceMemory
   )
 import Graphics.Vulkan.Core10.MemoryManagement
-  ( VkImage
-  , VkBuffer
+  ( VkBuffer
+  , VkImage
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_bind_memory2
-  ( pattern VK_IMAGE_CREATE_ALIAS_BIT
-  , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
-  , pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
+  ( VkBindBufferMemoryInfo(..)
   , VkBindImageMemoryInfo(..)
-  , vkBindImageMemory2
-  , VkBindBufferMemoryInfo(..)
   , vkBindBufferMemory2
+  , vkBindImageMemory2
+  , pattern VK_IMAGE_CREATE_ALIAS_BIT
+  , pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
+  , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
   )
 
 

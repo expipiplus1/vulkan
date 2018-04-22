@@ -23,12 +23,12 @@ import Data.String
   ( IsString
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -56,8 +56,8 @@ import Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32
   )
 import Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
   ( DWORD
-  , SECURITY_ATTRIBUTES
   , HANDLE
+  , SECURITY_ATTRIBUTES
   )
 
 
@@ -125,7 +125,11 @@ pattern VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME = "VK_KHR_external_fence_win3
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkFenceGetWin32HandleInfoKHR'
-foreign import ccall "vkGetFenceWin32HandleKHR" vkGetFenceWin32HandleKHR :: ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkFenceGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetFenceWin32HandleKHR" vkGetFenceWin32HandleKHR :: ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkFenceGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
 -- | vkImportFenceWin32HandleKHR - Import a fence from a Windows HANDLE
 --
 -- = Parameters
@@ -168,7 +172,11 @@ foreign import ccall "vkGetFenceWin32HandleKHR" vkGetFenceWin32HandleKHR :: ("de
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkImportFenceWin32HandleInfoKHR'
-foreign import ccall "vkImportFenceWin32HandleKHR" vkImportFenceWin32HandleKHR :: ("device" ::: VkDevice) -> ("pImportFenceWin32HandleInfo" ::: Ptr VkImportFenceWin32HandleInfoKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkImportFenceWin32HandleKHR" vkImportFenceWin32HandleKHR :: ("device" ::: VkDevice) -> ("pImportFenceWin32HandleInfo" ::: Ptr VkImportFenceWin32HandleInfoKHR) -> IO VkResult
 -- | VkImportFenceWin32HandleInfoKHR - (None)
 --
 -- = Description

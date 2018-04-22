@@ -49,16 +49,16 @@ import Data.Word
   , Word8
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -78,8 +78,8 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Buffer
-  ( VkBufferUsageFlags
-  , VkBufferCreateFlags
+  ( VkBufferCreateFlags
+  , VkBufferUsageFlags
   )
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
@@ -424,7 +424,11 @@ pattern VK_LUID_SIZE = 8
 -- 'VkExternalBufferProperties',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPhysicalDeviceExternalBufferInfo'
-foreign import ccall "vkGetPhysicalDeviceExternalBufferProperties" vkGetPhysicalDeviceExternalBufferProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pExternalBufferInfo" ::: Ptr VkPhysicalDeviceExternalBufferInfo) -> ("pExternalBufferProperties" ::: Ptr VkExternalBufferProperties) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceExternalBufferProperties" vkGetPhysicalDeviceExternalBufferProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pExternalBufferInfo" ::: Ptr VkPhysicalDeviceExternalBufferInfo) -> ("pExternalBufferProperties" ::: Ptr VkExternalBufferProperties) -> IO ()
 -- | VkExternalMemoryProperties - Structure specifying external memory handle
 -- type capabilities
 --
