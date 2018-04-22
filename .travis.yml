@@ -11,12 +11,12 @@ matrix:
   - env: GHC_VERSION="ghcHEAD"
 
 before_install:
-  - nix-store --realise $(nix-store --query --references  $(nix-instantiate --argstr compiler "ghc841"))
-  - nix-store --realise $(nix-store --query --references  $(nix-instantiate generate --argstr compiler "ghc841"))
+  - nix-store --realise $(nix-store --query --references  $(nix-instantiate --argstr compiler $GHC_VERSION))
+  - nix-store --realise $(nix-store --query --references  $(nix-instantiate generate))
   - git clone --depth 1 https://github.com/KhronosGroup/Vulkan-Docs.git Vulkan-Docs
 
 script:
   - nix-build --argstr compiler $GHC_VERSION
-  - nix-build generate --argstr compiler $GHC_VERSION
+  - nix-build generate
   - ./generate.sh ./src/ ./vulkan.cabal Vulkan-Docs
   - nix-build --argstr compiler $GHC_VERSION
