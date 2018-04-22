@@ -15,9 +15,13 @@ let
     overrides = self: super: {
       pandoc = pkgs.haskell.lib.appendPatches
                  super.pandoc
-                 [ ./pandoc-patches/pandoc-math.patch
-                   ./pandoc-patches/pandoc-haddock-math.patch
-                   ./pandoc-patches/pandoc-haddock-table.patch
+                 [ ./patches/pandoc-math.patch
+                   ./patches/pandoc-haddock-math.patch
+                   ./patches/pandoc-haddock-table.patch
+                 ];
+      async-pool = pkgs.haskell.lib.appendPatches
+                 super.async-pool
+                 [ ./patches/async-pool-bounds.patch
                  ];
     };
   };
