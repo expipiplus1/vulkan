@@ -56,6 +56,13 @@ writeCabal modules platforms guardInfo =
 
         {vcat $ writePlatformFlag <$> platforms}
 
+        flag safe-foreign-calls
+            description:
+              Do not mark foreign imports as 'unsafe'. This means that
+              callbacks from Vulkan to Haskell will work. If you are using
+              these then make sure this flag is enabled.
+            default: False
+
         library
           hs-source-dirs:      src
           -- We need to use cpphs, as regular cpp ruins latex math with lines
@@ -63,6 +70,9 @@ writeCabal modules platforms guardInfo =
           ghc-options:         -Wall -pgmPcpphs -optP--cpp
           build-depends:       cpphs
           exposed-modules:     {indent (-2) . vcat . intercalatePrepend "," $ pretty . mName <$> unguardedModules}
+
+          if flag(safe-foreign-calls)
+            cpp-options: -DSAFE_FOREIGN_CALLS
 
           {indent 0 . vcat $ writeGuardedModules <$> guardGroups}
 

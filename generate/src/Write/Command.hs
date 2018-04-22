@@ -49,6 +49,10 @@ commandDoc c@Command {..} = do
   (t, (is, es)) <- toHsType (commandType c)
   let d getDoc = [qci|
   {document getDoc (TopLevel cName)}
-  foreign import ccall "{cName}" {cName} :: {t}
+  foreign import ccall
+  #if !defined(SAFE_FOREIGN_CALLS)
+    unsafe
+  #endif
+    "{cName}" {cName} :: {t}
 |]
   pure (d, is, es)

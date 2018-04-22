@@ -179,7 +179,11 @@ writeFunction gm domain c@Command{..} = do
       d= [qci|
         {dropVk cName} :: {domain}Cmds -> {t}
         {dropVk cName} deviceCmds = mk{upperCaseName} (p{upperCaseName} deviceCmds)
-        foreign import ccall unsafe "dynamic" mk{upperCaseName}
+        foreign import ccall
+        #if !defined(SAFE_FOREIGN_CALLS)
+          unsafe
+        #endif
+          "dynamic" mk{upperCaseName}
           :: FunPtr {t} -> {t}
       |]
   pure ((d, gm =<< cPlatform), is, es)
