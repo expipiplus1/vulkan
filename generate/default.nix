@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> {}, compiler ? "ghc822" }:
 
 let
   # Strip out the irrelevant parts of the source
@@ -11,7 +11,7 @@ let
     python3
   ];
 
-  haskellPackages = pkgs.haskellPackages.override{
+  haskellPackages = pkgs.haskell.packages.${compiler}.override{
     overrides = self: super: {
       pandoc = pkgs.haskell.lib.appendPatches
                  super.pandoc_2_1_2

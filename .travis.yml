@@ -12,3 +12,4 @@ matrix:
 
 script:
   - nix-build --argstr compiler $GHC_VERSION
+  - nix-build generate --argstr compiler $GHC_VERSION
