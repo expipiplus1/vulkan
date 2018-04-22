@@ -136,10 +136,10 @@ isConstructor = \case
 
 moduleImports :: Module -> [Doc ()]
 moduleImports Module {..} =
-  let unqualifiedImportMap = Map.fromListWith
+  let unqualifiedImportMap = sort <$> Map.fromListWith
         union
         ((iModule &&& iImports) <$> [i | i@Import{} <- weImports =<< mWriteElements])
-      qualifiedImportMap = Map.fromListWith
+      qualifiedImportMap = sort <$> Map.fromListWith
         union
         ((iModule &&& iImports) <$> [i | i@QualifiedImport{} <- weImports =<< mWriteElements])
       makeImport :: Doc () -> (Text, [Text]) -> Doc ()
@@ -178,7 +178,7 @@ moduleInternalImports
   -> [Doc ()]
 moduleInternalImports nameModule Module {..} =
   let deps = simplifyDependencies (weDepends =<< mWriteElements)
-      depends = Map.fromListWith
+      depends = sort <$> Map.fromListWith
         (<>)
         [ ((m, g), [e])
         | d           <- deps
