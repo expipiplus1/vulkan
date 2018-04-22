@@ -142,26 +142,26 @@ import Data.Vector.Storable.Sized
   ( Vector
   )
 import Data.Word
-  ( Word64
-  , Word32
+  ( Word32
+  , Word64
   , Word8
   )
 import Foreign.C.Types
-  ( CFloat(..)
+  ( CChar(..)
+  , CFloat(..)
   , CSize(..)
-  , CChar(..)
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -182,9 +182,9 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
-  , VkStructureType(..)
   , VkFormat(..)
   , VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 
@@ -1830,7 +1830,11 @@ type VkDevice = Ptr VkDevice_T
 -- = See Also
 --
 -- 'VkAllocationCallbacks', 'VkInstance', 'VkInstanceCreateInfo'
-foreign import ccall "vkCreateInstance" vkCreateInstance :: ("pCreateInfo" ::: Ptr VkInstanceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pInstance" ::: Ptr VkInstance) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateInstance" vkCreateInstance :: ("pCreateInfo" ::: Ptr VkInstanceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pInstance" ::: Ptr VkInstance) -> IO VkResult
 -- | vkDestroyInstance - Destroy an instance of Vulkan
 --
 -- = Parameters
@@ -1868,7 +1872,11 @@ foreign import ccall "vkCreateInstance" vkCreateInstance :: ("pCreateInfo" ::: P
 -- = See Also
 --
 -- 'VkAllocationCallbacks', 'VkInstance'
-foreign import ccall "vkDestroyInstance" vkDestroyInstance :: ("instance" ::: VkInstance) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyInstance" vkDestroyInstance :: ("instance" ::: VkInstance) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | vkEnumeratePhysicalDevices - Enumerates the physical devices accessible
 -- to a Vulkan instance
 --
@@ -1926,7 +1934,11 @@ foreign import ccall "vkDestroyInstance" vkDestroyInstance :: ("instance" ::: Vk
 -- = See Also
 --
 -- 'VkInstance', 'VkPhysicalDevice'
-foreign import ccall "vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices :: ("instance" ::: VkInstance) -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr VkPhysicalDevice) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices :: ("instance" ::: VkInstance) -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr VkPhysicalDevice) -> IO VkResult
 -- | vkGetDeviceProcAddr - Return a function pointer for a command
 --
 -- = Parameters
@@ -1971,7 +1983,11 @@ foreign import ccall "vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices :: 
 -- = See Also
 --
 -- 'PFN_vkVoidFunction', 'VkDevice'
-foreign import ccall "vkGetDeviceProcAddr" vkGetDeviceProcAddr :: ("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetDeviceProcAddr" vkGetDeviceProcAddr :: ("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
 -- | vkGetInstanceProcAddr - Return a function pointer for a command
 --
 -- = Parameters
@@ -2044,7 +2060,11 @@ foreign import ccall "vkGetDeviceProcAddr" vkGetDeviceProcAddr :: ("device" ::: 
 -- = See Also
 --
 -- 'PFN_vkVoidFunction', 'VkInstance'
-foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr :: ("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetInstanceProcAddr" vkGetInstanceProcAddr :: ("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
 -- | vkGetPhysicalDeviceProperties - Returns properties of a physical device
 --
 -- = Parameters
@@ -2066,7 +2086,11 @@ foreign import ccall "vkGetInstanceProcAddr" vkGetInstanceProcAddr :: ("instance
 -- = See Also
 --
 -- 'VkPhysicalDevice', 'VkPhysicalDeviceProperties'
-foreign import ccall "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pProperties" ::: Ptr VkPhysicalDeviceProperties) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pProperties" ::: Ptr VkPhysicalDeviceProperties) -> IO ()
 -- | vkGetPhysicalDeviceQueueFamilyProperties - Reports properties of the
 -- queues of the specified physical device
 --
@@ -2109,7 +2133,11 @@ foreign import ccall "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperti
 -- = See Also
 --
 -- 'VkPhysicalDevice', 'VkQueueFamilyProperties'
-foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties" vkGetPhysicalDeviceQueueFamilyProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pQueueFamilyPropertyCount" ::: Ptr Word32) -> ("pQueueFamilyProperties" ::: Ptr VkQueueFamilyProperties) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceQueueFamilyProperties" vkGetPhysicalDeviceQueueFamilyProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pQueueFamilyPropertyCount" ::: Ptr Word32) -> ("pQueueFamilyProperties" ::: Ptr VkQueueFamilyProperties) -> IO ()
 -- | vkGetPhysicalDeviceMemoryProperties - Reports memory information for the
 -- specified physical device
 --
@@ -2131,7 +2159,11 @@ foreign import ccall "vkGetPhysicalDeviceQueueFamilyProperties" vkGetPhysicalDev
 -- = See Also
 --
 -- 'VkPhysicalDevice', 'VkPhysicalDeviceMemoryProperties'
-foreign import ccall "vkGetPhysicalDeviceMemoryProperties" vkGetPhysicalDeviceMemoryProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pMemoryProperties" ::: Ptr VkPhysicalDeviceMemoryProperties) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceMemoryProperties" vkGetPhysicalDeviceMemoryProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pMemoryProperties" ::: Ptr VkPhysicalDeviceMemoryProperties) -> IO ()
 -- | vkGetPhysicalDeviceFeatures - Reports capabilities of a physical device
 --
 -- = Parameters
@@ -2155,7 +2187,11 @@ foreign import ccall "vkGetPhysicalDeviceMemoryProperties" vkGetPhysicalDeviceMe
 -- = See Also
 --
 -- 'VkPhysicalDevice', 'VkPhysicalDeviceFeatures'
-foreign import ccall "vkGetPhysicalDeviceFeatures" vkGetPhysicalDeviceFeatures :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkPhysicalDeviceFeatures) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceFeatures" vkGetPhysicalDeviceFeatures :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkPhysicalDeviceFeatures) -> IO ()
 -- | vkGetPhysicalDeviceFormatProperties - Lists physical device’s format
 -- capabilities
 --
@@ -2183,7 +2219,11 @@ foreign import ccall "vkGetPhysicalDeviceFeatures" vkGetPhysicalDeviceFeatures :
 --
 -- 'Graphics.Vulkan.Core10.Core.VkFormat', 'VkFormatProperties',
 -- 'VkPhysicalDevice'
-foreign import ccall "vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("pFormatProperties" ::: Ptr VkFormatProperties) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("pFormatProperties" ::: Ptr VkFormatProperties) -> IO ()
 -- | vkGetPhysicalDeviceImageFormatProperties - Lists physical device’s image
 -- format capabilities
 --
@@ -2277,7 +2317,11 @@ foreign import ccall "vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFo
 -- 'Graphics.Vulkan.Core10.Core.VkFormat', 'VkImageCreateFlags',
 -- 'VkImageFormatProperties', 'VkImageTiling', 'VkImageType',
 -- 'VkImageUsageFlags', 'VkPhysicalDevice'
-foreign import ccall "vkGetPhysicalDeviceImageFormatProperties" vkGetPhysicalDeviceImageFormatProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("pImageFormatProperties" ::: Ptr VkImageFormatProperties) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceImageFormatProperties" vkGetPhysicalDeviceImageFormatProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("pImageFormatProperties" ::: Ptr VkImageFormatProperties) -> IO VkResult
 -- | VkExtent3D - Structure specifying a three-dimensional extent
 --
 -- = See Also

@@ -22,16 +22,16 @@ import Data.String
   ( IsString
   )
 import Data.Word
-  ( Word64
-  , Word32
+  ( Word32
+  , Word64
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -102,7 +102,11 @@ pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME = "VK_GOOGLE_display_timing"
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkRefreshCycleDurationGOOGLE',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
-foreign import ccall "vkGetRefreshCycleDurationGOOGLE" vkGetRefreshCycleDurationGOOGLE :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pDisplayTimingProperties" ::: Ptr VkRefreshCycleDurationGOOGLE) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetRefreshCycleDurationGOOGLE" vkGetRefreshCycleDurationGOOGLE :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pDisplayTimingProperties" ::: Ptr VkRefreshCycleDurationGOOGLE) -> IO VkResult
 -- | vkGetPastPresentationTimingGOOGLE - Obtain timing of a
 -- previously-presented image
 --
@@ -176,7 +180,11 @@ foreign import ccall "vkGetRefreshCycleDurationGOOGLE" vkGetRefreshCycleDuration
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkPastPresentationTimingGOOGLE',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
-foreign import ccall "vkGetPastPresentationTimingGOOGLE" vkGetPastPresentationTimingGOOGLE :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pPresentationTimingCount" ::: Ptr Word32) -> ("pPresentationTimings" ::: Ptr VkPastPresentationTimingGOOGLE) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPastPresentationTimingGOOGLE" vkGetPastPresentationTimingGOOGLE :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pPresentationTimingCount" ::: Ptr Word32) -> ("pPresentationTimings" ::: Ptr VkPastPresentationTimingGOOGLE) -> IO VkResult
 -- | VkRefreshCycleDurationGOOGLE - Structure containing the RC duration of a
 -- display
 --

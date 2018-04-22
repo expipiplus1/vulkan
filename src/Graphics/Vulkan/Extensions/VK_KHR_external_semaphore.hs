@@ -31,11 +31,11 @@ import Graphics.Vulkan.Core10.Core
   ( VkStructureType(..)
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore
-  ( pattern VK_SEMAPHORE_IMPORT_TEMPORARY_BIT
-  , pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
-  , VkExportSemaphoreCreateInfo(..)
-  , VkSemaphoreImportFlags
+  ( VkExportSemaphoreCreateInfo(..)
   , VkSemaphoreImportFlagBits(..)
+  , VkSemaphoreImportFlags
+  , pattern VK_SEMAPHORE_IMPORT_TEMPORARY_BIT
+  , pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
   ( VkExternalSemaphoreHandleTypeFlags

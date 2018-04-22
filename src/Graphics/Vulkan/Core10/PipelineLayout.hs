@@ -24,16 +24,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -53,8 +53,8 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  , VkResult(..)
+  ( VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -156,7 +156,11 @@ type VkDescriptorSetLayout = Ptr VkDescriptorSetLayout_T
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout',
 -- 'VkPipelineLayoutCreateInfo'
-foreign import ccall "vkCreatePipelineLayout" vkCreatePipelineLayout :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkPipelineLayoutCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelineLayout" ::: Ptr VkPipelineLayout) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreatePipelineLayout" vkCreatePipelineLayout :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkPipelineLayoutCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelineLayout" ::: Ptr VkPipelineLayout) -> IO VkResult
 -- | vkDestroyPipelineLayout - Destroy a pipeline layout object
 --
 -- = Parameters
@@ -201,7 +205,11 @@ foreign import ccall "vkCreatePipelineLayout" vkCreatePipelineLayout :: ("device
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout'
-foreign import ccall "vkDestroyPipelineLayout" vkDestroyPipelineLayout :: ("device" ::: VkDevice) -> ("pipelineLayout" ::: VkPipelineLayout) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyPipelineLayout" vkDestroyPipelineLayout :: ("device" ::: VkDevice) -> ("pipelineLayout" ::: VkPipelineLayout) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkPushConstantRange - Structure specifying a push constant range
 --
 -- == Valid Usage

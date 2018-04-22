@@ -31,16 +31,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -66,9 +66,9 @@ import Graphics.Vulkan.Core10.Core
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkPhysicalDevice
-  , VkAllocationCallbacks(..)
+  ( VkAllocationCallbacks(..)
   , VkInstance
+  , VkPhysicalDevice
   )
 import Graphics.Vulkan.Extensions.VK_KHR_surface
   ( VkSurfaceKHR
@@ -159,7 +159,11 @@ pattern VK_KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface"
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR',
 -- 'VkXcbSurfaceCreateInfoKHR'
-foreign import ccall "vkCreateXcbSurfaceKHR" vkCreateXcbSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkXcbSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateXcbSurfaceKHR" vkCreateXcbSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkXcbSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 -- | vkGetPhysicalDeviceXcbPresentationSupportKHR - Query physical device for
 -- presentation to X11 server using XCB
 --
@@ -192,7 +196,11 @@ foreign import ccall "vkCreateXcbSurfaceKHR" vkCreateXcbSurfaceKHR :: ("instance
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
-foreign import ccall "vkGetPhysicalDeviceXcbPresentationSupportKHR" vkGetPhysicalDeviceXcbPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr Xcb_connection_t) -> ("visual_id" ::: Xcb_visualid_t) -> IO VkBool32
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceXcbPresentationSupportKHR" vkGetPhysicalDeviceXcbPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr Xcb_connection_t) -> ("visual_id" ::: Xcb_visualid_t) -> IO VkBool32
 -- | VkXcbSurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Xcb surface object
 --

@@ -97,7 +97,11 @@ pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = "VK_EXT_acquire_xlib_displa
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
-foreign import ccall "vkAcquireXlibDisplayEXT" vkAcquireXlibDisplayEXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("dpy" ::: Ptr Display) -> ("display" ::: VkDisplayKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkAcquireXlibDisplayEXT" vkAcquireXlibDisplayEXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("dpy" ::: Ptr Display) -> ("display" ::: VkDisplayKHR) -> IO VkResult
 -- | vkGetRandROutputDisplayEXT - Query the VkDisplayKHR corresponding to an
 -- X11 RandR Output
 --
@@ -138,4 +142,8 @@ foreign import ccall "vkAcquireXlibDisplayEXT" vkAcquireXlibDisplayEXT :: ("phys
 --
 -- 'Graphics.Vulkan.Extensions.VK_KHR_display.VkDisplayKHR',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
-foreign import ccall "vkGetRandROutputDisplayEXT" vkGetRandROutputDisplayEXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("dpy" ::: Ptr Display) -> ("rrOutput" ::: RROutput) -> ("pDisplay" ::: Ptr VkDisplayKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetRandROutputDisplayEXT" vkGetRandROutputDisplayEXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("dpy" ::: Ptr Display) -> ("rrOutput" ::: RROutput) -> ("pDisplay" ::: Ptr VkDisplayKHR) -> IO VkResult

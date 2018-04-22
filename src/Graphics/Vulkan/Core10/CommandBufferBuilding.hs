@@ -100,17 +100,17 @@ import Foreign.C.Types
   ( CFloat(..)
   )
 import Foreign.Ptr
-  ( castPtr
+  ( Ptr
+  , castPtr
   , plusPtr
-  , Ptr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -154,36 +154,36 @@ import Graphics.Vulkan.Core10.ImageView
   ( VkImageSubresourceRange(..)
   )
 import Graphics.Vulkan.Core10.MemoryManagement
-  ( VkImage
-  , VkBuffer
+  ( VkBuffer
+  , VkImage
   )
 import Graphics.Vulkan.Core10.Pass
-  ( VkFramebuffer
-  , VkAccessFlags
-  , VkDependencyFlagBits(..)
-  , VkDependencyFlags
+  ( VkDependencyFlagBits(..)
   , VkPipelineBindPoint(..)
+  , VkAccessFlags
+  , VkDependencyFlags
+  , VkFramebuffer
   )
 import Graphics.Vulkan.Core10.Pipeline
-  ( VkRenderPass
+  ( VkRect2D(..)
   , VkShaderStageFlagBits(..)
-  , VkPipelineLayout
-  , VkRect2D(..)
   , VkViewport(..)
   , VkPipeline
+  , VkPipelineLayout
+  , VkRenderPass
   )
 import Graphics.Vulkan.Core10.PipelineLayout
   ( VkShaderStageFlags
   )
 import Graphics.Vulkan.Core10.Query
   ( VkQueryResultFlagBits(..)
-  , VkQueryResultFlags
   , VkQueryPool
+  , VkQueryResultFlags
   )
 import Graphics.Vulkan.Core10.Queue
   ( VkPipelineStageFlagBits(..)
-  , VkPipelineStageFlags
   , VkCommandBuffer
+  , VkPipelineStageFlags
   )
 import Graphics.Vulkan.Core10.Sampler
   ( VkFilter(..)
@@ -420,7 +420,11 @@ pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlagBits 0x00000003
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkPipeline',
 -- 'Graphics.Vulkan.Core10.Pass.VkPipelineBindPoint'
-foreign import ccall "vkCmdBindPipeline" vkCmdBindPipeline :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("pipeline" ::: VkPipeline) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdBindPipeline" vkCmdBindPipeline :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("pipeline" ::: VkPipeline) -> IO ()
 -- | vkCmdSetViewport - Set the viewport on a command buffer
 --
 -- = Parameters
@@ -501,7 +505,11 @@ foreign import ccall "vkCmdBindPipeline" vkCmdBindPipeline :: ("commandBuffer" :
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkViewport'
-foreign import ccall "vkCmdSetViewport" vkCmdSetViewport :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewports" ::: Ptr VkViewport) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetViewport" vkCmdSetViewport :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewports" ::: Ptr VkViewport) -> IO ()
 -- | vkCmdSetScissor - Set the dynamic scissor rectangles on a command buffer
 --
 -- = Parameters
@@ -597,7 +605,11 @@ foreign import ccall "vkCmdSetViewport" vkCmdSetViewport :: ("commandBuffer" :::
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkRect2D'
-foreign import ccall "vkCmdSetScissor" vkCmdSetScissor :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstScissor" ::: Word32) -> ("scissorCount" ::: Word32) -> ("pScissors" ::: Ptr VkRect2D) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetScissor" vkCmdSetScissor :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstScissor" ::: Word32) -> ("scissorCount" ::: Word32) -> ("pScissors" ::: Ptr VkRect2D) -> IO ()
 -- | vkCmdSetLineWidth - Set the dynamic line width state
 --
 -- = Parameters
@@ -648,7 +660,11 @@ foreign import ccall "vkCmdSetScissor" vkCmdSetScissor :: ("commandBuffer" ::: V
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdSetLineWidth" vkCmdSetLineWidth :: ("commandBuffer" ::: VkCommandBuffer) -> ("lineWidth" ::: CFloat) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetLineWidth" vkCmdSetLineWidth :: ("commandBuffer" ::: VkCommandBuffer) -> ("lineWidth" ::: CFloat) -> IO ()
 -- | vkCmdSetDepthBias - Set the depth bias dynamic state
 --
 -- = Parameters
@@ -780,7 +796,11 @@ foreign import ccall "vkCmdSetLineWidth" vkCmdSetLineWidth :: ("commandBuffer" :
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdSetDepthBias" vkCmdSetDepthBias :: ("commandBuffer" ::: VkCommandBuffer) -> ("depthBiasConstantFactor" ::: CFloat) -> ("depthBiasClamp" ::: CFloat) -> ("depthBiasSlopeFactor" ::: CFloat) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetDepthBias" vkCmdSetDepthBias :: ("commandBuffer" ::: VkCommandBuffer) -> ("depthBiasConstantFactor" ::: CFloat) -> ("depthBiasClamp" ::: CFloat) -> ("depthBiasSlopeFactor" ::: CFloat) -> IO ()
 -- | vkCmdSetBlendConstants - Set the values of blend constants
 --
 -- = Parameters
@@ -830,7 +850,11 @@ foreign import ccall "vkCmdSetDepthBias" vkCmdSetDepthBias :: ("commandBuffer" :
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdSetBlendConstants" vkCmdSetBlendConstants :: ("commandBuffer" ::: VkCommandBuffer) -> ("blendConstants" ::: Ptr CFloat) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetBlendConstants" vkCmdSetBlendConstants :: ("commandBuffer" ::: VkCommandBuffer) -> ("blendConstants" ::: Ptr CFloat) -> IO ()
 -- | vkCmdSetDepthBounds - Set the depth bounds test values for a command
 -- buffer
 --
@@ -889,7 +913,11 @@ foreign import ccall "vkCmdSetBlendConstants" vkCmdSetBlendConstants :: ("comman
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdSetDepthBounds" vkCmdSetDepthBounds :: ("commandBuffer" ::: VkCommandBuffer) -> ("minDepthBounds" ::: CFloat) -> ("maxDepthBounds" ::: CFloat) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetDepthBounds" vkCmdSetDepthBounds :: ("commandBuffer" ::: VkCommandBuffer) -> ("minDepthBounds" ::: CFloat) -> ("maxDepthBounds" ::: CFloat) -> IO ()
 -- | vkCmdSetStencilCompareMask - Set the stencil compare mask dynamic state
 --
 -- = Parameters
@@ -944,7 +972,11 @@ foreign import ccall "vkCmdSetDepthBounds" vkCmdSetDepthBounds :: ("commandBuffe
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkStencilFaceFlags'
-foreign import ccall "vkCmdSetStencilCompareMask" vkCmdSetStencilCompareMask :: ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("compareMask" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetStencilCompareMask" vkCmdSetStencilCompareMask :: ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("compareMask" ::: Word32) -> IO ()
 -- | vkCmdSetStencilWriteMask - Set the stencil write mask dynamic state
 --
 -- = Parameters
@@ -1000,7 +1032,11 @@ foreign import ccall "vkCmdSetStencilCompareMask" vkCmdSetStencilCompareMask :: 
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkStencilFaceFlags'
-foreign import ccall "vkCmdSetStencilWriteMask" vkCmdSetStencilWriteMask :: ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("writeMask" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetStencilWriteMask" vkCmdSetStencilWriteMask :: ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("writeMask" ::: Word32) -> IO ()
 -- | vkCmdSetStencilReference - Set the stencil reference dynamic state
 --
 -- = Parameters
@@ -1056,7 +1092,11 @@ foreign import ccall "vkCmdSetStencilWriteMask" vkCmdSetStencilWriteMask :: ("co
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkStencilFaceFlags'
-foreign import ccall "vkCmdSetStencilReference" vkCmdSetStencilReference :: ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("reference" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetStencilReference" vkCmdSetStencilReference :: ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("reference" ::: Word32) -> IO ()
 -- | vkCmdBindDescriptorSets - Binds descriptor sets to a command buffer
 --
 -- = Parameters
@@ -1227,7 +1267,11 @@ foreign import ccall "vkCmdSetStencilReference" vkCmdSetStencilReference :: ("co
 -- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSet',
 -- 'Graphics.Vulkan.Core10.Pass.VkPipelineBindPoint',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout'
-foreign import ccall "vkCmdBindDescriptorSets" vkCmdBindDescriptorSets :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("firstSet" ::: Word32) -> ("descriptorSetCount" ::: Word32) -> ("pDescriptorSets" ::: Ptr VkDescriptorSet) -> ("dynamicOffsetCount" ::: Word32) -> ("pDynamicOffsets" ::: Ptr Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdBindDescriptorSets" vkCmdBindDescriptorSets :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("firstSet" ::: Word32) -> ("descriptorSetCount" ::: Word32) -> ("pDescriptorSets" ::: Ptr VkDescriptorSet) -> ("dynamicOffsetCount" ::: Word32) -> ("pDynamicOffsets" ::: Ptr Word32) -> IO ()
 -- | vkCmdBindIndexBuffer - Bind an index buffer to a command buffer
 --
 -- = Parameters
@@ -1298,7 +1342,11 @@ foreign import ccall "vkCmdBindDescriptorSets" vkCmdBindDescriptorSets :: ("comm
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@,
 -- 'VkIndexType'
-foreign import ccall "vkCmdBindIndexBuffer" vkCmdBindIndexBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("indexType" ::: VkIndexType) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdBindIndexBuffer" vkCmdBindIndexBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("indexType" ::: VkIndexType) -> IO ()
 -- | vkCmdBindVertexBuffers - Bind vertex buffers to a command buffer
 --
 -- = Parameters
@@ -1387,7 +1435,11 @@ foreign import ccall "vkCmdBindIndexBuffer" vkCmdBindIndexBuffer :: ("commandBuf
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
-foreign import ccall "vkCmdBindVertexBuffers" vkCmdBindVertexBuffers :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdBindVertexBuffers" vkCmdBindVertexBuffers :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> IO ()
 -- | vkCmdDraw - Draw primitives
 --
 -- = Parameters
@@ -1569,7 +1621,11 @@ foreign import ccall "vkCmdBindVertexBuffers" vkCmdBindVertexBuffers :: ("comman
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdDraw" vkCmdDraw :: ("commandBuffer" ::: VkCommandBuffer) -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdDraw" vkCmdDraw :: ("commandBuffer" ::: VkCommandBuffer) -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ()
 -- | vkCmdDrawIndexed - Issue an indexed draw into a command buffer
 --
 -- = Parameters
@@ -1773,7 +1829,11 @@ foreign import ccall "vkCmdDraw" vkCmdDraw :: ("commandBuffer" ::: VkCommandBuff
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdDrawIndexed" vkCmdDrawIndexed :: ("commandBuffer" ::: VkCommandBuffer) -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdDrawIndexed" vkCmdDrawIndexed :: ("commandBuffer" ::: VkCommandBuffer) -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ()
 -- | vkCmdDrawIndirect - Issue an indirect draw into a command buffer
 --
 -- = Parameters
@@ -1991,7 +2051,11 @@ foreign import ccall "vkCmdDrawIndexed" vkCmdDrawIndexed :: ("commandBuffer" :::
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
-foreign import ccall "vkCmdDrawIndirect" vkCmdDrawIndirect :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdDrawIndirect" vkCmdDrawIndirect :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
 -- | vkCmdDrawIndexedIndirect - Perform an indexed indirect draw
 --
 -- = Parameters
@@ -2209,7 +2273,11 @@ foreign import ccall "vkCmdDrawIndirect" vkCmdDrawIndirect :: ("commandBuffer" :
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
-foreign import ccall "vkCmdDrawIndexedIndirect" vkCmdDrawIndexedIndirect :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdDrawIndexedIndirect" vkCmdDrawIndexedIndirect :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
 -- | vkCmdDispatch - Dispatch compute work items
 --
 -- = Parameters
@@ -2355,7 +2423,11 @@ foreign import ccall "vkCmdDrawIndexedIndirect" vkCmdDrawIndexedIndirect :: ("co
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdDispatch" vkCmdDispatch :: ("commandBuffer" ::: VkCommandBuffer) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdDispatch" vkCmdDispatch :: ("commandBuffer" ::: VkCommandBuffer) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
 -- | vkCmdDispatchIndirect - Dispatch compute work items using indirect
 -- parameters
 --
@@ -2508,7 +2580,11 @@ foreign import ccall "vkCmdDispatch" vkCmdDispatch :: ("commandBuffer" ::: VkCom
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
-foreign import ccall "vkCmdDispatchIndirect" vkCmdDispatchIndirect :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdDispatchIndirect" vkCmdDispatchIndirect :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> IO ()
 -- | vkCmdCopyBuffer - Copy data between buffer regions
 --
 -- = Parameters
@@ -2613,7 +2689,11 @@ foreign import ccall "vkCmdDispatchIndirect" vkCmdDispatchIndirect :: ("commandB
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer', 'VkBufferCopy',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdCopyBuffer" vkCmdCopyBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferCopy) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdCopyBuffer" vkCmdCopyBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferCopy) -> IO ()
 -- | vkCmdCopyImage - Copy data between images
 --
 -- = Parameters
@@ -2927,7 +3007,11 @@ foreign import ccall "vkCmdCopyBuffer" vkCmdCopyBuffer :: ("commandBuffer" ::: V
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage', 'VkImageCopy',
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout'
-foreign import ccall "vkCmdCopyImage" vkCmdCopyImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageCopy) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdCopyImage" vkCmdCopyImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageCopy) -> IO ()
 -- | vkCmdBlitImage - Copy regions of an image, potentially performing format
 -- conversion,
 --
@@ -3250,7 +3334,11 @@ foreign import ccall "vkCmdCopyImage" vkCmdCopyImage :: ("commandBuffer" ::: VkC
 -- 'Graphics.Vulkan.Core10.Sampler.VkFilter',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage', 'VkImageBlit',
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout'
-foreign import ccall "vkCmdBlitImage" vkCmdBlitImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageBlit) -> ("filter" ::: VkFilter) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdBlitImage" vkCmdBlitImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageBlit) -> ("filter" ::: VkFilter) -> IO ()
 -- | vkCmdCopyBufferToImage - Copy data from a buffer into an image
 --
 -- = Parameters
@@ -3407,7 +3495,11 @@ foreign import ccall "vkCmdBlitImage" vkCmdBlitImage :: ("commandBuffer" ::: VkC
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout'
-foreign import ccall "vkCmdCopyBufferToImage" vkCmdCopyBufferToImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdCopyBufferToImage" vkCmdCopyBufferToImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
 -- | vkCmdCopyImageToBuffer - Copy image data into a buffer
 --
 -- = Parameters
@@ -3565,7 +3657,11 @@ foreign import ccall "vkCmdCopyBufferToImage" vkCmdCopyBufferToImage :: ("comman
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout'
-foreign import ccall "vkCmdCopyImageToBuffer" vkCmdCopyImageToBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdCopyImageToBuffer" vkCmdCopyImageToBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
 -- | vkCmdUpdateBuffer - Update a buffer’s contents from host memory
 --
 -- = Parameters
@@ -3681,7 +3777,11 @@ foreign import ccall "vkCmdCopyImageToBuffer" vkCmdCopyImageToBuffer :: ("comman
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
-foreign import ccall "vkCmdUpdateBuffer" vkCmdUpdateBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("dataSize" ::: VkDeviceSize) -> ("pData" ::: Ptr ()) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdUpdateBuffer" vkCmdUpdateBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("dataSize" ::: VkDeviceSize) -> ("pData" ::: Ptr ()) -> IO ()
 -- | vkCmdFillBuffer - Fill a region of a buffer with a fixed value
 --
 -- = Parameters
@@ -3773,7 +3873,11 @@ foreign import ccall "vkCmdUpdateBuffer" vkCmdUpdateBuffer :: ("commandBuffer" :
 --
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
-foreign import ccall "vkCmdFillBuffer" vkCmdFillBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("size" ::: VkDeviceSize) -> ("data" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdFillBuffer" vkCmdFillBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("size" ::: VkDeviceSize) -> ("data" ::: Word32) -> IO ()
 -- | vkCmdClearColorImage - Clear regions of a color image
 --
 -- = Parameters
@@ -3918,7 +4022,11 @@ foreign import ccall "vkCmdFillBuffer" vkCmdFillBuffer :: ("commandBuffer" ::: V
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout',
 -- 'Graphics.Vulkan.Core10.ImageView.VkImageSubresourceRange'
-foreign import ccall "vkCmdClearColorImage" vkCmdClearColorImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pColor" ::: Ptr VkClearColorValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdClearColorImage" vkCmdClearColorImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pColor" ::: Ptr VkClearColorValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
 -- | vkCmdClearDepthStencilImage - Fill regions of a combined depth\/stencil
 -- image
 --
@@ -4062,7 +4170,11 @@ foreign import ccall "vkCmdClearColorImage" vkCmdClearColorImage :: ("commandBuf
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout',
 -- 'Graphics.Vulkan.Core10.ImageView.VkImageSubresourceRange'
-foreign import ccall "vkCmdClearDepthStencilImage" vkCmdClearDepthStencilImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pDepthStencil" ::: Ptr VkClearDepthStencilValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdClearDepthStencilImage" vkCmdClearDepthStencilImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pDepthStencil" ::: Ptr VkClearDepthStencilValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
 -- | vkCmdClearAttachments - Clear regions within bound framebuffer
 -- attachments
 --
@@ -4153,7 +4265,11 @@ foreign import ccall "vkCmdClearDepthStencilImage" vkCmdClearDepthStencilImage :
 --
 -- 'VkClearAttachment', 'VkClearRect',
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdClearAttachments" vkCmdClearAttachments :: ("commandBuffer" ::: VkCommandBuffer) -> ("attachmentCount" ::: Word32) -> ("pAttachments" ::: Ptr VkClearAttachment) -> ("rectCount" ::: Word32) -> ("pRects" ::: Ptr VkClearRect) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdClearAttachments" vkCmdClearAttachments :: ("commandBuffer" ::: VkCommandBuffer) -> ("attachmentCount" ::: Word32) -> ("pAttachments" ::: Ptr VkClearAttachment) -> ("rectCount" ::: Word32) -> ("pRects" ::: Ptr VkClearRect) -> IO ()
 -- | vkCmdResolveImage - Resolve regions of an image
 --
 -- = Parameters
@@ -4325,7 +4441,11 @@ foreign import ccall "vkCmdClearAttachments" vkCmdClearAttachments :: ("commandB
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.Core10.Image.VkImageLayout', 'VkImageResolve'
-foreign import ccall "vkCmdResolveImage" vkCmdResolveImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageResolve) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdResolveImage" vkCmdResolveImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageResolve) -> IO ()
 -- | vkCmdSetEvent - Set an event object to signaled state
 --
 -- = Parameters
@@ -4426,7 +4546,11 @@ foreign import ccall "vkCmdResolveImage" vkCmdResolveImage :: ("commandBuffer" :
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Event.VkEvent',
 -- 'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlags'
-foreign import ccall "vkCmdSetEvent" vkCmdSetEvent :: ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetEvent" vkCmdSetEvent :: ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
 -- | vkCmdResetEvent - Reset an event object to non-signaled state
 --
 -- = Parameters
@@ -4532,7 +4656,11 @@ foreign import ccall "vkCmdSetEvent" vkCmdSetEvent :: ("commandBuffer" ::: VkCom
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Event.VkEvent',
 -- 'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlags'
-foreign import ccall "vkCmdResetEvent" vkCmdResetEvent :: ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdResetEvent" vkCmdResetEvent :: ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
 -- | vkCmdWaitEvents - Wait for one or more events and insert a set of memory
 --
 -- = Parameters
@@ -4768,7 +4896,11 @@ foreign import ccall "vkCmdResetEvent" vkCmdResetEvent :: ("commandBuffer" ::: V
 -- 'VkBufferMemoryBarrier', 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Event.VkEvent', 'VkImageMemoryBarrier',
 -- 'VkMemoryBarrier', 'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlags'
-foreign import ccall "vkCmdWaitEvents" vkCmdWaitEvents :: ("commandBuffer" ::: VkCommandBuffer) -> ("eventCount" ::: Word32) -> ("pEvents" ::: Ptr VkEvent) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdWaitEvents" vkCmdWaitEvents :: ("commandBuffer" ::: VkCommandBuffer) -> ("eventCount" ::: Word32) -> ("pEvents" ::: Ptr VkEvent) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
 -- | vkCmdPipelineBarrier - Insert a memory dependency
 --
 -- = Parameters
@@ -5043,7 +5175,11 @@ foreign import ccall "vkCmdWaitEvents" vkCmdWaitEvents :: ("commandBuffer" ::: V
 -- 'VkBufferMemoryBarrier', 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Pass.VkDependencyFlags', 'VkImageMemoryBarrier',
 -- 'VkMemoryBarrier', 'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlags'
-foreign import ccall "vkCmdPipelineBarrier" vkCmdPipelineBarrier :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("dependencyFlags" ::: VkDependencyFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdPipelineBarrier" vkCmdPipelineBarrier :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("dependencyFlags" ::: VkDependencyFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
 -- | vkCmdBeginQuery - Begin a query
 --
 -- = Parameters
@@ -5155,7 +5291,11 @@ foreign import ccall "vkCmdPipelineBarrier" vkCmdPipelineBarrier :: ("commandBuf
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.CommandBuffer.VkQueryControlFlags',
 -- 'Graphics.Vulkan.Core10.Query.VkQueryPool'
-foreign import ccall "vkCmdBeginQuery" vkCmdBeginQuery :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdBeginQuery" vkCmdBeginQuery :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> IO ()
 -- | vkCmdEndQuery - Ends a query
 --
 -- = Parameters
@@ -5232,7 +5372,11 @@ foreign import ccall "vkCmdBeginQuery" vkCmdBeginQuery :: ("commandBuffer" ::: V
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Query.VkQueryPool'
-foreign import ccall "vkCmdEndQuery" vkCmdEndQuery :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdEndQuery" vkCmdEndQuery :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
 -- | vkCmdResetQueryPool - Reset queries in a query pool
 --
 -- = Parameters
@@ -5300,7 +5444,11 @@ foreign import ccall "vkCmdEndQuery" vkCmdEndQuery :: ("commandBuffer" ::: VkCom
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Query.VkQueryPool'
-foreign import ccall "vkCmdResetQueryPool" vkCmdResetQueryPool :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdResetQueryPool" vkCmdResetQueryPool :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
 -- | vkCmdWriteTimestamp - Write a device timestamp into a query object
 --
 -- = Parameters
@@ -5434,7 +5582,11 @@ foreign import ccall "vkCmdResetQueryPool" vkCmdResetQueryPool :: ("commandBuffe
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlagBits',
 -- 'Graphics.Vulkan.Core10.Query.VkQueryPool'
-foreign import ccall "vkCmdWriteTimestamp" vkCmdWriteTimestamp :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdWriteTimestamp" vkCmdWriteTimestamp :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
 -- | vkCmdCopyQueryPoolResults - Copy the results of queries in a query pool
 -- to a buffer object
 --
@@ -5592,7 +5744,11 @@ foreign import ccall "vkCmdWriteTimestamp" vkCmdWriteTimestamp :: ("commandBuffe
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@,
 -- 'Graphics.Vulkan.Core10.Query.VkQueryPool',
 -- 'Graphics.Vulkan.Core10.Query.VkQueryResultFlags'
-foreign import ccall "vkCmdCopyQueryPoolResults" vkCmdCopyQueryPoolResults :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdCopyQueryPoolResults" vkCmdCopyQueryPoolResults :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO ()
 -- | vkCmdPushConstants - Update the values of push constants
 --
 -- = Parameters
@@ -5686,7 +5842,11 @@ foreign import ccall "vkCmdCopyQueryPoolResults" vkCmdCopyQueryPoolResults :: ("
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout',
 -- 'Graphics.Vulkan.Core10.PipelineLayout.VkShaderStageFlags'
-foreign import ccall "vkCmdPushConstants" vkCmdPushConstants :: ("commandBuffer" ::: VkCommandBuffer) -> ("layout" ::: VkPipelineLayout) -> ("stageFlags" ::: VkShaderStageFlags) -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("pValues" ::: Ptr ()) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdPushConstants" vkCmdPushConstants :: ("commandBuffer" ::: VkCommandBuffer) -> ("layout" ::: VkPipelineLayout) -> ("stageFlags" ::: VkShaderStageFlags) -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("pValues" ::: Ptr ()) -> IO ()
 -- | vkCmdBeginRenderPass - Begin a new render pass
 --
 -- = Parameters
@@ -5818,7 +5978,11 @@ foreign import ccall "vkCmdPushConstants" vkCmdPushConstants :: ("commandBuffer"
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkRenderPassBeginInfo',
 -- 'VkSubpassContents'
-foreign import ccall "vkCmdBeginRenderPass" vkCmdBeginRenderPass :: ("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("contents" ::: VkSubpassContents) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdBeginRenderPass" vkCmdBeginRenderPass :: ("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("contents" ::: VkSubpassContents) -> IO ()
 -- | vkCmdNextSubpass - Transition to the next subpass of a render pass
 --
 -- = Parameters
@@ -5893,7 +6057,11 @@ foreign import ccall "vkCmdBeginRenderPass" vkCmdBeginRenderPass :: ("commandBuf
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', 'VkSubpassContents'
-foreign import ccall "vkCmdNextSubpass" vkCmdNextSubpass :: ("commandBuffer" ::: VkCommandBuffer) -> ("contents" ::: VkSubpassContents) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdNextSubpass" vkCmdNextSubpass :: ("commandBuffer" ::: VkCommandBuffer) -> ("contents" ::: VkSubpassContents) -> IO ()
 -- | vkCmdEndRenderPass - End the current render pass
 --
 -- = Parameters
@@ -5946,7 +6114,11 @@ foreign import ccall "vkCmdNextSubpass" vkCmdNextSubpass :: ("commandBuffer" :::
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdEndRenderPass" vkCmdEndRenderPass :: ("commandBuffer" ::: VkCommandBuffer) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdEndRenderPass" vkCmdEndRenderPass :: ("commandBuffer" ::: VkCommandBuffer) -> IO ()
 -- | vkCmdExecuteCommands - Execute a secondary command buffer from a primary
 -- command buffer
 --
@@ -6112,7 +6284,11 @@ foreign import ccall "vkCmdEndRenderPass" vkCmdEndRenderPass :: ("commandBuffer"
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
-foreign import ccall "vkCmdExecuteCommands" vkCmdExecuteCommands :: ("commandBuffer" ::: VkCommandBuffer) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdExecuteCommands" vkCmdExecuteCommands :: ("commandBuffer" ::: VkCommandBuffer) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ()
 -- | VkClearRect - Structure specifying a clear rectangle
 --
 -- = Description

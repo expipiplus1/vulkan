@@ -25,16 +25,16 @@ import Data.String
   ( IsString
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -173,7 +173,11 @@ pattern VK_KHR_ANDROID_SURFACE_EXTENSION_NAME = "VK_KHR_android_surface"
 -- 'VkAndroidSurfaceCreateInfoKHR',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'
-foreign import ccall "vkCreateAndroidSurfaceKHR" vkCreateAndroidSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkAndroidSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateAndroidSurfaceKHR" vkCreateAndroidSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkAndroidSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 -- | VkAndroidSurfaceCreateInfoKHR - Structure specifying parameters of a
 -- newly created Android surface object
 --

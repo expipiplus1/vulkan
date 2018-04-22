@@ -18,16 +18,16 @@ import Data.Bits
   , FiniteBits
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -47,8 +47,8 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  , VkResult(..)
+  ( VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -139,7 +139,11 @@ instance Read VkSemaphoreCreateFlags where
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Queue.VkSemaphore', 'VkSemaphoreCreateInfo'
-foreign import ccall "vkCreateSemaphore" vkCreateSemaphore :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSemaphoreCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSemaphore" ::: Ptr VkSemaphore) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateSemaphore" vkCreateSemaphore :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSemaphoreCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSemaphore" ::: Ptr VkSemaphore) -> IO VkResult
 -- | vkDestroySemaphore - Destroy a semaphore object
 --
 -- = Parameters
@@ -187,7 +191,11 @@ foreign import ccall "vkCreateSemaphore" vkCreateSemaphore :: ("device" ::: VkDe
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Queue.VkSemaphore'
-foreign import ccall "vkDestroySemaphore" vkDestroySemaphore :: ("device" ::: VkDevice) -> ("semaphore" ::: VkSemaphore) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroySemaphore" vkDestroySemaphore :: ("device" ::: VkDevice) -> ("semaphore" ::: VkSemaphore) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkSemaphoreCreateInfo - Structure specifying parameters of a newly
 -- created semaphore
 --

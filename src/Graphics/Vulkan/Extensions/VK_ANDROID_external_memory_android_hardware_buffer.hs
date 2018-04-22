@@ -31,16 +31,16 @@ import Data.String
   ( IsString
   )
 import Data.Word
-  ( Word64
-  , Word32
+  ( Word32
+  , Word64
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -53,9 +53,9 @@ import Graphics.Vulkan.Core10.Core
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkFormatFeatureFlags
+  ( VkDevice
   , VkDeviceSize
-  , VkDevice
+  , VkFormatFeatureFlags
   )
 import Graphics.Vulkan.Core10.ImageView
   ( VkComponentMapping(..)
@@ -68,8 +68,8 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   ( VkChromaLocation(..)
-  , VkSamplerYcbcrRange(..)
   , VkSamplerYcbcrModelConversion(..)
+  , VkSamplerYcbcrRange(..)
   )
 
 
@@ -140,7 +140,11 @@ pattern VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME = "VK_
 --
 -- 'VkAndroidHardwareBufferPropertiesANDROID',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkGetAndroidHardwareBufferPropertiesANDROID" vkGetAndroidHardwareBufferPropertiesANDROID :: ("device" ::: VkDevice) -> ("buffer" ::: Ptr AHardwareBuffer) -> ("pProperties" ::: Ptr VkAndroidHardwareBufferPropertiesANDROID) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetAndroidHardwareBufferPropertiesANDROID" vkGetAndroidHardwareBufferPropertiesANDROID :: ("device" ::: VkDevice) -> ("buffer" ::: Ptr AHardwareBuffer) -> ("pProperties" ::: Ptr VkAndroidHardwareBufferPropertiesANDROID) -> IO VkResult
 -- | vkGetMemoryAndroidHardwareBufferANDROID - Get an Android hardware buffer
 -- for a memory object
 --
@@ -194,7 +198,11 @@ foreign import ccall "vkGetAndroidHardwareBufferPropertiesANDROID" vkGetAndroidH
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkMemoryGetAndroidHardwareBufferInfoANDROID'
-foreign import ccall "vkGetMemoryAndroidHardwareBufferANDROID" vkGetMemoryAndroidHardwareBufferANDROID :: ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkMemoryGetAndroidHardwareBufferInfoANDROID) -> ("pBuffer" ::: Ptr (Ptr AHardwareBuffer)) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetMemoryAndroidHardwareBufferANDROID" vkGetMemoryAndroidHardwareBufferANDROID :: ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkMemoryGetAndroidHardwareBufferInfoANDROID) -> ("pBuffer" ::: Ptr (Ptr AHardwareBuffer)) -> IO VkResult
 -- | VkImportAndroidHardwareBufferInfoANDROID - Import memory from an Android
 -- hardware buffer
 --

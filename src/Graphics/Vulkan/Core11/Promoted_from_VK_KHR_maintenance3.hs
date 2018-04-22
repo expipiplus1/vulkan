@@ -17,12 +17,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -37,8 +37,8 @@ import Graphics.Vulkan.Core10.DescriptorSet
   ( VkDescriptorSetLayoutCreateInfo(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDeviceSize
-  , VkDevice
+  ( VkDevice
+  , VkDeviceSize
   )
 
 
@@ -107,7 +107,11 @@ pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = VkStructureType 100016
 -- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo',
 -- 'VkDescriptorSetLayoutSupport',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkGetDescriptorSetLayoutSupport" vkGetDescriptorSetLayoutSupport :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetDescriptorSetLayoutSupport" vkGetDescriptorSetLayoutSupport :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ()
 -- | VkPhysicalDeviceMaintenance3Properties - Structure describing descriptor
 -- set properties
 --

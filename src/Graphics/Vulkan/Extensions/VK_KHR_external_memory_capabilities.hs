@@ -63,8 +63,8 @@ import Graphics.Vulkan.NamedType
 
 
 import Graphics.Vulkan.Core10.Buffer
-  ( VkBufferUsageFlags
-  , VkBufferCreateFlags
+  ( VkBufferCreateFlags
+  , VkBufferUsageFlags
   )
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
@@ -75,34 +75,34 @@ import Graphics.Vulkan.Core10.DeviceInitialization
   , VkPhysicalDevice
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities
-  ( pattern VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
-  , pattern VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
-  , pattern VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
-  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
-  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
-  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
-  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
-  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
-  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
-  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
-  , pattern VK_LUID_SIZE
-  , VK_LUID_SIZE
-  , VkPhysicalDeviceIDProperties(..)
+  ( VkExternalBufferProperties(..)
   , VkExternalImageFormatProperties(..)
-  , VkPhysicalDeviceExternalImageFormatInfo(..)
-  , VkExternalMemoryProperties(..)
-  , VkExternalMemoryFeatureFlags
-  , VkExternalMemoryHandleTypeFlags
   , VkExternalMemoryFeatureFlagBits(..)
   , VkExternalMemoryHandleTypeFlagBits(..)
-  , VkExternalBufferProperties(..)
+  , VkExternalMemoryProperties(..)
   , VkPhysicalDeviceExternalBufferInfo(..)
+  , VkPhysicalDeviceExternalImageFormatInfo(..)
+  , VkPhysicalDeviceIDProperties(..)
+  , VK_LUID_SIZE
+  , VkExternalMemoryFeatureFlags
+  , VkExternalMemoryHandleTypeFlags
   , vkGetPhysicalDeviceExternalBufferProperties
+  , pattern VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
+  , pattern VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
+  , pattern VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
+  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
+  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
+  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
+  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
+  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
+  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+  , pattern VK_LUID_SIZE
+  , pattern VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES
+  , pattern VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES
   )
 
 

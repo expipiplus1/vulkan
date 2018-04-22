@@ -30,16 +30,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -65,9 +65,9 @@ import Graphics.Vulkan.Core10.Core
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkPhysicalDevice
-  , VkAllocationCallbacks(..)
+  ( VkAllocationCallbacks(..)
   , VkInstance
+  , VkPhysicalDevice
   )
 import Graphics.Vulkan.Extensions.VK_KHR_surface
   ( VkSurfaceKHR
@@ -156,7 +156,11 @@ pattern VK_KHR_WIN32_SURFACE_EXTENSION_NAME = "VK_KHR_win32_surface"
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR',
 -- 'VkWin32SurfaceCreateInfoKHR'
-foreign import ccall "vkCreateWin32SurfaceKHR" vkCreateWin32SurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkWin32SurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateWin32SurfaceKHR" vkCreateWin32SurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkWin32SurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 -- | vkGetPhysicalDeviceWin32PresentationSupportKHR - query queue family
 -- support for presentation on a Win32 display
 --
@@ -184,7 +188,11 @@ foreign import ccall "vkCreateWin32SurfaceKHR" vkCreateWin32SurfaceKHR :: ("inst
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
-foreign import ccall "vkGetPhysicalDeviceWin32PresentationSupportKHR" vkGetPhysicalDeviceWin32PresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> IO VkBool32
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceWin32PresentationSupportKHR" vkGetPhysicalDeviceWin32PresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> IO VkBool32
 -- | VkWin32SurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Win32 surface object
 --

@@ -62,16 +62,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -91,17 +91,17 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkFormat(..)
-  , VkBool32(..)
+  ( VkBool32(..)
+  , VkFormat(..)
   , VkObjectType(..)
   , VkResult(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkImageUsageFlags
-  , VkPhysicalDevice
-  , VkAllocationCallbacks(..)
+  ( VkAllocationCallbacks(..)
+  , VkImageUsageFlags
   , VkInstance
+  , VkPhysicalDevice
   )
 import Graphics.Vulkan.Core10.Pipeline
   ( VkExtent2D(..)
@@ -700,7 +700,11 @@ type VkSurfaceKHR = Ptr VkSurfaceKHR_T
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance', 'VkSurfaceKHR'
-foreign import ccall "vkDestroySurfaceKHR" vkDestroySurfaceKHR :: ("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroySurfaceKHR" vkDestroySurfaceKHR :: ("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | vkGetPhysicalDeviceSurfaceSupportKHR - Query if presentation is
 -- supported
 --
@@ -749,7 +753,11 @@ foreign import ccall "vkDestroySurfaceKHR" vkDestroySurfaceKHR :: ("instance" ::
 -- @VkBool32@,
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkSurfaceKHR'
-foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceSurfaceSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("surface" ::: VkSurfaceKHR) -> ("pSupported" ::: Ptr VkBool32) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceSurfaceSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("surface" ::: VkSurfaceKHR) -> ("pSupported" ::: Ptr VkBool32) -> IO VkResult
 -- | vkGetPhysicalDeviceSurfaceCapabilitiesKHR - Query surface capabilities
 --
 -- = Parameters
@@ -792,7 +800,11 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceS
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkSurfaceCapabilitiesKHR', 'VkSurfaceKHR'
-foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDeviceSurfaceCapabilitiesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilitiesKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDeviceSurfaceCapabilitiesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilitiesKHR) -> IO VkResult
 -- | vkGetPhysicalDeviceSurfaceFormatsKHR - Query color formats supported by
 -- surface
 --
@@ -861,7 +873,11 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDe
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkSurfaceFormatKHR', 'VkSurfaceKHR'
-foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceSurfaceFormatsKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormatKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceSurfaceFormatsKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormatKHR) -> IO VkResult
 -- | vkGetPhysicalDeviceSurfacePresentModesKHR - Query supported presentation
 -- modes
 --
@@ -927,7 +943,11 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceS
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPresentModeKHR', 'VkSurfaceKHR'
-foreign import ccall "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDeviceSurfacePresentModesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDeviceSurfacePresentModesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult
 -- | VkSurfaceCapabilitiesKHR - Structure describing capabilities of a
 -- surface
 --

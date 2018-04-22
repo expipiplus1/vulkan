@@ -25,16 +25,16 @@ import Foreign.C.Types
   ( CSize(..)
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -54,8 +54,8 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  , VkResult(..)
+  ( VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -162,7 +162,11 @@ type VkShaderModule = Ptr VkShaderModule_T
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkShaderModule', 'VkShaderModuleCreateInfo'
-foreign import ccall "vkCreateShaderModule" vkCreateShaderModule :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkShaderModuleCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pShaderModule" ::: Ptr VkShaderModule) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateShaderModule" vkCreateShaderModule :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkShaderModuleCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pShaderModule" ::: Ptr VkShaderModule) -> IO VkResult
 -- | vkDestroyShaderModule - Destroy a shader module module
 --
 -- = Parameters
@@ -211,7 +215,11 @@ foreign import ccall "vkCreateShaderModule" vkCreateShaderModule :: ("device" ::
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkShaderModule'
-foreign import ccall "vkDestroyShaderModule" vkDestroyShaderModule :: ("device" ::: VkDevice) -> ("shaderModule" ::: VkShaderModule) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyShaderModule" vkDestroyShaderModule :: ("device" ::: VkDevice) -> ("shaderModule" ::: VkShaderModule) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkShaderModuleCreateInfo - Structure specifying parameters of a newly
 -- created shader module
 --

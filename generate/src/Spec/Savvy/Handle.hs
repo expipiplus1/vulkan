@@ -22,6 +22,7 @@ data Handle = Handle
   { hName    :: Text
   , hType    :: Type
   , hAliases :: [Text]
+  , hParents :: [Text]
   }
   deriving (Show)
 
@@ -54,6 +55,7 @@ specHandles preprocess pc P.Spec {..} =
           $   Handle htName
           <$> (stringToTypeExpected pc' htName =<< preprocess htType)
           <*> pure (getAliases htName)
+          <*> pure htParents
         | P.HandleType {..} <- parsedHandles
         ]
 

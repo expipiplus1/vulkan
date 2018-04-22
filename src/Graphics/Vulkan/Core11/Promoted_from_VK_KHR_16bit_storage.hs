@@ -9,12 +9,12 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_16bit_storage
   ) where
 
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 
 

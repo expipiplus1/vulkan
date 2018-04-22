@@ -33,16 +33,16 @@ import Data.String
   ( IsString
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -67,13 +67,13 @@ import Graphics.Vulkan.Core10.Core
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkImageFormatProperties(..)
-  , VkImageCreateFlagBits(..)
+  ( VkImageCreateFlagBits(..)
+  , VkImageFormatProperties(..)
+  , VkImageTiling(..)
+  , VkImageType(..)
   , VkImageUsageFlagBits(..)
   , VkImageCreateFlags
   , VkImageUsageFlags
-  , VkImageTiling(..)
-  , VkImageType(..)
   , VkPhysicalDevice
   )
 
@@ -275,7 +275,11 @@ pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME = "VK_NV_external_memo
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageType',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkImageUsageFlags',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
-foreign import ccall "vkGetPhysicalDeviceExternalImageFormatPropertiesNV" vkGetPhysicalDeviceExternalImageFormatPropertiesNV :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("externalHandleType" ::: VkExternalMemoryHandleTypeFlagsNV) -> ("pExternalImageFormatProperties" ::: Ptr VkExternalImageFormatPropertiesNV) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceExternalImageFormatPropertiesNV" vkGetPhysicalDeviceExternalImageFormatPropertiesNV :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("externalHandleType" ::: VkExternalMemoryHandleTypeFlagsNV) -> ("pExternalImageFormatProperties" ::: Ptr VkExternalImageFormatPropertiesNV) -> IO VkResult
 -- | VkExternalImageFormatPropertiesNV - Structure specifying external image
 -- format properties
 --

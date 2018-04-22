@@ -21,9 +21,9 @@ writeHandle :: Handle -> Either [SpecError] WriteElement
 writeHandle h@Handle {..} = do
   weDoc <- hDoc h
   let weName       = "Handle: " <> hName
-      weProvides   = [TypeAlias hName]
       weExtensions = []
       weImports    = [Import "Foreign.Ptr" ["Ptr"]]
+      weProvides   = [Unguarded $ TypeAlias hName]
       weDepends    = []
   pure WriteElement {..}
 

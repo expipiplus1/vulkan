@@ -43,6 +43,7 @@ import           Write.Element
 import           Write.EnumExtension
 import           Write.Handle
 import           Write.HeaderVersion
+import           Write.Loader
 import           Write.Module
 import           Write.Module.Aggregate
 import           Write.Partition
@@ -142,6 +143,7 @@ specWriteElements Spec {..} = do
   wBaseTypes <-
     let isAllowedBaseType bt = btName bt /= "VkBool32"
     in eitherToValidation $ traverse writeBaseType (filter isAllowedBaseType sBaseTypes)
+  wLoader <- eitherToValidation $ writeLoader getEnumAliasTarget sPlatforms sCommands
   pure $ concat
     [ [wHeaderVersion]
     , bespokeWriteElements
@@ -156,4 +158,5 @@ specWriteElements Spec {..} = do
     , wStructs
     , wAliases
     , wBaseTypes
+    , [wLoader]
     ]

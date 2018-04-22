@@ -1,3 +1,4 @@
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms   #-}
 
@@ -6,6 +7,8 @@ module Write.Element
   , Export(..)
   , HaskellName(..)
   , Import(..)
+  , Guarded(..)
+  , unGuarded
   , pattern Pattern
   , pattern Term
   , pattern TypeConstructor
@@ -27,9 +30,9 @@ data WriteElement = WriteElement
   , weImports    :: [Import]
     -- ^ "system" imports
   , weDoc        :: DocMap -> Doc ()
-  , weProvides   :: [Export]
+  , weProvides   :: [Guarded Export]
     -- ^ The names this element declares
-  , weDepends    :: [HaskellName]
+  , weDepends    :: [Guarded HaskellName]
     -- ^ Other Vulkan names to expose
   }
 
@@ -44,6 +47,16 @@ data HaskellName
   | PatternName { unHaskellName :: Text }
   deriving (Show, Eq, Ord)
 
+data Guarded a
+  = Guarded Text a
+  | Unguarded a
+  deriving (Show, Eq, Ord)
+
+unGuarded :: Guarded a -> a
+unGuarded = \case
+  Guarded _ n -> n
+  Unguarded  n -> n
+
 pattern Pattern :: Text -> Export
 pattern Pattern n = WithoutConstructors (PatternName n)
 
@@ -56,10 +69,15 @@ pattern TypeConstructor n = WithConstructors (TypeName n)
 pattern TypeAlias :: Text -> Export
 pattern TypeAlias n = WithoutConstructors (TypeName n)
 
-data Import = Import
-  { iModule  :: Text
-  , iImports :: [Text]
-  }
+data Import
+  = Import
+    { iModule  :: Text
+    , iImports :: [Text]
+    }
+  | QualifiedImport
+    { iModule  :: Text
+    , iImports :: [Text]
+    }
   deriving (Show, Eq, Ord)
 
 type DocMap = Documentee -> Maybe Haddock

@@ -40,16 +40,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Text.ParserCombinators.ReadPrec
   ( (+++)
@@ -67,8 +67,8 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
-  , VkStructureType(..)
   , VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DescriptorSet

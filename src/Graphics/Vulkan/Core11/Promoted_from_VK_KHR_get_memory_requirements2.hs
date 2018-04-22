@@ -25,12 +25,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -45,8 +45,8 @@ import Graphics.Vulkan.Core10.DeviceInitialization
   )
 import Graphics.Vulkan.Core10.MemoryManagement
   ( VkMemoryRequirements(..)
-  , VkImage
   , VkBuffer
+  , VkImage
   )
 import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
   ( VkSparseImageMemoryRequirements(..)
@@ -98,7 +98,11 @@ pattern VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2 = VkStructureType 1
 -- 'VkBufferMemoryRequirementsInfo2',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkMemoryRequirements2'
-foreign import ccall "vkGetBufferMemoryRequirements2" vkGetBufferMemoryRequirements2 :: ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkBufferMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetBufferMemoryRequirements2" vkGetBufferMemoryRequirements2 :: ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkBufferMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2) -> IO ()
 -- | vkGetImageMemoryRequirements2 - Returns the memory requirements for
 -- specified Vulkan object
 --
@@ -128,7 +132,11 @@ foreign import ccall "vkGetBufferMemoryRequirements2" vkGetBufferMemoryRequireme
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkImageMemoryRequirementsInfo2', 'VkMemoryRequirements2'
-foreign import ccall "vkGetImageMemoryRequirements2" vkGetImageMemoryRequirements2 :: ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetImageMemoryRequirements2" vkGetImageMemoryRequirements2 :: ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2) -> IO ()
 -- | vkGetImageSparseMemoryRequirements2 - Query the memory requirements for
 -- a sparse image
 --
@@ -168,7 +176,11 @@ foreign import ccall "vkGetImageMemoryRequirements2" vkGetImageMemoryRequirement
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkImageSparseMemoryRequirementsInfo2',
 -- 'VkSparseImageMemoryRequirements2'
-foreign import ccall "vkGetImageSparseMemoryRequirements2" vkGetImageSparseMemoryRequirements2 :: ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageSparseMemoryRequirementsInfo2) -> ("pSparseMemoryRequirementCount" ::: Ptr Word32) -> ("pSparseMemoryRequirements" ::: Ptr VkSparseImageMemoryRequirements2) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetImageSparseMemoryRequirements2" vkGetImageSparseMemoryRequirements2 :: ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageSparseMemoryRequirementsInfo2) -> ("pSparseMemoryRequirementCount" ::: Ptr Word32) -> ("pSparseMemoryRequirements" ::: Ptr VkSparseImageMemoryRequirements2) -> IO ()
 -- | VkBufferMemoryRequirementsInfo2 - (None)
 --
 -- == Valid Usage (Implicit)

@@ -31,8 +31,8 @@ writeConstantExtension getEnumerantEnumName ce@ConstantExtension {..} =
         EnumValueInt    _ -> []
         EnumValueAlias  _ -> []
       weName     = "ConstantExtension: " <> ceName
-      weProvides = [Pattern ceName]
-      weDepends  = case ceValue of
+      weProvides = [Unguarded $ Pattern ceName]
+      weDepends  = Unguarded <$> case ceValue of
         EnumValueAlias n ->
           [ PatternName n
           , TypeName (fromMaybe (error (show n)) (getEnumerantEnumName n))

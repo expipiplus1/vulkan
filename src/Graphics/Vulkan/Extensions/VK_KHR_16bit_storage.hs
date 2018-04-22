@@ -29,8 +29,8 @@ import Graphics.Vulkan.Core10.Core
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_16bit_storage
-  ( pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
-  , VkPhysicalDevice16BitStorageFeatures(..)
+  ( VkPhysicalDevice16BitStorageFeatures(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
   )
 
 

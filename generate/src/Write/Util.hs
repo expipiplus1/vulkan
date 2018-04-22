@@ -8,9 +8,15 @@ module Write.Util
   , separatedSections
   , document
   , Documentee(..)
+  , separatedWithGuards
+  , guarded
   ) where
 
+import           Data.Bifunctor
+import           Data.Function
+import           Data.Functor.Extra
 import           Data.List.NonEmpty
+import qualified Data.List.NonEmpty        as NE
 import           Data.Maybe
 import           Data.Text                 (Text)
 import qualified Data.Text.Extra           as T
@@ -70,3 +76,63 @@ document getDoc n = case getDoc n of
       space = \case
         "" -> ""
         x  -> " " <> x
+
+separatedWithGuards
+  :: Text
+  -- ^ Separator
+  -> [(Doc (), Maybe Text)]
+  -- ^ Things to separate with optional guards
+  -> Doc ()
+separatedWithGuards sep things =
+  let prefixedThings = case things of
+        []   -> []
+        x:xs -> x : (first sepPrefix <$> xs)
+  in case mergeGuards prefixedThings of
+    []       -> mempty
+    (d : ds) -> vcatIndents $ concat ((uncurry (flip guardedLines) d) : (sepThings ds))
+    where
+      sepThings ds = ds <&> \(d, g) -> guardedLines g d
+      sepPrefix = case sep of
+        "" -> ("" <>)
+        s  -> (pretty s <+>)
+
+mergeGuards :: [(Doc (), Maybe Text)]
+            -> [(Doc (), Maybe Text)]
+mergeGuards xs =
+  let groups :: [NonEmpty ((Doc (), Maybe Text))]
+      groups = groupBy (sameGuard `on` snd) xs
+      sameGuard (Just x) (Just y) = x == y
+      sameGuard _ _               = False
+      ungroups :: NonEmpty (Doc (), Maybe Text) -> (Doc (), Maybe Text)
+      ungroups group =
+        let (ds, g:|gs) = NE.unzip group
+        in (vcat (NE.toList ds), g)
+  in ungroups <$> groups
+
+guardedLines :: Maybe Text -> Doc () -> [(Maybe Int, Doc ())]
+guardedLines = \case
+  Nothing -> \d -> [(Nothing, d)]
+  Just g  -> \d ->
+    [ (Just (-1000), "#if defined(" <> pretty g <> ")")
+    , (Nothing      , d)
+    , (Just (-1000), "#endif")
+    ]
+
+guarded :: Maybe Text -> Doc () -> Doc ()
+guarded = \case
+  Nothing -> id
+  Just g  -> \d ->
+    indent minBound (line <> "#if defined(" <> pretty g <> ")")
+      <> line <> d
+      <> indent minBound (line <> "#endif")
+
+-- | Workaround for https://github.com/quchen/prettyprinter/issues/57
+vcatIndents :: [(Maybe Int, Doc ())] -> Doc ()
+vcatIndents = \case
+  []                -> mempty
+  (Nothing, d) : ds -> hcat $ (d : (addLine <$> ds))
+  ds                -> hcat $ (addLine <$> ds)
+  where
+    addLine = \case
+      (Just i , d) -> indent i (line <> d)
+      (Nothing, d) -> line <> d

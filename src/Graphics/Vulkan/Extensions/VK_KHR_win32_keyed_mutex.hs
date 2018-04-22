@@ -15,16 +15,16 @@ import Data.String
   ( IsString
   )
 import Data.Word
-  ( Word64
-  , Word32
+  ( Word32
+  , Word64
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 
 

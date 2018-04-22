@@ -181,21 +181,21 @@ import Data.Word
   ( Word32
   )
 import Foreign.C.Types
-  ( CFloat(..)
-  , CChar(..)
+  ( CChar(..)
+  , CFloat(..)
   , CSize(..)
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -217,13 +217,13 @@ import Text.Read.Lex
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
   , VkFormat(..)
-  , VkStructureType(..)
   , VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkSampleCountFlagBits(..)
-  , VkAllocationCallbacks(..)
+  ( VkAllocationCallbacks(..)
+  , VkSampleCountFlagBits(..)
   , VkDevice
   )
 import Graphics.Vulkan.Core10.PipelineCache
@@ -2107,7 +2107,11 @@ type VkRenderPass = Ptr VkRenderPass_T
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkGraphicsPipelineCreateInfo', 'VkPipeline',
 -- 'Graphics.Vulkan.Core10.PipelineCache.VkPipelineCache'
-foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines :: ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkGraphicsPipelineCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelines" ::: Ptr VkPipeline) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines :: ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkGraphicsPipelineCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelines" ::: Ptr VkPipeline) -> IO VkResult
 -- | vkCreateComputePipelines - Creates a new compute pipeline object
 --
 -- = Parameters
@@ -2188,7 +2192,11 @@ foreign import ccall "vkCreateGraphicsPipelines" vkCreateGraphicsPipelines :: ("
 -- 'VkComputePipelineCreateInfo',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkPipeline',
 -- 'Graphics.Vulkan.Core10.PipelineCache.VkPipelineCache'
-foreign import ccall "vkCreateComputePipelines" vkCreateComputePipelines :: ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkComputePipelineCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelines" ::: Ptr VkPipeline) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateComputePipelines" vkCreateComputePipelines :: ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkComputePipelineCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelines" ::: Ptr VkPipeline) -> IO VkResult
 -- | vkDestroyPipeline - Destroy a pipeline object
 --
 -- = Parameters
@@ -2235,7 +2243,11 @@ foreign import ccall "vkCreateComputePipelines" vkCreateComputePipelines :: ("de
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkPipeline'
-foreign import ccall "vkDestroyPipeline" vkDestroyPipeline :: ("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyPipeline" vkDestroyPipeline :: ("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | VkOffset2D - Structure specifying a two-dimensional offset
 --
 -- = See Also

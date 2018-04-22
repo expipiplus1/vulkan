@@ -26,23 +26,23 @@ writeAPIConstant ac@APIConstant {..} =
         IntegralValue _ ->
           let weExtensions = ["PatternSynonyms", "DataKinds"]
               weImports    = []
-              weProvides =
+              weProvides = Unguarded <$>
                 [TypeAlias acName, Pattern acName]
           in  WriteElement {..}
         FloatValue _ ->
           let weExtensions = ["PatternSynonyms"]
               weImports    = [Import "Foreign.C.Types" ["CFloat"]]
-              weProvides   = [Pattern acName]
+              weProvides   = [Unguarded $ Pattern acName]
           in  WriteElement {..}
         Word32Value _ ->
           let weExtensions = ["PatternSynonyms"]
               weImports    = [Import "Data.Word" ["Word32"]]
-              weProvides   = [Pattern acName]
+              weProvides   = [Unguarded $ Pattern acName]
           in  WriteElement {..}
         Word64Value _ ->
           let weExtensions = ["PatternSynonyms"]
               weImports    = [Import "Data.Word" ["Word64"]]
-              weProvides   = [Pattern acName]
+              weProvides   = [Unguarded $ Pattern acName]
           in  WriteElement {..}
 
 constantDoc :: APIConstant -> DocMap -> Doc ()

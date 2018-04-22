@@ -30,16 +30,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -65,9 +65,9 @@ import Graphics.Vulkan.Core10.Core
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkPhysicalDevice
-  , VkAllocationCallbacks(..)
+  ( VkAllocationCallbacks(..)
   , VkInstance
+  , VkPhysicalDevice
   )
 import Graphics.Vulkan.Extensions.VK_KHR_surface
   ( VkSurfaceKHR
@@ -156,7 +156,11 @@ pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME = "VK_KHR_wayland_surface"
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR',
 -- 'VkWaylandSurfaceCreateInfoKHR'
-foreign import ccall "vkCreateWaylandSurfaceKHR" vkCreateWaylandSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkWaylandSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateWaylandSurfaceKHR" vkCreateWaylandSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkWaylandSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 -- | vkGetPhysicalDeviceWaylandPresentationSupportKHR - Query physical device
 -- for presentation to Wayland
 --
@@ -189,7 +193,11 @@ foreign import ccall "vkCreateWaylandSurfaceKHR" vkCreateWaylandSurfaceKHR :: ("
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
-foreign import ccall "vkGetPhysicalDeviceWaylandPresentationSupportKHR" vkGetPhysicalDeviceWaylandPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("display" ::: Ptr Wl_display) -> IO VkBool32
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceWaylandPresentationSupportKHR" vkGetPhysicalDeviceWaylandPresentationSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("display" ::: Ptr Wl_display) -> IO VkBool32
 -- | VkWaylandSurfaceCreateInfoKHR - Structure specifying parameters of a
 -- newly created Wayland surface object
 --

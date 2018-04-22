@@ -22,8 +22,8 @@ import Foreign.Storable
   ( Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -50,9 +50,9 @@ import Graphics.Vulkan.Core10.Core
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDevice
-  , VkFormatFeatureFlagBits(..)
+  ( VkFormatFeatureFlagBits(..)
   , VkImageCreateFlagBits(..)
+  , VkDevice
   )
 
 
@@ -171,4 +171,8 @@ pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT = VkFormatFeatureFlagBits 0x00008000
 -- 'Graphics.Vulkan.Core10.CommandPool.VkCommandPool',
 -- 'VkCommandPoolTrimFlags',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkTrimCommandPool" vkTrimCommandPool :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("flags" ::: VkCommandPoolTrimFlags) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkTrimCommandPool" vkTrimCommandPool :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("flags" ::: VkCommandPoolTrimFlags) -> IO ()

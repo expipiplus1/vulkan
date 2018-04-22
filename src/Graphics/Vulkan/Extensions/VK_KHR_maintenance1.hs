@@ -31,17 +31,17 @@ import Graphics.Vulkan.Core10.Core
   ( VkResult(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkImageCreateFlagBits(..)
-  , VkFormatFeatureFlagBits(..)
+  ( VkFormatFeatureFlagBits(..)
+  , VkImageCreateFlagBits(..)
   , VkDevice
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance1
-  ( pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+  ( VkCommandPoolTrimFlags(..)
+  , vkTrimCommandPool
+  , pattern VK_ERROR_OUT_OF_POOL_MEMORY
   , pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT
   , pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT
-  , pattern VK_ERROR_OUT_OF_POOL_MEMORY
-  , VkCommandPoolTrimFlags(..)
-  , vkTrimCommandPool
+  , pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
   )
 
 

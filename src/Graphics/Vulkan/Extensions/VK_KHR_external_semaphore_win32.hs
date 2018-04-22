@@ -25,16 +25,16 @@ import Data.String
   ( IsString
   )
 import Data.Word
-  ( Word64
-  , Word32
+  ( Word32
+  , Word64
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -62,8 +62,8 @@ import Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32
   )
 import Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
   ( DWORD
-  , SECURITY_ATTRIBUTES
   , HANDLE
+  , SECURITY_ATTRIBUTES
   )
 
 
@@ -134,7 +134,11 @@ pattern VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME = "VK_KHR_external_semaph
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkSemaphoreGetWin32HandleInfoKHR'
-foreign import ccall "vkGetSemaphoreWin32HandleKHR" vkGetSemaphoreWin32HandleKHR :: ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkSemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetSemaphoreWin32HandleKHR" vkGetSemaphoreWin32HandleKHR :: ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkSemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
 -- | vkImportSemaphoreWin32HandleKHR - Import a semaphore from a Windows
 -- HANDLE
 --
@@ -178,7 +182,11 @@ foreign import ccall "vkGetSemaphoreWin32HandleKHR" vkGetSemaphoreWin32HandleKHR
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkImportSemaphoreWin32HandleInfoKHR'
-foreign import ccall "vkImportSemaphoreWin32HandleKHR" vkImportSemaphoreWin32HandleKHR :: ("device" ::: VkDevice) -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr VkImportSemaphoreWin32HandleInfoKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkImportSemaphoreWin32HandleKHR" vkImportSemaphoreWin32HandleKHR :: ("device" ::: VkDevice) -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr VkImportSemaphoreWin32HandleInfoKHR) -> IO VkResult
 -- | VkImportSemaphoreWin32HandleInfoKHR - Structure specifying Windows
 -- handle to import to a semaphore
 --

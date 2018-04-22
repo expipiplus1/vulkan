@@ -52,16 +52,16 @@ import Foreign.C.Types
   ( CSize(..)
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -81,14 +81,14 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  , VkResult(..)
+  ( VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDeviceSize
-  , VkAllocationCallbacks(..)
+  ( VkAllocationCallbacks(..)
   , VkDevice
+  , VkDeviceSize
   )
 
 
@@ -473,7 +473,11 @@ type VkQueryPool = Ptr VkQueryPool_T
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkQueryPool',
 -- 'VkQueryPoolCreateInfo'
-foreign import ccall "vkCreateQueryPool" vkCreateQueryPool :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkQueryPoolCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pQueryPool" ::: Ptr VkQueryPool) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateQueryPool" vkCreateQueryPool :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkQueryPoolCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pQueryPool" ::: Ptr VkQueryPool) -> IO VkResult
 -- | vkDestroyQueryPool - Destroy a query pool object
 --
 -- = Parameters
@@ -520,7 +524,11 @@ foreign import ccall "vkCreateQueryPool" vkCreateQueryPool :: ("device" ::: VkDe
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkQueryPool'
-foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool :: ("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyQueryPool" vkDestroyQueryPool :: ("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | vkGetQueryPoolResults - Copy results of queries in a query pool to a
 -- host memory region
 --
@@ -681,7 +689,11 @@ foreign import ccall "vkDestroyQueryPool" vkDestroyQueryPool :: ("device" ::: Vk
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', @VkDeviceSize@,
 -- 'VkQueryPool', 'VkQueryResultFlags'
-foreign import ccall "vkGetQueryPoolResults" vkGetQueryPoolResults :: ("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetQueryPoolResults" vkGetQueryPoolResults :: ("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO VkResult
 -- | VkQueryPoolCreateInfo - Structure specifying parameters of a newly
 -- created query pool
 --

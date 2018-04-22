@@ -3,7 +3,7 @@
 
 
 module Graphics.Vulkan.Extensions
-  (     module Graphics.Vulkan.Extensions.VK_KHR_surface
+  ( module Graphics.Vulkan.Extensions.VK_KHR_surface
   , module Graphics.Vulkan.Extensions.VK_KHR_swapchain
   , module Graphics.Vulkan.Extensions.VK_KHR_display
   , module Graphics.Vulkan.Extensions.VK_KHR_display_swapchain
@@ -49,8 +49,6 @@ module Graphics.Vulkan.Extensions
   , module Graphics.Vulkan.Extensions.VK_NV_external_memory
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
   , module Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
-#endif
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
   , module Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
 #endif
   , module Graphics.Vulkan.Extensions.VK_KHR_get_physical_device_properties2

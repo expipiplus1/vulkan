@@ -19,7 +19,10 @@ makeAggregateModules
 makeAggregateModules guards ms
   = let
       inputNames :: [[Text]]
-      inputNames = nubOrd . splitModuleName . mName <$> ms
+      inputNames =
+        nubOrd
+          .   splitModuleName
+          <$> (filter (`notElem` disallowedModules) . fmap mName $ ms)
       newNames :: [[Text]]
       newNames =
         nubOrd (filter (not . null) (inits =<< inputNames)) \\ inputNames
@@ -46,3 +49,6 @@ splitModuleName = T.splitOn "."
 unsplitModuleName :: [Text] -> Text
 unsplitModuleName = T.intercalate "."
 
+-- | Modules which shouldn't feature in any aggregate
+disallowedModules :: [Text]
+disallowedModules = ["Graphics.Vulkan.Dynamic"]

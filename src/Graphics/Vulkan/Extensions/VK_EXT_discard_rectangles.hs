@@ -36,16 +36,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -69,8 +69,8 @@ import Graphics.Vulkan.Core10.Core
   , VkFlags
   )
 import Graphics.Vulkan.Core10.Pipeline
-  ( VkRect2D(..)
-  , VkDynamicState(..)
+  ( VkDynamicState(..)
+  , VkRect2D(..)
   )
 import Graphics.Vulkan.Core10.Queue
   ( VkCommandBuffer
@@ -241,7 +241,11 @@ pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME = "VK_EXT_discard_rectangles"
 --
 -- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkRect2D'
-foreign import ccall "vkCmdSetDiscardRectangleEXT" vkCmdSetDiscardRectangleEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr VkRect2D) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCmdSetDiscardRectangleEXT" vkCmdSetDiscardRectangleEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr VkRect2D) -> IO ()
 -- | VkPhysicalDeviceDiscardRectanglePropertiesEXT - Structure describing
 -- discard rectangle limits that can be supported by an implementation
 --

@@ -31,16 +31,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -64,19 +64,19 @@ import Graphics.Vulkan.Core10.Buffer
   )
 import Graphics.Vulkan.Core10.Core
   ( VkFormat(..)
-  , VkStructureType(..)
   , VkResult(..)
+  , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDeviceSize
-  , VkImageUsageFlags
-  , VkImageTiling(..)
-  , VkSampleCountFlagBits(..)
+  ( VkAllocationCallbacks(..)
   , VkExtent3D(..)
+  , VkImageTiling(..)
   , VkImageType(..)
-  , VkImageCreateFlags
-  , VkAllocationCallbacks(..)
+  , VkSampleCountFlagBits(..)
   , VkDevice
+  , VkDeviceSize
+  , VkImageCreateFlags
+  , VkImageUsageFlags
   )
 import Graphics.Vulkan.Core10.MemoryManagement
   ( VkImage
@@ -394,7 +394,11 @@ pattern VK_IMAGE_LAYOUT_PREINITIALIZED = VkImageLayout 8
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage', 'VkImageCreateInfo'
-foreign import ccall "vkCreateImage" vkCreateImage :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkImageCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pImage" ::: Ptr VkImage) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateImage" vkCreateImage :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkImageCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pImage" ::: Ptr VkImage) -> IO VkResult
 -- | vkDestroyImage - Destroy an image object
 --
 -- = Parameters
@@ -441,7 +445,11 @@ foreign import ccall "vkCreateImage" vkCreateImage :: ("device" ::: VkDevice) ->
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage'
-foreign import ccall "vkDestroyImage" vkDestroyImage :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroyImage" vkDestroyImage :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | vkGetImageSubresourceLayout - Retrieve information about an image
 -- subresource
 --
@@ -523,7 +531,11 @@ foreign import ccall "vkDestroyImage" vkDestroyImage :: ("device" ::: VkDevice) 
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.VkImageSubresource',
 -- 'VkSubresourceLayout'
-foreign import ccall "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pSubresource" ::: Ptr VkImageSubresource) -> ("pLayout" ::: Ptr VkSubresourceLayout) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetImageSubresourceLayout" vkGetImageSubresourceLayout :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pSubresource" ::: Ptr VkImageSubresource) -> ("pLayout" ::: Ptr VkSubresourceLayout) -> IO ()
 -- | VkImageCreateInfo - Structure specifying the parameters of a newly
 -- created image object
 --

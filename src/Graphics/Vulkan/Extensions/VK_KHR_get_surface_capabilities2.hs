@@ -26,12 +26,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -46,8 +46,8 @@ import Graphics.Vulkan.Core10.DeviceInitialization
   ( VkPhysicalDevice
   )
 import Graphics.Vulkan.Extensions.VK_KHR_surface
-  ( VkSurfaceFormatKHR(..)
-  , VkSurfaceCapabilitiesKHR(..)
+  ( VkSurfaceCapabilitiesKHR(..)
+  , VkSurfaceFormatKHR(..)
   , VkSurfaceKHR
   )
 
@@ -119,7 +119,11 @@ pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME = "VK_KHR_get_surface_c
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPhysicalDeviceSurfaceInfo2KHR', 'VkSurfaceCapabilities2KHR'
-foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilities2KHR" vkGetPhysicalDeviceSurfaceCapabilities2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2KHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceSurfaceCapabilities2KHR" vkGetPhysicalDeviceSurfaceCapabilities2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2KHR) -> IO VkResult
 -- | vkGetPhysicalDeviceSurfaceFormats2KHR - Query color formats supported by
 -- surface
 --
@@ -189,7 +193,11 @@ foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilities2KHR" vkGetPhysicalD
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkPhysicalDeviceSurfaceInfo2KHR', 'VkSurfaceFormat2KHR'
-foreign import ccall "vkGetPhysicalDeviceSurfaceFormats2KHR" vkGetPhysicalDeviceSurfaceFormats2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceSurfaceFormats2KHR" vkGetPhysicalDeviceSurfaceFormats2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult
 -- | VkPhysicalDeviceSurfaceInfo2KHR - Structure specifying a surface and
 -- related swapchain creation parameters
 --

@@ -30,9 +30,9 @@ writeEnumExtension enumName e@EnumExtension {..} =
       weDoc        = enumExtensionDoc enumName e
       weExtensions = ["PatternSynonyms"]
       weImports    = []
-      weProvides   = [Pattern exName]
+      weProvides   = [Unguarded $ Pattern exName]
       -- TODO: add the enum type to the depends
-      weDepends    = [TypeName enumName]
+      weDepends    = [Unguarded $ TypeName enumName]
   in  WriteElement {..}
 
 enumExtensionDoc :: Text -> EnumExtension -> DocMap -> Doc ()

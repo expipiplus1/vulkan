@@ -27,12 +27,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -50,14 +50,14 @@ import Graphics.Vulkan.Core10.Core
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.Device
-  ( VkDeviceQueueCreateFlags
-  , VkDeviceQueueCreateFlagBits(..)
+  ( VkDeviceQueueCreateFlagBits(..)
+  , VkDeviceQueueCreateFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDevice
-  , VkImageCreateFlagBits(..)
+  ( VkImageCreateFlagBits(..)
   , VkMemoryPropertyFlagBits(..)
   , VkQueueFlagBits(..)
+  , VkDevice
   )
 import Graphics.Vulkan.Core10.Queue
   ( VkQueue
@@ -123,7 +123,11 @@ pattern VK_COMMAND_POOL_CREATE_PROTECTED_BIT = VkCommandPoolCreateFlagBits 0x000
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkDeviceQueueInfo2', 'Graphics.Vulkan.Core10.Queue.VkQueue'
-foreign import ccall "vkGetDeviceQueue2" vkGetDeviceQueue2 :: ("device" ::: VkDevice) -> ("pQueueInfo" ::: Ptr VkDeviceQueueInfo2) -> ("pQueue" ::: Ptr VkQueue) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetDeviceQueue2" vkGetDeviceQueue2 :: ("device" ::: VkDevice) -> ("pQueueInfo" ::: Ptr VkDeviceQueueInfo2) -> ("pQueue" ::: Ptr VkQueue) -> IO ()
 -- | VkProtectedSubmitInfo - Structure indicating whether the submission is
 -- protected
 --

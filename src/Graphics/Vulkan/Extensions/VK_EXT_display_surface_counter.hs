@@ -30,16 +30,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -71,10 +71,10 @@ import Graphics.Vulkan.Core10.Pipeline
   ( VkExtent2D(..)
   )
 import Graphics.Vulkan.Extensions.VK_KHR_surface
-  ( VkCompositeAlphaFlagsKHR
-  , VkSurfaceTransformFlagBitsKHR(..)
-  , VkSurfaceTransformFlagsKHR
+  ( VkSurfaceTransformFlagBitsKHR(..)
+  , VkCompositeAlphaFlagsKHR
   , VkSurfaceKHR
+  , VkSurfaceTransformFlagsKHR
   )
 
 
@@ -170,7 +170,11 @@ pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = VK_STRUCTURE_TYPE_SURFACE_
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'VkSurfaceCapabilities2EXT',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'
-foreign import ccall "vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalDeviceSurfaceCapabilities2EXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2EXT) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalDeviceSurfaceCapabilities2EXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2EXT) -> IO VkResult
 -- | VkSurfaceCapabilities2EXT - Structure describing capabilities of a
 -- surface
 --

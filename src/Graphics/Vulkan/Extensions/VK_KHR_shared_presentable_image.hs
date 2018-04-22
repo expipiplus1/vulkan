@@ -21,12 +21,12 @@ import Data.String
   ( IsString
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -38,8 +38,8 @@ import Graphics.Vulkan.Core10.Core
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkImageUsageFlags
-  , VkDevice
+  ( VkDevice
+  , VkImageUsageFlags
   )
 import Graphics.Vulkan.Core10.Image
   ( VkImageLayout(..)
@@ -113,7 +113,11 @@ pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME = "VK_KHR_shared_presenta
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
-foreign import ccall "vkGetSwapchainStatusKHR" vkGetSwapchainStatusKHR :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetSwapchainStatusKHR" vkGetSwapchainStatusKHR :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult
 -- | VkSharedPresentSurfaceCapabilitiesKHR - structure describing
 -- capabilities of a surface for shared presentation
 --

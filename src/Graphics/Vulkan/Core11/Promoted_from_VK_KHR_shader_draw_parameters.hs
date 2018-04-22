@@ -9,12 +9,12 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_shader_draw_parameters
   ) where
 
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 
 

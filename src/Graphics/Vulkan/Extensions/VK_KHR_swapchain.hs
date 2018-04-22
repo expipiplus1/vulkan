@@ -67,16 +67,16 @@ import Data.Word
   , Word64
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -102,15 +102,15 @@ import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
   , VkFormat(..)
   , VkObjectType(..)
-  , VkStructureType(..)
   , VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkImageUsageFlags
-  , VkPhysicalDevice
-  , VkAllocationCallbacks(..)
+  ( VkAllocationCallbacks(..)
   , VkDevice
+  , VkImageUsageFlags
+  , VkPhysicalDevice
   )
 import Graphics.Vulkan.Core10.Image
   ( VkImageLayout(..)
@@ -123,18 +123,18 @@ import Graphics.Vulkan.Core10.Pipeline
   , VkRect2D(..)
   )
 import Graphics.Vulkan.Core10.Queue
-  ( VkQueue
-  , VkFence
+  ( VkFence
+  , VkQueue
   , VkSemaphore
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_creation
   ( VK_MAX_DEVICE_GROUP_SIZE
   )
 import Graphics.Vulkan.Extensions.VK_KHR_surface
-  ( VkPresentModeKHR(..)
+  ( VkColorSpaceKHR(..)
   , VkCompositeAlphaFlagBitsKHR(..)
+  , VkPresentModeKHR(..)
   , VkSurfaceTransformFlagBitsKHR(..)
-  , VkColorSpaceKHR(..)
   , VkSurfaceKHR
   )
 
@@ -402,7 +402,11 @@ type VkSwapchainKHR = Ptr VkSwapchainKHR_T
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkSwapchainCreateInfoKHR', 'VkSwapchainKHR'
-foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSwapchainCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSwapchain" ::: Ptr VkSwapchainKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateSwapchainKHR" vkCreateSwapchainKHR :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSwapchainCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSwapchain" ::: Ptr VkSwapchainKHR) -> IO VkResult
 -- | vkDestroySwapchainKHR - Destroy a swapchain object
 --
 -- = Parameters
@@ -471,7 +475,11 @@ foreign import ccall "vkCreateSwapchainKHR" vkCreateSwapchainKHR :: ("device" ::
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkSwapchainKHR'
-foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDestroySwapchainKHR" vkDestroySwapchainKHR :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 -- | vkGetSwapchainImagesKHR - Obtain the array of presentable images
 -- associated with a swapchain
 --
@@ -536,7 +544,11 @@ foreign import ccall "vkDestroySwapchainKHR" vkDestroySwapchainKHR :: ("device" 
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.MemoryManagement.VkImage', 'VkSwapchainKHR'
-foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pSwapchainImageCount" ::: Ptr Word32) -> ("pSwapchainImages" ::: Ptr VkImage) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pSwapchainImageCount" ::: Ptr Word32) -> ("pSwapchainImages" ::: Ptr VkImage) -> IO VkResult
 -- | vkAcquireNextImageKHR - Retrieve the index of the next available
 -- presentable image
 --
@@ -647,7 +659,11 @@ foreign import ccall "vkGetSwapchainImagesKHR" vkGetSwapchainImagesKHR :: ("devi
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Queue.VkFence',
 -- 'Graphics.Vulkan.Core10.Queue.VkSemaphore', 'VkSwapchainKHR'
-foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("timeout" ::: Word64) -> ("semaphore" ::: VkSemaphore) -> ("fence" ::: VkFence) -> ("pImageIndex" ::: Ptr Word32) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkAcquireNextImageKHR" vkAcquireNextImageKHR :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("timeout" ::: Word64) -> ("semaphore" ::: VkSemaphore) -> ("fence" ::: VkFence) -> ("pImageIndex" ::: Ptr Word32) -> IO VkResult
 -- | vkQueuePresentKHR - Queue an image for presentation
 --
 -- = Parameters
@@ -765,7 +781,11 @@ foreign import ccall "vkAcquireNextImageKHR" vkAcquireNextImageKHR :: ("device" 
 -- = See Also
 --
 -- 'VkPresentInfoKHR', 'Graphics.Vulkan.Core10.Queue.VkQueue'
-foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR :: ("queue" ::: VkQueue) -> ("pPresentInfo" ::: Ptr VkPresentInfoKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkQueuePresentKHR" vkQueuePresentKHR :: ("queue" ::: VkQueue) -> ("pPresentInfo" ::: Ptr VkPresentInfoKHR) -> IO VkResult
 -- | vkGetDeviceGroupPresentCapabilitiesKHR - Query present capabilities from
 -- other physical devices
 --
@@ -798,7 +818,11 @@ foreign import ccall "vkQueuePresentKHR" vkQueuePresentKHR :: ("queue" ::: VkQue
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkDeviceGroupPresentCapabilitiesKHR'
-foreign import ccall "vkGetDeviceGroupPresentCapabilitiesKHR" vkGetDeviceGroupPresentCapabilitiesKHR :: ("device" ::: VkDevice) -> ("pDeviceGroupPresentCapabilities" ::: Ptr VkDeviceGroupPresentCapabilitiesKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetDeviceGroupPresentCapabilitiesKHR" vkGetDeviceGroupPresentCapabilitiesKHR :: ("device" ::: VkDevice) -> ("pDeviceGroupPresentCapabilities" ::: Ptr VkDeviceGroupPresentCapabilitiesKHR) -> IO VkResult
 -- | vkGetDeviceGroupSurfacePresentModesKHR - Query present capabilities for
 -- a surface
 --
@@ -852,7 +876,11 @@ foreign import ccall "vkGetDeviceGroupPresentCapabilitiesKHR" vkGetDeviceGroupPr
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkDeviceGroupPresentModeFlagsKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'
-foreign import ccall "vkGetDeviceGroupSurfacePresentModesKHR" vkGetDeviceGroupSurfacePresentModesKHR :: ("device" ::: VkDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pModes" ::: Ptr VkDeviceGroupPresentModeFlagsKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetDeviceGroupSurfacePresentModesKHR" vkGetDeviceGroupSurfacePresentModesKHR :: ("device" ::: VkDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pModes" ::: Ptr VkDeviceGroupPresentModeFlagsKHR) -> IO VkResult
 -- | vkAcquireNextImage2KHR - Retrieve the index of the next available
 -- presentable image
 --
@@ -912,7 +940,11 @@ foreign import ccall "vkGetDeviceGroupSurfacePresentModesKHR" vkGetDeviceGroupSu
 --
 -- 'VkAcquireNextImageInfoKHR',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkAcquireNextImage2KHR" vkAcquireNextImage2KHR :: ("device" ::: VkDevice) -> ("pAcquireInfo" ::: Ptr VkAcquireNextImageInfoKHR) -> ("pImageIndex" ::: Ptr Word32) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkAcquireNextImage2KHR" vkAcquireNextImage2KHR :: ("device" ::: VkDevice) -> ("pAcquireInfo" ::: Ptr VkAcquireNextImageInfoKHR) -> ("pImageIndex" ::: Ptr Word32) -> IO VkResult
 -- | vkGetPhysicalDevicePresentRectanglesKHR - Query present rectangles for a
 -- surface on a physical device
 --
@@ -982,7 +1014,11 @@ foreign import ccall "vkAcquireNextImage2KHR" vkAcquireNextImage2KHR :: ("device
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'Graphics.Vulkan.Core10.Pipeline.VkRect2D',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'
-foreign import ccall "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevicePresentRectanglesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pRectCount" ::: Ptr Word32) -> ("pRects" ::: Ptr VkRect2D) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetPhysicalDevicePresentRectanglesKHR" vkGetPhysicalDevicePresentRectanglesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pRectCount" ::: Ptr Word32) -> ("pRects" ::: Ptr VkRect2D) -> IO VkResult
 -- | VkSwapchainCreateInfoKHR - Structure specifying parameters of a newly
 -- created swapchain object
 --

@@ -302,8 +302,8 @@ import Foreign.Storable
   ( Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Text.ParserCombinators.ReadPrec
   ( (+++)

@@ -30,28 +30,32 @@ writeStruct :: Struct -> Either [SpecError] WriteElement
 writeStruct s@Struct {..} = case sStructOrUnion of
   AStruct -> do
     (weDoc, imports, extensions) <- structDoc s
-    let weName       = "Struct: " <> sName
-        weExtensions = extensions ++ ["DuplicateRecordFields"]
-        weImports =
-          imports
-            ++ [ Import "Foreign.Ptr"      ["plusPtr"]
-               , Import "Foreign.Storable" ["Storable(..)"]
-               ]
-        weProvides = [TypeConstructor sName, Term sName]
-        weDepends  = nubOrd (concatMap (typeDepends . smType) sMembers)
+    let
+      weName       = "Struct: " <> sName
+      weExtensions = extensions ++ ["DuplicateRecordFields"]
+      weImports =
+        imports
+          ++ [ Import "Foreign.Ptr"      ["plusPtr"]
+             , Import "Foreign.Storable" ["Storable(..)"]
+             ]
+      weProvides = Unguarded <$> [TypeConstructor sName, Term sName]
+      weDepends =
+        Unguarded <$> nubOrd (concatMap (typeDepends . smType) sMembers)
     pure WriteElement {..}
   AUnion -> do
     (weDoc, imports, extensions) <- unionDoc s
-    let smNames      = toConstructorName <$> (smName <$> sMembers)
-        weName       = "Union: " <> sName
-        weExtensions = extensions
-        weImports =
-          imports
-            ++ [ Import "Foreign.Ptr"      ["castPtr"]
-               , Import "Foreign.Storable" ["Storable(..)"]
-               ]
-        weProvides = TypeConstructor sName : (Term <$> smNames)
-        weDepends  = nubOrd $ concatMap (typeDepends . smType) sMembers
+    let
+      smNames      = toConstructorName <$> (smName <$> sMembers)
+      weName       = "Union: " <> sName
+      weExtensions = extensions
+      weImports =
+        imports
+          ++ [ Import "Foreign.Ptr"      ["castPtr"]
+             , Import "Foreign.Storable" ["Storable(..)"]
+             ]
+      weProvides = Unguarded <$> TypeConstructor sName : (Term <$> smNames)
+      weDepends =
+        Unguarded <$> nubOrd (concatMap (typeDepends . smType) sMembers)
     pure WriteElement {..}
 
 ----------------------------------------------------------------

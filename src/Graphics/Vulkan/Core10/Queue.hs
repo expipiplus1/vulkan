@@ -45,16 +45,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -74,8 +74,8 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  , VkResult(..)
+  ( VkResult(..)
+  , VkStructureType(..)
   , VkFlags
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -510,7 +510,11 @@ type VkSemaphore = Ptr VkSemaphore_T
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkQueue'
-foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevice) -> ("queueFamilyIndex" ::: Word32) -> ("queueIndex" ::: Word32) -> ("pQueue" ::: Ptr VkQueue) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevice) -> ("queueFamilyIndex" ::: Word32) -> ("queueIndex" ::: Word32) -> ("pQueue" ::: Ptr VkQueue) -> IO ()
 -- | vkQueueSubmit - Submits a sequence of semaphores or command buffers to a
 -- queue
 --
@@ -711,7 +715,11 @@ foreign import ccall "vkGetDeviceQueue" vkGetDeviceQueue :: ("device" ::: VkDevi
 -- = See Also
 --
 -- 'VkFence', 'VkQueue', 'VkSubmitInfo'
-foreign import ccall "vkQueueSubmit" vkQueueSubmit :: ("queue" ::: VkQueue) -> ("submitCount" ::: Word32) -> ("pSubmits" ::: Ptr VkSubmitInfo) -> ("fence" ::: VkFence) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkQueueSubmit" vkQueueSubmit :: ("queue" ::: VkQueue) -> ("submitCount" ::: Word32) -> ("pSubmits" ::: Ptr VkSubmitInfo) -> ("fence" ::: VkFence) -> IO VkResult
 -- | vkQueueWaitIdle - Wait for a queue to become idle
 --
 -- = Parameters
@@ -753,7 +761,11 @@ foreign import ccall "vkQueueSubmit" vkQueueSubmit :: ("queue" ::: VkQueue) -> (
 -- = See Also
 --
 -- 'VkQueue'
-foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle :: ("queue" ::: VkQueue) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkQueueWaitIdle" vkQueueWaitIdle :: ("queue" ::: VkQueue) -> IO VkResult
 -- | vkDeviceWaitIdle - Wait for a device to become idle
 --
 -- = Parameters
@@ -789,7 +801,11 @@ foreign import ccall "vkQueueWaitIdle" vkQueueWaitIdle :: ("queue" ::: VkQueue) 
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkDeviceWaitIdle" vkDeviceWaitIdle :: ("device" ::: VkDevice) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkDeviceWaitIdle" vkDeviceWaitIdle :: ("device" ::: VkDevice) -> IO VkResult
 -- | VkSubmitInfo - Structure specifying a queue submit operation
 --
 -- = Description

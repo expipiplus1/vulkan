@@ -3,7 +3,7 @@
 
 
 module Graphics.Vulkan
-  (     module Graphics.Vulkan.NamedType
+  ( module Graphics.Vulkan.NamedType
   , module Graphics.Vulkan.Core10
   , module Graphics.Vulkan.Core11
   , module Graphics.Vulkan.Extensions

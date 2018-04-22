@@ -22,12 +22,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -36,8 +36,8 @@ import Graphics.Vulkan.NamedType
 
 import Graphics.Vulkan.Core10.Core
   ( VkBool32(..)
-  , VkStructureType(..)
   , VkResult(..)
+  , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
@@ -47,8 +47,8 @@ import Graphics.Vulkan.Core10.Pipeline
   ( VkRect2D(..)
   )
 import Graphics.Vulkan.Extensions.VK_KHR_swapchain
-  ( VkSwapchainKHR
-  , VkSwapchainCreateInfoKHR(..)
+  ( VkSwapchainCreateInfoKHR(..)
+  , VkSwapchainKHR
   )
 
 
@@ -149,7 +149,11 @@ pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_display_swapchain"
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
-foreign import ccall "vkCreateSharedSwapchainsKHR" vkCreateSharedSwapchainsKHR :: ("device" ::: VkDevice) -> ("swapchainCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkSwapchainCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSwapchains" ::: Ptr VkSwapchainKHR) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkCreateSharedSwapchainsKHR" vkCreateSharedSwapchainsKHR :: ("device" ::: VkDevice) -> ("swapchainCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkSwapchainCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSwapchains" ::: Ptr VkSwapchainKHR) -> IO VkResult
 -- | VkDisplayPresentInfoKHR - Structure describing parameters of a queue
 -- presentation to a swapchain
 --

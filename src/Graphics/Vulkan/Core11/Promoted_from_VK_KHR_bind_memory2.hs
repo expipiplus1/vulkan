@@ -19,12 +19,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -36,16 +36,16 @@ import Graphics.Vulkan.Core10.Core
   , VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDeviceSize
+  ( VkImageCreateFlagBits(..)
   , VkDevice
-  , VkImageCreateFlagBits(..)
+  , VkDeviceSize
   )
 import Graphics.Vulkan.Core10.Memory
   ( VkDeviceMemory
   )
 import Graphics.Vulkan.Core10.MemoryManagement
-  ( VkImage
-  , VkBuffer
+  ( VkBuffer
+  , VkImage
   )
 
 
@@ -97,7 +97,11 @@ pattern VK_IMAGE_CREATE_ALIAS_BIT = VkImageCreateFlagBits 0x00000400
 --
 -- 'VkBindBufferMemoryInfo',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkBindBufferMemory2" vkBindBufferMemory2 :: ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindBufferMemoryInfo) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkBindBufferMemory2" vkBindBufferMemory2 :: ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindBufferMemoryInfo) -> IO VkResult
 -- | vkBindImageMemory2 - Bind device memory to image objects
 --
 -- = Parameters
@@ -137,7 +141,11 @@ foreign import ccall "vkBindBufferMemory2" vkBindBufferMemory2 :: ("device" ::: 
 --
 -- 'VkBindImageMemoryInfo',
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall "vkBindImageMemory2" vkBindImageMemory2 :: ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindImageMemoryInfo) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkBindImageMemory2" vkBindImageMemory2 :: ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindImageMemoryInfo) -> IO VkResult
 -- | VkBindBufferMemoryInfo - Structure specifying how to bind a buffer to
 -- memory
 --

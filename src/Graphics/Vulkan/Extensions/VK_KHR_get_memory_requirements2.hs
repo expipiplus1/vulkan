@@ -50,26 +50,26 @@ import Graphics.Vulkan.Core10.DeviceInitialization
   )
 import Graphics.Vulkan.Core10.MemoryManagement
   ( VkMemoryRequirements(..)
-  , VkImage
   , VkBuffer
+  , VkImage
   )
 import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
   ( VkSparseImageMemoryRequirements(..)
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2
-  ( pattern VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2
-  , pattern VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2
-  , pattern VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2
-  , pattern VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2
-  , pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2
-  , VkSparseImageMemoryRequirements2(..)
-  , VkImageSparseMemoryRequirementsInfo2(..)
-  , vkGetImageSparseMemoryRequirements2
+  ( VkBufferMemoryRequirementsInfo2(..)
   , VkImageMemoryRequirementsInfo2(..)
-  , vkGetImageMemoryRequirements2
+  , VkImageSparseMemoryRequirementsInfo2(..)
   , VkMemoryRequirements2(..)
-  , VkBufferMemoryRequirementsInfo2(..)
+  , VkSparseImageMemoryRequirements2(..)
   , vkGetBufferMemoryRequirements2
+  , vkGetImageMemoryRequirements2
+  , vkGetImageSparseMemoryRequirements2
+  , pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2
+  , pattern VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2
+  , pattern VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2
+  , pattern VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2
+  , pattern VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2
   )
 
 

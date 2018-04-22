@@ -33,16 +33,16 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
-  ( expectP
-  , choose
+  ( choose
+  , expectP
   )
 import Text.ParserCombinators.ReadPrec
   ( (+++)
@@ -62,8 +62,8 @@ import Graphics.Vulkan.Core10.Core
   ( VkStructureType(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkImageUsageFlags
-  , VkImageCreateFlagBits(..)
+  ( VkImageCreateFlagBits(..)
+  , VkImageUsageFlags
   )
 import Graphics.Vulkan.Core10.Image
   ( VkImageLayout(..)

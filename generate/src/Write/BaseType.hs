@@ -23,8 +23,8 @@ writeBaseType :: BaseType -> Either [SpecError] WriteElement
 writeBaseType bt@BaseType {..} = do
   (weDoc, weImports, weExtensions) <- hDoc bt
   let weName     = "BaseType: " <> btName
-      weProvides = [TypeAlias btName]
-      weDepends  = typeDepends btType
+      weProvides = [Unguarded $ TypeAlias btName]
+      weDepends  = Unguarded <$> typeDepends btType
   pure WriteElement {..}
 
 hDoc :: BaseType -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])

@@ -18,12 +18,12 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( plusPtr
-  , Ptr
+  ( Ptr
+  , plusPtr
   )
 import Foreign.Storable
-  ( Storable(..)
-  , Storable
+  ( Storable
+  , Storable(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -34,8 +34,8 @@ import Graphics.Vulkan.Core10.Core
   ( VkResult(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDeviceSize
-  , VkDevice
+  ( VkDevice
+  , VkDeviceSize
   )
 import Graphics.Vulkan.Core10.Memory
   ( VkDeviceMemory
@@ -138,7 +138,11 @@ type VkImage = Ptr VkImage_T
 --
 -- 'VkBuffer', 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'VkMemoryRequirements'
-foreign import ccall "vkGetBufferMemoryRequirements" vkGetBufferMemoryRequirements :: ("device" ::: VkDevice) -> ("buffer" ::: VkBuffer) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetBufferMemoryRequirements" vkGetBufferMemoryRequirements :: ("device" ::: VkDevice) -> ("buffer" ::: VkBuffer) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements) -> IO ()
 -- | vkBindBufferMemory - Bind device memory to a buffer object
 --
 -- = Parameters
@@ -257,7 +261,11 @@ foreign import ccall "vkGetBufferMemoryRequirements" vkGetBufferMemoryRequiremen
 --
 -- 'VkBuffer', 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory', @VkDeviceSize@
-foreign import ccall "vkBindBufferMemory" vkBindBufferMemory :: ("device" ::: VkDevice) -> ("buffer" ::: VkBuffer) -> ("memory" ::: VkDeviceMemory) -> ("memoryOffset" ::: VkDeviceSize) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkBindBufferMemory" vkBindBufferMemory :: ("device" ::: VkDevice) -> ("buffer" ::: VkBuffer) -> ("memory" ::: VkDeviceMemory) -> ("memoryOffset" ::: VkDeviceSize) -> IO VkResult
 -- | vkGetImageMemoryRequirements - Returns the memory requirements for
 -- specified Vulkan object
 --
@@ -292,7 +300,11 @@ foreign import ccall "vkBindBufferMemory" vkBindBufferMemory :: ("device" ::: Vk
 --
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkImage',
 -- 'VkMemoryRequirements'
-foreign import ccall "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements) -> IO ()
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements) -> IO ()
 -- | vkBindImageMemory - Bind device memory to an image object
 --
 -- = Parameters
@@ -398,7 +410,11 @@ foreign import ccall "vkGetImageMemoryRequirements" vkGetImageMemoryRequirements
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
 -- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory', @VkDeviceSize@,
 -- 'VkImage'
-foreign import ccall "vkBindImageMemory" vkBindImageMemory :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("memory" ::: VkDeviceMemory) -> ("memoryOffset" ::: VkDeviceSize) -> IO VkResult
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkBindImageMemory" vkBindImageMemory :: ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("memory" ::: VkDeviceMemory) -> ("memoryOffset" ::: VkDeviceSize) -> IO VkResult
 -- | VkMemoryRequirements - Structure specifying memory requirements
 --
 -- = See Also
