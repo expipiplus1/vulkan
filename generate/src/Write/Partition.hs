@@ -50,7 +50,7 @@ partitionElements wes ss = validationToEither $ do
         let step name =
               [ d
               | we <- providingElements [name]
-              , d  <- weDepends we
+              , d  <- unGuarded <$> weDepends we
                 -- Don't allow other modules to grab exports from another seed
                 -- TODO: This may not disallow stealing names, as the
                 -- writeElement could be pulled in by a different requried name
@@ -104,7 +104,7 @@ makeReexports :: Set.Set HaskellName -> Module -> Module
 makeReexports dis Module {..} =
   let isAllowed we@WriteElement {..} = all (`Set.notMember` dis) (weProvidesHN we)
       (wes, res) = partitionEithers
-        [ if isAllowed we then Left we else Right (weProvides we)
+        [ if isAllowed we then Left we else Right (unGuarded <$> weProvides we)
         | we <- mWriteElements
         , isAllowed we
         ]
@@ -187,16 +187,16 @@ assertAllDependenciesSatisfied :: [Module] -> Validation [SpecError] ()
 assertAllDependenciesSatisfied ms
   = let
       allDepends :: [HaskellName]
-      allDepends = nubOrd $ weDepends =<< mWriteElements =<< ms
+      allDepends = nubOrd $ fmap unGuarded . weDepends =<< mWriteElements =<< ms
       allExports :: [HaskellName]
       allExports =
-        nubOrd . fmap unExport $ weProvides =<< mWriteElements =<< ms
+        nubOrd . fmap (unExport . unGuarded) $ weProvides =<< mWriteElements =<< ms
       dependsMap :: HaskellName -> [Text]
       dependsMap =
         let m = MultiMap.fromList
               [ (d, weName we)
               | we <- mWriteElements =<< ms
-              , d  <- weDepends we
+              , d  <- unGuarded <$> weDepends we
               ]
         in  (`MultiMap.lookup` m)
     in
@@ -229,4 +229,4 @@ genExportMapWriteElements wes = (`MultiMap.lookup` m)
 ----------------------------------------------------------------
 
 weProvidesHN :: WriteElement -> [HaskellName]
-weProvidesHN = fmap unExport . weProvides
+weProvidesHN = fmap (unExport . unGuarded) . weProvides

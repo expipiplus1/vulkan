@@ -1,4 +1,5 @@
 {-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
@@ -7,8 +8,12 @@ module Write.Loader
   ( writeLoader
   ) where
 
+import           Control.Arrow                            ((&&&))
+import           Control.Monad
 import           Data.Either.Validation
 import           Data.List.Extra
+import qualified Data.Map                                 as Map
+import           Data.Maybe
 import           Data.Text.Extra                          (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
@@ -18,35 +23,78 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Command
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
+import           Spec.Savvy.Platform
 import           Spec.Savvy.Type                          hiding (TypeName)
 import           Spec.Savvy.Type.Haskell
 import           Write.Element
 import           Write.Type.Enum
 import           Write.Util
 
-writeLoader :: (Text -> Maybe Text) -> [Command] -> Either [SpecError] WriteElement
-writeLoader getEnumName commands = do
-  (weDoc, is, es) <- writeLoaderDoc commands
-  let weName       = "Dynamic Function Pointer Loaders"
-      weExtensions = ["ForeignFunctionInterface", "MagicHash"] ++ es
-      weImports =
-        [ Import "Foreign.Ptr" ["FunPtr", "castPtrToFunPtr", "nullFunPtr"]
-          , QualifiedImport "GHC.Ptr" ["Ptr(..)"]
+writeLoader
+  :: (Text -> Maybe Text)
+  -- ^ Enum name resolver
+  -> [Platform]
+  -- ^ Platform guard info
+  -> [Command]
+  -- ^ Commands in the spec
+  -> Either [SpecError] WriteElement
+writeLoader getEnumName platforms commands = do
+  let
+    platformGuardMap :: Text -> Maybe Text
+    platformGuardMap =
+      (`Map.lookup` (Map.fromList
+                      ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
+                    )
+      )
+  (weDoc, is, es) <- writeLoaderDoc platformGuardMap commands
+  let
+    exposedCommands = (filter (isJust . cCommandLevel) commands)
+    weName          = "Dynamic Function Pointer Loaders"
+    weExtensions    = ["CPP", "ForeignFunctionInterface", "MagicHash"] ++ es
+    weImports =
+      [ Import "Foreign.Ptr" ["FunPtr", "castPtrToFunPtr", "nullFunPtr"]
+        , QualifiedImport "GHC.Ptr"     ["Ptr(..)"]
+        ]
+        ++ is
+    cmdProvides :: Command -> [Guarded Export]
+    cmdProvides Command {..} =
+      (case platformGuardMap =<< cPlatform of
+          Nothing -> Unguarded
+          Just g  -> Guarded g
+        )
+        <$> (  [Term (dropVk cName)]
+            ++ [Term (("has" <>) . T.upperCaseFirst . dropVk $ cName)]
+            )
+    weProvides =
+      (   Unguarded
+        <$> ([TypeConstructor, Term] <*> ["DeviceCmds", "InstanceCmds"])
+        )
+        ++ (Unguarded . Term <$> ["initDeviceCmds", "initInstanceCmds"])
+        ++ (cmdProvides =<< exposedCommands)
+    weReexports    = []
+    weReexportable = []
+    -- TODO: Write these like the imports and extensions, and move all that
+    -- to some writer monad.
+    weDepends =
+      concat
+          [ case platformGuardMap =<< cPlatform c of
+              Nothing -> Unguarded <$> (commandDepends getEnumName $ c)
+              Just g  -> Guarded g <$> (commandDepends getEnumName $ c)
+          | c <- exposedCommands
           ]
-          ++ is
-      weProvides = [TypeConstructor, Term] <*> ["DeviceCmds", "InstanceCmds"]
-      weReexports = []
-      weReexportable = []
-      -- TODO: Write these like the imports and extensions, and move all that
-      -- to some writer monad.
-      weDepends =
-        nubOrd
-          $  [TermName "vkGetDeviceProcAddr", TermName "vkGetInstanceProcAddr"]
-          ++ (commandDepends getEnumName =<< commands)
+        ++ (   Unguarded
+           <$> [ TermName "vkGetDeviceProcAddr"
+               , TermName "vkGetInstanceProcAddr"
+               ]
+           )
   pure WriteElement {..}
 
-writeLoaderDoc :: [Command] -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
-writeLoaderDoc commands = do
+writeLoaderDoc
+  :: (Text -> Maybe Text)
+  -- ^ Platform guard info
+  -> [Command]
+  -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+writeLoaderDoc platformGuardMap commands = do
   let deviceLevelCommands =
         [ c | c <- commands, cCommandLevel c == Just Device ]
       instanceLevelCommands =
@@ -54,66 +102,78 @@ writeLoaderDoc commands = do
         | c <- commands
         , cCommandLevel c `elem` [Just Instance, Just PhysicalDevice]
         ]
-  (drs, is, es) <- unzip3 <$> traverseP writeRecordMember deviceLevelCommands
-  (dfs, is', es') <- unzip3 <$> traverseP (writeFunction "Device") deviceLevelCommands
+  (drs, is , es ) <- unzip3 <$> traverseP (writeRecordMember platformGuardMap) deviceLevelCommands
+  (dfs, is', es') <-
+    unzip3 <$> traverseP (writeFunction platformGuardMap "Device") deviceLevelCommands
   (irs, is'', es'') <-
-    unzip3 <$> traverseP writeRecordMember instanceLevelCommands
+    unzip3 <$> traverseP (writeRecordMember platformGuardMap) instanceLevelCommands
   (ifs, is''', es''') <-
-    unzip3 <$> traverseP (writeFunction "Instance") instanceLevelCommands
+    unzip3 <$> traverseP (writeFunction platformGuardMap "Instance") instanceLevelCommands
   pure $
     let d = \_ -> [qci|
       data DeviceCmds = DeviceCmds
-        \{ {indent (-2) . vcat . intercalatePrepend "," $ drs}
+        \{ {indent (-2) . separatedWithGuards "," $ drs}
         }
+        deriving (Show)
 
       data InstanceCmds = InstanceCmds
-        \{ {indent (-2) . vcat . intercalatePrepend "," $ irs}
+        \{ {indent (-2) . separatedWithGuards "," $ irs}
         }
+        deriving (Show)
 
-      {initFunction "Device" deviceLevelCommands}
+      {initFunction platformGuardMap "Device" deviceLevelCommands}
 
-      {initFunction "Instance" instanceLevelCommands}
+      {initFunction platformGuardMap "Instance" instanceLevelCommands}
 
-      {vcat $ hasFunction "Device" <$> deviceLevelCommands}
+      {separatedWithGuards "" $ hasFunction platformGuardMap "Device" <$> deviceLevelCommands}
 
-      {vcat $ hasFunction "Instance" <$> instanceLevelCommands}
+      {separatedWithGuards "" $ hasFunction platformGuardMap "Instance" <$> instanceLevelCommands}
 
       -- * Device commands
-      {vcat $ dfs}
+      {separatedWithGuards "" $ dfs}
 
       -- * Instance commands
-      {vcat $ ifs}
+      {separatedWithGuards "" $ ifs}
     |]
     in (d, concat $ concat [is, is', is'', is'''], concat $ concat [es, es', es'', es'''])
 
-hasFunction :: Text -> Command -> Doc ()
-hasFunction domain Command{..} = [qci|
+hasFunction :: (Text -> Maybe Text) -> Text -> Command -> (Doc (), Maybe Text)
+hasFunction gm domain Command{..} = ([qci|
     has{T.upperCaseFirst $ dropVk cName} :: {domain}Cmds -> Bool
     has{T.upperCaseFirst $ dropVk cName} = (/= nullFunPtr) . p{T.upperCaseFirst cName}
-  |]
+  |], gm =<< cPlatform)
 
 -- | The initialization function for a set of command pointers
-initFunction :: Text -> [Command] -> Doc ()
-initFunction domain commands = [qci|
+initFunction :: (Text -> Maybe Text) -> Text -> [Command] -> Doc ()
+initFunction gm domain commands = [qci|
     init{domain}Cmds :: Vk{domain} -> IO {domain}Cmds
     init{domain}Cmds handle = {domain}Cmds
-      <$> {indent (-4) . vcat . intercalatePrepend "<*>" $
-           initLine domain <$> commands}
+      <$> {indent (-4) $ separatedWithGuards "<*>"
+           ((initLine domain &&& (gm <=< cPlatform)) <$> commands)}
   |]
   where
     initLine :: Text -> Command -> Doc ()
     initLine domain Command{..} = [qci|(castPtrToFunPtr <$> vkGet{domain}ProcAddr handle (GHC.Ptr.Ptr "{cName}\NUL"#))|]
 
-writeRecordMember :: Command -> Either [SpecError] (Doc (), [Import], [Text])
-writeRecordMember c@Command{..} = do
+writeRecordMember
+  :: (Text -> Maybe Text)
+  -- ^ platform to guard
+  -> Command
+  -> Either [SpecError] ((Doc (), Maybe Text), [Import], [Text])
+writeRecordMember gp c@Command{..} = do
   (t, (is, es)) <- toHsTypePrec 10 (commandType c)
   let d= [qci|
         p{T.upperCaseFirst cName} :: FunPtr {t}
       |]
-  pure (d, is, es)
+  pure ((d, gp =<< cPlatform), is, es)
 
-writeFunction :: Text -> Command -> Either [SpecError] (Doc (), [Import], [Text])
-writeFunction domain c@Command{..} = do
+writeFunction
+  :: (Text -> Maybe Text)
+  -- ^ platform to guard
+  -> Text
+  -> Command
+  -> Either [SpecError] ((Doc (), Maybe Text), [Import], [Text])
+writeFunction gm domain c@Command{..} = do
   (t, (is, es)) <- toHsTypePrec 10 (commandType c)
   let upperCaseName = T.upperCaseFirst cName
       d= [qci|
@@ -122,7 +182,7 @@ writeFunction domain c@Command{..} = do
         foreign import ccall unsafe "dynamic" mk{upperCaseName}
           :: FunPtr {t} -> {t}
       |]
-  pure (d, is, es)
+  pure ((d, gm =<< cPlatform), is, es)
 
 traverseP f xs = validationToEither $ traverse (eitherToValidation . f) xs
 
@@ -130,13 +190,21 @@ dropVk :: Text -> Text
 dropVk = T.lowerCaseFirst . T.dropPrefix' "vk"
 
 commandDepends :: (Text -> Maybe Text) -> Command -> [HaskellName]
-commandDepends getEnumName Command {..}
-  = let protoDepends = typeDepends $ Proto
-          cReturnType
-          [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
-    in  protoDepends
-          <> -- The constructors for an enum type need to be in scope
-             [ TypeName e
-             | TypeName n <- protoDepends
-             , Just e <- [getEnumName n]
-             ]
+commandDepends getEnumName Command {..} =
+  let protoDepends = typeDepends $ Proto
+        cReturnType
+        [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
+      protoDependsNoPointers = typeDepends $ Proto
+        cReturnType
+        [ (Just n, t)
+        | Parameter n t <- cParameters
+        , not (isPtrType t)
+        , not (isArrayType t)
+        ]
+  in  protoDepends
+        <> -- The constructors for an enum type need to be in scope
+           -- Unless they're just used as pointers
+           [ TypeName e
+           | TypeName n <- protoDependsNoPointers
+           , Just e <- [getEnumName n]
+           ]

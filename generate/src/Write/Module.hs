@@ -4,6 +4,7 @@
 {-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE TupleSections     #-}
 
 module Write.Module
   ( Module(..)
@@ -18,6 +19,7 @@ import           Data.Functor.Extra
 import           Data.List.Extra
 import qualified Data.Map                                 as Map
 import           Data.Maybe
+import qualified Data.Set                                 as Set
 import           Data.Text                                (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
@@ -76,18 +78,15 @@ getModuleDoc findDoc findModule thisModule name = do
 
 writeModule
   :: (Documentee -> Maybe Haddock)
-  -> (HaskellName -> Maybe (Text, Export))
+  -> (HaskellName -> Maybe (Text, Guarded Export))
   -> Module
   -> Doc ()
 writeModule getDoc getModule m@Module{..} = [qci|
   \{-# language Strict #-}
-  \{-# language CPP #-}
   {vcat $ moduleExtensions m}
 
   module {mName}
-    ( {indent (-2) $ separatedSections ","
-         [ (Nothing, moduleExports m)
-         ]}{vcat $ moduleReexports (null (moduleExports m)) m}
+    ( {indent (-2) $ separatedWithGuards "," (moduleExports m)}
     ) where
 
   {vcat $ moduleImports m}
@@ -98,23 +97,10 @@ writeModule getDoc getModule m@Module{..} = [qci|
   {vcatPara $ (flip weDoc getDoc) <$> mWriteElements}
   |]
 
-moduleExports :: Module -> [Doc ()]
+moduleExports :: Module -> [(Doc (), Maybe Text)]
 moduleExports Module {..} =
   mapMaybe exportHaskellName (weProvides =<< mWriteElements)
-
-moduleReexports :: Bool -> Module -> [Doc ()]
-moduleReexports first Module {..} =
-  mapMaybe exportHaskellName mReexports
-    ++ zipWith reexportModule (first : repeat False) mReexportedModules
-
-reexportModule :: Bool -> ReexportedModule -> Doc ()
-reexportModule first ReexportedModule {..} = case rmGuard of
-  Nothing -> [qci|{indent 2 $ if first then " " else ","} module {rmName}|]
-  Just g  -> indent (-100) [qci|
-      #if defined({g})
-        {if first then " " else "," :: Doc a} module {rmName}
-      #endif
-    |]
+  ++ [("module " <> pretty (rmName r), rmGuard r)| r <- mReexportedModules]
 
 importReexportedModule :: ReexportedModule -> Doc ()
 importReexportedModule ReexportedModule {..} = case rmGuard of
@@ -125,16 +111,22 @@ importReexportedModule ReexportedModule {..} = case rmGuard of
       #endif
     |]
 
-exportHaskellName :: Export -> Maybe (Doc ())
+exportHaskellName :: Guarded Export -> Maybe (Doc (), Maybe Text)
 exportHaskellName e =
-  let s = case unExport e of
+  let s = case unExport (unGuarded e) of
         TypeName n -> Just (pretty n)
         TermName n | isConstructor n -> Nothing
                    | otherwise       -> Just (pretty n)
         PatternName n -> Just ("pattern" <+> pretty n)
-  in  case e of
+      doc = case unGuarded e of
         WithConstructors    _ -> (<> "(..)") <$> s
         WithoutConstructors _ -> s
+  in  (
+      , (case e of
+          Guarded g _ -> Just g
+          Unguarded _ -> Nothing
+        )
+      ) <$> doc
 
 isConstructor :: Text -> Bool
 isConstructor = \case
@@ -158,10 +150,10 @@ moduleImports Module {..} =
   in (makeImport " "           <$> Map.assocs unqualifiedImportMap) ++
      (makeImport " qualified " <$> Map.assocs qualifiedImportMap)
 
-findModuleHN :: [Module] -> HaskellName -> Maybe (Text, Export)
+findModuleHN :: [Module] -> HaskellName -> Maybe (Text, Guarded Export)
 findModuleHN ms =
   let nameMap = Map.fromList
-        [ (unExport e, (mName m, e))
+        [ (unExport (unGuarded e), (mName m, e))
         | m  <- ms
         , we <- mWriteElements m
         , e  <- weProvides we
@@ -174,31 +166,45 @@ findModule ms =
         [ (e, mName m)
         | m  <- ms
         , we <- mWriteElements m
-        , e  <- unHaskellName . unExport <$> weProvides we
+        , e  <- unHaskellName . unExport . unGuarded <$> weProvides we
         ]
   in  (`Map.lookup` nameMap)
 
 moduleInternalImports
-  :: (HaskellName -> Maybe (Text, Export))
+  :: (HaskellName -> Maybe (Text, Guarded Export))
   -- ^ which module is this name from
   -> Module
   -> [Doc ()]
 moduleInternalImports nameModule Module {..} =
-  let depends = Map.fromListWith
+  let deps = simplifyDependencies (weDepends =<< mWriteElements)
+      depends = Map.fromListWith
         (<>)
-        [ (m, [e])
-        | d      <- nubOrd (weDepends =<< mWriteElements)
-        , Just (m, e) <- [nameModule d]
-        , d `notElem` (unExport <$> (weProvides =<< mWriteElements))
+        [ ((m, g), [e])
+        | d           <- deps
+        , Just (m, e) <- [nameModule (unGuarded d)]
+        , unGuarded d `notElem` (unExport . unGuarded <$> (weProvides =<< mWriteElements))
+        , let g = case d of
+                Unguarded _ -> Nothing
+                Guarded g _ -> Just g
         ]
-  in  Map.assocs depends <&> \(moduleName, is) -> [qci|
-        import {pretty moduleName}
-          ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe exportHaskellName is}
-          )
-|]
+  in  Map.assocs depends <&> \((moduleName, guard), is) ->
+        guarded guard [qci|
+          import {pretty moduleName}
+            ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe (fmap fst . exportHaskellName) is}
+            )
+        |]
+
+simplifyDependencies :: [Guarded HaskellName] -> [Guarded HaskellName]
+simplifyDependencies deps =
+  let unguarded = Set.fromList [ Unguarded d | Unguarded d <- deps ]
+      guarded   = Set.fromList
+        [ Guarded g d
+        | Guarded g d <- deps
+        , Unguarded d `Set.notMember` unguarded
+        ]
+  in  Set.toList unguarded ++ Set.toList guarded
 
 moduleExtensions :: Module -> [Doc ()]
 moduleExtensions Module{..} =
   let es = nubOrd $ weExtensions =<< mWriteElements
   in es <&> \e -> [qci|\{-# language {e} #-}|]
-

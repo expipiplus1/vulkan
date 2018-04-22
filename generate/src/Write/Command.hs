@@ -30,17 +30,18 @@ writeCommand getEnumName fp@Command {..} = do
   (weDoc, weImports, weExtensions) <- commandDoc fp
   let
     weName       = "Command: " <> cName
-    weProvides   = [Term cName]
     protoDepends = typeDepends $ Proto
       cReturnType
       [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
+    weProvides = [Unguarded $ Term cName]
     weDepends =
-      protoDepends
+      Unguarded
+        <$> protoDepends
         <> -- The constructors for an enum type need to be in scope
-           [ TypeName e
-           | TypeName n <- protoDepends
-           , Just     e <- [getEnumName n]
-           ]
+            [ TypeName e
+            | TypeName n <- protoDepends
+            , Just e <- [getEnumName n]
+            ]
   pure WriteElement {..}
 
 commandDoc :: Command -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])

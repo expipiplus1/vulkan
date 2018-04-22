@@ -42,10 +42,10 @@ writeEnum e@Enum {..} =
                  [ Import "Data.Bits" ["Bits", "FiniteBits"]
                  ]
 
-      weProvides =
+      weProvides = Unguarded <$>
         [TypeConstructor eName, Term eName]
           ++ [ Pattern eeName | EnumElement {..} <- eElements ]
-      weDepends = case eType of
+      weDepends = Unguarded <$> case eType of
         EnumTypeEnum    -> []
         EnumTypeBitmask -> [TypeName "VkFlags"]
   in  WriteElement {..}

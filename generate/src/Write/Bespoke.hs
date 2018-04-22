@@ -28,7 +28,7 @@ namedType =
       weImports = []
       weExtensions = ["PolyKinds", "TypeOperators"]
       weName = "NamedType"
-      weProvides = [ TypeAlias "(:::)" ]
+      weProvides = Unguarded <$> [ TypeAlias "(:::)" ]
       weDepends = []
   in WriteElement{..}
 
@@ -66,7 +66,8 @@ versions =
                   ]
       weExtensions = ["PatternSynonyms", "ViewPatterns"]
       weName = "Version Macros"
-      weProvides = [ Pattern "VK_MAKE_VERSION"
+      weProvides = Unguarded <$>
+                   [ Pattern "VK_MAKE_VERSION"
                    , Pattern "VK_API_VERSION_1_0"
                    , Pattern "VK_API_VERSION_1_1"
                    , Term "_VK_VERSION_MAJOR"
@@ -87,7 +88,7 @@ nullHandle =
       weImports = [Import "Foreign.Ptr" ["Ptr", "nullPtr"]]
       weExtensions = ["PatternSynonyms", "ViewPatterns"]
       weName = "Null handle"
-      weProvides = [Pattern "VK_NULL_HANDLE"]
+      weProvides = [Unguarded $ Pattern "VK_NULL_HANDLE"]
       weDepends = []
   in WriteElement{..}
 
@@ -112,7 +113,7 @@ voidDataWriteElement n =
       weImports = []
       weExtensions = []
       weName = n
-      weProvides = [WithoutConstructors (TypeName n)]
+      weProvides = [Unguarded $ WithoutConstructors (TypeName n)]
       weDepends = []
   in WriteElement{..}
 
@@ -163,7 +164,8 @@ newtypeOrTypeWriteElement decl n t is =
       weExtensions = []
       weName = t
       -- TODO: Tidy
-      weProvides = if decl == "newtype"
+      weProvides = Unguarded <$>
+                   if decl == "newtype"
                      then [WithConstructors (TypeName n)]
                      else [WithoutConstructors (TypeName n)]
       weDepends = []

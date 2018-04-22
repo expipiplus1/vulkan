@@ -18,15 +18,19 @@ import           Data.Closure
 import           Data.Either.Validation
 import           Data.Foldable
 import qualified Data.Map               as Map
+import           Data.Maybe
 import qualified Data.MultiMap          as MultiMap
 import           Data.Text
 import           Data.Traversable
 
 import qualified Spec.Command           as P
 import           Spec.Savvy.Error
+import           Spec.Savvy.Extension
+import           Spec.Savvy.Feature     (Requirement (..))
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Type
 import qualified Spec.Spec              as P
+import           Write.Element          (HaskellName (TermName))
 
 data Command = Command
   { cName         :: Text
@@ -37,6 +41,8 @@ data Command = Command
     -- ^ The closure of aliases to this command, doesn't include aliases in
     -- extensions
   , cCommandLevel :: Maybe CommandLevel
+  , cPlatform     :: Maybe Text
+    -- ^ The platform this command runs on if it is not universal
   }
   deriving (Show)
 
@@ -55,8 +61,13 @@ data CommandLevel
   | Device
   deriving (Show, Eq)
 
-specCommands :: TypeParseContext -> P.Spec -> [Handle] -> Validation [SpecError] [Command]
-specCommands pc P.Spec {..} handles
+specCommands
+  :: TypeParseContext
+  -> P.Spec
+  -> [Handle]
+  -> [Extension]
+  -> Validation [SpecError] [Command]
+specCommands pc P.Spec {..} handles extensions
   = let
       commandAliases :: [(Text, Text)]
       commandAliases =
@@ -75,6 +86,13 @@ specCommands pc P.Spec {..} handles
           $ let cAliases =
                   closeNonReflexive (`MultiMap.lookup` aliasMap) [cName]
                 cCommandLevel = commandLevel' ps
+                cPlatform     = listToMaybe
+                  [ p
+                  | e          <- extensions
+                  , TermName n <- rRequiredNames =<< extRequirements e
+                  , n == cName
+                  , Just p <- [extPlatform e]
+                  ]
             in  Command {cReturnType = ret, cParameters = ps, ..}
 
 commandType :: Command -> Type

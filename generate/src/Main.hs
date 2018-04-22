@@ -38,5 +38,6 @@ main = do
           exitFailure
         Right s -> do
           let allExtensionNames = extName <$> sExtensions s
-          documentation <- loadAllDocumentation allExtensionNames vkDir manPath
+          -- documentation <- loadAllDocumentation allExtensionNames vkDir manPath
+          let documentation = const Nothing
           writeSpec documentation outDir cabalPath s

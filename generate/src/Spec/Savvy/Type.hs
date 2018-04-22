@@ -16,6 +16,8 @@ module Spec.Savvy.Type
   , stringToTypeExpected
   , specParserContext
   , typeDepends
+  , isPtrType
+  , isArrayType
   ) where
 
 import           Control.Applicative
@@ -221,3 +223,13 @@ typeDepends = \case
   TypeName "Integral a => a"    -> []
   TypeName t                    -> [WE.TypeName t]
   Proto t ps -> typeDepends t ++ [ p | (_, pt) <- ps, p <- typeDepends pt ]
+
+isPtrType :: Type -> Bool
+isPtrType = \case
+  Ptr _ -> True
+  _ -> False
+
+isArrayType :: Type -> Bool
+isArrayType = \case
+  Array _ _ -> True
+  _ -> False
