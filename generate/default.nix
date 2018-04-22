@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> {}, compiler ? "ghc822" }:
 
 let
   # Strip out the irrelevant parts of the source
@@ -11,13 +11,17 @@ let
     python3
   ];
 
-  haskellPackages = pkgs.haskellPackages.override{
+  haskellPackages = pkgs.haskell.packages.${compiler}.override{
     overrides = self: super: {
       pandoc = pkgs.haskell.lib.appendPatches
-                 super.pandoc_2_1_2
-                 [ ./pandoc-patches/pandoc-math.patch
-                   ./pandoc-patches/pandoc-haddock-math.patch
-                   ./pandoc-patches/pandoc-haddock-table.patch
+                 super.pandoc
+                 [ ./patches/pandoc-math.patch
+                   ./patches/pandoc-haddock-math.patch
+                   ./patches/pandoc-haddock-table.patch
+                 ];
+      async-pool = pkgs.haskell.lib.appendPatches
+                 super.async-pool
+                 [ ./patches/async-pool-bounds.patch
                  ];
     };
   };

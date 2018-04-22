@@ -96,7 +96,7 @@ executable generate
                      , Write.Type.FuncPointer
                      , Write.Util
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
-  build-depends:       base >= 4.8 && < 4.11
+  build-depends:       base >= 4.8 && < 5
                      , control-bool >= 0.2.1
                      , directory >= 1.2 && < 1.4
                      , extra

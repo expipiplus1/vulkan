@@ -1,0 +1,13 @@
+diff --git a/async-pool.cabal b/async-pool.cabal
+index cf9c6c9..e2b8743 100644
+--- a/async-pool.cabal
++++ b/async-pool.cabal
+@@ -20,7 +20,7 @@ Library
+     default-language: Haskell98
+     ghc-options:      -Wall
+     build-depends:
+-        base >= 3 && < 4.11
++        base >= 3 && < 4.12
+       , fgl
+       , async
+       , stm
