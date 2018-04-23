@@ -57,7 +57,7 @@ data EnumType
     -- ^ Bitmask enums are backed by the VkFlags type (Word32)
   | EnumTypeEnum
     -- ^ Enum enums are backed by Int32
-  deriving (Show)
+  deriving (Show, Eq)
 
 data EnumElement = EnumElement
   { eeName    :: Text

@@ -59,3 +59,6 @@ Several classes of functions:
 Idioms:
 
 - Length/Array pairs
+
+TODO:
+  Take a closer look at `vkCmdBindDescriptorSets`

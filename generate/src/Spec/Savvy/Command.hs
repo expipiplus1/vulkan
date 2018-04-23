@@ -21,7 +21,8 @@ import           Data.Foldable
 import qualified Data.Map               as Map
 import           Data.Maybe
 import qualified Data.MultiMap          as MultiMap
-import           Data.Text
+import           Data.Text              (Text)
+import qualified Data.Text.Extra        as T
 import           Data.Traversable
 
 import qualified Spec.Command           as P
@@ -58,6 +59,9 @@ data Parameter = Parameter
 data ParameterLength
   = NullTerminated
   | NamedLength Text
+  | NamedMemberLength Text Text
+    -- ^ The length is specified by a member of another (struct) parameter, an
+    -- example is vkAllocateCommandBuffers
   deriving (Show)
 
 -- | The "level" of a command, related to what it is dispatched from.
@@ -92,7 +96,10 @@ specCommands pc P.Spec {..} handles extensions
           let pLength = case pLengths of
                 Nothing                  -> Nothing
                 Just ["null-terminated"] -> Just NullTerminated
-                Just [l                ] -> Just (NamedLength l)
+                Just [l] | [param, member] <- T.splitOn "::" l ->
+                  Just (NamedMemberLength param member)
+                Just [l] -> Just (NamedLength l)
+                Just _ -> error "TODO: Multiple lengths"
           pure Parameter {pType = t, ..}
         pure
           $ let cAliases =
