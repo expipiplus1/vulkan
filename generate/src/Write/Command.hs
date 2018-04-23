@@ -1,4 +1,3 @@
-{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
@@ -32,7 +31,7 @@ writeCommand getEnumName fp@Command {..} = do
     weName       = "Command: " <> cName
     protoDepends = typeDepends $ Proto
       cReturnType
-      [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
+      [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
     weProvides = [Unguarded $ Term cName]
     weDepends =
       Unguarded

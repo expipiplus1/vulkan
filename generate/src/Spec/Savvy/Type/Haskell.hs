@@ -1,11 +1,11 @@
-{-# LANGUAGE DataKinds                  #-}
+{-# LANGUAGE DataKinds         #-}
 
 
-{-# LANGUAGE LambdaCase                 #-}
-{-# LANGUAGE OverloadedStrings          #-}
-{-# LANGUAGE PatternSynonyms            #-}
-{-# LANGUAGE PolyKinds                  #-}
-{-# LANGUAGE TypeOperators              #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PatternSynonyms   #-}
+{-# LANGUAGE PolyKinds         #-}
+{-# LANGUAGE TypeOperators     #-}
 
 module Spec.Savvy.Type.Haskell
   ( toHsType
@@ -58,15 +58,15 @@ neg = \case
 
 toHsType' :: Int -> Pos -> Type -> TypeM (Doc ())
 toHsType' prec pos = \case
-  Float -> useWithConstructors "Foreign.C.Types" "CFloat"
-  Void  -> pure "()"
-  Char  -> useWithConstructors "Foreign.C.Types" "CChar"
-  Int   -> useWithConstructors "Foreign.C.Types" "CInt"
-  Ptr t -> do
+  Float   -> useWithConstructors "Foreign.C.Types" "CFloat"
+  Void    -> pure "()"
+  Char    -> useWithConstructors "Foreign.C.Types" "CChar"
+  Int     -> useWithConstructors "Foreign.C.Types" "CInt"
+  Ptr _ t -> do
     tellImport "Foreign.Ptr" "Ptr"
     t' <- toHsType' 10 pos t
     pure . parens' (prec >= 10) $ "Ptr" <+> t'
-  Array size t -> do
+  Array _ size t -> do
     tellImport "Data.Vector.Storable.Sized" "Vector"
     size' <- sizeToType size
     t'    <- toHsType' 10 pos t

@@ -31,21 +31,18 @@ typeSize namedType constantValue lookupSub = \case
   Float -> pure $ fromIntegral (sizeOf (undefined :: CFloat))
   Char -> pure $ fromIntegral (sizeOf (undefined :: CChar))
   Int -> pure $ fromIntegral (sizeOf (undefined :: CInt))
-  Ptr _ -> pure $ fromIntegral (sizeOf (undefined :: Ptr ()))
-  Array (NumericArraySize len) t -> do
+  Ptr _ _ -> pure $ fromIntegral (sizeOf (undefined :: Ptr ()))
+  Array _ (NumericArraySize len) t -> do
     tSize <- lookupSub t
     pure (len * tSize)
-  Array (SymbolicArraySize n) t -> do
+  Array _ (SymbolicArraySize n) t -> do
     tSize <- lookupSub t
-    len <- maybe (throwError [UnknownConstantValue n]) pure (constantValue n)
+    len   <- maybe (throwError [UnknownConstantValue n]) pure (constantValue n)
     pure (len * tSize)
   TypeName n
-    | Just (SomeStorable x) <- knownNames n
-    -> pure $ fromIntegral (sizeOf x)
-    | Just t <- namedType n
-    -> lookupSub t
-    | otherwise
-    -> throwError [UnknownTypeSize n]
+    | Just (SomeStorable x) <- knownNames n -> pure $ fromIntegral (sizeOf x)
+    | Just t <- namedType n                 -> lookupSub t
+    | otherwise                             -> throwError [UnknownTypeSize n]
   t -> throwError [SizingBadType (T.pack (show t))]
 
 -- | Get the alignment of a type in bytes
@@ -55,11 +52,11 @@ typeAlignment
   -> Type
   -> Either [SpecError] Word
 typeAlignment namedType lookupSub = \case
-  Float     -> pure $ fromIntegral (alignment (undefined :: CFloat))
-  Char      -> pure $ fromIntegral (alignment (undefined :: CChar))
-  Int       -> pure $ fromIntegral (alignment (undefined :: CInt))
-  Ptr _     -> pure $ fromIntegral (alignment (undefined :: Ptr ()))
-  Array _ t -> lookupSub t
+  Float       -> pure $ fromIntegral (alignment (undefined :: CFloat))
+  Char        -> pure $ fromIntegral (alignment (undefined :: CChar))
+  Int         -> pure $ fromIntegral (alignment (undefined :: CInt))
+  Ptr _ _     -> pure $ fromIntegral (alignment (undefined :: Ptr ()))
+  Array _ _ t -> lookupSub t
   TypeName n
     | Just (SomeStorable x) <- knownNames n -> pure $ fromIntegral (alignment x)
     | Just t <- namedType n -> lookupSub t

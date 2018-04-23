@@ -30,8 +30,8 @@ writeHandle h@Handle {..} = do
 hDoc :: Handle -> Either [SpecError] (DocMap -> Doc ())
 hDoc Handle{..} = do
   p <- case hType of
-    Ptr (TypeName p) -> pure p
-    _                -> Left [HandleToNonPointerType hName]
+    Ptr _ (TypeName p) -> pure p
+    _                  -> Left [HandleToNonPointerType hName]
   pure (\getDoc -> [qci|
     -- | Dummy data to tag the 'Ptr' with
     data {p}

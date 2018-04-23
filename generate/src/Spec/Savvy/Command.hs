@@ -7,6 +7,7 @@ module Spec.Savvy.Command
   ( Command(..)
   , Parameter(..)
   , CommandLevel(..)
+  , ParameterLength(..)
   , specCommands
   , commandType
   , lowerArrayToPointer
@@ -47,9 +48,16 @@ data Command = Command
   deriving (Show)
 
 data Parameter = Parameter
-  { pName :: Text
-  , pType :: Type
+  { pName       :: Text
+  , pType       :: Type
+  , pLength     :: Maybe ParameterLength
+  , pIsOptional :: Maybe [Bool]
   }
+  deriving (Show)
+
+data ParameterLength
+  = NullTerminated
+  | NamedLength Text
   deriving (Show)
 
 -- | The "level" of a command, related to what it is dispatched from.
@@ -79,8 +87,12 @@ specCommands pc P.Spec {..} handles extensions
     in
       for sCommands $ \P.Command {..} -> do
         ret <- eitherToValidation $ stringToTypeExpected pc cName cReturnType
-        ps  <- for cParameters $ \P.Parameter {..} -> do
-          t <- eitherToValidation $ stringToTypeExpected pc pName pType
+        ps  <- for cParameters $ \P.Parameter {..} -> eitherToValidation $ do
+          t <- stringToTypeExpected pc pName pType
+          let pLength = case pLengths of
+                Nothing                  -> Nothing
+                Just ["null-terminated"] -> Just NullTerminated
+                Just [l                ] -> Just (NamedLength l)
           pure Parameter {pType = t, ..}
         pure
           $ let cAliases =
@@ -98,12 +110,12 @@ specCommands pc P.Spec {..} handles extensions
 commandType :: Command -> Type
 commandType Command {..} = Proto
   cReturnType
-  [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
+  [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
 
 lowerArrayToPointer :: Type -> Type
 lowerArrayToPointer = \case
-    Array _ t -> Ptr t
-    t         -> t
+  Array c _ t -> Ptr c t
+  t           -> t
 
 commandLevel :: [Handle] -> [Parameter] -> Maybe CommandLevel
 commandLevel handles =
@@ -118,5 +130,5 @@ commandLevel handles =
           h <- handleMap handleName
           asum $ handleLevel <$> hParents h
   in  \case
-        Parameter _ (TypeName n) : _ -> handleLevel n
-        _                            -> Nothing
+        Parameter _ (TypeName n) _ _ : _ -> handleLevel n
+        _                              -> Nothing

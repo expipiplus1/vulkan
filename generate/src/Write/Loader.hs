@@ -197,11 +197,11 @@ commandDepends :: (Text -> Maybe Text) -> Command -> [HaskellName]
 commandDepends getEnumName Command {..} =
   let protoDepends = typeDepends $ Proto
         cReturnType
-        [ (Just n, lowerArrayToPointer t) | Parameter n t <- cParameters ]
+        [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
       protoDependsNoPointers = typeDepends $ Proto
         cReturnType
         [ (Just n, t)
-        | Parameter n t <- cParameters
+        | Parameter n t _ _ <- cParameters
         , not (isPtrType t)
         , not (isArrayType t)
         ]

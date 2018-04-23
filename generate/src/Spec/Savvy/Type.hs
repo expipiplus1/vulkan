@@ -8,6 +8,7 @@
 module Spec.Savvy.Type
   ( Type(..)
   , ArraySize(..)
+  , Qualifier(..)
   , TypeContext(..)
   , extendTypeContext
   , getTypeSize
@@ -20,7 +21,7 @@ module Spec.Savvy.Type
   , isArrayType
   ) where
 
-import           Control.Applicative
+import           Control.Applicative                      hiding (Const (..))
 import           Control.Monad.Fix.Extra
 import           Control.Monad.Trans.Reader               (ReaderT (..))
 import           Data.Either.Validation
@@ -47,17 +48,23 @@ data Type
   | Char
   | Int
     -- ^ Signed int
-  | Ptr Type
-  | Array ArraySize Type
+  | Ptr Qualifier Type
+    -- ^ Qualifies the pointed to type
+  | Array Qualifier ArraySize Type
+    -- ^ Qualifies the pointed to type
   | TypeName Text
   | Proto Type [(Maybe Text, Type)]
-  deriving (Show)
+  deriving (Show, Eq)
 
 data ArraySize
   = NumericArraySize Word
   | SymbolicArraySize Text
-  deriving (Show)
+  deriving (Show, Eq)
 
+data Qualifier
+  = NonConst
+  | Const
+  deriving (Show, Eq)
 
 ----------------------------------------------------------------
 -- Type context
@@ -129,11 +136,23 @@ cTypeToType = \case
   C.TypeSpecifier (C.Specifiers []          []        []) t -> nameToType t
   C.TypeSpecifier (C.Specifiers []          [C.CONST] []) t -> nameToType t
   C.TypeSpecifier (C.Specifiers [C.TYPEDEF] []        []) t -> nameToType t
-  C.Ptr           []        t  -> Ptr <$> cTypeToType t
-  C.Ptr           [C.CONST] t  -> Ptr <$> cTypeToType t
-  C.Array         s         t  -> Array <$> arraySize s <*> cTypeToType t
+  C.Ptr           []        t  -> Ptr <$> typeQualifier t <*> cTypeToType t
+  C.Ptr           [C.CONST] t  -> Ptr <$> typeQualifier t <*> cTypeToType t
+  C.Array         s         t  -> Array <$> typeQualifier t <*> arraySize s <*> cTypeToType t
   C.Proto ret ps -> Proto <$> cTypeToType ret <*> traverse cParamDeclToType ps
   c                            -> Left [UnhandledCType (showText c)]
+
+typeQualifier :: CType -> Either [SpecError] Qualifier
+typeQualifier = \case
+  C.TypeSpecifier (C.Specifiers []          []        []) _ -> pure NonConst
+  C.TypeSpecifier (C.Specifiers []          [C.CONST] []) _ -> pure Const
+  C.TypeSpecifier (C.Specifiers [C.TYPEDEF] []        []) _ -> pure NonConst
+  C.Ptr           []        _ -> pure NonConst
+  C.Ptr           [C.CONST] _ -> pure Const
+  C.Array         _         _ -> pure NonConst
+  C.Proto         _         _ -> pure NonConst
+  c                           -> Left [UnhandledCType (showText c)]
+
 
 cParamDeclToType
   :: C.ParameterDeclaration C.CIdentifier
@@ -197,39 +216,39 @@ typeStringWorkarounds =
 
 typeDepends :: Type -> [HaskellName]
 typeDepends = \case
-  Float                         -> []
-  Void                          -> []
-  Char                          -> []
-  Int                           -> []
-  Ptr t                         -> typeDepends t
-  Array (NumericArraySize  _) t -> typeDepends t
-  Array (SymbolicArraySize s) t -> WE.TypeName s : typeDepends t
-  TypeName "void"               -> []
-  TypeName "int"                -> []
-  TypeName "char"               -> []
-  TypeName "float"              -> []
-  TypeName "uint8_t"            -> []
-  TypeName "uint32_t"           -> []
-  TypeName "uint64_t"           -> []
-  TypeName "int32_t"            -> []
-  TypeName "size_t"             -> []
+  Float                           -> []
+  Void                            -> []
+  Char                            -> []
+  Int                             -> []
+  Ptr _ t                         -> typeDepends t
+  Array _ (NumericArraySize  _) t -> typeDepends t
+  Array _ (SymbolicArraySize s) t -> WE.TypeName s : typeDepends t
+  TypeName "void"                 -> []
+  TypeName "int"                  -> []
+  TypeName "char"                 -> []
+  TypeName "float"                -> []
+  TypeName "uint8_t"              -> []
+  TypeName "uint32_t"             -> []
+  TypeName "uint64_t"             -> []
+  TypeName "int32_t"              -> []
+  TypeName "size_t"               -> []
   -- TODO: This mapping is replicated in several places!
-  TypeName "xcb_connection_t"   -> [WE.TypeName "Xcb_connection_t"]
-  TypeName "xcb_visualid_t"     -> [WE.TypeName "Xcb_visualid_t"]
-  TypeName "xcb_window_t"       -> [WE.TypeName "Xcb_window_t"]
-  TypeName "wl_display"         -> [WE.TypeName "Wl_display"]
-  TypeName "wl_surface"         -> [WE.TypeName "Wl_surface"]
+  TypeName "xcb_connection_t"     -> [WE.TypeName "Xcb_connection_t"]
+  TypeName "xcb_visualid_t"       -> [WE.TypeName "Xcb_visualid_t"]
+  TypeName "xcb_window_t"         -> [WE.TypeName "Xcb_window_t"]
+  TypeName "wl_display"           -> [WE.TypeName "Wl_display"]
+  TypeName "wl_surface"           -> [WE.TypeName "Wl_surface"]
   -- TODO: Remove, this is hacky
-  TypeName "Integral a => a"    -> []
-  TypeName t                    -> [WE.TypeName t]
+  TypeName "Integral a => a"      -> []
+  TypeName t                      -> [WE.TypeName t]
   Proto t ps -> typeDepends t ++ [ p | (_, pt) <- ps, p <- typeDepends pt ]
 
 isPtrType :: Type -> Bool
 isPtrType = \case
-  Ptr _ -> True
+  Ptr _ _ -> True
   _ -> False
 
 isArrayType :: Type -> Bool
 isArrayType = \case
-  Array _ _ -> True
+  Array {} -> True
   _ -> False
