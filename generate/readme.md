@@ -62,3 +62,6 @@ Idioms:
 
 TODO:
   Take a closer look at `vkCmdBindDescriptorSets`
+  Take a closer look at `vkUpdateDescriptorSetWithTemplate`
+  Don't expose things where the documentation is `is reserved for future use and is ignored`
+

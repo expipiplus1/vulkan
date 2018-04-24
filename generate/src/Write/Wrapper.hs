@@ -46,15 +46,43 @@ commandWrapper
   -> Doc ()
 commandWrapper isHandle isBitmask command = either
   ((pretty (cName command) <+>) . pretty)
-  id
+  vcat
   (wrapCommand isHandle isBitmask command)
 
 wrapCommand
-  :: (Text -> Bool) -> (Text -> Bool) -> Command -> Either Text (Doc ())
-wrapCommand isHandle isBitmask Command{..} = do
-  wts <- parametersToWrappingTypes isHandle isBitmask cParameters
-  pure ([qci|{funName cName} :: {wtsToSig wts}|] <> line <>
-        [qci|{funName cName} = {wrap wts (pretty cName) }|])
+  :: (Text -> Bool) -> (Text -> Bool) -> Command -> Either Text [Doc ()]
+wrapCommand isHandle isBitmask Command {..} = do
+  let
+    lengthPairs :: [(Parameter, Maybe Text, [Parameter])]
+    lengthPairs = getLengthPointerPairs cParameters
+    makeWts usage =
+      parametersToWrappingTypes isHandle isBitmask usage lengthPairs cParameters
+  traceShowM lengthPairs
+  wrappingTypes <- if isDualUseCommand lengthPairs
+    then do
+      wts1 <- makeWts (Just CommandGetLength)
+      wts2 <- makeWts (Just CommandGetValues)
+      pure [wts1, wts2]
+    else pure <$> makeWts Nothing
+  let printTypes wts =
+        [qci|{funName cName} :: {wtsToSig wts}|] <> line <>
+         [qci|{funName cName} = {wrap wts (pretty cName) }|]
+  pure $ printTypes <$> wrappingTypes
+
+
+isDualUseCommand :: [(Parameter, Maybe Text, [Parameter])] -> Bool
+isDualUseCommand = \case
+  -- For simplicity, only handle these commands if they have one array parameter
+  -- The length must not be a member
+  -- There must only be one return array
+  [(length, Nothing, [vector])]
+    | -- The length parameter must be a valid pointer, but it can be
+      -- unspecified if the vector pointer is null, i.e. we are querying the size.
+      Just [False, True] <- pIsOptional length
+      -- The vector pointer can be null, i.e. we are querying the size.
+    , Just [True] <- pIsOptional vector
+    -> True
+  _ -> False
 
 wtsToSig :: [WrappingType] -> Doc ()
 wtsToSig ts =
@@ -73,48 +101,63 @@ wtsToSig ts =
 
 parametersToWrappingTypes
   :: (Text -> Bool)
+  -- ^ Is this name a handle
   -> (Text -> Bool)
+  -- ^ Is this name a bitmask
+  -> Maybe CommandUsage
+  -- ^ If this is a dual use command, which usage shall we generate
+  -> [(Parameter, Maybe Text, [Parameter])]
+  -- ^ (parameter containing length, name of member representing length,
+  -- vector parameters which must be this length)
   -> [Parameter]
   -> Either Text [WrappingType]
-parametersToWrappingTypes isHandle isBitmask ps =
+parametersToWrappingTypes isHandle isBitmask maybeCommandUsage lengthPairs ps =
   let
-    lengthPairs :: [(Parameter, Maybe Text, Parameter)]
-    lengthPairs = getLengthPointerPairs ps
-
-    nonMemberLengthMap :: Text -> Maybe Parameter
+    -- Go from a length name to a list of vectors having that length
+    nonMemberLengthMap :: Text -> Maybe [Parameter]
     nonMemberLengthMap =
       (`Map.lookup` Map.fromList
-        [ (pName l, v) | (l, Nothing, v) <- lengthPairs ]
+        [ (pName l, vs) | (l, Nothing, vs) <- lengthPairs ]
       )
 
     isLengthPairList :: Text -> Bool
-    isLengthPairList = (`elem` [ pName v | (_, Nothing, v) <- lengthPairs ])
+    isLengthPairList =
+      (`elem` [ pName v | (_, Nothing, vs) <- lengthPairs, v <- vs ])
 
     parameterToWrappingType :: Parameter -> Either Text WrappingType
     parameterToWrappingType p
-      | Just vector <- nonMemberLengthMap (pName p)
-      = pure $ InferredType (lengthWrap (dropPointer (pName vector)))
+      | Just vectors <- nonMemberLengthMap (pName p)
+      , length vectors > 1
+      = throwError "Multiple vectors must be same length"
       | otherwise
       = let name = pName p
         in
           case pType p of
-            Void      -> throwError "void parameter"
+            Void -> throwError "void parameter"
+            Array Const (NumericArraySize n) t
+              | n >= 2, Just tyName <- simpleTypeName t, Nothing <- pIsOptional
+                p
+              -> pure $ InputType (Input name (tupleTy n tyName))
+                                  (tupleWrap n (pName p))
             Array{}   -> throwError "array parameter"
             Proto _ _ -> throwError "proto paramter"
             t
-              | Just tyName <- simpleTypeName t, isNothing (pIsOptional p)
+              | Just tyName <- simpleTypeName t
+              , isNothing (pIsOptional p)
                 -- Handles can always be null
-                || isHandle tyName
+                                          || isHandle tyName
                 -- Bitmasks can always be 0
-                || isBitmask tyName
-              -> pure
-                $ InputType (Input name tyName) (simpleWrap (pName p))
+                                                             || isBitmask tyName
+              -> pure $ InputType (Input name tyName) (simpleWrap (pName p))
+            t
+              | Just [vector] <- nonMemberLengthMap (pName p)
+              , Just tyName <- simpleTypeName t
+              -> pure $ InferredType (lengthWrap (dropPointer (pName vector)))
             Ptr Const t
               | Nothing <- pLength p
               , Just tyName <- simpleTypeName t
               , Nothing <- pIsOptional p
-              -> pure
-                $ InputType (Input name tyName) (allocaWrap (pName p))
+              -> pure $ InputType (Input name tyName) (allocaWrap (pName p))
               | Nothing <- pLength p
               , Just tyName <- simpleTypeName t
               , Just [True] <- pIsOptional p
@@ -134,67 +177,79 @@ parametersToWrappingTypes isHandle isBitmask ps =
               -> pure $ OutputType
                 (Output tyName ("peek" <+> pretty (pName p)))
                 (simpleAllocaOutputWrap (pName p))
-              | Just (NamedMemberLength s m) <- pLength p
+              | -- A vector to read which will be made as long as a member of a
+                -- struct being passed in g
+                Just (NamedMemberLength s m) <- pLength p
               , Just tyName <- simpleTypeName t
               , Nothing <- pIsOptional p
               -> pure $ OutputType
-                (Output ("Vector " <> tyName) (peekForeignPtrOutput (pName p) s m))
-                (vectorForeignPtrOutputWrap (pName p) s m)
+                (Output ("Vector " <> tyName)
+                        (peekForeignPtrOutput (pName p) (m <> " " <> s))
+                )
+                (vectorForeignPtrOutputWrap (pName p) (m <> " " <> s))
+              | -- The length dual use command output value
+                -- It is not an array
+                Nothing <- pLength p
+              , -- It has uint32_t type
+                Just "uint32_t" <- simpleTypeName t
+              , -- Is is a required pointer to an optional value
+                Just [False, True] <- pIsOptional p
+              , -- We are generating a dual use command
+                Just commandUsage <- maybeCommandUsage
+              -> case commandUsage of
+                CommandGetLength -> pure $ OutputType
+                  (Output "uint32_t" ("peek" <+> pretty (pName p)))
+                  (simpleAllocaOutputWrap (pName p))
+                CommandGetValues -> pure
+                  $ InputType (Input name "uint32_t") (allocaWrap (pName p))
+              | -- The value dual use command output
+                -- It is an array with a parameter length
+                isLengthPairList (pName p)
+              , -- It is not required
+                Just [True] <- pIsOptional p
+              , -- We are generating a dual use command
+                Just commandUsage <- maybeCommandUsage
+              , Just tyName <- simpleTypeName t
+              , Just (NamedLength lengthParamName) <- pLength p
+              -> case commandUsage of
+                CommandGetLength -> pure $ InferredType passNullPtrWrap
+                CommandGetValues -> pure $ OutputType
+                  (Output
+                    ("Vector " <> tyName)
+                    (peekForeignPtrOutputPeekLength (pName p) (ptrName lengthParamName))
+                  )
+                  (vectorForeignPtrOutputWrap (pName p) (dropPointer lengthParamName))
             t -> throwError ("unhandled type: " <> T.tShow t)
   in
     traverse parameterToWrappingType ps
 
 -- | Returns (parameter containing length, name of member representing length,
--- vector parameter)
-getLengthPointerPairs :: [Parameter] -> [(Parameter, Maybe Text, Parameter)]
+-- vector parameters)
+getLengthPointerPairs :: [Parameter] -> [(Parameter, Maybe Text, [Parameter])]
 getLengthPointerPairs parameters =
   let
     -- A list of all const arrays with lengths
     arrays :: [((Text, Maybe Text), Parameter)]
     arrays =
       [ (lm, p)
-      | p@(Parameter _ (Ptr Const _) (Just lenSpecifier) Nothing) <- parameters
+      | p@(Parameter _ (Ptr _ _) (Just lenSpecifier) _) <- parameters
       , lm <- case lenSpecifier of
         NamedLength l         -> pure (l, Nothing)
         NamedMemberLength l m -> pure (l, Just m)
         _                     -> []
       ]
     -- We have a pair if the length is determined by exactly one array
-    uniqueLengthPairs :: [(Text, Maybe Text, Parameter)]
+    uniqueLengthPairs :: [(Text, Maybe Text, [Parameter])]
     uniqueLengthPairs =
-      [ (length, m, p)
-      | ((length, m), [p]) <- MultiMap.assocs (MultiMap.fromList arrays)
+      [ (length, m, ps)
+      | ((length, m), ps) <- MultiMap.assocs (MultiMap.fromList arrays)
       ]
     -- A map from name to parameters
     parameterMap = (`Map.lookup` Map.fromList ((pName &&& id) <$> parameters))
   in
     -- Only return pairs where the length is another parameter
-    mapMaybe (\(length, m, p) -> (, m, p) <$> parameterMap length)
+    mapMaybe (\(length, m, ps) -> (, m, ps) <$> parameterMap length)
              uniqueLengthPairs
-
-getMemberLengthPointerPairs :: [Parameter] -> [(Parameter, Text, Parameter)]
-getMemberLengthPointerPairs parameters
-  = let
-      -- A list of all const arrays with lengths
-      arrays :: [((Text, Text), Parameter)]
-      arrays =
-        [ ((length, member), p)
-        | p@(Parameter _ (Ptr Const _) (Just (NamedMemberLength length member)) Nothing) <-
-          parameters
-        ]
-      -- We have a pair if the length is determined by exactly one array
-      uniqueLengthPairs :: [(Text, Text, Parameter)]
-      uniqueLengthPairs =
-        [ (length, member, p)
-        | ((length, member), [p]) <- MultiMap.assocs (MultiMap.fromList arrays)
-        ]
-      -- A map from name to parameters
-      parameterMap =
-        (`Map.lookup` Map.fromList ((pName &&& id) <$> parameters))
-    in
-      -- Only return pairs where the length is another parameter
-      mapMaybe (\(length, member, p) -> (, member, p) <$> parameterMap length)
-               uniqueLengthPairs
 
 data WrappingType = WrappingType
   { wtInput  :: Maybe Input
@@ -287,6 +342,12 @@ lengthWrap
   -> Doc ()
 lengthWrap vec cont e = cont [qci|{e} (length {vec})|]
 
+passNullPtrWrap
+  :: (Doc () -> Doc ())
+  -> Doc ()
+  -> Doc ()
+passNullPtrWrap cont e = cont [qci|{e} nullPtr|]
+
 vecWrap
   :: Text
   -- ^ vector name
@@ -304,33 +365,68 @@ peekForeignPtrOutput
   :: Text
   -- ^ Parameter name
   -> Text
-  -- ^ Struct containing the length member
-  -> Text
-  -- ^ Member of struct containing the length
+  -- ^ Expression to get the length
   -> Doc ()
-peekForeignPtrOutput paramName struct lenMember =
-  [qci|pure (unsafeFromForeignPtr0 {"f" <> ptrName (dropPointer paramName)} (fromIntegral ({lenMember} {struct})))|]
+peekForeignPtrOutput paramName len =
+  [qci|pure (unsafeFromForeignPtr0 {"f" <> ptrName (dropPointer paramName)} (fromIntegral ({len})))|]
+
+peekForeignPtrOutputPeekLength
+  :: Text
+  -- ^ Parameter name
+  -> Text
+  -- ^ Expression to get a pointer to the length
+  -> Doc ()
+peekForeignPtrOutputPeekLength paramName lenPtr =
+  [qci|(unsafeFromForeignPtr0 {"f" <> ptrName (dropPointer paramName)} . fromIntegral <$> peek {lenPtr})|]
+
 
 vectorForeignPtrOutputWrap
   :: Text
   -- ^ Parameter name
   -> Text
-  -- ^ Struct containing the length member
-  -> Text
-  -- ^ Member of struct containing the length
+  -- ^ Expression to get the length
   -> (Doc () -> Doc ())
   -> Doc ()
   -> Doc ()
-vectorForeignPtrOutputWrap vecName struct lenMember cont e =
+vectorForeignPtrOutputWrap vecName len cont e =
   let
     param     = pretty (dropPointer vecName)
     paramPtr  = pretty (ptrName (dropPointer vecName))
     paramFPtr = pretty ("f" <> ptrName (dropPointer vecName))
     -- Note the brackets opened here are closed after cont!
     withPtr
-      = [qci|mallocForeignPtrArray (fromIntegral ({lenMember} {struct})) >>= (\\{paramFPtr} -> withForeignPtr {paramFPtr} (\\{paramPtr} -> {e} {paramPtr}|]
+      = [qci|mallocForeignPtrArray (fromIntegral ({len})) >>= (\\{paramFPtr} -> withForeignPtr {paramFPtr} (\\{paramPtr} -> {e} {paramPtr}|]
   in
     [qci|{cont withPtr}))|]
+
+tupleTy :: Word -> Text -> Text
+tupleTy n t = T.pack . show $ tupled (replicate (fromIntegral n) (pretty t))
+
+tupleWrap :: Word -> Text
+  -> (Doc () -> Doc ())
+  -> Doc ()
+  -> Doc ()
+tupleWrap n paramName cont e =
+  -- let paramNames = (pretty paramName <>) . pretty . show <$> [0..n-1]
+  --     paramPtr  = pretty (ptrName (dropPointer paramName))
+  --     withPtr =
+  --       [qci|\\{tupled paramNames} -> withArray {list paramNames} (\\{paramPtr} -> {e} {paramPtr}|]
+  -- in [qci|{cont withPtr})|]
+  let paramNames = (pretty paramName <>) . pretty . show <$> [0..n-1]
+      paramPtr  = pretty (ptrName (dropPointer paramName))
+      withPtr =
+        [qci|\\{tupled paramNames} -> allocaArray {n} (\\{paramPtr} -> {writePokes paramPtr paramNames} *> {e} {paramPtr}|]
+  in [qci|{cont withPtr})|]
+
+-- This opens a bracket
+withTupleArray :: [Doc ()] -> Doc ()
+withTupleArray ds = [qci|allocaArray {length ds} (\\|]
+
+writePokes :: Doc () -> [Doc ()] -> Doc ()
+writePokes ptr ds = hsep $ punctuate "*>" (zipWith writePoke [0..] ds)
+  where
+    writePoke n d = [qci|pokeElemOff {ptr} {n} {d}|]
+
 
 wrap :: [WrappingType] -> Doc () -> Doc ()
 wrap wts = go . fmap wtWrap $ wts
@@ -394,3 +490,14 @@ simpleTypeName = \case
   TypeName n -> pure n
   Proto _ _  -> Nothing
 
+-- | Several commands such as `vkEnumerateInstanceExtensionProperties` have a dual usage
+--
+-- In one configuration when the output array is NULL an `inout` parameter is
+-- filled with the number of values to fetch, in another configuration this
+-- `inout` parameter is used to represent the size of the returned value array.
+--
+-- We expose these functionalities separately, and this type is used to select
+-- which command to generate
+data CommandUsage
+  = CommandGetLength
+  | CommandGetValues

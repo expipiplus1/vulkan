@@ -43,17 +43,17 @@ main = do
         traverse_ (sayErr . prettySpecError) e
         exitFailure
       Right s -> do
-        let isHandle = (`Set.member` (Set.fromList (hName <$> sHandles s)))
+        let isHandle = (`Set.member` Set.fromList (hName <$> sHandles s))
         let isBitmask =
-              (`Set.member` (Set.fromList
-                              [ n
-                              | Enum {..} <- sEnums s
-                              , n         <- eName : eAliases
-                              , eType == EnumTypeBitmask
-                              ]
-                            )
+              (`Set.member` Set.fromList
+                [ n
+                | Enum {..} <- sEnums s
+                , n         <- eName : eAliases
+                , eType == EnumTypeBitmask
+                ]
               )
-        let ss = sort (show . commandWrapper isHandle isBitmask <$> sCommands s)
+        let ss =
+              sort (show . commandWrapper isHandle isBitmask <$> sCommands s)
         traverse_ (sayErrString . (++ "\n")) ss
         -- let allExtensionNames = extName <$> sExtensions s
         -- documentation <- loadAllDocumentation allExtensionNames vkDir manPath
