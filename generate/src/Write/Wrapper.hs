@@ -26,7 +26,6 @@ import qualified Data.MultiMap                            as MultiMap
 import           Data.Text                                (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
-import           Debug.Trace
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
@@ -57,7 +56,6 @@ wrapCommand isHandle isBitmask Command {..} = do
     lengthPairs = getLengthPointerPairs cParameters
     makeWts usage =
       parametersToWrappingTypes isHandle isBitmask usage lengthPairs cParameters
-  traceShowM lengthPairs
   wrappingTypes <- if isDualUseCommand lengthPairs
     then do
       wts1 <- makeWts (Just CommandGetLength)
@@ -127,8 +125,8 @@ parametersToWrappingTypes isHandle isBitmask maybeCommandUsage lengthPairs ps =
     parameterToWrappingType :: Parameter -> Either Text WrappingType
     parameterToWrappingType p
       | Just vectors <- nonMemberLengthMap (pName p)
-      , length vectors > 1
-      = throwError "Multiple vectors must be same length"
+      , length [ () | Parameter _ (Ptr Const _) _ _ <- vectors ] > 1
+      = throwError "More then two input vectors with same length specifier"
       | otherwise
       = let name = pName p
         in
@@ -142,6 +140,24 @@ parametersToWrappingTypes isHandle isBitmask maybeCommandUsage lengthPairs ps =
             Array{}   -> throwError "array parameter"
             Proto _ _ -> throwError "proto paramter"
             t
+              | -- The length of an array of typed values, length is given in
+                -- number of values
+                [vector] <-
+                [ v
+                | Just vs <- pure $nonMemberLengthMap (pName p)
+                , v@(Parameter _ (Ptr Const _) _ _) <- vs
+                ]
+              , Just tyName <- simpleTypeName t
+              , Ptr _ vType <- pType vector
+              , Just _ <- simpleTypeName vType
+              -> pure $ InferredType (lengthWrap (dropPointer (pName vector)) name)
+              | -- The length of an array of untyped (void*) values, length is
+                -- given in bytes.
+                Just [vector] <- nonMemberLengthMap (pName p)
+              , Just tyName <- simpleTypeName t
+              , Ptr _ Void <- pType vector
+              -> pure
+                $ InferredType (lengthBytesWrap (dropPointer (pName vector)))
               | Just tyName <- simpleTypeName t
               , isNothing (pIsOptional p)
                 -- Handles can always be null
@@ -149,10 +165,6 @@ parametersToWrappingTypes isHandle isBitmask maybeCommandUsage lengthPairs ps =
                 -- Bitmasks can always be 0
                                                              || isBitmask tyName
               -> pure $ InputType (Input name tyName) (simpleWrap (pName p))
-            t
-              | Just [vector] <- nonMemberLengthMap (pName p)
-              , Just tyName <- simpleTypeName t
-              -> pure $ InferredType (lengthWrap (dropPointer (pName vector)))
             Ptr Const t
               | Nothing <- pLength p
               , Just tyName <- simpleTypeName t
@@ -168,12 +180,42 @@ parametersToWrappingTypes isHandle isBitmask maybeCommandUsage lengthPairs ps =
               , Nothing <- pIsOptional p
               -> pure $ InputType (Input name ("Vector " <> tyName))
                                   (vecWrap (pName p))
+              | -- A const void pointer, represent as a 'Vector a' where a is
+                -- storable
+                isLengthPairList (pName p)
+              , Void <- t
+              , Nothing <- pIsOptional p
+              -> pure $ InputType (Input name ("Vector " <> "a"))
+                                  (vecWrap (pName p))
+              | -- A non optional string
+                Char <- t
+              , Just NullTerminated <- pLength p
+              , Nothing <- pIsOptional p
+              -> pure
+                $ InputType (Input name "ByteString") (cStringWrap (pName p))
+              | -- An optional string
+                Char <- t
+              , Just NullTerminated <- pLength p
+              , Just [True] <- pIsOptional p
+              -> pure $ InputType (Input name "ByteString")
+                                  (optionalCStringWrap (pName p))
               | otherwise
               -> throwError "array ptr parameter"
             Ptr NonConst t
-              | Nothing <- pLength p
+              | -- A pointer to a non-optional return value
+                Nothing <- pLength p
               , Just tyName <- simpleTypeName t
               , Nothing <- pIsOptional p
+              -> -- This is probaby the most fishy case, it assumes that the
+                 -- pointers being sent in are for returning variables only.
+                 pure $ OutputType
+                (Output tyName ("peek" <+> pretty (pName p)))
+                (simpleAllocaOutputWrap (pName p))
+              | -- A pointer to an optional return value
+                Nothing <- pLength p
+              , Just tyName <- simpleTypeName t
+              , Just [False, True] <- pIsOptional p
+              , isHandle tyName || isBitmask tyName
               -> pure $ OutputType
                 (Output tyName ("peek" <+> pretty (pName p)))
                 (simpleAllocaOutputWrap (pName p))
@@ -187,6 +229,15 @@ parametersToWrappingTypes isHandle isBitmask maybeCommandUsage lengthPairs ps =
                         (peekForeignPtrOutput (pName p) (m <> " " <> s))
                 )
                 (vectorForeignPtrOutputWrap (pName p) (m <> " " <> s))
+              | -- A vector to read which will be made as long as an input parameter
+                Just (NamedLength lengthParamName) <- pLength p
+              , Just tyName <- simpleTypeName t
+              , Nothing <- pIsOptional p
+              -> pure $ OutputType
+                (Output ("Vector " <> tyName)
+                        (peekForeignPtrOutput (pName p) lengthParamName)
+                )
+                (vectorForeignPtrOutputWrap (pName p) lengthParamName)
               | -- The length dual use command output value
                 -- It is not an array
                 Nothing <- pLength p
@@ -216,9 +267,13 @@ parametersToWrappingTypes isHandle isBitmask maybeCommandUsage lengthPairs ps =
                 CommandGetValues -> pure $ OutputType
                   (Output
                     ("Vector " <> tyName)
-                    (peekForeignPtrOutputPeekLength (pName p) (ptrName lengthParamName))
+                    (peekForeignPtrOutputPeekLength (pName p)
+                                                    (ptrName lengthParamName)
+                    )
                   )
-                  (vectorForeignPtrOutputWrap (pName p) (dropPointer lengthParamName))
+                  (vectorForeignPtrOutputWrap (pName p)
+                                              (dropPointer lengthParamName)
+                  )
             t -> throwError ("unhandled type: " <> T.tShow t)
   in
     traverse parameterToWrappingType ps
@@ -283,7 +338,35 @@ simpleWrap
   -> Doc ()
   -> Doc ()
 simpleWrap paramName cont e =
-  [qci|\\{pretty paramName} -> {cont (e <+> pretty paramName)}|]
+  [qci|\\{pretty (unKeyword paramName)} -> {cont (e <+> pretty (unKeyword paramName))}|]
+
+cStringWrap
+  :: Text
+  -- ^ Parameter name
+  -> (Doc () -> Doc ())
+  -> Doc ()
+  -> Doc ()
+cStringWrap paramName cont e =
+  let -- TODO: Use unkeyword everywhere
+      param = pretty (unKeyword $ dropPointer paramName)
+      paramPtr = pretty (unKeyword $ ptrName (dropPointer paramName))
+      -- Note the bracket opened here is closed after cont!
+      withPtr = [qci|useAsCString {param} (\\{paramPtr} -> {e} {paramPtr}|]
+  in [qci|\\{param} -> {cont withPtr})|]
+
+optionalCStringWrap
+  :: Text
+  -- ^ Parameter name
+  -> (Doc () -> Doc ())
+  -> Doc ()
+  -> Doc ()
+optionalCStringWrap paramName cont e =
+  let -- TODO: Use unkeyword everywhere
+      param = pretty (unKeyword $ dropPointer paramName)
+      paramPtr = pretty (unKeyword $ ptrName (dropPointer paramName))
+      -- Note the bracket opened here is closed after cont!
+      withPtr = [qci|useAsCStringMaybe {param} (\\{paramPtr} -> {e} {paramPtr}|]
+  in [qci|\\{param} -> {cont withPtr})|]
 
 simpleAllocaOutputWrap
   :: Text
@@ -316,8 +399,8 @@ optionalAllocaWrap
   -> Doc ()
   -> Doc ()
 optionalAllocaWrap paramName cont e =
-  let param = pretty (dropPointer paramName)
-      paramPtr = pretty (ptrName (dropPointer paramName))
+  let param = (dropPointer paramName)
+      paramPtr = (ptrName (dropPointer paramName))
       -- Note the bracket opened here is closed after cont!
       withPtr = [qci|withAllocaMaybe {param} (\\{paramPtr} -> {e} {paramPtr}|]
   in [qci|\\{param} -> {cont withPtr})|]
@@ -332,15 +415,33 @@ withAllocaMaybe m f = case m of
   Nothing -> f nullPtr
   Just x  -> withAlloca x f
 {-# inline withAllocaMaybe #-}
+
+useAsCStringMaybe :: Maybe ByteString -> (CString -> IO b) -> IO b
+useAsCStringMaybe m f = case m of
+  Nothing -> f nullPtr
+  Just x  -> useAsCString x f
+{-# inline withAllocaMaybe #-}
 -}
 
 lengthWrap
   :: Text
   -- ^ Vector name
+  -> Text
+  -- ^ Parameter name
   -> (Doc () -> Doc ())
   -> Doc ()
   -> Doc ()
-lengthWrap vec cont e = cont [qci|{e} (length {vec})|]
+lengthWrap vec paramName cont e =
+  let withLength = cont [qci|{e} {paramName}|]
+  in [qci|let {paramName} = (length {vec}) in {withLength}|]
+
+lengthBytesWrap
+  :: Text
+  -- ^ Vector name
+  -> (Doc () -> Doc ())
+  -> Doc ()
+  -> Doc ()
+lengthBytesWrap vec cont e = cont [qci|{e} (sizeOf (head {vec}) * length {vec})|]
 
 passNullPtrWrap
   :: (Doc () -> Doc ())
@@ -478,6 +579,44 @@ dropVk = T.lowerCaseFirst . T.dropPrefix' "vk"
 
 dropPointer :: Text -> Text
 dropPointer = T.lowerCaseFirst . T.dropPrefix' "p"
+
+unKeyword :: Text -> Text
+unKeyword t = if t `elem` keywords then t <> "'" else t
+  where
+    keywords =
+      [ "as"
+      , "case"
+      , "class"
+      , "data family"
+      , "data instance"
+      , "data"
+      , "default"
+      , "deriving"
+      , "do"
+      , "else"
+      , "family"
+      , "forall"
+      , "foreign"
+      , "hiding"
+      , "if"
+      , "import"
+      , "in"
+      , "infix"
+      , "infixl"
+      , "infixr"
+      , "instance"
+      , "let"
+      , "mdo"
+      , "module"
+      , "newtype"
+      , "of"
+      , "proc"
+      , "qualified"
+      , "rec"
+      , "then"
+      , "type"
+      , "where"
+      ]
 
 simpleTypeName :: Type -> Maybe Text
 simpleTypeName = \case
