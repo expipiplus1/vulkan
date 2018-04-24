@@ -7,6 +7,7 @@
 module Write.Struct
   ( writeStruct
   , fixMemberName
+  , toRecordMemberName
   ) where
 
 import           Control.Bool

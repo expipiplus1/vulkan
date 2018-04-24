@@ -14,6 +14,7 @@ import           Data.Either.Validation
 import           Data.Foldable
 import           Data.List.Extra
 import           Data.Maybe
+import qualified Data.Set                  as Set
 import           Data.Text                 (Text)
 import qualified Data.Text                 as T
 import           Data.Text.Prettyprint.Doc
@@ -26,10 +27,12 @@ import           Documentation
 import           Spec.Savvy.Alias
 import           Spec.Savvy.APIConstant
 import           Spec.Savvy.BaseType
+import           Spec.Savvy.Command
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
+import           Spec.Savvy.Handle
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Spec
 import           Write.Alias
@@ -51,6 +54,7 @@ import           Write.Seed
 import           Write.Struct
 import           Write.Type.Enum
 import           Write.Type.FuncPointer
+import           Write.Wrapper
 
 -- TODO: Better error handling
 writeSpec
@@ -64,8 +68,11 @@ writeSpec
   -> IO ()
 writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
   ws <- ExceptT . pure . validationToEither $ specWriteElements s
+  wrapperWriteElements <- ExceptT . pure . validationToEither $ specWrapperWriteElements s
   let seeds = specSeeds s
-  ms             <- ExceptT . pure $ partitionElements ws seeds
+      wrapperModule = Module "Graphics.Vulkan.Wrapped" wrapperWriteElements [] []
+  partitionedModules             <- ExceptT . pure $ partitionElements ws seeds
+  let ms = wrapperModule : partitionedModules
   platformGuards <- ExceptT . pure . validationToEither $ getModuleGuardInfo
     (sExtensions s)
     (sPlatforms s)
@@ -98,6 +105,32 @@ saveModules getDoc outDir ms = concat
       createDirectoryIfMissing True     dir
       writeFile                filename (show doc)
       pure []
+
+specWrapperWriteElements :: Spec -> Validation [SpecError] [WriteElement]
+specWrapperWriteElements Spec {..} = do
+  let isHandle = (`Set.member` Set.fromList (hName <$> sHandles))
+  let isBitmask =
+        (`Set.member` Set.fromList
+          [ n
+          | Enum {..} <- sEnums
+          , n         <- eName : eAliases
+          , eType == EnumTypeBitmask
+          ]
+        )
+      enabledCommands = filter
+        ( (`notElem` [ "vkGetSwapchainGrallocUsageANDROID"
+                     , "vkAcquireImageANDROID"
+                     , "vkQueueSignalReleaseImageANDROID"
+                     ]
+          )
+        . cName
+        )
+        sCommands
+
+  let (es, ss) =
+        partitionEithers $ commandWrapper isHandle isBitmask <$> enabledCommands
+  -- TODO: Warn on unwrapped command
+  pure ss
 
 specWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specWriteElements Spec {..} = do

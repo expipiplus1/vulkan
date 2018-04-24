@@ -64,7 +64,9 @@ TODO:
   Take a closer look at `vkCmdBindDescriptorSets`
   Take a closer look at `vkUpdateDescriptorSetWithTemplate`
   Don't expose things where the documentation is `is reserved for future use and is ignored`
+  Don't marshal windowing system values
 
 `vkGetSemaphoreFdKHR` requires the user to be careful not to leak resources
 
 `vkCmdBindVertexBuffers` requires two vectors to be the same. Should we pass in non-storable vectors of tuples?
+

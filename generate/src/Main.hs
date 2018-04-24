@@ -5,6 +5,7 @@ module Main
   ( main
   ) where
 
+import           Data.Either
 import           Data.Foldable
 import           Data.List
 import           Data.Text.Extra
@@ -22,9 +23,9 @@ import           Spec.Savvy.Spec
 import           Write.Spec
 import           Write.Wrapper
 
-import qualified Data.Set             as Set
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Handle
+import           Write.Element
 
 main :: IO ()
 main = do
@@ -43,18 +44,7 @@ main = do
         traverse_ (sayErr . prettySpecError) e
         exitFailure
       Right s -> do
-        let isHandle = (`Set.member` Set.fromList (hName <$> sHandles s))
-        let isBitmask =
-              (`Set.member` Set.fromList
-                [ n
-                | Enum {..} <- sEnums s
-                , n         <- eName : eAliases
-                , eType == EnumTypeBitmask
-                ]
-              )
-        let ss =
-              sort (show . commandWrapper isHandle isBitmask <$> sCommands s)
-        traverse_ (sayErrString . (++ "\n")) ss
-        -- let allExtensionNames = extName <$> sExtensions s
-        -- documentation <- loadAllDocumentation allExtensionNames vkDir manPath
-        -- writeSpec documentation outDir cabalPath s
+        let allExtensionNames = extName <$> sExtensions s
+        documentation <- loadAllDocumentation allExtensionNames vkDir manPath
+        -- let documentation = const Nothing
+        writeSpec documentation outDir cabalPath s

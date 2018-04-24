@@ -91,7 +91,8 @@ library
   -- ending in backslashes
   ghc-options:         -Wall -pgmPcpphs -optP--cpp
   build-depends:       cpphs
-  exposed-modules:     Graphics.Vulkan.NamedType
+  exposed-modules:     Graphics.Vulkan.Wrapped
+                     , Graphics.Vulkan.NamedType
                      , Graphics.Vulkan.Core10.Core
                      , Graphics.Vulkan.Core10.Version
                      , Graphics.Vulkan.Core10.Constants

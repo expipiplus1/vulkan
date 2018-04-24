@@ -178,6 +178,8 @@ moduleInternalImports
   -> [Doc ()]
 moduleInternalImports nameModule Module {..} =
   let deps = simplifyDependencies (weDepends =<< mWriteElements)
+      -- A map between (ModuleName, Guard) and a list of exports
+      depends :: Map.Map (Text, Maybe Text) [Guarded Export]
       depends = sort <$> Map.fromListWith
         (<>)
         [ ((m, g), [e])
