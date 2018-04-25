@@ -43,6 +43,7 @@ import Graphics.Vulkan.Extensions.VK_KHR_xlib_surface
 
 -- No documentation found for TopLevel "RROutput"
 type RROutput = Word64
+  
 -- No documentation found for TopLevel "VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION"
 pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION = 1

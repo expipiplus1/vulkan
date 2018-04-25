@@ -79,8 +79,10 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
 data Xcb_connection_t
 -- No documentation found for TopLevel "Xcb_visualid_t"
 type Xcb_visualid_t = Word32
+  
 -- No documentation found for TopLevel "Xcb_window_t"
 type Xcb_window_t = Word32
+  
 -- ** VkXcbSurfaceCreateFlagsKHR
 
 -- No documentation found for TopLevel "VkXcbSurfaceCreateFlagsKHR"

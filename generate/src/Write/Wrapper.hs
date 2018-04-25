@@ -52,7 +52,7 @@ commandWrapper isHandle isBitmask command = do
   let weName = cName command T.<+> "wrapper"
       isDefaultable t =
         maybe False (isHandle <||> isBitmask) (simpleTypeName t)
-  (weDoc, (weImports, weProvides, weDepends, weExtensions)) <- either
+  (weDoc, (weImports, weProvides, weDepends, weExtensions, _)) <- either
     (throwError . (cName command T.<+>))
     (pure . first (const . vcat))
     (runWrap $ wrapCommand isDefaultable command)
@@ -62,12 +62,19 @@ commandWrapper isHandle isBitmask command = do
 -- Monad for wrapping
 ----------------------------------------------------------------
 
-type WrapM = WriterT ([Import], [Guarded Export], [Guarded HaskellName], [Text]) (Except Text)
+type Extension = Text
+type Constraint = Text
+type WriteState = ([Import], [Guarded Export], [Guarded HaskellName], [Extension], [Constraint])
+
+getConstraints :: WriteState -> [Constraint]
+getConstraints (_,_,_,_,cs) = cs
+
+type WrapM = WriterT WriteState (Except Text)
 
 runWrap
   :: WrapM a
-  -> Either Text (a, ([Import], [Guarded Export], [Guarded HaskellName], [Text]))
-runWrap w = runExcept . runWriterT $ w
+  -> Either Text (a, WriteState)
+runWrap = runExcept . runWriterT
 
 tellImport
   :: Text
@@ -75,7 +82,7 @@ tellImport
   -> Text
   -- ^ Value
   -> WrapM ()
-tellImport m v = tell ([Import m [v]], [], [], [])
+tellImport m v = tell ([Import m [v]], [], [], [], [])
 
 tellQualifiedImport
   :: Text
@@ -83,38 +90,43 @@ tellQualifiedImport
   -> Text
   -- ^ Value
   -> WrapM ()
-tellQualifiedImport m v = tell ([QualifiedImport m [v]], [], [], [])
+tellQualifiedImport m v = tell ([QualifiedImport m [v]], [], [], [], [])
 
 tellImports
   :: [Import]
   -> WrapM ()
-tellImports is = tell (is, [], [], [])
+tellImports is = tell (is, [], [], [], [])
 
 tellExport
   :: Guarded Export
   -> WrapM ()
-tellExport e = tell ([], [e], [], [])
+tellExport e = tell ([], [e], [], [], [])
 
 tellDepend
   :: Guarded HaskellName
   -> WrapM ()
-tellDepend d = tell ([], [], [d], [])
+tellDepend d = tell ([], [], [d], [], [])
 
 tellDepends
   :: [Guarded HaskellName]
   -> WrapM ()
-tellDepends ds = tell ([], [], ds, [])
+tellDepends ds = tell ([], [], ds, [], [])
 
 tellExtension
   :: Text
   -> WrapM ()
-tellExtension e = tell ([], [], [], [e])
+tellExtension e = tell ([], [], [], [e], [])
+
+tellConstraint
+  :: Text
+  -> WrapM ()
+tellConstraint c = tell ([], [], [], [], [c])
 
 toHsType :: Type -> WrapM (Doc ())
 toHsType t = case H.toHsType t of
   Left es -> throwError ("Failure making Haskell type: " <> T.tShow es)
   Right (d, (is, es)) -> do
-    tell (is, [], [], es)
+    tell (is, [], [], es, [])
     -- TODO: This is a bit of a hack
     tellDepends (Unguarded <$> typeDepends t)
     pure d
@@ -131,14 +143,15 @@ wrapCommand
 wrapCommand isDefaultable Command {..} = do
   let lengthPairs :: [(Parameter, Maybe Text, [Parameter])]
       lengthPairs = getLengthPointerPairs cParameters
-      makeWts usage =
+      makeWts :: Maybe CommandUsage -> WrapM ([WrappingType], [Constraint])
+      makeWts usage = listens getConstraints $
         parametersToWrappingTypes isDefaultable usage lengthPairs cParameters
-  let printTypes makeName wts = do
+  let printTypes makeName (wts, constraints) = do
         sig <- wtsToSig cReturnType wts
         pure $ line <> [qci|
           -- | Wrapper for {cName}
-          {makeName cName} :: {sig}
-          {makeName cName} = {wrap wts (pretty cName) }|]
+          {makeName cName} :: {if not (null constraints) then tupled (pretty <$> constraints) <+> "=> " else mempty}{sig}
+          {makeName cName} = {wrap cReturnType wts (pretty cName) }|]
   ds <- if isDualUseCommand lengthPairs
     then do
       wts1 <- printTypes funGetLengthName =<< makeWts (Just CommandGetLength)
@@ -165,10 +178,14 @@ isDualUseCommand = \case
 
 wtsToSig :: Type -> [WrappingType] -> WrapM (Doc ())
 wtsToSig returnType ts = do
-  returnTypeDoc <- toHsType returnType
   let outputs = [ t | WrappingType _ (Just (Output t _)) _ <- ts ]
-      ret     = tupled (returnTypeDoc : outputs)
-  pure $ intercalateArrows (mapMaybe (fmap iType . wtInput) ts <> ["IO" <+> ret])
+  ret <- tupled <$> if returnType == Void
+    then pure outputs
+    else do
+      returnTypeDoc <- toHsType returnType
+      pure (returnTypeDoc : outputs)
+  pure
+    $ intercalateArrows (mapMaybe (fmap iType . wtInput) ts <> ["IO" <+> ret])
 
 parametersToWrappingTypes
   :: (Type -> Bool)
@@ -202,6 +219,9 @@ parametersToWrappingTypes isDefaultable maybeCommandUsage lengthPairs ps =
     isLengthPairList :: Text -> Bool
     isLengthPairList =
       (`elem` [ pName v | (_, Nothing, vs) <- lengthPairs, v <- vs ])
+
+    getParameter :: Text -> Maybe Parameter
+    getParameter = (`Map.lookup` Map.fromList [ (pName p, p) | p <- ps ])
 
     parameterToWrappingType :: Parameter -> WrapM WrappingType
     parameterToWrappingType p
@@ -245,48 +265,74 @@ parametersToWrappingTypes isDefaultable maybeCommandUsage lengthPairs ps =
               -> do
                 tyName <- toHsType t
                 pure $ InputType (Input name tyName) (simpleWrap (pName p))
-            Ptr Const t
-              | Nothing <- pLength p, isSimpleType t, Nothing <- pIsOptional p
+            ptrType@(Ptr Const t)
+              | -- Is this a type which we should pass using the pointer
+                -- without any marshaling
+                isPassAsPointerType t
+              , isSimpleType t
+              , isNothing (pIsOptional p) || isDefaultable t
+              -> do
+                tyName <- toHsType ptrType
+                pure $ InputType (Input (pName p) tyName) (simpleWrap (pName p))
+              | Nothing <- pLength p
+              , isSimpleType t
+              , Nothing <- pIsOptional p
               -> do
                 tyName <- toHsType t
                 w      <- allocaWrap (pName p)
                 pure $ InputType (Input name tyName) w
-              | Nothing <- pLength p, isSimpleType t, Just [True] <- pIsOptional
-                p
+              | Nothing <- pLength p
+              , isSimpleType t
+              , Just [True] <- pIsOptional p
               -> do
                 tyName <- toHsType t
                 w      <- optionalAllocaWrap (pName p)
                 pure $ InputType (Input name ("Maybe " <> tyName)) w
-              | isLengthPairList (pName p), isSimpleType t, Nothing <-
-                pIsOptional p
+              | isLengthPairList (pName p)
+              , isSimpleType t
+              , Nothing <- pIsOptional p
               -> do
                 tyName <- toHsType t
                 w      <- vecWrap (pName p)
                 pure $ InputType (Input name ("Vector " <> tyName)) w
               | -- A const void pointer, represent as a 'Vector a' where a is
                 -- storable
-                isLengthPairList (pName p), Void <- t, Nothing <- pIsOptional p
+                isLengthPairList (pName p)
+              , Void <- t
+              , Nothing <- pIsOptional p
               -> do
                 tellImport "Data.Vector.Storable" "Vector"
                 w <- voidVecWrap (pName p)
+                tellImport "Foreign.Storable" "Storable"
+                tellConstraint "Storable a"
                 pure $ InputType (Input name ("Vector " <> "a")) w
               | -- A non optional string
-                Char <- t, Just NullTerminated <- pLength p, Nothing <-
-                pIsOptional p
+                Char <- t
+              , Just NullTerminated <- pLength p
+              , Nothing <- pIsOptional p
               -> do
                 w <- cStringWrap (pName p)
                 tellImport "Data.ByteString" "ByteString"
                 pure $ InputType (Input name "ByteString") w
               | -- An optional string
-                Char <- t, Just NullTerminated <- pLength p, Just [True] <-
-                pIsOptional p
+                Char <- t
+              , Just NullTerminated <- pLength p
+              , Just [True] <- pIsOptional p
               -> do
                 w <- optionalCStringWrap (pName p)
                 tellImport "Data.ByteString" "ByteString"
                 pure $ InputType (Input name "Maybe ByteString") w
               | otherwise
               -> throwError "array ptr parameter"
-            Ptr NonConst t
+            ptrType@(Ptr NonConst t)
+              | -- Is this a type which we should pass using the pointer
+                -- without any marshaling
+                isPassAsPointerType t
+              , isSimpleType t
+              , isNothing (pIsOptional p) || isDefaultable t
+              -> do
+                tyName <- toHsType ptrType
+                pure $ InputType (Input (pName p) tyName) (simpleWrap (pName p))
               | -- A pointer to a non-optional return value
                 Nothing <- pLength p
               , isSimpleType t
@@ -316,7 +362,20 @@ parametersToWrappingTypes isDefaultable maybeCommandUsage lengthPairs ps =
               -> do
                 tyName <- toHsType t
                 tellExtension "DuplicateRecordFields"
-                let lengthExpression = toRecordMemberName m <> " " <> dropPointer s
+                structType <- case getParameter s of
+                  Nothing -> throwError "Cant find length parameter"
+                  Just p  ->
+                    case pType p of
+                      Ptr _ structType -> toHsType structType
+                      structType -> toHsType structType
+                let lengthExpression =
+                      toRecordMemberName m
+                        <> " "
+                        <> "("
+                        <> dropPointer s
+                        <> " :: "
+                        <> T.tShow structType
+                        <> ")"
                 peek <- peekForeignPtrOutput (pName p) lengthExpression
                 w    <- vectorForeignPtrOutputWrap (pName p) lengthExpression
                 pure $ OutputType (Output ("Vector " <> tyName) peek) w
@@ -379,6 +438,19 @@ parametersToWrappingTypes isDefaultable maybeCommandUsage lengthPairs ps =
             t -> throwError ("unhandled type: " <> T.tShow t)
   in
     traverse parameterToWrappingType ps
+
+-- | Is this a type we don't want to marshal
+isPassAsPointerType :: Type -> Bool
+isPassAsPointerType = \case
+  TypeName n
+    | n
+      `elem` [ "MirConnection"
+             , "wl_display"
+             , "xcb_connection_t"
+             , "AHardwareBuffer"
+             ]
+    -> True
+  _ -> False
 
 -- | Returns (parameter containing length, name of member representing length,
 -- vector parameters)
@@ -646,8 +718,8 @@ writePokes ptr ds = do
   pure . hsep $ punctuate "*>" (zipWith writePoke [0..] ds)
 
 
-wrap :: [WrappingType] -> Doc () -> Doc ()
-wrap wts = go . fmap wtWrap $ wts
+wrap :: Type -> [WrappingType] -> Doc () -> Doc ()
+wrap returnType wts = go . fmap wtWrap $ wts
   where
     go :: [(Doc () -> Doc ()) -> Doc () -> Doc ()] -> Doc () -> Doc ()
     go = ($makeOutput) . appEndo . fold . fmap Endo
@@ -663,9 +735,13 @@ wrap wts = go . fmap wtWrap $ wts
     makeOutput :: Doc () -> Doc ()
     makeOutput =
       let outputs = [ o | WrappingType _ (Just o) _ <- wts ]
-      in  case outputs of
-            [] -> id
-            xs -> \e -> [qci|{e} >>= (\\r -> {tupleA ("pure r" : (oPeek <$> xs))})|]
+      in
+        case outputs of
+          [] -> id
+          xs -> case returnType of
+            Void -> \e -> [qci|{e} *> ({tupleA (oPeek <$> xs)})|]
+            _    -> \e ->
+              [qci|{e} >>= (\\r -> {tupleA ("pure r" : (oPeek <$> xs))})|]
 
 isPassByValue :: Parameter -> Bool
 isPassByValue = pType >>> \case
@@ -772,3 +848,5 @@ isSimpleType = \case
 data CommandUsage
   = CommandGetLength
   | CommandGetValues
+
+

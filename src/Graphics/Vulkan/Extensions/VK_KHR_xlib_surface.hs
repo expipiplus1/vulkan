@@ -78,10 +78,13 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
 
 -- No documentation found for TopLevel "Display"
 newtype Display = Display (Ptr Display)
+  deriving (Storable)
 -- No documentation found for TopLevel "VisualID"
 type VisualID = Word64
+  
 -- No documentation found for TopLevel "Window"
 type Window = Word64
+  
 -- ** VkXlibSurfaceCreateFlagsKHR
 
 -- No documentation found for TopLevel "VkXlibSurfaceCreateFlagsKHR"

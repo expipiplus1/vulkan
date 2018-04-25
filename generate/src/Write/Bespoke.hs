@@ -9,6 +9,7 @@ module Write.Bespoke
 import           Data.Text                                (Text)
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
+import           Data.Text.Prettyprint.Doc
 
 import           Spec.Savvy.Enum
 import           Write.Element
@@ -159,9 +160,14 @@ newtypeOrTypeWriteElement decl n t is =
   let weDoc getDoc = [qci|
         {document getDoc (TopLevel n)}
         {decl} {n} = {t}
+          {if decl == "newtype"
+          then pretty ("deriving (Storable)" :: Text)
+          else mempty}
 |]
-      weImports = is
-      weExtensions = []
+      weImports = is ++
+        [Import "Foreign.Storable" ["Storable"] | decl == "newtype"]
+      weExtensions =
+        ["GeneralizedNewtypeDeriving" | decl == "newtype"]
       weName = t
       -- TODO: Tidy
       weProvides = Unguarded <$>

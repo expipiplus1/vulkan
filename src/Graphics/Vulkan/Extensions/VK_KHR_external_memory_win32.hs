@@ -66,6 +66,7 @@ import Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
 
 -- No documentation found for TopLevel "LPCWSTR"
 type LPCWSTR = Ptr CWchar
+  
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR = VkStructureType 1000073000

@@ -42,11 +42,13 @@ import Foreign.Marshal.Utils
   , with
   )
 import Foreign.Ptr
-  ( castPtr
+  ( Ptr
+  , castPtr
   , nullPtr
   )
 import Foreign.Storable
-  ( peek
+  ( Storable
+  , peek
   , pokeElemOff
   )
 import qualified Data.Vector.Storable
@@ -718,7 +720,7 @@ createInstance :: VkInstanceCreateInfo ->  Maybe VkAllocationCallbacks ->  IO ( 
 createInstance = \createInfo -> \allocator -> alloca (\pInstance -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateInstance pCreateInfo pAllocator pInstance >>= (\r -> (,) <$> pure r<*>peek pInstance))))
 
 -- | Wrapper for vkDestroyInstance
-destroyInstance :: VkInstance ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyInstance :: VkInstance ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyInstance = \instance' -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyInstance instance' pAllocator)
 
 -- | Wrapper for vkEnumeratePhysicalDevices
@@ -740,34 +742,28 @@ getInstanceProcAddr :: VkInstance ->  ByteString ->  IO ( PFN_vkVoidFunction )
 getInstanceProcAddr = \instance' -> \name -> useAsCString name (\pName -> vkGetInstanceProcAddr instance' pName)
 
 -- | Wrapper for vkGetPhysicalDeviceProperties
-getPhysicalDeviceProperties :: VkPhysicalDevice ->  IO ( ()
-                                                       , VkPhysicalDeviceProperties )
-getPhysicalDeviceProperties = \physicalDevice -> alloca (\pProperties -> vkGetPhysicalDeviceProperties physicalDevice pProperties >>= (\r -> (,) <$> pure r<*>peek pProperties))
+getPhysicalDeviceProperties :: VkPhysicalDevice ->  IO ( VkPhysicalDeviceProperties )
+getPhysicalDeviceProperties = \physicalDevice -> alloca (\pProperties -> vkGetPhysicalDeviceProperties physicalDevice pProperties *> (peek pProperties))
 
 -- | Wrapper for vkGetPhysicalDeviceQueueFamilyProperties
-getNumgetPhysicalDeviceQueueFamilyProperties :: VkPhysicalDevice ->  IO ( ()
-                                                                        , Word32 )
-getNumgetPhysicalDeviceQueueFamilyProperties = \physicalDevice -> alloca (\pQueueFamilyPropertyCount -> vkGetPhysicalDeviceQueueFamilyProperties physicalDevice pQueueFamilyPropertyCount nullPtr >>= (\r -> (,) <$> pure r<*>peek pQueueFamilyPropertyCount))
+getNumgetPhysicalDeviceQueueFamilyProperties :: VkPhysicalDevice ->  IO ( Word32 )
+getNumgetPhysicalDeviceQueueFamilyProperties = \physicalDevice -> alloca (\pQueueFamilyPropertyCount -> vkGetPhysicalDeviceQueueFamilyProperties physicalDevice pQueueFamilyPropertyCount nullPtr *> (peek pQueueFamilyPropertyCount))
 
 -- | Wrapper for vkGetPhysicalDeviceQueueFamilyProperties
-getPhysicalDeviceQueueFamilyProperties :: VkPhysicalDevice ->  Word32 ->  IO ( ()
-                                                                             , Vector VkQueueFamilyProperties )
-getPhysicalDeviceQueueFamilyProperties = \physicalDevice -> \queueFamilyPropertyCount -> mallocForeignPtrArray (fromIntegral (queueFamilyPropertyCount)) >>= (\fpQueueFamilyProperties -> withForeignPtr fpQueueFamilyProperties (\pQueueFamilyProperties -> with queueFamilyPropertyCount (\pQueueFamilyPropertyCount -> vkGetPhysicalDeviceQueueFamilyProperties physicalDevice pQueueFamilyPropertyCount pQueueFamilyProperties >>= (\r -> (,) <$> pure r<*>(unsafeFromForeignPtr0 fpQueueFamilyProperties . fromIntegral <$> peek pQueueFamilyPropertyCount)))))
+getPhysicalDeviceQueueFamilyProperties :: VkPhysicalDevice ->  Word32 ->  IO ( Vector VkQueueFamilyProperties )
+getPhysicalDeviceQueueFamilyProperties = \physicalDevice -> \queueFamilyPropertyCount -> mallocForeignPtrArray (fromIntegral (queueFamilyPropertyCount)) >>= (\fpQueueFamilyProperties -> withForeignPtr fpQueueFamilyProperties (\pQueueFamilyProperties -> with queueFamilyPropertyCount (\pQueueFamilyPropertyCount -> vkGetPhysicalDeviceQueueFamilyProperties physicalDevice pQueueFamilyPropertyCount pQueueFamilyProperties *> ((unsafeFromForeignPtr0 fpQueueFamilyProperties . fromIntegral <$> peek pQueueFamilyPropertyCount)))))
 
 -- | Wrapper for vkGetPhysicalDeviceMemoryProperties
-getPhysicalDeviceMemoryProperties :: VkPhysicalDevice ->  IO ( ()
-                                                             , VkPhysicalDeviceMemoryProperties )
-getPhysicalDeviceMemoryProperties = \physicalDevice -> alloca (\pMemoryProperties -> vkGetPhysicalDeviceMemoryProperties physicalDevice pMemoryProperties >>= (\r -> (,) <$> pure r<*>peek pMemoryProperties))
+getPhysicalDeviceMemoryProperties :: VkPhysicalDevice ->  IO ( VkPhysicalDeviceMemoryProperties )
+getPhysicalDeviceMemoryProperties = \physicalDevice -> alloca (\pMemoryProperties -> vkGetPhysicalDeviceMemoryProperties physicalDevice pMemoryProperties *> (peek pMemoryProperties))
 
 -- | Wrapper for vkGetPhysicalDeviceFeatures
-getPhysicalDeviceFeatures :: VkPhysicalDevice ->  IO ( ()
-                                                     , VkPhysicalDeviceFeatures )
-getPhysicalDeviceFeatures = \physicalDevice -> alloca (\pFeatures -> vkGetPhysicalDeviceFeatures physicalDevice pFeatures >>= (\r -> (,) <$> pure r<*>peek pFeatures))
+getPhysicalDeviceFeatures :: VkPhysicalDevice ->  IO ( VkPhysicalDeviceFeatures )
+getPhysicalDeviceFeatures = \physicalDevice -> alloca (\pFeatures -> vkGetPhysicalDeviceFeatures physicalDevice pFeatures *> (peek pFeatures))
 
 -- | Wrapper for vkGetPhysicalDeviceFormatProperties
-getPhysicalDeviceFormatProperties :: VkPhysicalDevice ->  VkFormat ->  IO ( ()
-                                                                          , VkFormatProperties )
-getPhysicalDeviceFormatProperties = \physicalDevice -> \format -> alloca (\pFormatProperties -> vkGetPhysicalDeviceFormatProperties physicalDevice format pFormatProperties >>= (\r -> (,) <$> pure r<*>peek pFormatProperties))
+getPhysicalDeviceFormatProperties :: VkPhysicalDevice ->  VkFormat ->  IO ( VkFormatProperties )
+getPhysicalDeviceFormatProperties = \physicalDevice -> \format -> alloca (\pFormatProperties -> vkGetPhysicalDeviceFormatProperties physicalDevice format pFormatProperties *> (peek pFormatProperties))
 
 -- | Wrapper for vkGetPhysicalDeviceImageFormatProperties
 getPhysicalDeviceImageFormatProperties :: VkPhysicalDevice ->  VkFormat ->  VkImageType ->  VkImageTiling ->  VkImageUsageFlags ->  VkImageCreateFlags ->  IO ( VkResult
@@ -780,7 +776,7 @@ createDevice :: VkPhysicalDevice ->  VkDeviceCreateInfo ->  Maybe VkAllocationCa
 createDevice = \physicalDevice -> \createInfo -> \allocator -> alloca (\pDevice -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateDevice physicalDevice pCreateInfo pAllocator pDevice >>= (\r -> (,) <$> pure r<*>peek pDevice))))
 
 -- | Wrapper for vkDestroyDevice
-destroyDevice :: VkDevice ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyDevice :: VkDevice ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyDevice = \device -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyDevice device pAllocator)
 
 -- | Wrapper for vkEnumerateInstanceVersion
@@ -829,9 +825,8 @@ enumerateDeviceExtensionProperties :: VkPhysicalDevice ->  Maybe ByteString ->  
 enumerateDeviceExtensionProperties = \physicalDevice -> \layerName -> \propertyCount -> mallocForeignPtrArray (fromIntegral (propertyCount)) >>= (\fpProperties -> withForeignPtr fpProperties (\pProperties -> with propertyCount (\pPropertyCount -> maybeWith useAsCString layerName (\pLayerName -> vkEnumerateDeviceExtensionProperties physicalDevice pLayerName pPropertyCount pProperties >>= (\r -> (,) <$> pure r<*>(unsafeFromForeignPtr0 fpProperties . fromIntegral <$> peek pPropertyCount))))))
 
 -- | Wrapper for vkGetDeviceQueue
-getDeviceQueue :: VkDevice ->  Word32 ->  Word32 ->  IO ( ()
-                                                        , VkQueue )
-getDeviceQueue = \device -> \queueFamilyIndex -> \queueIndex -> alloca (\pQueue -> vkGetDeviceQueue device queueFamilyIndex queueIndex pQueue >>= (\r -> (,) <$> pure r<*>peek pQueue))
+getDeviceQueue :: VkDevice ->  Word32 ->  Word32 ->  IO ( VkQueue )
+getDeviceQueue = \device -> \queueFamilyIndex -> \queueIndex -> alloca (\pQueue -> vkGetDeviceQueue device queueFamilyIndex queueIndex pQueue *> (peek pQueue))
 
 -- | Wrapper for vkQueueSubmit
 queueSubmit :: VkQueue ->  Vector VkSubmitInfo ->  VkFence ->  IO ( VkResult )
@@ -851,11 +846,11 @@ allocateMemory :: VkDevice ->  VkMemoryAllocateInfo ->  Maybe VkAllocationCallba
 allocateMemory = \device -> \allocateInfo -> \allocator -> alloca (\pMemory -> maybeWith with allocator (\pAllocator -> with allocateInfo (\pAllocateInfo -> vkAllocateMemory device pAllocateInfo pAllocator pMemory >>= (\r -> (,) <$> pure r<*>peek pMemory))))
 
 -- | Wrapper for vkFreeMemory
-freeMemory :: VkDevice ->  VkDeviceMemory ->  Maybe VkAllocationCallbacks ->  IO ( () )
+freeMemory :: VkDevice ->  VkDeviceMemory ->  Maybe VkAllocationCallbacks ->  IO (  )
 freeMemory = \device -> \memory -> \allocator -> maybeWith with allocator (\pAllocator -> vkFreeMemory device memory pAllocator)
 
 -- | Wrapper for vkUnmapMemory
-unmapMemory :: VkDevice ->  VkDeviceMemory ->  IO ( () )
+unmapMemory :: VkDevice ->  VkDeviceMemory ->  IO (  )
 unmapMemory = \device -> \memory -> vkUnmapMemory device memory
 
 -- | Wrapper for vkFlushMappedMemoryRanges
@@ -867,47 +862,40 @@ invalidateMappedMemoryRanges :: VkDevice ->  Vector VkMappedMemoryRange ->  IO (
 invalidateMappedMemoryRanges = \device -> \memoryRanges -> unsafeWith memoryRanges (\pMemoryRanges -> vkInvalidateMappedMemoryRanges device (fromIntegral $ Data.Vector.Storable.length memoryRanges) pMemoryRanges)
 
 -- | Wrapper for vkGetDeviceMemoryCommitment
-getDeviceMemoryCommitment :: VkDevice ->  VkDeviceMemory ->  IO ( ()
-                                                                , VkDeviceSize )
-getDeviceMemoryCommitment = \device -> \memory -> alloca (\pCommittedMemoryInBytes -> vkGetDeviceMemoryCommitment device memory pCommittedMemoryInBytes >>= (\r -> (,) <$> pure r<*>peek pCommittedMemoryInBytes))
+getDeviceMemoryCommitment :: VkDevice ->  VkDeviceMemory ->  IO ( VkDeviceSize )
+getDeviceMemoryCommitment = \device -> \memory -> alloca (\pCommittedMemoryInBytes -> vkGetDeviceMemoryCommitment device memory pCommittedMemoryInBytes *> (peek pCommittedMemoryInBytes))
 
 -- | Wrapper for vkGetBufferMemoryRequirements
-getBufferMemoryRequirements :: VkDevice ->  VkBuffer ->  IO ( ()
-                                                            , VkMemoryRequirements )
-getBufferMemoryRequirements = \device -> \buffer -> alloca (\pMemoryRequirements -> vkGetBufferMemoryRequirements device buffer pMemoryRequirements >>= (\r -> (,) <$> pure r<*>peek pMemoryRequirements))
+getBufferMemoryRequirements :: VkDevice ->  VkBuffer ->  IO ( VkMemoryRequirements )
+getBufferMemoryRequirements = \device -> \buffer -> alloca (\pMemoryRequirements -> vkGetBufferMemoryRequirements device buffer pMemoryRequirements *> (peek pMemoryRequirements))
 
 -- | Wrapper for vkBindBufferMemory
 bindBufferMemory :: VkDevice ->  VkBuffer ->  VkDeviceMemory ->  VkDeviceSize ->  IO ( VkResult )
 bindBufferMemory = \device -> \buffer -> \memory -> \memoryOffset -> vkBindBufferMemory device buffer memory memoryOffset
 
 -- | Wrapper for vkGetImageMemoryRequirements
-getImageMemoryRequirements :: VkDevice ->  VkImage ->  IO ( ()
-                                                          , VkMemoryRequirements )
-getImageMemoryRequirements = \device -> \image -> alloca (\pMemoryRequirements -> vkGetImageMemoryRequirements device image pMemoryRequirements >>= (\r -> (,) <$> pure r<*>peek pMemoryRequirements))
+getImageMemoryRequirements :: VkDevice ->  VkImage ->  IO ( VkMemoryRequirements )
+getImageMemoryRequirements = \device -> \image -> alloca (\pMemoryRequirements -> vkGetImageMemoryRequirements device image pMemoryRequirements *> (peek pMemoryRequirements))
 
 -- | Wrapper for vkBindImageMemory
 bindImageMemory :: VkDevice ->  VkImage ->  VkDeviceMemory ->  VkDeviceSize ->  IO ( VkResult )
 bindImageMemory = \device -> \image -> \memory -> \memoryOffset -> vkBindImageMemory device image memory memoryOffset
 
 -- | Wrapper for vkGetImageSparseMemoryRequirements
-getNumgetImageSparseMemoryRequirements :: VkDevice ->  VkImage ->  IO ( ()
-                                                                      , Word32 )
-getNumgetImageSparseMemoryRequirements = \device -> \image -> alloca (\pSparseMemoryRequirementCount -> vkGetImageSparseMemoryRequirements device image pSparseMemoryRequirementCount nullPtr >>= (\r -> (,) <$> pure r<*>peek pSparseMemoryRequirementCount))
+getNumgetImageSparseMemoryRequirements :: VkDevice ->  VkImage ->  IO ( Word32 )
+getNumgetImageSparseMemoryRequirements = \device -> \image -> alloca (\pSparseMemoryRequirementCount -> vkGetImageSparseMemoryRequirements device image pSparseMemoryRequirementCount nullPtr *> (peek pSparseMemoryRequirementCount))
 
 -- | Wrapper for vkGetImageSparseMemoryRequirements
-getImageSparseMemoryRequirements :: VkDevice ->  VkImage ->  Word32 ->  IO ( ()
-                                                                           , Vector VkSparseImageMemoryRequirements )
-getImageSparseMemoryRequirements = \device -> \image -> \sparseMemoryRequirementCount -> mallocForeignPtrArray (fromIntegral (sparseMemoryRequirementCount)) >>= (\fpSparseMemoryRequirements -> withForeignPtr fpSparseMemoryRequirements (\pSparseMemoryRequirements -> with sparseMemoryRequirementCount (\pSparseMemoryRequirementCount -> vkGetImageSparseMemoryRequirements device image pSparseMemoryRequirementCount pSparseMemoryRequirements >>= (\r -> (,) <$> pure r<*>(unsafeFromForeignPtr0 fpSparseMemoryRequirements . fromIntegral <$> peek pSparseMemoryRequirementCount)))))
+getImageSparseMemoryRequirements :: VkDevice ->  VkImage ->  Word32 ->  IO ( Vector VkSparseImageMemoryRequirements )
+getImageSparseMemoryRequirements = \device -> \image -> \sparseMemoryRequirementCount -> mallocForeignPtrArray (fromIntegral (sparseMemoryRequirementCount)) >>= (\fpSparseMemoryRequirements -> withForeignPtr fpSparseMemoryRequirements (\pSparseMemoryRequirements -> with sparseMemoryRequirementCount (\pSparseMemoryRequirementCount -> vkGetImageSparseMemoryRequirements device image pSparseMemoryRequirementCount pSparseMemoryRequirements *> ((unsafeFromForeignPtr0 fpSparseMemoryRequirements . fromIntegral <$> peek pSparseMemoryRequirementCount)))))
 
 -- | Wrapper for vkGetPhysicalDeviceSparseImageFormatProperties
-getNumgetPhysicalDeviceSparseImageFormatProperties :: VkPhysicalDevice ->  VkFormat ->  VkImageType ->  VkSampleCountFlagBits ->  VkImageUsageFlags ->  VkImageTiling ->  IO ( ()
-                                                                                                                                                                             , Word32 )
-getNumgetPhysicalDeviceSparseImageFormatProperties = \physicalDevice -> \format -> \type' -> \samples -> \usage -> \tiling -> alloca (\pPropertyCount -> vkGetPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling pPropertyCount nullPtr >>= (\r -> (,) <$> pure r<*>peek pPropertyCount))
+getNumgetPhysicalDeviceSparseImageFormatProperties :: VkPhysicalDevice ->  VkFormat ->  VkImageType ->  VkSampleCountFlagBits ->  VkImageUsageFlags ->  VkImageTiling ->  IO ( Word32 )
+getNumgetPhysicalDeviceSparseImageFormatProperties = \physicalDevice -> \format -> \type' -> \samples -> \usage -> \tiling -> alloca (\pPropertyCount -> vkGetPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling pPropertyCount nullPtr *> (peek pPropertyCount))
 
 -- | Wrapper for vkGetPhysicalDeviceSparseImageFormatProperties
-getPhysicalDeviceSparseImageFormatProperties :: VkPhysicalDevice ->  VkFormat ->  VkImageType ->  VkSampleCountFlagBits ->  VkImageUsageFlags ->  VkImageTiling ->  Word32 ->  IO ( ()
-                                                                                                                                                                                  , Vector VkSparseImageFormatProperties )
-getPhysicalDeviceSparseImageFormatProperties = \physicalDevice -> \format -> \type' -> \samples -> \usage -> \tiling -> \propertyCount -> mallocForeignPtrArray (fromIntegral (propertyCount)) >>= (\fpProperties -> withForeignPtr fpProperties (\pProperties -> with propertyCount (\pPropertyCount -> vkGetPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling pPropertyCount pProperties >>= (\r -> (,) <$> pure r<*>(unsafeFromForeignPtr0 fpProperties . fromIntegral <$> peek pPropertyCount)))))
+getPhysicalDeviceSparseImageFormatProperties :: VkPhysicalDevice ->  VkFormat ->  VkImageType ->  VkSampleCountFlagBits ->  VkImageUsageFlags ->  VkImageTiling ->  Word32 ->  IO ( Vector VkSparseImageFormatProperties )
+getPhysicalDeviceSparseImageFormatProperties = \physicalDevice -> \format -> \type' -> \samples -> \usage -> \tiling -> \propertyCount -> mallocForeignPtrArray (fromIntegral (propertyCount)) >>= (\fpProperties -> withForeignPtr fpProperties (\pProperties -> with propertyCount (\pPropertyCount -> vkGetPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling pPropertyCount pProperties *> ((unsafeFromForeignPtr0 fpProperties . fromIntegral <$> peek pPropertyCount)))))
 
 -- | Wrapper for vkQueueBindSparse
 queueBindSparse :: VkQueue ->  Vector VkBindSparseInfo ->  VkFence ->  IO ( VkResult )
@@ -919,7 +907,7 @@ createFence :: VkDevice ->  VkFenceCreateInfo ->  Maybe VkAllocationCallbacks ->
 createFence = \device -> \createInfo -> \allocator -> alloca (\pFence -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateFence device pCreateInfo pAllocator pFence >>= (\r -> (,) <$> pure r<*>peek pFence))))
 
 -- | Wrapper for vkDestroyFence
-destroyFence :: VkDevice ->  VkFence ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyFence :: VkDevice ->  VkFence ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyFence = \device -> \fence -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyFence device fence pAllocator)
 
 -- | Wrapper for vkResetFences
@@ -940,7 +928,7 @@ createSemaphore :: VkDevice ->  VkSemaphoreCreateInfo ->  Maybe VkAllocationCall
 createSemaphore = \device -> \createInfo -> \allocator -> alloca (\pSemaphore -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateSemaphore device pCreateInfo pAllocator pSemaphore >>= (\r -> (,) <$> pure r<*>peek pSemaphore))))
 
 -- | Wrapper for vkDestroySemaphore
-destroySemaphore :: VkDevice ->  VkSemaphore ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroySemaphore :: VkDevice ->  VkSemaphore ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroySemaphore = \device -> \semaphore -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroySemaphore device semaphore pAllocator)
 
 -- | Wrapper for vkCreateEvent
@@ -949,7 +937,7 @@ createEvent :: VkDevice ->  VkEventCreateInfo ->  Maybe VkAllocationCallbacks ->
 createEvent = \device -> \createInfo -> \allocator -> alloca (\pEvent -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateEvent device pCreateInfo pAllocator pEvent >>= (\r -> (,) <$> pure r<*>peek pEvent))))
 
 -- | Wrapper for vkDestroyEvent
-destroyEvent :: VkDevice ->  VkEvent ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyEvent :: VkDevice ->  VkEvent ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyEvent = \device -> \event -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyEvent device event pAllocator)
 
 -- | Wrapper for vkGetEventStatus
@@ -970,7 +958,7 @@ createQueryPool :: VkDevice ->  VkQueryPoolCreateInfo ->  Maybe VkAllocationCall
 createQueryPool = \device -> \createInfo -> \allocator -> alloca (\pQueryPool -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateQueryPool device pCreateInfo pAllocator pQueryPool >>= (\r -> (,) <$> pure r<*>peek pQueryPool))))
 
 -- | Wrapper for vkDestroyQueryPool
-destroyQueryPool :: VkDevice ->  VkQueryPool ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyQueryPool :: VkDevice ->  VkQueryPool ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyQueryPool = \device -> \queryPool -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyQueryPool device queryPool pAllocator)
 
 -- | Wrapper for vkCreateBuffer
@@ -979,7 +967,7 @@ createBuffer :: VkDevice ->  VkBufferCreateInfo ->  Maybe VkAllocationCallbacks 
 createBuffer = \device -> \createInfo -> \allocator -> alloca (\pBuffer -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateBuffer device pCreateInfo pAllocator pBuffer >>= (\r -> (,) <$> pure r<*>peek pBuffer))))
 
 -- | Wrapper for vkDestroyBuffer
-destroyBuffer :: VkDevice ->  VkBuffer ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyBuffer :: VkDevice ->  VkBuffer ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyBuffer = \device -> \buffer -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyBuffer device buffer pAllocator)
 
 -- | Wrapper for vkCreateBufferView
@@ -988,7 +976,7 @@ createBufferView :: VkDevice ->  VkBufferViewCreateInfo ->  Maybe VkAllocationCa
 createBufferView = \device -> \createInfo -> \allocator -> alloca (\pView -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateBufferView device pCreateInfo pAllocator pView >>= (\r -> (,) <$> pure r<*>peek pView))))
 
 -- | Wrapper for vkDestroyBufferView
-destroyBufferView :: VkDevice ->  VkBufferView ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyBufferView :: VkDevice ->  VkBufferView ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyBufferView = \device -> \bufferView -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyBufferView device bufferView pAllocator)
 
 -- | Wrapper for vkCreateImage
@@ -997,13 +985,12 @@ createImage :: VkDevice ->  VkImageCreateInfo ->  Maybe VkAllocationCallbacks ->
 createImage = \device -> \createInfo -> \allocator -> alloca (\pImage -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateImage device pCreateInfo pAllocator pImage >>= (\r -> (,) <$> pure r<*>peek pImage))))
 
 -- | Wrapper for vkDestroyImage
-destroyImage :: VkDevice ->  VkImage ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyImage :: VkDevice ->  VkImage ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyImage = \device -> \image -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyImage device image pAllocator)
 
 -- | Wrapper for vkGetImageSubresourceLayout
-getImageSubresourceLayout :: VkDevice ->  VkImage ->  VkImageSubresource ->  IO ( ()
-                                                                                , VkSubresourceLayout )
-getImageSubresourceLayout = \device -> \image -> \subresource -> alloca (\pLayout -> with subresource (\pSubresource -> vkGetImageSubresourceLayout device image pSubresource pLayout >>= (\r -> (,) <$> pure r<*>peek pLayout)))
+getImageSubresourceLayout :: VkDevice ->  VkImage ->  VkImageSubresource ->  IO ( VkSubresourceLayout )
+getImageSubresourceLayout = \device -> \image -> \subresource -> alloca (\pLayout -> with subresource (\pSubresource -> vkGetImageSubresourceLayout device image pSubresource pLayout *> (peek pLayout)))
 
 -- | Wrapper for vkCreateImageView
 createImageView :: VkDevice ->  VkImageViewCreateInfo ->  Maybe VkAllocationCallbacks ->  IO ( VkResult
@@ -1011,7 +998,7 @@ createImageView :: VkDevice ->  VkImageViewCreateInfo ->  Maybe VkAllocationCall
 createImageView = \device -> \createInfo -> \allocator -> alloca (\pView -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateImageView device pCreateInfo pAllocator pView >>= (\r -> (,) <$> pure r<*>peek pView))))
 
 -- | Wrapper for vkDestroyImageView
-destroyImageView :: VkDevice ->  VkImageView ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyImageView :: VkDevice ->  VkImageView ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyImageView = \device -> \imageView -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyImageView device imageView pAllocator)
 
 -- | Wrapper for vkCreateShaderModule
@@ -1020,7 +1007,7 @@ createShaderModule :: VkDevice ->  VkShaderModuleCreateInfo ->  Maybe VkAllocati
 createShaderModule = \device -> \createInfo -> \allocator -> alloca (\pShaderModule -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateShaderModule device pCreateInfo pAllocator pShaderModule >>= (\r -> (,) <$> pure r<*>peek pShaderModule))))
 
 -- | Wrapper for vkDestroyShaderModule
-destroyShaderModule :: VkDevice ->  VkShaderModule ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyShaderModule :: VkDevice ->  VkShaderModule ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyShaderModule = \device -> \shaderModule -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyShaderModule device shaderModule pAllocator)
 
 -- | Wrapper for vkCreatePipelineCache
@@ -1029,7 +1016,7 @@ createPipelineCache :: VkDevice ->  VkPipelineCacheCreateInfo ->  Maybe VkAlloca
 createPipelineCache = \device -> \createInfo -> \allocator -> alloca (\pPipelineCache -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreatePipelineCache device pCreateInfo pAllocator pPipelineCache >>= (\r -> (,) <$> pure r<*>peek pPipelineCache))))
 
 -- | Wrapper for vkDestroyPipelineCache
-destroyPipelineCache :: VkDevice ->  VkPipelineCache ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyPipelineCache :: VkDevice ->  VkPipelineCache ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyPipelineCache = \device -> \pipelineCache -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyPipelineCache device pipelineCache pAllocator)
 
 -- | Wrapper for vkMergePipelineCaches
@@ -1047,7 +1034,7 @@ createComputePipelines :: VkDevice ->  VkPipelineCache ->  Vector VkComputePipel
 createComputePipelines = \device -> \pipelineCache -> \createInfos -> \allocator -> mallocForeignPtrArray (fromIntegral ((Data.Vector.Storable.length createInfos))) >>= (\fpPipelines -> withForeignPtr fpPipelines (\pPipelines -> maybeWith with allocator (\pAllocator -> unsafeWith createInfos (\pCreateInfos -> vkCreateComputePipelines device pipelineCache (fromIntegral $ Data.Vector.Storable.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> (,) <$> pure r<*>pure (unsafeFromForeignPtr0 fpPipelines (fromIntegral ((Data.Vector.Storable.length createInfos)))))))))
 
 -- | Wrapper for vkDestroyPipeline
-destroyPipeline :: VkDevice ->  VkPipeline ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyPipeline :: VkDevice ->  VkPipeline ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyPipeline = \device -> \pipeline -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyPipeline device pipeline pAllocator)
 
 -- | Wrapper for vkCreatePipelineLayout
@@ -1056,7 +1043,7 @@ createPipelineLayout :: VkDevice ->  VkPipelineLayoutCreateInfo ->  Maybe VkAllo
 createPipelineLayout = \device -> \createInfo -> \allocator -> alloca (\pPipelineLayout -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreatePipelineLayout device pCreateInfo pAllocator pPipelineLayout >>= (\r -> (,) <$> pure r<*>peek pPipelineLayout))))
 
 -- | Wrapper for vkDestroyPipelineLayout
-destroyPipelineLayout :: VkDevice ->  VkPipelineLayout ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyPipelineLayout :: VkDevice ->  VkPipelineLayout ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyPipelineLayout = \device -> \pipelineLayout -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyPipelineLayout device pipelineLayout pAllocator)
 
 -- | Wrapper for vkCreateSampler
@@ -1065,7 +1052,7 @@ createSampler :: VkDevice ->  VkSamplerCreateInfo ->  Maybe VkAllocationCallback
 createSampler = \device -> \createInfo -> \allocator -> alloca (\pSampler -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateSampler device pCreateInfo pAllocator pSampler >>= (\r -> (,) <$> pure r<*>peek pSampler))))
 
 -- | Wrapper for vkDestroySampler
-destroySampler :: VkDevice ->  VkSampler ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroySampler :: VkDevice ->  VkSampler ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroySampler = \device -> \sampler -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroySampler device sampler pAllocator)
 
 -- | Wrapper for vkCreateDescriptorSetLayout
@@ -1074,7 +1061,7 @@ createDescriptorSetLayout :: VkDevice ->  VkDescriptorSetLayoutCreateInfo ->  Ma
 createDescriptorSetLayout = \device -> \createInfo -> \allocator -> alloca (\pSetLayout -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateDescriptorSetLayout device pCreateInfo pAllocator pSetLayout >>= (\r -> (,) <$> pure r<*>peek pSetLayout))))
 
 -- | Wrapper for vkDestroyDescriptorSetLayout
-destroyDescriptorSetLayout :: VkDevice ->  VkDescriptorSetLayout ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyDescriptorSetLayout :: VkDevice ->  VkDescriptorSetLayout ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyDescriptorSetLayout = \device -> \descriptorSetLayout -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyDescriptorSetLayout device descriptorSetLayout pAllocator)
 
 -- | Wrapper for vkCreateDescriptorPool
@@ -1083,7 +1070,7 @@ createDescriptorPool :: VkDevice ->  VkDescriptorPoolCreateInfo ->  Maybe VkAllo
 createDescriptorPool = \device -> \createInfo -> \allocator -> alloca (\pDescriptorPool -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateDescriptorPool device pCreateInfo pAllocator pDescriptorPool >>= (\r -> (,) <$> pure r<*>peek pDescriptorPool))))
 
 -- | Wrapper for vkDestroyDescriptorPool
-destroyDescriptorPool :: VkDevice ->  VkDescriptorPool ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyDescriptorPool :: VkDevice ->  VkDescriptorPool ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyDescriptorPool = \device -> \descriptorPool -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyDescriptorPool device descriptorPool pAllocator)
 
 -- | Wrapper for vkResetDescriptorPool
@@ -1093,14 +1080,14 @@ resetDescriptorPool = \device -> \descriptorPool -> \flags -> vkResetDescriptorP
 -- | Wrapper for vkAllocateDescriptorSets
 allocateDescriptorSets :: VkDevice ->  VkDescriptorSetAllocateInfo ->  IO ( VkResult
                                                                           , Vector VkDescriptorSet )
-allocateDescriptorSets = \device -> \allocateInfo -> mallocForeignPtrArray (fromIntegral (vkDescriptorSetCount allocateInfo)) >>= (\fpDescriptorSets -> withForeignPtr fpDescriptorSets (\pDescriptorSets -> with allocateInfo (\pAllocateInfo -> vkAllocateDescriptorSets device pAllocateInfo pDescriptorSets >>= (\r -> (,) <$> pure r<*>pure (unsafeFromForeignPtr0 fpDescriptorSets (fromIntegral (vkDescriptorSetCount allocateInfo)))))))
+allocateDescriptorSets = \device -> \allocateInfo -> mallocForeignPtrArray (fromIntegral (vkDescriptorSetCount (allocateInfo :: VkDescriptorSetAllocateInfo))) >>= (\fpDescriptorSets -> withForeignPtr fpDescriptorSets (\pDescriptorSets -> with allocateInfo (\pAllocateInfo -> vkAllocateDescriptorSets device pAllocateInfo pDescriptorSets >>= (\r -> (,) <$> pure r<*>pure (unsafeFromForeignPtr0 fpDescriptorSets (fromIntegral (vkDescriptorSetCount (allocateInfo :: VkDescriptorSetAllocateInfo))))))))
 
 -- | Wrapper for vkFreeDescriptorSets
 freeDescriptorSets :: VkDevice ->  VkDescriptorPool ->  Vector VkDescriptorSet ->  IO ( VkResult )
 freeDescriptorSets = \device -> \descriptorPool -> \descriptorSets -> unsafeWith descriptorSets (\pDescriptorSets -> vkFreeDescriptorSets device descriptorPool (fromIntegral $ Data.Vector.Storable.length descriptorSets) pDescriptorSets)
 
 -- | Wrapper for vkUpdateDescriptorSets
-updateDescriptorSets :: VkDevice ->  Vector VkWriteDescriptorSet ->  Vector VkCopyDescriptorSet ->  IO ( () )
+updateDescriptorSets :: VkDevice ->  Vector VkWriteDescriptorSet ->  Vector VkCopyDescriptorSet ->  IO (  )
 updateDescriptorSets = \device -> \descriptorWrites -> \descriptorCopies -> unsafeWith descriptorCopies (\pDescriptorCopies -> unsafeWith descriptorWrites (\pDescriptorWrites -> vkUpdateDescriptorSets device (fromIntegral $ Data.Vector.Storable.length descriptorWrites) pDescriptorWrites (fromIntegral $ Data.Vector.Storable.length descriptorCopies) pDescriptorCopies))
 
 -- | Wrapper for vkCreateFramebuffer
@@ -1109,7 +1096,7 @@ createFramebuffer :: VkDevice ->  VkFramebufferCreateInfo ->  Maybe VkAllocation
 createFramebuffer = \device -> \createInfo -> \allocator -> alloca (\pFramebuffer -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateFramebuffer device pCreateInfo pAllocator pFramebuffer >>= (\r -> (,) <$> pure r<*>peek pFramebuffer))))
 
 -- | Wrapper for vkDestroyFramebuffer
-destroyFramebuffer :: VkDevice ->  VkFramebuffer ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyFramebuffer :: VkDevice ->  VkFramebuffer ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyFramebuffer = \device -> \framebuffer -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyFramebuffer device framebuffer pAllocator)
 
 -- | Wrapper for vkCreateRenderPass
@@ -1118,13 +1105,12 @@ createRenderPass :: VkDevice ->  VkRenderPassCreateInfo ->  Maybe VkAllocationCa
 createRenderPass = \device -> \createInfo -> \allocator -> alloca (\pRenderPass -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateRenderPass device pCreateInfo pAllocator pRenderPass >>= (\r -> (,) <$> pure r<*>peek pRenderPass))))
 
 -- | Wrapper for vkDestroyRenderPass
-destroyRenderPass :: VkDevice ->  VkRenderPass ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyRenderPass :: VkDevice ->  VkRenderPass ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyRenderPass = \device -> \renderPass -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyRenderPass device renderPass pAllocator)
 
 -- | Wrapper for vkGetRenderAreaGranularity
-getRenderAreaGranularity :: VkDevice ->  VkRenderPass ->  IO ( ()
-                                                             , VkExtent2D )
-getRenderAreaGranularity = \device -> \renderPass -> alloca (\pGranularity -> vkGetRenderAreaGranularity device renderPass pGranularity >>= (\r -> (,) <$> pure r<*>peek pGranularity))
+getRenderAreaGranularity :: VkDevice ->  VkRenderPass ->  IO ( VkExtent2D )
+getRenderAreaGranularity = \device -> \renderPass -> alloca (\pGranularity -> vkGetRenderAreaGranularity device renderPass pGranularity *> (peek pGranularity))
 
 -- | Wrapper for vkCreateCommandPool
 createCommandPool :: VkDevice ->  VkCommandPoolCreateInfo ->  Maybe VkAllocationCallbacks ->  IO ( VkResult
@@ -1132,7 +1118,7 @@ createCommandPool :: VkDevice ->  VkCommandPoolCreateInfo ->  Maybe VkAllocation
 createCommandPool = \device -> \createInfo -> \allocator -> alloca (\pCommandPool -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateCommandPool device pCreateInfo pAllocator pCommandPool >>= (\r -> (,) <$> pure r<*>peek pCommandPool))))
 
 -- | Wrapper for vkDestroyCommandPool
-destroyCommandPool :: VkDevice ->  VkCommandPool ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyCommandPool :: VkDevice ->  VkCommandPool ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyCommandPool = \device -> \commandPool -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyCommandPool device commandPool pAllocator)
 
 -- | Wrapper for vkResetCommandPool
@@ -1142,10 +1128,10 @@ resetCommandPool = \device -> \commandPool -> \flags -> vkResetCommandPool devic
 -- | Wrapper for vkAllocateCommandBuffers
 allocateCommandBuffers :: VkDevice ->  VkCommandBufferAllocateInfo ->  IO ( VkResult
                                                                           , Vector VkCommandBuffer )
-allocateCommandBuffers = \device -> \allocateInfo -> mallocForeignPtrArray (fromIntegral (vkCommandBufferCount allocateInfo)) >>= (\fpCommandBuffers -> withForeignPtr fpCommandBuffers (\pCommandBuffers -> with allocateInfo (\pAllocateInfo -> vkAllocateCommandBuffers device pAllocateInfo pCommandBuffers >>= (\r -> (,) <$> pure r<*>pure (unsafeFromForeignPtr0 fpCommandBuffers (fromIntegral (vkCommandBufferCount allocateInfo)))))))
+allocateCommandBuffers = \device -> \allocateInfo -> mallocForeignPtrArray (fromIntegral (vkCommandBufferCount (allocateInfo :: VkCommandBufferAllocateInfo))) >>= (\fpCommandBuffers -> withForeignPtr fpCommandBuffers (\pCommandBuffers -> with allocateInfo (\pAllocateInfo -> vkAllocateCommandBuffers device pAllocateInfo pCommandBuffers >>= (\r -> (,) <$> pure r<*>pure (unsafeFromForeignPtr0 fpCommandBuffers (fromIntegral (vkCommandBufferCount (allocateInfo :: VkCommandBufferAllocateInfo))))))))
 
 -- | Wrapper for vkFreeCommandBuffers
-freeCommandBuffers :: VkDevice ->  VkCommandPool ->  Vector VkCommandBuffer ->  IO ( () )
+freeCommandBuffers :: VkDevice ->  VkCommandPool ->  Vector VkCommandBuffer ->  IO (  )
 freeCommandBuffers = \device -> \commandPool -> \commandBuffers -> unsafeWith commandBuffers (\pCommandBuffers -> vkFreeCommandBuffers device commandPool (fromIntegral $ Data.Vector.Storable.length commandBuffers) pCommandBuffers)
 
 -- | Wrapper for vkBeginCommandBuffer
@@ -1161,181 +1147,181 @@ resetCommandBuffer :: VkCommandBuffer ->  VkCommandBufferResetFlags ->  IO ( VkR
 resetCommandBuffer = \commandBuffer -> \flags -> vkResetCommandBuffer commandBuffer flags
 
 -- | Wrapper for vkCmdBindPipeline
-cmdBindPipeline :: VkCommandBuffer ->  VkPipelineBindPoint ->  VkPipeline ->  IO ( () )
+cmdBindPipeline :: VkCommandBuffer ->  VkPipelineBindPoint ->  VkPipeline ->  IO (  )
 cmdBindPipeline = \commandBuffer -> \pipelineBindPoint -> \pipeline -> vkCmdBindPipeline commandBuffer pipelineBindPoint pipeline
 
 -- | Wrapper for vkCmdSetViewport
-cmdSetViewport :: VkCommandBuffer ->  Word32 ->  Vector VkViewport ->  IO ( () )
+cmdSetViewport :: VkCommandBuffer ->  Word32 ->  Vector VkViewport ->  IO (  )
 cmdSetViewport = \commandBuffer -> \firstViewport -> \viewports -> unsafeWith viewports (\pViewports -> vkCmdSetViewport commandBuffer firstViewport (fromIntegral $ Data.Vector.Storable.length viewports) pViewports)
 
 -- | Wrapper for vkCmdSetScissor
-cmdSetScissor :: VkCommandBuffer ->  Word32 ->  Vector VkRect2D ->  IO ( () )
+cmdSetScissor :: VkCommandBuffer ->  Word32 ->  Vector VkRect2D ->  IO (  )
 cmdSetScissor = \commandBuffer -> \firstScissor -> \scissors -> unsafeWith scissors (\pScissors -> vkCmdSetScissor commandBuffer firstScissor (fromIntegral $ Data.Vector.Storable.length scissors) pScissors)
 
 -- | Wrapper for vkCmdSetLineWidth
-cmdSetLineWidth :: VkCommandBuffer ->  CFloat ->  IO ( () )
+cmdSetLineWidth :: VkCommandBuffer ->  CFloat ->  IO (  )
 cmdSetLineWidth = \commandBuffer -> \lineWidth -> vkCmdSetLineWidth commandBuffer lineWidth
 
 -- | Wrapper for vkCmdSetDepthBias
-cmdSetDepthBias :: VkCommandBuffer ->  CFloat ->  CFloat ->  CFloat ->  IO ( () )
+cmdSetDepthBias :: VkCommandBuffer ->  CFloat ->  CFloat ->  CFloat ->  IO (  )
 cmdSetDepthBias = \commandBuffer -> \depthBiasConstantFactor -> \depthBiasClamp -> \depthBiasSlopeFactor -> vkCmdSetDepthBias commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor
 
 -- | Wrapper for vkCmdSetBlendConstants
 cmdSetBlendConstants :: VkCommandBuffer ->  ( CFloat
                                             , CFloat
                                             , CFloat
-                                            , CFloat ) ->  IO (())
+                                            , CFloat ) ->  IO ()
 cmdSetBlendConstants = \commandBuffer -> \( blendConstants0
                                           , blendConstants1
                                           , blendConstants2
                                           , blendConstants3 ) -> allocaArray 4 (\pBlendConstants -> pokeElemOff pBlendConstants 0 blendConstants0*> pokeElemOff pBlendConstants 1 blendConstants1*> pokeElemOff pBlendConstants 2 blendConstants2*> pokeElemOff pBlendConstants 3 blendConstants3 *> vkCmdSetBlendConstants commandBuffer pBlendConstants)
 
 -- | Wrapper for vkCmdSetDepthBounds
-cmdSetDepthBounds :: VkCommandBuffer ->  CFloat ->  CFloat ->  IO ( () )
+cmdSetDepthBounds :: VkCommandBuffer ->  CFloat ->  CFloat ->  IO (  )
 cmdSetDepthBounds = \commandBuffer -> \minDepthBounds -> \maxDepthBounds -> vkCmdSetDepthBounds commandBuffer minDepthBounds maxDepthBounds
 
 -- | Wrapper for vkCmdSetStencilCompareMask
-cmdSetStencilCompareMask :: VkCommandBuffer ->  VkStencilFaceFlags ->  Word32 ->  IO ( () )
+cmdSetStencilCompareMask :: VkCommandBuffer ->  VkStencilFaceFlags ->  Word32 ->  IO (  )
 cmdSetStencilCompareMask = \commandBuffer -> \faceMask -> \compareMask -> vkCmdSetStencilCompareMask commandBuffer faceMask compareMask
 
 -- | Wrapper for vkCmdSetStencilWriteMask
-cmdSetStencilWriteMask :: VkCommandBuffer ->  VkStencilFaceFlags ->  Word32 ->  IO ( () )
+cmdSetStencilWriteMask :: VkCommandBuffer ->  VkStencilFaceFlags ->  Word32 ->  IO (  )
 cmdSetStencilWriteMask = \commandBuffer -> \faceMask -> \writeMask -> vkCmdSetStencilWriteMask commandBuffer faceMask writeMask
 
 -- | Wrapper for vkCmdSetStencilReference
-cmdSetStencilReference :: VkCommandBuffer ->  VkStencilFaceFlags ->  Word32 ->  IO ( () )
+cmdSetStencilReference :: VkCommandBuffer ->  VkStencilFaceFlags ->  Word32 ->  IO (  )
 cmdSetStencilReference = \commandBuffer -> \faceMask -> \reference -> vkCmdSetStencilReference commandBuffer faceMask reference
 
 -- | Wrapper for vkCmdBindDescriptorSets
-cmdBindDescriptorSets :: VkCommandBuffer ->  VkPipelineBindPoint ->  VkPipelineLayout ->  Word32 ->  Vector VkDescriptorSet ->  Vector Word32 ->  IO ( () )
+cmdBindDescriptorSets :: VkCommandBuffer ->  VkPipelineBindPoint ->  VkPipelineLayout ->  Word32 ->  Vector VkDescriptorSet ->  Vector Word32 ->  IO (  )
 cmdBindDescriptorSets = \commandBuffer -> \pipelineBindPoint -> \layout -> \firstSet -> \descriptorSets -> \dynamicOffsets -> unsafeWith dynamicOffsets (\pDynamicOffsets -> unsafeWith descriptorSets (\pDescriptorSets -> vkCmdBindDescriptorSets commandBuffer pipelineBindPoint layout firstSet (fromIntegral $ Data.Vector.Storable.length descriptorSets) pDescriptorSets (fromIntegral $ Data.Vector.Storable.length dynamicOffsets) pDynamicOffsets))
 
 -- | Wrapper for vkCmdBindIndexBuffer
-cmdBindIndexBuffer :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  VkIndexType ->  IO ( () )
+cmdBindIndexBuffer :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  VkIndexType ->  IO (  )
 cmdBindIndexBuffer = \commandBuffer -> \buffer -> \offset -> \indexType -> vkCmdBindIndexBuffer commandBuffer buffer offset indexType
 
 -- | Wrapper for vkCmdDraw
-cmdDraw :: VkCommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO ( () )
+cmdDraw :: VkCommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO (  )
 cmdDraw = \commandBuffer -> \vertexCount -> \instanceCount -> \firstVertex -> \firstInstance -> vkCmdDraw commandBuffer vertexCount instanceCount firstVertex firstInstance
 
 -- | Wrapper for vkCmdDrawIndexed
-cmdDrawIndexed :: VkCommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Int32 ->  Word32 ->  IO ( () )
+cmdDrawIndexed :: VkCommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Int32 ->  Word32 ->  IO (  )
 cmdDrawIndexed = \commandBuffer -> \indexCount -> \instanceCount -> \firstIndex -> \vertexOffset -> \firstInstance -> vkCmdDrawIndexed commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance
 
 -- | Wrapper for vkCmdDrawIndirect
-cmdDrawIndirect :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  Word32 ->  IO ( () )
+cmdDrawIndirect :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  Word32 ->  IO (  )
 cmdDrawIndirect = \commandBuffer -> \buffer -> \offset -> \drawCount -> \stride -> vkCmdDrawIndirect commandBuffer buffer offset drawCount stride
 
 -- | Wrapper for vkCmdDrawIndexedIndirect
-cmdDrawIndexedIndirect :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  Word32 ->  IO ( () )
+cmdDrawIndexedIndirect :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  Word32 ->  IO (  )
 cmdDrawIndexedIndirect = \commandBuffer -> \buffer -> \offset -> \drawCount -> \stride -> vkCmdDrawIndexedIndirect commandBuffer buffer offset drawCount stride
 
 -- | Wrapper for vkCmdDispatch
-cmdDispatch :: VkCommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  IO ( () )
+cmdDispatch :: VkCommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  IO (  )
 cmdDispatch = \commandBuffer -> \groupCountX -> \groupCountY -> \groupCountZ -> vkCmdDispatch commandBuffer groupCountX groupCountY groupCountZ
 
 -- | Wrapper for vkCmdDispatchIndirect
-cmdDispatchIndirect :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  IO ( () )
+cmdDispatchIndirect :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  IO (  )
 cmdDispatchIndirect = \commandBuffer -> \buffer -> \offset -> vkCmdDispatchIndirect commandBuffer buffer offset
 
 -- | Wrapper for vkCmdCopyBuffer
-cmdCopyBuffer :: VkCommandBuffer ->  VkBuffer ->  VkBuffer ->  Vector VkBufferCopy ->  IO ( () )
+cmdCopyBuffer :: VkCommandBuffer ->  VkBuffer ->  VkBuffer ->  Vector VkBufferCopy ->  IO (  )
 cmdCopyBuffer = \commandBuffer -> \srcBuffer -> \dstBuffer -> \regions -> unsafeWith regions (\pRegions -> vkCmdCopyBuffer commandBuffer srcBuffer dstBuffer (fromIntegral $ Data.Vector.Storable.length regions) pRegions)
 
 -- | Wrapper for vkCmdCopyImage
-cmdCopyImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkImage ->  VkImageLayout ->  Vector VkImageCopy ->  IO ( () )
+cmdCopyImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkImage ->  VkImageLayout ->  Vector VkImageCopy ->  IO (  )
 cmdCopyImage = \commandBuffer -> \srcImage -> \srcImageLayout -> \dstImage -> \dstImageLayout -> \regions -> unsafeWith regions (\pRegions -> vkCmdCopyImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout (fromIntegral $ Data.Vector.Storable.length regions) pRegions)
 
 -- | Wrapper for vkCmdBlitImage
-cmdBlitImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkImage ->  VkImageLayout ->  Vector VkImageBlit ->  VkFilter ->  IO ( () )
+cmdBlitImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkImage ->  VkImageLayout ->  Vector VkImageBlit ->  VkFilter ->  IO (  )
 cmdBlitImage = \commandBuffer -> \srcImage -> \srcImageLayout -> \dstImage -> \dstImageLayout -> \regions -> \filter -> unsafeWith regions (\pRegions -> vkCmdBlitImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout (fromIntegral $ Data.Vector.Storable.length regions) pRegions filter)
 
 -- | Wrapper for vkCmdCopyBufferToImage
-cmdCopyBufferToImage :: VkCommandBuffer ->  VkBuffer ->  VkImage ->  VkImageLayout ->  Vector VkBufferImageCopy ->  IO ( () )
+cmdCopyBufferToImage :: VkCommandBuffer ->  VkBuffer ->  VkImage ->  VkImageLayout ->  Vector VkBufferImageCopy ->  IO (  )
 cmdCopyBufferToImage = \commandBuffer -> \srcBuffer -> \dstImage -> \dstImageLayout -> \regions -> unsafeWith regions (\pRegions -> vkCmdCopyBufferToImage commandBuffer srcBuffer dstImage dstImageLayout (fromIntegral $ Data.Vector.Storable.length regions) pRegions)
 
 -- | Wrapper for vkCmdCopyImageToBuffer
-cmdCopyImageToBuffer :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkBuffer ->  Vector VkBufferImageCopy ->  IO ( () )
+cmdCopyImageToBuffer :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkBuffer ->  Vector VkBufferImageCopy ->  IO (  )
 cmdCopyImageToBuffer = \commandBuffer -> \srcImage -> \srcImageLayout -> \dstBuffer -> \regions -> unsafeWith regions (\pRegions -> vkCmdCopyImageToBuffer commandBuffer srcImage srcImageLayout dstBuffer (fromIntegral $ Data.Vector.Storable.length regions) pRegions)
 
 -- | Wrapper for vkCmdUpdateBuffer
-cmdUpdateBuffer :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  Vector a ->  IO ( () )
+cmdUpdateBuffer :: (Storable a) => VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  Vector a ->  IO (  )
 cmdUpdateBuffer = \commandBuffer -> \dstBuffer -> \dstOffset -> \data' -> unsafeWith data' (\pData -> vkCmdUpdateBuffer commandBuffer dstBuffer dstOffset (fromIntegral $ Data.Vector.Storable.length data') (castPtr pData))
 
 -- | Wrapper for vkCmdFillBuffer
-cmdFillBuffer :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  VkDeviceSize ->  Word32 ->  IO ( () )
+cmdFillBuffer :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  VkDeviceSize ->  Word32 ->  IO (  )
 cmdFillBuffer = \commandBuffer -> \dstBuffer -> \dstOffset -> \size -> \data' -> vkCmdFillBuffer commandBuffer dstBuffer dstOffset size data'
 
 -- | Wrapper for vkCmdClearColorImage
-cmdClearColorImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkClearColorValue ->  Vector VkImageSubresourceRange ->  IO ( () )
+cmdClearColorImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkClearColorValue ->  Vector VkImageSubresourceRange ->  IO (  )
 cmdClearColorImage = \commandBuffer -> \image -> \imageLayout -> \color -> \ranges -> unsafeWith ranges (\pRanges -> with color (\pColor -> vkCmdClearColorImage commandBuffer image imageLayout pColor (fromIntegral $ Data.Vector.Storable.length ranges) pRanges))
 
 -- | Wrapper for vkCmdClearDepthStencilImage
-cmdClearDepthStencilImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkClearDepthStencilValue ->  Vector VkImageSubresourceRange ->  IO ( () )
+cmdClearDepthStencilImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkClearDepthStencilValue ->  Vector VkImageSubresourceRange ->  IO (  )
 cmdClearDepthStencilImage = \commandBuffer -> \image -> \imageLayout -> \depthStencil -> \ranges -> unsafeWith ranges (\pRanges -> with depthStencil (\pDepthStencil -> vkCmdClearDepthStencilImage commandBuffer image imageLayout pDepthStencil (fromIntegral $ Data.Vector.Storable.length ranges) pRanges))
 
 -- | Wrapper for vkCmdClearAttachments
-cmdClearAttachments :: VkCommandBuffer ->  Vector VkClearAttachment ->  Vector VkClearRect ->  IO ( () )
+cmdClearAttachments :: VkCommandBuffer ->  Vector VkClearAttachment ->  Vector VkClearRect ->  IO (  )
 cmdClearAttachments = \commandBuffer -> \attachments -> \rects -> unsafeWith rects (\pRects -> unsafeWith attachments (\pAttachments -> vkCmdClearAttachments commandBuffer (fromIntegral $ Data.Vector.Storable.length attachments) pAttachments (fromIntegral $ Data.Vector.Storable.length rects) pRects))
 
 -- | Wrapper for vkCmdResolveImage
-cmdResolveImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkImage ->  VkImageLayout ->  Vector VkImageResolve ->  IO ( () )
+cmdResolveImage :: VkCommandBuffer ->  VkImage ->  VkImageLayout ->  VkImage ->  VkImageLayout ->  Vector VkImageResolve ->  IO (  )
 cmdResolveImage = \commandBuffer -> \srcImage -> \srcImageLayout -> \dstImage -> \dstImageLayout -> \regions -> unsafeWith regions (\pRegions -> vkCmdResolveImage commandBuffer srcImage srcImageLayout dstImage dstImageLayout (fromIntegral $ Data.Vector.Storable.length regions) pRegions)
 
 -- | Wrapper for vkCmdSetEvent
-cmdSetEvent :: VkCommandBuffer ->  VkEvent ->  VkPipelineStageFlags ->  IO ( () )
+cmdSetEvent :: VkCommandBuffer ->  VkEvent ->  VkPipelineStageFlags ->  IO (  )
 cmdSetEvent = \commandBuffer -> \event -> \stageMask -> vkCmdSetEvent commandBuffer event stageMask
 
 -- | Wrapper for vkCmdResetEvent
-cmdResetEvent :: VkCommandBuffer ->  VkEvent ->  VkPipelineStageFlags ->  IO ( () )
+cmdResetEvent :: VkCommandBuffer ->  VkEvent ->  VkPipelineStageFlags ->  IO (  )
 cmdResetEvent = \commandBuffer -> \event -> \stageMask -> vkCmdResetEvent commandBuffer event stageMask
 
 -- | Wrapper for vkCmdWaitEvents
-cmdWaitEvents :: VkCommandBuffer ->  Vector VkEvent ->  VkPipelineStageFlags ->  VkPipelineStageFlags ->  Vector VkMemoryBarrier ->  Vector VkBufferMemoryBarrier ->  Vector VkImageMemoryBarrier ->  IO ( () )
+cmdWaitEvents :: VkCommandBuffer ->  Vector VkEvent ->  VkPipelineStageFlags ->  VkPipelineStageFlags ->  Vector VkMemoryBarrier ->  Vector VkBufferMemoryBarrier ->  Vector VkImageMemoryBarrier ->  IO (  )
 cmdWaitEvents = \commandBuffer -> \events -> \srcStageMask -> \dstStageMask -> \memoryBarriers -> \bufferMemoryBarriers -> \imageMemoryBarriers -> unsafeWith imageMemoryBarriers (\pImageMemoryBarriers -> unsafeWith bufferMemoryBarriers (\pBufferMemoryBarriers -> unsafeWith memoryBarriers (\pMemoryBarriers -> unsafeWith events (\pEvents -> vkCmdWaitEvents commandBuffer (fromIntegral $ Data.Vector.Storable.length events) pEvents srcStageMask dstStageMask (fromIntegral $ Data.Vector.Storable.length memoryBarriers) pMemoryBarriers (fromIntegral $ Data.Vector.Storable.length bufferMemoryBarriers) pBufferMemoryBarriers (fromIntegral $ Data.Vector.Storable.length imageMemoryBarriers) pImageMemoryBarriers))))
 
 -- | Wrapper for vkCmdPipelineBarrier
-cmdPipelineBarrier :: VkCommandBuffer ->  VkPipelineStageFlags ->  VkPipelineStageFlags ->  VkDependencyFlags ->  Vector VkMemoryBarrier ->  Vector VkBufferMemoryBarrier ->  Vector VkImageMemoryBarrier ->  IO ( () )
+cmdPipelineBarrier :: VkCommandBuffer ->  VkPipelineStageFlags ->  VkPipelineStageFlags ->  VkDependencyFlags ->  Vector VkMemoryBarrier ->  Vector VkBufferMemoryBarrier ->  Vector VkImageMemoryBarrier ->  IO (  )
 cmdPipelineBarrier = \commandBuffer -> \srcStageMask -> \dstStageMask -> \dependencyFlags -> \memoryBarriers -> \bufferMemoryBarriers -> \imageMemoryBarriers -> unsafeWith imageMemoryBarriers (\pImageMemoryBarriers -> unsafeWith bufferMemoryBarriers (\pBufferMemoryBarriers -> unsafeWith memoryBarriers (\pMemoryBarriers -> vkCmdPipelineBarrier commandBuffer srcStageMask dstStageMask dependencyFlags (fromIntegral $ Data.Vector.Storable.length memoryBarriers) pMemoryBarriers (fromIntegral $ Data.Vector.Storable.length bufferMemoryBarriers) pBufferMemoryBarriers (fromIntegral $ Data.Vector.Storable.length imageMemoryBarriers) pImageMemoryBarriers)))
 
 -- | Wrapper for vkCmdBeginQuery
-cmdBeginQuery :: VkCommandBuffer ->  VkQueryPool ->  Word32 ->  VkQueryControlFlags ->  IO ( () )
+cmdBeginQuery :: VkCommandBuffer ->  VkQueryPool ->  Word32 ->  VkQueryControlFlags ->  IO (  )
 cmdBeginQuery = \commandBuffer -> \queryPool -> \query -> \flags -> vkCmdBeginQuery commandBuffer queryPool query flags
 
 -- | Wrapper for vkCmdEndQuery
-cmdEndQuery :: VkCommandBuffer ->  VkQueryPool ->  Word32 ->  IO ( () )
+cmdEndQuery :: VkCommandBuffer ->  VkQueryPool ->  Word32 ->  IO (  )
 cmdEndQuery = \commandBuffer -> \queryPool -> \query -> vkCmdEndQuery commandBuffer queryPool query
 
 -- | Wrapper for vkCmdResetQueryPool
-cmdResetQueryPool :: VkCommandBuffer ->  VkQueryPool ->  Word32 ->  Word32 ->  IO ( () )
+cmdResetQueryPool :: VkCommandBuffer ->  VkQueryPool ->  Word32 ->  Word32 ->  IO (  )
 cmdResetQueryPool = \commandBuffer -> \queryPool -> \firstQuery -> \queryCount -> vkCmdResetQueryPool commandBuffer queryPool firstQuery queryCount
 
 -- | Wrapper for vkCmdWriteTimestamp
-cmdWriteTimestamp :: VkCommandBuffer ->  VkPipelineStageFlagBits ->  VkQueryPool ->  Word32 ->  IO ( () )
+cmdWriteTimestamp :: VkCommandBuffer ->  VkPipelineStageFlagBits ->  VkQueryPool ->  Word32 ->  IO (  )
 cmdWriteTimestamp = \commandBuffer -> \pipelineStage -> \queryPool -> \query -> vkCmdWriteTimestamp commandBuffer pipelineStage queryPool query
 
 -- | Wrapper for vkCmdCopyQueryPoolResults
-cmdCopyQueryPoolResults :: VkCommandBuffer ->  VkQueryPool ->  Word32 ->  Word32 ->  VkBuffer ->  VkDeviceSize ->  VkDeviceSize ->  VkQueryResultFlags ->  IO ( () )
+cmdCopyQueryPoolResults :: VkCommandBuffer ->  VkQueryPool ->  Word32 ->  Word32 ->  VkBuffer ->  VkDeviceSize ->  VkDeviceSize ->  VkQueryResultFlags ->  IO (  )
 cmdCopyQueryPoolResults = \commandBuffer -> \queryPool -> \firstQuery -> \queryCount -> \dstBuffer -> \dstOffset -> \stride -> \flags -> vkCmdCopyQueryPoolResults commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags
 
 -- | Wrapper for vkCmdPushConstants
-cmdPushConstants :: VkCommandBuffer ->  VkPipelineLayout ->  VkShaderStageFlags ->  Word32 ->  Vector a ->  IO ( () )
+cmdPushConstants :: (Storable a) => VkCommandBuffer ->  VkPipelineLayout ->  VkShaderStageFlags ->  Word32 ->  Vector a ->  IO (  )
 cmdPushConstants = \commandBuffer -> \layout -> \stageFlags -> \offset -> \values -> unsafeWith values (\pValues -> vkCmdPushConstants commandBuffer layout stageFlags offset (fromIntegral $ Data.Vector.Storable.length values) (castPtr pValues))
 
 -- | Wrapper for vkCmdBeginRenderPass
-cmdBeginRenderPass :: VkCommandBuffer ->  VkRenderPassBeginInfo ->  VkSubpassContents ->  IO ( () )
+cmdBeginRenderPass :: VkCommandBuffer ->  VkRenderPassBeginInfo ->  VkSubpassContents ->  IO (  )
 cmdBeginRenderPass = \commandBuffer -> \renderPassBegin -> \contents -> with renderPassBegin (\pRenderPassBegin -> vkCmdBeginRenderPass commandBuffer pRenderPassBegin contents)
 
 -- | Wrapper for vkCmdNextSubpass
-cmdNextSubpass :: VkCommandBuffer ->  VkSubpassContents ->  IO ( () )
+cmdNextSubpass :: VkCommandBuffer ->  VkSubpassContents ->  IO (  )
 cmdNextSubpass = \commandBuffer -> \contents -> vkCmdNextSubpass commandBuffer contents
 
 -- | Wrapper for vkCmdEndRenderPass
-cmdEndRenderPass :: VkCommandBuffer ->  IO ( () )
+cmdEndRenderPass :: VkCommandBuffer ->  IO (  )
 cmdEndRenderPass = \commandBuffer -> vkCmdEndRenderPass commandBuffer
 
 -- | Wrapper for vkCmdExecuteCommands
-cmdExecuteCommands :: VkCommandBuffer ->  Vector VkCommandBuffer ->  IO ( () )
+cmdExecuteCommands :: VkCommandBuffer ->  Vector VkCommandBuffer ->  IO (  )
 cmdExecuteCommands = \commandBuffer -> \commandBuffers -> unsafeWith commandBuffers (\pCommandBuffers -> vkCmdExecuteCommands commandBuffer (fromIntegral $ Data.Vector.Storable.length commandBuffers) pCommandBuffers)
 
 -- | Wrapper for vkCreateAndroidSurfaceKHR
@@ -1409,12 +1395,11 @@ createMirSurfaceKHR :: VkInstance ->  VkMirSurfaceCreateInfoKHR ->  Maybe VkAllo
 createMirSurfaceKHR = \instance' -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateMirSurfaceKHR instance' pCreateInfo pAllocator pSurface >>= (\r -> (,) <$> pure r<*>peek pSurface))))
 
 -- | Wrapper for vkGetPhysicalDeviceMirPresentationSupportKHR
-getPhysicalDeviceMirPresentationSupportKHR :: VkPhysicalDevice ->  Word32 ->  IO ( VkBool32
-                                                                                 , MirConnection )
-getPhysicalDeviceMirPresentationSupportKHR = \physicalDevice -> \queueFamilyIndex -> alloca (\pConnection -> vkGetPhysicalDeviceMirPresentationSupportKHR physicalDevice queueFamilyIndex pConnection >>= (\r -> (,) <$> pure r<*>peek pConnection))
+getPhysicalDeviceMirPresentationSupportKHR :: VkPhysicalDevice ->  Word32 ->  Ptr MirConnection ->  IO ( VkBool32 )
+getPhysicalDeviceMirPresentationSupportKHR = \physicalDevice -> \queueFamilyIndex -> \connection -> vkGetPhysicalDeviceMirPresentationSupportKHR physicalDevice queueFamilyIndex connection
 
 -- | Wrapper for vkDestroySurfaceKHR
-destroySurfaceKHR :: VkInstance ->  VkSurfaceKHR ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroySurfaceKHR :: VkInstance ->  VkSurfaceKHR ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroySurfaceKHR = \instance' -> \surface -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroySurfaceKHR instance' surface pAllocator)
 
 -- | Wrapper for vkGetPhysicalDeviceSurfaceSupportKHR
@@ -1453,7 +1438,7 @@ createSwapchainKHR :: VkDevice ->  VkSwapchainCreateInfoKHR ->  Maybe VkAllocati
 createSwapchainKHR = \device -> \createInfo -> \allocator -> alloca (\pSwapchain -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateSwapchainKHR device pCreateInfo pAllocator pSwapchain >>= (\r -> (,) <$> pure r<*>peek pSwapchain))))
 
 -- | Wrapper for vkDestroySwapchainKHR
-destroySwapchainKHR :: VkDevice ->  VkSwapchainKHR ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroySwapchainKHR :: VkDevice ->  VkSwapchainKHR ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroySwapchainKHR = \device -> \swapchain -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroySwapchainKHR device swapchain pAllocator)
 
 -- | Wrapper for vkGetSwapchainImagesKHR
@@ -1486,9 +1471,8 @@ createWaylandSurfaceKHR :: VkInstance ->  VkWaylandSurfaceCreateInfoKHR ->  Mayb
 createWaylandSurfaceKHR = \instance' -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateWaylandSurfaceKHR instance' pCreateInfo pAllocator pSurface >>= (\r -> (,) <$> pure r<*>peek pSurface))))
 
 -- | Wrapper for vkGetPhysicalDeviceWaylandPresentationSupportKHR
-getPhysicalDeviceWaylandPresentationSupportKHR :: VkPhysicalDevice ->  Word32 ->  IO ( VkBool32
-                                                                                     , Wl_display )
-getPhysicalDeviceWaylandPresentationSupportKHR = \physicalDevice -> \queueFamilyIndex -> alloca (\pDisplay -> vkGetPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex pDisplay >>= (\r -> (,) <$> pure r<*>peek pDisplay))
+getPhysicalDeviceWaylandPresentationSupportKHR :: VkPhysicalDevice ->  Word32 ->  Ptr Wl_display ->  IO ( VkBool32 )
+getPhysicalDeviceWaylandPresentationSupportKHR = \physicalDevice -> \queueFamilyIndex -> \display -> vkGetPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex display
 
 -- | Wrapper for vkCreateWin32SurfaceKHR
 createWin32SurfaceKHR :: VkInstance ->  VkWin32SurfaceCreateInfoKHR ->  Maybe VkAllocationCallbacks ->  IO ( VkResult
@@ -1515,9 +1499,8 @@ createXcbSurfaceKHR :: VkInstance ->  VkXcbSurfaceCreateInfoKHR ->  Maybe VkAllo
 createXcbSurfaceKHR = \instance' -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateXcbSurfaceKHR instance' pCreateInfo pAllocator pSurface >>= (\r -> (,) <$> pure r<*>peek pSurface))))
 
 -- | Wrapper for vkGetPhysicalDeviceXcbPresentationSupportKHR
-getPhysicalDeviceXcbPresentationSupportKHR :: VkPhysicalDevice ->  Word32 ->  Xcb_visualid_t ->  IO ( VkBool32
-                                                                                                    , Xcb_connection_t )
-getPhysicalDeviceXcbPresentationSupportKHR = \physicalDevice -> \queueFamilyIndex -> \visual_id -> alloca (\pConnection -> vkGetPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex pConnection visual_id >>= (\r -> (,) <$> pure r<*>peek pConnection))
+getPhysicalDeviceXcbPresentationSupportKHR :: VkPhysicalDevice ->  Word32 ->  Ptr Xcb_connection_t ->  Xcb_visualid_t ->  IO ( VkBool32 )
+getPhysicalDeviceXcbPresentationSupportKHR = \physicalDevice -> \queueFamilyIndex -> \connection -> \visual_id -> vkGetPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex connection visual_id
 
 -- | Wrapper for vkCreateDebugReportCallbackEXT
 createDebugReportCallbackEXT :: VkInstance ->  VkDebugReportCallbackCreateInfoEXT ->  Maybe VkAllocationCallbacks ->  IO ( VkResult
@@ -1525,11 +1508,11 @@ createDebugReportCallbackEXT :: VkInstance ->  VkDebugReportCallbackCreateInfoEX
 createDebugReportCallbackEXT = \instance' -> \createInfo -> \allocator -> alloca (\pCallback -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateDebugReportCallbackEXT instance' pCreateInfo pAllocator pCallback >>= (\r -> (,) <$> pure r<*>peek pCallback))))
 
 -- | Wrapper for vkDestroyDebugReportCallbackEXT
-destroyDebugReportCallbackEXT :: VkInstance ->  VkDebugReportCallbackEXT ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyDebugReportCallbackEXT :: VkInstance ->  VkDebugReportCallbackEXT ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyDebugReportCallbackEXT = \instance' -> \callback -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyDebugReportCallbackEXT instance' callback pAllocator)
 
 -- | Wrapper for vkDebugReportMessageEXT
-debugReportMessageEXT :: VkInstance ->  VkDebugReportFlagsEXT ->  VkDebugReportObjectTypeEXT ->  Word64 ->  CSize ->  Int32 ->  ByteString ->  ByteString ->  IO ( () )
+debugReportMessageEXT :: VkInstance ->  VkDebugReportFlagsEXT ->  VkDebugReportObjectTypeEXT ->  Word64 ->  CSize ->  Int32 ->  ByteString ->  ByteString ->  IO (  )
 debugReportMessageEXT = \instance' -> \flags -> \objectType -> \object -> \location -> \messageCode -> \layerPrefix -> \message -> useAsCString message (\pMessage -> useAsCString layerPrefix (\pLayerPrefix -> vkDebugReportMessageEXT instance' flags objectType object location messageCode pLayerPrefix pMessage))
 
 -- | Wrapper for vkDebugMarkerSetObjectNameEXT
@@ -1541,15 +1524,15 @@ debugMarkerSetObjectTagEXT :: VkDevice ->  VkDebugMarkerObjectTagInfoEXT ->  IO 
 debugMarkerSetObjectTagEXT = \device -> \tagInfo -> with tagInfo (\pTagInfo -> vkDebugMarkerSetObjectTagEXT device pTagInfo)
 
 -- | Wrapper for vkCmdDebugMarkerBeginEXT
-cmdDebugMarkerBeginEXT :: VkCommandBuffer ->  VkDebugMarkerMarkerInfoEXT ->  IO ( () )
+cmdDebugMarkerBeginEXT :: VkCommandBuffer ->  VkDebugMarkerMarkerInfoEXT ->  IO (  )
 cmdDebugMarkerBeginEXT = \commandBuffer -> \markerInfo -> with markerInfo (\pMarkerInfo -> vkCmdDebugMarkerBeginEXT commandBuffer pMarkerInfo)
 
 -- | Wrapper for vkCmdDebugMarkerEndEXT
-cmdDebugMarkerEndEXT :: VkCommandBuffer ->  IO ( () )
+cmdDebugMarkerEndEXT :: VkCommandBuffer ->  IO (  )
 cmdDebugMarkerEndEXT = \commandBuffer -> vkCmdDebugMarkerEndEXT commandBuffer
 
 -- | Wrapper for vkCmdDebugMarkerInsertEXT
-cmdDebugMarkerInsertEXT :: VkCommandBuffer ->  VkDebugMarkerMarkerInfoEXT ->  IO ( () )
+cmdDebugMarkerInsertEXT :: VkCommandBuffer ->  VkDebugMarkerMarkerInfoEXT ->  IO (  )
 cmdDebugMarkerInsertEXT = \commandBuffer -> \markerInfo -> with markerInfo (\pMarkerInfo -> vkCmdDebugMarkerInsertEXT commandBuffer pMarkerInfo)
 
 -- | Wrapper for vkGetPhysicalDeviceExternalImageFormatPropertiesNV
@@ -1563,19 +1546,19 @@ getMemoryWin32HandleNV :: VkDevice ->  VkDeviceMemory ->  VkExternalMemoryHandle
 getMemoryWin32HandleNV = \device -> \memory -> \handleType -> alloca (\pHandle -> vkGetMemoryWin32HandleNV device memory handleType pHandle >>= (\r -> (,) <$> pure r<*>peek pHandle))
 
 -- | Wrapper for vkCmdDrawIndirectCountAMD
-cmdDrawIndirectCountAMD :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  Word32 ->  IO ( () )
+cmdDrawIndirectCountAMD :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  Word32 ->  IO (  )
 cmdDrawIndirectCountAMD = \commandBuffer -> \buffer -> \offset -> \countBuffer -> \countBufferOffset -> \maxDrawCount -> \stride -> vkCmdDrawIndirectCountAMD commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride
 
 -- | Wrapper for vkCmdDrawIndexedIndirectCountAMD
-cmdDrawIndexedIndirectCountAMD :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  Word32 ->  IO ( () )
+cmdDrawIndexedIndirectCountAMD :: VkCommandBuffer ->  VkBuffer ->  VkDeviceSize ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  Word32 ->  IO (  )
 cmdDrawIndexedIndirectCountAMD = \commandBuffer -> \buffer -> \offset -> \countBuffer -> \countBufferOffset -> \maxDrawCount -> \stride -> vkCmdDrawIndexedIndirectCountAMD commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride
 
 -- | Wrapper for vkCmdProcessCommandsNVX
-cmdProcessCommandsNVX :: VkCommandBuffer ->  VkCmdProcessCommandsInfoNVX ->  IO ( () )
+cmdProcessCommandsNVX :: VkCommandBuffer ->  VkCmdProcessCommandsInfoNVX ->  IO (  )
 cmdProcessCommandsNVX = \commandBuffer -> \processCommandsInfo -> with processCommandsInfo (\pProcessCommandsInfo -> vkCmdProcessCommandsNVX commandBuffer pProcessCommandsInfo)
 
 -- | Wrapper for vkCmdReserveSpaceForCommandsNVX
-cmdReserveSpaceForCommandsNVX :: VkCommandBuffer ->  VkCmdReserveSpaceForCommandsInfoNVX ->  IO ( () )
+cmdReserveSpaceForCommandsNVX :: VkCommandBuffer ->  VkCmdReserveSpaceForCommandsInfoNVX ->  IO (  )
 cmdReserveSpaceForCommandsNVX = \commandBuffer -> \reserveSpaceInfo -> with reserveSpaceInfo (\pReserveSpaceInfo -> vkCmdReserveSpaceForCommandsNVX commandBuffer pReserveSpaceInfo)
 
 -- | Wrapper for vkCreateIndirectCommandsLayoutNVX
@@ -1584,7 +1567,7 @@ createIndirectCommandsLayoutNVX :: VkDevice ->  VkIndirectCommandsLayoutCreateIn
 createIndirectCommandsLayoutNVX = \device -> \createInfo -> \allocator -> alloca (\pIndirectCommandsLayout -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateIndirectCommandsLayoutNVX device pCreateInfo pAllocator pIndirectCommandsLayout >>= (\r -> (,) <$> pure r<*>peek pIndirectCommandsLayout))))
 
 -- | Wrapper for vkDestroyIndirectCommandsLayoutNVX
-destroyIndirectCommandsLayoutNVX :: VkDevice ->  VkIndirectCommandsLayoutNVX ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyIndirectCommandsLayoutNVX :: VkDevice ->  VkIndirectCommandsLayoutNVX ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyIndirectCommandsLayoutNVX = \device -> \indirectCommandsLayout -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyIndirectCommandsLayoutNVX device indirectCommandsLayout pAllocator)
 
 -- | Wrapper for vkCreateObjectTableNVX
@@ -1593,29 +1576,25 @@ createObjectTableNVX :: VkDevice ->  VkObjectTableCreateInfoNVX ->  Maybe VkAllo
 createObjectTableNVX = \device -> \createInfo -> \allocator -> alloca (\pObjectTable -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateObjectTableNVX device pCreateInfo pAllocator pObjectTable >>= (\r -> (,) <$> pure r<*>peek pObjectTable))))
 
 -- | Wrapper for vkDestroyObjectTableNVX
-destroyObjectTableNVX :: VkDevice ->  VkObjectTableNVX ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyObjectTableNVX :: VkDevice ->  VkObjectTableNVX ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyObjectTableNVX = \device -> \objectTable -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyObjectTableNVX device objectTable pAllocator)
 
 -- | Wrapper for vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX
-getPhysicalDeviceGeneratedCommandsPropertiesNVX :: VkPhysicalDevice ->  IO ( ()
-                                                                           , VkDeviceGeneratedCommandsFeaturesNVX
+getPhysicalDeviceGeneratedCommandsPropertiesNVX :: VkPhysicalDevice ->  IO ( VkDeviceGeneratedCommandsFeaturesNVX
                                                                            , VkDeviceGeneratedCommandsLimitsNVX )
-getPhysicalDeviceGeneratedCommandsPropertiesNVX = \physicalDevice -> alloca (\pLimits -> alloca (\pFeatures -> vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX physicalDevice pFeatures pLimits >>= (\r -> (,,) <$> pure r<*>peek pFeatures<*>peek pLimits)))
+getPhysicalDeviceGeneratedCommandsPropertiesNVX = \physicalDevice -> alloca (\pLimits -> alloca (\pFeatures -> vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX physicalDevice pFeatures pLimits *> ((,) <$> peek pFeatures<*>peek pLimits)))
 
 -- | Wrapper for vkGetPhysicalDeviceFeatures2
-getPhysicalDeviceFeatures2 :: VkPhysicalDevice ->  IO ( ()
-                                                      , VkPhysicalDeviceFeatures2 )
-getPhysicalDeviceFeatures2 = \physicalDevice -> alloca (\pFeatures -> vkGetPhysicalDeviceFeatures2 physicalDevice pFeatures >>= (\r -> (,) <$> pure r<*>peek pFeatures))
+getPhysicalDeviceFeatures2 :: VkPhysicalDevice ->  IO ( VkPhysicalDeviceFeatures2 )
+getPhysicalDeviceFeatures2 = \physicalDevice -> alloca (\pFeatures -> vkGetPhysicalDeviceFeatures2 physicalDevice pFeatures *> (peek pFeatures))
 
 -- | Wrapper for vkGetPhysicalDeviceProperties2
-getPhysicalDeviceProperties2 :: VkPhysicalDevice ->  IO ( ()
-                                                        , VkPhysicalDeviceProperties2 )
-getPhysicalDeviceProperties2 = \physicalDevice -> alloca (\pProperties -> vkGetPhysicalDeviceProperties2 physicalDevice pProperties >>= (\r -> (,) <$> pure r<*>peek pProperties))
+getPhysicalDeviceProperties2 :: VkPhysicalDevice ->  IO ( VkPhysicalDeviceProperties2 )
+getPhysicalDeviceProperties2 = \physicalDevice -> alloca (\pProperties -> vkGetPhysicalDeviceProperties2 physicalDevice pProperties *> (peek pProperties))
 
 -- | Wrapper for vkGetPhysicalDeviceFormatProperties2
-getPhysicalDeviceFormatProperties2 :: VkPhysicalDevice ->  VkFormat ->  IO ( ()
-                                                                           , VkFormatProperties2 )
-getPhysicalDeviceFormatProperties2 = \physicalDevice -> \format -> alloca (\pFormatProperties -> vkGetPhysicalDeviceFormatProperties2 physicalDevice format pFormatProperties >>= (\r -> (,) <$> pure r<*>peek pFormatProperties))
+getPhysicalDeviceFormatProperties2 :: VkPhysicalDevice ->  VkFormat ->  IO ( VkFormatProperties2 )
+getPhysicalDeviceFormatProperties2 = \physicalDevice -> \format -> alloca (\pFormatProperties -> vkGetPhysicalDeviceFormatProperties2 physicalDevice format pFormatProperties *> (peek pFormatProperties))
 
 -- | Wrapper for vkGetPhysicalDeviceImageFormatProperties2
 getPhysicalDeviceImageFormatProperties2 :: VkPhysicalDevice ->  VkPhysicalDeviceImageFormatInfo2 ->  IO ( VkResult
@@ -1623,42 +1602,36 @@ getPhysicalDeviceImageFormatProperties2 :: VkPhysicalDevice ->  VkPhysicalDevice
 getPhysicalDeviceImageFormatProperties2 = \physicalDevice -> \imageFormatInfo -> alloca (\pImageFormatProperties -> with imageFormatInfo (\pImageFormatInfo -> vkGetPhysicalDeviceImageFormatProperties2 physicalDevice pImageFormatInfo pImageFormatProperties >>= (\r -> (,) <$> pure r<*>peek pImageFormatProperties)))
 
 -- | Wrapper for vkGetPhysicalDeviceQueueFamilyProperties2
-getNumgetPhysicalDeviceQueueFamilyProperties2 :: VkPhysicalDevice ->  IO ( ()
-                                                                         , Word32 )
-getNumgetPhysicalDeviceQueueFamilyProperties2 = \physicalDevice -> alloca (\pQueueFamilyPropertyCount -> vkGetPhysicalDeviceQueueFamilyProperties2 physicalDevice pQueueFamilyPropertyCount nullPtr >>= (\r -> (,) <$> pure r<*>peek pQueueFamilyPropertyCount))
+getNumgetPhysicalDeviceQueueFamilyProperties2 :: VkPhysicalDevice ->  IO ( Word32 )
+getNumgetPhysicalDeviceQueueFamilyProperties2 = \physicalDevice -> alloca (\pQueueFamilyPropertyCount -> vkGetPhysicalDeviceQueueFamilyProperties2 physicalDevice pQueueFamilyPropertyCount nullPtr *> (peek pQueueFamilyPropertyCount))
 
 -- | Wrapper for vkGetPhysicalDeviceQueueFamilyProperties2
-getPhysicalDeviceQueueFamilyProperties2 :: VkPhysicalDevice ->  Word32 ->  IO ( ()
-                                                                              , Vector VkQueueFamilyProperties2 )
-getPhysicalDeviceQueueFamilyProperties2 = \physicalDevice -> \queueFamilyPropertyCount -> mallocForeignPtrArray (fromIntegral (queueFamilyPropertyCount)) >>= (\fpQueueFamilyProperties -> withForeignPtr fpQueueFamilyProperties (\pQueueFamilyProperties -> with queueFamilyPropertyCount (\pQueueFamilyPropertyCount -> vkGetPhysicalDeviceQueueFamilyProperties2 physicalDevice pQueueFamilyPropertyCount pQueueFamilyProperties >>= (\r -> (,) <$> pure r<*>(unsafeFromForeignPtr0 fpQueueFamilyProperties . fromIntegral <$> peek pQueueFamilyPropertyCount)))))
+getPhysicalDeviceQueueFamilyProperties2 :: VkPhysicalDevice ->  Word32 ->  IO ( Vector VkQueueFamilyProperties2 )
+getPhysicalDeviceQueueFamilyProperties2 = \physicalDevice -> \queueFamilyPropertyCount -> mallocForeignPtrArray (fromIntegral (queueFamilyPropertyCount)) >>= (\fpQueueFamilyProperties -> withForeignPtr fpQueueFamilyProperties (\pQueueFamilyProperties -> with queueFamilyPropertyCount (\pQueueFamilyPropertyCount -> vkGetPhysicalDeviceQueueFamilyProperties2 physicalDevice pQueueFamilyPropertyCount pQueueFamilyProperties *> ((unsafeFromForeignPtr0 fpQueueFamilyProperties . fromIntegral <$> peek pQueueFamilyPropertyCount)))))
 
 -- | Wrapper for vkGetPhysicalDeviceMemoryProperties2
-getPhysicalDeviceMemoryProperties2 :: VkPhysicalDevice ->  IO ( ()
-                                                              , VkPhysicalDeviceMemoryProperties2 )
-getPhysicalDeviceMemoryProperties2 = \physicalDevice -> alloca (\pMemoryProperties -> vkGetPhysicalDeviceMemoryProperties2 physicalDevice pMemoryProperties >>= (\r -> (,) <$> pure r<*>peek pMemoryProperties))
+getPhysicalDeviceMemoryProperties2 :: VkPhysicalDevice ->  IO ( VkPhysicalDeviceMemoryProperties2 )
+getPhysicalDeviceMemoryProperties2 = \physicalDevice -> alloca (\pMemoryProperties -> vkGetPhysicalDeviceMemoryProperties2 physicalDevice pMemoryProperties *> (peek pMemoryProperties))
 
 -- | Wrapper for vkGetPhysicalDeviceSparseImageFormatProperties2
-getNumgetPhysicalDeviceSparseImageFormatProperties2 :: VkPhysicalDevice ->  VkPhysicalDeviceSparseImageFormatInfo2 ->  IO ( ()
-                                                                                                                          , Word32 )
-getNumgetPhysicalDeviceSparseImageFormatProperties2 = \physicalDevice -> \formatInfo -> alloca (\pPropertyCount -> with formatInfo (\pFormatInfo -> vkGetPhysicalDeviceSparseImageFormatProperties2 physicalDevice pFormatInfo pPropertyCount nullPtr >>= (\r -> (,) <$> pure r<*>peek pPropertyCount)))
+getNumgetPhysicalDeviceSparseImageFormatProperties2 :: VkPhysicalDevice ->  VkPhysicalDeviceSparseImageFormatInfo2 ->  IO ( Word32 )
+getNumgetPhysicalDeviceSparseImageFormatProperties2 = \physicalDevice -> \formatInfo -> alloca (\pPropertyCount -> with formatInfo (\pFormatInfo -> vkGetPhysicalDeviceSparseImageFormatProperties2 physicalDevice pFormatInfo pPropertyCount nullPtr *> (peek pPropertyCount)))
 
 -- | Wrapper for vkGetPhysicalDeviceSparseImageFormatProperties2
-getPhysicalDeviceSparseImageFormatProperties2 :: VkPhysicalDevice ->  VkPhysicalDeviceSparseImageFormatInfo2 ->  Word32 ->  IO ( ()
-                                                                                                                               , Vector VkSparseImageFormatProperties2 )
-getPhysicalDeviceSparseImageFormatProperties2 = \physicalDevice -> \formatInfo -> \propertyCount -> mallocForeignPtrArray (fromIntegral (propertyCount)) >>= (\fpProperties -> withForeignPtr fpProperties (\pProperties -> with propertyCount (\pPropertyCount -> with formatInfo (\pFormatInfo -> vkGetPhysicalDeviceSparseImageFormatProperties2 physicalDevice pFormatInfo pPropertyCount pProperties >>= (\r -> (,) <$> pure r<*>(unsafeFromForeignPtr0 fpProperties . fromIntegral <$> peek pPropertyCount))))))
+getPhysicalDeviceSparseImageFormatProperties2 :: VkPhysicalDevice ->  VkPhysicalDeviceSparseImageFormatInfo2 ->  Word32 ->  IO ( Vector VkSparseImageFormatProperties2 )
+getPhysicalDeviceSparseImageFormatProperties2 = \physicalDevice -> \formatInfo -> \propertyCount -> mallocForeignPtrArray (fromIntegral (propertyCount)) >>= (\fpProperties -> withForeignPtr fpProperties (\pProperties -> with propertyCount (\pPropertyCount -> with formatInfo (\pFormatInfo -> vkGetPhysicalDeviceSparseImageFormatProperties2 physicalDevice pFormatInfo pPropertyCount pProperties *> ((unsafeFromForeignPtr0 fpProperties . fromIntegral <$> peek pPropertyCount))))))
 
 -- | Wrapper for vkCmdPushDescriptorSetKHR
-cmdPushDescriptorSetKHR :: VkCommandBuffer ->  VkPipelineBindPoint ->  VkPipelineLayout ->  Word32 ->  Vector VkWriteDescriptorSet ->  IO ( () )
+cmdPushDescriptorSetKHR :: VkCommandBuffer ->  VkPipelineBindPoint ->  VkPipelineLayout ->  Word32 ->  Vector VkWriteDescriptorSet ->  IO (  )
 cmdPushDescriptorSetKHR = \commandBuffer -> \pipelineBindPoint -> \layout -> \set -> \descriptorWrites -> unsafeWith descriptorWrites (\pDescriptorWrites -> vkCmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set (fromIntegral $ Data.Vector.Storable.length descriptorWrites) pDescriptorWrites)
 
 -- | Wrapper for vkTrimCommandPool
-trimCommandPool :: VkDevice ->  VkCommandPool ->  VkCommandPoolTrimFlags ->  IO ( () )
+trimCommandPool :: VkDevice ->  VkCommandPool ->  VkCommandPoolTrimFlags ->  IO (  )
 trimCommandPool = \device -> \commandPool -> \flags -> vkTrimCommandPool device commandPool flags
 
 -- | Wrapper for vkGetPhysicalDeviceExternalBufferProperties
-getPhysicalDeviceExternalBufferProperties :: VkPhysicalDevice ->  VkPhysicalDeviceExternalBufferInfo ->  IO ( ()
-                                                                                                            , VkExternalBufferProperties )
-getPhysicalDeviceExternalBufferProperties = \physicalDevice -> \externalBufferInfo -> alloca (\pExternalBufferProperties -> with externalBufferInfo (\pExternalBufferInfo -> vkGetPhysicalDeviceExternalBufferProperties physicalDevice pExternalBufferInfo pExternalBufferProperties >>= (\r -> (,) <$> pure r<*>peek pExternalBufferProperties)))
+getPhysicalDeviceExternalBufferProperties :: VkPhysicalDevice ->  VkPhysicalDeviceExternalBufferInfo ->  IO ( VkExternalBufferProperties )
+getPhysicalDeviceExternalBufferProperties = \physicalDevice -> \externalBufferInfo -> alloca (\pExternalBufferProperties -> with externalBufferInfo (\pExternalBufferInfo -> vkGetPhysicalDeviceExternalBufferProperties physicalDevice pExternalBufferInfo pExternalBufferProperties *> (peek pExternalBufferProperties)))
 
 -- | Wrapper for vkGetMemoryWin32HandleKHR
 getMemoryWin32HandleKHR :: VkDevice ->  VkMemoryGetWin32HandleInfoKHR ->  IO ( VkResult
@@ -1681,9 +1654,8 @@ getMemoryFdPropertiesKHR :: VkDevice ->  VkExternalMemoryHandleTypeFlagBits ->  
 getMemoryFdPropertiesKHR = \device -> \handleType -> \fd -> alloca (\pMemoryFdProperties -> vkGetMemoryFdPropertiesKHR device handleType fd pMemoryFdProperties >>= (\r -> (,) <$> pure r<*>peek pMemoryFdProperties))
 
 -- | Wrapper for vkGetPhysicalDeviceExternalSemaphoreProperties
-getPhysicalDeviceExternalSemaphoreProperties :: VkPhysicalDevice ->  VkPhysicalDeviceExternalSemaphoreInfo ->  IO ( ()
-                                                                                                                  , VkExternalSemaphoreProperties )
-getPhysicalDeviceExternalSemaphoreProperties = \physicalDevice -> \externalSemaphoreInfo -> alloca (\pExternalSemaphoreProperties -> with externalSemaphoreInfo (\pExternalSemaphoreInfo -> vkGetPhysicalDeviceExternalSemaphoreProperties physicalDevice pExternalSemaphoreInfo pExternalSemaphoreProperties >>= (\r -> (,) <$> pure r<*>peek pExternalSemaphoreProperties)))
+getPhysicalDeviceExternalSemaphoreProperties :: VkPhysicalDevice ->  VkPhysicalDeviceExternalSemaphoreInfo ->  IO ( VkExternalSemaphoreProperties )
+getPhysicalDeviceExternalSemaphoreProperties = \physicalDevice -> \externalSemaphoreInfo -> alloca (\pExternalSemaphoreProperties -> with externalSemaphoreInfo (\pExternalSemaphoreInfo -> vkGetPhysicalDeviceExternalSemaphoreProperties physicalDevice pExternalSemaphoreInfo pExternalSemaphoreProperties *> (peek pExternalSemaphoreProperties)))
 
 -- | Wrapper for vkGetSemaphoreWin32HandleKHR
 getSemaphoreWin32HandleKHR :: VkDevice ->  VkSemaphoreGetWin32HandleInfoKHR ->  IO ( VkResult
@@ -1704,9 +1676,8 @@ importSemaphoreFdKHR :: VkDevice ->  VkImportSemaphoreFdInfoKHR ->  IO ( VkResul
 importSemaphoreFdKHR = \device -> \importSemaphoreFdInfo -> with importSemaphoreFdInfo (\pImportSemaphoreFdInfo -> vkImportSemaphoreFdKHR device pImportSemaphoreFdInfo)
 
 -- | Wrapper for vkGetPhysicalDeviceExternalFenceProperties
-getPhysicalDeviceExternalFenceProperties :: VkPhysicalDevice ->  VkPhysicalDeviceExternalFenceInfo ->  IO ( ()
-                                                                                                          , VkExternalFenceProperties )
-getPhysicalDeviceExternalFenceProperties = \physicalDevice -> \externalFenceInfo -> alloca (\pExternalFenceProperties -> with externalFenceInfo (\pExternalFenceInfo -> vkGetPhysicalDeviceExternalFenceProperties physicalDevice pExternalFenceInfo pExternalFenceProperties >>= (\r -> (,) <$> pure r<*>peek pExternalFenceProperties)))
+getPhysicalDeviceExternalFenceProperties :: VkPhysicalDevice ->  VkPhysicalDeviceExternalFenceInfo ->  IO ( VkExternalFenceProperties )
+getPhysicalDeviceExternalFenceProperties = \physicalDevice -> \externalFenceInfo -> alloca (\pExternalFenceProperties -> with externalFenceInfo (\pExternalFenceInfo -> vkGetPhysicalDeviceExternalFenceProperties physicalDevice pExternalFenceInfo pExternalFenceProperties *> (peek pExternalFenceProperties)))
 
 -- | Wrapper for vkGetFenceWin32HandleKHR
 getFenceWin32HandleKHR :: VkDevice ->  VkFenceGetWin32HandleInfoKHR ->  IO ( VkResult
@@ -1776,9 +1747,8 @@ enumeratePhysicalDeviceGroups :: VkInstance ->  Word32 ->  IO ( VkResult
 enumeratePhysicalDeviceGroups = \instance' -> \physicalDeviceGroupCount -> mallocForeignPtrArray (fromIntegral (physicalDeviceGroupCount)) >>= (\fpPhysicalDeviceGroupProperties -> withForeignPtr fpPhysicalDeviceGroupProperties (\pPhysicalDeviceGroupProperties -> with physicalDeviceGroupCount (\pPhysicalDeviceGroupCount -> vkEnumeratePhysicalDeviceGroups instance' pPhysicalDeviceGroupCount pPhysicalDeviceGroupProperties >>= (\r -> (,) <$> pure r<*>(unsafeFromForeignPtr0 fpPhysicalDeviceGroupProperties . fromIntegral <$> peek pPhysicalDeviceGroupCount)))))
 
 -- | Wrapper for vkGetDeviceGroupPeerMemoryFeatures
-getDeviceGroupPeerMemoryFeatures :: VkDevice ->  Word32 ->  Word32 ->  Word32 ->  IO ( ()
-                                                                                     , VkPeerMemoryFeatureFlags )
-getDeviceGroupPeerMemoryFeatures = \device -> \heapIndex -> \localDeviceIndex -> \remoteDeviceIndex -> alloca (\pPeerMemoryFeatures -> vkGetDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex pPeerMemoryFeatures >>= (\r -> (,) <$> pure r<*>peek pPeerMemoryFeatures))
+getDeviceGroupPeerMemoryFeatures :: VkDevice ->  Word32 ->  Word32 ->  Word32 ->  IO ( VkPeerMemoryFeatureFlags )
+getDeviceGroupPeerMemoryFeatures = \device -> \heapIndex -> \localDeviceIndex -> \remoteDeviceIndex -> alloca (\pPeerMemoryFeatures -> vkGetDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex pPeerMemoryFeatures *> (peek pPeerMemoryFeatures))
 
 -- | Wrapper for vkBindBufferMemory2
 bindBufferMemory2 :: VkDevice ->  Vector VkBindBufferMemoryInfo ->  IO ( VkResult )
@@ -1789,7 +1759,7 @@ bindImageMemory2 :: VkDevice ->  Vector VkBindImageMemoryInfo ->  IO ( VkResult 
 bindImageMemory2 = \device -> \bindInfos -> unsafeWith bindInfos (\pBindInfos -> vkBindImageMemory2 device (fromIntegral $ Data.Vector.Storable.length bindInfos) pBindInfos)
 
 -- | Wrapper for vkCmdSetDeviceMask
-cmdSetDeviceMask :: VkCommandBuffer ->  Word32 ->  IO ( () )
+cmdSetDeviceMask :: VkCommandBuffer ->  Word32 ->  IO (  )
 cmdSetDeviceMask = \commandBuffer -> \deviceMask -> vkCmdSetDeviceMask commandBuffer deviceMask
 
 -- | Wrapper for vkGetDeviceGroupPresentCapabilitiesKHR
@@ -1808,7 +1778,7 @@ acquireNextImage2KHR :: VkDevice ->  VkAcquireNextImageInfoKHR ->  IO ( VkResult
 acquireNextImage2KHR = \device -> \acquireInfo -> alloca (\pImageIndex -> with acquireInfo (\pAcquireInfo -> vkAcquireNextImage2KHR device pAcquireInfo pImageIndex >>= (\r -> (,) <$> pure r<*>peek pImageIndex)))
 
 -- | Wrapper for vkCmdDispatchBase
-cmdDispatchBase :: VkCommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO ( () )
+cmdDispatchBase :: VkCommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO (  )
 cmdDispatchBase = \commandBuffer -> \baseGroupX -> \baseGroupY -> \baseGroupZ -> \groupCountX -> \groupCountY -> \groupCountZ -> vkCmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ
 
 -- | Wrapper for vkGetPhysicalDevicePresentRectanglesKHR
@@ -1827,7 +1797,7 @@ createDescriptorUpdateTemplate :: VkDevice ->  VkDescriptorUpdateTemplateCreateI
 createDescriptorUpdateTemplate = \device -> \createInfo -> \allocator -> alloca (\pDescriptorUpdateTemplate -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateDescriptorUpdateTemplate device pCreateInfo pAllocator pDescriptorUpdateTemplate >>= (\r -> (,) <$> pure r<*>peek pDescriptorUpdateTemplate))))
 
 -- | Wrapper for vkDestroyDescriptorUpdateTemplate
-destroyDescriptorUpdateTemplate :: VkDevice ->  VkDescriptorUpdateTemplate ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyDescriptorUpdateTemplate :: VkDevice ->  VkDescriptorUpdateTemplate ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyDescriptorUpdateTemplate = \device -> \descriptorUpdateTemplate -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyDescriptorUpdateTemplate device descriptorUpdateTemplate pAllocator)
 
 -- | Wrapper for vkGetSwapchainStatusKHR
@@ -1860,21 +1830,20 @@ createMacOSSurfaceMVK :: VkInstance ->  VkMacOSSurfaceCreateInfoMVK ->  Maybe Vk
 createMacOSSurfaceMVK = \instance' -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateMacOSSurfaceMVK instance' pCreateInfo pAllocator pSurface >>= (\r -> (,) <$> pure r<*>peek pSurface))))
 
 -- | Wrapper for vkCmdSetViewportWScalingNV
-cmdSetViewportWScalingNV :: VkCommandBuffer ->  Word32 ->  Vector VkViewportWScalingNV ->  IO ( () )
+cmdSetViewportWScalingNV :: VkCommandBuffer ->  Word32 ->  Vector VkViewportWScalingNV ->  IO (  )
 cmdSetViewportWScalingNV = \commandBuffer -> \firstViewport -> \viewportWScalings -> unsafeWith viewportWScalings (\pViewportWScalings -> vkCmdSetViewportWScalingNV commandBuffer firstViewport (fromIntegral $ Data.Vector.Storable.length viewportWScalings) pViewportWScalings)
 
 -- | Wrapper for vkCmdSetDiscardRectangleEXT
-cmdSetDiscardRectangleEXT :: VkCommandBuffer ->  Word32 ->  Vector VkRect2D ->  IO ( () )
+cmdSetDiscardRectangleEXT :: VkCommandBuffer ->  Word32 ->  Vector VkRect2D ->  IO (  )
 cmdSetDiscardRectangleEXT = \commandBuffer -> \firstDiscardRectangle -> \discardRectangles -> unsafeWith discardRectangles (\pDiscardRectangles -> vkCmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle (fromIntegral $ Data.Vector.Storable.length discardRectangles) pDiscardRectangles)
 
 -- | Wrapper for vkCmdSetSampleLocationsEXT
-cmdSetSampleLocationsEXT :: VkCommandBuffer ->  VkSampleLocationsInfoEXT ->  IO ( () )
+cmdSetSampleLocationsEXT :: VkCommandBuffer ->  VkSampleLocationsInfoEXT ->  IO (  )
 cmdSetSampleLocationsEXT = \commandBuffer -> \sampleLocationsInfo -> with sampleLocationsInfo (\pSampleLocationsInfo -> vkCmdSetSampleLocationsEXT commandBuffer pSampleLocationsInfo)
 
 -- | Wrapper for vkGetPhysicalDeviceMultisamplePropertiesEXT
-getPhysicalDeviceMultisamplePropertiesEXT :: VkPhysicalDevice ->  VkSampleCountFlagBits ->  IO ( ()
-                                                                                               , VkMultisamplePropertiesEXT )
-getPhysicalDeviceMultisamplePropertiesEXT = \physicalDevice -> \samples -> alloca (\pMultisampleProperties -> vkGetPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples pMultisampleProperties >>= (\r -> (,) <$> pure r<*>peek pMultisampleProperties))
+getPhysicalDeviceMultisamplePropertiesEXT :: VkPhysicalDevice ->  VkSampleCountFlagBits ->  IO ( VkMultisamplePropertiesEXT )
+getPhysicalDeviceMultisamplePropertiesEXT = \physicalDevice -> \samples -> alloca (\pMultisampleProperties -> vkGetPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples pMultisampleProperties *> (peek pMultisampleProperties))
 
 -- | Wrapper for vkGetPhysicalDeviceSurfaceCapabilities2KHR
 getPhysicalDeviceSurfaceCapabilities2KHR :: VkPhysicalDevice ->  VkPhysicalDeviceSurfaceInfo2KHR ->  IO ( VkResult
@@ -1892,24 +1861,20 @@ getPhysicalDeviceSurfaceFormats2KHR :: VkPhysicalDevice ->  VkPhysicalDeviceSurf
 getPhysicalDeviceSurfaceFormats2KHR = \physicalDevice -> \surfaceInfo -> \surfaceFormatCount -> mallocForeignPtrArray (fromIntegral (surfaceFormatCount)) >>= (\fpSurfaceFormats -> withForeignPtr fpSurfaceFormats (\pSurfaceFormats -> with surfaceFormatCount (\pSurfaceFormatCount -> with surfaceInfo (\pSurfaceInfo -> vkGetPhysicalDeviceSurfaceFormats2KHR physicalDevice pSurfaceInfo pSurfaceFormatCount pSurfaceFormats >>= (\r -> (,) <$> pure r<*>(unsafeFromForeignPtr0 fpSurfaceFormats . fromIntegral <$> peek pSurfaceFormatCount))))))
 
 -- | Wrapper for vkGetBufferMemoryRequirements2
-getBufferMemoryRequirements2 :: VkDevice ->  VkBufferMemoryRequirementsInfo2 ->  IO ( ()
-                                                                                    , VkMemoryRequirements2 )
-getBufferMemoryRequirements2 = \device -> \info -> alloca (\pMemoryRequirements -> with info (\pInfo -> vkGetBufferMemoryRequirements2 device pInfo pMemoryRequirements >>= (\r -> (,) <$> pure r<*>peek pMemoryRequirements)))
+getBufferMemoryRequirements2 :: VkDevice ->  VkBufferMemoryRequirementsInfo2 ->  IO ( VkMemoryRequirements2 )
+getBufferMemoryRequirements2 = \device -> \info -> alloca (\pMemoryRequirements -> with info (\pInfo -> vkGetBufferMemoryRequirements2 device pInfo pMemoryRequirements *> (peek pMemoryRequirements)))
 
 -- | Wrapper for vkGetImageMemoryRequirements2
-getImageMemoryRequirements2 :: VkDevice ->  VkImageMemoryRequirementsInfo2 ->  IO ( ()
-                                                                                  , VkMemoryRequirements2 )
-getImageMemoryRequirements2 = \device -> \info -> alloca (\pMemoryRequirements -> with info (\pInfo -> vkGetImageMemoryRequirements2 device pInfo pMemoryRequirements >>= (\r -> (,) <$> pure r<*>peek pMemoryRequirements)))
+getImageMemoryRequirements2 :: VkDevice ->  VkImageMemoryRequirementsInfo2 ->  IO ( VkMemoryRequirements2 )
+getImageMemoryRequirements2 = \device -> \info -> alloca (\pMemoryRequirements -> with info (\pInfo -> vkGetImageMemoryRequirements2 device pInfo pMemoryRequirements *> (peek pMemoryRequirements)))
 
 -- | Wrapper for vkGetImageSparseMemoryRequirements2
-getNumgetImageSparseMemoryRequirements2 :: VkDevice ->  VkImageSparseMemoryRequirementsInfo2 ->  IO ( ()
-                                                                                                    , Word32 )
-getNumgetImageSparseMemoryRequirements2 = \device -> \info -> alloca (\pSparseMemoryRequirementCount -> with info (\pInfo -> vkGetImageSparseMemoryRequirements2 device pInfo pSparseMemoryRequirementCount nullPtr >>= (\r -> (,) <$> pure r<*>peek pSparseMemoryRequirementCount)))
+getNumgetImageSparseMemoryRequirements2 :: VkDevice ->  VkImageSparseMemoryRequirementsInfo2 ->  IO ( Word32 )
+getNumgetImageSparseMemoryRequirements2 = \device -> \info -> alloca (\pSparseMemoryRequirementCount -> with info (\pInfo -> vkGetImageSparseMemoryRequirements2 device pInfo pSparseMemoryRequirementCount nullPtr *> (peek pSparseMemoryRequirementCount)))
 
 -- | Wrapper for vkGetImageSparseMemoryRequirements2
-getImageSparseMemoryRequirements2 :: VkDevice ->  VkImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO ( ()
-                                                                                                         , Vector VkSparseImageMemoryRequirements2 )
-getImageSparseMemoryRequirements2 = \device -> \info -> \sparseMemoryRequirementCount -> mallocForeignPtrArray (fromIntegral (sparseMemoryRequirementCount)) >>= (\fpSparseMemoryRequirements -> withForeignPtr fpSparseMemoryRequirements (\pSparseMemoryRequirements -> with sparseMemoryRequirementCount (\pSparseMemoryRequirementCount -> with info (\pInfo -> vkGetImageSparseMemoryRequirements2 device pInfo pSparseMemoryRequirementCount pSparseMemoryRequirements >>= (\r -> (,) <$> pure r<*>(unsafeFromForeignPtr0 fpSparseMemoryRequirements . fromIntegral <$> peek pSparseMemoryRequirementCount))))))
+getImageSparseMemoryRequirements2 :: VkDevice ->  VkImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO ( Vector VkSparseImageMemoryRequirements2 )
+getImageSparseMemoryRequirements2 = \device -> \info -> \sparseMemoryRequirementCount -> mallocForeignPtrArray (fromIntegral (sparseMemoryRequirementCount)) >>= (\fpSparseMemoryRequirements -> withForeignPtr fpSparseMemoryRequirements (\pSparseMemoryRequirements -> with sparseMemoryRequirementCount (\pSparseMemoryRequirementCount -> with info (\pInfo -> vkGetImageSparseMemoryRequirements2 device pInfo pSparseMemoryRequirementCount pSparseMemoryRequirements *> ((unsafeFromForeignPtr0 fpSparseMemoryRequirements . fromIntegral <$> peek pSparseMemoryRequirementCount))))))
 
 -- | Wrapper for vkCreateSamplerYcbcrConversion
 createSamplerYcbcrConversion :: VkDevice ->  VkSamplerYcbcrConversionCreateInfo ->  Maybe VkAllocationCallbacks ->  IO ( VkResult
@@ -1917,13 +1882,12 @@ createSamplerYcbcrConversion :: VkDevice ->  VkSamplerYcbcrConversionCreateInfo 
 createSamplerYcbcrConversion = \device -> \createInfo -> \allocator -> alloca (\pYcbcrConversion -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateSamplerYcbcrConversion device pCreateInfo pAllocator pYcbcrConversion >>= (\r -> (,) <$> pure r<*>peek pYcbcrConversion))))
 
 -- | Wrapper for vkDestroySamplerYcbcrConversion
-destroySamplerYcbcrConversion :: VkDevice ->  VkSamplerYcbcrConversion ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroySamplerYcbcrConversion :: VkDevice ->  VkSamplerYcbcrConversion ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroySamplerYcbcrConversion = \device -> \ycbcrConversion -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroySamplerYcbcrConversion device ycbcrConversion pAllocator)
 
 -- | Wrapper for vkGetDeviceQueue2
-getDeviceQueue2 :: VkDevice ->  VkDeviceQueueInfo2 ->  IO ( ()
-                                                          , VkQueue )
-getDeviceQueue2 = \device -> \queueInfo -> alloca (\pQueue -> with queueInfo (\pQueueInfo -> vkGetDeviceQueue2 device pQueueInfo pQueue >>= (\r -> (,) <$> pure r<*>peek pQueue)))
+getDeviceQueue2 :: VkDevice ->  VkDeviceQueueInfo2 ->  IO ( VkQueue )
+getDeviceQueue2 = \device -> \queueInfo -> alloca (\pQueue -> with queueInfo (\pQueueInfo -> vkGetDeviceQueue2 device pQueueInfo pQueue *> (peek pQueue)))
 
 -- | Wrapper for vkCreateValidationCacheEXT
 createValidationCacheEXT :: VkDevice ->  VkValidationCacheCreateInfoEXT ->  Maybe VkAllocationCallbacks ->  IO ( VkResult
@@ -1931,7 +1895,7 @@ createValidationCacheEXT :: VkDevice ->  VkValidationCacheCreateInfoEXT ->  Mayb
 createValidationCacheEXT = \device -> \createInfo -> \allocator -> alloca (\pValidationCache -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateValidationCacheEXT device pCreateInfo pAllocator pValidationCache >>= (\r -> (,) <$> pure r<*>peek pValidationCache))))
 
 -- | Wrapper for vkDestroyValidationCacheEXT
-destroyValidationCacheEXT :: VkDevice ->  VkValidationCacheEXT ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyValidationCacheEXT :: VkDevice ->  VkValidationCacheEXT ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyValidationCacheEXT = \device -> \validationCache -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyValidationCacheEXT device validationCache pAllocator)
 
 -- | Wrapper for vkMergeValidationCachesEXT
@@ -1939,9 +1903,8 @@ mergeValidationCachesEXT :: VkDevice ->  VkValidationCacheEXT ->  Vector VkValid
 mergeValidationCachesEXT = \device -> \dstCache -> \srcCaches -> unsafeWith srcCaches (\pSrcCaches -> vkMergeValidationCachesEXT device dstCache (fromIntegral $ Data.Vector.Storable.length srcCaches) pSrcCaches)
 
 -- | Wrapper for vkGetDescriptorSetLayoutSupport
-getDescriptorSetLayoutSupport :: VkDevice ->  VkDescriptorSetLayoutCreateInfo ->  IO ( ()
-                                                                                     , VkDescriptorSetLayoutSupport )
-getDescriptorSetLayoutSupport = \device -> \createInfo -> alloca (\pSupport -> with createInfo (\pCreateInfo -> vkGetDescriptorSetLayoutSupport device pCreateInfo pSupport >>= (\r -> (,) <$> pure r<*>peek pSupport)))
+getDescriptorSetLayoutSupport :: VkDevice ->  VkDescriptorSetLayoutCreateInfo ->  IO ( VkDescriptorSetLayoutSupport )
+getDescriptorSetLayoutSupport = \device -> \createInfo -> alloca (\pSupport -> with createInfo (\pCreateInfo -> vkGetDescriptorSetLayoutSupport device pCreateInfo pSupport *> (peek pSupport)))
 
 -- | Wrapper for vkSetDebugUtilsObjectNameEXT
 setDebugUtilsObjectNameEXT :: VkDevice ->  VkDebugUtilsObjectNameInfoEXT ->  IO ( VkResult )
@@ -1952,27 +1915,27 @@ setDebugUtilsObjectTagEXT :: VkDevice ->  VkDebugUtilsObjectTagInfoEXT ->  IO ( 
 setDebugUtilsObjectTagEXT = \device -> \tagInfo -> with tagInfo (\pTagInfo -> vkSetDebugUtilsObjectTagEXT device pTagInfo)
 
 -- | Wrapper for vkQueueBeginDebugUtilsLabelEXT
-queueBeginDebugUtilsLabelEXT :: VkQueue ->  VkDebugUtilsLabelEXT ->  IO ( () )
+queueBeginDebugUtilsLabelEXT :: VkQueue ->  VkDebugUtilsLabelEXT ->  IO (  )
 queueBeginDebugUtilsLabelEXT = \queue -> \labelInfo -> with labelInfo (\pLabelInfo -> vkQueueBeginDebugUtilsLabelEXT queue pLabelInfo)
 
 -- | Wrapper for vkQueueEndDebugUtilsLabelEXT
-queueEndDebugUtilsLabelEXT :: VkQueue ->  IO ( () )
+queueEndDebugUtilsLabelEXT :: VkQueue ->  IO (  )
 queueEndDebugUtilsLabelEXT = \queue -> vkQueueEndDebugUtilsLabelEXT queue
 
 -- | Wrapper for vkQueueInsertDebugUtilsLabelEXT
-queueInsertDebugUtilsLabelEXT :: VkQueue ->  VkDebugUtilsLabelEXT ->  IO ( () )
+queueInsertDebugUtilsLabelEXT :: VkQueue ->  VkDebugUtilsLabelEXT ->  IO (  )
 queueInsertDebugUtilsLabelEXT = \queue -> \labelInfo -> with labelInfo (\pLabelInfo -> vkQueueInsertDebugUtilsLabelEXT queue pLabelInfo)
 
 -- | Wrapper for vkCmdBeginDebugUtilsLabelEXT
-cmdBeginDebugUtilsLabelEXT :: VkCommandBuffer ->  VkDebugUtilsLabelEXT ->  IO ( () )
+cmdBeginDebugUtilsLabelEXT :: VkCommandBuffer ->  VkDebugUtilsLabelEXT ->  IO (  )
 cmdBeginDebugUtilsLabelEXT = \commandBuffer -> \labelInfo -> with labelInfo (\pLabelInfo -> vkCmdBeginDebugUtilsLabelEXT commandBuffer pLabelInfo)
 
 -- | Wrapper for vkCmdEndDebugUtilsLabelEXT
-cmdEndDebugUtilsLabelEXT :: VkCommandBuffer ->  IO ( () )
+cmdEndDebugUtilsLabelEXT :: VkCommandBuffer ->  IO (  )
 cmdEndDebugUtilsLabelEXT = \commandBuffer -> vkCmdEndDebugUtilsLabelEXT commandBuffer
 
 -- | Wrapper for vkCmdInsertDebugUtilsLabelEXT
-cmdInsertDebugUtilsLabelEXT :: VkCommandBuffer ->  VkDebugUtilsLabelEXT ->  IO ( () )
+cmdInsertDebugUtilsLabelEXT :: VkCommandBuffer ->  VkDebugUtilsLabelEXT ->  IO (  )
 cmdInsertDebugUtilsLabelEXT = \commandBuffer -> \labelInfo -> with labelInfo (\pLabelInfo -> vkCmdInsertDebugUtilsLabelEXT commandBuffer pLabelInfo)
 
 -- | Wrapper for vkCreateDebugUtilsMessengerEXT
@@ -1981,18 +1944,18 @@ createDebugUtilsMessengerEXT :: VkInstance ->  VkDebugUtilsMessengerCreateInfoEX
 createDebugUtilsMessengerEXT = \instance' -> \createInfo -> \allocator -> alloca (\pMessenger -> maybeWith with allocator (\pAllocator -> with createInfo (\pCreateInfo -> vkCreateDebugUtilsMessengerEXT instance' pCreateInfo pAllocator pMessenger >>= (\r -> (,) <$> pure r<*>peek pMessenger))))
 
 -- | Wrapper for vkDestroyDebugUtilsMessengerEXT
-destroyDebugUtilsMessengerEXT :: VkInstance ->  VkDebugUtilsMessengerEXT ->  Maybe VkAllocationCallbacks ->  IO ( () )
+destroyDebugUtilsMessengerEXT :: VkInstance ->  VkDebugUtilsMessengerEXT ->  Maybe VkAllocationCallbacks ->  IO (  )
 destroyDebugUtilsMessengerEXT = \instance' -> \messenger -> \allocator -> maybeWith with allocator (\pAllocator -> vkDestroyDebugUtilsMessengerEXT instance' messenger pAllocator)
 
 -- | Wrapper for vkSubmitDebugUtilsMessageEXT
-submitDebugUtilsMessageEXT :: VkInstance ->  VkDebugUtilsMessageSeverityFlagBitsEXT ->  VkDebugUtilsMessageTypeFlagsEXT ->  VkDebugUtilsMessengerCallbackDataEXT ->  IO ( () )
+submitDebugUtilsMessageEXT :: VkInstance ->  VkDebugUtilsMessageSeverityFlagBitsEXT ->  VkDebugUtilsMessageTypeFlagsEXT ->  VkDebugUtilsMessengerCallbackDataEXT ->  IO (  )
 submitDebugUtilsMessageEXT = \instance' -> \messageSeverity -> \messageTypes -> \callbackData -> with callbackData (\pCallbackData -> vkSubmitDebugUtilsMessageEXT instance' messageSeverity messageTypes pCallbackData)
 
 -- | Wrapper for vkCmdWriteBufferMarkerAMD
-cmdWriteBufferMarkerAMD :: VkCommandBuffer ->  VkPipelineStageFlagBits ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  IO ( () )
+cmdWriteBufferMarkerAMD :: VkCommandBuffer ->  VkPipelineStageFlagBits ->  VkBuffer ->  VkDeviceSize ->  Word32 ->  IO (  )
 cmdWriteBufferMarkerAMD = \commandBuffer -> \pipelineStage -> \dstBuffer -> \dstOffset -> \marker -> vkCmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker
 
 -- | Wrapper for vkGetAndroidHardwareBufferPropertiesANDROID
-getAndroidHardwareBufferPropertiesANDROID :: VkDevice ->  AHardwareBuffer ->  IO ( VkResult
-                                                                                 , VkAndroidHardwareBufferPropertiesANDROID )
-getAndroidHardwareBufferPropertiesANDROID = \device -> \buffer -> alloca (\pProperties -> with buffer (\pBuffer -> vkGetAndroidHardwareBufferPropertiesANDROID device pBuffer pProperties >>= (\r -> (,) <$> pure r<*>peek pProperties)))
+getAndroidHardwareBufferPropertiesANDROID :: VkDevice ->  Ptr AHardwareBuffer ->  IO ( VkResult
+                                                                                     , VkAndroidHardwareBufferPropertiesANDROID )
+getAndroidHardwareBufferPropertiesANDROID = \device -> \buffer -> alloca (\pProperties -> vkGetAndroidHardwareBufferPropertiesANDROID device buffer pProperties >>= (\r -> (,) <$> pure r<*>peek pProperties))

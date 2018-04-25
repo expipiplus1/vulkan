@@ -76,8 +76,10 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
 
 -- No documentation found for TopLevel "HINSTANCE"
 type HINSTANCE = Ptr ()
+  
 -- No documentation found for TopLevel "HWND"
 type HWND = Ptr ()
+  
 -- ** VkWin32SurfaceCreateFlagsKHR
 
 -- No documentation found for TopLevel "VkWin32SurfaceCreateFlagsKHR"

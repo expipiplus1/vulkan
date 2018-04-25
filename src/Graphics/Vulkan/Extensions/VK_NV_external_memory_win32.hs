@@ -56,10 +56,12 @@ import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
 
 -- No documentation found for TopLevel "HANDLE"
 type HANDLE = Ptr ()
+  
 -- | Opaque data
 data SECURITY_ATTRIBUTES
 -- No documentation found for TopLevel "DWORD"
 type DWORD = Word32
+  
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV"
 pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV = VkStructureType 1000057000
