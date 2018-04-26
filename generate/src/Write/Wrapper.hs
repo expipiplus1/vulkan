@@ -38,6 +38,9 @@ import qualified Spec.Savvy.Type.Haskell                  as H
 
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
+import           Write.Marshal.Monad
+import           Write.Marshal.Util
+import           Write.Marshal.Wrap
 import           Write.Struct
 import           Write.Util
 
@@ -47,89 +50,16 @@ commandWrapper
   -> (Text -> Bool)
   -- ^ Is this the name of a bitmask type
   -> Command
-  -> Either Text WriteElement
+  -> Either [SpecError] WriteElement
 commandWrapper isHandle isBitmask command = do
   let weName = cName command T.<+> "wrapper"
       isDefaultable t =
         maybe False (isHandle <||> isBitmask) (simpleTypeName t)
   (weDoc, (weImports, weProvides, weDepends, weExtensions, _)) <- either
-    (throwError . (cName command T.<+>))
+    (throwError . fmap (WithContext (cName command)))
     (pure . first (const . vcat))
     (runWrap $ wrapCommand isDefaultable command)
   pure WriteElement {..}
-
-----------------------------------------------------------------
--- Monad for wrapping
-----------------------------------------------------------------
-
-type Extension = Text
-type Constraint = Text
-type WriteState = ([Import], [Guarded Export], [Guarded HaskellName], [Extension], [Constraint])
-
-getConstraints :: WriteState -> [Constraint]
-getConstraints (_,_,_,_,cs) = cs
-
-type WrapM = WriterT WriteState (Except Text)
-
-runWrap
-  :: WrapM a
-  -> Either Text (a, WriteState)
-runWrap = runExcept . runWriterT
-
-tellImport
-  :: Text
-  -- ^ Module
-  -> Text
-  -- ^ Value
-  -> WrapM ()
-tellImport m v = tell ([Import m [v]], [], [], [], [])
-
-tellQualifiedImport
-  :: Text
-  -- ^ Module
-  -> Text
-  -- ^ Value
-  -> WrapM ()
-tellQualifiedImport m v = tell ([QualifiedImport m [v]], [], [], [], [])
-
-tellImports
-  :: [Import]
-  -> WrapM ()
-tellImports is = tell (is, [], [], [], [])
-
-tellExport
-  :: Guarded Export
-  -> WrapM ()
-tellExport e = tell ([], [e], [], [], [])
-
-tellDepend
-  :: Guarded HaskellName
-  -> WrapM ()
-tellDepend d = tell ([], [], [d], [], [])
-
-tellDepends
-  :: [Guarded HaskellName]
-  -> WrapM ()
-tellDepends ds = tell ([], [], ds, [], [])
-
-tellExtension
-  :: Text
-  -> WrapM ()
-tellExtension e = tell ([], [], [], [e], [])
-
-tellConstraint
-  :: Text
-  -> WrapM ()
-tellConstraint c = tell ([], [], [], [], [c])
-
-toHsType :: Type -> WrapM (Doc ())
-toHsType t = case H.toHsType t of
-  Left es -> throwError ("Failure making Haskell type: " <> T.tShow es)
-  Right (d, (is, es)) -> do
-    tell (is, [], [], es, [])
-    -- TODO: This is a bit of a hack
-    tellDepends (Unguarded <$> typeDepends t)
-    pure d
 
 ----------------------------------------------------------------
 -- The wrapping commands
@@ -227,19 +157,19 @@ parametersToWrappingTypes isDefaultable maybeCommandUsage lengthPairs ps =
     parameterToWrappingType p
       | Just vectors <- nonMemberLengthMap (pName p)
       , length [ () | Parameter _ (Ptr Const _) _ _ <- vectors ] > 1
-      = throwError "More then two input vectors with same length specifier"
+      = throwError [Other "More then two input vectors with same length specifier"]
       | otherwise
       = let name = pName p
         in
           case pType p of
-            Void -> throwError "void parameter"
+            Void -> throwError [Other "void parameter"]
             Array Const (NumericArraySize n) t
               | n >= 2, isSimpleType t, Nothing <- pIsOptional p -> do
                 tyName <- toHsType t
                 (w, _) <- tupleWrap n (pName p)
                 pure $ InputType (Input name (tupleTy n tyName)) w
-            Array{}   -> throwError "array parameter"
-            Proto _ _ -> throwError "proto paramter"
+            Array{}   -> throwError [Other "array parameter"]
+            Proto _ _ -> throwError [Other "proto paramter"]
             t
               | -- The length of an array of typed values, length is given in
                 -- number of values
@@ -323,7 +253,7 @@ parametersToWrappingTypes isDefaultable maybeCommandUsage lengthPairs ps =
                 tellImport "Data.ByteString" "ByteString"
                 pure $ InputType (Input name "Maybe ByteString") w
               | otherwise
-              -> throwError "array ptr parameter"
+              -> throwError [Other "array ptr parameter"]
             ptrType@(Ptr NonConst t)
               | -- Is this a type which we should pass using the pointer
                 -- without any marshaling
@@ -363,11 +293,11 @@ parametersToWrappingTypes isDefaultable maybeCommandUsage lengthPairs ps =
                 tyName <- toHsType t
                 tellExtension "DuplicateRecordFields"
                 structType <- case getParameter s of
-                  Nothing -> throwError "Cant find length parameter"
+                  Nothing -> throwError [Other "Cant find length parameter"]
                   Just p  ->
                     case pType p of
                       Ptr _ structType -> toHsType structType
-                      structType -> toHsType structType
+                      structType       -> toHsType structType
                 let lengthExpression =
                       toRecordMemberName m
                         <> " "
@@ -435,22 +365,9 @@ parametersToWrappingTypes isDefaultable maybeCommandUsage lengthPairs ps =
                       (pName p)
                       (dropPointer lengthParamName)
                     pure $ OutputType (Output ("Vector " <> tyName) peek) w
-            t -> throwError ("unhandled type: " <> T.tShow t)
+            t -> throwError [Other ("unhandled type: " <> T.tShow t)]
   in
     traverse parameterToWrappingType ps
-
--- | Is this a type we don't want to marshal
-isPassAsPointerType :: Type -> Bool
-isPassAsPointerType = \case
-  TypeName n
-    | n
-      `elem` [ "MirConnection"
-             , "wl_display"
-             , "xcb_connection_t"
-             , "AHardwareBuffer"
-             ]
-    -> True
-  _ -> False
 
 -- | Returns (parameter containing length, name of member representing length,
 -- vector parameters)
@@ -489,8 +406,6 @@ data WrappingType = WrappingType
     -- returning a wrapper
     -- TODO: Make better types!
   }
-
-type Wrapper = (Doc () -> Doc ()) -> Doc () -> Doc ()
 
 data Input = Input
   { iName :: Text
@@ -711,18 +626,9 @@ tupleWrap n paramName = do
            [qci|\\{tupled paramNames} -> allocaArray {n} (\\{paramPtr} -> {pokes} *> {e} {paramPtr}|]
      in [qci|{cont withPtr})|]
 
-writePokes :: Doc () -> [Doc ()] -> WrapM (Doc ())
-writePokes ptr ds = do
-  let writePoke n d = [qci|pokeElemOff {ptr} {n} {d}|]
-  tellImport "Foreign.Storable" "pokeElemOff"
-  pure . hsep $ punctuate "*>" (zipWith writePoke [0..] ds)
-
-
 wrap :: Type -> [WrappingType] -> Doc () -> Doc ()
-wrap returnType wts = go . fmap wtWrap $ wts
+wrap returnType wts = ($makeOutput) . foldWrappers . fmap wtWrap $ wts
   where
-    go :: [(Doc () -> Doc ()) -> Doc () -> Doc ()] -> Doc () -> Doc ()
-    go = ($makeOutput) . appEndo . fold . fmap Endo
 
     tupleA :: [Doc ()] -> Doc ()
     tupleA = \case
@@ -743,100 +649,6 @@ wrap returnType wts = go . fmap wtWrap $ wts
             _    -> \e ->
               [qci|{e} >>= (\\r -> {tupleA ("pure r" : (oPeek <$> xs))})|]
 
-isPassByValue :: Parameter -> Bool
-isPassByValue = pType >>> \case
-  Float      -> True
-  Void       -> True
-  Char       -> True
-  Int        -> True
-  Ptr _ _    -> False
-  Array{}    -> False
-  TypeName _ -> True
-  Proto _ _  -> False
-
-isPassByConstPointer :: Parameter -> Bool
-isPassByConstPointer = \case
-  Parameter _ (Ptr Const _) Nothing Nothing -> True
-  _ -> False
-
-intercalateArrows = hsep . punctuate (space <> "->" <> space)
-
-funName :: Text -> Text
-funName = T.lowerCaseFirst . dropVk
-
-funGetLengthName :: Text -> Text
-funGetLengthName =
-  ("getNum" <>) . T.dropPrefix' "Get" . dropVk
-
-ptrName :: Text -> Text
-ptrName = ("p" <>) . T.upperCaseFirst
-
-dropVk :: Text -> Text
-dropVk = T.lowerCaseFirst . T.dropPrefix' "vk"
-
-dropPointer :: Text -> Text
-dropPointer = T.lowerCaseFirst . T.dropPrefix' "p"
-
-unKeyword :: Text -> Text
-unKeyword t = if t `elem` keywords then t <> "'" else t
-  where
-    keywords =
-      [ "as"
-      , "case"
-      , "class"
-      , "data family"
-      , "data instance"
-      , "data"
-      , "default"
-      , "deriving"
-      , "do"
-      , "else"
-      , "family"
-      , "forall"
-      , "foreign"
-      , "hiding"
-      , "if"
-      , "import"
-      , "in"
-      , "infix"
-      , "infixl"
-      , "infixr"
-      , "instance"
-      , "let"
-      , "mdo"
-      , "module"
-      , "newtype"
-      , "of"
-      , "proc"
-      , "qualified"
-      , "rec"
-      , "then"
-      , "type"
-      , "where"
-      ]
-
-simpleTypeName :: Type -> Maybe Text
-simpleTypeName = \case
-  Float      -> pure "Float"
-  Void       -> Nothing
-  Char       -> pure "CChar"
-  Int        -> pure "CInt"
-  Ptr _ _    -> Nothing
-  Array{}    -> Nothing
-  TypeName n -> pure n
-  Proto _ _  -> Nothing
-
-isSimpleType :: Type -> Bool
-isSimpleType = \case
-  Float      -> True
-  Void       -> False
-  Char       -> True
-  Int        -> True
-  Ptr _ _    -> False
-  Array{}    -> False
-  TypeName n -> True
-  Proto _ _  -> False
-
 -- | Several commands such as `vkEnumerateInstanceExtensionProperties` have a dual usage
 --
 -- In one configuration when the output array is NULL an `inout` parameter is
@@ -848,5 +660,3 @@ isSimpleType = \case
 data CommandUsage
   = CommandGetLength
   | CommandGetValues
-
-

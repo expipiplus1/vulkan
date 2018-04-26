@@ -47,6 +47,7 @@ import           Write.EnumExtension
 import           Write.Handle
 import           Write.HeaderVersion
 import           Write.Loader
+import           Write.Marshal.Struct
 import           Write.Module
 import           Write.Module.Aggregate
 import           Write.Partition
@@ -70,9 +71,12 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
   ws <- ExceptT . pure . validationToEither $ specWriteElements s
   wrapperWriteElements <- ExceptT . pure . validationToEither $ specWrapperWriteElements s
   let seeds = specSeeds s
-      wrapperModule = Module "Graphics.Vulkan.Wrapped" wrapperWriteElements [] []
+      -- wrapperModule = Module "Graphics.Vulkan.Wrapped" (snd wrapperWriteElements) [] []
+      wrapperModule = Module "Graphics.Vulkan.Wrapped" [] [] []
+      structWrapperModule = Module "Graphics.Vulkan.Marshal" (fst wrapperWriteElements) [] []
   partitionedModules             <- ExceptT . pure $ partitionElements ws seeds
-  let ms = wrapperModule : partitionedModules
+  -- let ms = structWrapperModule : wrapperModule : partitionedModules
+  let ms = [structWrapperModule]
   platformGuards <- ExceptT . pure . validationToEither $ getModuleGuardInfo
     (sExtensions s)
     (sPlatforms s)
@@ -106,7 +110,7 @@ saveModules getDoc outDir ms = concat
       writeFile                filename (show doc)
       pure []
 
-specWrapperWriteElements :: Spec -> Validation [SpecError] [WriteElement]
+specWrapperWriteElements :: Spec -> Validation [SpecError] ([WriteElement], [WriteElement])
 specWrapperWriteElements Spec {..} = do
   let isHandle = (`Set.member` Set.fromList (hName <$> sHandles))
   let isBitmask =
@@ -117,6 +121,7 @@ specWrapperWriteElements Spec {..} = do
           , eType == EnumTypeBitmask
           ]
         )
+      -- TODO: Filter in a better way
       enabledCommands = filter
         ( (`notElem` [ "vkGetSwapchainGrallocUsageANDROID"
                      , "vkAcquireImageANDROID"
@@ -127,10 +132,12 @@ specWrapperWriteElements Spec {..} = do
         )
         sCommands
 
-  let (es, ss) =
+  let (commandMarshalErrors, commandWrappers) =
         partitionEithers $ commandWrapper isHandle isBitmask <$> enabledCommands
-  -- TODO: Warn on unwrapped command
-  pure ss
+      (structMarshalErrors, structWrappers) =
+        partitionEithers $ structWrapper isHandle isBitmask <$> sStructs
+  -- TODO: Warn properly on unwrapped command
+  pure (structWrappers, commandWrappers)
 
 specWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specWriteElements Spec {..} = do

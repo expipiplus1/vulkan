@@ -51,4 +51,7 @@ unsplitModuleName = T.intercalate "."
 
 -- | Modules which shouldn't feature in any aggregate
 disallowedModules :: [Text]
-disallowedModules = ["Graphics.Vulkan.Dynamic"]
+disallowedModules =
+  [ "Graphics.Vulkan.Dynamic"
+  , "Graphics.Vulkan.Wrapped"
+  ]

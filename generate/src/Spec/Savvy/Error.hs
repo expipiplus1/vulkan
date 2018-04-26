@@ -10,7 +10,8 @@ import           Data.Semigroup
 import           Data.Text
 
 data SpecError
-  = EnumTypeMissing Text
+  = WithContext Text SpecError
+  | EnumTypeMissing Text
   | AliasTargetMissing Text
   | EnumExtensionNumberMissing Text
   | WeirdBitmaskType Text
@@ -50,6 +51,7 @@ data SpecError
 
 prettySpecError :: SpecError -> Text
 prettySpecError = \case
+  WithContext c e -> c <> ":" <+> prettySpecError e
   EnumTypeMissing e ->
     "An enumeration value declaration references an undeclared enum type called"
       <+> e

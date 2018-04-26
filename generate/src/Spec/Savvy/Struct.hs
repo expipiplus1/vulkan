@@ -36,18 +36,20 @@ data Struct = Struct
     -- ^ The closure of struct aliases, doesn't include aliases from extensions
   , sStructOrUnion :: StructOrUnion
   }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data StructMember = StructMember
-  { smName      :: Text
-  , smType      :: Type
-  , smOffset    :: Word -- Keep this lazy
-  , smSize      :: Word -- Keep this lazy
-  , smAlignment :: Word -- Keep this lazy
-  , smValues    :: [Text]
-  , smComment   :: Maybe Text
+  { smName       :: Text
+  , smType       :: Type
+  , smOffset     :: Word -- Keep this lazy
+  , smSize       :: Word -- Keep this lazy
+  , smAlignment  :: Word -- Keep this lazy
+  , smValues     :: Maybe [Text]
+  , smIsOptional :: Maybe [Bool]
+  , smLengths    :: Maybe [Text]
+  , smComment    :: Maybe Text
   }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data StructOrUnion
   = AStruct

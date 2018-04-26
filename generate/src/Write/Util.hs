@@ -3,6 +3,7 @@
 
 module Write.Util
   ( intercalatePrepend
+  , intercalatePrependEither
   , emptyLineSep
   , vcatPara
   , separatedSections
@@ -29,6 +30,11 @@ import           Documentation.Haddock
 intercalatePrepend :: Doc () -> [Doc ()] -> [Doc ()]
 intercalatePrepend _ []     = []
 intercalatePrepend i (m:ms) = m : ((i <+>) <$> ms)
+
+-- | the same as 'intercalatePrepend' but "Left" elements are not prependd
+intercalatePrependEither :: Doc () -> [Either (Doc ()) (Doc ())] -> [Doc ()]
+intercalatePrependEither _ []     = []
+intercalatePrependEither i (m:ms) = either id id m : (either id (i <+>) <$> ms)
 
 emptyLineSep :: Foldable f => f (Doc a) -> Doc a
 emptyLineSep = concatWith (\a b -> a <> line <> line <> b)
@@ -89,7 +95,7 @@ separatedWithGuards sep things =
         x:xs -> x : (first sepPrefix <$> xs)
   in case mergeGuards prefixedThings of
     []       -> mempty
-    (d : ds) -> vcatIndents $ concat ((uncurry (flip guardedLines) d) : (sepThings ds))
+    (d : ds) -> vcatIndents $ concat (uncurry (flip guardedLines) d : sepThings ds)
     where
       sepThings ds = ds <&> \(d, g) -> guardedLines g d
       sepPrefix = case sep of
@@ -99,7 +105,7 @@ separatedWithGuards sep things =
 mergeGuards :: [(Doc (), Maybe Text)]
             -> [(Doc (), Maybe Text)]
 mergeGuards xs =
-  let groups :: [NonEmpty ((Doc (), Maybe Text))]
+  let groups :: [NonEmpty (Doc (), Maybe Text)]
       groups = groupBy (sameGuard `on` snd) xs
       sameGuard (Just x) (Just y) = x == y
       sameGuard _ _               = False
@@ -130,8 +136,8 @@ guarded = \case
 vcatIndents :: [(Maybe Int, Doc ())] -> Doc ()
 vcatIndents = \case
   []                -> mempty
-  (Nothing, d) : ds -> hcat $ (d : (addLine <$> ds))
-  ds                -> hcat $ (addLine <$> ds)
+  (Nothing, d) : ds -> hcat (d : (addLine <$> ds))
+  ds                -> hcat (addLine <$> ds)
   where
     addLine = \case
       (Just i , d) -> indent i (line <> d)
