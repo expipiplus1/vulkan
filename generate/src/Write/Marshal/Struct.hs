@@ -12,6 +12,7 @@
 
 module Write.Marshal.Struct
   ( structWrapper
+  , vkStructWriteElement
   ) where
 
 import           Control.Arrow                            ((&&&))
@@ -65,6 +66,52 @@ structWrapper isHandle isBitmask struct = do
     (runWrap $ wrapStruct isDefaultable struct)
   pure WriteElement {..}
 
+vkStructWriteElement :: WriteElement
+vkStructWriteElement =
+  let weName = "VkStruct class declaration"
+      weImports = [ Import "Foreign.Storable" ["Storable", "poke", "pokeElemOff"]
+                  , Import "Foreign.Ptr" ["Ptr"]
+                  , Import "Foreign.Marshal.Alloc" ["alloca"]
+                  , Import "Foreign.Marshal.Array" ["allocaArray"]
+                  , Import "Data.Vector" ["Vector", "ifoldr"]
+                  , QualifiedImport "Data.Vector" ["length"]
+                  ]
+      weProvides =
+        [Unguarded $ WithConstructors $ WE.TypeName "VkStruct"]
+      weDepends = []
+      weExtensions = ["FunctionalDependencies", "RankNTypes"]
+      weDoc = pure [qci|
+        class Storable c => VkStruct marshalled c | marshalled -> c, c -> marshalled where
+          withCStruct :: marshalled -> (c -> IO a) -> IO a
+
+        withCStructPtr :: VkStruct a c => a -> (Ptr c -> IO b) -> IO b
+        withCStructPtr a f = withCStruct a (\c -> alloca (\p -> poke p c *> f))
+
+        withVec
+          :: forall a b c
+           . VkStruct a c
+          => Vector a
+          -> (Ptr c -> IO b)
+          -> IO b
+        withVec v cont = allocaArray (Data.Vector.length v) $ \p ->
+          let go :: Int -> ((b -> IO d) -> IO d) -> IO d -> IO d
+              go index a complete = withCStruct a (\b -> pokeElemOff p index b *> complete)
+          in  ifoldr go (cont p) v
+
+        -- withVec
+        --   :: forall a b d
+        --    . Storable b
+        --   => (forall c . a -> (b -> IO c) -> IO c)
+        --   -> Vector a
+        --   -> (Ptr b -> IO d)
+        --   -> IO d
+        -- withVec alloc v cont = allocaArray (V.length v) $ \p ->
+        --   let go :: Int -> ((b -> IO d) -> IO d) -> IO d -> IO d
+        --       go index with complete = with (\b -> pokeElemOff p index b *> complete)
+        --   in  ifoldr go (cont p) (fmap alloc v)
+      |]
+  in WriteElement{..}
+
 ----------------------------------------------------------------
 -- The wrapping commands
 ----------------------------------------------------------------
@@ -76,8 +123,9 @@ wrapStruct
   -> WrapM [DocMap -> Doc ()]
 wrapStruct isDefaultable s = do
   marshalled    <- marshallStruct isDefaultable s
-  toCStructDoc  <- writeToCStruct marshalled
+  toCStructDoc  <- writeVkStructInstance marshalled
   marshalledDoc <- writeMarshalled marshalled
+  tellExtension "DuplicateRecordFields"
   let weDoc docMap = marshalledDoc docMap <> line <> toCStructDoc
   pure [weDoc]
 
@@ -118,10 +166,11 @@ data MemberUsage a
 ----------------------------------------------------------------
 
 marshallStruct :: (Type -> Bool) -> Struct -> WrapM MarshalledStruct
-marshallStruct isDefaultable Struct {..} =
+marshallStruct isDefaultable Struct {..} = do
   let lengthRelation = getLengthRelation sMembers
-  in  MarshalledStruct sName
-        <$> traverse (marshallMember isDefaultable lengthRelation) sMembers
+  when (sStructOrUnion == AUnion) $ throwError [Other "Unions not supported"]
+  MarshalledStruct (dropVkType sName)
+    <$> traverse (marshallMember isDefaultable lengthRelation) sMembers
 
 -- This may
 marshallMember
@@ -142,7 +191,7 @@ marshallMember isDefaultable lengthRelation m = do
   ty <- case smType m of
     Ptr _ Void | smName m == "pNext" -> pure (NextPointer (smName m))
     Ptr _ t | isPassAsPointerType t, Nothing <- smIsOptional m ->
-      Preserved <$> toHsType t
+      Preserved <$> toHsType (smType m)
     _ | Just [v] <- smValues m, Nothing <- smIsOptional m -> pure (Univalued v)
     Ptr Const Char
       | Nothing <- smIsOptional m, Just ["null-terminated"] <- smLengths m
@@ -153,9 +202,9 @@ marshallMember isDefaultable lengthRelation m = do
     Ptr _ t
       | Nothing <- smIsOptional m, Just [length] <- smLengths m, isSimpleType t
       -> pure $ Vector (smName m) t
-    (Array _ _ t)
-      | isSimpleType t, Nothing <- smIsOptional m, Nothing <- smLengths m
-      -> Preserved <$> toHsType (smType m)
+    -- (Array _ _ t)
+    --   | isSimpleType t, Nothing <- smIsOptional m, Nothing <- smLengths m
+    --   -> Preserved <$> toHsType (smType m)
     t
       | isSimpleType t
       , Just v <- lengthMap (smName m)
@@ -177,11 +226,17 @@ marshallMember isDefaultable lengthRelation m = do
         ]
   pure $ MarshalledMember (smName m) <$> ty
 
-writeToCStruct :: MarshalledStruct -> WrapM (Doc ())
-writeToCStruct MarshalledStruct{..} = pure $ [qci|
-  withCStruct :: {msName} -> (C.{msName} -> IO a) -> IO a
-  withCStruct from cont = {wrap "cont" ("C." <> msName) "from" msMembers}
-  |]
+writeVkStructInstance :: MarshalledStruct -> WrapM (Doc ())
+writeVkStructInstance MarshalledStruct{..} = do
+  tellDepends
+    [Unguarded (WE.TypeName ("Vk" <> msName)), Unguarded (TermName ("Vk" <> msName))]
+  tellExtension "InstanceSigs"
+  wrapped <- wrap "cont" ("Vk" <> msName) msName "from" msMembers
+  pure [qci|
+    instance VkStruct {msName} Vk{msName} where
+      withCStruct :: {msName} -> (Vk{msName} -> IO a) -> IO a
+      withCStruct from cont = {wrapped}
+    |]
 
 wrap
   :: Text
@@ -189,38 +244,51 @@ wrap
   -> Text
   -- ^ The C struct constructor name
   -> Text
+  -- ^ The marshalled struct type
+  -> Text
   -- ^ The marshalled struct name
   -> [MemberUsage MarshalledMember]
   -- ^ The struct members
-  -> Doc ()
-wrap contName con from members =
-  let wrappers :: [Wrapper]
-      wrappers = memberWrapper from <$> members
-      applyCont :: Wrapper
-      applyCont = \cont e -> cont [qci|({contName} ({e})|] <> ")"
-  in  foldWrappers (applyCont : wrappers) id (pretty con)
+  -> WrapM (Doc ())
+wrap contName con fromType from members = do
+  wrappers <- traverse (memberWrapper fromType from) members
+  let applyCont :: Wrapper
+      applyCont = \cont e -> cont [qci|{contName} ({e}|] <> ")"
+  pure $ foldWrappers (applyCont : wrappers) id (pretty con)
 
-memberWrapper :: Text -> MemberUsage MarshalledMember -> Wrapper
-memberWrapper from = \case
-  Univalued value  -> \cont e -> cont [qci|{e} {value}|]
-  Length vec       -> \cont e -> cont [qci|{e} (fromIntegral (length {vec}))|]
-  Preserved member -> \cont e -> cont [qci|{e} ({mmName member} {from})|]
+memberWrapper
+  :: Text
+  -> Text
+  -> MemberUsage MarshalledMember
+  -> WrapM Wrapper
+memberWrapper fromType from =
+  let accessMember :: Text -> Doc ()
+      accessMember memberName = [qci|{toMemberName memberName} ({from} :: {fromType})|]
+  in \case
+  Univalued value  -> do
+    tellExtension "PatternSynonyms"
+    tellDepend (Unguarded (PatternName value))
+    pure $ \cont e -> cont [qci|{e} {value}|]
+  Length vec       -> do
+    tellImports [QualifiedImport "Data.Vector" ["length"]]
+    pure $ \cont e -> cont [qci|{e} (fromIntegral (Data.Vector.length {vec}))|]
+  Preserved member -> pure $ \cont e -> cont [qci|{e} ({accessMember (mmName member)})|]
   -- TODO: proper pointer names
-  NextPointer memberName -> \cont e ->
+  NextPointer memberName -> pure $ \cont e ->
     let withPtr =
-          [qci|({memberName} {from}) (\\{ptrName memberName} -> {e} {ptrName memberName}|]
+          [qci|({accessMember memberName}) (\\{ptrName memberName} -> {e} {ptrName memberName}|]
     in [qci|{cont withPtr})|]
-  ByteString memberName -> \cont e ->
+  ByteString memberName -> pure $ \cont e ->
     let paramPtr = pretty (unKeyword $ ptrName (dropPointer memberName))
-        withPtr  = [qci|useAsCString ({memberName} {from}) (\\{paramPtr} -> {e} {paramPtr}|]
+        withPtr  = [qci|useAsCString ({accessMember memberName}) (\\{paramPtr} -> {e} {paramPtr}|]
     in  [qci|{cont withPtr})|]
-  MaybeByteString memberName -> \cont e ->
+  MaybeByteString memberName -> pure $ \cont e ->
     let paramPtr = pretty (unKeyword $ ptrName (dropPointer memberName))
-        withPtr  = [qci|maybeWith useAsCString ({memberName} {from}) (\\{paramPtr} -> {e} {paramPtr}|]
+        withPtr  = [qci|maybeWith useAsCString ({accessMember memberName}) (\\{paramPtr} -> {e} {paramPtr}|]
     in  [qci|{cont withPtr})|]
-  Vector memberName elemType -> \cont e ->
+  Vector memberName elemType -> pure $ \cont e ->
     let paramPtr = pretty (ptrName (dropPointer memberName))
-        withPtr  = [qci|todoWithVector ({memberName} {from}) (\\{paramPtr} -> {e} {paramPtr}|]
+        withPtr  = [qci|withVec ({accessMember memberName}) (\\{paramPtr} -> {e} {paramPtr}|]
     in  [qci|{cont withPtr})|]
 
 -- | Returns (struct member containing length, name of member representing length,
@@ -274,24 +342,28 @@ writeMarshalledMember :: Text -> MemberUsage MarshalledMember -> WrapM (DocMap -
 writeMarshalledMember parentName = \case
   Univalued _ -> pure $ \_ -> Left "-- Univalued Member elided"
   Length    _ -> pure $ \_ -> Left "-- Length valued member elided"
-  NextPointer memberName ->
+  NextPointer memberName -> do
+    tellImport "Foreign.Ptr" "Ptr"
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: forall a. (Ptr () -> IO a) -> IO a
     |]
-  ByteString memberName ->
+  ByteString memberName -> do
+    tellImport "Data.ByteString" "ByteString"
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: ByteString
     |]
   -- TODO: Abstract over Maybe here
-  MaybeByteString memberName ->
+  MaybeByteString memberName -> do
+    tellImport "Data.ByteString" "ByteString"
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: Maybe ByteString
     |]
   Vector memberName t -> do
     tyName <- toHsType t
+    tellImport "Data.Vector" "Vector"
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: Vector {tyName}
@@ -319,22 +391,13 @@ isLength = \case
 toMemberName :: Text -> Text
 toMemberName = ("vk" <>) . T.upperCaseFirst
 
+dropVkType :: Text -> Text
+dropVkType = T.dropPrefix' "Vk"
+
 {-
 import           Data.Vector           as V
 import           Foreign.Marshal.Array
 import           Foreign.Ptr
 import           Foreign.Storable
-
-withVec
-  :: forall a b d
-   . Storable b
-  => (forall c . a -> (b -> IO c) -> IO c)
-  -> Vector a
-  -> (Ptr b -> IO d)
-  -> IO d
-withVec alloc v cont = allocaArray (V.length v) $ \p ->
-  let go :: Int -> ((b -> IO d) -> IO d) -> IO d -> IO d
-      go index with complete = with (\b -> pokeElemOff p index b *> complete)
-  in  ifoldr go (cont p) (fmap alloc v)
 
    -}

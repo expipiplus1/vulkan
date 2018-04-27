@@ -20,6 +20,7 @@ import           Data.List.NonEmpty
 import qualified Data.List.NonEmpty        as NE
 import           Data.Maybe
 import           Data.Text                 (Text)
+import           Data.Either
 import qualified Data.Text.Extra           as T
 import           Data.Text.Prettyprint.Doc
 
@@ -33,8 +34,14 @@ intercalatePrepend i (m:ms) = m : ((i <+>) <$> ms)
 
 -- | the same as 'intercalatePrepend' but "Left" elements are not prependd
 intercalatePrependEither :: Doc () -> [Either (Doc ()) (Doc ())] -> [Doc ()]
-intercalatePrependEither _ []     = []
-intercalatePrependEither i (m:ms) = either id id m : (either id (i <+>) <$> ms)
+intercalatePrependEither _ [] = []
+intercalatePrependEither i ms =
+  let (leadingLefts, rest) = Prelude.break isRight ms
+  in  case rest of
+        [] -> either id id <$> leadingLefts
+        r : rs ->
+          fmap (either id id) (leadingLefts ++ [r])
+            ++ (either id (i <+>) <$> rs)
 
 emptyLineSep :: Foldable f => f (Doc a) -> Doc a
 emptyLineSep = concatWith (\a b -> a <> line <> line <> b)

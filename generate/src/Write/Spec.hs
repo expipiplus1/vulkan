@@ -73,10 +73,9 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
   let seeds = specSeeds s
       -- wrapperModule = Module "Graphics.Vulkan.Wrapped" (snd wrapperWriteElements) [] []
       wrapperModule = Module "Graphics.Vulkan.Wrapped" [] [] []
-      structWrapperModule = Module "Graphics.Vulkan.Marshal" (fst wrapperWriteElements) [] []
+      structWrapperModule = Module "Graphics.Vulkan.Marshal" (vkStructWriteElement: fst wrapperWriteElements) [] []
   partitionedModules             <- ExceptT . pure $ partitionElements ws seeds
-  -- let ms = structWrapperModule : wrapperModule : partitionedModules
-  let ms = [structWrapperModule]
+  let ms = structWrapperModule : wrapperModule : partitionedModules
   platformGuards <- ExceptT . pure . validationToEither $ getModuleGuardInfo
     (sExtensions s)
     (sPlatforms s)
