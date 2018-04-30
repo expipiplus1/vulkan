@@ -163,6 +163,10 @@ data MemberUsage a
     -- ^ This is the pNext pointer (include the member name for completeness)
   | ByteString Text
     -- ^ A const char with member name
+  | ByteStringData Text
+    -- ^ A void pointer to some data with member name
+  | ByteStringLength Text
+    -- ^ The length of a bytestring
   | MaybeByteString Text
     -- ^ An optional const char with member name
   | Vector Text Type (Doc ())
@@ -205,8 +209,23 @@ marshallMember isStruct isDefaultable lengthRelation m = do
         (`Map.lookup` Map.fromList [ (smName l, v) | (l, v) <- lengthRelation ])
 
   ty <- case smType m of
-    Ptr _ Void | smName m == "pNext" -> pure (NextPointer (smName m))
-    Ptr _ t | isPassAsPointerType t, Nothing <- smIsOptional m ->
+    Ptr _ Void
+      | -- The pointer to the next element in the struct chain
+        smName m == "pNext"
+      , Nothing <- smIsOptional m
+      , Nothing <- smLengths m
+      -> pure (NextPointer (smName m))
+      | -- A void pointer consumed by the user and not Vulkan
+        Nothing <- smIsOptional m
+      , Nothing <- smLengths m
+      -> Preserved <$> toHsType (smType m)
+      | -- A pointer to data to be consumed by Vulkan (has a length)
+        Nothing <- smIsOptional m
+      , Just [length] <- smLengths m
+      -> pure $ ByteStringData (smName m)
+    Ptr _ t
+      | isPassAsPointerType t
+      , Nothing <- smIsOptional m ->
       Preserved <$> toHsType (smType m)
     _ | Just [v] <- smValues m, Nothing <- smIsOptional m -> pure (Univalued v)
     Ptr Const Char
@@ -260,6 +279,8 @@ marshallMember isStruct isDefaultable lengthRelation m = do
       | -- The length of a non-optional vector
         isSimpleType t
       , Just v <- lengthMap (smName m)
+      , Ptr _ p <- smType v
+      , isSimpleType p
       , Nothing <- smIsOptional v
       -> pure $ Length (smName v)
       | -- The length of an optional vector
@@ -267,6 +288,12 @@ marshallMember isStruct isDefaultable lengthRelation m = do
       , Just v <- lengthMap (smName m)
       , Just [True] <- smIsOptional v
       -> pure $ OptionalLength (smName v)
+      | -- The length of a void ptr
+        isSimpleType t
+      , Just v <- lengthMap (smName m)
+      , Ptr _ Void <- smType v
+      , Nothing <- smIsOptional v
+      -> pure $ ByteStringLength (smName v)
       | isSimpleType t
       , Nothing <- lengthMap (smName m)
       , (isNothing (smIsOptional m) || isDefaultable t)

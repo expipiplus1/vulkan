@@ -63,6 +63,7 @@ isPassAsPointerType = \case
              , "wl_display"
              , "xcb_connection_t"
              , "AHardwareBuffer"
+             , "ANativeWindow"
              ]
     -> True
   _ -> False
