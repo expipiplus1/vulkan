@@ -7,6 +7,8 @@ module Write.Spec
   ( writeSpec
   ) where
 
+import Debug.Trace
+
 import           Control.Monad.Except
 import           Data.Bifunctor
 import           Data.Either.Extra
@@ -32,6 +34,7 @@ import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
+import           Spec.Savvy.Struct
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Spec
@@ -112,7 +115,7 @@ saveModules getDoc outDir ms = concat
 specWrapperWriteElements :: Spec -> Validation [SpecError] ([WriteElement], [WriteElement])
 specWrapperWriteElements Spec {..} = do
   let isHandle = (`Set.member` Set.fromList (hName <$> sHandles))
-  let isBitmask =
+      isBitmask =
         (`Set.member` Set.fromList
           [ n
           | Enum {..} <- sEnums
@@ -120,6 +123,7 @@ specWrapperWriteElements Spec {..} = do
           , eType == EnumTypeBitmask
           ]
         )
+      isStruct = (`Set.member` Set.fromList (sName <$> sStructs))
       -- TODO: Filter in a better way
       enabledCommands = filter
         ( (`notElem` [ "vkGetSwapchainGrallocUsageANDROID"
@@ -134,8 +138,9 @@ specWrapperWriteElements Spec {..} = do
   let (commandMarshalErrors, commandWrappers) =
         partitionEithers $ commandWrapper isHandle isBitmask <$> enabledCommands
       (structMarshalErrors, structWrappers) =
-        partitionEithers $ structWrapper isHandle isBitmask <$> sStructs
+        partitionEithers $ structWrapper isHandle isBitmask isStruct <$> sStructs
   -- TODO: Warn properly on unwrapped command
+  _ <- traverse_ traceShowM structMarshalErrors
   pure (structWrappers, commandWrappers)
 
 specWriteElements :: Spec -> Validation [SpecError] [WriteElement]

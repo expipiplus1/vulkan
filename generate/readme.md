@@ -70,3 +70,19 @@ TODO:
 
 `vkCmdBindVertexBuffers` requires two vectors to be the same. Should we pass in non-storable vectors of tuples?
 
+
+## Marshalling structs:
+
+- `VkDescriptorSetLayoutBindingFlagsCreateInfoEXT` has a complex rule for the
+'bindingCount' member. Look into this.
+- `VkSubpassDescription` is interesting too, too vectors of the same length,
+  one of which is optional
+  - Implement with `Either (Vector A) (Vector (A, B))`?
+  - Implement with `(Vector A, Maybe (Vector B))` and truncate the longer Vector?
+  - Use sized vectors: `(Vector n A, Maybe (Vector n B))`
+
+- Need to read pNext chains
+  - For example those returned by vkGetPhysicalDeviceFeatures2KHR
+  - Only one of each type of struct can be returned from each function, could
+    we just return a tuple: `(A, Maybe B, Maybe C, ..)` covering all the
+    possible extensions?
