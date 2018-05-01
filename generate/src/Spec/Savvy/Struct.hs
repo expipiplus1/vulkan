@@ -35,6 +35,7 @@ data Struct = Struct
   , sAliases       :: [Text]
     -- ^ The closure of struct aliases, doesn't include aliases from extensions
   , sStructOrUnion :: StructOrUnion
+  , sReturnedOnly  :: Bool
   }
   deriving (Show, Eq)
 
@@ -107,6 +108,7 @@ specStruct getAliases tc@TypeContext {..} P.StructType {..} = do
     lastMember     = last sMembers
     sSize = nextAlignment sAlignment (smOffset lastMember + smSize lastMember)
     sStructOrUnion = AStruct
+    sReturnedOnly  = stIsReturnedOnly
   pure Struct {..}
 
 specStructMember
@@ -147,6 +149,7 @@ specUnion getAliases tc@TypeContext {..} P.UnionType {..} = do
         sAlignment     = foldl1 lcm (smAlignment <$> sMembers)
         sSize = nextAlignment sAlignment (maximum (0 : (smSize <$> sMembers)))
         sStructOrUnion = AUnion
+        sReturnedOnly  = utIsReturnedOnly
       in
         Struct {..}
 

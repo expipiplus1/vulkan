@@ -77,7 +77,7 @@ writeCabal modules platforms guardInfo =
           {indent 0 . vcat $ writeGuardedModules <$> guardGroups}
 
           build-depends:       base >= 4.9 && < 5
-                             , vector-sized >= 0.1 && < 1.1
+                             , vector-sized >= 1.0.1
           default-language:    Haskell2010
 
           if os(windows)

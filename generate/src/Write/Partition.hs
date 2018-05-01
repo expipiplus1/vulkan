@@ -8,6 +8,7 @@ module Write.Partition
   ( ModuleSeed(..)
   , Module(..)
   , partitionElements
+  , ignoredUnexportedNames
   ) where
 
 import           Control.Monad

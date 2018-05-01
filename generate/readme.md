@@ -86,3 +86,13 @@ TODO:
   - Only one of each type of struct can be returned from each function, could
     we just return a tuple: `(A, Maybe B, Maybe C, ..)` covering all the
     possible extensions?
+
+- `VkPipelineCoverageToColorStateCreateInfoNV` Has an optional member which
+  dictates a bool parameter
+
+- Raise an issue for structs which extend a returnedonly struct which are not
+  returnedonly
+
+- Should wrap the function pointers in VkAllocationCallbacks
+
+- The names for sibling vector members could be improved

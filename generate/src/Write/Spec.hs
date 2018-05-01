@@ -7,7 +7,7 @@ module Write.Spec
   ( writeSpec
   ) where
 
-import Debug.Trace
+import           Debug.Trace
 
 import           Control.Monad.Except
 import           Data.Bifunctor
@@ -23,6 +23,8 @@ import           Data.Text.Prettyprint.Doc
 import           Say
 import           System.Directory
 import           System.FilePath
+import           System.IO.Error
+import qualified System.IO.Strict          as Strict
 import           System.ProgressBar
 
 import           Documentation
@@ -34,10 +36,10 @@ import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
-import           Spec.Savvy.Struct
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Spec
+import           Spec.Savvy.Struct
 import           Write.Alias
 import           Write.BaseType
 import           Write.Bespoke
@@ -109,10 +111,18 @@ saveModules getDoc outDir ms = concat
             outDir </> T.unpack ((<> ".hs") . T.replace "." "/" $ mName)
           dir = takeDirectory filename
       createDirectoryIfMissing True     dir
-      writeFile                filename (show doc)
+      writeFileIfChanged       filename (show doc)
       pure []
 
-specWrapperWriteElements :: Spec -> Validation [SpecError] ([WriteElement], [WriteElement])
+    writeFileIfChanged filename contents = readFileMay filename >>= \case
+      Just existing | existing == contents -> pure ()
+      _ -> writeFile filename contents
+
+    readFileMay :: FilePath -> IO (Maybe String)
+    readFileMay f = (Just <$> Strict.readFile f) `catchIOError` const (pure Nothing)
+
+specWrapperWriteElements
+  :: Spec -> Validation [SpecError] ([WriteElement], [WriteElement])
 specWrapperWriteElements Spec {..} = do
   let isHandle = (`Set.member` Set.fromList (hName <$> sHandles))
       isBitmask =
@@ -123,22 +133,21 @@ specWrapperWriteElements Spec {..} = do
           , eType == EnumTypeBitmask
           ]
         )
-      isStruct = (`Set.member` Set.fromList (sName <$> sStructs))
+      isStruct        = (`Set.member` Set.fromList (sName <$> sStructs))
       -- TODO: Filter in a better way
       enabledCommands = filter
-        ( (`notElem` [ "vkGetSwapchainGrallocUsageANDROID"
-                     , "vkAcquireImageANDROID"
-                     , "vkQueueSignalReleaseImageANDROID"
-                     ]
-          )
-        . cName
-        )
+        ((`notElem` ignoredUnexportedNames) . TermName . cName)
         sCommands
+
+      enabledStructs =
+        filter ((`notElem` ignoredUnexportedNames) . TypeName . sName) sStructs
 
   let (commandMarshalErrors, commandWrappers) =
         partitionEithers $ commandWrapper isHandle isBitmask <$> enabledCommands
       (structMarshalErrors, structWrappers) =
-        partitionEithers $ structWrapper isHandle isBitmask isStruct <$> sStructs
+        partitionEithers
+          $   structWrapper isHandle isBitmask isStruct
+          <$> enabledStructs
   -- TODO: Warn properly on unwrapped command
   _ <- traverse_ traceShowM structMarshalErrors
   pure (structWrappers, commandWrappers)

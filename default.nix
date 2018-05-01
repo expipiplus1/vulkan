@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}, compiler ? "ghc841" }:
+{ pkgs ? import <nixpkgs> {}, compiler ? "ghc842" }:
 
 # Strip out the irrelevant parts of the source
 let src = with pkgs.lib;
@@ -7,17 +7,17 @@ let src = with pkgs.lib;
 
     haskellPackages = pkgs.haskell.packages.${compiler}.override {
       overrides = self: super: {
-        vector-sized = self.vector-sized_1_0_0_0;
+        vector-sized = self.vector-sized_1_0_1_0;
 
-        vector-sized_1_0_0_0 = super.vector-sized_1_0_0_0.override {
-          indexed-list-literals = self.indexed-list-literals_0_2_0_0;
-        };
+        # vector-sized_1_0_0_0 = super.vector-sized_1_0_0_0.override {
+        #   indexed-list-literals = self.indexed-list-literals_0_2_0_0;
+        # };
       };
     };
 
     extraEnvPackages = [
-      haskellPackages.cabal-install
-      haskellPackages.hscolour
+      # haskellPackages.cabal-install
+      # haskellPackages.hscolour
     ];
 
     drv =
