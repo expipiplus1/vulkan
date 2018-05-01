@@ -11,6 +11,7 @@ module Spec.Savvy.Struct
   , specStructs
   ) where
 
+import           Control.Applicative
 import           Control.Monad.Fix.Extra
 import           Data.Closure
 import           Data.Either.Validation
@@ -116,8 +117,13 @@ specStructMember tc P.StructMember {..} smOffset = eitherToValidation $ do
   type'       <- stringToTypeExpected (tcParseContext tc) smName smType
   smAlignment <- getTypeAlignment tc type'
   smSize      <- getTypeSize tc type'
-  vals        <- pure (maybeToList smValues)
-  pure StructMember {smType = type', smValues = vals, ..}
+  let vals = fmap pure smValues
+  pure StructMember
+    { smType    = type'
+    , smValues  = vals
+    , smLengths = smAltLengths <|> smLengths
+    , ..
+    }
 
 ----------------------------------------------------------------
 -- Unions
