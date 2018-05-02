@@ -49,12 +49,14 @@ data HaskellName
 
 data Guarded a
   = Guarded Text a
+  | InvGuarded Text a
   | Unguarded a
   deriving (Show, Eq, Ord)
 
 unGuarded :: Guarded a -> a
 unGuarded = \case
   Guarded _ n -> n
+  InvGuarded _ n -> n
   Unguarded  n -> n
 
 pattern Pattern :: Text -> Export

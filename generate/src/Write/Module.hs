@@ -107,7 +107,7 @@ importReexportedModule :: ReexportedModule -> Doc ()
 importReexportedModule ReexportedModule {..} = case rmGuard of
   Nothing -> [qci|import {rmName}|]
   Just g  -> [qci|
-      #if defined({g})
+      #if {g}
       import {rmName}
       #endif
     |]
@@ -122,12 +122,7 @@ exportHaskellName e =
       doc = case unGuarded e of
         WithConstructors    _ -> (<> "(..)") <$> s
         WithoutConstructors _ -> s
-  in  (
-      , (case e of
-          Guarded g _ -> Just g
-          Unguarded _ -> Nothing
-        )
-      ) <$> doc
+  in  (, guardCPPGuard e) <$> doc
 
 isConstructor :: Text -> Bool
 isConstructor = \case
@@ -186,9 +181,7 @@ moduleInternalImports nameModule Module {..} =
         | d           <- deps
         , Just (m, e) <- [nameModule (unGuarded d)]
         , unGuarded d `notElem` (unExport . unGuarded <$> (weProvides =<< mWriteElements))
-        , let g = case d of
-                Unguarded _ -> Nothing
-                Guarded g _ -> Just g
+        , let g = guardCPPGuard d
         ]
   in  Map.assocs depends <&> \((moduleName, guard), is) ->
         guarded guard [qci|
@@ -205,9 +198,21 @@ simplifyDependencies deps =
         | Guarded g d <- deps
         , Unguarded d `Set.notMember` unguarded
         ]
-  in  Set.toList unguarded ++ Set.toList guarded
+      invGuarded   = Set.fromList
+        [ InvGuarded g d
+        | InvGuarded g d <- deps
+        , Unguarded d `Set.notMember` unguarded
+        ]
+  in  Set.toList unguarded ++ Set.toList guarded ++ Set.toList invGuarded
 
 moduleExtensions :: Module -> [Doc ()]
 moduleExtensions Module{..} =
   let es = nubOrd $ weExtensions =<< mWriteElements
   in es <&> \e -> [qci|\{-# language {e} #-}|]
+
+-- Get the CPP guard for a Guarded value
+guardCPPGuard :: Guarded a -> Maybe Text
+guardCPPGuard = \case
+  Guarded    g _ -> Just ("defined(" <> g <> ")")
+  InvGuarded g _ -> Just ("!defined(" <> g <> ")")
+  Unguarded _    -> Nothing

@@ -14,13 +14,13 @@ module Write.Util
   ) where
 
 import           Data.Bifunctor
+import           Data.Either
 import           Data.Function
 import           Data.Functor.Extra
 import           Data.List.NonEmpty
 import qualified Data.List.NonEmpty        as NE
 import           Data.Maybe
 import           Data.Text                 (Text)
-import           Data.Either
 import qualified Data.Text.Extra           as T
 import           Data.Text.Prettyprint.Doc
 
@@ -126,7 +126,7 @@ guardedLines :: Maybe Text -> Doc () -> [(Maybe Int, Doc ())]
 guardedLines = \case
   Nothing -> \d -> [(Nothing, d)]
   Just g  -> \d ->
-    [ (Just (-1000), "#if defined(" <> pretty g <> ")")
+    [ (Just (-1000), "#if " <> pretty g)
     , (Nothing      , d)
     , (Just (-1000), "#endif")
     ]
@@ -135,7 +135,7 @@ guarded :: Maybe Text -> Doc () -> Doc ()
 guarded = \case
   Nothing -> id
   Just g  -> \d ->
-    indent minBound (line <> "#if defined(" <> pretty g <> ")")
+    indent minBound (line <> "#if " <> pretty g)
       <> line <> d
       <> indent minBound (line <> "#endif")
 

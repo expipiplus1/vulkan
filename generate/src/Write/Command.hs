@@ -32,7 +32,7 @@ writeCommand getEnumName fp@Command {..} = do
     protoDepends = typeDepends $ Proto
       cReturnType
       [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
-    weProvides = [Unguarded $ Term cName]
+    weProvides = [InvGuarded "NO_IMPORT_COMMANDS" $ Term cName]
     weDepends =
       Unguarded
         <$> protoDepends
@@ -48,10 +48,12 @@ commandDoc c@Command {..} = do
   (t, (is, es)) <- toHsType (commandType c)
   let d getDoc = [qci|
   {document getDoc (TopLevel cName)}
+  #if !defined(NO_IMPORT_COMMANDS)
   foreign import ccall
   #if !defined(SAFE_FOREIGN_CALLS)
     unsafe
   #endif
     "{cName}" {cName} :: {t}
+  #endif
 |]
   pure (d, is, es)

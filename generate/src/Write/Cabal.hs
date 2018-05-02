@@ -63,6 +63,12 @@ writeCabal modules platforms guardInfo =
               these then make sure this flag is enabled.
             default: False
 
+        flag no-import-commands
+            description:
+              Disable all command importing. This is useful in developing the
+              library without without having to link to libvulkan.
+            default: False
+
         library
           hs-source-dirs:      src
           -- We need to use cpphs, as regular cpp ruins latex math with lines
@@ -73,6 +79,9 @@ writeCabal modules platforms guardInfo =
 
           if flag(safe-foreign-calls)
             cpp-options: -DSAFE_FOREIGN_CALLS
+
+          if flag(no-import-commands)
+            cpp-options: -DNO_IMPORT_COMMANDS
 
           {indent 0 . vcat $ writeGuardedModules <$> guardGroups}
 
