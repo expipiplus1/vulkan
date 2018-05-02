@@ -78,8 +78,7 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
     ExceptT . pure . validationToEither $ specWrapperWriteElements s
   let
     seeds          = specSeeds s
-    -- wrapperModule = Module "Graphics.Vulkan.Wrapped" (snd wrapperWriteElements) [] []
-    wrapperModule  = Module "Graphics.Vulkan.Wrapped" [] [] []
+    wrapperModule = Module "Graphics.Vulkan.Wrapped" (snd wrapperWriteElements) [] []
     enabledStructs = filter
       ((`notElem` ignoredUnexportedNames) . TypeName . sName)
       (sStructs s)
@@ -153,7 +152,7 @@ specWrapperWriteElements Spec {..} = do
         filter ((`notElem` ignoredUnexportedNames) . TypeName . sName) sStructs
 
   let (commandMarshalErrors, commandWrappers) =
-        partitionEithers $ commandWrapper isHandle isBitmask <$> enabledCommands
+        partitionEithers $ commandWrapper isHandle isBitmask isStruct <$> enabledCommands
       (structMarshalErrors, structWrappers) =
         partitionEithers
           $   structWrapper isHandle isBitmask isStruct enabledStructs
