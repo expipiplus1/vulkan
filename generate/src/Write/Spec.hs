@@ -146,7 +146,7 @@ specWrapperWriteElements Spec {..} = do
         partitionEithers $ commandWrapper isHandle isBitmask <$> enabledCommands
       (structMarshalErrors, structWrappers) =
         partitionEithers
-          $   structWrapper isHandle isBitmask isStruct
+          $   structWrapper isHandle isBitmask isStruct enabledStructs
           <$> enabledStructs
   -- TODO: Warn properly on unwrapped command
   _ <- traverse_ traceShowM structMarshalErrors
