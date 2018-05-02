@@ -105,8 +105,8 @@ vkStructWriteElement =
       ]
     weProvides = Unguarded <$> [ WithConstructors $ WE.TypeName "ToCStruct"
                                , WithConstructors $ WE.TypeName "FromCStruct"
-                               , WithConstructors $ WE.TypeName "SomeCStruct"
-                               , Term "SomeCStruct"
+                               , WithConstructors $ WE.TypeName "SomeVkStruct"
+                               , Term "SomeVkStruct"
                                ]
     weDepends  = []
     weExtensions =
@@ -114,13 +114,15 @@ vkStructWriteElement =
       , "RankNTypes"
       , "ScopedTypeVariables"
       , "TypeApplications"
+      , "GADTs"
       ]
     weDoc = pure [qci|
       class ToCStruct marshalled c | marshalled -> c, c -> marshalled where
         withCStruct :: marshalled -> (c -> IO a) -> IO a
       class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
         fromCStruct :: c -> IO marshalled
-      newtype SomeCStruct = SomeCStruct \{unSomeCStruct :: forall a. (Ptr () -> IO a) -> IO a }
+      data SomeVkStruct where
+        SomeVkStruct :: \{unSomeVkStruct :: forall a. (Ptr () -> IO a) -> IO a } -> SomeVkStruct
 
       withCStructPtr :: (Storable c, ToCStruct a c) => a -> (Ptr c -> IO b) -> IO b
       withCStructPtr a f = withCStruct a (\c -> alloca (\p -> poke p c *> f p))
@@ -794,7 +796,7 @@ memberWrapper fromType from =
   -- TODO: proper pointer names
   NextPointer memberName -> pure $ \cont e ->
     let withPtr =
-          [qci|(unSomeCStruct {accessMember memberName}) (\\{ptrName memberName} -> {e} {ptrName memberName}|]
+          [qci|(unSomeVkStruct {accessMember memberName}) (\\{ptrName memberName} -> {e} {ptrName memberName}|]
     in [qci|{cont withPtr})|]
   ByteString memberName -> do
     tellImport "Data.ByteString" "useAsCString"
@@ -935,7 +937,7 @@ fromCStructMember from fromType =
               tellDepend (Unguarded (PatternName s))
               pure $ pretty s
           pure $ Right [qci|Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized {accessMember memberName}) (\p -> packCStringLen (castPtr p, {len}))|]
-        NextPointer memberName -> pure $ Right [qci|pure (SomeCStruct ($ {accessMember memberName}))|]
+        NextPointer memberName -> pure $ Right [qci|pure (SomeVkStruct ($ {accessMember memberName}))|]
         ByteString memberName -> do
           tellImport "Data.ByteString" "packCString"
           pure $ Right [qci|packCString {accessMember memberName}|]
@@ -1081,7 +1083,7 @@ writeMarshalledMember parentName = \case
     tellImport "Foreign.Ptr" "Ptr"
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: SomeCStruct
+      {pretty (toMemberName memberName)} :: SomeVkStruct
     |]
   ByteString memberName -> do
     tellImport "Data.ByteString" "ByteString"
