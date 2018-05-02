@@ -74,19 +74,29 @@ writeSpec
   -> IO ()
 writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
   ws <- ExceptT . pure . validationToEither $ specWriteElements s
-  wrapperWriteElements <- ExceptT . pure . validationToEither $ specWrapperWriteElements s
-  let seeds = specSeeds s
-      -- wrapperModule = Module "Graphics.Vulkan.Wrapped" (snd wrapperWriteElements) [] []
-      wrapperModule = Module "Graphics.Vulkan.Wrapped" [] [] []
-      structWrapperModule = Module "Graphics.Vulkan.Marshal" (vkStructWriteElement: fst wrapperWriteElements) [] []
-  partitionedModules             <- ExceptT . pure $ partitionElements ws seeds
+  wrapperWriteElements <-
+    ExceptT . pure . validationToEither $ specWrapperWriteElements s
+  let
+    seeds          = specSeeds s
+    -- wrapperModule = Module "Graphics.Vulkan.Wrapped" (snd wrapperWriteElements) [] []
+    wrapperModule  = Module "Graphics.Vulkan.Wrapped" [] [] []
+    enabledStructs = filter
+      ((`notElem` ignoredUnexportedNames) . TypeName . sName)
+      (sStructs s)
+    structWrapperModule = Module
+      "Graphics.Vulkan.Marshal"
+      (vkStructWriteElement (enabledStructs) : fst wrapperWriteElements)
+      []
+      []
+  partitionedModules <- ExceptT . pure $ partitionElements ws seeds
   let ms = structWrapperModule : wrapperModule : partitionedModules
   platformGuards <- ExceptT . pure . validationToEither $ getModuleGuardInfo
     (sExtensions s)
     (sPlatforms s)
   let aggs = makeAggregateModules platformGuards ms
-  liftIO $ writeFile cabalPath
-            (show (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards))
+  liftIO $ writeFile
+    cabalPath
+    (show (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards))
   liftIO (saveModules docs outDir (ms ++ aggs)) >>= \case
     [] -> pure ()
     es -> throwError es

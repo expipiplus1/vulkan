@@ -18,21 +18,21 @@ module Write.Marshal.Struct
 import           Control.Arrow                            ((&&&))
 import           Control.Bool
 import           Control.Category                         ((>>>))
-import Data.Char(isUpper, toUpper)
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.Writer.Strict              hiding ((<>))
 import           Data.Bifunctor
+import           Data.Char                                (isUpper, toUpper)
 import           Data.Closure
 import           Data.Foldable
 import           Data.Function
 import           Data.Functor
 import           Data.List                                (partition)
 import qualified Data.Map                                 as Map
-import qualified Data.Set                                 as Set
 import           Data.Maybe
 import           Data.Monoid                              (Endo (..))
 import qualified Data.MultiMap                            as MultiMap
+import qualified Data.Set                                 as Set
 import           Data.Text                                (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
@@ -79,9 +79,11 @@ structWrapper isHandle isBitmask isStruct allStructs struct = do
     (runWrap $ wrapStruct isDefaultable isStructType (containsUnion (sName struct)) struct)
   pure WriteElement {..}
 
-vkStructWriteElement :: WriteElement
-vkStructWriteElement =
+vkStructWriteElement :: [Struct] -> WriteElement
+vkStructWriteElement structs =
   let
+    containsUnion = doesStructContainUnion structs
+
     weName = "ToCStruct class declaration"
     weImports =
       [ Import "Foreign.Storable"      ["Storable", "poke", "pokeElemOff", "peek", "peekElemOff"]
@@ -100,6 +102,10 @@ vkStructWriteElement =
       , Import "GHC.TypeNats" ["natVal", "KnownNat", "type (<=)"]
       , Import "Foreign.C.Types" ["CChar(..)"]
       , Import "Data.Word" ["Word8"]
+      , Import "Data.Typeable" ["Typeable", "cast", "eqT"]
+      , Import "Data.Type.Equality" ["(:~:)(Refl)"]
+      , Import "Control.Exception" ["throwIO, Exception"]
+      , Import "Control.Applicative" ["(<|>)"]
       , QualifiedImport "Data.Vector.Generic"
                         ["cons", "empty"]
       ]
@@ -107,22 +113,74 @@ vkStructWriteElement =
                                , WithConstructors $ WE.TypeName "FromCStruct"
                                , WithConstructors $ WE.TypeName "SomeVkStruct"
                                , Term "SomeVkStruct"
+                               , Term "withCStructPtr"
+                               , Term "fromCStructPtr"
+                               , Term "fromSomeVkStruct"
+                               , Term "fromSomeVkStructChain"
+                               , Term "peekVkStruct"
+                               , Term "withSomeVkStruct"
                                ]
-    weDepends  = []
+
+
+
+    -- TODO: This also depends on all the patterns here, and all the type names
+    weDepends  = [Unguarded (WE.TypeName "VkStructureType")]
     weExtensions =
       [ "FunctionalDependencies"
       , "RankNTypes"
       , "ScopedTypeVariables"
       , "TypeApplications"
       , "GADTs"
+      , "StandaloneDeriving"
+      , "LambdaCase"
       ]
     weDoc = pure [qci|
       class ToCStruct marshalled c | marshalled -> c, c -> marshalled where
         withCStruct :: marshalled -> (c -> IO a) -> IO a
       class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
         fromCStruct :: c -> IO marshalled
+      class HasPNext a where
+        getPNext :: a -> Maybe SomeVkStruct
+
+      -- TODO: Better exceptions
+      data VulkanException
+        = UnknownStructureType VkStructureType
+        | MarshallingUnionType
+        deriving (Show, Typeable)
+
+      instance Exception VulkanException
+
       data SomeVkStruct where
-        SomeVkStruct :: \{unSomeVkStruct :: forall a. (Ptr () -> IO a) -> IO a } -> SomeVkStruct
+        SomeVkStruct
+          :: (ToCStruct a b, Storable b, Show a, Eq a, Typeable a, HasPNext a)
+          => a
+          -> SomeVkStruct
+
+      instance HasPNext SomeVkStruct where
+        getPNext (SomeVkStruct a) = getPNext a
+
+      deriving instance Show SomeVkStruct
+
+      instance Eq SomeVkStruct where
+        SomeVkStruct (a :: a) == SomeVkStruct (b :: b) = case eqT @a @b of
+          Nothing   -> False
+          Just Refl -> a == b
+
+      fromSomeVkStruct :: Typeable a => SomeVkStruct -> Maybe a
+      fromSomeVkStruct (SomeVkStruct a) = cast a
+
+      fromSomeVkStructChain :: Typeable a => SomeVkStruct -> Maybe a
+      fromSomeVkStructChain a =
+        fromSomeVkStruct a <|> (getPNext a >>= fromSomeVkStructChain)
+
+      withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
+      withSomeVkStruct (SomeVkStruct a) f = withCStructPtr a (f . castPtr)
+
+      peekVkStruct :: Ptr () -> IO SomeVkStruct
+      peekVkStruct p = do
+        peek (castPtr p :: Ptr VkStructureType) >>= \case
+          {indent 0 . vcat . mapMaybe (writeSomeStructPeek containsUnion) $ structs}
+          t -> throwIO (UnknownStructureType t)
 
       withCStructPtr :: (Storable c, ToCStruct a c) => a -> (Ptr c -> IO b) -> IO b
       withCStructPtr a f = withCStruct a (\c -> alloca (\p -> poke p c *> f p))
@@ -222,6 +280,21 @@ vkStructWriteElement =
     |]
   in WriteElement{..}
 
+writeSomeStructPeek
+  :: (Text -> Bool)
+  -- ^ Does a struct contain a union
+  -> Struct
+  -> Maybe (Doc ())
+writeSomeStructPeek containsUnion Struct{..}
+  = do
+    StructMember {smName = "sType", smValues = Just [enum]} : _ <- pure sMembers
+    pure $ if containsUnion sName
+      then [qci|
+             -- We are not able to marshal this type back into Haskell as we don't know which union component to use
+             {enum} -> throwIO MarshallingUnionType
+           |]
+      else [qci|{enum} -> SomeVkStruct <$> fromCStructPtr (castPtr p :: Ptr {sName})|]
+
 ----------------------------------------------------------------
 -- The wrapping commands
 ----------------------------------------------------------------
@@ -236,14 +309,15 @@ wrapStruct
   -> Struct
   -> WrapM [DocMap -> Doc ()]
 wrapStruct isDefaultable isStruct containsUnion s = do
-  marshalled    <- marshallStruct isStruct isDefaultable s
-  toCStructDoc  <- writeToCStructInstance marshalled
-  fromCStructDoc  <- writeFromCStructInstance containsUnion marshalled
-  marshalledDoc <- writeMarshalled marshalled
+  marshalled     <- marshallStruct isStruct isDefaultable s
+  toCStructDoc   <- writeToCStructInstance marshalled
+  fromCStructDoc <- writeFromCStructInstance containsUnion marshalled
+  hasPNextDoc    <- writeHasPNextInstance marshalled
+  marshalledDoc  <- writeMarshalled marshalled
   tellExtension "DuplicateRecordFields"
   tellExport (Unguarded (WithConstructors (WE.TypeName (dropVkType (sName s)))))
   tellExport (Unguarded (Term (dropVkType (sName s))))
-  let weDoc docMap = vsep [marshalledDoc docMap, toCStructDoc, fromCStructDoc]
+  let weDoc docMap = vsep [marshalledDoc docMap, toCStructDoc, fromCStructDoc, hasPNextDoc]
   pure [weDoc]
 
 ----------------------------------------------------------------
@@ -794,10 +868,12 @@ memberWrapper fromType from =
           with  = [qci|withCStruct {accessMember memberName} (\\{paramName} -> {e} {paramName}|]
       in  [qci|{cont with})|]
   -- TODO: proper pointer names
-  NextPointer memberName -> pure $ \cont e ->
-    let withPtr =
-          [qci|(unSomeVkStruct {accessMember memberName}) (\\{ptrName memberName} -> {e} {ptrName memberName}|]
-    in [qci|{cont withPtr})|]
+  NextPointer memberName -> do
+    tellImport "Foreign.Marshal.Utils" "maybeWith"
+    pure $ \cont e ->
+      let withPtr =
+            [qci|maybeWith withSomeVkStruct {accessMember memberName} (\\{ptrName memberName} -> {e} {ptrName memberName}|]
+      in  [qci|{cont withPtr})|]
   ByteString memberName -> do
     tellImport "Data.ByteString" "useAsCString"
     pure $ \cont e ->
@@ -937,7 +1013,9 @@ fromCStructMember from fromType =
               tellDepend (Unguarded (PatternName s))
               pure $ pretty s
           pure $ Right [qci|Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized {accessMember memberName}) (\p -> packCStringLen (castPtr p, {len}))|]
-        NextPointer memberName -> pure $ Right [qci|pure (SomeVkStruct ($ {accessMember memberName}))|]
+        NextPointer memberName -> do
+          tellImport "Foreign.Marshal.Utils" "maybePeek"
+          pure $ Right [qci|maybePeek peekVkStruct {accessMember memberName}|]
         ByteString memberName -> do
           tellImport "Data.ByteString" "packCString"
           pure $ Right [qci|packCString {accessMember memberName}|]
@@ -977,7 +1055,7 @@ fromCStructMember from fromType =
               e = [qci|Data.Vector.take (fromIntegral {accessMember validCountMemberName}) (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized {accessMember memberName}))|]
           pure . Right $ case fromCRep of
             Nothing -> [qci|pure ({e})|]
-            Just f -> [qci|traverse {f} ({e})|]
+            Just f  -> [qci|traverse {f} ({e})|]
         FixedArrayZeroPad memberName _ _ -> do
           tellQualifiedImport "Data.Vector.Storable.Sized" "fromSized"
           tellQualifiedImport "Data.Vector.Generic" "convert"
@@ -994,6 +1072,20 @@ fromCStructMember from fromType =
         -- m -> pure $ Right (pretty ("_ -- unhandled" T.<+> T.tShow m))
         -- m -> pure $ Right "_"
 
+----------------------------------------------------------------
+-- HasPNext instance
+----------------------------------------------------------------
+
+writeHasPNextInstance :: MarshalledStruct -> WrapM (Doc ())
+writeHasPNextInstance MarshalledStruct{..} =
+  case [n | NextPointer n  <- msMembers] of
+    [] -> pure [qci|-- This struct doesn't have a pNext member"|]
+    [n] ->
+      pure $ [qci|
+        instance HasPNext {msName} where
+          getPNext a = vkPNext (a :: {msName})
+      |]
+    _ -> throwError [Other ("Struct with more than one pNext member:" T.<+> T.tShow msName)]
 
 ----------------------------------------------------------------
 -- Utils
@@ -1054,6 +1146,7 @@ writeMarshalled MarshalledStruct {..} = do
            intercalatePrependEither "," (($ getDoc) <$> memberDocs)
           }
         }
+        deriving (Show, Eq)
       |]
     AUnion -> do
       memberDocs <- traverse
@@ -1064,6 +1157,7 @@ writeMarshalled MarshalledStruct {..} = do
       data {msName}
         = {indent (-2) . vsep $
            intercalatePrependEither "|" (($ getDoc) <$> memberDocs)}
+        deriving (Show, Eq)
       |]
 
 writeMarshalledMember
@@ -1083,7 +1177,7 @@ writeMarshalledMember parentName = \case
     tellImport "Foreign.Ptr" "Ptr"
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: SomeVkStruct
+      {pretty (toMemberName memberName)} :: Maybe SomeVkStruct
     |]
   ByteString memberName -> do
     tellImport "Data.ByteString" "ByteString"
