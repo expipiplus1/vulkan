@@ -17,10 +17,8 @@ module Write.Marshal.Struct
 
 import           Control.Arrow                            ((&&&))
 import           Control.Bool
-import           Control.Category                         ((>>>))
 import           Control.Monad
 import           Control.Monad.Except
-import           Control.Monad.Writer.Strict              hiding ((<>))
 import           Data.Bifunctor
 import           Data.Char                                (isUpper, toUpper)
 import           Data.Closure
@@ -95,7 +93,6 @@ vkStructWriteElement structs =
                         ["length", "take", "replicate", "fromList", "Vector", "(++)"]
       , QualifiedImport "Data.Vector.Generic.Sized.Internal" ["Vector(Vector)"]
       , QualifiedImport "Data.Vector.Generic.Sized" ["Vector"]
-      , QualifiedImport "Data.Vector.Sized"         ["Vector"]
       , Import          "Data.Proxy"                ["Proxy(Proxy)"]
       , Import          "Data.ByteString"
                         ["ByteString", "take", "unpack"]
@@ -107,7 +104,7 @@ vkStructWriteElement structs =
       , Import "Control.Exception" ["throwIO, Exception"]
       , Import "Control.Applicative" ["(<|>)"]
       , QualifiedImport "Data.Vector.Generic"
-                        ["cons", "empty"]
+                        ["snoc", "empty"]
       ]
     weProvides = Unguarded <$> [ WithConstructors $ WE.TypeName "ToCStruct"
                                , WithConstructors $ WE.TypeName "FromCStruct"
@@ -127,12 +124,16 @@ vkStructWriteElement structs =
     weDepends  = [Unguarded (WE.TypeName "VkStructureType")]
     weExtensions =
       [ "FunctionalDependencies"
+      , "DataKinds"
+      , "ExplicitNamespaces"
+      , "FlexibleContexts"
+      , "GADTs"
+      , "LambdaCase"
       , "RankNTypes"
       , "ScopedTypeVariables"
-      , "TypeApplications"
-      , "GADTs"
       , "StandaloneDeriving"
-      , "LambdaCase"
+      , "TypeApplications"
+      , "TypeOperators"
       ]
     weDoc = pure [qci|
       class ToCStruct marshalled c | marshalled -> c, c -> marshalled where
@@ -201,9 +202,9 @@ vkStructWriteElement structs =
         -> (Vector b -> IO d)
         -> IO d
       withArray alloc v cont =
-        let go :: Int -> a -> (Vector b -> IO d) -> (Vector b -> IO d)
-            go index x complete v = alloc x (\b -> complete (Data.Vector.Generic.cons b v))
-        in  ifoldr go cont v (Data.Vector.Generic.empty)
+        let go :: a -> (Vector b -> IO d) -> (Vector b -> IO d)
+            go x complete bs = alloc x (\b -> complete (Data.Vector.Generic.snoc bs b))
+        in  foldr go cont v (Data.Vector.Generic.empty)
         -- | Pad or trucate a vector so that it has the required size
 
       withVec
@@ -836,7 +837,7 @@ memberWrapper fromType from =
     tellImports [QualifiedImport "Data.Vector" ["length"]]
     pure $ \cont e -> cont [qci|{e} (fromIntegral (Data.Vector.length {accessMember vec}))|]
   EnabledFlag enabled       -> do
-    tellImports [QualifiedImport "Data.Maybe" ["maybe"]]
+    tellImport "Data.Maybe" "maybe"
     tellDepends (Unguarded <$> [PatternName "VK_FALSE", PatternName "VK_TRUE"])
     pure $ \cont e -> cont [qci|{e} (maybe VK_FALSE (const VK_TRUE) {accessMember enabled})|]
   OptionalZero memberName _ -> do
@@ -1063,14 +1064,11 @@ fromCStructMember from fromType =
           pure $ Right [qci|pure (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized {accessMember memberName}))|]
         FixedArrayTuple memberName length _ -> do
           tellQualifiedImport "Data.Vector.Storable.Sized" "unsafeIndex"
-          let tuple = tupled ((\i -> [qci|Data.Vector.Storable.Sized.unsafeIndex {accessMember memberName} {i}|]) <$> [0 .. pred length])
+          let tuple = tupled ((\i -> [qci|Data.Vector.Storable.Sized.unsafeIndex x {i}|]) <$> [0 .. pred length])
           pure $ Right [qci|pure (let x = {accessMember memberName} in {tuple})|]
         OptionalZero memberName _ -> do
           pure $ Right [qci|pure (let x = {accessMember memberName} in if x == 0 then Nothing else Just x)|]
-
         m -> throwError [Other (T.tShow m)]
-        -- m -> pure $ Right (pretty ("_ -- unhandled" T.<+> T.tShow m))
-        -- m -> pure $ Right "_"
 
 ----------------------------------------------------------------
 -- HasPNext instance
