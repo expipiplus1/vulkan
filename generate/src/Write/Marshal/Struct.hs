@@ -101,8 +101,9 @@ vkStructWriteElement structs =
       , Import "Data.Word" ["Word8"]
       , Import "Data.Typeable" ["Typeable", "cast", "eqT"]
       , Import "Data.Type.Equality" ["(:~:)(Refl)"]
-      , Import "Control.Exception" ["throwIO, Exception"]
+      , Import "Control.Exception" ["throwIO"]
       , Import "Control.Applicative" ["(<|>)"]
+      , Import "GHC.IO.Exception" ["IOException(..)", "IOErrorType(InvalidArgument)"]
       , QualifiedImport "Data.Vector.Generic"
                         ["snoc", "empty"]
       ]
@@ -112,10 +113,12 @@ vkStructWriteElement structs =
                                , Term "SomeVkStruct"
                                , Term "withCStructPtr"
                                , Term "fromCStructPtr"
+                               , Term "fromCStructPtrElem"
                                , Term "fromSomeVkStruct"
                                , Term "fromSomeVkStructChain"
                                , Term "peekVkStruct"
                                , Term "withSomeVkStruct"
+                               , Term "withVec"
                                ]
 
 
@@ -143,14 +146,6 @@ vkStructWriteElement structs =
       class HasPNext a where
         getPNext :: a -> Maybe SomeVkStruct
 
-      -- TODO: Better exceptions
-      data VulkanException
-        = UnknownStructureType VkStructureType
-        | MarshallingUnionType
-        deriving (Show, Typeable)
-
-      instance Exception VulkanException
-
       data SomeVkStruct where
         SomeVkStruct
           :: (ToCStruct a b, Storable b, Show a, Eq a, Typeable a, HasPNext a)
@@ -177,11 +172,21 @@ vkStructWriteElement structs =
       withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
       withSomeVkStruct (SomeVkStruct a) f = withCStructPtr a (f . castPtr)
 
-      peekVkStruct :: Ptr () -> IO SomeVkStruct
+      -- | Read the @sType@ member of a Vulkan struct and marshal the struct into
+      -- a 'SomeVkStruct'
+      --
+      -- Make sure that you only pass this a pointer to a Vulkan struct with a
+      -- @sType@ member at offset 0 otherwise the behaviour is undefined.
+      --
+      -- - Throws an 'InvalidArgument' 'IOException' if given a pointer to a
+      --   struct with an unrecognised @sType@ member.
+      -- - Throws an 'InvalidArgument' 'IOException' if given a pointer to a
+      --   struct which can't be marshalled (those containing union types)
+      peekVkStruct :: Ptr SomeVkStruct -> IO SomeVkStruct
       peekVkStruct p = do
         peek (castPtr p :: Ptr VkStructureType) >>= \case
           {indent 0 . vcat . mapMaybe (writeSomeStructPeek containsUnion) $ structs}
-          t -> throwIO (UnknownStructureType t)
+          t -> throwIO (IOError Nothing InvalidArgument "" ("Unknown VkStructureType: " ++ show t) Nothing Nothing)
 
       withCStructPtr :: (Storable c, ToCStruct a c) => a -> (Ptr c -> IO b) -> IO b
       withCStructPtr a f = withCStruct a (\c -> alloca (\p -> poke p c *> f p))
@@ -205,7 +210,6 @@ vkStructWriteElement structs =
         let go :: a -> (Vector b -> IO d) -> (Vector b -> IO d)
             go x complete bs = alloc x (\b -> complete (Data.Vector.Generic.snoc bs b))
         in  foldr go cont v (Data.Vector.Generic.empty)
-        -- | Pad or trucate a vector so that it has the required size
 
       withVec
         :: forall a b d
@@ -218,9 +222,8 @@ vkStructWriteElement structs =
         let go :: Int -> a -> IO d -> IO d
             go index x complete = alloc x (\b -> pokeElemOff p index b *> complete)
         in  ifoldr go (cont p) v
-        -- | Pad or trucate a vector so that it has the required size
 
-      -- | Pad or trucate a vector so that it has the required size
+      -- | Pad or truncate a vector so that it has the required size
       padSized
         :: forall n a v
          . (KnownNat n, Data.Vector.Generic.Vector v a)
@@ -292,7 +295,7 @@ writeSomeStructPeek containsUnion Struct{..}
     pure $ if containsUnion sName
       then [qci|
              -- We are not able to marshal this type back into Haskell as we don't know which union component to use
-             {enum} -> throwIO MarshallingUnionType
+             {enum} -> throwIO (IOError Nothing InvalidArgument "" ("Unable to marshal Vulkan structure containing unions: " ++ show {enum}) Nothing Nothing)
            |]
       else [qci|{enum} -> SomeVkStruct <$> fromCStructPtr (castPtr p :: Ptr {sName})|]
 
@@ -1016,7 +1019,8 @@ fromCStructMember from fromType =
           pure $ Right [qci|Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized {accessMember memberName}) (\p -> packCStringLen (castPtr p, {len}))|]
         NextPointer memberName -> do
           tellImport "Foreign.Marshal.Utils" "maybePeek"
-          pure $ Right [qci|maybePeek peekVkStruct {accessMember memberName}|]
+          tellImport "Foreign.Ptr" "castPtr"
+          pure $ Right [qci|maybePeek peekVkStruct (castPtr {accessMember memberName})|]
         ByteString memberName -> do
           tellImport "Data.ByteString" "packCString"
           pure $ Right [qci|packCString {accessMember memberName}|]
@@ -1297,16 +1301,6 @@ writeMarshalledUnionMember parentName = \case
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
-
-isUnivalued :: MemberUsage a -> Bool
-isUnivalued = \case
-  Univalued _ -> True
-  _ -> False
-
-isLength :: MemberUsage a -> Bool
-isLength = \case
-  Length _ -> True
-  _ -> False
 
 toMemberName :: Text -> Text
 toMemberName = ("vk" <>) . T.upperCaseFirst
