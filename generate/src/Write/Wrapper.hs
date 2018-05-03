@@ -76,18 +76,19 @@ wrapCommand
   -- ^ Is this is a struct
   -> Command
   -> WrapM [Doc ()]
-wrapCommand isDefaultable isStruct Command {..} = do
+wrapCommand isDefaultable isStruct c@Command {..} = do
   let lengthPairs :: [(Parameter, Maybe Text, [Parameter])]
       lengthPairs = getLengthPointerPairs cParameters
       makeWts :: Maybe CommandUsage -> WrapM ([WrappingType], [Constraint])
       makeWts usage = listens getConstraints $
         parametersToWrappingTypes isDefaultable isStruct usage lengthPairs cParameters
   let printTypes makeName (wts, constraints) = do
-        sig <- wtsToSig cReturnType wts
+        sig <- wtsToSig c wts
+        wrapped <- wrap c wts
         pure $ line <> [qci|
           -- | Wrapper for {cName}
           {makeName cName} :: {if not (null constraints) then tupled (pretty <$> constraints) <+> "=> " else mempty}{sig}
-          {makeName cName} = {wrap cReturnType wts (pretty cName) }|]
+          {makeName cName} = {wrapped (pretty cName)}|]
   ds <- if isDualUseCommand lengthPairs
     then do
       wts1 <- do
@@ -97,7 +98,9 @@ wrapCommand isDefaultable isStruct Command {..} = do
         tellExport (Unguarded (Term (funName cName)))
         printTypes funName =<< makeWts (Just CommandGetValues)
       pure [wts1, wts2]
-    else fmap pure $ printTypes funName =<< makeWts Nothing
+    else do
+      tellExport (Unguarded (Term (funName cName)))
+      fmap pure $ printTypes funName =<< makeWts Nothing
   tellDepend (Unguarded (TermName cName))
   pure ds
 
@@ -116,14 +119,14 @@ isDualUseCommand = \case
     -> True
   _ -> False
 
-wtsToSig :: Type -> [WrappingType] -> WrapM (Doc ())
-wtsToSig returnType ts = do
+wtsToSig :: Command -> [WrappingType] -> WrapM (Doc ())
+wtsToSig c@Command{..} ts = do
   let outputs = [ t | WrappingType _ (Just (Output t _)) _ <- ts ]
-  ret <- tupled <$> if returnType == Void
-    then pure outputs
-    else do
-      returnTypeDoc <- toHsType returnType
+  ret <- tupled <$> if commandReturnsResult c
+    then do
+      returnTypeDoc <- toHsType cReturnType
       pure (returnTypeDoc : outputs)
+    else pure outputs
   pure
     $ intercalateArrows (mapMaybe (fmap iType . wtInput) ts <> ["IO" <+> ret])
 
@@ -184,6 +187,22 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
         Proto t ps ->
           Proto (deepMarshalledType t) (second deepMarshalledType <$> ps)
         t -> marshalledType t
+
+      elidedLengthVector
+        :: Type
+        -- ^ Struct type
+        -> Text
+        -- ^ Length member name
+        -> Maybe Text
+        -- ^ The name of the vector member which has this length
+      elidedLengthVector structType lengthName =
+        -- TODO: Don't hard code this
+        if structType
+             == TypeName "DescriptorSetAllocateInfo"
+             && lengthName
+             == "descriptorSetCount"
+          then Just "pSetLayouts"
+          else Nothing
 
       parameterToWrappingType :: Parameter -> WrapM WrappingType
       parameterToWrappingType p
@@ -301,7 +320,7 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 , Void <- t
                 , Nothing <- pIsOptional p
                 -> do
-                  tellImport "Data.Vector" "Vector"
+                  tellImport "Data.Vector"           "Vector"
                   tellImport "Foreign.Marshal.Utils" "with"
                   let alloc = "(flip ($))"
                   w <- voidVecWrap alloc (pName p)
@@ -336,6 +355,14 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   tyName <- toHsType ptrType
                   pure $ InputType (Input (pName p) tyName)
                                    (simpleWrap (pName p))
+                | -- Is another pointer being returned
+                  Ptr NonConst t' <- t
+                , Just [False, True] <- pIsOptional p
+                -> do
+                  tyName <- toHsType t
+                  (w, ptr) <- simpleAllocaOutputWrap (pName p)
+                  tellImport "Foreign.Storable" "peek"
+                  pure $ OutputType (Output tyName ("peek" <+> ptr)) w
                 | -- A pointer to a non-optional return value
                   Nothing <- pLength p
                 , isSimpleType t
@@ -367,20 +394,36 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   tellExtension "DuplicateRecordFields"
                   structType <- case getParameter s of
                     Nothing -> throwError [Other "Cant find length parameter"]
-                    Just p' -> case pType p' of
-                      Ptr _ structType -> toHsType structType
-                      structType       -> toHsType structType
-                  let lengthExpression =
-                        toRecordMemberName m
-                          <> " "
-                          <> "("
-                          <> dropPointer s
-                          <> " :: "
-                          <> T.tShow structType
-                          <> ")"
+                    Just p' -> pure $ case deepMarshalledType (pType p') of
+                      Ptr _ structType -> structType
+                      structType       -> structType
+                  structTypeDoc    <- toHsType structType
+                  lengthExpression <- case elidedLengthVector structType m of
+                    Nothing ->
+                      pure
+                        $  "fromIntegral ("
+                        <> toRecordMemberName m
+                        <> " "
+                        <> "("
+                        <> dropPointer s
+                        <> " :: "
+                        <> T.tShow structTypeDoc
+                        <> "))"
+                    Just vec -> do
+                      tellQualifiedImport "Data.Vector" "length"
+                      pure
+                        $  "Data.Vector.length ("
+                        <> toRecordMemberName vec
+                        <> " ("
+                        <> dropPointer s
+                        <> " :: "
+                        <> T.tShow structTypeDoc
+                        <> "))"
                   peekElemOff <- getPeekElemOff t
-                  peek <- peekVectorOutput peekElemOff (pName p) lengthExpression
-                  w    <- vectorOutputWrap (pName p) lengthExpression
+                  peek        <- peekVectorOutput peekElemOff
+                                                  (pName p)
+                                                  lengthExpression
+                  w <- vectorOutputWrap (pName p) lengthExpression
                   pure $ OutputType (Output ("Vector " <> tyName) peek) w
                 | -- A vector to read which will be made as long as an input parameter
                   Just (NamedLength lengthParamName) <- pLength p
@@ -398,8 +441,10 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                           <> dropPointer (pName inputVector)
                           <> ")"
                   peekElemOff <- getPeekElemOff t
-                  peek <- peekVectorOutput peekElemOff (pName p) lengthExpression
-                  w    <- vectorOutputWrap (pName p) lengthExpression
+                  peek        <- peekVectorOutput peekElemOff
+                                                  (pName p)
+                                                  lengthExpression
+                  w <- vectorOutputWrap (pName p) lengthExpression
                   pure $ OutputType (Output ("Vector " <> tyName) peek) w
                 | -- The length dual use command output value
                   -- It is not an array
@@ -442,13 +487,13 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                     CommandGetLength -> InferredType <$> passNullPtrWrap
                     CommandGetValues -> do
                       peekElemOff <- getPeekElemOff t
-                      peek <- peekVectorOutputPeekLength
+                      peek        <- peekVectorOutputPeekLength
                         peekElemOff
                         (pName p)
                         (ptrName (dropPointer lengthParamName))
                       w <- vectorOutputWrap
                         (pName p)
-                        (dropPointer lengthParamName)
+                        ("fromIntegral" T.<+> dropPointer lengthParamName)
                       pure $ OutputType (Output ("Vector " <> tyName) peek) w
               t -> throwError [Other ("unhandled type: " <> T.tShow t)]
     in
@@ -666,7 +711,7 @@ peekVectorOutput
   -> WrapM (Doc ())
 peekVectorOutput peekElemOff paramName len = do
   tellQualifiedImport "Data.Vector" "generateM"
-  pure [qci|(Data.Vector.generateM (fromIntegral {len}) ({peekElemOff} {ptrName (dropPointer paramName)}))|]
+  pure [qci|(Data.Vector.generateM ({len}) ({peekElemOff} {ptrName (dropPointer paramName)}))|]
 
 peekVectorOutputPeekLength
   :: Text
@@ -696,7 +741,7 @@ vectorOutputWrap vecName len = do
      paramPtr  = pretty (ptrName (dropPointer vecName))
      -- Note the bracket opened here is closed after cont!
      withPtr
-       = [qci|allocaArray (fromIntegral ({len})) (\\{paramPtr} -> {e} {paramPtr}|]
+       = [qci|allocaArray ({len}) (\\{paramPtr} -> {e} {paramPtr}|]
    in
      [qci|{cont withPtr})|]
 
@@ -716,28 +761,43 @@ tupleWrap n paramName = do
            [qci|\\{tupled paramNames} -> allocaArray {n} (\\{paramPtr} -> {pokes} *> {e} {paramPtr}|]
      in [qci|{cont withPtr})|]
 
-wrap :: Type -> [WrappingType] -> Doc () -> Doc ()
-wrap returnType wts = ($makeOutput) . foldWrappers . fmap wtWrap $ wts
-  where
+wrap :: Command -> [WrappingType] -> WrapM (Doc () -> Doc ())
+wrap c wts = do
+  makeOutput <-
+    let outputs = [ o | WrappingType _ (Just o) _ <- wts ]
+    in
+      case cReturnType c of
+        Void -> pure $ \e -> [qci|{e} *> ({tupleA (oPeek <$> outputs)})|]
+        TypeName "VkResult" -> do
+          tellImport "Control.Monad"     "when"
+          tellImport "Control.Exception" "throwIO"
+          tellDepend (Unguarded (PatternName "VK_SUCCESS"))
+          tellDepend (Unguarded (TermName "VulkanException"))
+          let returnsResult = commandReturnsResult c
+          pure
+            $ \e ->
+                [qci|{e} >>= (\\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ({tupleA (["pure r"| returnsResult] ++ (oPeek <$> outputs))}))|]
+        _ ->
+          pure $ \e ->
+            [qci|{e} >>= (\\r -> {tupleA ("pure r" : (oPeek <$> outputs))})|]
+  pure $ ($ makeOutput) . foldWrappers . fmap wtWrap $ wts
 
-    tupleA :: [Doc ()] -> Doc ()
-    tupleA = \case
-      []  -> "()"
-      [x] -> x
-      xs ->
-        "(" <> hcat (replicate (length xs - 1) ",") <> ")" <+> "<$>" <+> hcat
-          (punctuate "<*>" xs)
+-- | Does this command have an interesting result
+commandReturnsResult :: Command -> Bool
+commandReturnsResult Command {..} = case cReturnType of
+  Void                -> False
+  TypeName "VkResult" -> ["VK_SUCCESS"] /= fromMaybe [] cSuccessCodes
+  _                   -> True
 
-    makeOutput :: Doc () -> Doc ()
-    makeOutput =
-      let outputs = [ o | WrappingType _ (Just o) _ <- wts ]
-      in
-        case outputs of
-          [] -> id
-          xs -> case returnType of
-            Void -> \e -> [qci|{e} *> ({tupleA (oPeek <$> xs)})|]
-            _    -> \e ->
-              [qci|{e} >>= (\\r -> {tupleA ("pure r" : (oPeek <$> xs))})|]
+-- | Create a tuple from some arguments in an Applicative Functor
+tupleA :: [Doc ()] -> Doc ()
+tupleA = \case
+  []  -> "pure ()"
+  [x] -> x
+  xs ->
+    "(" <> hcat (replicate (length xs - 1) ",") <> ")" <+> "<$>" <+> hcat
+      (punctuate "<*>" xs)
+
 
 -- | Several commands such as `vkEnumerateInstanceExtensionProperties` have a dual usage
 --

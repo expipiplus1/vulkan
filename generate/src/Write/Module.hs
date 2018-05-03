@@ -206,9 +206,13 @@ simplifyDependencies deps =
   in  Set.toList unguarded ++ Set.toList guarded ++ Set.toList invGuarded
 
 moduleExtensions :: Module -> [Doc ()]
-moduleExtensions Module{..} =
-  let es = nubOrd $ weExtensions =<< mWriteElements
-  in es <&> \e -> [qci|\{-# language {e} #-}|]
+moduleExtensions Module {..} =
+  let extraExtensions =
+        [ "PatternSynonyms"
+        | PatternName _ <- fmap unGuarded . weDepends =<< mWriteElements
+        ]
+      es = nubOrd $ (weExtensions =<< mWriteElements) ++ extraExtensions
+  in  es <&> \e -> [qci|\{-# language {e} #-}|]
 
 -- Get the CPP guard for a Guarded value
 guardCPPGuard :: Guarded a -> Maybe Text

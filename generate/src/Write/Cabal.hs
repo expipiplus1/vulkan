@@ -18,7 +18,7 @@ import           Write.Module
 import           Write.Util
 
 vulkanVersion :: Doc ()
-vulkanVersion = "2.1.0.0"
+vulkanVersion = "3.0.0.0"
 
 writeCabal :: [Module] -> [Platform] -> [PlatformGuardInfo] -> Doc ()
 writeCabal modules platforms guardInfo =

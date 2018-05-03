@@ -82,49 +82,53 @@ vkStructWriteElement structs =
   let
     containsUnion = doesStructContainUnion structs
 
-    weName = "ToCStruct class declaration"
-    weImports =
-      [ Import "Foreign.Storable"      ["Storable", "poke", "pokeElemOff", "peek", "peekElemOff"]
-      , Import "Foreign.Ptr"           ["Ptr"]
-      , Import "Foreign.Marshal.Alloc" ["alloca"]
-      , Import "Foreign.Marshal.Array" ["allocaArray"]
-      , Import "Data.Vector"           ["Vector", "ifoldr"]
-      , QualifiedImport "Data.Vector.Generic"
-                        ["length", "take", "replicate", "fromList", "Vector", "(++)"]
-      , QualifiedImport "Data.Vector.Generic.Sized.Internal" ["Vector(Vector)"]
-      , QualifiedImport "Data.Vector.Generic.Sized" ["Vector"]
-      , Import          "Data.Proxy"                ["Proxy(Proxy)"]
-      , Import          "Data.ByteString"
-                        ["ByteString", "take", "unpack"]
-      , Import "GHC.TypeNats" ["natVal", "KnownNat", "type (<=)"]
-      , Import "Foreign.C.Types" ["CChar(..)"]
-      , Import "Data.Word" ["Word8"]
-      , Import "Data.Typeable" ["Typeable", "cast", "eqT"]
-      , Import "Data.Type.Equality" ["(:~:)(Refl)"]
-      , Import "Control.Exception" ["throwIO"]
-      , Import "Control.Applicative" ["(<|>)"]
-      , Import "GHC.IO.Exception" ["IOException(..)", "IOErrorType(InvalidArgument)"]
-      , QualifiedImport "Data.Vector.Generic"
-                        ["snoc", "empty"]
-      ]
-    weProvides = Unguarded <$> [ WithConstructors $ WE.TypeName "ToCStruct"
-                               , WithConstructors $ WE.TypeName "FromCStruct"
-                               , WithConstructors $ WE.TypeName "SomeVkStruct"
-                               , Term "SomeVkStruct"
-                               , Term "withCStructPtr"
-                               , Term "fromCStructPtr"
-                               , Term "fromCStructPtrElem"
-                               , Term "fromSomeVkStruct"
-                               , Term "fromSomeVkStructChain"
-                               , Term "peekVkStruct"
-                               , Term "withSomeVkStruct"
-                               , Term "withVec"
-                               ]
+    weName        = "ToCStruct class declaration"
+    weImports
+      = [ Import "Foreign.Storable"
+                 ["Storable", "poke", "pokeElemOff", "peek", "peekElemOff"]
+        , Import "Foreign.Ptr"           ["Ptr"]
+        , Import "Foreign.Marshal.Alloc" ["alloca"]
+        , Import "Foreign.Marshal.Array" ["allocaArray"]
+        , Import "Data.Vector"           ["Vector", "ifoldr"]
+        , QualifiedImport
+          "Data.Vector.Generic"
+          ["length", "take", "replicate", "fromList", "Vector", "(++)"]
+        , QualifiedImport "Data.Vector.Generic.Sized.Internal"
+                          ["Vector(Vector)"]
+        , QualifiedImport "Data.Vector.Generic.Sized" ["Vector"]
+        , Import          "Data.Proxy"                ["Proxy(Proxy)"]
+        , Import "Data.ByteString" ["ByteString", "take", "unpack"]
+        , Import "GHC.TypeNats" ["natVal", "KnownNat", "type (<=)"]
+        , Import          "Foreign.C.Types"           ["CChar(..)"]
+        , Import          "Data.Word"                 ["Word8"]
+        , Import "Data.Typeable" ["Typeable", "cast", "eqT"]
+        , Import          "Data.Type.Equality"        ["(:~:)(Refl)"]
+        , Import          "Control.Exception"         ["throwIO"]
+        , Import          "Control.Applicative"       ["(<|>)"]
+        , Import "GHC.IO.Exception"
+                 ["IOException(..)", "IOErrorType(InvalidArgument)"]
+        , QualifiedImport "Data.Vector.Generic" ["snoc", "empty"]
+        ]
+    weProvides =
+      Unguarded
+        <$> [ WithConstructors $ WE.TypeName "ToCStruct"
+            , WithConstructors $ WE.TypeName "FromCStruct"
+            , WithConstructors $ WE.TypeName "SomeVkStruct"
+            , Term "SomeVkStruct"
+            , Term "withCStructPtr"
+            , Term "fromCStructPtr"
+            , Term "fromCStructPtrElem"
+            , Term "fromSomeVkStruct"
+            , Term "fromSomeVkStructChain"
+            , Term "peekVkStruct"
+            , Term "withSomeVkStruct"
+            , Term "withVec"
+            ]
 
 
 
     -- TODO: This also depends on all the patterns here, and all the type names
-    weDepends  = [Unguarded (WE.TypeName "VkStructureType")]
+    weDepends = [Unguarded (WE.TypeName "VkStructureType")]
     weExtensions =
       [ "FunctionalDependencies"
       , "DataKinds"

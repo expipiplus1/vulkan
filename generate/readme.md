@@ -70,6 +70,13 @@ TODO:
 
 `vkCmdBindVertexBuffers` requires two vectors to be the same. Should we pass in non-storable vectors of tuples?
 
+For the `VulkanException` `Exception` instance add the human readable messages
+here:
+https://www.khronos.org/registry/vulkan/specs/1.1-extensions/man/html/VkResult.html
+
+For functions such as `vkGetQueryPoolResults`, we could take a length, and
+return a bytestring of that length. Or an element count and a strike, returning
+a vector.
 
 ## Marshalling structs:
 
@@ -95,4 +102,7 @@ TODO:
 
 - Should wrap the function pointers in VkAllocationCallbacks
 
-- The names for sibling vector members could be improved
+- Implement sibling vectors
+  - The names for sibling vector members could be improved
+
+- Pattern synonyms for struct aliases

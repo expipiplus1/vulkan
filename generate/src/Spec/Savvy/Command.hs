@@ -45,6 +45,8 @@ data Command = Command
   , cCommandLevel :: Maybe CommandLevel
   , cPlatform     :: Maybe Text
     -- ^ The platform this command runs on if it is not universal
+  , cSuccessCodes :: Maybe [Text]
+  , cErrorCodes   :: Maybe [Text]
   }
   deriving (Show)
 

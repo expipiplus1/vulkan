@@ -53,6 +53,7 @@ import           Write.Handle
 import           Write.HeaderVersion
 import           Write.Loader
 import           Write.Marshal.Struct
+import           Write.Marshal.Exception
 import           Write.Module
 import           Write.Module.Aggregate
 import           Write.Partition
@@ -77,8 +78,9 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
   wrapperWriteElements <-
     ExceptT . pure . validationToEither $ specWrapperWriteElements s
   let
-    seeds          = specSeeds s
-    wrapperModule = Module "Graphics.Vulkan.Wrapped" (snd wrapperWriteElements) [] []
+    seeds = specSeeds s
+    wrapperModule =
+      Module "Graphics.Vulkan.Wrapped" (vkExceptionWriteElement : snd wrapperWriteElements) [] []
     enabledStructs = filter
       ((`notElem` ignoredUnexportedNames) . TypeName . sName)
       (sStructs s)
@@ -158,6 +160,7 @@ specWrapperWriteElements Spec {..} = do
           $   structWrapper isHandle isBitmask isStruct enabledStructs
           <$> enabledStructs
   -- TODO: Warn properly on unwrapped command
+  _ <- traverse_ traceShowM commandMarshalErrors
   _ <- traverse_ traceShowM structMarshalErrors
   pure (structWrappers, commandWrappers)
 
