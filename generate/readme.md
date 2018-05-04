@@ -62,6 +62,8 @@ Idioms:
 
 TODO:
   Take a closer look at `vkCmdBindDescriptorSets`
+    - If there is an optional length for a vector, it means that the vector
+      iteslf is optional
   Take a closer look at `vkUpdateDescriptorSetWithTemplate`
   Don't expose things where the documentation is `is reserved for future use and is ignored`
   Don't marshal windowing system values
@@ -106,3 +108,15 @@ a vector.
   - The names for sibling vector members could be improved
 
 - Pattern synonyms for struct aliases
+
+- Would be nice to perform just one `allocaBytes` and then poke everything into
+  one allocation
+  - This may require two traversals over the data, once to determine the size
+    and another to perform the writes.
+  - Most of this could be done statically at source-generation time though
+  - Before doing any stuff like this it would be nice to have a set of
+    benchmarks
+    - Perhaps these: https://github.com/RippeR37/GL_vs_VK
+      https://github.com/vkmark/vkmark
+
+- Use `Bool` instead of `VkBool32`
