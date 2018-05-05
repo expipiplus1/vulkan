@@ -57,7 +57,7 @@ specConstants P.Spec {..} =
           <*> pure comment
           <*> pure aliases
         | P.Constant name (Right value) comment <- sConstants
-        , let aliases = closeNonReflexive (`MultiMap.lookup` aliasMap) [name]
+        , let aliases = closeNonReflexiveL (`MultiMap.lookup` aliasMap) [name]
         ]
 
 parseValue :: Text -> Validation [SpecError] ConstantValue

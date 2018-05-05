@@ -105,7 +105,7 @@ specCommands pc P.Spec {..} handles extensions
           pure Parameter {pType = t, ..}
         pure
           $ let cAliases =
-                  closeNonReflexive (`MultiMap.lookup` aliasMap) [cName]
+                  closeNonReflexiveL (`MultiMap.lookup` aliasMap) [cName]
                 cCommandLevel = commandLevel' ps
                 cPlatform     = listToMaybe
                   [ p

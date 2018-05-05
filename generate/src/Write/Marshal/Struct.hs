@@ -978,7 +978,7 @@ doesStructContainUnion structs =
           , WE.TypeName containee <- typeDepends . smType =<< sMembers container
           ]
 
-    structWithUnions = close contains unionNames
+    structWithUnions = closeL contains unionNames
   in (`Set.member` Set.fromList structWithUnions)
 
 fromCStructMember

@@ -49,7 +49,7 @@ specHandles preprocess pc P.Spec {..} =
         , taCategory == "handle"
         ]
       aliasMap = MultiMap.fromList handleAliases
-      getAliases s = closeNonReflexive (`MultiMap.lookup` aliasMap) [s]
+      getAliases s = closeNonReflexiveL (`MultiMap.lookup` aliasMap) [s]
   in  sequenceA
         [ eitherToValidation
           $   Handle htName

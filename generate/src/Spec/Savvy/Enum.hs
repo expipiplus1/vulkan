@@ -124,7 +124,7 @@ specEnumEnums spec@P.Spec {..} =
                     [ EnumElement {eeValue = Left (P.eeValue el), ..}
                     | el@P.EnumElement {..} <- P.eElements ee
                     ]
-                  eAliases    = closeNonReflexive (`MultiMap.lookup` aliasMap) [etName]
+                  eAliases    = closeNonReflexiveL (`MultiMap.lookup` aliasMap) [etName]
                   eComment    = P.eComment ee
                   eExtensions = MultiMap.lookup eName allExtensionEnums
                   eType       = EnumTypeEnum
@@ -183,7 +183,7 @@ specBitmasks spec@P.Spec {..}
             pure $ case bmtRequires of
               Nothing -> emptyEnum
                 bmt
-                (closeNonReflexive (`MultiMap.lookup` aliasMap) [bmtName])
+                (closeNonReflexiveL (`MultiMap.lookup` aliasMap) [bmtName])
                 (MultiMap.lookup bmtName allExtensionEnums)
               Just bitmaskRequirement ->
                 case Map.lookup bitmaskRequirement bitmaskMap of
@@ -208,7 +208,7 @@ specBitmasks spec@P.Spec {..}
                                    eeComment = bmvComment
                              ]
                       eAliases =
-                        closeNonReflexive (`MultiMap.lookup` aliasMap) [bmName]
+                        closeNonReflexiveL (`MultiMap.lookup` aliasMap) [bmName]
                       eComment    = P.bmComment bm
                       eExtensions = MultiMap.lookup bmName allExtensionEnums
                       eType       = EnumTypeBitmask

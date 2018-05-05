@@ -71,7 +71,7 @@ specStructs tc P.Spec {..}
         , taCategory == "struct"
         ]
       aliasMap = MultiMap.fromList structAliases
-      getAliases s = closeNonReflexive (`MultiMap.lookup` aliasMap) [s]
+      getAliases s = closeNonReflexiveL (`MultiMap.lookup` aliasMap) [s]
     in
       eitherToValidation $ fixLookupM parsedStructNames sName $ \getStruct ->
         let structTypeContext =
