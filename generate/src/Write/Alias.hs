@@ -7,6 +7,8 @@ module Write.Alias
   ( writeAliases
   ) where
 
+import           Debug.Trace
+
 import           Control.Applicative
 import           Control.Arrow                            ((&&&))
 import           Data.Either.Validation
@@ -22,7 +24,6 @@ import           Spec.Savvy.Error
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
-
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
 import           Write.Struct
@@ -51,11 +52,14 @@ writeValueAlias getType alias@Alias{..} = eitherToValidation $ do
         {document getDoc (TopLevel aName)}
         {aName} :: {t}
         {aName} = {aAliasName}
-|]
+      |]
       weExtensions = es
       weName       = "Value Alias: " <> aName
       weProvides   = [Unguarded $ Term aName]
-      weDepends    = Unguarded <$> [TermName aAliasName] ++ typeDepends (getType target)
+      weDepends    = Unguarded <$> TermName aAliasName : typeDepends (getType target)
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
   pure WriteElement {..}
 
 writePatternAlias
@@ -70,11 +74,14 @@ writePatternAlias getType alias@Alias{..} = eitherToValidation $ do
         {document getDoc (TopLevel aName)}
         pattern {aName} :: {t}
         pattern {aName} = {aAliasName}
-|]
+      |]
       weExtensions = "PatternSynonyms" : es
       weName       = "Pattern Alias: " <> aName
       weProvides   = [Unguarded $ Pattern aName]
       weDepends    = Unguarded <$> PatternName aAliasName : typeDepends (getType target)
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
   pure WriteElement {..}
 
 writeTypeAlias
@@ -90,6 +97,9 @@ writeTypeAlias Alias{..} =
       weName       = "Type Alias: " <> aName
       weProvides   = [Unguarded $ TypeAlias aName]
       weDepends    = [Unguarded $ WE.TypeName aAliasName]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
   in WriteElement {..}
 
 writeStructPatternAlias :: Alias Struct -> Validation [SpecError] WriteElement
@@ -108,8 +118,11 @@ writeStructPatternAlias alias@Alias{..} = eitherToValidation $ do
       weName       = "Struct Pattern Alias: " <> aName
       weProvides   = [Unguarded $ Pattern aName]
       weDepends    = -- This is not correct if we have a struct alias of a struct alias
-                     Unguarded <$> [WE.TypeName aAliasName] ++
+                     Unguarded <$> WE.TypeName aAliasName :
                        (typeDepends . smType =<< sMembers)
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
   pure WriteElement {..}
 
 writeConstantAlias :: Alias APIConstant -> Validation [SpecError] WriteElement

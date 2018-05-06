@@ -15,7 +15,6 @@ import           Control.Applicative
 import           Control.Monad.Fix.Extra
 import           Data.Closure
 import           Data.Either.Validation
-import           Data.Maybe
 import qualified Data.MultiMap           as MultiMap
 import           Data.Semigroup
 import           Data.Text               (Text)

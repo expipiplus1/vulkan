@@ -26,13 +26,16 @@ writeEnumExtension
   -> EnumExtension
   -> WriteElement
 writeEnumExtension enumName e@EnumExtension {..} =
-  let weName       = "Enum Extension: " <> exName <> " : " <> enumName
-      weDoc        = enumExtensionDoc enumName e
-      weExtensions = ["PatternSynonyms"]
-      weImports    = []
-      weProvides   = [Unguarded $ Pattern exName]
+  let weName                 = "Enum Extension: " <> exName <> " : " <> enumName
+      weDoc                  = enumExtensionDoc enumName e
+      weExtensions           = ["PatternSynonyms"]
+      weImports              = []
+      weProvides             = [Unguarded $ Pattern exName]
       -- TODO: add the enum type to the depends
-      weDepends    = [Unguarded $ TypeName enumName]
+      weDepends              = [Unguarded $ TypeName enumName]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
   in  WriteElement {..}
 
 enumExtensionDoc :: Text -> EnumExtension -> DocMap -> Doc ()

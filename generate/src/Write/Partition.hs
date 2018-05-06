@@ -1,6 +1,5 @@
 {-# LANGUAGE ApplicativeDo     #-}
 {-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
@@ -43,44 +42,52 @@ partitionElements
   :: [WriteElement] -> [ModuleSeed] -> Either [SpecError] [Module]
 partitionElements wes ss = validationToEither $ do
   let -- All the names explicitly exported by seeds.
-      allSeedNames :: [HaskellName]
-      allSeedNames = weProvidesHN =<< providingElements . msSeeds =<< ss
+    allSeedNames :: Set.Set HaskellName
+    allSeedNames =
+      Set.fromList $ weProvidesHN =<< providingElements =<< msSeeds =<< ss
 
-      closeSeed :: ModuleSeed -> [HaskellName]
-      closeSeed ModuleSeed {..} =
-        let step name =
-              [ d
-              | we <- providingElements [name]
-              , d  <- unGuarded <$> weDepends we
-                -- Don't allow other modules to grab exports from another seed
-                -- TODO: This may not disallow stealing names, as the
-                -- writeElement could be pulled in by a different requried name
-              , d `notElem` allSeedNames
-              ]
-        in  close
+    closeSeed :: ModuleSeed -> Set.Set HaskellName
+    closeSeed ModuleSeed {..}
+      = let
+          step name =
+            let
+              ds = Set.map unGuarded
+                $ Set.fromList (weDepends =<< providingElements name)
+            in
+               -- Don't allow other modules to grab exports from another seed
+               -- TODO: This may not disallow stealing names, as the
+               -- writeElement could be pulled in by a different requried name
+                ds `Set.difference` allSeedNames
+        in close
               step
-              (  msSeeds
-              ++ [ export
-                 | (moduleName, export) <- explicitlyPlacedNames
-                 , moduleName == msName
-                 ]
+              (Set.fromList
+                (  msSeeds
+                ++ [ export
+                   | (moduleName, export) <- explicitlyPlacedNames
+                   , moduleName == msName
+                   ]
+                )
               )
 
-      providingElements :: [HaskellName] -> [WriteElement]
-      providingElements names =
-        [ we | we <- wes, not . null $ intersect names (weProvidesHN we) ]
+    providingElements :: HaskellName -> [WriteElement]
+    providingElements = (`MultiMap.lookup` m)
+      where
+        m =
+          MultiMap.fromList [ (name, we) | we <- wes, name <- weProvidesHN we ]
 
-      modules =
-        [ Module msName closure [] []
-        | m@ModuleSeed {..} <- ss
-        , let names   = closeSeed m
-              closure = providingElements names
-        ]
-      prioritizedModules = prioritizeModules modules
-  _ <- assertExactlyOneSeeds wes ss
-  _ <- assertExactlyOneExport wes prioritizedModules
-  _ <- assertNoEmptyModules prioritizedModules
-  _ <- assertAllDependenciesSatisfied prioritizedModules
+    modules =
+      [ Module msName closure [] []
+      | m@ModuleSeed {..} <- ss
+      , let names   = Set.toList (closeSeed m)
+            closure =
+              nubOrdOn weProvides $ providingElements =<< names
+      ]
+    prioritizedModules = prioritizeModules modules
+  -- _ <- assertUniqueSeedNames ss
+  -- _ <- assertExactlyOneSeeds wes ss
+  -- _ <- assertExactlyOneExport wes prioritizedModules
+  -- _ <- assertNoEmptyModules prioritizedModules
+  -- _ <- assertAllDependenciesSatisfied prioritizedModules
   pure prioritizedModules
 
 -- | Make sure there are no duplicate exports, if something is exported in an
@@ -107,7 +114,6 @@ makeReexports dis Module {..} =
       (wes, res) = partitionEithers
         [ if isAllowed we then Left we else Right (unGuarded <$> weProvides we)
         | we <- mWriteElements
-        , isAllowed we
         ]
   in  Module {mWriteElements = wes, mReexports = concat res, ..}
 
@@ -132,14 +138,23 @@ ignoredUnexportedNames =
 
 explicitlyPlacedNames :: [(Text, HaskellName)]
 explicitlyPlacedNames =
-  [ ( "Graphics.Vulkan.Core10.CommandBufferBuilding"
+  [ ( "Graphics.Vulkan.C.Core10.CommandBufferBuilding"
     , TypeName "VkDrawIndirectCommand"
     )
-  , ( "Graphics.Vulkan.Core10.CommandBufferBuilding"
+  , ( "Graphics.Vulkan.C.Core10.CommandBufferBuilding"
     , TypeName "VkDrawIndexedIndirectCommand"
     )
-  , ( "Graphics.Vulkan.Core10.CommandBufferBuilding"
+  , ( "Graphics.Vulkan.C.Core10.CommandBufferBuilding"
     , TypeName "VkDispatchIndirectCommand"
+    )
+  , ( "Graphics.Vulkan.Core10.CommandBufferBuilding"
+    , TypeName "DrawIndirectCommand"
+    )
+  , ( "Graphics.Vulkan.Core10.CommandBufferBuilding"
+    , TypeName "DrawIndexedIndirectCommand"
+    )
+  , ( "Graphics.Vulkan.Core10.CommandBufferBuilding"
+    , TypeName "DispatchIndirectCommand"
     )
   ]
 
@@ -224,6 +239,14 @@ genExportMapWriteElements wes = (`MultiMap.lookup` m)
       | we@WriteElement {..} <- wes
       , hsName            <- weProvidesHN we
       ]
+
+assertUniqueSeedNames :: [ModuleSeed] -> Validation [SpecError] ()
+assertUniqueSeedNames ms =
+  let names          = msName <$> ms
+      duplicateNames = nubOrd names \\ names
+  in  case duplicateNames of
+        [] -> pure ()
+        ns -> Failure [DuplicateSeedNames ns]
 
 ----------------------------------------------------------------
 -- Utils

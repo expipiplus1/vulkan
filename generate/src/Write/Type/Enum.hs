@@ -45,6 +45,9 @@ writeEnum e@Enum {..} =
       weProvides = Unguarded <$>
         [TypeConstructor eName, Term eName]
           ++ [ Pattern eeName | EnumElement {..} <- eElements ]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
       weDepends = Unguarded <$> case eType of
         EnumTypeEnum    -> []
         EnumTypeBitmask -> [TypeName "VkFlags"]

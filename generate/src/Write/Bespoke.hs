@@ -7,9 +7,9 @@ module Write.Bespoke
   ) where
 
 import           Data.Text                                (Text)
+import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
-import           Data.Text.Prettyprint.Doc
 
 import           Spec.Savvy.Enum
 import           Write.Element
@@ -18,7 +18,8 @@ import           Write.Util
 
 bespokeWriteElements :: [WriteElement]
 bespokeWriteElements =
-  [namedType, versions, nullHandle, bools] ++ concat [win32, x11, xcb, wayland, mir, android]
+  [namedType, versions, nullHandle, bools] ++ concat [win32, x11, xcb, wayland, mir, android] ++
+    bespokeMarshalledWriteElements
 
 namedType :: WriteElement
 namedType =
@@ -30,6 +31,9 @@ namedType =
       weExtensions = ["PolyKinds", "TypeOperators"]
       weName = "NamedType"
       weProvides = Unguarded <$> [ TypeAlias "(:::)" ]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
       weDepends = []
   in WriteElement{..}
 
@@ -75,6 +79,9 @@ versions =
                    , Term "_VK_VERSION_MINOR"
                    , Term "_VK_VERSION_PATCH"
                    ]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
       weDepends = []
   in WriteElement{..}
 
@@ -90,6 +97,9 @@ nullHandle =
       weExtensions = ["PatternSynonyms", "ViewPatterns"]
       weName = "Null handle"
       weProvides = [Unguarded $ Pattern "VK_NULL_HANDLE"]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
       weDepends = []
   in WriteElement{..}
 
@@ -115,16 +125,19 @@ voidDataWriteElement n =
       weExtensions = []
       weName = n
       weProvides = [Unguarded $ WithoutConstructors (TypeName n)]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
       weDepends = []
   in WriteElement{..}
 
 unitPtrAliasWriteElement :: Text -> WriteElement
 unitPtrAliasWriteElement t =
-  aliasWriteElement t "Ptr ()" [Import "Foreign.Ptr" ["Ptr"]]
+  aliasWriteElement t "Ptr ()" [Import "Foreign.Ptr" ["Ptr"]] []
 
 selfPtrWriteElement :: Text -> WriteElement
 selfPtrWriteElement t =
-  newtypeWriteElement t [qci|{t} (Ptr {t})|] [Import "Foreign.Ptr" ["Ptr"]]
+  newtypeWriteElement t [qci|{t} (Ptr {t})|] [Import "Foreign.Ptr" ["Ptr"]] []
 
 aliasWriteElement
   :: Text
@@ -133,6 +146,8 @@ aliasWriteElement
   -- ^ Alias
   -> [Import]
   -- ^ Imports
+  -> [HaskellName]
+  -- ^ Depends
   -> WriteElement
 aliasWriteElement = newtypeOrTypeWriteElement "type"
 
@@ -143,6 +158,8 @@ newtypeWriteElement
   -- ^ Alias
   -> [Import]
   -- ^ Imports
+  -> [HaskellName]
+  -- ^ Depends
   -> WriteElement
 newtypeWriteElement = newtypeOrTypeWriteElement "newtype"
 
@@ -155,8 +172,10 @@ newtypeOrTypeWriteElement
   -- ^ Alias
   -> [Import]
   -- ^ Imports
+  -> [HaskellName]
+  -- ^ Depends
   -> WriteElement
-newtypeOrTypeWriteElement decl n t is =
+newtypeOrTypeWriteElement decl n t is ds =
   let weDoc getDoc = [qci|
         {document getDoc (TopLevel n)}
         {decl} {n} = {t}
@@ -174,7 +193,10 @@ newtypeOrTypeWriteElement decl n t is =
                    if decl == "newtype"
                      then [WithConstructors (TypeName n)]
                      else [WithoutConstructors (TypeName n)]
-      weDepends = []
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
+      weDepends              = Unguarded <$> ds
   in WriteElement{..}
 
 win32 :: [WriteElement]
@@ -183,26 +205,26 @@ win32 =
   , unitPtrAliasWriteElement "HWND"
   , unitPtrAliasWriteElement "HANDLE"
   , voidDataWriteElement "SECURITY_ATTRIBUTES"
-  , aliasWriteElement "DWORD" "Word32" [Import "Data.Word" ["Word32"]]
+  , aliasWriteElement "DWORD" "Word32" [Import "Data.Word" ["Word32"]] []
   , aliasWriteElement
     "LPCWSTR"
     "Ptr CWchar"
-    [Import "Foreign.Ptr" ["Ptr"], Import "Foreign.C.Types" ["CWchar"]]
+    [Import "Foreign.Ptr" ["Ptr"], Import "Foreign.C.Types" ["CWchar"]] []
   ]
 
 x11 :: [WriteElement]
 x11 =
   [ selfPtrWriteElement "Display"
-  , aliasWriteElement "VisualID" "Word64" [Import "Data.Word" ["Word64"]]
-  , aliasWriteElement "Window"   "Word64" [Import "Data.Word" ["Word64"]]
-  , aliasWriteElement "RROutput" "Word64" [Import "Data.Word" ["Word64"]]
+  , aliasWriteElement "VisualID" "Word64" [Import "Data.Word" ["Word64"]] []
+  , aliasWriteElement "Window"   "Word64" [Import "Data.Word" ["Word64"]] []
+  , aliasWriteElement "RROutput" "Word64" [Import "Data.Word" ["Word64"]] []
   ]
 
 xcb :: [WriteElement]
 xcb =
   [ voidDataWriteElement "Xcb_connection_t"
-  , aliasWriteElement "Xcb_visualid_t" "Word32" [Import "Data.Word" ["Word32"]]
-  , aliasWriteElement "Xcb_window_t"   "Word32" [Import "Data.Word" ["Word32"]]
+  , aliasWriteElement "Xcb_visualid_t" "Word32" [Import "Data.Word" ["Word32"]] []
+  , aliasWriteElement "Xcb_window_t"   "Word32" [Import "Data.Word" ["Word32"]] []
   ]
 
 wayland :: [WriteElement]
@@ -218,3 +240,12 @@ android :: [WriteElement]
 android =
   [voidDataWriteElement "AHardwareBuffer", voidDataWriteElement "ANativeWindow"]
 
+----------------------------------------------------------------
+-- Marshalled bespoke bits
+----------------------------------------------------------------
+
+bespokeMarshalledWriteElements :: [WriteElement]
+bespokeMarshalledWriteElements =
+  [ aliasWriteElement "DeviceSize" "VkDeviceSize" [] [TypeName "VkDeviceSize"]
+  , aliasWriteElement "SampleMask" "VkSampleMask" [] [TypeName "VkSampleMask"]
+  ]

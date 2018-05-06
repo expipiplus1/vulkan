@@ -1,44 +1,22 @@
-{-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE LambdaCase        #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternGuards     #-}
-{-# LANGUAGE PatternSynonyms   #-}
-{-# LANGUAGE QuasiQuotes       #-}
-{-# LANGUAGE RecordWildCards   #-}
-{-# LANGUAGE TupleSections     #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE PatternSynonyms  #-}
 
 module Write.Marshal.Monad
   where
 
-import           Control.Arrow                            ((&&&))
-import           Control.Bool
-import           Control.Category                         ((>>>))
-import           Control.Monad
 import           Control.Monad.Except
-import           Control.Monad.Writer.Strict              hiding ((<>))
-import           Data.Bifunctor
-import           Data.Foldable
+import           Control.Monad.Writer.Strict
 import           Data.Function
 import           Data.Functor
-import qualified Data.Map                                 as Map
-import           Data.Maybe
-import           Data.Monoid                              (Endo (..))
-import qualified Data.MultiMap                            as MultiMap
-import           Data.Text                                (Text)
-import qualified Data.Text.Extra                          as T
+import           Data.Text                   (Text)
 import           Data.Text.Prettyprint.Doc
-import           Prelude                                  hiding (Enum)
-import           Text.InterpolatedString.Perl6.Unindented
+import           Prelude                     hiding (Enum)
 
-import           Spec.Savvy.Command
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
-import qualified Spec.Savvy.Type.Haskell                  as H
+import qualified Spec.Savvy.Type.Haskell     as H
 
-import           Write.Element                            hiding (TypeName)
-import qualified Write.Element                            as WE
-import           Write.Struct
-import           Write.Util
+import           Write.Element               hiding (TypeName)
 
 ----------------------------------------------------------------
 -- Monad for wrapping
@@ -46,7 +24,16 @@ import           Write.Util
 
 type Extension = Text
 type Constraint = Text
-type WriteState = ([Import], [Guarded Export], [Guarded HaskellName], [Extension], [Constraint])
+type WriteState =
+  ( [Import]
+  , [Guarded Export]
+  , ( [Guarded HaskellName] -- Depends
+    , [Guarded HaskellName] -- Source depends
+    )
+  , [Extension]
+  , [Constraint]
+  )
+-- TODO, better type
 
 getConstraints :: WriteState -> [Constraint]
 getConstraints (_,_,_,_,cs) = cs
@@ -64,7 +51,7 @@ tellImport
   -> Text
   -- ^ Value
   -> WrapM ()
-tellImport m v = tell ([Import m [v]], [], [], [], [])
+tellImport m v = tell ([Import m [v]], mempty, mempty, mempty, mempty)
 
 tellQualifiedImport
   :: Text
@@ -72,43 +59,49 @@ tellQualifiedImport
   -> Text
   -- ^ Value
   -> WrapM ()
-tellQualifiedImport m v = tell ([QualifiedImport m [v]], [], [], [], [])
+tellQualifiedImport m v =
+  tell ([QualifiedImport m [v]], mempty, mempty, mempty, mempty)
 
 tellImports
   :: [Import]
   -> WrapM ()
-tellImports is = tell (is, [], [], [], [])
+tellImports is = tell (is, mempty, mempty, mempty, mempty)
 
 tellExport
   :: Guarded Export
   -> WrapM ()
-tellExport e = tell ([], [e], [], [], [])
+tellExport e = tell (mempty, [e], mempty, mempty, mempty)
 
 tellDepend
   :: Guarded HaskellName
   -> WrapM ()
-tellDepend d = tell ([], [], [d], [], [])
+tellDepend d = tell (mempty, mempty, ([d], mempty), mempty, mempty)
 
 tellDepends
   :: [Guarded HaskellName]
   -> WrapM ()
-tellDepends ds = tell ([], [], ds, [], [])
+tellDepends ds = tell (mempty, mempty, (ds, mempty), mempty, mempty)
+
+tellSourceDepend
+  :: Guarded HaskellName
+  -> WrapM ()
+tellSourceDepend d = tell (mempty, mempty, (mempty, [d]), mempty, mempty)
 
 tellExtension
   :: Text
   -> WrapM ()
-tellExtension e = tell ([], [], [], [e], [])
+tellExtension e = tell (mempty, mempty, mempty, [e], mempty)
 
 tellConstraint
   :: Text
   -> WrapM ()
-tellConstraint c = tell ([], [], [], [], [c])
+tellConstraint c = tell (mempty, mempty, mempty, mempty, [c])
 
 toHsType :: Type -> WrapM (Doc ())
 toHsType t = case H.toHsType t of
   Left es -> throwError es
   Right (d, (is, es)) -> do
-    tell (is, [], [], es, [])
+    tell (is, mempty, mempty, es, mempty)
     -- TODO: This is a bit of a hack
     tellDepends (Unguarded <$> typeDepends t)
     pure d

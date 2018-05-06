@@ -24,6 +24,9 @@ writeBaseType bt@BaseType {..} = do
   (weDoc, weImports, weExtensions) <- hDoc bt
   let weName     = "BaseType: " <> btName
       weProvides = [Unguarded $ TypeAlias btName]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
       weDepends  = Unguarded <$> typeDepends btType
   pure WriteElement {..}
 

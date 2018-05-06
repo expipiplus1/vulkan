@@ -1,13 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards   #-}
+{-# OPTIONS_GHC -fno-warn-unused-local-binds #-}
+{-# OPTIONS_GHC -fno-warn-unused-imports #-}
 
 module Main
   ( main
   ) where
 
-import           Data.Either
 import           Data.Foldable
-import           Data.List
 import           Data.Text.Extra
 import           Say
 import           System.Environment
@@ -21,11 +20,7 @@ import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
 import           Spec.Savvy.Spec
 import           Write.Spec
-import           Write.Wrapper
 
-import           Spec.Savvy.Enum
-import           Spec.Savvy.Handle
-import           Write.Element
 
 main :: IO ()
 main = do

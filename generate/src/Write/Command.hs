@@ -41,6 +41,9 @@ writeCommand getEnumName fp@Command {..} = do
             | TypeName n <- protoDepends
             , Just e <- [getEnumName n]
             ]
+    weUndependableProvides = []
+    weSourceDepends        = []
+    weBootElement          = Nothing
   pure WriteElement {..}
 
 commandDoc :: Command -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])

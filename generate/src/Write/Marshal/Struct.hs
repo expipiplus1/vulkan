@@ -12,8 +12,9 @@
 
 module Write.Marshal.Struct
   ( structWrapper
-  , vkStructWriteElement
   ) where
+
+import Debug.Trace
 
 import           Control.Arrow                            ((&&&))
 import           Control.Bool
@@ -21,16 +22,13 @@ import           Control.Monad
 import           Control.Monad.Except
 import           Data.Bifunctor
 import           Data.Char                                (isUpper, toUpper)
-import           Data.Closure
 import           Data.Foldable
 import           Data.Function
 import           Data.Functor
 import           Data.List                                (partition)
 import qualified Data.Map                                 as Map
 import           Data.Maybe
-import           Data.Monoid                              (Endo (..))
 import qualified Data.MultiMap                            as MultiMap
-import qualified Data.Set                                 as Set
 import           Data.Text                                (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
@@ -41,16 +39,18 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Error
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
-import qualified Spec.Savvy.Type.Haskell                  as H
 
 import           Documentation
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
 import           Write.Marshal.Monad
 import           Write.Marshal.Util
+import           Write.Marshal.Struct.Utils (doesStructContainUnion)
 import           Write.Marshal.Wrap
-import           Write.Struct
 import           Write.Util
+
+
+{-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
 
 structWrapper
   :: (Text -> Bool)
@@ -62,246 +62,37 @@ structWrapper
   -> [Struct]
   -- ^ A list of all structs
   -> Struct
-  -> Either [SpecError] WriteElement
+  -> Either [SpecError] [WriteElement]
 structWrapper isHandle isBitmask isStruct allStructs struct = do
-  let weName = sName struct T.<+> "wrapper"
+  let weName                 = sName struct T.<+> "wrapper"
+      weUndependableProvides = []
+      weBootElement          = Nothing
+      isMarshalledHandle     = isHandle . ("Vk" <>)
+      isMarshalledBitmask    = isBitmask . ("Vk" <>)
+      isMarshalledStruct     = isStruct . ("Vk" <>)
       isDefaultable t = maybe
         False
-        (isHandle <||> isBitmask <||> isDefaultableForeignType)
+        (    isHandle
+        <||> isBitmask
+        <||> isDefaultableForeignType
+        <||> isMarshalledHandle
+        <||> isMarshalledBitmask
+        )
         (simpleTypeName t)
-      isStructType t = maybe False isStruct (simpleTypeName t)
+      isStructType t =
+        maybe False (isStruct <||> isMarshalledStruct) (simpleTypeName t)
       containsUnion = doesStructContainUnion allStructs
-  (weDoc, (weImports, weProvides, weDepends, weExtensions, _)) <- either
-    (throwError . fmap (WithContext (sName struct)))
-    (pure . first (fmap vcat . sequence))
-    (runWrap $ wrapStruct isDefaultable isStructType (containsUnion (sName struct)) struct)
-  pure WriteElement {..}
-
-vkStructWriteElement :: [Struct] -> WriteElement
-vkStructWriteElement structs =
-  let
-    containsUnion = doesStructContainUnion structs
-
-    weName        = "ToCStruct class declaration"
-    weImports
-      = [ Import "Foreign.Storable"
-                 ["Storable", "poke", "pokeElemOff", "peek", "peekElemOff"]
-        , Import "Foreign.Ptr"           ["Ptr"]
-        , Import "Foreign.Marshal.Alloc" ["alloca"]
-        , Import "Foreign.Marshal.Array" ["allocaArray"]
-        , Import "Data.Vector"           ["Vector", "ifoldr"]
-        , QualifiedImport
-          "Data.Vector.Generic"
-          ["length", "take", "replicate", "fromList", "Vector", "(++)"]
-        , QualifiedImport "Data.Vector.Generic.Sized.Internal"
-                          ["Vector(Vector)"]
-        , QualifiedImport "Data.Vector.Generic.Sized" ["Vector"]
-        , Import          "Data.Proxy"                ["Proxy(Proxy)"]
-        , Import "Data.ByteString" ["ByteString", "take", "unpack"]
-        , Import "GHC.TypeNats" ["natVal", "KnownNat", "type (<=)"]
-        , Import          "Foreign.C.Types"           ["CChar(..)"]
-        , Import          "Data.Word"                 ["Word8"]
-        , Import "Data.Typeable" ["Typeable", "cast", "eqT"]
-        , Import          "Data.Type.Equality"        ["(:~:)(Refl)"]
-        , Import          "Control.Exception"         ["throwIO"]
-        , Import          "Control.Applicative"       ["(<|>)"]
-        , Import "GHC.IO.Exception"
-                 ["IOException(..)", "IOErrorType(InvalidArgument)"]
-        , QualifiedImport "Data.Vector.Generic" ["snoc", "empty"]
-        ]
-    weProvides =
-      Unguarded
-        <$> [ WithConstructors $ WE.TypeName "ToCStruct"
-            , WithConstructors $ WE.TypeName "FromCStruct"
-            , WithConstructors $ WE.TypeName "SomeVkStruct"
-            , Term "SomeVkStruct"
-            , Term "withCStructPtr"
-            , Term "fromCStructPtr"
-            , Term "fromCStructPtrElem"
-            , Term "fromSomeVkStruct"
-            , Term "fromSomeVkStructChain"
-            , Term "peekVkStruct"
-            , Term "withSomeVkStruct"
-            , Term "withVec"
-            ]
-
-
-
-    -- TODO: This also depends on all the patterns here, and all the type names
-    weDepends = [Unguarded (WE.TypeName "VkStructureType")]
-    weExtensions =
-      [ "FunctionalDependencies"
-      , "DataKinds"
-      , "ExplicitNamespaces"
-      , "FlexibleContexts"
-      , "GADTs"
-      , "LambdaCase"
-      , "RankNTypes"
-      , "ScopedTypeVariables"
-      , "StandaloneDeriving"
-      , "TypeApplications"
-      , "TypeOperators"
-      ]
-    weDoc = pure [qci|
-      class ToCStruct marshalled c | marshalled -> c, c -> marshalled where
-        withCStruct :: marshalled -> (c -> IO a) -> IO a
-      class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
-        fromCStruct :: c -> IO marshalled
-      class HasPNext a where
-        getPNext :: a -> Maybe SomeVkStruct
-
-      data SomeVkStruct where
-        SomeVkStruct
-          :: (ToCStruct a b, Storable b, Show a, Eq a, Typeable a, HasPNext a)
-          => a
-          -> SomeVkStruct
-
-      instance HasPNext SomeVkStruct where
-        getPNext (SomeVkStruct a) = getPNext a
-
-      deriving instance Show SomeVkStruct
-
-      instance Eq SomeVkStruct where
-        SomeVkStruct (a :: a) == SomeVkStruct (b :: b) = case eqT @a @b of
-          Nothing   -> False
-          Just Refl -> a == b
-
-      fromSomeVkStruct :: Typeable a => SomeVkStruct -> Maybe a
-      fromSomeVkStruct (SomeVkStruct a) = cast a
-
-      fromSomeVkStructChain :: Typeable a => SomeVkStruct -> Maybe a
-      fromSomeVkStructChain a =
-        fromSomeVkStruct a <|> (getPNext a >>= fromSomeVkStructChain)
-
-      withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
-      withSomeVkStruct (SomeVkStruct a) f = withCStructPtr a (f . castPtr)
-
-      -- | Read the @sType@ member of a Vulkan struct and marshal the struct into
-      -- a 'SomeVkStruct'
-      --
-      -- Make sure that you only pass this a pointer to a Vulkan struct with a
-      -- @sType@ member at offset 0 otherwise the behaviour is undefined.
-      --
-      -- - Throws an 'InvalidArgument' 'IOException' if given a pointer to a
-      --   struct with an unrecognised @sType@ member.
-      -- - Throws an 'InvalidArgument' 'IOException' if given a pointer to a
-      --   struct which can't be marshalled (those containing union types)
-      peekVkStruct :: Ptr SomeVkStruct -> IO SomeVkStruct
-      peekVkStruct p = do
-        peek (castPtr p :: Ptr VkStructureType) >>= \case
-          {indent 0 . vcat . mapMaybe (writeSomeStructPeek containsUnion) $ structs}
-          t -> throwIO (IOError Nothing InvalidArgument "" ("Unknown VkStructureType: " ++ show t) Nothing Nothing)
-
-      withCStructPtr :: (Storable c, ToCStruct a c) => a -> (Ptr c -> IO b) -> IO b
-      withCStructPtr a f = withCStruct a (\c -> alloca (\p -> poke p c *> f p))
-
-      fromCStructPtr :: (Storable c, FromCStruct a c) => Ptr c -> IO a
-      fromCStructPtr p = fromCStruct =<< peek p
-
-      fromCStructPtrElem :: (Storable c, FromCStruct a c) => Ptr c -> Int -> IO a
-      fromCStructPtrElem p o = fromCStruct =<< peekElemOff p o
-
-      packCStringElemOff :: Ptr (Ptr CChar) -> Int -> IO ByteString
-      packCStringElemOff p o = packCString =<< peekElemOff p o
-
-      withArray
-        :: forall a b d
-         . (a -> (b -> IO d) -> IO d)
-        -> Vector a
-        -> (Vector b -> IO d)
-        -> IO d
-      withArray alloc v cont =
-        let go :: a -> (Vector b -> IO d) -> (Vector b -> IO d)
-            go x complete bs = alloc x (\b -> complete (Data.Vector.Generic.snoc bs b))
-        in  foldr go cont v (Data.Vector.Generic.empty)
-
-      withVec
-        :: forall a b d
-         . Storable b
-        => (a -> (b -> IO d) -> IO d)
-        -> Vector a
-        -> (Ptr b -> IO d)
-        -> IO d
-      withVec alloc v cont = allocaArray (Data.Vector.length v) $ \p ->
-        let go :: Int -> a -> IO d -> IO d
-            go index x complete = alloc x (\b -> pokeElemOff p index b *> complete)
-        in  ifoldr go (cont p) v
-
-      -- | Pad or truncate a vector so that it has the required size
-      padSized
-        :: forall n a v
-         . (KnownNat n, Data.Vector.Generic.Vector v a)
-        => a
-        -- ^ The value with which to pad if the given vector is too short
-        -> v a
-        -- ^ The vector to pad or truncate
-        -> Data.Vector.Generic.Sized.Vector v n a
-      padSized p v = Data.Vector.Generic.Sized.Internal.Vector padded
-        where
-          padded :: v a
-          padded = let n = fromIntegral (natVal (Proxy @n))
-                   in padVector p n v
-
-      -- | Make sure a vector is at least a certain length
-      padVector
-        :: (Data.Vector.Generic.Vector v a)
-        => a
-        -> Int
-        -> v a
-        -> v a
-      padVector p n v =
-        let m = Data.Vector.Generic.length v
-        in case m `compare` n of
-             LT -> v Data.Vector.Generic.++ (Data.Vector.Generic.replicate (n - m) p)
-             EQ -> v
-             GT -> Data.Vector.Generic.take n v
-
-      -- | Convert a bytestring to a null terminated sized vector. If the bytestring
-      -- is too long it will be truncated.
-      byteStringToNullTerminatedSizedVector
-        :: forall n v
-         . (KnownNat n, 1 <= n, Data.Vector.Generic.Vector v CChar)
-        => ByteString
-        -> Data.Vector.Generic.Sized.Vector v n CChar
-      byteStringToNullTerminatedSizedVector bs = padSized
-        (CChar 0)
-        (byteStringToVector (Data.ByteString.take predN bs))
-        where
-          predN = pred (fromIntegral (natVal (Proxy @n)))
-          byteStringToVector =
-            Data.Vector.Generic.fromList . fmap fromIntegral . Data.ByteString.unpack
-
-      -- | Convert a bytestring to a sized vector. If the bytestring is too
-      -- long it will be truncated. If it is too short it will be zero padded
-      byteStringToSizedVector
-        :: forall n v
-         . (KnownNat n, Data.Vector.Generic.Vector v Word8)
-        => ByteString
-        -> Data.Vector.Generic.Sized.Vector v n Word8
-      byteStringToSizedVector bs = padSized
-        0
-        (byteStringToVector (Data.ByteString.take n bs))
-        where
-          n                  = fromIntegral (natVal (Proxy @n))
-          byteStringToVector = Data.Vector.Generic.fromList . Data.ByteString.unpack
-
-    |]
-  in WriteElement{..}
-
-writeSomeStructPeek
-  :: (Text -> Bool)
-  -- ^ Does a struct contain a union
-  -> Struct
-  -> Maybe (Doc ())
-writeSomeStructPeek containsUnion Struct{..}
-  = do
-    StructMember {smName = "sType", smValues = Just [enum]} : _ <- pure sMembers
-    pure $ if containsUnion sName
-      then [qci|
-             -- We are not able to marshal this type back into Haskell as we don't know which union component to use
-             {enum} -> throwIO (IOError Nothing InvalidArgument "" ("Unable to marshal Vulkan structure containing unions: " ++ show {enum}) Nothing Nothing)
-           |]
-      else [qci|{enum} -> SomeVkStruct <$> fromCStructPtr (castPtr p :: Ptr {sName})|]
+  ( (weDoc, aliasWriteElements)
+   ,(weImports, weProvides, (weDepends, weSourceDepends), weExtensions, _)) <-
+    either
+      (throwError . fmap (WithContext (sName struct)))
+      pure
+      (runWrap $ wrapStruct isDefaultable
+                            isStructType
+                            (containsUnion (sName struct))
+                            struct
+      )
+  pure (WriteElement {..} : aliasWriteElements)
 
 ----------------------------------------------------------------
 -- The wrapping commands
@@ -315,7 +106,8 @@ wrapStruct
   -> Bool
   -- ^ Does this struct contain a union
   -> Struct
-  -> WrapM [DocMap -> Doc ()]
+  -> WrapM (DocMap -> Doc (), [WriteElement])
+  -- ^ Returns the docs for this struct, and any aliases
 wrapStruct isDefaultable isStruct containsUnion s = do
   marshalled     <- marshallStruct isStruct isDefaultable s
   toCStructDoc   <- writeToCStructInstance marshalled
@@ -325,8 +117,10 @@ wrapStruct isDefaultable isStruct containsUnion s = do
   tellExtension "DuplicateRecordFields"
   tellExport (Unguarded (WithConstructors (WE.TypeName (dropVkType (sName s)))))
   tellExport (Unguarded (Term (dropVkType (sName s))))
-  let weDoc docMap = vsep [marshalledDoc docMap, toCStructDoc, fromCStructDoc, hasPNextDoc]
-  pure [weDoc]
+  let weDoc docMap =
+        vsep [marshalledDoc docMap, toCStructDoc, fromCStructDoc, hasPNextDoc]
+  aliases <- traverse (writeAlias (msMembers marshalled) s) (sAliases s)
+  pure (weDoc, aliases)
 
 ----------------------------------------------------------------
 --
@@ -384,12 +178,14 @@ data MemberUsage a
       Text --- ^ member name
       Word --- ^ length
       Type --- ^ element type
+      (Maybe (Doc ())) --- ^ allocator
+      (Maybe (Doc ())) --- ^ from C representation
     -- ^ A fixed size array represented as a tuple
   | Preserved a
     -- ^ This is preserved without changes
   | PreservedMarshalled
       Text --- ^ member name
-      Text --- ^ member type
+      Type --- ^ member type
     -- ^ An ordinary member, using the marshalled struct
   | NextPointer Text
     -- ^ This is the pNext pointer (include the member name for completeness)
@@ -415,6 +211,7 @@ data MemberUsage a
   | BitMaskVector
       Text --- ^ The name of the member in the C struct which contains the
            -- length in bits
+      Text --- ^ The type of length member
       Int  --- ^ The bit size of the elements
       Text --- ^ member name
       Type --- ^ element type
@@ -429,11 +226,11 @@ data MemberUsage a
       (Doc ()) --- ^ peekElemOff
     -- ^ An optional vector with name and type and allocator, represented with
     -- Maybe.
-  | OptionalPtr Text Type (Doc ())
-    -- ^ An optional value with name and type and allocator, represented with
-    -- Maybe.
-  | NonOptionalPtr Text Type (Doc ())
-    -- ^ An value with name and type and allocator
+  | OptionalPtr Text Type (Doc ()) (Doc ())
+    -- ^ An optional value with name and type and allocator and fromCStructPtr,
+    -- represented with Maybe.
+  | NonOptionalPtr Text Type (Doc ()) (Doc ())
+    -- ^ An value with name and type and allocator and fromCStructPtr
   | EnabledFlag Text
     -- ^ A VkBool32 type which is true iff another value is not Nothing
   | OptionalZero
@@ -477,15 +274,92 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
   let
     -- Go from a length name to a list of vectors having that length
     -- TODO: Rename
-      lengthMap :: Text -> Maybe [StructMember]
-      lengthMap =
-        (`Map.lookup` Map.fromList [ (smName l, v) | (l, v) <- lengthRelation ])
+    lengthMap :: Text -> Maybe [StructMember]
+    lengthMap =
+      (`Map.lookup` Map.fromList [ (smName l, v) | (l, v) <- lengthRelation ])
 
-      findLengthMember :: Text -> Maybe StructMember
-      findLengthMember =
-        (`Map.lookup` Map.fromList [ (smName l, l) | (l, _) <- lengthRelation ])
+    findLengthMember :: Text -> Maybe StructMember
+    findLengthMember =
+      (`Map.lookup` Map.fromList [ (smName l, l) | (l, _) <- lengthRelation ])
 
-  ty <- case smType m of
+    marshalledType :: Type -> Type
+    marshalledType t
+      | Just tyName <- simpleTypeName t
+      , isStruct t
+      = TypeName (dropVkType tyName)
+      | Just tyName <- simpleTypeName t
+      , tyName /= "VkBool32"
+      , Just n <- T.dropPrefix "Vk" tyName
+      = TypeName n
+      | otherwise
+      = t
+
+    deepMarshalledType :: Type -> Type
+    deepMarshalledType = \case
+      Ptr cv t        -> Ptr cv (deepMarshalledType t)
+      Array cv size t -> Array cv size (deepMarshalledType t)
+      Proto t ps' ->
+        Proto (deepMarshalledType t) (second deepMarshalledType <$> ps')
+      t -> marshalledType t
+
+    -- For a type get the "withCStruct" and "peekElemOff" for that type
+    structWithPeekElem :: Type -> WrapM (Doc (), Doc ())
+    structWithPeekElem t = do
+      unless (isStruct t) $ throwError
+        [ Other
+            ("getting struct peek elem for non struct type:" T.<+> T.tShow t)
+        ]
+      tyName <- case simpleTypeName t of
+        Nothing -> throwError
+          [ Other
+              ("getting struct peek elem for non simple type:" T.<+> T.tShow t)
+          ]
+        Just tyName -> pure tyName
+      tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
+      tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
+      tellImport "Foreign.Storable" "peekElemOff"
+      tellImport "Control.Monad"    "(<=<)"
+      pure
+        ( pretty $ "withCStruct" <> tyName
+        , pretty $ "(\\p -> fromCStruct" <> tyName <> " <=< peekElemOff p)"
+        )
+
+    structWithPtr :: Type -> WrapM (Doc (), Doc ())
+    structWithPtr t = do
+      unless (isStruct t) $ throwError
+        [Other ("getting struct withPtr for non struct type:" T.<+> T.tShow t)]
+      tyName <- case simpleTypeName t of
+        Nothing -> throwError
+          [ Other
+              ("getting struct withPtr for non simple type:" T.<+> T.tShow t)
+          ]
+        Just tyName -> pure tyName
+      tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
+      tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
+      tellImport "Foreign.Marshal.Utils" "with"
+      tellImport "Foreign.Storable"      "peek"
+      tellImport "Control.Monad"         "(<=<)"
+      pure
+        ( [qci|(\\a -> withCStruct{tyName} a . flip with)|]
+        , [qci|(fromCStruct{tyName} <=< peek)|]
+        )
+
+    structFromPtr :: Type -> WrapM (Doc ())
+    structFromPtr t = do
+      unless (isStruct t) $ throwError
+        [Other ("getting struct withPtr for non struct type:" T.<+> T.tShow t)]
+      tyName <- case simpleTypeName t of
+        Nothing -> throwError
+          [ Other
+              ("getting struct withPtr for non simple type:" T.<+> T.tShow t)
+          ]
+        Just tyName -> pure tyName
+      tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
+      tellImport "Foreign.Marshal.Utils" "with"
+      pure [qci|(\\a -> withCStruct{tyName} a . flip with)|]
+
+
+  ty <- case deepMarshalledType (smType m) of
     _ | Just [v] <- smValues m, Nothing <- smIsOptional m -> pure (Univalued v)
     t | isNonMarshalledType t -> Preserved <$> toHsType (smType m)
     Ptr _ t | isPassAsPointerType t, Nothing <- smIsOptional m ->
@@ -500,9 +374,9 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       -> Preserved <$> toHsType (smType m)
       | -- A pointer to data to be consumed by Vulkan (has a length)
         Nothing <- smIsOptional m
-      , Just [length] <- smLengths m
+      , Just [lengthName] <- smLengths m
       , Const <- cv
-      , Just lengthMember <- findLengthMember length
+      , Just lengthMember <- findLengthMember lengthName
       -> pure $ ByteStringData (smName lengthMember) (smName m)
     Ptr Const Char
       | Nothing <- smIsOptional m, Just ["null-terminated"] <- smLengths m
@@ -523,92 +397,134 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
         ]
       , Just tyName <- simpleTypeName t
       -> if isStruct t
-        then -- If this is a struct, use the marshalled version
-             pure $ Vector countName
-                           multiple
-                           (smName m)
-                           (TypeName (dropVkType tyName))
-                           "withCStruct"
-                           "fromCStructPtrElem"
-        else pure $ Vector countName multiple (smName m) t "(flip ($))" "peekElemOff"
+        then do
+          (with, peekElem) <- structWithPeekElem t
+          -- If this is a struct, use the marshalled version
+          pure $ Vector countName
+                        multiple
+                        (smName m)
+                        (TypeName tyName)
+                        with
+                        peekElem
+        else do
+          tellImport "Foreign.Storable" "peekElemOff"
+          pure $ Vector countName
+                        multiple
+                        (smName m)
+                        t
+                        "(flip ($))"
+                        "peekElemOff"
       | -- An array with a length specified in bits
         -- TODO: Don't hardcode this
         Just ["(rasterizationSamples + 31) / 32"] <- smLengths m
-      , [(countName, elemBitSize)] <-
-        [ (countName, size)
-        | (structName, countName, vecName, size) <- bitMaskLengthRelation
+      , [(countName, countType, elemBitSize)] <-
+        [ (countName, countType, size)
+        | (structName, countName, countType, vecName, size) <-
+          bitMaskLengthRelation
         , structName == sName struct
         , vecName == smName m
         ]
       , Just tyName <- simpleTypeName t
       -> if isStruct t
-        then -- If this is a struct, use the marshalled version
-             pure $ BitMaskVector countName
+        then do
+          tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
+          -- If this is a struct, use the marshalled version
+          pure $ BitMaskVector countName
+                               countType
+                               elemBitSize
+                               (smName m)
+                               (TypeName tyName)
+                               (pretty $ "withCStruct" <> tyName)
+        else pure $ BitMaskVector countName
+                                  countType
                                   elemBitSize
                                   (smName m)
-                                  (TypeName (dropVkType tyName))
-                                  "withCStruct"
-        else pure $ BitMaskVector countName elemBitSize (smName m) t "(flip ($))"
+                                  t
+                                  "(flip ($))"
       | -- An array
         Nothing <- smIsOptional m
-      , Just [length] <- smLengths m
-      , Just lengthMember <- findLengthMember length
+      , Just [lengthName] <- smLengths m
+      , Just lengthMember <- findLengthMember lengthName
       , Just tyName <- simpleTypeName t
       -> if isStruct t
-        then -- If this is a struct, use the marshalled version
-             pure $ Vector length
-                           1
-                           (smName m)
-                           (TypeName (dropVkType tyName))
-                           "withCStruct"
-                           "fromCStructPtrElem"
-        else pure $ Vector (smName lengthMember) 1 (smName m) t "(flip ($))" "peekElemOff"
+        then do
+          let eName = dropVkType tyName
+          (with, peekElem) <- structWithPeekElem t
+          pure $ Vector lengthName 1 (smName m) (TypeName tyName) with peekElem
+        else do
+          tellImport "Foreign.Storable" "peekElemOff"
+          pure $ Vector (smName lengthMember)
+                        1
+                        (smName m)
+                        t
+                        "(flip ($))"
+                        "peekElemOff"
       | -- An optional array
         Just [True] <- smIsOptional m
-      , Just [length] <- smLengths m
+      , Just [lengthName] <- smLengths m
       , Just tyName <- simpleTypeName t
-      , Just lengthMember <- findLengthMember length
+      , Just lengthMember <- findLengthMember lengthName
       -> if isStruct t
-        then -- If this is a struct, use the marshalled version
-             pure $ OptionalVector (smName lengthMember)
-                                   (smName m)
-                                   (TypeName (dropVkType tyName))
-                                   "withCStruct"
-                                   "fromCStructPtrElem"
-        else pure
-          $ OptionalVector (smName lengthMember) (smName m) t "(flip ($))" "peekElemOff"
+        then do
+          (with, peekElem) <- structWithPeekElem t
+          -- If this is a struct, use the marshalled version
+          pure $ OptionalVector (smName lengthMember)
+                                (smName m)
+                                (TypeName (dropVkType tyName))
+                                with
+                                peekElem
+        else do
+          tellImport "Foreign.Storable" "peekElemOff"
+          tellImport "Data.Function"    "(&)"
+          pure $ OptionalVector (smName lengthMember)
+                                (smName m)
+                                t
+                                "(&)"
+                                "peekElemOff"
       | -- An array of strings
         Nothing <- smIsOptional m
-      , Just [length, "null-terminated"] <- smLengths m
+      , Just [lengthName, "null-terminated"] <- smLengths m
       , Ptr Const Char <- t
       -> do
         tellImport "Data.ByteString" "useAsCString"
         tellImport "Data.ByteString" "ByteString"
-        pure $ Vector length 1 (smName m) (TypeName "ByteString") "useAsCString" "packCStringElemOff"
+        tellDepend (Unguarded (TermName "packCStringElemOff"))
+        pure $ Vector lengthName
+                      1
+                      (smName m)
+                      (TypeName "ByteString")
+                      "useAsCString"
+                      "packCStringElemOff"
       | -- An optional pointer to a single value (no length)
         Just [True] <- smIsOptional m
       , Nothing <- smLengths m
       , Just tyName <- simpleTypeName t
       -> if isStruct t
-        then -- If this is a struct, use the marshalled version
-             pure $ OptionalPtr (smName m)
-                                (TypeName (dropVkType tyName))
-                                "withCStructPtr"
+        then do
+          (withPtr, fromPtr) <- structWithPtr t
+          -- If this is a struct, use the marshalled version
+          pure $ OptionalPtr (smName m)
+                             (TypeName (dropVkType tyName))
+                             withPtr
+                             fromPtr
         else do
           tellImport "Foreign.Marshal.Utils" "with"
-          pure $ OptionalPtr (smName m) t "with"
+          pure $ OptionalPtr (smName m) t "with" "peek"
       | -- An pointer to a single value (no length)
         Nothing <- smIsOptional m
       , Nothing <- smLengths m
       , Just tyName <- simpleTypeName t
       -> if isStruct t
-        then -- If this is a struct, use the marshalled version
-             pure $ NonOptionalPtr (smName m)
-                                   (TypeName (dropVkType tyName))
-                                   "withCStructPtr"
+        then do
+          (withPtr, fromPtr) <- structWithPtr t
+          -- If this is a struct, use the marshalled version
+          pure $ NonOptionalPtr (smName m)
+                                (TypeName (dropVkType tyName))
+                                withPtr
+                                fromPtr
         else do
           tellImport "Foreign.Marshal.Utils" "with"
-          pure $ NonOptionalPtr (smName m) t "with"
+          pure $ NonOptionalPtr (smName m) t "with" "peek"
     (Array _ size t)
       | SymbolicArraySize sizeSymbol <- size
       , sizeSymbol `elem` ["VK_UUID_SIZE", "VK_LUID_SIZE"]
@@ -617,7 +533,7 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       , Nothing <- smLengths m
       , sReturnedOnly struct
       -> pure $ FixedArrayZeroPadByteString (smName m) size
-      | SymbolicArraySize sizeSymbol <- size
+      | SymbolicArraySize _sizeSymbol <- size
       , (sName struct, smName m) `elem` zeroPadMembers
       , isSimpleType t
       , Nothing <- smIsOptional m
@@ -635,16 +551,22 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
         ]
       , Just tyName <- simpleTypeName t
       , Just countMember <- findLengthMember countName
-      -> let alloc = if isStruct t
-               then -- If this is a struct, use the marshalled version
-                    "withCStruct"
-               else "(flip ($))"
-             fromCRep = if isStruct t
-               then Just "fromCStruct"
-               else Nothing
-             ty = if isStruct t then (TypeName (dropVkType tyName)) else t
-         in  FixedArray (smName countMember) (smName m) size ty alloc
-               <$> dummyMember t <*> pure fromCRep
+      -> do
+        alloc <- if isStruct t
+          then do
+            tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
+            -- If this is a struct, use the marshalled version
+            pure (pretty $ "withCStruct" <> tyName)
+          else do
+            tellImport "Data.Function" "(&)"
+            pure "(&)"
+        let fromCRep = if isStruct t
+              then Just (pretty $ "fromCStruct" <> tyName)
+              else Nothing
+            ty = if isStruct t then TypeName (dropVkType tyName) else t
+        FixedArray (smName countMember) (smName m) size ty alloc
+          <$> dummyMember t
+          <*> pure fromCRep
       | Char <- t
       , Nothing <- smIsOptional m
       , Nothing <- smLengths m
@@ -660,7 +582,14 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       , isSimpleType t
       , Nothing <- smLengths m
       , sizeNumber >= 2
-      -> pure $ FixedArrayTuple (smName m) sizeNumber t
+      , Just tyName <- simpleTypeName t
+      -> pure $ if isStruct t
+        then FixedArrayTuple (smName m)
+                             sizeNumber
+                             t
+                             (Just (pretty $ "withCStruct" <> tyName))
+                             (Just (pretty $ "fromCStruct" <> tyName))
+        else FixedArrayTuple (smName m) sizeNumber t Nothing Nothing
     t
       | -- The length of a vector in bytes
         [(vecName, size)] <-
@@ -675,7 +604,8 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
         -- information
         [()] <-
         [ ()
-        | (structName, countName, vecName, size) <- bitMaskLengthRelation
+        | (structName, countName, _countType, _vecName, _size) <-
+          bitMaskLengthRelation
         , structName == sName struct
         , countName == smName m
         ]
@@ -694,7 +624,7 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       | -- An enabler
         [_] <-
         [ ()
-        | (structName, enableName, enabledName) <- enableRelation
+        | (structName, _enableName, enabledName) <- enableRelation
         , structName == sName struct
         , enabledName == smName m
         ]
@@ -734,7 +664,8 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       , Ptr _ Void <- smType v
       , Nothing <- smIsOptional v
       -> pure $ ByteStringLength (smName v)
-      | isSimpleType t
+      | -- A boring normal type
+        isSimpleType t
       , Nothing <- lengthMap (smName m)
       , isNothing (smIsOptional m)
         ||     isDefaultable t
@@ -744,7 +675,7 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       , Just tyName <- simpleTypeName t
       -> if isStruct t
         then -- If this is a struct, use the marshalled version
-             pure $ PreservedMarshalled (smName m) (dropVkType tyName)
+             pure $ PreservedMarshalled (smName m) (TypeName tyName)
         else Preserved <$> toHsType t
     _ -> throwError
       [ Other
@@ -759,31 +690,30 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
 writeToCStructInstance
   :: MarshalledStruct -> WrapM (Doc ())
 writeToCStructInstance MarshalledStruct{..} = do
-  tellDepends
-    [Unguarded (WE.TypeName ("Vk" <> msName)), Unguarded (TermName ("Vk" <> msName))]
-  tellExtension "InstanceSigs"
+  tellDepend $ Unguarded (WE.TypeName ("Vk" <> msName))
+  tellExport (traceShowId $ Unguarded (Term ("withCStruct" <> msName)))
   case msStructOrUnion of
     AStruct -> do
       wrapped <- wrap "cont" ("Vk" <> msName) msName "from" msMembers
       pure [qci|
-        instance ToCStruct {msName} Vk{msName} where
-          withCStruct :: {msName} -> (Vk{msName} -> IO a) -> IO a
-          withCStruct from cont = {wrapped}
+        withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
+        withCStruct{msName} from cont = {wrapped}
         |]
     AUnion -> do
       wrappedAlts <- for msMembers $ \case
         -- These only work with single member sums
-        m@(FixedArrayTuple n _ _) ->
+        FixedArrayTuple n _ _ Nothing _ ->
           pure [qci|{T.upperCaseFirst n} x -> cont ({"Vk" <> T.upperCaseFirst n} (fromTuple x))|]
-        m@(PreservedMarshalled n _) ->
-          pure [qci|{T.upperCaseFirst n} x -> withCStruct x (cont . {"Vk" <> T.upperCaseFirst n})|]
+        PreservedMarshalled n t
+          | Just tyName <- simpleTypeName t
+          -> do tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
+                pure [qci|{T.upperCaseFirst n} x -> withCStruct{tyName} x (cont . {"Vk" <> T.upperCaseFirst n})|]
         m -> throwError [Other ("Unhandled union member for wrapping:" T.<+> T.tShow m)]
 
       pure [qci|
-        instance ToCStruct {msName} Vk{msName} where
-          withCStruct :: {msName} -> (Vk{msName} -> IO a) -> IO a
-          withCStruct from cont = case from of
-        {indent 4 $ vcat wrappedAlts}
+        withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
+        withCStruct{msName} from cont = case from of
+        {indent 2 $ vcat wrappedAlts}
       |]
 
 wrap
@@ -801,7 +731,7 @@ wrap
 wrap contName con fromType from members = do
   wrappers <- traverse (memberWrapper fromType from) members
   let applyCont :: Wrapper
-      applyCont = \cont e -> cont [qci|{contName} ({e}|] <> ")"
+      applyCont cont e = cont [qci|{contName} ({e}|] <> ")"
   pure $ foldWrappers (applyCont : wrappers) id (pretty con)
 
 memberWrapper
@@ -823,7 +753,7 @@ memberWrapper fromType from =
   LengthMultiple vec mul -> do
     tellImports [QualifiedImport "Data.Vector" ["length"]]
     pure $ \cont e -> cont [qci|{e} ({mul} * fromIntegral (Data.Vector.length {accessMember vec}))|]
-  MinLength [] _       -> do
+  MinLength [] _       ->
     throwError [Other "MinLength has no non-optional vectors to examine"]
   MinLength [vec] []       -> do
     tellImports [QualifiedImport "Data.Vector" ["length"]]
@@ -852,32 +782,49 @@ memberWrapper fromType from =
     pure $ \cont e -> cont [qci|{e} (fromMaybe 0 {accessMember memberName})|]
   FixedArray _ memberName _ _ alloc dummy _ -> do
     tellQualifiedImport "Data.Vector.Generic.Sized" "convert"
+    tellDepend (Unguarded (TermName "withArray"))
+    tellDepend (Unguarded (TermName "padSized"))
     -- This assumes that this is a vector of handles or pointers
     pure $ \cont e ->
       let paramName = pretty (dropPointer memberName)
           with = [qci|withArray {alloc} {accessMember memberName} (\\{paramName} -> {e} (Data.Vector.Generic.Sized.convert (padSized {dummy} {paramName}))|]
       in [qci|{cont with})|]
-  FixedArrayTuple memberName _ _ -> do
+  FixedArrayTuple memberName _ _ Nothing _ -> do
     tellImport "Data.Vector.Generic.Sized" "fromTuple"
     pure $ \cont e -> cont [qci|{e} (fromTuple {accessMember memberName})|]
-  FixedArrayNullTerminated memberName _ ->
+  FixedArrayTuple memberName _ _ (Just alloc) _ -> do
+    tellImport "Data.Vector.Generic.Sized" "fromTuple"
+    tellImport "Data.Vector.Generic.Sized" "convert"
+    tellDepend (Unguarded (TermName "withSizedArray"))
+    pure $ \cont e ->
+      let paramName = pretty (dropPointer memberName)
+          with = [qci|withSizedArray {alloc} (fromTuple {accessMember memberName}) (\\{paramName} -> {e} (Data.Vector.Generic.Sized.convert {paramName})|]
+      in [qci|{cont with})|]
+  FixedArrayNullTerminated memberName _ -> do
+    tellDepend (Unguarded (TermName "byteStringToNullTerminatedSizedVector"))
     -- This truncates oversized bytestrings
     pure $ \cont e -> cont [qci|{e} (byteStringToNullTerminatedSizedVector {accessMember memberName})|]
-  FixedArrayZeroPadByteString memberName _ ->
+  FixedArrayZeroPadByteString memberName _ -> do
+    tellDepend (Unguarded (TermName "byteStringToSizedVector"))
     -- This truncates oversized bytestrings
     pure $ \cont e -> cont [qci|{e} (byteStringToSizedVector {accessMember memberName})|]
-  FixedArrayZeroPad memberName _ _ ->
+  FixedArrayZeroPad memberName _ _ -> do
+    tellDepend (Unguarded (TermName "padSized"))
+    tellQualifiedImport "Data.Vector.Generic.Sized" "convert"
     -- This truncates oversized vectors
     pure $ \cont e -> cont [qci|{e} (Data.Vector.Generic.Sized.convert (padSized 0 {accessMember memberName}))|]
   Preserved member -> pure $ \cont e -> cont [qci|{e} {accessMember (mmName member)}|]
-  PreservedMarshalled memberName _ ->
-    pure $ \cont e ->
-      let paramName = pretty (dropPointer memberName)
-          with  = [qci|withCStruct {accessMember memberName} (\\{paramName} -> {e} {paramName}|]
-      in  [qci|{cont with})|]
+  PreservedMarshalled memberName t
+    | Just tyName <- simpleTypeName t
+    -> do tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
+          pure $ \cont e ->
+            let paramName = pretty (dropPointer memberName)
+                with  = [qci|withCStruct{tyName} {accessMember memberName} (\\{paramName} -> {e} {paramName}|]
+            in  [qci|{cont with})|]
   -- TODO: proper pointer names
   NextPointer memberName -> do
     tellImport "Foreign.Marshal.Utils" "maybeWith"
+    tellDepend (Unguarded (TermName "withSomeVkStruct"))
     pure $ \cont e ->
       let withPtr =
             [qci|maybeWith withSomeVkStruct {accessMember memberName} (\\{ptrName memberName} -> {e} {ptrName memberName}|]
@@ -904,35 +851,43 @@ memberWrapper fromType from =
       let paramPtr = pretty (unKeyword $ ptrName (dropPointer memberName))
           withPtr  = [qci|maybeWith useAsCString {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
-  Vector _ _ memberName elemType alloc _ -> pure $ \cont e ->
-    let paramPtr = pretty (ptrName (dropPointer memberName))
-        withPtr  = [qci|withVec {alloc} {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
-    in  [qci|{cont withPtr})|]
-  BitMaskVector lengthMemberName bitSize memberName elemType alloc -> do
+  Vector _ _ memberName _elemType alloc _ -> do
+    tellDepend (Unguarded (TermName "withVec"))
+    pure $ \cont e ->
+      let paramPtr = pretty (ptrName (dropPointer memberName))
+          withPtr  = [qci|withVec {alloc} {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
+      in  [qci|{cont withPtr})|]
+  BitMaskVector lengthMemberName lengthMemberType bitSize memberName _elemType alloc -> do
     tellImport "Data.Bits" "zeroBits"
     tellImport "Data.Coerce" "coerce"
     tellDepend (Unguarded (WE.TypeName "VkFlags"))
+    tellDepend (Unguarded (TermName "withVec"))
+    tellDepend (Unguarded (TermName "padVector"))
+    tellDepend (Unguarded (WE.TypeName lengthMemberType))
     pure $ \cont e ->
       let paramPtr = pretty (ptrName (dropPointer memberName))
           withPtr  = [qci|withVec {alloc} (padVector zeroBits (fromIntegral ((coerce {accessMember lengthMemberName} :: VkFlags) + {pred bitSize}) `quot` {bitSize}) {accessMember memberName}) (\\{paramPtr} -> {e} {paramPtr}|]
       in [qci|{cont withPtr})|]
-  OptionalVector _ memberName elemType alloc _ -> do
+  OptionalVector _ memberName _elemType alloc _ -> do
     tellImport "Foreign.Marshal.Utils" "maybeWith"
+    tellDepend (Unguarded (TermName "withVec"))
     pure $ \cont e ->
       let paramPtr = pretty (ptrName (dropPointer memberName))
           withPtr  = [qci|maybeWith (withVec {alloc}) {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
-  OptionalPtr memberName elemType alloc -> do
+  OptionalPtr memberName _elemType alloc _ -> do
     tellImport "Foreign.Marshal.Utils" "maybeWith"
     pure $ \cont e ->
       let paramPtr = pretty (ptrName (dropPointer memberName))
           withPtr  = [qci|maybeWith {alloc} {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
-  NonOptionalPtr memberName elemType alloc -> do
+  NonOptionalPtr memberName _elemType alloc _ ->
     pure $ \cont e ->
-      let paramPtr = pretty (ptrName (dropPointer memberName))
-          withPtr  = [qci|{alloc} {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
-      in  [qci|{cont withPtr})|]
+    let paramPtr = pretty (ptrName (dropPointer memberName))
+        withPtr  = [qci|{alloc} {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
+    in  [qci|{cont withPtr})|]
+  SiblingVectorMaster {} -> error "Sibling vectors unimplemented"
+  SiblingVectorSlave  {} -> error "Sibling vectors unimplemented"
 
 ----------------------------------------------------------------
 -- FromCStruct
@@ -944,47 +899,24 @@ writeFromCStructInstance
   -> MarshalledStruct
   -> WrapM (Doc ())
 writeFromCStructInstance containsUnion MarshalledStruct{..} = do
-  tellDepends
-    [Unguarded (WE.TypeName ("Vk" <> msName)), Unguarded (TermName ("Vk" <> msName))]
-  tellExtension "InstanceSigs"
+  tellDepend $ Unguarded (WE.TypeName ("Vk" <> msName))
   case msStructOrUnion of
     AStruct ->
       if containsUnion
-        then pure "-- No FromCStruct instance for types containing unions"
+        then pure "-- No fromCStruct function for types containing unions"
         else do
           members <- traverse (fromCStructMember "c" (pretty $ "Vk" <> msName)) msMembers
+          tellExport (Unguarded (Term ("fromCStruct" <> msName)))
           pure [qci|
-            instance FromCStruct {msName} Vk{msName} where
-              fromCStruct :: Vk{msName} -> IO {msName}
-              fromCStruct c = {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)}
-
+            fromCStruct{msName} :: Vk{msName} -> IO {msName}
+            fromCStruct{msName} c = {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)}
             |]
-    AUnion -> pure "-- No FromCStruct instance for sum types"
-      -- throwError [Other "Can't go from a c struct to a union"]
-
--- | Returns the names of all structs containing unions
-doesStructContainUnion :: [Struct] -> Text -> Bool
-doesStructContainUnion structs =
-  let
-    unionNames = [ sName s | s <- structs, sStructOrUnion s == AUnion ]
-
-    -- The list of struct names which contain this type
-    contains :: Text -> [Text]
-    contains = (`MultiMap.lookup` m)
-      where
-        m = MultiMap.fromList
-          [ (containee, sName container)
-          | container <- structs
-          , WE.TypeName containee <- typeDepends . smType =<< sMembers container
-          ]
-
-    structWithUnions = closeL contains unionNames
-  in (`Set.member` Set.fromList structWithUnions)
+    AUnion -> pure "-- No FromCStruct function for sum types"
 
 fromCStructMember
-  :: (Doc ())
+  :: Doc ()
   -- ^ The name of the c struct we are translating
-  -> (Doc ())
+  -> Doc ()
   -- ^ The type of the c struct we are translating
   -> MemberUsage MarshalledMember
   -> WrapM (Either (Doc ()) (Doc ()))
@@ -1003,8 +935,10 @@ fromCStructMember from fromType =
           pure $ Left "-- Fixed array valid count member elided"
         EnabledFlag _ -> pure $ Left "-- enable flag member elided"
         Preserved   m -> pure $ Right [qci|pure {accessMember (mmName m)}|]
-        PreservedMarshalled memberName _ ->
-          pure $ Right [qci|(fromCStruct {accessMember memberName})|]
+        PreservedMarshalled memberName t
+          | Just tyName <- simpleTypeName t
+          -> do tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
+                pure $ Right [qci|(fromCStruct{tyName} {accessMember memberName})|]
         FixedArrayNullTerminated memberName _ -> do
           tellQualifiedImport "Data.Vector.Storable" "unsafeWith"
           tellQualifiedImport "Data.Vector.Storable.Sized" "fromSized"
@@ -1024,6 +958,7 @@ fromCStructMember from fromType =
         NextPointer memberName -> do
           tellImport "Foreign.Marshal.Utils" "maybePeek"
           tellImport "Foreign.Ptr" "castPtr"
+          tellSourceDepend (Unguarded (TermName "peekVkStruct"))
           pure $ Right [qci|maybePeek peekVkStruct (castPtr {accessMember memberName})|]
         ByteString memberName -> do
           tellImport "Data.ByteString" "packCString"
@@ -1032,18 +967,20 @@ fromCStructMember from fromType =
           tellImport "Foreign.Marshal.Utils" "maybePeek"
           tellImport "Data.ByteString" "packCString"
           pure $ Right [qci|maybePeek packCString {accessMember memberName}|]
-        Vector lenMemberName 1 memberName type' _alloc peekElemOff -> do
+        Vector lenMemberName 1 memberName _ _alloc peekElemOff -> do
           tellQualifiedImport "Data.Vector" "generateM"
           pure $ Right [qci|(Data.Vector.generateM (fromIntegral {accessMember lenMemberName}) ({peekElemOff} {accessMember memberName}))|]
-        Vector lenMemberName multiple memberName type' _alloc peekElemOff -> do
+        Vector lenMemberName multiple memberName _ _alloc peekElemOff -> do
           tellQualifiedImport "Data.Vector" "generateM"
           pure $ Right [qci|(Data.Vector.generateM (fromIntegral {accessMember lenMemberName} `quot` {multiple}) ({peekElemOff} {accessMember memberName}))|]
-        BitMaskVector lenMemberName bitSize memberName type' _alloc -> do
+        BitMaskVector lenMemberName lenMemberType bitSize memberName _ _alloc -> do
           tellQualifiedImport "Data.Vector" "generateM"
           tellImport "Data.Coerce" "coerce"
+          tellImport "Foreign.Storable" "peekElemOff"
           tellDepend (Unguarded (WE.TypeName "VkFlags"))
+          tellDepend (Unguarded (WE.TypeName lenMemberType))
           pure $ Right [qci|(Data.Vector.generateM (fromIntegral (((coerce {accessMember lenMemberName} :: VkFlags) + {pred bitSize}) `quot` {bitSize})) (peekElemOff {accessMember memberName}))|]
-        OptionalVector lenMemberName memberName type' _alloc peekElemOff -> do
+        OptionalVector lenMemberName memberName _ _alloc peekElemOff -> do
           tellImport "Foreign.Marshal.Utils" "maybePeek"
           tellQualifiedImport "Data.Vector" "generateM"
           pure $ Right [qci|maybePeek (\p -> Data.Vector.generateM (fromIntegral {accessMember lenMemberName}) ({peekElemOff} p)) {accessMember memberName}|]
@@ -1051,12 +988,12 @@ fromCStructMember from fromType =
           tellImport "Data.ByteString" "packCStringLen"
           tellImport "Foreign.Ptr" "castPtr"
           pure $ Right [qci|packCStringLen (castPtr {accessMember memberName}, fromIntegral {accessMember lenMemberName})|]
-        OptionalPtr memberName _ _ -> do
+        OptionalPtr memberName _ _ fromPtr -> do
           tellImport "Foreign.Marshal.Utils" "maybePeek"
-          pure $ Right [qci|maybePeek fromCStructPtr {accessMember memberName}|]
-        NonOptionalPtr memberName _ _ ->
-          pure $ Right [qci|fromCStructPtr {accessMember memberName}|]
-        FixedArray validCountMemberName memberName maxArraySize _elemType _alloc _dummy fromCRep -> do
+          pure $ Right [qci|maybePeek {fromPtr} {accessMember memberName}|]
+        NonOptionalPtr memberName _ _ fromPtr ->
+          pure $ Right [qci|{fromPtr} {accessMember memberName}|]
+        FixedArray validCountMemberName memberName _maxArraySize _elemType _alloc _dummy fromCRep -> do
           tellQualifiedImport "Data.Vector.Storable.Sized" "fromSized"
           tellQualifiedImport "Data.Vector.Generic" "convert"
           tellQualifiedImport "Data.Vector" "take"
@@ -1070,11 +1007,20 @@ fromCStructMember from fromType =
           tellQualifiedImport "Data.Vector.Generic" "convert"
           tellQualifiedImport "Data.Vector" "take"
           pure $ Right [qci|pure (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized {accessMember memberName}))|]
-        FixedArrayTuple memberName length _ -> do
+        FixedArrayTuple memberName length' _ _ Nothing -> do
           tellQualifiedImport "Data.Vector.Storable.Sized" "unsafeIndex"
-          let tuple = tupled ((\i -> [qci|Data.Vector.Storable.Sized.unsafeIndex x {i}|]) <$> [0 .. pred length])
+          let tuple = tupled ((\i -> [qci|Data.Vector.Storable.Sized.unsafeIndex x {i}|]) <$> [0 .. pred length'])
           pure $ Right [qci|pure (let x = {accessMember memberName} in {tuple})|]
-        OptionalZero memberName _ -> do
+        FixedArrayTuple memberName length' _ _ (Just fromCStruct) -> do
+          tellQualifiedImport "Data.Vector.Storable.Sized" "unsafeIndex"
+          let cs :: [Doc ()]
+              cs = (\i -> [qci|{fromCStruct} (Data.Vector.Storable.Sized.unsafeIndex x {i})|]) <$> [0 .. pred length']
+              tuple :: Doc ()
+              tuple = [qci|{tupled (replicate (fromIntegral length') mempty)} <$> {
+                            indent (-4) . vsep $ (intercalatePrepend "<*>" $ cs)}
+              |]
+          pure $ Right [qci|(let x = {accessMember memberName} in {tuple})|]
+        OptionalZero memberName _ ->
           pure $ Right [qci|pure (let x = {accessMember memberName} in if x == 0 then Nothing else Just x)|]
         m -> throwError [Other (T.tShow m)]
 
@@ -1086,7 +1032,8 @@ writeHasPNextInstance :: MarshalledStruct -> WrapM (Doc ())
 writeHasPNextInstance MarshalledStruct{..} =
   case [n | NextPointer n  <- msMembers] of
     [] -> pure [qci|-- This struct doesn't have a pNext member"|]
-    [n] ->
+    [_] -> do
+      tellDepends [Unguarded (WE.TypeName "HasPNext")]
       pure $ [qci|
         instance HasPNext {msName} where
           getPNext a = vkPNext (a :: {msName})
@@ -1114,8 +1061,8 @@ getLengthRelation struct structMembers
 
       lengthPairs :: [(Text, [StructMember])]
       lengthPairs =
-        [ (length, ps)
-        | (length, ps) <- MultiMap.assocs (MultiMap.fromList arrays)
+        [ (length', ps)
+        | (length', ps) <- MultiMap.assocs (MultiMap.fromList arrays)
         ]
 
       validCountPairs :: [(Text, [StructMember])]
@@ -1131,7 +1078,7 @@ getLengthRelation struct structMembers
         (`Map.lookup` Map.fromList ((smName &&& id) <$> structMembers))
     in
       -- Only return pairs where the length is another structmember
-      mapMaybe (\(length, p) -> (, p) <$> structmemberMap length)
+      mapMaybe (\(length', p) -> (, p) <$> structmemberMap length')
                (lengthPairs ++ validCountPairs)
 
 ----------------------------------------------------------------
@@ -1139,7 +1086,7 @@ getLengthRelation struct structMembers
 ----------------------------------------------------------------
 
 writeMarshalled :: MarshalledStruct -> WrapM (DocMap -> Doc ())
-writeMarshalled MarshalledStruct {..} = do
+writeMarshalled MarshalledStruct {..} =
   case msStructOrUnion of
     AStruct -> do
       memberDocs <- traverse
@@ -1156,7 +1103,7 @@ writeMarshalled MarshalledStruct {..} = do
       |]
     AUnion -> do
       memberDocs <- traverse
-        (writeMarshalledUnionMember msName)
+        writeMarshalledUnionMember
         msMembers
       pure $ \getDoc -> [qci|
       {document getDoc (TopLevel msName)}
@@ -1181,6 +1128,7 @@ writeMarshalledMember parentName = \case
   EnabledFlag          _ -> pure $ \_ -> Left "-- enable flag member elided"
   NextPointer memberName -> do
     tellImport "Foreign.Ptr" "Ptr"
+    tellDepend (Unguarded (WE.TypeName "SomeVkStruct"))
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: Maybe SomeVkStruct
@@ -1230,7 +1178,7 @@ writeMarshalledMember parentName = \case
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: Vector {tyName}
     |]
-  BitMaskVector _ _ memberName t _ -> do
+  BitMaskVector _ _ _ memberName t _ -> do
     tyName <- toHsType t
     tellImport "Data.Vector" "Vector"
     pure $ \getDoc -> Right [qci|
@@ -1244,7 +1192,7 @@ writeMarshalledMember parentName = \case
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: Vector {tyName}
     |]
-  FixedArrayTuple memberName len t -> do
+  FixedArrayTuple memberName len t _ _-> do
     tyName <- toHsType t
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
@@ -1262,18 +1210,19 @@ writeMarshalledMember parentName = \case
       {document getDoc (Nested parentName mmName)}
       {pretty (toMemberName mmName)} :: {mmType}
     |]
-  PreservedMarshalled memberName memberType ->
+  PreservedMarshalled memberName memberType -> do
+    tyName <- toHsType memberType
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: {pretty memberType}
+      {pretty (toMemberName memberName)} :: {tyName}
     |]
-  OptionalPtr memberName t _ -> do
+  OptionalPtr memberName t _ _ -> do
     tyName <- toHsType t
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: Maybe {tyName}
     |]
-  NonOptionalPtr memberName t _ -> do
+  NonOptionalPtr memberName t _ _ -> do
     tyName <- toHsType t
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
@@ -1285,20 +1234,22 @@ writeMarshalledMember parentName = \case
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: Maybe {tyName}
     |]
+  SiblingVectorMaster {} -> error "Sibling vectors unimplemented"
+  SiblingVectorSlave  {} -> error "Sibling vectors unimplemented"
 
 writeMarshalledUnionMember
-  :: Text
-  -> MemberUsage MarshalledMember
+  :: MemberUsage MarshalledMember
   -> WrapM (DocMap -> Either (Doc ()) (Doc ()))
-writeMarshalledUnionMember parentName = \case
-  FixedArrayTuple n len t -> do
+writeMarshalledUnionMember = \case
+  FixedArrayTuple n len t _ _-> do
     tyName <- toHsType t
-    pure $ \getDoc -> Right [qci|
+    pure $ \_ -> Right [qci|
       {T.upperCaseFirst n} {tupled (replicate (fromIntegral len) tyName)}
     |]
-  PreservedMarshalled n t ->
-    pure $ \getDoc -> Right [qci|
-      {T.upperCaseFirst n} {t}
+  PreservedMarshalled n t -> do
+    tyName <- toHsType t
+    pure $ \_ -> Right [qci|
+      {T.upperCaseFirst n} {tyName}
     |]
   m -> throwError [Other ("Unhandled union member:" T.<+> T.tShow m)]
 
@@ -1377,10 +1328,12 @@ zeroPadMembers = [("VkDeviceGroupPresentCapabilitiesKHR", "presentMask")]
 lengthMultipleRelation :: [(Text, Text, Text, Int)]
 lengthMultipleRelation = [("VkShaderModuleCreateInfo", "codeSize", "pCode", 4)]
 
-bitMaskLengthRelation :: [(Text, Text, Text, Int)]
+-- TODO: lol, "Haskell is strongly typed"
+bitMaskLengthRelation :: [(Text, Text, Text, Text, Int)]
 bitMaskLengthRelation =
   [ ( "VkPipelineMultisampleStateCreateInfo"
     , "rasterizationSamples"
+    , "VkSampleCountFlagBits"
     , "pSampleMask"
     , 32
     )
@@ -1392,14 +1345,14 @@ bitMaskLengthRelation =
 -- TODO: be a bit less lazy about this
 dummyMember :: Type -> WrapM (Doc ())
 dummyMember = \case
-  TypeName "VkMemoryHeap" -> do
+  TypeName "MemoryHeap" -> do
     tellImport "Data.Bits" "zeroBits"
     tellDepend (Unguarded (WE.TermName "VkMemoryHeap"))
-    pure $ "(VkMemoryHeap 0 zeroBits)"
-  TypeName "VkMemoryType" -> do
+    pure "(VkMemoryHeap 0 zeroBits)"
+  TypeName "MemoryType" -> do
     tellImport "Data.Bits" "zeroBits"
     tellDepend (Unguarded (WE.TermName "VkMemoryType"))
-    pure $ "(VkMemoryType zeroBits 0)"
+    pure "(VkMemoryType zeroBits 0)"
   _ -> do
     tellImport "Foreign.Ptr" "nullPtr"
     pure "nullPtr"
@@ -1417,6 +1370,36 @@ isNonMarshalledType = \case
   Ptr _ (TypeName t) ->
     t `elem` ["SECURITY_ATTRIBUTES", "Display", "wl_surface", "MirSurface"]
   -- TODO: Marshal windows strings
-  TypeName t -> t `elem` ["LPCWSTR"]
+  TypeName t -> t == "LPCWSTR"
   _          -> False
 
+----------------------------------------------------------------
+-- Aliases
+----------------------------------------------------------------
+
+writeAlias
+  :: MonadError [SpecError] m
+  => [MemberUsage MarshalledMember]
+  -- ^ The types
+  -> Struct
+  -- ^ The original Struct
+  -> Text
+  -- ^ The alias name
+  -> m WriteElement
+writeAlias _members Struct{..} name = do
+  let weName = name T.<+> "alias" T.<+> sName
+      weUndependableProvides = []
+      weBootElement          = Nothing
+      aliasDoc = do
+        tellExport (Unguarded (TypeAlias (dropVkType name)))
+        tellDepend (Unguarded (WE.TypeName (dropVkType sName)))
+        tellExtension "PatternSynonyms"
+        pure $ \_ -> [qci|
+          type {dropVkType name} = {dropVkType sName}
+          -- TODO: Pattern constructor alias)
+        |]
+  (weDoc, (weImports, weProvides, (weDepends, weSourceDepends), weExtensions, _)) <- either
+    (throwError . fmap (WithContext sName))
+    pure
+    (runWrap aliasDoc)
+  pure WriteElement {..}

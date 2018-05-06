@@ -16,15 +16,15 @@ import           Data.Either.Validation
 import           Data.Foldable
 import           Data.List.Extra
 import           Data.Maybe
-import qualified Data.Set                  as Set
-import           Data.Text                 (Text)
-import qualified Data.Text                 as T
+import qualified Data.Set                   as Set
+import           Data.Text                  (Text)
+import qualified Data.Text                  as T
 import           Data.Text.Prettyprint.Doc
 import           Say
 import           System.Directory
 import           System.FilePath
 import           System.IO.Error
-import qualified System.IO.Strict          as Strict
+import qualified System.IO.Strict           as Strict
 import           System.ProgressBar
 
 import           Documentation
@@ -52,8 +52,10 @@ import           Write.EnumExtension
 import           Write.Handle
 import           Write.HeaderVersion
 import           Write.Loader
-import           Write.Marshal.Struct
+import           Write.Marshal.Aliases
 import           Write.Marshal.Exception
+import           Write.Marshal.Struct
+import           Write.Marshal.Struct.Utils
 import           Write.Module
 import           Write.Module.Aggregate
 import           Write.Partition
@@ -74,31 +76,29 @@ writeSpec
   -> Spec
   -> IO ()
 writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
-  ws <- ExceptT . pure . validationToEither $ specWriteElements s
-  wrapperWriteElements <-
+  cWriteElements <- ExceptT . pure . validationToEither $ specCWriteElements s
+  marshalledWriteElements <-
     ExceptT . pure . validationToEither $ specWrapperWriteElements s
-  let
-    seeds = specSeeds s
-    wrapperModule =
-      Module "Graphics.Vulkan.Wrapped" (vkExceptionWriteElement : snd wrapperWriteElements) [] []
-    enabledStructs = filter
-      ((`notElem` ignoredUnexportedNames) . TypeName . sName)
-      (sStructs s)
-    structWrapperModule = Module
-      "Graphics.Vulkan.Marshal"
-      (vkStructWriteElement (enabledStructs) : fst wrapperWriteElements)
-      []
-      []
+  let seeds = specSeeds s
+      ws =
+        [ vkExceptionWriteElement
+          , vkStructWriteElement (sStructs s)
+          , vkPeekStructWriteElement (sStructs s)
+          ]
+          ++ cWriteElements
+          ++ fst marshalledWriteElements
+          ++ snd marshalledWriteElements
   partitionedModules <- ExceptT . pure $ partitionElements ws seeds
-  let ms = structWrapperModule : wrapperModule : partitionedModules
-  platformGuards <- ExceptT . pure . validationToEither $ getModuleGuardInfo
+  platformGuards     <- ExceptT . pure . validationToEither $ getModuleGuardInfo
     (sExtensions s)
     (sPlatforms s)
-  let aggs = makeAggregateModules platformGuards ms
+  let aggs = makeAggregateModules platformGuards partitionedModules
   liftIO $ writeFile
     cabalPath
-    (show (writeCabal (ms ++ aggs) (sPlatforms s) platformGuards))
-  liftIO (saveModules docs outDir (ms ++ aggs)) >>= \case
+    (show
+      (writeCabal (partitionedModules ++ aggs) (sPlatforms s) platformGuards)
+    )
+  liftIO (saveModules docs outDir (partitionedModules ++ aggs)) >>= \case
     [] -> pure ()
     es -> throwError es
 
@@ -116,13 +116,17 @@ saveModules
 saveModules getDoc outDir ms = concat
   <$> withProgress 1 saveModule (zip ms (writeModules getDoc ms))
   where
-    saveModule :: (Module, Doc ()) -> IO [SpecError]
-    saveModule (Module {..}, doc) = do
+    saveModule :: (Module, (Doc (), Maybe (Doc ()))) -> IO [SpecError]
+    saveModule (Module {..}, (doc, docBoot)) = do
       let filename =
             outDir </> T.unpack ((<> ".hs") . T.replace "." "/" $ mName)
-          dir = takeDirectory filename
+          bootFilename = filename -<.> "hs-boot"
+          dir          = takeDirectory filename
       createDirectoryIfMissing True     dir
       writeFileIfChanged       filename (show doc)
+      case docBoot of
+        Nothing -> pure ()
+        Just d  -> writeFileIfChanged bootFilename (show d)
       pure []
 
     writeFileIfChanged filename contents = readFileMay filename >>= \case
@@ -130,7 +134,8 @@ saveModules getDoc outDir ms = concat
       _ -> writeFile filename contents
 
     readFileMay :: FilePath -> IO (Maybe String)
-    readFileMay f = (Just <$> Strict.readFile f) `catchIOError` const (pure Nothing)
+    readFileMay f =
+      (Just <$> Strict.readFile f) `catchIOError` const (pure Nothing)
 
 specWrapperWriteElements
   :: Spec -> Validation [SpecError] ([WriteElement], [WriteElement])
@@ -162,10 +167,10 @@ specWrapperWriteElements Spec {..} = do
   -- TODO: Warn properly on unwrapped command
   _ <- traverse_ traceShowM commandMarshalErrors
   _ <- traverse_ traceShowM structMarshalErrors
-  pure (structWrappers, commandWrappers)
+  pure (concat structWrappers, concat commandWrappers)
 
-specWriteElements :: Spec -> Validation [SpecError] [WriteElement]
-specWriteElements Spec {..} = do
+specCWriteElements :: Spec -> Validation [SpecError] [WriteElement]
+specCWriteElements s@Spec {..} = do
   let
     -- All requirement in features and specs
     reqs =
@@ -194,21 +199,24 @@ specWriteElements Spec {..} = do
       (second exName)
       [ (eName e, ex) | e <- sEnums, ex <- eExtensions e ]
     wEnumAliases = [] -- writeEnumAlias <$> [ ea | r <- reqs, ea <- rEnumAliases r ]
-    wConstants   =
+    wConstants =
       let isAllowedConstant c = acName c `notElem` ["VK_TRUE", "VK_FALSE"]
-      in writeAPIConstant <$> filter isAllowedConstant sConstants
+      in  writeAPIConstant <$> filter isAllowedConstant sConstants
     wConstantExtensions =
       fmap (writeConstantExtension getEnumerantEnumName) . rConstants =<< reqs
   wFuncPointers <- eitherToValidation $ traverse writeFuncPointer sFuncPointers
   wHandles      <- eitherToValidation $ traverse writeHandle sHandles
   wCommands     <- eitherToValidation
     $ traverse (writeCommand getEnumAliasTarget) sCommands
-  wStructs   <- eitherToValidation $ traverse writeStruct sStructs
-  wAliases   <- writeAliases sAliases
-  wBaseTypes <-
+  wStructs           <- eitherToValidation $ traverse writeStruct sStructs
+  wAliases           <- writeAliases sAliases
+  wMarshalledAliases <- writeAliases (makeMarshalledAliases s)
+  wBaseTypes         <-
     let isAllowedBaseType bt = btName bt /= "VkBool32"
-    in eitherToValidation $ traverse writeBaseType (filter isAllowedBaseType sBaseTypes)
-  wLoader <- eitherToValidation $ writeLoader getEnumAliasTarget sPlatforms sCommands
+    in  eitherToValidation
+          $ traverse writeBaseType (filter isAllowedBaseType sBaseTypes)
+  wLoader <- eitherToValidation
+    $ writeLoader getEnumAliasTarget sPlatforms sCommands
   pure $ concat
     [ [wHeaderVersion]
     , bespokeWriteElements
@@ -222,6 +230,7 @@ specWriteElements Spec {..} = do
     , wCommands
     , wStructs
     , wAliases
+    , wMarshalledAliases
     , wBaseTypes
     , [wLoader]
     ]

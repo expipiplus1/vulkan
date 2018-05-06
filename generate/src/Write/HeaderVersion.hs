@@ -23,5 +23,8 @@ writeHeaderVersion version =
       weExtensions = ["PatternSynonyms"]
       weName = "Header Version"
       weProvides = [Unguarded $ Pattern "VK_HEADER_VERSION"]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
       weDepends = []
   in WriteElement{..}

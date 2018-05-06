@@ -10,21 +10,15 @@ module Documentation.Haddock
   , documentationToHaddock
   ) where
 
-import           Control.Monad
-import           Data.Bifunctor
 import           Data.Bifunctor
 import           Data.Default
-import           Data.Either.Combinators
 import           Data.Foldable
 import           Data.List
 import           Data.Maybe
 import           Data.Semigroup
-import           Data.Text                    (Text)
-import qualified Data.Text.Extra              as T
-import           Documentation.RunAsciiDoctor
-import           Prelude                      hiding (rem)
-import           Say
-import           System.Environment
+import           Data.Text       (Text)
+import qualified Data.Text.Extra as T
+import           Prelude
 import           Text.Pandoc
 
 import           Documentation
@@ -60,8 +54,8 @@ prepareForHaddock =
       where
         dummy = Para [Str "'"]
         go :: Block -> [Block] -> [Block]
-        go h@(Header{}) (t@(Table{}) : bs) = h : dummy : t : bs
-        go b            bs                 = b : bs
+        go h@Header{} (t@Table{} : bs) = h : dummy : t : bs
+        go b          bs               = b : bs
 
     removeEmptySections :: [Block] -> [Block]
     removeEmptySections = foldr go []
@@ -104,10 +98,6 @@ fixLinks findDocs = topDown fixInlines
           t
           (externalSpecHTML <> "#" <> T.unpack fragment, title)
       i -> i
-
-f = Link ("", [], [])
-         [Str "depth", Space, Str "bias", Space, Str "clamping"]
-         ("{html_spec_relative}#features-features-depthBiasClamp", "")
 
 externalSpecHTML :: String
 externalSpecHTML

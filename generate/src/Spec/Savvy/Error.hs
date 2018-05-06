@@ -45,6 +45,7 @@ data SpecError
   | HandleToNonPointerType Text
   | RequiredExportMissing Text [Text]
   | UnknownPlatform Text
+  | DuplicateSeedNames [Text]
   | Other Text
     -- ^ Used for testing in development
   deriving (Show)
@@ -115,6 +116,7 @@ prettySpecError = \case
       <+> "Required by WriteElements: "
       <+> showText ns
   UnknownPlatform p -> "Unknown platform" <+> p
+  DuplicateSeedNames ns -> "Duplicate Seed Names " <+> showText ns
   Other e -> e
 
 (<+>) :: Text -> Text -> Text

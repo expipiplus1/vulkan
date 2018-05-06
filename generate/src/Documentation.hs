@@ -1,7 +1,6 @@
 {-# LANGUAGE LambdaCase          #-}
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE PatternSynonyms     #-}
-{-# LANGUAGE RecordWildCards     #-}
 {-# LANGUAGE RecursiveDo         #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE ViewPatterns        #-}
@@ -15,13 +14,11 @@ module Documentation
   ) where
 
 import           Control.Monad
-import           Data.Bifunctor
 import           Data.Default
 import           Data.Either.Combinators
 import           Data.Foldable
 import           Data.List.Extra2
 import           Data.Maybe
-import           Data.Semigroup
 import           Data.Text                    (Text)
 import qualified Data.Text.Extra              as T
 import           Documentation.RunAsciiDoctor
@@ -77,35 +74,24 @@ splitDocumentation parent (Pandoc meta bs) = do
   where
     splitPrefix m = \case
       -- Remove the "Document Notes" section
-      Section "_document_notes"  _  rem -> pure (Nothing, rem)
+      Section "_document_notes"  _    rem -> pure (Nothing, rem)
 
       -- Remove the "C Specification" section
-      Section "_c_specification" _  rem -> pure (Nothing, rem)
+      Section "_c_specification" _    rem -> pure (Nothing, rem)
 
       -- Remove the "Name" header
-      Section "_name"            bs rem -> pure (Nothing, bs ++ rem)
+      Section "_name"            bs'' rem -> pure (Nothing, bs'' ++ rem)
 
       -- If the description section is a list of documentation for enumeration
       -- values, split them into separate documentation elements
-      xs@(Section sectionTag bs rem)
-        | sectionTag `elem` ["_description", "_members"] -> case
-            memberDocs parent m bs
-          of
-            Left  err -> pure (Nothing, xs)
-            Right ds  -> pure (Just ds, rem)
+      xs@(Section sectionTag bs'' rem)
+        | sectionTag `elem` ["_description", "_members"]
+        -> case memberDocs parent m bs'' of
+          Left  _  -> pure (Nothing, xs)
+          Right ds -> pure (Just ds, rem)
 
       -- Leave everything else alone
       xs -> pure (Nothing, xs)
-
-dropPrefix :: String -> String -> Maybe String
-dropPrefix prefix s = if prefix `isPrefixOf` s
-                        then Just (drop (length prefix) s)
-                        else Nothing
-
-dropSuffix :: String -> String -> Maybe String
-dropSuffix suffix s = if suffix `isSuffixOf` s
-                        then Just (take (length s - length suffix) s)
-                        else Nothing
 
 pattern Section :: String -> [Block] -> [Block] -> [Block]
 pattern Section ref blocks remainder
@@ -136,17 +122,7 @@ main :: IO ()
 main = do
   [d, m] <- getArgs
   manTxtToDocbook [] d m >>= \case
-    Left  e -> sayErr e
-    Right d -> case docBookToDocumentation d of
+    Left  e  -> sayErr e
+    Right d' -> case docBookToDocumentation d' of
       Left  e  -> sayErr e
-      Right ds -> do
-        for_ ds sayShow
-        -- for_ ds $ \d -> case documentationToHaddock (fixupDocumentation d) of
-        --   Right t ->
-        --     -- sayShow ()
-        --     say t
-        --     -- say
-        --     --   "\n\n--------------------------------------------------------------------------------\n\n"
-        --   Left e -> sayErrShow e
-
-
+      Right ds -> for_ ds sayShow

@@ -82,11 +82,11 @@ document :: (Documentee -> Maybe Haddock) -> Documentee -> Doc ()
 document getDoc n = case getDoc n of
   Nothing          -> "-- No documentation found for" <+> pretty (T.tShow n)
   Just (Haddock h) -> case T.lines h of
-    [] -> "-- Empty Documentation Found for" <+> pretty (T.tShow n)
-    x : xs ->
-      vcat (("-- |" <> pretty (space x)) : (("--" <>) . pretty . space <$> xs))
+    []     -> "-- Empty Documentation Found for" <+> pretty (T.tShow n)
+    x : xs -> vcat
+      (("-- |" <> pretty (space' x)) : (("--" <>) . pretty . space' <$> xs))
     where
-      space = \case
+      space' = \case
         "" -> ""
         x  -> " " <> x
 
@@ -96,7 +96,7 @@ separatedWithGuards
   -> [(Doc (), Maybe Text)]
   -- ^ Things to separate with optional guards
   -> Doc ()
-separatedWithGuards sep things =
+separatedWithGuards sep' things =
   let prefixedThings = case things of
         []   -> []
         x:xs -> x : (first sepPrefix <$> xs)
@@ -105,22 +105,20 @@ separatedWithGuards sep things =
     (d : ds) -> vcatIndents $ concat (uncurry (flip guardedLines) d : sepThings ds)
     where
       sepThings ds = ds <&> \(d, g) -> guardedLines g d
-      sepPrefix = case sep of
+      sepPrefix = case sep' of
         "" -> ("" <>)
         s  -> (pretty s <+>)
 
-mergeGuards :: [(Doc (), Maybe Text)]
-            -> [(Doc (), Maybe Text)]
+mergeGuards :: [(Doc (), Maybe Text)] -> [(Doc (), Maybe Text)]
 mergeGuards xs =
   let groups :: [NonEmpty (Doc (), Maybe Text)]
       groups = groupBy (sameGuard `on` snd) xs
       sameGuard (Just x) (Just y) = x == y
-      sameGuard _ _               = False
+      sameGuard _        _        = False
       ungroups :: NonEmpty (Doc (), Maybe Text) -> (Doc (), Maybe Text)
-      ungroups group =
-        let (ds, g:|gs) = NE.unzip group
-        in (vcat (NE.toList ds), g)
-  in ungroups <$> groups
+      ungroups group' =
+        let (ds, g :| _) = NE.unzip group' in (vcat (NE.toList ds), g)
+  in  ungroups <$> groups
 
 guardedLines :: Maybe Text -> Doc () -> [(Maybe Int, Doc ())]
 guardedLines = \case

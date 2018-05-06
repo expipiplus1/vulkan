@@ -1,11 +1,8 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE PatternGuards     #-}
 {-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE QuasiQuotes       #-}
-{-# LANGUAGE RecordWildCards   #-}
-{-# LANGUAGE TupleSections     #-}
 
 module Write.Marshal.Util
   ( isPassAsPointerType
@@ -23,20 +20,10 @@ module Write.Marshal.Util
   , isSimpleType
   ) where
 
-import           Control.Arrow                            ((&&&))
-import           Control.Bool
 import           Control.Category                         ((>>>))
-import           Control.Monad
-import           Control.Monad.Except
-import           Control.Monad.Writer.Strict              hiding ((<>))
-import           Data.Bifunctor
 import           Data.Foldable
 import           Data.Function
-import           Data.Functor
-import qualified Data.Map                                 as Map
 import           Data.Maybe
-import           Data.Monoid                              (Endo (..))
-import qualified Data.MultiMap                            as MultiMap
 import           Data.Text                                (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
@@ -44,15 +31,9 @@ import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Command
-import           Spec.Savvy.Error
 import           Spec.Savvy.Type
-import qualified Spec.Savvy.Type.Haskell                  as H
 
-import           Write.Element                            hiding (TypeName)
-import qualified Write.Element                            as WE
 import           Write.Marshal.Monad
-import           Write.Struct
-import           Write.Util
 
 -- | Is this a type we don't want to marshal
 isPassAsPointerType :: Type -> Bool
@@ -70,10 +51,10 @@ isPassAsPointerType = \case
 
 writePokes :: Doc () -> [Doc ()] -> WrapM (Doc ())
 writePokes ptr ds = do
-  let writePoke n d = [qci|pokeElemOff {ptr} {n} {d}|]
+  let writePoke :: Int -> (Doc () -> Doc ())
+      writePoke n d = [qci|pokeElemOff {ptr} {n} {d}|]
   tellImport "Foreign.Storable" "pokeElemOff"
   pure . hsep $ punctuate "*>" (zipWith writePoke [0..] ds)
-
 
 isPassByValue :: Parameter -> Bool
 isPassByValue = pType >>> \case
@@ -167,6 +148,6 @@ isSimpleType = \case
   Int        -> True
   Ptr _ _    -> False
   Array{}    -> False
-  TypeName n -> True
+  TypeName _ -> True
   Proto _ _  -> False
 

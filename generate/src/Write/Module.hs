@@ -48,13 +48,22 @@ writeModules
   :: (Documentee -> Maybe Documentation)
   -- Find some documentation
   -> [Module]
-  -> [Doc ()]
+  -> [(Doc (), Maybe (Doc ()))]
+  -- ^ A list of modules and possible boot modules
 writeModules findDoc ms =
   let moduleMapHN = findModuleHN ms
-      moduleMap = findModule ms
+      moduleMap   = findModule ms
       getDoc :: Text -> Documentee -> Maybe Haddock
       getDoc = getModuleDoc findDoc moduleMap
-  in ms <&> (\m -> writeModule (getDoc (mName m)) moduleMapHN m)
+  in  ms
+        <&> (\m ->
+              let sourceModule =
+                    case mapMaybe weBootElement (mWriteElements m) of
+                      []  -> Nothing
+                      wes -> Just m { mWriteElements = wes }
+                  write = writeModule (getDoc (mName m)) moduleMapHN
+              in  (write m, write <$> sourceModule)
+            )
 
 getModuleDoc
   :: (Documentee -> Maybe Documentation)
@@ -65,10 +74,10 @@ getModuleDoc
   -- ^ The module name we are rendering
   -> (Documentee -> Maybe Haddock)
   -- ^ Get the rendered haddocks
-getModuleDoc findDoc findModule thisModule name = do
+getModuleDoc findDoc findModule' thisModule name = do
   doc <- findDoc name
   let getLoc :: Text -> DocumenteeLocation
-      getLoc n = case findModule n of
+      getLoc n = case findModule' n of
         Nothing -> Unknown
         Just m | m == thisModule -> ThisModule
                | otherwise       -> OtherModule m
@@ -92,6 +101,9 @@ writeModule getDoc getModule m@Module{..} = [qci|
 
   {vcat $ moduleImports m}
   {vcat $ importReexportedModule <$> mReexportedModules}
+  \{-
+  {vcat . fmap (pretty . show) $ mReexports}
+  -}
 
   {vcat $ moduleInternalImports getModule m}
 
@@ -100,8 +112,12 @@ writeModule getDoc getModule m@Module{..} = [qci|
 
 moduleExports :: Module -> [(Doc (), Maybe Text)]
 moduleExports Module {..} =
-  mapMaybe exportHaskellName (weProvides =<< mWriteElements)
-  ++ [("module " <> pretty (rmName r), rmGuard r)| r <- mReexportedModules]
+  mapMaybe
+      exportHaskellName
+      (  (weProvides =<< mWriteElements)
+      ++ (weUndependableProvides =<< mWriteElements)
+      )
+    ++ [ ("module " <> pretty (rmName r), rmGuard r) | r <- mReexportedModules ]
 
 importReexportedModule :: ReexportedModule -> Doc ()
 importReexportedModule ReexportedModule {..} = case rmGuard of
@@ -143,8 +159,8 @@ moduleImports Module {..} =
            ( {indent (-2) . vcat . intercalatePrepend "," $ pretty <$> is}
            )
        |]
-  in (makeImport " "           <$> Map.assocs unqualifiedImportMap) ++
-     (makeImport " qualified " <$> Map.assocs qualifiedImportMap)
+  in (makeImport " "                <$> Map.assocs unqualifiedImportMap) ++
+     (makeImport " qualified "      <$> Map.assocs qualifiedImportMap)
 
 findModuleHN :: [Module] -> HaskellName -> Maybe (Text, Guarded Export)
 findModuleHN ms =
@@ -172,10 +188,11 @@ moduleInternalImports
   -> Module
   -> [Doc ()]
 moduleInternalImports nameModule Module {..} =
-  let deps = simplifyDependencies (weDepends =<< mWriteElements)
+  let nonSourceDeps = simplifyDependencies (weDepends =<< mWriteElements)
+      sourceDeps = simplifyDependencies (weSourceDepends =<< mWriteElements)
       -- A map between (ModuleName, Guard) and a list of exports
-      depends :: Map.Map (Text, Maybe Text) [Guarded Export]
-      depends = sort <$> Map.fromListWith
+      depends :: [Guarded HaskellName] -> Map.Map (Text, Maybe Text) [Guarded Export]
+      depends deps = sort <$> Map.fromListWith
         (<>)
         [ ((m, g), [e])
         | d           <- deps
@@ -183,27 +200,30 @@ moduleInternalImports nameModule Module {..} =
         , unGuarded d `notElem` (unExport . unGuarded <$> (weProvides =<< mWriteElements))
         , let g = guardCPPGuard d
         ]
-  in  Map.assocs depends <&> \((moduleName, guard), is) ->
-        guarded guard [qci|
-          import {pretty moduleName}
-            ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe (fmap fst . exportHaskellName) is}
-            )
-        |]
+      writeDeps :: Doc () -> [Guarded HaskellName] -> [Doc ()]
+      writeDeps qualifier deps =
+        Map.assocs (depends deps) <&> \((moduleName, guard), is) ->
+          guarded guard [qci|
+            import {qualifier}{pretty moduleName}
+              ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe (fmap fst . exportHaskellName) is}
+              )
+          |]
+  in writeDeps "" nonSourceDeps ++ writeDeps "{-# source #-} " sourceDeps
 
 simplifyDependencies :: [Guarded HaskellName] -> [Guarded HaskellName]
 simplifyDependencies deps =
   let unguarded = Set.fromList [ Unguarded d | Unguarded d <- deps ]
-      guarded   = Set.fromList
+      guarded'  = Set.fromList
         [ Guarded g d
         | Guarded g d <- deps
         , Unguarded d `Set.notMember` unguarded
         ]
-      invGuarded   = Set.fromList
+      invGuarded = Set.fromList
         [ InvGuarded g d
         | InvGuarded g d <- deps
         , Unguarded d `Set.notMember` unguarded
         ]
-  in  Set.toList unguarded ++ Set.toList guarded ++ Set.toList invGuarded
+  in  Set.toList unguarded ++ Set.toList guarded' ++ Set.toList invGuarded
 
 moduleExtensions :: Module -> [Doc ()]
 moduleExtensions Module {..} =

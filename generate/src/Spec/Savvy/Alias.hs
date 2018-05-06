@@ -5,23 +5,23 @@
 module Spec.Savvy.Alias
   ( Aliases(..)
   , Alias(..)
-  , AliasTarget
+  , AliasTarget(..)
   , aliasTarget
   , specAliases
   ) where
 
 import           Control.Applicative
-import           Control.Arrow            ((&&&))
+import           Control.Arrow           ((&&&))
 import           Control.Monad.Fix.Extra
 import           Data.Either.Validation
 import           Data.Foldable
-import qualified Data.Map                 as Map
+import qualified Data.Map                as Map
 import           Data.Semigroup
-import           Data.Text                (Text)
+import           Data.Text               (Text)
 import           Data.Traversable
-import           Prelude                  hiding (Enum)
-import qualified Spec.Command             as P
-import qualified Spec.Constant            as P
+import           Prelude                 hiding (Enum)
+import qualified Spec.Command            as P
+import qualified Spec.Constant           as P
 import           Spec.Savvy.APIConstant
 import           Spec.Savvy.Command
 import           Spec.Savvy.Enum
@@ -29,8 +29,8 @@ import           Spec.Savvy.Error
 import           Spec.Savvy.Feature
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Struct
-import qualified Spec.Spec                as P
-import qualified Spec.Type                as P
+import qualified Spec.Spec               as P
+import qualified Spec.Type               as P
 
 data Aliases = Aliases
   { commandAliases       :: [Alias Command]

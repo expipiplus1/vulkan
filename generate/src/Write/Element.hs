@@ -1,6 +1,7 @@
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms   #-}
+{-# LANGUAGE RecordWildCards   #-}
 
 module Write.Element
   ( WriteElement(..)
@@ -24,16 +25,23 @@ import           Documentation
 import           Documentation.Haddock
 
 data WriteElement = WriteElement
-  { weName       :: Text
+  { weName                 :: Text
     -- ^ For debug purposes
-  , weExtensions :: [Text]
-  , weImports    :: [Import]
+  , weExtensions           :: [Text]
+  , weImports              :: [Import]
     -- ^ "system" imports
-  , weDoc        :: DocMap -> Doc ()
-  , weProvides   :: [Guarded Export]
+  , weDoc                  :: DocMap -> Doc ()
+  , weProvides             :: [Guarded Export]
     -- ^ The names this element declares
-  , weDepends    :: [Guarded HaskellName]
-    -- ^ Other Vulkan names to expose
+  , weUndependableProvides :: [Guarded Export]
+    -- ^ Names this write element exposes which are ignored when calculating
+    -- module dependencies
+  , weSourceDepends        :: [Guarded HaskellName]
+    -- ^ Things to import with a SOURCE pragma
+  , weDepends              :: [Guarded HaskellName]
+    -- ^ Other internal library names required by this element
+  , weBootElement          :: Maybe WriteElement
+    -- ^ An element used to write a hs-boot file
   }
 
 data Export
@@ -86,10 +94,14 @@ type DocMap = Documentee -> Maybe Haddock
 
 instance Semigroup WriteElement where
   we1 <> we2 = WriteElement
-    { weName       = weName we1 <> " and " <> weName we2
-    , weDoc        = (\d -> vcat [weDoc we1 d, line, weDoc we2 d])
-    , weExtensions = weExtensions we1 <> weExtensions we2
-    , weImports    = weImports we1 <> weImports we2
-    , weProvides   = weProvides we1 <> weProvides we2
-    , weDepends    = weDepends we1 <> weDepends we2
+    { weName                 = weName we1 <> " and " <> weName we2
+    , weDoc                  = \d -> vcat [weDoc we1 d, line, weDoc we2 d]
+    , weExtensions           = weExtensions we1 <> weExtensions we2
+    , weImports              = weImports we1 <> weImports we2
+    , weProvides             = weProvides we1 <> weProvides we2
+    , weDepends              = weDepends we1 <> weDepends we2
+    , weUndependableProvides = weUndependableProvides we1
+      <> weUndependableProvides we2
+    , weSourceDepends        = weSourceDepends we1 <> weSourceDepends we2
+    , weBootElement          = weBootElement we1 <> weBootElement we2
     }

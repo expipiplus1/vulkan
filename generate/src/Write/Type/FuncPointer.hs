@@ -25,6 +25,9 @@ writeFuncPointer fp@FuncPointer {..} = do
   let weName     = "FuncPointer: " <> fpName
       weProvides = Unguarded <$> [TypeAlias fpName]
       weDepends  = Unguarded <$> typeDepends fpType
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
   pure WriteElement {..}
 
 fpDoc :: FuncPointer -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])

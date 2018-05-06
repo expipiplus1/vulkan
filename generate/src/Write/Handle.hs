@@ -20,11 +20,14 @@ import           Write.Util
 writeHandle :: Handle -> Either [SpecError] WriteElement
 writeHandle h@Handle {..} = do
   weDoc <- hDoc h
-  let weName       = "Handle: " <> hName
-      weExtensions = []
-      weImports    = [Import "Foreign.Ptr" ["Ptr"]]
-      weProvides   = [Unguarded $ TypeAlias hName]
-      weDepends    = []
+  let weName                 = "Handle: " <> hName
+      weExtensions           = []
+      weImports              = [Import "Foreign.Ptr" ["Ptr"]]
+      weProvides             = [Unguarded $ TypeAlias hName]
+      weDepends              = []
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
   pure WriteElement {..}
 
 hDoc :: Handle -> Either [SpecError] (DocMap -> Doc ())

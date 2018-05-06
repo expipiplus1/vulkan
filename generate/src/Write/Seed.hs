@@ -10,6 +10,7 @@ module Write.Seed
 
 import           Control.Bool
 import           Data.Char
+import           Data.Maybe
 import           Data.Text                 (Text)
 import qualified Data.Text.Extra           as T
 import           Data.Text.Prettyprint.Doc
@@ -24,17 +25,23 @@ import           Write.Partition
 
 specSeeds :: Spec -> [ModuleSeed]
 specSeeds s =
-  bespokeSeeds
+  bespokeSeedsHighPriority
     ++ featureToSeeds (vulkan10Feature (sFeatures s))
     ++ featureToSeeds (vulkan11Feature (sFeatures s))
     ++ (extensionToSeed <$> sExtensions s)
-    ++ [dynamicLoaderSeed] -- It's very important for this to come last
+    ++ [dynamicLoaderSeed] -- It's important for this to come after the C
+                           -- modules to avoid pulling in every type
+    ++ featureToMarshalledSeeds (vulkan10Feature (sFeatures s))
+    ++ featureToMarshalledSeeds (vulkan11Feature (sFeatures s))
+    ++ (extensionToMarshalledSeed <$> sExtensions s)
+    ++ bespokeSeedsLowPriority
 
-bespokeSeeds :: [ModuleSeed]
-bespokeSeeds =
-  [ ModuleSeed "Graphics.Vulkan.NamedType" [TypeName "(:::)"] Nothing
+bespokeSeedsHighPriority :: [ModuleSeed]
+bespokeSeedsHighPriority =
+  [ ModuleSeed "Graphics.Vulkan.NamedType" [TypeName "(:::)"]           Nothing
+  , ModuleSeed "Graphics.Vulkan.Exception" [TypeName "VulkanException"] Nothing
   , ModuleSeed
-    (toModuleName "Core10" "Core")
+    (toCModuleName "Core10" "Core")
     [ TypeName "VkResult"
     , TypeName "VkStructureType"
     , PatternName "VK_TRUE"
@@ -45,6 +52,40 @@ bespokeSeeds =
     , TypeName "VkObjectType"
     ]
     Nothing
+  , ModuleSeed
+    (toModuleName "Core10" "Core")
+    [ TypeName "Result"
+    , TypeName "StructureType"
+    , PatternName "VK_TRUE"
+    , PatternName "VK_FALSE"
+    , TypeName "Flags"
+    , TypeName "Format"
+    , TypeName "Bool32"
+    , TypeName "ObjectType"
+    ]
+    Nothing
+  ]
+
+bespokeSeedsLowPriority :: [ModuleSeed]
+bespokeSeedsLowPriority =
+  [ ModuleSeed
+    "Graphics.Vulkan.Marshal.Utils"
+    [ TypeName "ToCStruct"
+    , TypeName "FromCStruct"
+    , TypeName "SomeVkStruct"
+    , TermName "SomeVkStruct"
+    , TermName "withCStructPtr"
+    , TermName "fromCStructPtr"
+    , TermName "fromCStructPtrElem"
+    , TermName "fromSomeVkStruct"
+    , TermName "fromSomeVkStructChain"
+    , TermName "withSomeVkStruct"
+    , TermName "withVec"
+    ]
+    Nothing
+  , ModuleSeed "Graphics.Vulkan.Marshal.Utils.Peek"
+               [TermName "peekVkStruct"]
+               Nothing
   ]
 
 dynamicLoaderSeed :: ModuleSeed
@@ -53,7 +94,7 @@ dynamicLoaderSeed =
 
 featureToSeeds :: Feature -> [ModuleSeed]
 featureToSeeds Feature {..} =
-  [ ModuleSeed (toModuleName (featureModuleName fName) name) rRequiredNames Nothing
+  [ ModuleSeed (toCModuleName (featureModuleName fName) name) rRequiredNames Nothing
   | Requirement {..} <- fRequirements
   , Just name        <- [rComment]
   , name
@@ -63,15 +104,43 @@ featureToSeeds Feature {..} =
   , not ("has no API" `T.isSuffixOf` name)
   ]
 
+featureToMarshalledSeeds :: Feature -> [ModuleSeed]
+featureToMarshalledSeeds Feature {..} =
+  [ ModuleSeed (toModuleName (featureModuleName fName) name)
+               (mapMaybe toMarshalledName rRequiredNames)
+               Nothing
+  | Requirement {..} <- fRequirements
+  , Just name        <- [rComment]
+  , name
+    `notElem` [ "Header boilerplate"
+              , "Types not directly used by the API. Include e.g. structs that are not parameter types of commands, but still defined by the API."
+              ]
+  , not ("has no API" `T.isSuffixOf` name)
+  ]
+
+toMarshalledName :: HaskellName -> Maybe HaskellName
+toMarshalledName = \case
+  TermName    n -> TermName . T.lowerCaseFirst <$> T.dropPrefix "vk" n
+  TypeName    n -> TypeName . T.upperCaseFirst <$> T.dropPrefix "Vk" n
+  PatternName n -> pure $ PatternName n
+
 extensionToSeed :: Extension -> ModuleSeed
 extensionToSeed Extension {..} = ModuleSeed
-  (toModuleName "Extensions" extName)
+  (toCModuleName "Extensions" extName)
   (requiredNames <> providedValues)
   extPlatform
   where
     requiredNames = rRequiredNames =<< extRequirements
     providedValues =
       PatternName . exName . snd <$> (rEnumExtensions =<< extRequirements)
+
+extensionToMarshalledSeed :: Extension -> ModuleSeed
+extensionToMarshalledSeed Extension {..} = ModuleSeed
+  (toModuleName "Extensions" extName)
+  requiredNames
+  extPlatform
+  where
+    requiredNames = mapMaybe toMarshalledName (rRequiredNames =<< extRequirements)
 
 featureModuleName :: Text -> Text
 featureModuleName = \case
@@ -85,6 +154,16 @@ featureModuleName = \case
     digits = T.pack <$> many (psym isDigit)
     parseVersion :: RE Char (Text, Text)
     parseVersion = "VK_VERSION_" *> ((,) <$> digits <*> ("_" *> digits))
+
+toCModuleName :: Text -> Text -> Text
+toCModuleName feature n = T.intercalate
+  "."
+  [ "Graphics"
+  , "Vulkan"
+  , "C"
+  , sectionNameToModuleBaseName feature
+  , sectionNameToModuleBaseName n
+  ]
 
 toModuleName :: Text -> Text -> Text
 toModuleName feature n = T.intercalate

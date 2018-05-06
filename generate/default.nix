@@ -19,14 +19,10 @@ let
                    ./patches/pandoc-haddock-math.patch
                    ./patches/pandoc-haddock-table.patch
                  ];
-      async-pool = pkgs.haskell.lib.appendPatches
-                 super.async-pool
-                 [ ./patches/async-pool-bounds.patch
-                 ];
     };
   };
 
-  drv = haskellPackages.callCabal2nix "generate" src {};
+  drv = pkgs.haskell.lib.enableLibraryProfiling (haskellPackages.callCabal2nix "generate" src {});
 
   envWithExtras = pkgs.lib.overrideDerivation drv.env (attrs: {
     buildInputs = attrs.buildInputs ++ extraEnvPackages;

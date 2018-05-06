@@ -14,7 +14,6 @@ module Spec.Savvy.Command
   ) where
 
 import           Control.Arrow
-import           Control.Monad
 import           Data.Closure
 import           Data.Either.Validation
 import           Data.Foldable

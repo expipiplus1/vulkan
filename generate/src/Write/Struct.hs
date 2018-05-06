@@ -42,6 +42,9 @@ writeStruct s@Struct {..} = case sStructOrUnion of
       weProvides = Unguarded <$> [TypeConstructor sName, Term sName]
       weDepends =
         Unguarded <$> nubOrd (concatMap (typeDepends . smType) sMembers)
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
     pure WriteElement {..}
   AUnion -> do
     (weDoc, imports, extensions) <- unionDoc s
@@ -57,6 +60,9 @@ writeStruct s@Struct {..} = case sStructOrUnion of
       weProvides = Unguarded <$> TypeConstructor sName : (Term <$> smNames)
       weDepends =
         Unguarded <$> nubOrd (concatMap (typeDepends . smType) sMembers)
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
     pure WriteElement {..}
 
 ----------------------------------------------------------------

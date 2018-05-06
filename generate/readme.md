@@ -120,3 +120,5 @@ a vector.
       https://github.com/vkmark/vkmark
 
 - Use `Bool` instead of `VkBool32`
+
+- For the marshalled version use stronger typing for handles and device size

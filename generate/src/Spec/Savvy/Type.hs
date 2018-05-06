@@ -240,6 +240,7 @@ typeDepends = \case
   TypeName "wl_surface"           -> [WE.TypeName "Wl_surface"]
   -- TODO: Remove, this is hacky
   TypeName "Integral a => a"      -> []
+  TypeName "ByteString"           -> []
   TypeName t                      -> [WE.TypeName t]
   Proto t ps -> typeDepends t ++ [ p | (_, pt) <- ps, p <- typeDepends pt ]
 

@@ -1,5 +1,4 @@
 {-# LANGUAGE ApplicativeDo     #-}
-{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
@@ -14,6 +13,7 @@ import           Data.Either.Validation
 import           Data.List.Extra
 import qualified Data.Map                                 as Map
 import           Data.Maybe
+import           Data.Semigroup
 import           Data.Text.Extra                          (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
@@ -21,13 +21,11 @@ import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Command
-import           Spec.Savvy.Enum
 import           Spec.Savvy.Error
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Type                          hiding (TypeName)
 import           Spec.Savvy.Type.Haskell
 import           Write.Element
-import           Write.Type.Enum
 import           Write.Util
 
 writeLoader
@@ -39,16 +37,14 @@ writeLoader
   -- ^ Commands in the spec
   -> Either [SpecError] WriteElement
 writeLoader getEnumName platforms commands = do
-  let
-    platformGuardMap :: Text -> Maybe Text
-    platformGuardMap =
-      (`Map.lookup` (Map.fromList
-                      ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
-                    )
-      )
+  let platformGuardMap :: Text -> Maybe Text
+      platformGuardMap =
+        (`Map.lookup` Map.fromList
+          ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
+        )
   (weDoc, is, es) <- writeLoaderDoc platformGuardMap commands
   let
-    exposedCommands = (filter (isJust . cCommandLevel) commands)
+    exposedCommands = filter (isJust . cCommandLevel) commands
     weName          = "Dynamic Function Pointer Loaders"
     weExtensions    = ["CPP", "ForeignFunctionInterface", "MagicHash"] ++ es
     weImports =
@@ -62,24 +58,25 @@ writeLoader getEnumName platforms commands = do
           Nothing -> Unguarded
           Just g  -> Guarded g
         )
-        <$> (  [Term (dropVk cName)]
-            ++ [Term (("has" <>) . T.upperCaseFirst . dropVk $ cName)]
+        <$> ( Term (dropVk cName)
+            : [Term (("has" <>) . T.upperCaseFirst . dropVk $ cName)]
             )
     weProvides =
       (   Unguarded
         <$> ([TypeConstructor, Term] <*> ["DeviceCmds", "InstanceCmds"])
         )
         ++ (Unguarded . Term <$> ["initDeviceCmds", "initInstanceCmds"])
-        ++ (cmdProvides =<< exposedCommands)
-    weReexports    = []
-    weReexportable = []
+    -- These are undependable as they are shadowed by the marshalling commands
+    weUndependableProvides = cmdProvides =<< exposedCommands
+    weSourceDepends        = []
+    weBootElement          = Nothing
     -- TODO: Write these like the imports and extensions, and move all that
     -- to some writer monad.
     weDepends =
       concat
           [ case platformGuardMap =<< cPlatform c of
-              Nothing -> Unguarded <$> (commandDepends getEnumName $ c)
-              Just g  -> Guarded g <$> (commandDepends getEnumName $ c)
+              Nothing -> Unguarded <$> commandDepends getEnumName c
+              Just g  -> Guarded g <$> commandDepends getEnumName c
           | c <- exposedCommands
           ]
         ++ (   Unguarded
@@ -110,7 +107,7 @@ writeLoaderDoc platformGuardMap commands = do
   (ifs, is''', es''') <-
     unzip3 <$> traverseP (writeFunction platformGuardMap "Instance") instanceLevelCommands
   pure $
-    let d = \_ -> [qci|
+    let d _ = [qci|
       data DeviceCmds = DeviceCmds
         \{ {indent (-2) . separatedWithGuards "," $ drs}
         }
@@ -153,7 +150,7 @@ initFunction gm domain commands = [qci|
   |]
   where
     initLine :: Text -> Command -> Doc ()
-    initLine domain Command{..} = [qci|(castPtrToFunPtr <$> vkGet{domain}ProcAddr handle (GHC.Ptr.Ptr "{cName}\NUL"#))|]
+    initLine domain' Command{..} = [qci|(castPtrToFunPtr <$> vkGet{domain'}ProcAddr handle (GHC.Ptr.Ptr "{cName}\NUL"#))|]
 
 writeRecordMember
   :: (Text -> Maybe Text)
@@ -188,6 +185,8 @@ writeFunction gm domain c@Command{..} = do
       |]
   pure ((d, gm =<< cPlatform), is, es)
 
+traverseP
+  :: (Semigroup e, Traversable t) => (a -> Either e b) -> t a -> Either e (t b)
 traverseP f xs = validationToEither $ traverse (eitherToValidation . f) xs
 
 dropVk :: Text -> Text
