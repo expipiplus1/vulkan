@@ -7,8 +7,6 @@ module Write.Alias
   ( writeAliases
   ) where
 
-import           Debug.Trace
-
 import           Control.Applicative
 import           Control.Arrow                            ((&&&))
 import           Data.Either.Validation

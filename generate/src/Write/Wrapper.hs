@@ -11,8 +11,6 @@ module Write.Wrapper
   ( commandWrapper
   ) where
 
-import Debug.Trace
-
 import           Control.Arrow                            ((&&&))
 import           Control.Bool
 import           Control.Monad

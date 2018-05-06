@@ -6,7 +6,6 @@
 
 module Write.Marshal.Struct.Utils
   ( vkStructWriteElement
-  , vkPeekStructWriteElement
   , doesStructContainUnion
   ) where
 
@@ -29,25 +28,19 @@ import           Spec.Savvy.Type
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
 
-vkStructWriteElement :: [Struct] -> WriteElement
-vkStructWriteElement structs =
+vkStructWriteElement :: WriteElement
+vkStructWriteElement =
   let
     weName        = "ToCStruct class declaration"
     weImports
-      = [ Import "Control.Applicative"       ["(<|>)"]
-        , Import "Control.Exception"         ["throwIO"]
-        , Import "Data.Proxy"                ["Proxy(Proxy)"]
-        , Import "Data.Type.Equality"        ["(:~:)(Refl)"]
+      = [ Import "Data.Proxy"                ["Proxy(Proxy)"]
         , Import "Data.Word"                 ["Word8"]
         , Import "Foreign.C.Types"           ["CChar(..)"]
         , Import "Data.ByteString" ["ByteString", "take", "unpack", "packCString"]
-        , Import "Data.Typeable" ["Typeable", "cast", "eqT"]
         , Import "Data.Vector"           ["Vector", "ifoldr"]
-        , Import "Foreign.Marshal.Alloc" ["alloca"]
         , Import "Foreign.Marshal.Array" ["allocaArray"]
-        , Import "Foreign.Ptr"           ["Ptr", "castPtr"]
-        , Import "Foreign.Storable" ["Storable", "poke", "pokeElemOff", "peek", "peekElemOff"]
-        , Import "GHC.IO.Exception" ["IOException(..)", "IOErrorType(InvalidArgument)"]
+        , Import "Foreign.Ptr"           ["Ptr"]
+        , Import "Foreign.Storable" ["Storable", "pokeElemOff", "peekElemOff"]
         , Import "GHC.TypeNats" ["natVal", "KnownNat", "type (<=)"]
         , QualifiedImport "Data.Vector"           ["length"]
         , QualifiedImport "Data.Vector.Generic" ["length", "take", "replicate", "fromList", "Vector", "(++)"]
@@ -58,18 +51,8 @@ vkStructWriteElement structs =
         ]
     weProvides =
       Unguarded
-        <$> [ WithConstructors $ WE.TypeName "ToCStruct"
-            , WithConstructors $ WE.TypeName "FromCStruct"
-            , WithConstructors $ WE.TypeName "SomeVkStruct"
-            , WithConstructors $ WE.TypeName "HasPNext"
-            , Term "SomeVkStruct"
-            , Term "withCStructPtr"
-            , Term "fromCStructPtr"
-            , Term "fromCStructPtrElem"
-            , Term "fromSomeVkStruct"
-            , Term "fromSomeVkStructChain"
-            , Term "withSomeVkStruct"
-            , Term "withVec"
+        <$> [
+              Term "withVec"
             , Term "withArray"
             , Term "withSizedArray"
             , Term "byteStringToSizedVector"
@@ -96,48 +79,6 @@ vkStructWriteElement structs =
       , "TypeOperators"
       ]
     weDoc = pure [qci|
-      class ToCStruct marshalled c | marshalled -> c, c -> marshalled where
-        withCStruct :: marshalled -> (c -> IO a) -> IO a
-      class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
-        fromCStruct :: c -> IO marshalled
-      class HasPNext a where
-        getPNext :: a -> Maybe SomeVkStruct
-
-      data SomeVkStruct where
-        SomeVkStruct
-          :: (ToCStruct a b, Storable b, Show a, Eq a, Typeable a, HasPNext a)
-          => a
-          -> SomeVkStruct
-
-      instance HasPNext SomeVkStruct where
-        getPNext (SomeVkStruct a) = getPNext a
-
-      deriving instance Show SomeVkStruct
-
-      instance Eq SomeVkStruct where
-        SomeVkStruct (a :: a) == SomeVkStruct (b :: b) = case eqT @a @b of
-          Nothing   -> False
-          Just Refl -> a == b
-
-      fromSomeVkStruct :: Typeable a => SomeVkStruct -> Maybe a
-      fromSomeVkStruct (SomeVkStruct a) = cast a
-
-      fromSomeVkStructChain :: Typeable a => SomeVkStruct -> Maybe a
-      fromSomeVkStructChain a =
-        fromSomeVkStruct a <|> (getPNext a >>= fromSomeVkStructChain)
-
-      withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
-      withSomeVkStruct (SomeVkStruct a) f = withCStructPtr a (f . castPtr)
-
-      withCStructPtr :: (Storable c, ToCStruct a c) => a -> (Ptr c -> IO b) -> IO b
-      withCStructPtr a f = withCStruct a (\c -> alloca (\p -> poke p c *> f p))
-
-      fromCStructPtr :: (Storable c, FromCStruct a c) => Ptr c -> IO a
-      fromCStructPtr p = fromCStruct =<< peek p
-
-      fromCStructPtrElem :: (Storable c, FromCStruct a c) => Ptr c -> Int -> IO a
-      fromCStructPtrElem p o = fromCStruct =<< peekElemOff p o
-
       packCStringElemOff :: Ptr (Ptr CChar) -> Int -> IO ByteString
       packCStringElemOff p o = packCString =<< peekElemOff p o
 
@@ -255,89 +196,3 @@ doesStructContainUnion structs =
     structWithUnions = closeL contains unionNames
   in (`Set.member` Set.fromList structWithUnions)
 
-----------------------------------------------------------------
--- peekVkStruct
-----------------------------------------------------------------
-
-vkPeekStructWriteElement :: [Struct] -> WriteElement
-vkPeekStructWriteElement structs =
-  let
-    containsUnion = doesStructContainUnion structs
-
-    weName        = "peekVkStruct declaration"
-    weImports
-      = [ Import "Control.Exception"         ["throwIO"]
-        , Import "Data.Typeable" ["Typeable", "cast", "eqT"]
-        , Import "Foreign.Marshal.Alloc" ["alloca"]
-        , Import "Foreign.Marshal.Array" ["allocaArray"]
-        , Import "Foreign.Ptr"           ["Ptr", "castPtr"]
-        , Import "Foreign.Storable" ["Storable", "poke", "pokeElemOff", "peek", "peekElemOff"]
-        , Import "GHC.IO.Exception" ["IOException(..)", "IOErrorType(InvalidArgument)"]
-        ]
-    weProvides = [Unguarded (Term "peekVkStruct")]
-    weUndependableProvides = []
-    weSourceDepends        = []
-    weBootElement          = Just peekBootElement
-    weDepends =
-      [ Unguarded (WE.TypeName "SomeVkStruct")
-      , Unguarded (WE.TypeName "VkStructureType")
-      ] ++
-      [ d
-      | Struct{..} <- structs
-      , StructMember {smName = "sType", smValues = Just [enum]} : _ <- pure sMembers
-      , d <- Unguarded <$>
-          [ PatternName enum
-          , WE.TypeName sName
-          , WE.TermName ("fromCStruct" <> T.dropPrefix' "Vk" sName)
-          ]
-      ]
-    weExtensions = ["LambdaCase"]
-    weDoc = pure [qci|
-      -- | Read the @sType@ member of a Vulkan struct and marshal the struct into
-      -- a 'SomeVkStruct'
-      --
-      -- Make sure that you only pass this a pointer to a Vulkan struct with a
-      -- @sType@ member at offset 0 otherwise the behaviour is undefined.
-      --
-      -- - Throws an 'InvalidArgument' 'IOException' if given a pointer to a
-      --   struct with an unrecognised @sType@ member.
-      -- - Throws an 'InvalidArgument' 'IOException' if given a pointer to a
-      --   struct which can't be marshalled (those containing union types)
-      peekVkStruct :: Ptr SomeVkStruct -> IO SomeVkStruct
-      peekVkStruct p = do
-        peek (castPtr p :: Ptr VkStructureType) >>= \case
-          {indent 0 . vcat $ mapMaybe (writeSomeStructPeek containsUnion) $ structs}
-          t -> throwIO (IOError Nothing InvalidArgument "" ("Unknown VkStructureType: " ++ show t) Nothing Nothing)
-    |]
-  in WriteElement{..}
-
-writeSomeStructPeek
-  :: (Text -> Bool)
-  -- ^ Does a struct contain a union
-  -> Struct
-  -> Maybe (Doc ())
-writeSomeStructPeek containsUnion Struct{..}
-  = do
-    StructMember {smName = "sType", smValues = Just [enum]} : _ <- pure sMembers
-    pure $ if containsUnion sName
-      then [qci|
-             -- We are not able to marshal this type back into Haskell as we don't know which union component to use
-             {enum} -> throwIO (IOError Nothing InvalidArgument "" ("Unable to marshal Vulkan structure containing unions: " ++ show {enum}) Nothing Nothing)
-           |]
-      else [qci|{enum} -> SomeVkStruct <$> (fromCStruct{T.dropPrefix' "Vk" sName} =<< peek (castPtr p :: Ptr {sName}))|]
-
-peekBootElement :: WriteElement
-peekBootElement =
-  let
-    weName                 = "peekVkStruct boot declaration"
-    weImports              = [ Import "Foreign.Ptr"           ["Ptr"] ]
-    weProvides             = [Unguarded (Term "peekVkStruct")]
-    weUndependableProvides = []
-    weSourceDepends        = [Unguarded (WE.TypeName "SomeVkStruct")]
-    weBootElement          = Nothing
-    weDepends              = []
-    weExtensions           = []
-    weDoc = pure [qci|
-      peekVkStruct :: Ptr SomeVkStruct -> IO SomeVkStruct
-    |]
-  in WriteElement{..}

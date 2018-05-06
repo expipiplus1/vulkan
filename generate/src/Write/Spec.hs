@@ -54,6 +54,7 @@ import           Write.HeaderVersion
 import           Write.Loader
 import           Write.Marshal.Aliases
 import           Write.Marshal.Exception
+import           Write.Marshal.SomeVkStruct
 import           Write.Marshal.Struct
 import           Write.Marshal.Struct.Utils
 import           Write.Module
@@ -79,11 +80,16 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
   cWriteElements <- ExceptT . pure . validationToEither $ specCWriteElements s
   marshalledWriteElements <-
     ExceptT . pure . validationToEither $ specWrapperWriteElements s
-  let seeds = specSeeds s
+
+  let enabledStructs = filter
+        ((`notElem` ignoredUnexportedNames) . TypeName . sName)
+        (sStructs s)
+      seeds = specSeeds s
       ws =
         [ vkExceptionWriteElement
-          , vkStructWriteElement (sStructs s)
-          , vkPeekStructWriteElement (sStructs s)
+          , vkStructWriteElement
+          , vkPeekStructWriteElement enabledStructs
+          , someVkStructWriteElement enabledStructs
           ]
           ++ cWriteElements
           ++ fst marshalledWriteElements

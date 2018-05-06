@@ -101,9 +101,6 @@ writeModule getDoc getModule m@Module{..} = [qci|
 
   {vcat $ moduleImports m}
   {vcat $ importReexportedModule <$> mReexportedModules}
-  \{-
-  {vcat . fmap (pretty . show) $ mReexports}
-  -}
 
   {vcat $ moduleInternalImports getModule m}
 
@@ -113,7 +110,7 @@ writeModule getDoc getModule m@Module{..} = [qci|
 moduleExports :: Module -> [(Doc (), Maybe Text)]
 moduleExports Module {..} =
   mapMaybe
-      exportHaskellName
+      (exportHaskellName False)
       (  (weProvides =<< mWriteElements)
       ++ (weUndependableProvides =<< mWriteElements)
       )
@@ -128,16 +125,20 @@ importReexportedModule ReexportedModule {..} = case rmGuard of
       #endif
     |]
 
-exportHaskellName :: Guarded Export -> Maybe (Doc (), Maybe Text)
-exportHaskellName e =
+exportHaskellName
+  :: Bool
+  -- ^ Is source import
+  -> Guarded Export
+  -> Maybe (Doc (), Maybe Text)
+exportHaskellName isSourceImport e =
   let s = case unExport (unGuarded e) of
         TypeName n -> Just (pretty n)
         TermName n | isConstructor n -> Nothing
                    | otherwise       -> Just (pretty n)
         PatternName n -> Just ("pattern" <+> pretty n)
       doc = case unGuarded e of
-        WithConstructors    _ -> (<> "(..)") <$> s
-        WithoutConstructors _ -> s
+        WithConstructors _ | not isSourceImport -> (<> "(..)") <$> s
+        _                  -> s
   in  (, guardCPPGuard e) <$> doc
 
 isConstructor :: Text -> Bool
@@ -200,15 +201,15 @@ moduleInternalImports nameModule Module {..} =
         , unGuarded d `notElem` (unExport . unGuarded <$> (weProvides =<< mWriteElements))
         , let g = guardCPPGuard d
         ]
-      writeDeps :: Doc () -> [Guarded HaskellName] -> [Doc ()]
-      writeDeps qualifier deps =
+      writeDeps :: Bool -> Doc () -> [Guarded HaskellName] -> [Doc ()]
+      writeDeps isSourceImport qualifier deps =
         Map.assocs (depends deps) <&> \((moduleName, guard), is) ->
           guarded guard [qci|
             import {qualifier}{pretty moduleName}
-              ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe (fmap fst . exportHaskellName) is}
+              ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe (fmap fst . exportHaskellName isSourceImport) is}
               )
           |]
-  in writeDeps "" nonSourceDeps ++ writeDeps "{-# source #-} " sourceDeps
+  in writeDeps False "" nonSourceDeps ++ writeDeps True "{-# source #-} " sourceDeps
 
 simplifyDependencies :: [Guarded HaskellName] -> [Guarded HaskellName]
 simplifyDependencies deps =
