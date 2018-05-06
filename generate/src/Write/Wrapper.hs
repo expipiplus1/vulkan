@@ -612,7 +612,8 @@ simpleWrap
   -- ^ Parameter name
   -> Wrapper
 simpleWrap paramName cont e =
-  [qci|\\{pretty (unKeyword paramName)} -> {cont (e <+> pretty (unKeyword paramName))}|]
+  let w = pretty $ unReservedWord paramName
+  in [qci|\\{w} -> {cont (e <+> w)}|]
 
 cStringWrap
   :: Text
@@ -621,9 +622,9 @@ cStringWrap
 cStringWrap paramName = do
   tellImport "Data.ByteString" "useAsCString"
   pure $ \cont e ->
-    let -- TODO: Use unkeyword everywhere
-        param    = pretty (unKeyword $ dropPointer paramName)
-        paramPtr = pretty (unKeyword $ ptrName (dropPointer paramName))
+    let -- TODO: Use unReservedWord everywhere
+        param    = pretty (unReservedWord $ dropPointer paramName)
+        paramPtr = pretty (unReservedWord $ ptrName (dropPointer paramName))
         -- Note the bracket opened here is closed after cont!
         withPtr  = [qci|useAsCString {param} (\\{paramPtr} -> {e} {paramPtr}|]
     in  [qci|\\{param} -> {cont withPtr})|]
@@ -636,9 +637,9 @@ optionalCStringWrap paramName = do
   tellImport "Data.ByteString"       "useAsCString"
   tellImport "Foreign.Marshal.Utils" "maybeWith"
   pure $ \cont e ->
-    let -- TODO: Use unkeyword everywhere
-      param    = pretty (unKeyword $ dropPointer paramName)
-      paramPtr = pretty (unKeyword $ ptrName (dropPointer paramName))
+    let -- TODO: Use unReservedWord everywhere
+      param    = pretty (unReservedWord $ dropPointer paramName)
+      paramPtr = pretty (unReservedWord $ ptrName (dropPointer paramName))
       -- Note the bracket opened here is closed after cont!
       withPtr =
         [qci|maybeWith useAsCString {param} (\\{paramPtr} -> {e} {paramPtr}|]
@@ -695,7 +696,7 @@ lengthWrap
 lengthWrap vec = do
   tellQualifiedImport "Data.Vector" "length"
   pure $ \cont e ->
-    cont [qci|{e} (fromIntegral $ Data.Vector.length {unKeyword vec})|]
+    cont [qci|{e} (fromIntegral $ Data.Vector.length {unReservedWord vec})|]
 
 lengthBytesWrap
   :: Text
@@ -706,7 +707,7 @@ lengthBytesWrap vec = do
   tellQualifiedImport "Data.Vector" "length"
   pure $ \cont e ->
     cont
-      [qci|{e} (fromIntegral $ sizeOf (head {unKeyword vec}) * Data.Vector.length {unKeyword vec})|]
+      [qci|{e} (fromIntegral $ sizeOf (head {unReservedWord vec}) * Data.Vector.length {unReservedWord vec})|]
 
 passNullPtrWrap :: WrapM Wrapper
 passNullPtrWrap = do
@@ -722,7 +723,7 @@ vecWrap
 vecWrap nonPtrAlloc vecName = do
   tellDepend (Unguarded (TermName "withVec"))
   pure $ \cont e ->
-    let param    = pretty (unKeyword $ dropPointer vecName)
+    let param    = pretty (unReservedWord $ dropPointer vecName)
         paramPtr = pretty (ptrName (dropPointer vecName))
         -- Note the bracket opened here is closed after cont!
         withPtr  = [qci|withVec {nonPtrAlloc} {param} (\\{paramPtr} -> {e} {paramPtr}|]
@@ -739,7 +740,7 @@ voidVecWrap nonPtrAlloc vecName = do
   tellDepend (Unguarded (TermName "withVec"))
   pure $ \cont e ->
     let
-      param    = pretty (unKeyword $ dropPointer vecName)
+      param    = pretty (unReservedWord $ dropPointer vecName)
       paramPtr = pretty (ptrName (dropPointer vecName))
       -- Note the bracket opened here is closed after cont!
       withPtr =

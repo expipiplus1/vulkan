@@ -59,7 +59,7 @@ data Guarded a
   = Guarded Text a
   | InvGuarded Text a
   | Unguarded a
-  deriving (Show, Eq, Ord)
+  deriving (Show, Eq, Ord, Functor)
 
 unGuarded :: Guarded a -> a
 unGuarded = \case

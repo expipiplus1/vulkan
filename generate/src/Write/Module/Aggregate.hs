@@ -27,7 +27,7 @@ makeAggregateModules guards ms
       newNames =
         nubOrd (filter (not . null) (inits =<< inputNames)) \\ inputNames
     in
-      [ Module aggName [] [] reexports
+      [ Module aggName [] [] [] reexports
       | nameComponents <- newNames
       , not . null $ nameComponents
       , let

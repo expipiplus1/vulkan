@@ -53,12 +53,9 @@ partitionElements wes ss = validationToEither $ do
             let
               ds = Set.map unGuarded
                 $ Set.fromList (weDepends =<< providingElements name)
-            in
-               -- Don't allow other modules to grab exports from another seed
-               -- TODO: This may not disallow stealing names, as the
-               -- writeElement could be pulled in by a different requried name
+            in      --  Don't allow other modules to grab exports from another seed
                 ds `Set.difference` allSeedNames
-        in close
+        in  close
               step
               (Set.fromList
                 (  msSeeds
@@ -75,19 +72,25 @@ partitionElements wes ss = validationToEither $ do
         m =
           MultiMap.fromList [ (name, we) | we <- wes, name <- weProvidesHN we ]
 
+    nameExport :: HaskellName -> Maybe (Guarded Export)
+    nameExport n = case providingElements n of
+      []    -> Nothing
+      x : _ -> find ((== n) . unExport . unGuarded) (weProvides x)
+
     modules =
-      [ Module msName closure [] []
+      [ Module msName closure [] seedReexports []
       | m@ModuleSeed {..} <- ss
-      , let names   = Set.toList (closeSeed m)
-            closure =
-              nubOrdOn weProvides $ providingElements =<< names
+      , let
+        names   = Set.toList (closeSeed m)
+        closure = nubOrdOn weProvides $ providingElements =<< names
+        seedReexports = nubOrd $ mapMaybe nameExport msSeeds
       ]
     prioritizedModules = prioritizeModules modules
-  -- _ <- assertUniqueSeedNames ss
-  -- _ <- assertExactlyOneSeeds wes ss
-  -- _ <- assertExactlyOneExport wes prioritizedModules
-  -- _ <- assertNoEmptyModules prioritizedModules
-  -- _ <- assertAllDependenciesSatisfied prioritizedModules
+  _ <- assertUniqueSeedNames ss
+  _ <- assertExactlyOneSeeds wes ss
+  _ <- assertExactlyOneExport wes prioritizedModules
+  _ <- assertNoEmptyModules prioritizedModules
+  _ <- assertAllDependenciesSatisfied prioritizedModules
   pure prioritizedModules
 
 -- | Make sure there are no duplicate exports, if something is exported in an
@@ -112,10 +115,12 @@ makeReexports :: Set.Set HaskellName -> Module -> Module
 makeReexports dis Module {..} =
   let isAllowed we@WriteElement {..} = all (`Set.notMember` dis) (weProvidesHN we)
       (wes, res) = partitionEithers
+        -- TODO: This should preserve guards
         [ if isAllowed we then Left we else Right (unGuarded <$> weProvides we)
         | we <- mWriteElements
         ]
-  in  Module {mWriteElements = wes, mReexports = concat res, ..}
+      seedReexports = mSeedReexports \\ (weProvides =<< wes)
+  in  Module {mWriteElements = wes, mReexports = concat res, mSeedReexports = seedReexports, ..}
 
 moduleExportedNames :: Module -> Set.Set HaskellName
 moduleExportedNames Module {..} =
@@ -195,9 +200,10 @@ assertExactlyOneExport wes mods =
 
 -- | Make sure there are no modules exporting nothing
 assertNoEmptyModules :: [Module] -> Validation [SpecError] ()
-assertNoEmptyModules = traverse_ $ \Module {..} -> case mWriteElements of
-  [] -> Failure [ModuleWithoutExports mName]
-  _  -> Success ()
+assertNoEmptyModules = traverse_ $ \Module {..} ->
+  if null mWriteElements && null mSeedReexports
+    then Failure [ModuleWithoutExports mName]
+    else Success ()
 
 assertAllDependenciesSatisfied :: [Module] -> Validation [SpecError] ()
 assertAllDependenciesSatisfied ms

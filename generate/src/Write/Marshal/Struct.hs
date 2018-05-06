@@ -835,14 +835,14 @@ memberWrapper fromType from =
   ByteString memberName -> do
     tellImport "Data.ByteString" "useAsCString"
     pure $ \cont e ->
-      let paramPtr = pretty (unKeyword $ ptrName (dropPointer memberName))
+      let paramPtr = pretty (unReservedWord $ ptrName (dropPointer memberName))
           withPtr  = [qci|useAsCString {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
   ByteStringData _ memberName -> do
     tellImport "Data.ByteString.Unsafe" "unsafeUseAsCString"
     tellImport "Foreign.Ptr" "castPtr"
     pure $ \cont e ->
-      let paramPtr = pretty (unKeyword $ ptrName (dropPointer memberName))
+      let paramPtr = pretty (unReservedWord $ ptrName (dropPointer memberName))
           withPtr  = [qci|unsafeUseAsCString {accessMember memberName} (\\{paramPtr} -> {e} (castPtr {paramPtr})|]
       in  [qci|{cont withPtr})|]
   ByteStringLength bs       -> do
@@ -851,7 +851,7 @@ memberWrapper fromType from =
   MaybeByteString memberName -> do
     tellImport "Foreign.Marshal.Utils" "maybeWith"
     pure $ \cont e ->
-      let paramPtr = pretty (unKeyword $ ptrName (dropPointer memberName))
+      let paramPtr = pretty (unReservedWord $ ptrName (dropPointer memberName))
           withPtr  = [qci|maybeWith useAsCString {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
   Vector _ _ memberName _elemType alloc _ -> do

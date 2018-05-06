@@ -11,9 +11,11 @@ module Write.Seed
 import           Control.Bool
 import           Data.Char
 import           Data.Maybe
+import qualified Data.MultiMap             as MultiMap
 import           Data.Text                 (Text)
 import qualified Data.Text.Extra           as T
 import           Data.Text.Prettyprint.Doc
+import           Prelude                   hiding (Enum)
 import           Text.Regex.Applicative
 
 import           Spec.Savvy.Enum
@@ -25,14 +27,15 @@ import           Write.Partition
 
 specSeeds :: Spec -> [ModuleSeed]
 specSeeds s =
-  bespokeSeedsHighPriority
+  let aliasNames = enumAliasNames (sEnums s)
+  in bespokeSeedsHighPriority
     ++ featureToSeeds (vulkan10Feature (sFeatures s))
     ++ featureToSeeds (vulkan11Feature (sFeatures s))
     ++ (extensionToSeed <$> sExtensions s)
     ++ [dynamicLoaderSeed] -- It's important for this to come after the C
                            -- modules to avoid pulling in every type
-    ++ featureToMarshalledSeeds (vulkan10Feature (sFeatures s))
-    ++ featureToMarshalledSeeds (vulkan11Feature (sFeatures s))
+    ++ featureToMarshalledSeeds aliasNames (vulkan10Feature (sFeatures s))
+    ++ featureToMarshalledSeeds aliasNames (vulkan11Feature (sFeatures s))
     ++ (extensionToMarshalledSeed <$> sExtensions s)
     ++ bespokeSeedsLowPriority
 
@@ -106,12 +109,13 @@ featureToSeeds Feature {..} =
   , not ("has no API" `T.isSuffixOf` name)
   ]
 
-featureToMarshalledSeeds :: Feature -> [ModuleSeed]
-featureToMarshalledSeeds Feature {..} =
+featureToMarshalledSeeds :: (HaskellName -> [HaskellName]) -> Feature -> [ModuleSeed]
+featureToMarshalledSeeds aliasNames Feature {..} =
   [ ModuleSeed (toModuleName (featureModuleName fName) name)
-               (mapMaybe toMarshalledName rRequiredNames)
+               (mapMaybe toMarshalledName requiredNames)
                Nothing
   | Requirement {..} <- fRequirements
+  , let requiredNames = rRequiredNames ++ (aliasNames =<< rRequiredNames)
   , Just name        <- [rComment]
   , name
     `notElem` [ "Header boilerplate"
@@ -199,3 +203,13 @@ sectionNameToModuleBaseName = \case
     where
       isAllowed n = n `notElem` forbiddenWords
       forbiddenWords = ["commands", "API"]
+
+enumAliasNames :: [Enum] -> HaskellName -> [HaskellName]
+enumAliasNames es = (`MultiMap.lookup` m)
+  where
+    m = MultiMap.fromList
+      [ (k, v)
+      | Enum {..} <- es
+      , let k = TypeName eName
+      , v <- TypeName <$> eAliases
+      ]

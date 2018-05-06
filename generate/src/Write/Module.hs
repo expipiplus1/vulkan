@@ -35,6 +35,8 @@ data Module = Module
   { mName              :: Text
   , mWriteElements     :: [WriteElement]
   , mReexports         :: [Export]
+    -- ^ Ignored, generates too much noise
+  , mSeedReexports     :: [Guarded Export]
   , mReexportedModules :: [ReexportedModule]
   }
 
@@ -113,6 +115,7 @@ moduleExports Module {..} =
       (exportHaskellName False)
       (  (weProvides =<< mWriteElements)
       ++ (weUndependableProvides =<< mWriteElements)
+      ++ mSeedReexports
       )
     ++ [ ("module " <> pretty (rmName r), rmGuard r) | r <- mReexportedModules ]
 
@@ -191,6 +194,8 @@ moduleInternalImports
 moduleInternalImports nameModule Module {..} =
   let nonSourceDeps = simplifyDependencies (weDepends =<< mWriteElements)
       sourceDeps = simplifyDependencies (weSourceDepends =<< mWriteElements)
+      reexportedDeps = simplifyDependencies (fmap unExport <$> mSeedReexports)
+                       \\ nonSourceDeps
       -- A map between (ModuleName, Guard) and a list of exports
       depends :: [Guarded HaskellName] -> Map.Map (Text, Maybe Text) [Guarded Export]
       depends deps = sort <$> Map.fromListWith
@@ -209,7 +214,10 @@ moduleInternalImports nameModule Module {..} =
               ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe (fmap fst . exportHaskellName isSourceImport) is}
               )
           |]
-  in writeDeps False "" nonSourceDeps ++ writeDeps True "{-# source #-} " sourceDeps
+  in concat [ writeDeps False "" nonSourceDeps
+            , writeDeps True "{-# source #-} " sourceDeps
+            , writeDeps False "" reexportedDeps
+            ]
 
 simplifyDependencies :: [Guarded HaskellName] -> [Guarded HaskellName]
 simplifyDependencies deps =

@@ -58,7 +58,7 @@ someVkStructWriteElement structs =
     weDepends =
       [ d
       | Struct{..} <- structs
-      , StructMember {smName = "sType", smValues = Just [enum]} : _ <- pure sMembers
+      , StructMember {smName = "sType", smValues = Just []} : _ <- pure sMembers
       , d <- Unguarded <$>
           [ WE.TypeName sName
           , WE.TypeName (T.dropPrefix' "Vk" sName)
@@ -141,7 +141,7 @@ writeSomeStructInstances
   -> Maybe (Doc ())
 writeSomeStructInstances containsUnion Struct{..}
   = do
-    StructMember {smName = "sType", smValues = Just [enum]} : _ <- pure sMembers
+    StructMember {smName = "sType", smValues = Just []} : _ <- pure sMembers
     marshalledName <- T.dropPrefix "Vk" sName
     let toCStructDoc = [qci|
           instance ToCStruct {marshalledName} {sName} where
@@ -213,7 +213,9 @@ vkPeekStructWriteElement structs =
       , d <- Unguarded <$>
           [ PatternName enum
           , WE.TypeName sName
-          , WE.TermName ("fromCStruct" <> T.dropPrefix' "Vk" sName)
+          ] ++
+          [ WE.TermName ("fromCStruct" <> T.dropPrefix' "Vk" sName)
+          | not (containsUnion sName)
           ]
       ]
     weExtensions = ["LambdaCase"]

@@ -15,7 +15,7 @@ module Write.Marshal.Util
   , ptrName
   , dropVk
   , dropPointer
-  , unKeyword
+  , unReservedWord
   , simpleTypeName
   , isSimpleType
   ) where
@@ -91,8 +91,8 @@ dropVk = T.lowerCaseFirst . T.dropPrefix' "vk"
 dropPointer :: Text -> Text
 dropPointer = T.lowerCaseFirst . T.dropPrefix' "p"
 
-unKeyword :: Text -> Text
-unKeyword t = if t `elem` keywords then t <> "'" else t
+unReservedWord :: Text -> Text
+unReservedWord t = if t `elem` (keywords ++ preludeWords) then t <> "'" else t
   where
     keywords =
       [ "as"
@@ -127,6 +127,9 @@ unKeyword t = if t `elem` keywords then t <> "'" else t
       , "then"
       , "type"
       , "where"
+      ]
+    preludeWords =
+      [ "filter"
       ]
 
 simpleTypeName :: Type -> Maybe Text
