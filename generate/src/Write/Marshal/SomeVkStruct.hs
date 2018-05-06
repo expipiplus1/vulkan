@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE QuasiQuotes       #-}
@@ -58,7 +59,6 @@ someVkStructWriteElement structs =
     weDepends =
       [ d
       | Struct{..} <- structs
-      , StructMember {smName = "sType", smValues = Just [_]} : _ <- pure sMembers
       , d <- Unguarded <$>
           [ WE.TypeName sName
           , WE.TypeName (T.dropPrefix' "Vk" sName)
@@ -141,7 +141,6 @@ writeSomeStructInstances
   -> Maybe (Doc ())
 writeSomeStructInstances containsUnion Struct{..}
   = do
-    StructMember {smName = "sType", smValues = Just [_]} : _ <- pure sMembers
     marshalledName <- T.dropPrefix "Vk" sName
     let toCStructDoc = [qci|
           instance ToCStruct {marshalledName} {sName} where
@@ -153,10 +152,15 @@ writeSomeStructInstances containsUnion Struct{..}
             instance FromCStruct {marshalledName} {sName} where
               fromCStruct = fromCStruct{marshalledName}
             |]
-    let hasPNextDoc = [qci|
-          instance HasPNext {marshalledName} where
-            getPNext a = vkPNext (a :: {marshalledName})
-          |]
+    let hasPNextDoc =
+          if any (\case
+                     StructMember {smName = "pNext"} -> True
+                     _ -> False) sMembers
+            then [qci|
+                   instance HasPNext {marshalledName} where
+                     getPNext a = vkPNext (a :: {marshalledName})
+                 |]
+            else mempty
     pure $ vcat [toCStructDoc, fromCStructDoc, hasPNextDoc]
 
 someVkStructBootElement :: WriteElement

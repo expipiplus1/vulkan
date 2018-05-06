@@ -98,16 +98,17 @@ separatedWithGuards
   -> Doc ()
 separatedWithGuards sep' things =
   let prefixedThings = case things of
-        []   -> []
-        x:xs -> x : (first sepPrefix <$> xs)
-  in case mergeGuards prefixedThings of
-    []       -> mempty
-    (d : ds) -> vcatIndents $ concat (uncurry (flip guardedLines) d : sepThings ds)
-    where
-      sepThings ds = ds <&> \(d, g) -> guardedLines g d
-      sepPrefix = case sep' of
-        "" -> ("" <>)
-        s  -> (pretty s <+>)
+        []     -> []
+        x : xs -> x : (first sepPrefix <$> xs)
+  in  case mergeGuards prefixedThings of
+        [] -> mempty
+        (d : ds) ->
+          vcatIndents $ concat (uncurry (flip guardedLines) d : sepThings ds)
+  where
+    sepThings ds = ds <&> \(d, g) -> guardedLines g d
+    sepPrefix = case sep' of
+      "" -> ("" <>)
+      s  -> (pretty s <+>)
 
 mergeGuards :: [(Doc (), Maybe Text)] -> [(Doc (), Maybe Text)]
 mergeGuards xs =
