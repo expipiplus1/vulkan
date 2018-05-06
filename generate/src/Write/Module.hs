@@ -238,7 +238,11 @@ moduleExtensions :: Module -> [Doc ()]
 moduleExtensions Module {..} =
   let extraExtensions =
         [ "PatternSynonyms"
-        | PatternName _ <- fmap unGuarded . weDepends =<< mWriteElements
+        | PatternName _ <-
+          unGuarded
+            <$> (  (weDepends =<< mWriteElements)
+                ++ (fmap unExport <$> mSeedReexports)
+                )
         ]
       es = nubOrd $ (weExtensions =<< mWriteElements) ++ extraExtensions
   in  es <&> \e -> [qci|\{-# language {e} #-}|]

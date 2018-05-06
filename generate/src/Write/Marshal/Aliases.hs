@@ -47,7 +47,7 @@ makeMarshalledEnumAlias e@Enum {..} = do
 
 makeMarshalledAliasAlias :: Alias a -> Maybe (Alias a)
 makeMarshalledAliasAlias a = do
-  aName <- T.dropPrefix "Vk" (aName a)
-  let aAliasName = A.aName a
-      aAlias     = AnAlias a
+  aName      <- T.dropPrefix "Vk" (aName a)
+  aAliasName <- T.dropPrefix "Vk" (A.aAliasName a)
+  let aAlias = AnAlias (Alias aAliasName (A.aAliasName a) (AnAlias a))
   pure Alias {..}

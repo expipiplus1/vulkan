@@ -53,4 +53,5 @@ unsplitModuleName = T.intercalate "."
 disallowedModules :: [Text]
 disallowedModules =
   [ "Graphics.Vulkan.Dynamic"
+  , "Graphics.Vulkan.C"
   ]
