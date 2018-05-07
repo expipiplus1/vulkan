@@ -80,6 +80,13 @@ For functions such as `vkGetQueryPoolResults`, we could take a length, and
 return a bytestring of that length. Or an element count and a strike, returning
 a vector.
 
+implement sibling vectors
+
+There are sometimes several valid choices for marshalling values, it would be
+nice to expose both functions. When creating the wrappers, instead return more
+than one along with an optional name suffix and return the product of the
+options.
+
 ## Marshalling structs:
 
 - `VkDescriptorSetLayoutBindingFlagsCreateInfoEXT` has a complex rule for the

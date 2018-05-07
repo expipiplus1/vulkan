@@ -86,6 +86,14 @@ executable generate
                      , Write.Handle
                      , Write.HeaderVersion
                      , Write.Loader
+                     , Write.Marshal.Aliases
+                     , Write.Marshal.Exception
+                     , Write.Marshal.Monad
+                     , Write.Marshal.SomeVkStruct
+                     , Write.Marshal.Struct
+                     , Write.Marshal.Struct.Utils
+                     , Write.Marshal.Util
+                     , Write.Marshal.Wrap
                      , Write.Module
                      , Write.Module.Aggregate
                      , Write.Partition
@@ -95,6 +103,7 @@ executable generate
                      , Write.Type.Enum
                      , Write.Type.FuncPointer
                      , Write.Util
+                     , Write.Wrapper
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
   build-depends:       base >= 4.8 && < 5
                      , control-bool >= 0.2.1
