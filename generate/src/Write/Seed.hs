@@ -8,6 +8,7 @@ module Write.Seed
   ( specSeeds
   ) where
 
+import Data.Foldable
 import           Control.Bool
 import           Data.Char
 import           Data.Maybe
@@ -25,19 +26,31 @@ import           Spec.Savvy.Spec
 import           Write.Element
 import           Write.Partition
 
+import Debug.Trace
+
 specSeeds :: Spec -> [ModuleSeed]
 specSeeds s =
-  let aliasNames = enumAliasNames (sEnums s)
-  in bespokeSeedsHighPriority
-    ++ featureToSeeds (vulkan10Feature (sFeatures s))
-    ++ featureToSeeds (vulkan11Feature (sFeatures s))
-    ++ (extensionToSeed <$> sExtensions s)
-    ++ [dynamicLoaderSeed] -- It's important for this to come after the C
-                           -- modules to avoid pulling in every type
-    ++ featureToMarshalledSeeds aliasNames (vulkan10Feature (sFeatures s))
-    ++ featureToMarshalledSeeds aliasNames (vulkan11Feature (sFeatures s))
-    ++ (extensionToMarshalledSeed <$> sExtensions s)
-    ++ bespokeSeedsLowPriority
+  fmap (\x -> traceShow (msName x) x)
+    $ let
+        aliasNames = enumAliasNames (sEnums s)
+        bespokeSeedNames =
+          msName <$> (bespokeSeedsHighPriority ++ bespokeSeedsLowPriority)
+        -- Filter any extracted seeds for which we have bespoke seeds
+        nonBespokeSeeds =
+          filter ((`notElem` bespokeSeedNames) . msName)
+            $  featureToSeeds (vulkan10Feature (sFeatures s))
+            ++ featureToSeeds (vulkan11Feature (sFeatures s))
+            ++ (extensionToSeed <$> sExtensions s)
+            ++ [dynamicLoaderSeed] -- It's important for this to come after the C
+                                   -- modules to avoid pulling in every type
+            ++ featureToMarshalledSeeds aliasNames
+                                        (vulkan10Feature (sFeatures s))
+
+            ++ featureToMarshalledSeeds aliasNames
+                                        (vulkan11Feature (sFeatures s))
+            ++ (extensionToMarshalledSeed <$> sExtensions s)
+      in
+        bespokeSeedsHighPriority ++ nonBespokeSeeds ++ bespokeSeedsLowPriority
 
 bespokeSeedsHighPriority :: [ModuleSeed]
 bespokeSeedsHighPriority =
@@ -65,15 +78,14 @@ bespokeSeedsHighPriority =
     , TermName "boolToBool32"
     ]
     Nothing
+  , ModuleSeed (toCModuleName "Core11" "Version")
+               [PatternName "VK_API_VERSION_1_1"]
+               Nothing
   ]
 
 bespokeSeedsLowPriority :: [ModuleSeed]
 bespokeSeedsLowPriority =
-  [ ModuleSeed
-    "Graphics.Vulkan.Marshal.Utils"
-    [ TermName "withVec"
-    ]
-    Nothing
+  [ ModuleSeed "Graphics.Vulkan.Marshal.Utils" [TermName "withVec"] Nothing
   , ModuleSeed
     "Graphics.Vulkan.Marshal.SomeVkStruct"
     [ TypeName "ToCStruct"
@@ -87,6 +99,21 @@ bespokeSeedsLowPriority =
     , TermName "withCStructPtr"
     , TermName "fromCStructPtr"
     , TermName "fromCStructPtrElem"
+    ]
+    Nothing
+  , ModuleSeed
+    (toModuleName "Core10" "Version")
+    [ PatternName "VK_MAKE_VERSION"
+    , PatternName "VK_API_VERSION_1_0"
+    , PatternName "VK_MAKE_VERSION"
+    , TermName "_VK_VERSION_MAJOR"
+    , TermName "_VK_VERSION_MINOR"
+    , TermName "_VK_VERSION_PATCH"
+    ]
+    Nothing
+  , ModuleSeed
+    (toModuleName "Core11" "Version")
+    [ PatternName "VK_API_VERSION_1_1"
     ]
     Nothing
   ]
@@ -124,8 +151,14 @@ featureToMarshalledSeeds aliasNames Feature {..} =
 
 toMarshalledName :: HaskellName -> Maybe HaskellName
 toMarshalledName = \case
-  TermName    n -> TermName . T.lowerCaseFirst <$> T.dropPrefix "vk" n
-  TypeName    n -> TypeName . T.upperCaseFirst <$> T.dropPrefix "Vk" n
+  TermName    n -> asum
+    [ TermName . T.lowerCaseFirst <$> T.dropPrefix "vk" n
+    , pure $ TermName n
+    ]
+  TypeName    n -> asum
+    [ TypeName . T.upperCaseFirst <$> T.dropPrefix "Vk" n
+    , pure $ TypeName n
+    ]
   PatternName n -> pure $ PatternName n
 
 extensionToSeed :: Extension -> ModuleSeed

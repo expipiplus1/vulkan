@@ -19,21 +19,20 @@ makeAggregateModules
 makeAggregateModules guards ms
   = let
       inputNames :: [[Text]]
-      inputNames =
-        nubOrd
-          .   splitModuleName
-          <$> (filter (`notElem` disallowedModules) . fmap mName $ ms)
+      inputNames = nubOrd . (splitModuleName . mName) <$> ms
       newNames :: [[Text]]
       newNames =
-        nubOrd (filter (not . null) (inits =<< inputNames)) \\ inputNames
+        nubOrd (filter (not . null) (inits =<< inputNames))
+          \\ inputNames
     in
       [ Module aggName [] [] [] reexports
       | nameComponents <- newNames
       , not . null $ nameComponents
       , let
         aggName       = unsplitModuleName nameComponents
-        reexportNames = unsplitModuleName
-          <$> filter ((nameComponents ==) . init) (inputNames ++ newNames)
+        reexportNames = unsplitModuleName <$> filter
+          ((nameComponents ==) . init)
+          ((inputNames ++ newNames) \\ disallowedModules)
         reexports =
           [ ReexportedModule
               n
@@ -50,8 +49,11 @@ unsplitModuleName :: [Text] -> Text
 unsplitModuleName = T.intercalate "."
 
 -- | Modules which shouldn't feature in any aggregate
-disallowedModules :: [Text]
-disallowedModules =
+disallowedModules :: [[Text]]
+disallowedModules = splitModuleName <$>
   [ "Graphics.Vulkan.Dynamic"
   , "Graphics.Vulkan.C"
+  , "Graphics.Vulkan.Marshal"
+  , "Graphics.Vulkan.Marshal.Utils"
+  , "Graphics.Vulkan.Marshal.SomeVkStruct"
   ]

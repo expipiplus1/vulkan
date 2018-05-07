@@ -7,7 +7,9 @@ module Write.Bespoke
   ) where
 
 import           Data.Text                                (Text)
+import qualified Data.Text.Extra as T
 import           Data.Text.Prettyprint.Doc
+import           Data.Word
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
@@ -18,8 +20,15 @@ import           Write.Util
 
 bespokeWriteElements :: [WriteElement]
 bespokeWriteElements =
-  [namedType, versions, nullHandle, bools] ++ concat [win32, x11, xcb, wayland, mir, android] ++
-    bespokeMarshalledWriteElements
+  [ namedType
+    , versions
+    , apiVersionWriteElement 1 0
+    , apiVersionWriteElement 1 1
+    , nullHandle
+    , bools
+    ]
+    ++ concat [win32, x11, xcb, wayland, mir, android]
+    ++ bespokeMarshalledWriteElements
 
 namedType :: WriteElement
 namedType =
@@ -46,14 +55,6 @@ versions =
           (\v -> (_VK_VERSION_MAJOR v, _VK_VERSION_MINOR v, _VK_VERSION_PATCH v) -> (major, minor, patch))
           where VK_MAKE_VERSION major minor patch = major `shiftL` 22 .|. minor `shiftL` 12 .|. patch
 
-        {document getDoc (TopLevel "VK_API_VERSION_1_0")}
-        pattern VK_API_VERSION_1_0 :: Word32
-        pattern VK_API_VERSION_1_0 = VK_MAKE_VERSION 1 0 0
-
-        {document getDoc (TopLevel "VK_API_VERSION_1_1")}
-        pattern VK_API_VERSION_1_1 :: Word32
-        pattern VK_API_VERSION_1_1 = VK_MAKE_VERSION 1 1 0
-
         {document getDoc (TopLevel "VK_VERSION_MAJOR")}
         _VK_VERSION_MAJOR :: Word32 -> Word32
         _VK_VERSION_MAJOR v = v `shiftR` 22
@@ -62,7 +63,7 @@ versions =
         _VK_VERSION_MINOR :: Word32 -> Word32
         _VK_VERSION_MINOR v = v `shiftR` 12 .&. 0x3ff
 
-        {document getDoc (TopLevel "VK_VERSION_PATCh")}
+        {document getDoc (TopLevel "VK_VERSION_PATCH")}
         _VK_VERSION_PATCH :: Word32 -> Word32
         _VK_VERSION_PATCH v = v .&. 0xfff
       |]
@@ -73,8 +74,6 @@ versions =
       weName = "Version Macros"
       weProvides = Unguarded <$>
                    [ Pattern "VK_MAKE_VERSION"
-                   , Pattern "VK_API_VERSION_1_0"
-                   , Pattern "VK_API_VERSION_1_1"
                    , Term "_VK_VERSION_MAJOR"
                    , Term "_VK_VERSION_MINOR"
                    , Term "_VK_VERSION_PATCH"
@@ -83,6 +82,25 @@ versions =
       weSourceDepends        = []
       weBootElement          = Nothing
       weDepends = []
+  in WriteElement{..}
+
+apiVersionWriteElement :: Word32 -> Word32 -> WriteElement
+apiVersionWriteElement major minor =
+  let patternName = "VK_API_VERSION_" <> T.tShow major <> "_" <> T.tShow minor
+      weDoc getDoc = [qci|
+        {document getDoc (TopLevel patternName)}
+        pattern {patternName} :: Word32
+        pattern {patternName} = VK_MAKE_VERSION {major} {minor} 0
+      |]
+      weImports = [ Import "Data.Word" ["Word32"]
+                  ]
+      weExtensions = ["PatternSynonyms"]
+      weName = "Version Macro" T.<+> T.tShow major T.<+> T.tShow minor
+      weProvides = [ Unguarded $ Pattern patternName ]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
+      weDepends = [Unguarded (PatternName "VK_MAKE_VERSION")]
   in WriteElement{..}
 
 nullHandle :: WriteElement
