@@ -98,20 +98,22 @@ wrapCommand isDefaultable isStruct c@Command {..} = do
       makeType wts constraints = wtsToSig c constraints wts
   (ds, aliases) <- if isDualUseCommand lengthPairs
     then do
-      wts1 <- do
+      (wts1, as1) <- do
         (wts, constraints) <- makeWts (Just CommandGetLength)
         tellExport (Unguarded (Term (funGetLengthName cName)))
         printWrapped funGetLengthName wts constraints
-      wts2 <- do
+        (,) <$> printWrapped funGetLengthName wts constraints
+            <*> pure [] -- TODO: write aliases for get length names
+      (wts2, as2) <- do
         (wts, constraints) <- makeWts (Just CommandGetValues)
         tellExport (Unguarded (Term (funName cName)))
-        printWrapped funName wts constraints
-      pure ([wts1, wts2], [])
+        (,) <$> printWrapped funName wts constraints
+            <*> traverse (writeAlias wts constraints c) cAliases
+      pure ([wts1, wts2], as1 ++ as2)
     else do
       tellExport (Unguarded (Term (funName cName)))
       (wts, constraints) <- makeWts Nothing
       d <- printWrapped funName wts constraints
-      -- TODO: Write alises for dual use commands
       as <- traverse (writeAlias wts constraints c) cAliases
       pure ([d], as)
   tellDepend (Unguarded (TermName cName))
@@ -253,7 +255,7 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 Just tyName <- pure $ simpleTypeName t
                 tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
                 tellImport "Foreign.Storable" "peek"
-                tellImport "Control.Monad" "(<=<)"
+                tellImport "Control.Monad"    "(<=<)"
                 pure [qci|(fromCStruct{tyName} <=< peek)|]
               else do
                 tellImport "Foreign.Storable" "peek"
@@ -263,7 +265,7 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 Just tyName <- pure $ simpleTypeName t
                 tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
                 tellImport "Foreign.Storable" "peekElemOff"
-                tellImport "Control.Monad" "(<=<)"
+                tellImport "Control.Monad"    "(<=<)"
                 pure [qci|(\\p -> fromCStruct{tyName} <=< peekElemOff p)|]
               else do
                 tellImport "Foreign.Storable" "peekElemOff"
@@ -295,8 +297,8 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 , isSimpleType t
                 , Ptr NonConst Void <- pType vector
                 -> do
-                    let w = simpleWrap (pName p)
-                    pure $ InputType (Input name (toHsType t)) w
+                  let w = simpleWrap (pName p)
+                  pure $ InputType (Input name (toHsType t)) w
                 | -- The length of an array of typed values, length is given in
                   -- number of values
                   vectors <-
@@ -310,6 +312,10 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 -> do
                   w <- lengthWrap (dropPointer . pName <$> vectors)
                   pure $ InferredType w
+                | -- A Bool argument
+                  Just "VkBool32" <- simpleTypeName t
+                , Nothing <- pIsOptional p
+                -> InputType (Input name (pure "Bool")) <$> (boolWrap (pName p))
                 | -- A ordinary boring argument
                   isSimpleType t
                 , isNothing (pIsOptional p) || isDefaultable t
@@ -328,24 +334,24 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 , isSimpleType t
                 , Nothing <- pIsOptional p
                 -> do
-                  alloc  <- getAlloc t
-                  w      <- allocaWrap alloc (pName p)
+                  alloc <- getAlloc t
+                  w     <- allocaWrap alloc (pName p)
                   pure $ InputType (Input name (toHsType t)) w
                 | -- An optional pointer without any length
                   Nothing <- pLength p
                 , isSimpleType t
                 , Just [True] <- pIsOptional p
                 -> do
-                  alloc  <- getAlloc t
-                  w      <- optionalAllocaWrap alloc (pName p)
+                  alloc <- getAlloc t
+                  w     <- optionalAllocaWrap alloc (pName p)
                   pure $ InputType (Input name (("Maybe " <>) <$> toHsType t)) w
                 | -- A vector of values with a length
                   isLengthPairList (pName p)
                 , isSimpleType t
                 , Nothing <- pIsOptional p
                 -> do
-                  alloc  <- getNonPtrAlloc t
-                  w      <- vecWrap alloc (pName p)
+                  alloc <- getNonPtrAlloc t
+                  w     <- vecWrap alloc (pName p)
                   let vType = do
                         tellImport "Data.Vector" "Vector"
                         tyName <- toHsType t
@@ -356,8 +362,8 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 , Ptr Const t' <- t
                 , Nothing <- pIsOptional p
                 -> do
-                  alloc  <- getAlloc t'
-                  w      <- vecWrap alloc (pName p)
+                  alloc <- getAlloc t'
+                  w     <- vecWrap alloc (pName p)
                   let vType = do
                         tellImport "Data.Vector" "Vector"
                         tyName <- toHsType t'
@@ -371,7 +377,7 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 , Nothing <- pIsOptional p
                 -> do
                   tellImport "Foreign.Marshal.Utils" "with"
-                  tellImport "Data.Function" "(&)"
+                  tellImport "Data.Function"         "(&)"
                   let alloc = "(&)"
                   w <- voidVecWrap alloc (pName p)
                   tellImport "Foreign.Storable" "Storable"
@@ -406,9 +412,8 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   Void <- t
                 , Nothing <- pLength p
                 , Nothing == pIsOptional p || Just [False] == pIsOptional p
-                ->
-                  pure $ InputType (Input (pName p) (toHsType ptrType))
-                                   (simpleWrap (pName p))
+                -> pure $ InputType (Input (pName p) (toHsType ptrType))
+                                    (simpleWrap (pName p))
                 | otherwise
                 -> throwError [Other "array ptr parameter"]
               ptrType@(Ptr NonConst t)
@@ -417,18 +422,31 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   isPassAsPointerType t
                 , isSimpleType t
                 , isNothing (pIsOptional p) || isDefaultable t
-                ->
-                  pure $ InputType (Input (pName p) (toHsType ptrType))
-                                   (simpleWrap (pName p))
+                -> pure $ InputType (Input (pName p) (toHsType ptrType))
+                                    (simpleWrap (pName p))
                 | -- Is another pointer being returned
                   Ptr NonConst t' <- t
                 , -- There is no optional attribute on the return value from
                   -- vkGetMemoryAndroidHardwareBufferANDROID
-                  (Just [False, True] == pIsOptional p) || t' == TypeName "AHardwareBuffer"
+                  (Just [False, True] == pIsOptional p) || t' == TypeName
+                  "AHardwareBuffer"
                 -> do
                   (w, ptr) <- simpleAllocaOutputWrap (pName p)
                   tellImport "Foreign.Storable" "peek"
                   pure $ OutputType (Output (toHsType t) ("peek" <+> ptr)) w
+                | -- A pointer to a non-optional return bool
+                  Nothing <- pLength p
+                , Just "VkBool32" <- simpleTypeName t
+                , Nothing <- pIsOptional p
+                -> do
+                  (w, ptr) <- simpleAllocaOutputWrap (pName p)
+                  peek     <- getPeek t
+                  tellDepend (Unguarded (TermName "bool32ToBool"))
+                  pure $ OutputType
+                    (Output (pure "Bool")
+                            ("bool32ToBool" <+> "<$>" <+> parens (peek <+> ptr))
+                    )
+                    w
                 | -- A pointer to a non-optional return value
                   Nothing <- pLength p
                 , isSimpleType t
@@ -520,7 +538,8 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   -- It is not an array
                   Nothing <- pLength p
                 , -- It has uint32_t or size_t type
-                  ((Just "uint32_t" ==) <||> (Just "size_t" ==)) (simpleTypeName t)
+                  ((Just "uint32_t" ==) <||> (Just "size_t" ==))
+                  (simpleTypeName t)
                 , -- Is is a required pointer to an optional value
                   Just [False, True] <- pIsOptional p
                 , -- We are generating a dual use command
@@ -533,8 +552,8 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                       pure "peek"
                     pure $ OutputType (Output (toHsType t) (peek <+> ptr)) w
                   CommandGetValues -> do
-                    alloc  <- getAlloc t
-                    w      <- allocaWrap alloc (pName p)
+                    alloc <- getAlloc t
+                    w     <- allocaWrap alloc (pName p)
                     pure $ InputType (Input name (toHsType t)) w
                 | -- The value dual use command output
                   -- It is an array with a parameter length in bytes
@@ -546,18 +565,20 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   Just commandUsage <- maybeCommandUsage
                 , Void <- t
                 , Just (NamedLength lengthParamName) <- pLength p
-                ->
-                  case commandUsage of
-                    CommandGetLength -> InferredType <$> passNullPtrWrap
-                    CommandGetValues -> do
-                      peek        <- peekByteStringOutputPeekLength
-                        (pName p)
-                        (ptrName (dropPointer lengthParamName))
-                      w <- byteStringOutputWrap
-                        (pName p)
-                        ("fromIntegral" T.<+> dropPointer lengthParamName)
-                      let vType = tellImport "Data.ByteString" "ByteString" $> "ByteString"
-                      pure $ OutputType (Output vType peek) w
+                -> case commandUsage of
+                  CommandGetLength -> InferredType <$> passNullPtrWrap
+                  CommandGetValues -> do
+                    peek <- peekByteStringOutputPeekLength
+                      (pName p)
+                      (ptrName (dropPointer lengthParamName))
+                    w <- byteStringOutputWrap
+                      (pName p)
+                      ("fromIntegral" T.<+> dropPointer lengthParamName)
+                    let
+                      vType =
+                        tellImport "Data.ByteString" "ByteString"
+                          $> "ByteString"
+                    pure $ OutputType (Output vType peek) w
                 | -- The value dual use command output
                   -- It is an array with a parameter length
                   isLengthPairList (pName p)
@@ -567,23 +588,22 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   Just commandUsage <- maybeCommandUsage
                 , isSimpleType t
                 , Just (NamedLength lengthParamName) <- pLength p
-                ->
-                  case commandUsage of
-                    CommandGetLength -> InferredType <$> passNullPtrWrap
-                    CommandGetValues -> do
-                      peekElemOff <- getPeekElemOff t
-                      peek        <- peekVectorOutputPeekLength
-                        peekElemOff
-                        (pName p)
-                        (ptrName (dropPointer lengthParamName))
-                      w <- vectorOutputWrap
-                        (pName p)
-                        ("fromIntegral" T.<+> dropPointer lengthParamName)
-                      let vType = do
-                            tellImport "Data.Vector" "Vector"
-                            tyName <- toHsType t
-                            pure ("Vector" <+> tyName)
-                      pure $ OutputType (Output vType peek) w
+                -> case commandUsage of
+                  CommandGetLength -> InferredType <$> passNullPtrWrap
+                  CommandGetValues -> do
+                    peekElemOff <- getPeekElemOff t
+                    peek        <- peekVectorOutputPeekLength
+                      peekElemOff
+                      (pName p)
+                      (ptrName (dropPointer lengthParamName))
+                    w <- vectorOutputWrap
+                      (pName p)
+                      ("fromIntegral" T.<+> dropPointer lengthParamName)
+                    let vType = do
+                          tellImport "Data.Vector" "Vector"
+                          tyName <- toHsType t
+                          pure ("Vector" <+> tyName)
+                    pure $ OutputType (Output vType peek) w
                 | -- This is an array with a parameter length in bytes
                   -- Returned as a ByteString
                   isLengthPairList (pName p)
@@ -592,14 +612,15 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 , Void <- t
                 , Just (NamedLength lengthParamName) <- pLength p
                 -> do
-                      peek        <- peekByteStringOutput
-                        (pName p)
-                        (dropPointer lengthParamName)
-                      w <- byteStringOutputWrap
-                        (pName p)
-                        ("fromIntegral" T.<+> dropPointer lengthParamName)
-                      let vType = tellImport "Data.ByteString" "ByteString" $> "ByteString"
-                      pure $ OutputType (Output vType peek) w
+                  peek <- peekByteStringOutput (pName p)
+                                               (dropPointer lengthParamName)
+                  w <- byteStringOutputWrap
+                    (pName p)
+                    ("fromIntegral" T.<+> dropPointer lengthParamName)
+                  let
+                    vType =
+                      tellImport "Data.ByteString" "ByteString" $> "ByteString"
+                  pure $ OutputType (Output vType peek) w
               t -> throwError [Other ("unhandled type: " <> T.tShow t)]
     in
       traverse parameterToWrappingType ps
@@ -673,6 +694,16 @@ simpleWrap
 simpleWrap paramName cont e =
   let w = pretty $ unReservedWord paramName
   in [qci|\\{w} -> {cont (e <+> w)}|]
+
+boolWrap
+  :: Text
+  -- ^ Parameter name
+  -> WrapM Wrapper
+boolWrap paramName = do
+  tellDepend (Unguarded (TermName "boolToBool32"))
+  let paramDoc = pretty $ unReservedWord paramName
+      w = parens $ "boolToBool32" <+> paramDoc
+  pure $ \cont e -> [qci|\\{paramDoc} -> {cont (e <+> w)}|]
 
 cStringWrap
   :: Text

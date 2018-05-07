@@ -59,12 +59,10 @@ bespokeSeedsHighPriority =
     (toModuleName "Core10" "Core")
     [ TypeName "Result"
     , TypeName "StructureType"
-    , PatternName "VK_TRUE"
-    , PatternName "VK_FALSE"
-    , TypeName "Flags"
     , TypeName "Format"
-    , TypeName "Bool32"
     , TypeName "ObjectType"
+    , TermName "bool32ToBool"
+    , TermName "boolToBool32"
     ]
     Nothing
   ]

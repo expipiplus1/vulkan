@@ -6,6 +6,7 @@ module Write.Marshal.Aliases
   ) where
 
 import           Data.Maybe
+import           Control.Monad     (guard)
 import qualified Data.Text.Extra   as T
 import           Prelude           hiding (Enum)
 import           Spec.Savvy.Alias  as A
@@ -40,6 +41,7 @@ makeMarshalledHandleAlias h@Handle {..} = do
 
 makeMarshalledEnumAlias :: Enum -> Maybe (Alias Enum)
 makeMarshalledEnumAlias e@Enum {..} = do
+  guard (eName `notElem` unmarshalledEnumNames)
   aName <- T.dropPrefix "Vk" eName
   let aAliasName = eName
       aAlias     = ATarget e
@@ -51,3 +53,11 @@ makeMarshalledAliasAlias a = do
   aAliasName <- T.dropPrefix "Vk" (A.aAliasName a)
   let aAlias = AnAlias (Alias aAliasName (A.aAliasName a) (AnAlias a))
   pure Alias {..}
+
+----------------------------------------------------------------
+-- Quirks
+----------------------------------------------------------------
+
+-- These are only useful on the C side, so don't write aliases for them
+unmarshalledEnumNames :: [T.Text]
+unmarshalledEnumNames = ["VkSystemAllocationScope", "VkInternalAllocationType"]

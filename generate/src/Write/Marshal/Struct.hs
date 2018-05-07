@@ -184,6 +184,9 @@ data MemberUsage a
       Text --- ^ member name
       Type --- ^ member type
     -- ^ An ordinary member, using the marshalled struct
+  | Bool
+      Text --- ^ member name
+    -- ^ This is a bool member
   | NextPointer Text
     -- ^ This is the pNext pointer (include the member name for completeness)
   | ByteString Text
@@ -667,6 +670,12 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       , Ptr _ Void <- smType v
       , Nothing <- smIsOptional v
       -> pure $ ByteStringLength (smName v)
+      | -- A Bool
+        Just "VkBool32" <- simpleTypeName t
+      , Nothing <- lengthMap (smName m)
+      , isNothing (smIsOptional m)
+      , Nothing <- smLengths m
+      -> pure $ Bool (smName m)
       | -- A boring normal type
         isSimpleType t
       , Nothing <- lengthMap (smName m)
@@ -824,6 +833,9 @@ memberWrapper fromType from =
             let paramName = pretty (dropPointer memberName)
                 with  = [qci|withCStruct{tyName} {accessMember memberName} (\\{paramName} -> {e} {paramName}|]
             in  [qci|{cont with})|]
+  Bool memberName -> do
+    tellDepend (Unguarded (TermName "boolToBool32"))
+    pure $ \cont e -> cont [qci|{e} (boolToBool32 {accessMember memberName})|]
   -- TODO: proper pointer names
   NextPointer memberName -> do
     tellImport "Foreign.Marshal.Utils" "maybeWith"
@@ -946,6 +958,9 @@ fromCStructMember from fromType =
           | Just tyName <- simpleTypeName t
           -> do tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
                 pure $ Right [qci|(fromCStruct{tyName} {accessMember memberName})|]
+        Bool memberName -> do
+          tellDepend (Unguarded (TermName ("bool32ToBool")))
+          pure $ Right [qci|pure (bool32ToBool {accessMember memberName})|]
         FixedArrayNullTerminated memberName _ -> do
           tellQualifiedImport "Data.Vector.Storable" "unsafeWith"
           tellQualifiedImport "Data.Vector.Storable.Sized" "fromSized"
@@ -1209,6 +1224,11 @@ writeMarshalledMember parentName = \case
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName memberName)}
       {pretty (toMemberName memberName)} :: {tyName}
+    |]
+  Bool memberName ->
+    pure $ \getDoc -> Right [qci|
+      {document getDoc (Nested parentName memberName)}
+      {pretty (toMemberName memberName)} :: Bool
     |]
   OptionalPtr memberName t _ _ -> do
     tyName <- toHsType t

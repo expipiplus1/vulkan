@@ -248,4 +248,32 @@ bespokeMarshalledWriteElements :: [WriteElement]
 bespokeMarshalledWriteElements =
   [ aliasWriteElement "DeviceSize" "VkDeviceSize" [] [TypeName "VkDeviceSize"]
   , aliasWriteElement "SampleMask" "VkSampleMask" [] [TypeName "VkSampleMask"]
+  , boolConversion
   ]
+
+boolConversion :: WriteElement
+boolConversion =
+  let weName = "Bool conversion"
+      weImports = []
+      weExtensions = [ "LambdaCase" ]
+      weProvides   = Unguarded . Term <$> ["bool32ToBool", "boolToBool32"]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
+      weDepends =
+        Unguarded
+          <$> [TypeName "VkBool32", PatternName "VK_FALSE", PatternName "VK_TRUE"]
+      weDoc _ = [qci|
+        bool32ToBool :: VkBool32 -> Bool
+        bool32ToBool = \case
+          VK_FALSE -> False
+          VK_TRUE  -> True
+          -- TODO: add pattern totality
+          _        -> error "unhandled VkBool32 Value"
+
+        boolToBool32 :: Bool -> VkBool32
+        boolToBool32 = \case
+          False -> VK_FALSE
+          True  -> VK_TRUE
+     |]
+  in  WriteElement {..}

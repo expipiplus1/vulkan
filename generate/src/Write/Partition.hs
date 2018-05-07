@@ -86,11 +86,11 @@ partitionElements wes ss = validationToEither $ do
         seedReexports = nubOrd $ mapMaybe nameExport msSeeds
       ]
     prioritizedModules = prioritizeModules modules
-  -- _ <- assertUniqueSeedNames ss
-  -- _ <- assertExactlyOneSeeds wes ss
-  -- _ <- assertExactlyOneExport wes prioritizedModules
-  -- _ <- assertNoEmptyModules prioritizedModules
-  -- _ <- assertAllDependenciesSatisfied prioritizedModules
+  _ <- assertUniqueSeedNames ss
+  _ <- assertExactlyOneSeeds wes ss
+  _ <- assertExactlyOneExport wes prioritizedModules
+  _ <- assertNoEmptyModules prioritizedModules
+  _ <- assertAllDependenciesSatisfied prioritizedModules
   pure prioritizedModules
 
 -- | Make sure there are no duplicate exports, if something is exported in an
