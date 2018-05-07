@@ -50,8 +50,8 @@ commandDoc :: Command -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
 commandDoc c@Command {..} = do
   (t, (is, es)) <- toHsType (commandType c)
   let d getDoc = [qci|
-  {document getDoc (TopLevel cName)}
   #if !defined(NO_IMPORT_COMMANDS)
+  {document getDoc (TopLevel cName)}
   foreign import ccall
   #if !defined(SAFE_FOREIGN_CALLS)
     unsafe

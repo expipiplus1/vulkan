@@ -1,4 +1,5 @@
 {-# LANGUAGE LambdaCase          #-}
+{-# LANGUAGE TupleSections          #-}
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE PatternSynonyms     #-}
 {-# LANGUAGE RecursiveDo         #-}
@@ -83,12 +84,15 @@ splitDocumentation parent (Pandoc meta bs) = do
       Section "_name"            bs'' rem -> pure (Nothing, bs'' ++ rem)
 
       -- If the description section is a list of documentation for enumeration
-      -- values, split them into separate documentation elements
+      -- values or members, split them into separate documentation elements
+      -- TODO: command parameters
       xs@(Section sectionTag bs'' rem)
-        | sectionTag `elem` ["_description", "_members"]
+        | h : _ <- xs, sectionTag `elem` ["_description", "_members"]
         -> case memberDocs parent m bs'' of
-          Left  _  -> pure (Nothing, xs)
-          Right ds -> pure (Just ds, rem)
+          Left  _        -> pure (Nothing, xs)
+          Right (ds, []) -> pure (Just ds, rem)
+          Right (ds, leftoverBlocks) ->
+            pure (Just ds, h : leftoverBlocks ++ rem)
 
       -- Leave everything else alone
       xs -> pure (Nothing, xs)
@@ -104,19 +108,27 @@ isHeaderLE n = \case
   _             -> False
 
 -- Handle struct members, enum docs and function parameter documentation
-memberDocs :: Text -> Meta -> [Block] -> Either Text [Documentation]
-memberDocs parent m = \case
-  [BulletList bs] ->
-    let enumDoc :: [Block] -> Either Text Documentation
-        enumDoc = \case
-          [p@(Para (Code ("", [], []) memberName : _))] -> pure Documentation
-            { dDocumentee    = Nested parent (T.pack memberName)
-            , dDocumentation = Pandoc m [p]
-            }
-          _ -> Left "Unhandled member documentation declaration"
-    in  traverse enumDoc bs
-  _ -> Left
-    "Trying to extract member documentation from an unhandled desscription"
+memberDocs
+  :: Text
+  -- ^ Parent name
+  -> Meta
+  -> [Block]
+  -> Either Text ([Documentation], [Block])
+  -- ^ The documentation and the leftover blocks
+memberDocs parent m blocks =
+  let extractBulletList = \case
+        BulletList bullets ->
+          let enumDoc :: [Block] -> Either Text Documentation
+              enumDoc = \case
+                [p@(Para (Code ("", [], []) memberName : _))] ->
+                  pure Documentation
+                    { dDocumentee    = Nested parent (T.pack memberName)
+                    , dDocumentation = Pandoc m [p]
+                    }
+                _ -> Left "Unhandled member documentation declaration"
+          in  (, []) <$> traverse enumDoc bullets
+        d -> Right ([], [d])
+  in  mconcat <$> traverse extractBulletList blocks
 
 main :: IO ()
 main = do

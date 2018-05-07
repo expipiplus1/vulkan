@@ -85,8 +85,10 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
         ((`notElem` ignoredUnexportedNames) . TypeName . sName)
         (sStructs s)
       seeds = specSeeds s
+      -- TODO:
+      Just vkResultEnum = find ((== "VkResult") . eName) (sEnums s)
       ws =
-        [ vkExceptionWriteElement
+        [ vkExceptionWriteElement docs vkResultEnum
           , vkStructWriteElement
           , vkPeekStructWriteElement enabledStructs
           , someVkStructWriteElement enabledStructs
