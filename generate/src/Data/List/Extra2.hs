@@ -19,10 +19,10 @@ iterateSuffixes
   -> ([b], [a])
   -- ^ (The list of (non-empty) extracted prefixes, the list without those
   -- prefixes)
-iterateSuffixes split = foldr go ([], [])
+iterateSuffixes split' = foldr go ([], [])
   where
     go :: a -> ([b], [a]) -> ([b], [a])
-    go x (ss, xs) = first (: ss) $ split (x : xs)
+    go x (ss, xs) = first (: ss) $ split' (x : xs)
 
 iterateSuffixesM
   :: forall m a b
@@ -34,7 +34,7 @@ iterateSuffixesM
   -> m ([b], [a])
   -- ^ (The list of (non-empty) extracted prefixes, the list without those
   -- prefixes)
-iterateSuffixesM split = foldrM go ([], [])
+iterateSuffixesM split' = foldrM go ([], [])
   where
     go :: a -> ([b], [a]) -> m ([b], [a])
-    go x (ss, xs) = first (: ss) <$> split (x : xs)
+    go x (ss, xs) = first (: ss) <$> split' (x : xs)

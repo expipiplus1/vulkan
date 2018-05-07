@@ -1,4 +1,5 @@
 {-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
@@ -9,7 +10,10 @@ module Write.Loader
 
 import           Control.Arrow                            ((&&&))
 import           Control.Monad
+import           Control.Monad.Except
+import           Control.Monad.Writer.Class
 import           Data.Either.Validation
+import           Data.Foldable
 import           Data.List.Extra
 import qualified Data.Map                                 as Map
 import           Data.Maybe
@@ -24,8 +28,11 @@ import           Spec.Savvy.Command
 import           Spec.Savvy.Error
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Type                          hiding (TypeName)
-import           Spec.Savvy.Type.Haskell
+import           Spec.Savvy.Type.Haskell                  hiding (toHsType)
 import           Write.Element
+import           Write.Marshal.Monad
+import           Write.Marshal.Util
+import           Write.Marshal.Wrap
 import           Write.Util
 
 writeLoader
@@ -42,56 +49,57 @@ writeLoader getEnumName platforms commands = do
         (`Map.lookup` Map.fromList
           ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
         )
-  (weDoc, is, es) <- writeLoaderDoc platformGuardMap commands
+  ( weDoc
+   ,(weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
+    either
+      (throwError . fmap (WithContext "Dynamic Loader"))
+      pure
+      (runWrap $ writeLoaderDoc getEnumName platformGuardMap commands
+      )
+
   let
-    exposedCommands = filter (isJust . cCommandLevel) commands
     weName          = "Dynamic Function Pointer Loaders"
-    weExtensions    = ["CPP", "ForeignFunctionInterface", "MagicHash"] ++ es
-    weImports =
-      [ Import "Foreign.Ptr" ["FunPtr", "castPtrToFunPtr", "nullFunPtr"]
-        , QualifiedImport "GHC.Ptr"     ["Ptr(..)"]
-        ]
-        ++ is
-    cmdProvides :: Command -> [Guarded Export]
-    cmdProvides Command {..} =
-      (case platformGuardMap =<< cPlatform of
-          Nothing -> Unguarded
-          Just g  -> Guarded g
-        )
-        <$> ( Term (dropVk cName)
-            : [Term (("has" <>) . T.upperCaseFirst . dropVk $ cName)]
-            )
-    weProvides =
-      (   Unguarded
-        <$> ([TypeConstructor, Term] <*> ["DeviceCmds", "InstanceCmds"])
-        )
-        ++ (Unguarded . Term <$> ["initDeviceCmds", "initInstanceCmds"])
+    -- cmdProvides :: Command -> [Guarded Export]
+    -- cmdProvides Command {..} =
+    --   (case platformGuardMap =<< cPlatform of
+    --       Nothing -> Unguarded
+    --       Just g  -> Guarded g
+    --     )
+    --     <$> ( Term (dropVk cName)
+    --         : [Term (("has" <>) . T.upperCaseFirst . dropVk $ cName)]
+    --         )
+    -- weProvides =
+    --   (   Unguarded
+    --     <$> ([TypeConstructor, Term] <*> ["DeviceCmds", "InstanceCmds"])
+    --     )
+    --     ++ (Unguarded . Term <$> ["initDeviceCmds", "initInstanceCmds"])
     -- These are undependable as they are shadowed by the marshalling commands
-    weUndependableProvides = cmdProvides =<< exposedCommands
-    weSourceDepends        = []
+    -- weUndependableProvides = cmdProvides =<< exposedCommands
     weBootElement          = Nothing
     -- TODO: Write these like the imports and extensions, and move all that
     -- to some writer monad.
-    weDepends =
-      concat
-          [ case platformGuardMap =<< cPlatform c of
-              Nothing -> Unguarded <$> commandDepends getEnumName c
-              Just g  -> Guarded g <$> commandDepends getEnumName c
-          | c <- exposedCommands
-          ]
-        ++ (   Unguarded
-           <$> [ TermName "vkGetDeviceProcAddr"
-               , TermName "vkGetInstanceProcAddr"
-               ]
-           )
+    -- weDepends =
+    --   concat
+    --       [ case platformGuardMap =<< cPlatform c of
+    --           Nothing -> Unguarded <$> commandDepends getEnumName c
+    --           Just g  -> Guarded g <$> commandDepends getEnumName c
+    --       | c <- exposedCommands
+    --       ]
+    --     ++ (   Unguarded
+    --        <$> [ TermName "vkGetDeviceProcAddr"
+    --            , TermName "vkGetInstanceProcAddr"
+    --            ]
+    --        )
   pure WriteElement {..}
 
 writeLoaderDoc
   :: (Text -> Maybe Text)
+  -- ^ Enum name resolver
+  -> (Text -> Maybe Text)
   -- ^ Platform guard info
   -> [Command]
-  -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
-writeLoaderDoc platformGuardMap commands = do
+  -> WrapM (DocMap -> Doc ())
+writeLoaderDoc getEnumName platformGuardMap commands = do
   let deviceLevelCommands =
         [ c | c <- commands, cCommandLevel c == Just Device ]
       instanceLevelCommands =
@@ -99,15 +107,19 @@ writeLoaderDoc platformGuardMap commands = do
         | c <- commands
         , cCommandLevel c `elem` [Just Instance, Just PhysicalDevice]
         ]
-  (drs, is , es ) <- unzip3 <$> traverseP (writeRecordMember platformGuardMap) deviceLevelCommands
-  (dfs, is', es') <-
-    unzip3 <$> traverseP (writeFunction platformGuardMap "Device") deviceLevelCommands
-  (irs, is'', es'') <-
-    unzip3 <$> traverseP (writeRecordMember platformGuardMap) instanceLevelCommands
-  (ifs, is''', es''') <-
-    unzip3 <$> traverseP (writeFunction platformGuardMap "Instance") instanceLevelCommands
+  drs <- traverse (writeRecordMember getEnumName platformGuardMap) deviceLevelCommands
+  dfs <- traverse (writeFunction platformGuardMap "Device") deviceLevelCommands
+  irs <- traverse (writeRecordMember getEnumName platformGuardMap) instanceLevelCommands
+  ifs <- traverse (writeFunction platformGuardMap "Instance") instanceLevelCommands
+  ifi <- initFunction platformGuardMap "Instance" instanceLevelCommands
+  ifd <- initFunction platformGuardMap "Device" deviceLevelCommands
+  initializationCommands <- writeInitializationCommands commands
+  tellExport (Unguarded (TypeConstructor "DeviceCmds"))
+  tellExport (Unguarded (TypeConstructor "InstanceCmds"))
   pure $
     let d _ = [qci|
+      {initializationCommands}
+
       data DeviceCmds = DeviceCmds
         \{ {indent (-2) . separatedWithGuards "," $ drs}
         }
@@ -118,13 +130,9 @@ writeLoaderDoc platformGuardMap commands = do
         }
         deriving (Show)
 
-      {initFunction platformGuardMap "Device" deviceLevelCommands}
+      {ifd}
 
-      {initFunction platformGuardMap "Instance" instanceLevelCommands}
-
-      {separatedWithGuards "" $ hasFunction platformGuardMap "Device" <$> deviceLevelCommands}
-
-      {separatedWithGuards "" $ hasFunction platformGuardMap "Instance" <$> instanceLevelCommands}
+      {ifi}
 
       -- * Device commands
       {separatedWithGuards "" $ dfs}
@@ -132,7 +140,12 @@ writeLoaderDoc platformGuardMap commands = do
       -- * Instance commands
       {separatedWithGuards "" $ ifs}
     |]
-    in (d, concat $ concat [is, is', is'', is'''], concat $ concat [es, es', es'', es'''])
+    in d
+
+      -- {separatedWithGuards "" $ hasFunction platformGuardMap "Device" <$>
+      -- deviceLevelCommands}
+      -- {separatedWithGuards "" $ hasFunction platformGuardMap "Instance" <$>
+      -- instanceLevelCommands}
 
 hasFunction :: (Text -> Maybe Text) -> Text -> Command -> (Doc (), Maybe Text)
 hasFunction gm domain Command{..} = ([qci|
@@ -141,59 +154,101 @@ hasFunction gm domain Command{..} = ([qci|
   |], gm =<< cPlatform)
 
 -- | The initialization function for a set of command pointers
-initFunction :: (Text -> Maybe Text) -> Text -> [Command] -> Doc ()
-initFunction gm domain commands = [qci|
+initFunction :: (Text -> Maybe Text) -> Text -> [Command] -> WrapM (Doc ())
+initFunction gm domain commands = do
+  initLines <- traverse initLine commands
+  tellDepend (Unguarded (TermName ("vkGet" <> domain <> "ProcAddr")))
+  tellDepend (Unguarded (TypeName ("Vk" <> domain)))
+  tellExport (Unguarded (Term ("init"<> domain <> "Cmds")))
+  tellExtension "MagicHash"
+  tellExtension "TypeApplications"
+  tellImport "Foreign.Ptr" "castPtrToFunPtr"
+  tellQualifiedImport "GHC.Ptr" "Ptr(..)"
+  pure [qci|
     init{domain}Cmds :: Vk{domain} -> IO {domain}Cmds
     init{domain}Cmds handle = {domain}Cmds
       <$> {indent (-4) $ separatedWithGuards "<*>"
-           ((initLine domain &&& (gm <=< cPlatform)) <$> commands)}
+           (zip initLines ((gm <=< cPlatform) <$> commands))}
   |]
   where
-    initLine :: Text -> Command -> Doc ()
-    initLine domain' Command{..} = [qci|(castPtrToFunPtr <$> vkGet{domain'}ProcAddr handle (GHC.Ptr.Ptr "{cName}\NUL"#))|]
+    initLine :: Command -> WrapM (Doc ())
+    initLine c@Command{..} = do
+      censorGuarded gm c $ tellDepend (Unguarded (TypeName ("FN_" <> cName)))
+      pure [qci|(castPtrToFunPtr @_ @FN_{cName} <$> vkGet{domain}ProcAddr handle (GHC.Ptr.Ptr "{cName}\NUL"#))|]
 
 writeRecordMember
   :: (Text -> Maybe Text)
+  -- ^ Enum resolver
+  -> (Text -> Maybe Text)
   -- ^ platform to guard
   -> Command
-  -> Either [SpecError] ((Doc (), Maybe Text), [Import], [Text])
-writeRecordMember gp c@Command{..} = do
-  (t, (is, es)) <- toHsTypePrec 10 (commandType c)
-  let d= [qci|
-        p{T.upperCaseFirst cName} :: FunPtr {t}
-      |]
-  pure ((d, gp =<< cPlatform), is, es)
+  -> WrapM (Doc (), Maybe Text)
+writeRecordMember getEnumName gp c@Command {..} = do
+  t <- censorGuarded gp c $ toHsType (commandType c)
+  tellDepends . commandDepends getEnumName gp $ c
+  let d = [qci|p{T.upperCaseFirst cName} :: FunPtr ({t})|]
+  pure (d, gp =<< cPlatform)
+
+censorGuarded
+  :: (Text -> Maybe Text)
+  -- ^ platform to guard
+  -> Command
+  -> WrapM a
+  -> WrapM a
+censorGuarded gp Command {..}
+  = let
+      makeGuarded = case gp =<< cPlatform of
+        Nothing -> id
+        Just g ->
+          let replaceGuards :: [Guarded a] -> [Guarded a]
+              replaceGuards = fmap (Guarded g . unGuarded)
+          in  \(a, (exports, undependableExports), (depends, sourceDepends), d, e) ->
+                ( a
+                , (replaceGuards exports, replaceGuards undependableExports)
+                , (replaceGuards depends, replaceGuards sourceDepends)
+                , d
+                , e
+                )
+    in  censor makeGuarded
 
 writeFunction
   :: (Text -> Maybe Text)
   -- ^ platform to guard
   -> Text
   -> Command
-  -> Either [SpecError] ((Doc (), Maybe Text), [Import], [Text])
-writeFunction gm domain c@Command{..} = do
-  (t, (is, es)) <- toHsTypePrec 10 (commandType c)
+  -> WrapM (Doc (), Maybe Text)
+writeFunction gm domain c@Command{..} = censorGuarded gm c $ do
+  -- This is taken care of in a better way with commandDepends (importing
+  -- constructors)
+  t <- censor (const mempty) $ toHsType (commandType c)
+  tellExtension "ForeignFunctionInterface"
+  tellImport "Foreign.Ptr" "FunPtr"
+  tellUndependableExport (Unguarded (Term (dropVk cName)))
   let upperCaseName = T.upperCaseFirst cName
       d= [qci|
-        {dropVk cName} :: {domain}Cmds -> {t}
+        {dropVk cName} :: {domain}Cmds -> ({t})
         {dropVk cName} deviceCmds = mk{upperCaseName} (p{upperCaseName} deviceCmds)
         foreign import ccall
         #if !defined(SAFE_FOREIGN_CALLS)
           unsafe
         #endif
           "dynamic" mk{upperCaseName}
-          :: FunPtr {t} -> {t}
+          :: FunPtr ({t}) -> ({t})
       |]
-  pure ((d, gm =<< cPlatform), is, es)
+  pure (d, gm =<< cPlatform)
 
 traverseP
   :: (Semigroup e, Traversable t) => (a -> Either e b) -> t a -> Either e (t b)
 traverseP f xs = validationToEither $ traverse (eitherToValidation . f) xs
 
-dropVk :: Text -> Text
-dropVk = T.lowerCaseFirst . T.dropPrefix' "vk"
-
-commandDepends :: (Text -> Maybe Text) -> Command -> [HaskellName]
-commandDepends getEnumName Command {..} =
+commandDepends
+  :: (Text -> Maybe Text)
+  -- ^ Enum resolver
+  -> (Text -> Maybe Text)
+  -- ^ platform map
+  -> Command
+  -> [Guarded HaskellName]
+commandDepends getEnumName platformGuardMap Command {..} =
   let protoDepends = typeDepends $ Proto
         cReturnType
         [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
@@ -204,10 +259,63 @@ commandDepends getEnumName Command {..} =
         , not (isPtrType t)
         , not (isArrayType t)
         ]
-  in  protoDepends
-        <> -- The constructors for an enum type need to be in scope
+      names =
+        protoDepends
+          <> -- The constructors for an enum type need to be in scope
            -- Unless they're just used as pointers
-           [ TypeName e
-           | TypeName n <- protoDependsNoPointers
-           , Just e <- [getEnumName n]
-           ]
+             [ TypeName e
+             | TypeName n <- protoDependsNoPointers
+             , Just e <- [getEnumName n]
+             ]
+  in  case platformGuardMap =<< cPlatform of
+        Nothing -> Unguarded <$> names
+        Just g  -> Guarded g <$> names
+
+
+-- | Write the commands which do not require a valid instance
+writeInitializationCommands :: [Command] -> WrapM (Doc ())
+writeInitializationCommands commands = do
+  let findCommand n = case find ((== n) . cName) commands of
+        Nothing ->
+          throwError [Other ("Couldn't find initialization command:" T.<+> n)]
+        Just c -> pure c
+  enumerateInstanceVersion <- findCommand "vkEnumerateInstanceVersion"
+  enumerateInstanceExtensionProperties <- findCommand
+    "vkEnumerateInstanceExtensionProperties"
+  enumerateInstanceLayerProperties <- findCommand
+    "vkEnumerateInstanceLayerProperties"
+  createInstance     <- findCommand "vkCreateInstance"
+
+  tellImport "Foreign.Ptr" "FunPtr"
+  tellImport "Foreign.Ptr" "castPtrToFunPtr"
+  tellImport "Foreign.Ptr" "nullPtr"
+  tellImport "System.IO.Unsafe" "unsafeDupablePerformIO"
+  tellDepend (Unguarded (TermName "vkGetInstanceProcAddr"))
+  tellExtension "MagicHash"
+
+  let go c = do
+        ty <- toHsType (commandType c)
+        tellUndependableExport (Unguarded (Term (dropVk (cName c))))
+        tellDepend (Unguarded (TypeName ("FN_" <> cName c)))
+        pure [qci|
+          foreign import ccall
+          #if !defined(SAFE_FOREIGN_CALLS)
+            unsafe
+          #endif
+            "dynamic" mk{T.upperCaseFirst (cName c)}
+            :: FunPtr ({ty}) -> ({ty})
+
+          {dropVk (cName c)} :: {ty}
+          {dropVk (cName c)} = mk{T.upperCaseFirst (cName c)} procAddr
+            where
+              procAddr = castPtrToFunPtr @_ @FN_{cName c} $
+                unsafeDupablePerformIO
+                  $ vkGetInstanceProcAddr nullPtr (GHC.Ptr.Ptr "{cName c}\NUL"#)
+        |]
+
+  vcat <$> traverse go
+    [ enumerateInstanceVersion
+    , enumerateInstanceExtensionProperties
+    , enumerateInstanceLayerProperties
+    , createInstance
+    ]

@@ -3,13 +3,14 @@
 
 module Documentation.RunAsciiDoctor
   ( manTxtToDocbook
+  , main
   ) where
 
+import qualified Data.List               as L
 import           Data.Semigroup
 import           Data.Text
 import qualified Data.Text               as T
 import qualified Data.Text.Lazy          as T (toStrict)
-import qualified Data.List as L
 import           Data.Text.Lazy.Encoding
 import           Say
 import           System.Environment
@@ -111,7 +112,7 @@ main = do
   [d, m] <- getArgs
   manTxtToDocbook [] d m >>= \case
     Left  e -> sayErr e
-    Right d -> say d
+    Right d' -> say d'
 
 -- | @preceedAll x xs@ inserts @x@ before every element in @xs@
 preceedAll :: a -> [a] -> [a]

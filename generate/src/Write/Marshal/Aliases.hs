@@ -5,8 +5,8 @@ module Write.Marshal.Aliases
   ( makeMarshalledAliases
   ) where
 
-import           Data.Maybe
 import           Control.Monad     (guard)
+import           Data.Maybe
 import qualified Data.Text.Extra   as T
 import           Prelude           hiding (Enum)
 import           Spec.Savvy.Alias  as A
@@ -32,8 +32,11 @@ makeMarshalledAliases Spec {..} =
       enumExtensionAliases = []
   in  Aliases {..}
 
+-- | Note that this doesn't make an alias for dispatchable handles, these are
+-- handled separately because they contain the table of command addresses
 makeMarshalledHandleAlias :: Handle -> Maybe (Alias Handle)
 makeMarshalledHandleAlias h@Handle {..} = do
+  guard (NonDispatchable == hHandleType)
   aName <- T.dropPrefix "Vk" hName
   let aAliasName = hName
       aAlias     = ATarget h

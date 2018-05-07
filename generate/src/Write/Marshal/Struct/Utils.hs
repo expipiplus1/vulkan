@@ -17,8 +17,6 @@ import           Data.Maybe
 import qualified Data.MultiMap                            as MultiMap
 import qualified Data.Set                                 as Set
 import           Data.Text                                (Text)
-import qualified Data.Text.Extra                          as T
-import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 

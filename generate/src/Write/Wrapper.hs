@@ -53,17 +53,16 @@ commandWrapper
   -> Either [SpecError] [WriteElement]
 commandWrapper isHandle isBitmask isStruct command = do
   let
-    weName                 = cName command T.<+> "wrapper"
-    weUndependableProvides = []
-    weBootElement          = Nothing
-    isMarshalledHandle     = isHandle . ("Vk" <>)
-    isMarshalledBitmask    = isBitmask . ("Vk" <>)
+    weName              = cName command T.<+> "wrapper"
+    weBootElement       = Nothing
+    isMarshalledHandle  = isHandle . ("Vk" <>)
+    isMarshalledBitmask = isBitmask . ("Vk" <>)
     isDefaultable t = maybe
       False
       (isHandle <||> isMarshalledHandle <||> isMarshalledBitmask <||> isBitmask)
       (simpleTypeName t)
     isTypeStruct t = maybe False isStruct (simpleTypeName t)
-  ((weDoc, aliasWriteElements), (weImports, weProvides, (weDepends, weSourceDepends), weExtensions, _)) <-
+  ((weDoc, aliasWriteElements), (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
     either (throwError . fmap (WithContext (cName command)))
            (pure . first (first (const . vcat)))
            (runWrap $ wrapCommand isDefaultable isTypeStruct command)
@@ -101,7 +100,6 @@ wrapCommand isDefaultable isStruct c@Command {..} = do
       (wts1, as1) <- do
         (wts, constraints) <- makeWts (Just CommandGetLength)
         tellExport (Unguarded (Term (funGetLengthName cName)))
-        printWrapped funGetLengthName wts constraints
         (,) <$> printWrapped funGetLengthName wts constraints
             <*> pure [] -- TODO: write aliases for get length names
       (wts2, as2) <- do
@@ -315,7 +313,7 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 | -- A Bool argument
                   Just "VkBool32" <- simpleTypeName t
                 , Nothing <- pIsOptional p
-                -> InputType (Input name (pure "Bool")) <$> (boolWrap (pName p))
+                -> InputType (Input name (pure "Bool")) <$> boolWrap (pName p)
                 | -- A ordinary boring argument
                   isSimpleType t
                 , isNothing (pIsOptional p) || isDefaultable t
@@ -393,25 +391,25 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 , Nothing <- pIsOptional p
                 -> do
                   w <- cStringWrap (pName p)
-                  let t = do
+                  let t' = do
                         tellImport "Data.ByteString" "ByteString"
                         pure "ByteString"
-                  pure $ InputType (Input name t) w
+                  pure $ InputType (Input name t') w
                 | -- An optional string
                   Char <- t
                 , Just NullTerminated <- pLength p
                 , Just [True] <- pIsOptional p
                 -> do
                   w <- optionalCStringWrap (pName p)
-                  let t = do
+                  let t' = do
                         tellImport "Data.ByteString" "ByteString"
                         pure "Maybe ByteString"
-                  pure $ InputType (Input name t) w
+                  pure $ InputType (Input name t') w
                 | -- A const void pointer with no length
                   -- Pass as 'Ptr ()'
                   Void <- t
                 , Nothing <- pLength p
-                , Nothing == pIsOptional p || Just [False] == pIsOptional p
+                , isNothing (pIsOptional p) || Just [False] == pIsOptional p
                 -> pure $ InputType (Input (pName p) (toHsType ptrType))
                                     (simpleWrap (pName p))
                 | otherwise
@@ -443,8 +441,9 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   peek     <- getPeek t
                   tellDepend (Unguarded (TermName "bool32ToBool"))
                   pure $ OutputType
-                    (Output (pure "Bool")
-                            ("bool32ToBool" <+> "<$>" <+> parens (peek <+> ptr))
+                    (Output
+                      (pure "Bool")
+                      ("bool32ToBool" <+> "<$>" <+> parens (peek <+> ptr))
                     )
                     w
                 | -- A pointer to a non-optional return value
@@ -1009,8 +1008,6 @@ writeAlias
   -> m WriteElement
 writeAlias wts constraints c@Command{..} name = do
   let weName = name T.<+> "alias" T.<+> cName
-      weUndependableProvides = []
-      weSourceDepends        = []
       weBootElement          = Nothing
       aliasDoc = do
         t <- wtsToSig c constraints wts
@@ -1020,7 +1017,7 @@ writeAlias wts constraints c@Command{..} name = do
           {dropVk name} :: {t}
           {dropVk name} = {dropVk cName}
         |]
-  (weDoc, (weImports, weProvides, (weDepends, weSourceDepends), weExtensions, _)) <- either
+  (weDoc, (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <- either
     (throwError . fmap (WithContext cName))
     pure
     (runWrap aliasDoc)

@@ -51,8 +51,8 @@ unsplitModuleName = T.intercalate "."
 -- | Modules which shouldn't feature in any aggregate
 disallowedModules :: [[Text]]
 disallowedModules = splitModuleName <$>
-  [ "Graphics.Vulkan.Dynamic"
-  , "Graphics.Vulkan.C"
+  [ "Graphics.Vulkan.C"
+  , "Graphics.Vulkan.C.Dynamic"
   , "Graphics.Vulkan.Marshal"
   , "Graphics.Vulkan.Marshal.Utils"
   , "Graphics.Vulkan.Marshal.SomeVkStruct"

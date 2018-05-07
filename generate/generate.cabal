@@ -88,6 +88,7 @@ executable generate
                      , Write.Loader
                      , Write.Marshal.Aliases
                      , Write.Marshal.Exception
+                     , Write.Marshal.Handle
                      , Write.Marshal.Monad
                      , Write.Marshal.SomeVkStruct
                      , Write.Marshal.Struct

@@ -32,7 +32,10 @@ writeCommand getEnumName fp@Command {..} = do
     protoDepends = typeDepends $ Proto
       cReturnType
       [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
-    weProvides = [InvGuarded "NO_IMPORT_COMMANDS" $ Term cName]
+    weProvides = [ InvGuarded "NO_IMPORT_COMMANDS" $ Term cName
+                 , Unguarded (TypeAlias ("FN_" <> cName))
+                 , Unguarded (TypeAlias ("PFN_" <> cName))
+                 ]
     weDepends =
       Unguarded
         <$> protoDepends
@@ -58,5 +61,7 @@ commandDoc c@Command {..} = do
   #endif
     "{cName}" {cName} :: {t}
   #endif
+  type FN_{cName} = {t}
+  type PFN_{cName} = FunPtr FN_{cName}
 |]
-  pure (d, is, es)
+  pure (d, Import "Foreign.Ptr" ["FunPtr"] : is, es)

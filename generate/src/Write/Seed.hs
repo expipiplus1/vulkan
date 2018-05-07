@@ -8,9 +8,9 @@ module Write.Seed
   ( specSeeds
   ) where
 
-import Data.Foldable
 import           Control.Bool
 import           Data.Char
+import           Data.Foldable
 import           Data.Maybe
 import qualified Data.MultiMap             as MultiMap
 import           Data.Text                 (Text)
@@ -26,31 +26,24 @@ import           Spec.Savvy.Spec
 import           Write.Element
 import           Write.Partition
 
-import Debug.Trace
-
 specSeeds :: Spec -> [ModuleSeed]
 specSeeds s =
-  fmap (\x -> traceShow (msName x) x)
-    $ let
-        aliasNames = enumAliasNames (sEnums s)
-        bespokeSeedNames =
-          msName <$> (bespokeSeedsHighPriority ++ bespokeSeedsLowPriority)
-        -- Filter any extracted seeds for which we have bespoke seeds
-        nonBespokeSeeds =
-          filter ((`notElem` bespokeSeedNames) . msName)
-            $  featureToSeeds (vulkan10Feature (sFeatures s))
-            ++ featureToSeeds (vulkan11Feature (sFeatures s))
-            ++ (extensionToSeed <$> sExtensions s)
-            ++ [dynamicLoaderSeed] -- It's important for this to come after the C
-                                   -- modules to avoid pulling in every type
-            ++ featureToMarshalledSeeds aliasNames
-                                        (vulkan10Feature (sFeatures s))
+  let aliasNames = enumAliasNames (sEnums s)
+      bespokeSeedNames =
+        msName <$> (bespokeSeedsHighPriority ++ bespokeSeedsLowPriority)
+      -- Filter any extracted seeds for which we have bespoke seeds
+      nonBespokeSeeds =
+        filter ((`notElem` bespokeSeedNames) . msName)
+          $  featureToSeeds (vulkan10Feature (sFeatures s))
+          ++ featureToSeeds (vulkan11Feature (sFeatures s))
+          ++ (extensionToSeed <$> sExtensions s)
+          ++ [dynamicLoaderSeed] -- It's important for this to come after the C
+                                 -- modules to avoid pulling in every type
+          ++ featureToMarshalledSeeds aliasNames (vulkan10Feature (sFeatures s))
 
-            ++ featureToMarshalledSeeds aliasNames
-                                        (vulkan11Feature (sFeatures s))
-            ++ (extensionToMarshalledSeed <$> sExtensions s)
-      in
-        bespokeSeedsHighPriority ++ nonBespokeSeeds ++ bespokeSeedsLowPriority
+          ++ featureToMarshalledSeeds aliasNames (vulkan11Feature (sFeatures s))
+          ++ (extensionToMarshalledSeed <$> sExtensions s)
+  in  bespokeSeedsHighPriority ++ nonBespokeSeeds ++ bespokeSeedsLowPriority
 
 bespokeSeedsHighPriority :: [ModuleSeed]
 bespokeSeedsHighPriority =
@@ -120,7 +113,7 @@ bespokeSeedsLowPriority =
 
 dynamicLoaderSeed :: ModuleSeed
 dynamicLoaderSeed =
-  ModuleSeed "Graphics.Vulkan.Dynamic" [TypeName "DeviceCmds"] Nothing
+  ModuleSeed "Graphics.Vulkan.C.Dynamic" [TypeName "DeviceCmds"] Nothing
 
 featureToSeeds :: Feature -> [ModuleSeed]
 featureToSeeds Feature {..} =

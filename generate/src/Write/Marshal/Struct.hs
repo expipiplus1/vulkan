@@ -62,12 +62,11 @@ structWrapper
   -> Struct
   -> Either [SpecError] [WriteElement]
 structWrapper isHandle isBitmask isStruct allStructs struct = do
-  let weName                 = sName struct T.<+> "wrapper"
-      weUndependableProvides = []
-      weBootElement          = Nothing
-      isMarshalledHandle     = isHandle . ("Vk" <>)
-      isMarshalledBitmask    = isBitmask . ("Vk" <>)
-      isMarshalledStruct     = isStruct . ("Vk" <>)
+  let weName              = sName struct T.<+> "wrapper"
+      weBootElement       = Nothing
+      isMarshalledHandle  = isHandle . ("Vk" <>)
+      isMarshalledBitmask = isBitmask . ("Vk" <>)
+      isMarshalledStruct  = isStruct . ("Vk" <>)
       isDefaultable t = maybe
         False
         (    isHandle
@@ -80,8 +79,7 @@ structWrapper isHandle isBitmask isStruct allStructs struct = do
       isStructType t =
         maybe False (isStruct <||> isMarshalledStruct) (simpleTypeName t)
       containsUnion = doesStructContainUnion allStructs
-  ( (weDoc, aliasWriteElements)
-   ,(weImports, weProvides, (weDepends, weSourceDepends), weExtensions, _)) <-
+  ((weDoc, aliasWriteElements), (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
     either
       (throwError . fmap (WithContext (sName struct)))
       pure
@@ -451,7 +449,6 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       , Just tyName <- simpleTypeName t
       -> if isStruct t
         then do
-          let eName = dropVkType tyName
           (with, peekElem) <- structWithPeekElem t
           pure $ Vector lengthName 1 (smName m) (TypeName tyName) with peekElem
         else pure $ Vector
@@ -475,7 +472,7 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
                                 (TypeName (dropVkType tyName))
                                 with
                                 peekElem
-        else do
+        else
           pure $ OptionalVector
             (smName lengthMember)
             (smName m)
@@ -833,6 +830,8 @@ memberWrapper fromType from =
             let paramName = pretty (dropPointer memberName)
                 with  = [qci|withCStruct{tyName} {accessMember memberName} (\\{paramName} -> {e} {paramName}|]
             in  [qci|{cont with})|]
+    | otherwise
+    -> throwError [Other "PreservedMarshalled given non simple type"]
   Bool memberName -> do
     tellDepend (Unguarded (TermName "boolToBool32"))
     pure $ \cont e -> cont [qci|{e} (boolToBool32 {accessMember memberName})|]
@@ -959,7 +958,7 @@ fromCStructMember from fromType =
           -> do tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
                 pure $ Right [qci|(fromCStruct{tyName} {accessMember memberName})|]
         Bool memberName -> do
-          tellDepend (Unguarded (TermName ("bool32ToBool")))
+          tellDepend (Unguarded (TermName "bool32ToBool"))
           pure $ Right [qci|pure (bool32ToBool {accessMember memberName})|]
         FixedArrayNullTerminated memberName _ -> do
           tellQualifiedImport "Data.Vector.Storable" "unsafeWith"
@@ -1402,7 +1401,6 @@ writeAlias
   -> m WriteElement
 writeAlias _members Struct{..} name = do
   let weName = name T.<+> "alias" T.<+> sName
-      weUndependableProvides = []
       weBootElement          = Nothing
       aliasDoc = do
         tellExport (Unguarded (TypeAlias (dropVkType name)))
@@ -1412,7 +1410,7 @@ writeAlias _members Struct{..} name = do
           type {dropVkType name} = {dropVkType sName}
           -- TODO: Pattern constructor alias)
         |]
-  (weDoc, (weImports, weProvides, (weDepends, weSourceDepends), weExtensions, _)) <- either
+  (weDoc, (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <- either
     (throwError . fmap (WithContext sName))
     pure
     (runWrap aliasDoc)

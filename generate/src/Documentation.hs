@@ -1,9 +1,9 @@
 {-# LANGUAGE LambdaCase          #-}
-{-# LANGUAGE TupleSections          #-}
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE PatternSynonyms     #-}
 {-# LANGUAGE RecursiveDo         #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TupleSections       #-}
 {-# LANGUAGE ViewPatterns        #-}
 
 module Documentation
@@ -22,7 +22,7 @@ import           Data.List.Extra2
 import           Data.Maybe
 import           Data.Text                    (Text)
 import qualified Data.Text.Extra              as T
-import           Documentation.RunAsciiDoctor
+import           Documentation.RunAsciiDoctor hiding (main)
 import           Prelude                      hiding (rem)
 import           Say
 import           System.Environment

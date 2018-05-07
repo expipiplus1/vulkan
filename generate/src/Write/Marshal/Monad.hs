@@ -26,7 +26,9 @@ type Extension = Text
 type Constraint = Text
 type WriteState =
   ( [Import]
-  , [Guarded Export]
+  , ( [Guarded Export]
+    , [Guarded Export]
+    )
   , ( [Guarded HaskellName] -- Depends
     , [Guarded HaskellName] -- Source depends
     )
@@ -70,7 +72,12 @@ tellImports is = tell (is, mempty, mempty, mempty, mempty)
 tellExport
   :: Guarded Export
   -> WrapM ()
-tellExport e = tell (mempty, [e], mempty, mempty, mempty)
+tellExport e = tell (mempty, ([e], mempty), mempty, mempty, mempty)
+
+tellUndependableExport
+  :: Guarded Export
+  -> WrapM ()
+tellUndependableExport e = tell (mempty, (mempty, [e]), mempty, mempty, mempty)
 
 tellDepend
   :: Guarded HaskellName

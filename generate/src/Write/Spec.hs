@@ -54,6 +54,7 @@ import           Write.HeaderVersion
 import           Write.Loader
 import           Write.Marshal.Aliases
 import           Write.Marshal.Exception
+import           Write.Marshal.Handle
 import           Write.Marshal.SomeVkStruct
 import           Write.Marshal.Struct
 import           Write.Marshal.Struct.Utils
@@ -94,8 +95,7 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
           , someVkStructWriteElement enabledStructs
           ]
           ++ cWriteElements
-          ++ fst marshalledWriteElements
-          ++ snd marshalledWriteElements
+          ++ marshalledWriteElements
   partitionedModules <- ExceptT . pure $ partitionElements ws seeds
   platformGuards     <- ExceptT . pure . validationToEither $ getModuleGuardInfo
     (sExtensions s)
@@ -145,8 +145,7 @@ saveModules getDoc outDir ms = concat
     readFileMay f =
       (Just <$> Strict.readFile f) `catchIOError` const (pure Nothing)
 
-specWrapperWriteElements
-  :: Spec -> Validation [SpecError] ([WriteElement], [WriteElement])
+specWrapperWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specWrapperWriteElements Spec {..} = do
   let isHandle = (`Set.member` Set.fromList (hName <$> sHandles))
       isBitmask =
@@ -166,16 +165,23 @@ specWrapperWriteElements Spec {..} = do
       enabledStructs =
         filter ((`notElem` ignoredUnexportedNames) . TypeName . sName) sStructs
 
+      dispatchableHandles =
+        [ h | h@Handle { hHandleType = Dispatchable } <- sHandles ]
+
   let (commandMarshalErrors, commandWrappers) =
-        partitionEithers $ commandWrapper isHandle isBitmask isStruct <$> enabledCommands
+        partitionEithers
+          $   commandWrapper isHandle isBitmask isStruct
+          <$> enabledCommands
       (structMarshalErrors, structWrappers) =
         partitionEithers
           $   structWrapper isHandle isBitmask isStruct enabledStructs
           <$> enabledStructs
+      (handleMarshalErrors, handleWrappers) =
+        partitionEithers $ handleWrapper <$> dispatchableHandles
   -- TODO: Warn properly on unwrapped command
   _ <- traverse_ traceShowM commandMarshalErrors
   _ <- traverse_ traceShowM structMarshalErrors
-  pure (concat structWrappers, concat commandWrappers)
+  pure (concat [concat structWrappers, concat commandWrappers, handleWrappers])
 
 specCWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specCWriteElements s@Spec {..} = do

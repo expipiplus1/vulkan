@@ -4,14 +4,17 @@
 
 module Spec.Savvy.Handle
   ( Handle(..)
+  , HandleType(..)
   , specHandles
   ) where
 
+import           Control.Monad.Except
 import           Data.Closure
 import           Data.Either.Validation
 import qualified Data.HashSet           as HashSet
 import qualified Data.MultiMap          as MultiMap
 import           Data.Text
+import qualified Data.Text.Extra        as T
 import           Language.C.Types.Parse
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
@@ -19,12 +22,16 @@ import qualified Spec.Spec              as P
 import qualified Spec.Type              as P
 
 data Handle = Handle
-  { hName    :: Text
-  , hType    :: Type
-  , hAliases :: [Text]
-  , hParents :: [Text]
+  { hName       :: Text
+  , hType       :: Type
+  , hAliases    :: [Text]
+  , hParents    :: [Text]
+  , hHandleType :: HandleType
   }
   deriving (Show)
+
+data HandleType = NonDispatchable | Dispatchable
+  deriving (Eq, Show)
 
 specHandles
   :: (Text -> Either [SpecError] Text)
@@ -56,7 +63,16 @@ specHandles preprocess pc P.Spec {..} =
           <$> (stringToTypeExpected pc' htName =<< preprocess htType)
           <*> pure (getAliases htName)
           <*> pure htParents
+          <*> macroToHandleType htMacro
         | P.HandleType {..} <- parsedHandles
         ]
 
+macroToHandleType :: Text -> Either [SpecError] HandleType
+macroToHandleType t
+  | "VK_DEFINE_HANDLE" `T.isPrefixOf` t
+  = pure Dispatchable
+  | "VK_DEFINE_NON_DISPATCHABLE_HANDLE" `T.isPrefixOf` t
+  = pure NonDispatchable
+  | otherwise
+  = throwError [Other "Couldn't determine handle type"]
 

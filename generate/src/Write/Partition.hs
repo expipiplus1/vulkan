@@ -139,6 +139,12 @@ ignoredUnexportedNames =
   , TypeName "VkNativeBufferANDROID"
   , TermName "VkNativeBufferANDROID"
   , PatternName "VK_STRUCTURE_TYPE_NATIVE_BUFFER_ANDROID"
+  , TypeName "FN_vkGetSwapchainGrallocUsageANDROID"
+  , TypeName "PFN_vkGetSwapchainGrallocUsageANDROID"
+  , TypeName "FN_vkAcquireImageANDROID"
+  , TypeName "PFN_vkAcquireImageANDROID"
+  , TypeName "FN_vkQueueSignalReleaseImageANDROID"
+  , TypeName "PFN_vkQueueSignalReleaseImageANDROID"
   ]
 
 explicitlyPlacedNames :: [(Text, HaskellName)]
