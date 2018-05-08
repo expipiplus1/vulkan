@@ -97,9 +97,15 @@ separatedWithGuards
   -- ^ Things to separate with optional guards
   -> Doc ()
 separatedWithGuards sep' things =
-  let prefixedThings = case things of
-        []     -> []
-        x : xs -> x : (first sepPrefix <$> xs)
+  let
+    prefixedThings = case things of
+      []  -> []
+      [x] -> [x]
+      -- If the first case is guarded, move the seps around
+      x@(_, Just _) : x' : xs
+        | sep' /= ""
+        -> first (<> line <> sepPrefix mempty) x : x' : (first sepPrefix <$> xs)
+      x : xs -> x : (first sepPrefix <$> xs)
   in  case mergeGuards prefixedThings of
         [] -> mempty
         (d : ds) ->
@@ -149,3 +155,4 @@ vcatIndents = \case
     addLine = \case
       (Just i , d) -> indent i (line <> d)
       (Nothing, d) -> line <> d
+

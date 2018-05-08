@@ -10,6 +10,7 @@ module Write.Element
   , Import(..)
   , Guarded(..)
   , unGuarded
+  , guardWriteElement
   , pattern Pattern
   , pattern Term
   , pattern TypeConstructor
@@ -17,12 +18,14 @@ module Write.Element
   , DocMap
   ) where
 
+import           Control.Monad.Except
 import           Data.Semigroup
 import           Data.Text
 import           Data.Text.Prettyprint.Doc
 
 import           Documentation
 import           Documentation.Haddock
+import           Spec.Savvy.Error
 
 data WriteElement = WriteElement
   { weName                 :: Text
@@ -66,6 +69,22 @@ unGuarded = \case
   Guarded _ n -> n
   InvGuarded _ n -> n
   Unguarded  n -> n
+
+-- | Returns nothing if the write element has already got any guarded things
+guardWriteElement :: Text -> WriteElement -> Maybe WriteElement
+guardWriteElement g we = do
+  let addGuard = \case
+        Unguarded x -> pure $ Guarded g x
+        _           -> Nothing
+  provides             <- traverse addGuard (weProvides we)
+  undependableProvides <- traverse addGuard (weUndependableProvides we)
+  sourceDepends        <- traverse addGuard (weSourceDepends we)
+  depends              <- traverse addGuard (weDepends we)
+  pure we { weProvides             = provides
+          , weUndependableProvides = undependableProvides
+          , weSourceDepends        = sourceDepends
+          , weDepends              = depends
+          }
 
 pattern Pattern :: Text -> Export
 pattern Pattern n = WithoutConstructors (PatternName n)
