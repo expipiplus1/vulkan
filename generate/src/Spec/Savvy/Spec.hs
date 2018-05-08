@@ -92,7 +92,7 @@ spec s = do
     validationToEither
     $   (,)
     <$> specCommands pc s sHandles sExtensions
-    <*> specStructs tc s
+    <*> specStructs tc s sExtensions
 
   sAliases <- validationToEither
     $ specAliases s sCommands sEnums sHandles sStructs sConstants requirements

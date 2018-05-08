@@ -92,7 +92,7 @@ specCommands pc P.Spec {..} handles extensions
                 Just [l] | [param, member] <- T.splitOn "::" l ->
                   Just (NamedMemberLength param member)
                 Just [l] -> Just (NamedLength l)
-                Just _ -> error "TODO: Multiple lengths"
+                Just _   -> error "TODO: Multiple lengths"
           pure Parameter {pType = t, ..}
         pure
           $ let cAliases =
@@ -101,9 +101,9 @@ specCommands pc P.Spec {..} handles extensions
                 cPlatform     = listToMaybe
                   [ p
                   | e          <- extensions
+                  , Just     p <- [extPlatform e]
                   , TermName n <- rRequiredNames =<< extRequirements e
                   , n == cName
-                  , Just p <- [extPlatform e]
                   ]
             in  Command {cReturnType = ret, cParameters = ps, ..}
 

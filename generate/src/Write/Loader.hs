@@ -28,11 +28,9 @@ import           Spec.Savvy.Command
 import           Spec.Savvy.Error
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Type                          hiding (TypeName)
-import           Spec.Savvy.Type.Haskell                  hiding (toHsType)
 import           Write.Element
 import           Write.Marshal.Monad
 import           Write.Marshal.Util
-import           Write.Marshal.Wrap
 import           Write.Util
 
 writeLoader
@@ -49,48 +47,10 @@ writeLoader getEnumName platforms commands = do
         (`Map.lookup` Map.fromList
           ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
         )
-  ( weDoc
-   ,(weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
-    either
-      (throwError . fmap (WithContext "Dynamic Loader"))
-      pure
-      (runWrap $ writeLoaderDoc getEnumName platformGuardMap commands
-      )
-
-  let
-    weName          = "Dynamic Function Pointer Loaders"
-    -- cmdProvides :: Command -> [Guarded Export]
-    -- cmdProvides Command {..} =
-    --   (case platformGuardMap =<< cPlatform of
-    --       Nothing -> Unguarded
-    --       Just g  -> Guarded g
-    --     )
-    --     <$> ( Term (dropVk cName)
-    --         : [Term (("has" <>) . T.upperCaseFirst . dropVk $ cName)]
-    --         )
-    -- weProvides =
-    --   (   Unguarded
-    --     <$> ([TypeConstructor, Term] <*> ["DeviceCmds", "InstanceCmds"])
-    --     )
-    --     ++ (Unguarded . Term <$> ["initDeviceCmds", "initInstanceCmds"])
-    -- These are undependable as they are shadowed by the marshalling commands
-    -- weUndependableProvides = cmdProvides =<< exposedCommands
-    weBootElement          = Nothing
-    -- TODO: Write these like the imports and extensions, and move all that
-    -- to some writer monad.
-    -- weDepends =
-    --   concat
-    --       [ case platformGuardMap =<< cPlatform c of
-    --           Nothing -> Unguarded <$> commandDepends getEnumName c
-    --           Just g  -> Guarded g <$> commandDepends getEnumName c
-    --       | c <- exposedCommands
-    --       ]
-    --     ++ (   Unguarded
-    --        <$> [ TermName "vkGetDeviceProcAddr"
-    --            , TermName "vkGetInstanceProcAddr"
-    --            ]
-    --        )
-  pure WriteElement {..}
+      weName          = "Dynamic Function Pointer Loaders"
+      weBootElement          = Nothing
+  wrapMToWriteElements weName weBootElement
+        (writeLoaderDoc getEnumName platformGuardMap commands)
 
 writeLoaderDoc
   :: (Text -> Maybe Text)

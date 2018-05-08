@@ -7,17 +7,15 @@ module Write.Spec
   ( writeSpec
   ) where
 
-import           Debug.Trace
-
-import           Control.Arrow                            ((&&&))
+import           Control.Arrow              ((&&&))
 import           Control.Monad.Except
 import           Data.Bifunctor
 import           Data.Either.Extra
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.List.Extra
+import qualified Data.Map                   as Map
 import           Data.Maybe
-import qualified Data.Map                                 as Map
 import qualified Data.Set                   as Set
 import           Data.Text                  (Text)
 import qualified Data.Text                  as T
@@ -35,7 +33,6 @@ import           Spec.Savvy.APIConstant
 import           Spec.Savvy.BaseType
 import           Spec.Savvy.Command
 import           Spec.Savvy.Enum
-import qualified Spec.Savvy.Type as Ty
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
@@ -86,10 +83,7 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
   marshalledWriteElements <-
     ExceptT . pure . validationToEither $ specWrapperWriteElements s
 
-  let enabledStructs = filter
-        ((`notElem` ignoredUnexportedNames) . TypeName . sName)
-        (sStructs s)
-      seeds = specSeeds s
+  let seeds = specSeeds s
       -- TODO:
       Just vkResultEnum = find ((== "VkResult") . eName) (sEnums s)
       ws =
@@ -148,52 +142,46 @@ saveModules getDoc outDir ms = concat
 
 specWrapperWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specWrapperWriteElements Spec {..} = do
-  let getHandle = (`Map.lookup` Map.fromList ((hName &&& id) <$> sHandles))
-      isBitmask =
-        (`Set.member` Set.fromList
-          [ n
-          | Enum {..} <- sEnums
-          , n         <- eName : eAliases
-          , eType == EnumTypeBitmask
-          ]
-        )
-      isStruct        = (`Set.member` Set.fromList (sName <$> sStructs))
-      -- TODO: Filter in a better way
-      enabledCommands = filter
-        ((`notElem` ignoredUnexportedNames) . TermName . cName)
-        sCommands
+  let
+    getHandle = (`Map.lookup` Map.fromList ((hName &&& id) <$> sHandles))
+    isBitmask =
+      (`Set.member` Set.fromList
+        [ n
+        | Enum {..} <- sEnums
+        , n         <- eName : eAliases
+        , eType == EnumTypeBitmask
+        ]
+      )
+    isStruct = (`Set.member` Set.fromList (sName <$> sStructs))
+    -- TODO: Filter in a better way
+    enabledCommands =
+      filter ((`notElem` ignoredUnexportedNames) . TermName . cName) sCommands
 
-      enabledStructs =
-        filter ((`notElem` ignoredUnexportedNames) . TypeName . sName) sStructs
+    enabledStructs =
+      filter ((`notElem` ignoredUnexportedNames) . TypeName . sName) sStructs
 
-      dispatchableHandles =
-        [ h | h@Handle { hHandleType = Dispatchable } <- sHandles ]
+    dispatchableHandles =
+      [ h | h@Handle { hHandleType = Dispatchable } <- sHandles ]
 
-      getStructDispatchableHandle =
-        doesStructContainDispatchableHandle (getHandle <=< simpleTypeName) sStructs
+    getStructDispatchableHandle = doesStructContainDispatchableHandle
+      (getHandle <=< simpleTypeName)
+      sStructs
 
-  let (commandMarshalErrors, commandWrappers) =
-        partitionEithers
-          $   commandWrapper getHandle
-                             isBitmask
-                             isStruct
-                             getStructDispatchableHandle
-          <$> enabledCommands
-      (structMarshalErrors, structWrappers) =
-        partitionEithers
-          $   structWrapper getHandle isBitmask isStruct enabledStructs
-          <$> enabledStructs
-      (handleMarshalErrors, handleWrappers) =
-        partitionEithers $ handleWrapper <$> dispatchableHandles
-  -- TODO: Warn properly on unwrapped command
-  _ <- traverse_ traceShowM commandMarshalErrors
-  _ <- traverse_ traceShowM structMarshalErrors
+  commandWrappers <- eitherToValidation $ traverse
+    (commandWrapper getHandle isBitmask isStruct getStructDispatchableHandle)
+    enabledCommands
+  structWrappers <- eitherToValidation $ traverse
+    (structWrapper getHandle isBitmask isStruct enabledStructs)
+    enabledStructs
+  handleWrappers <- eitherToValidation
+    $ traverse handleWrapper dispatchableHandles
+  someVkStructWE <- eitherToValidation
+    $ someVkStructWriteElement getHandle sPlatforms enabledStructs
+  peekStructWE <- eitherToValidation
+    $ vkPeekStructWriteElement getHandle sPlatforms enabledStructs
   pure
     (  concat [concat structWrappers, concat commandWrappers, handleWrappers]
-    ++ [ vkStructWriteElement
-       , vkPeekStructWriteElement getHandle enabledStructs
-       , someVkStructWriteElement getHandle enabledStructs
-       ]
+    ++ [vkStructWriteElement, peekStructWE, someVkStructWE]
     )
 
 specCWriteElements :: Spec -> Validation [SpecError] [WriteElement]

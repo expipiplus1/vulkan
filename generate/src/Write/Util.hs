@@ -121,6 +121,7 @@ mergeGuards xs =
         let (ds, g :| _) = NE.unzip group' in (vcat (NE.toList ds), g)
   in  ungroups <$> groups
 
+-- This doesn't really work https://github.com/quchen/prettyprinter/issues/57
 guardedLines :: Maybe Text -> Doc () -> [(Maybe Int, Doc ())]
 guardedLines = \case
   Nothing -> \d -> [(Nothing, d)]

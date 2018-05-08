@@ -15,15 +15,20 @@ import           Control.Applicative
 import           Control.Monad.Fix.Extra
 import           Data.Closure
 import           Data.Either.Validation
+import           Data.Maybe
 import qualified Data.MultiMap           as MultiMap
 import           Data.Semigroup
 import           Data.Text               (Text)
 import qualified Data.Text               as T
 import           Data.Traversable
+
 import           Spec.Savvy.Error
+import           Spec.Savvy.Extension
+import           Spec.Savvy.Feature      (Requirement (..))
 import           Spec.Savvy.Type
 import qualified Spec.Spec               as P
 import qualified Spec.Type               as P
+import qualified Write.Element           as WE (HaskellName (TypeName))
 
 data Struct = Struct
   { sName          :: Text
@@ -35,6 +40,8 @@ data Struct = Struct
     -- ^ The closure of struct aliases, doesn't include aliases from extensions
   , sStructOrUnion :: StructOrUnion
   , sReturnedOnly  :: Bool
+  , sPlatform      :: Maybe Text
+    -- ^ The platform this struct is restricted to if it is not universal
   }
   deriving (Show, Eq)
 
@@ -56,12 +63,15 @@ data StructOrUnion
   | AUnion
   deriving (Show, Eq)
 
-specStructs :: TypeContext -> P.Spec -> Validation [SpecError] [Struct]
-specStructs tc P.Spec {..}
+specStructs :: TypeContext -> P.Spec
+  -> [Extension]
+            -> Validation [SpecError] [Struct]
+specStructs tc P.Spec {..} extensions
   = let
-      parsedStructs     = [ s | P.AStructType s <- sTypes ]
-      parsedUnions      = [ u | P.AUnionType u <- sTypes ]
-      parsedStructNames = (P.stName <$> parsedStructs) ++ (P.utName <$> parsedUnions)
+      parsedStructs = [ s | P.AStructType s <- sTypes ]
+      parsedUnions  = [ u | P.AUnionType u <- sTypes ]
+      parsedStructNames =
+        (P.stName <$> parsedStructs) ++ (P.utName <$> parsedUnions)
 
       structAliases :: [(Text, Text)]
       structAliases =
@@ -82,9 +92,12 @@ specStructs tc P.Spec {..}
             getStructSize      = getField sSize
             getStructAlignment = getField sAlignment
         in  (<>)
-            <$> for parsedStructs (specStruct getAliases structTypeContext)
+            <$> for parsedStructs
+                    (specStruct getAliases structTypeContext extensions)
             <*> validationToEither
-                  (for parsedUnions (specUnion getAliases structTypeContext))
+                  (for parsedUnions
+                       (specUnion getAliases structTypeContext extensions)
+                  )
 
 ----------------------------------------------------------------
 -- Structs
@@ -93,9 +106,10 @@ specStructs tc P.Spec {..}
 specStruct
   :: (Text -> [Text])
   -> TypeContext
+  -> [Extension]
   -> P.StructType
   -> Either [SpecError] Struct
-specStruct getAliases tc@TypeContext {..} P.StructType {..} = do
+specStruct getAliases tc@TypeContext {..} extensions P.StructType {..} = do
   rec sMembers <- validationToEither $ do
         let offsets = memberOffsets sMembers
         for (zipSameLength stMembers offsets) (uncurry (specStructMember tc))
@@ -108,6 +122,13 @@ specStruct getAliases tc@TypeContext {..} P.StructType {..} = do
     sSize = nextAlignment sAlignment (smOffset lastMember + smSize lastMember)
     sStructOrUnion = AStruct
     sReturnedOnly  = stIsReturnedOnly
+    sPlatform      = listToMaybe
+      [ p
+      | e          <- extensions
+      , Just p <- [extPlatform e]
+      , WE.TypeName n <- rRequiredNames =<< extRequirements e
+      , n == sName
+      ]
   pure Struct {..}
 
 specStructMember
@@ -135,9 +156,10 @@ specStructMember tc P.StructMember {..} smOffset = eitherToValidation $ do
 specUnion
   :: (Text -> [Text])
   -> TypeContext
+  -> [Extension]
   -> P.UnionType
   -> Validation [SpecError] Struct
-specUnion getAliases tc@TypeContext {..} P.UnionType {..} = do
+specUnion getAliases tc@TypeContext {..} extensions P.UnionType {..} = do
   sMembers <- for utMembers (\m -> specStructMember tc m 0)
   -- ApplicativeDo for this weirdness
   pure
@@ -149,6 +171,13 @@ specUnion getAliases tc@TypeContext {..} P.UnionType {..} = do
         sSize = nextAlignment sAlignment (maximum (0 : (smSize <$> sMembers)))
         sStructOrUnion = AUnion
         sReturnedOnly  = utIsReturnedOnly
+        sPlatform      = listToMaybe
+          [ p
+          | e          <- extensions
+          , Just p <- [extPlatform e]
+          , WE.TypeName n <- rRequiredNames =<< extRequirements e
+          , n == sName
+          ]
       in
         Struct {..}
 

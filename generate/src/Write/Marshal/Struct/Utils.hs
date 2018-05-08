@@ -10,23 +10,21 @@ module Write.Marshal.Struct.Utils
   , doesStructContainDispatchableHandle
   ) where
 
-import Debug.Trace
-
 import           Control.Monad
 import           Data.Closure
 import           Data.Function
 import           Data.Functor
+import           Data.List.Extra
+import qualified Data.Map                                 as Map
 import           Data.Maybe
-import Data.List.Extra
 import qualified Data.MultiMap                            as MultiMap
-import qualified Data.Map                            as Map
 import qualified Data.Set                                 as Set
 import           Data.Text                                (Text)
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
-import           Spec.Savvy.Struct
 import           Spec.Savvy.Handle
+import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 
 import           Write.Element                            hiding (TypeName)

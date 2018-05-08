@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE PatternSynonyms  #-}
+{-# LANGUAGE RecordWildCards  #-}
 
 module Write.Marshal.Monad
   where
@@ -46,6 +47,18 @@ runWrap
   :: WrapM a
   -> Either [SpecError] (a, WriteState)
 runWrap = runExcept . runWriterT
+
+wrapMToWriteElements
+  :: Text
+  -- ^ Name
+  -> Maybe WriteElement
+  -- ^ Boot element
+  -> WrapM (DocMap -> Doc ())
+  -> Either [SpecError] WriteElement
+wrapMToWriteElements weName weBootElement w = do
+  (weDoc, (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
+    either (throwError . fmap (WithContext weName)) pure (runWrap w)
+  pure WriteElement {..}
 
 tellImport
   :: Text
@@ -112,3 +125,4 @@ toHsType t = case H.toHsType t of
     -- TODO: This is a bit of a hack
     tellDepends (Unguarded <$> typeDepends t)
     pure d
+

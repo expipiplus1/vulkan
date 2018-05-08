@@ -7,38 +7,22 @@ module Write.Marshal.Handle
   ( handleWrapper
   ) where
 
-import           Control.Arrow                            ((&&&))
-import           Control.Bool
 import           Control.Monad
 import           Control.Monad.Except
-import           Data.Bifunctor
-import           Data.Char                                (isUpper, toUpper)
-import           Data.Foldable
 import           Data.Function
-import           Data.Functor
-import           Data.List                                (partition)
-import qualified Data.Map                                 as Map
 import           Data.Maybe
-import qualified Data.MultiMap                            as MultiMap
 import           Data.Text                                (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
-import           Data.Traversable
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
-import           Spec.Savvy.Type
 
-import           Documentation
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
 import           Write.Marshal.Monad
-import           Write.Marshal.Struct.Utils               (doesStructContainUnion)
-import           Write.Marshal.Util
-import           Write.Marshal.Wrap
-import           Write.Util
 
 handleWrapper :: Handle -> Either [SpecError] WriteElement
 handleWrapper handle = do
