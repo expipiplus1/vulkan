@@ -9,6 +9,7 @@ module Write.Spec
 
 import           Debug.Trace
 
+import           Control.Arrow                            ((&&&))
 import           Control.Monad.Except
 import           Data.Bifunctor
 import           Data.Either.Extra
@@ -16,6 +17,7 @@ import           Data.Either.Validation
 import           Data.Foldable
 import           Data.List.Extra
 import           Data.Maybe
+import qualified Data.Map                                 as Map
 import qualified Data.Set                   as Set
 import           Data.Text                  (Text)
 import qualified Data.Text                  as T
@@ -33,6 +35,7 @@ import           Spec.Savvy.APIConstant
 import           Spec.Savvy.BaseType
 import           Spec.Savvy.Command
 import           Spec.Savvy.Enum
+import qualified Spec.Savvy.Type as Ty
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
@@ -58,6 +61,7 @@ import           Write.Marshal.Handle
 import           Write.Marshal.SomeVkStruct
 import           Write.Marshal.Struct
 import           Write.Marshal.Struct.Utils
+import           Write.Marshal.Util
 import           Write.Module
 import           Write.Module.Aggregate
 import           Write.Partition
@@ -90,9 +94,6 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
       Just vkResultEnum = find ((== "VkResult") . eName) (sEnums s)
       ws =
         [ vkExceptionWriteElement docs vkResultEnum
-          , vkStructWriteElement
-          , vkPeekStructWriteElement enabledStructs
-          , someVkStructWriteElement enabledStructs
           ]
           ++ cWriteElements
           ++ marshalledWriteElements
@@ -147,7 +148,7 @@ saveModules getDoc outDir ms = concat
 
 specWrapperWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specWrapperWriteElements Spec {..} = do
-  let isHandle = (`Set.member` Set.fromList (hName <$> sHandles))
+  let getHandle = (`Map.lookup` Map.fromList ((hName &&& id) <$> sHandles))
       isBitmask =
         (`Set.member` Set.fromList
           [ n
@@ -168,20 +169,32 @@ specWrapperWriteElements Spec {..} = do
       dispatchableHandles =
         [ h | h@Handle { hHandleType = Dispatchable } <- sHandles ]
 
+      getStructDispatchableHandle =
+        doesStructContainDispatchableHandle (getHandle <=< simpleTypeName) sStructs
+
   let (commandMarshalErrors, commandWrappers) =
         partitionEithers
-          $   commandWrapper isHandle isBitmask isStruct
+          $   commandWrapper getHandle
+                             isBitmask
+                             isStruct
+                             getStructDispatchableHandle
           <$> enabledCommands
       (structMarshalErrors, structWrappers) =
         partitionEithers
-          $   structWrapper isHandle isBitmask isStruct enabledStructs
+          $   structWrapper getHandle isBitmask isStruct enabledStructs
           <$> enabledStructs
       (handleMarshalErrors, handleWrappers) =
         partitionEithers $ handleWrapper <$> dispatchableHandles
   -- TODO: Warn properly on unwrapped command
   _ <- traverse_ traceShowM commandMarshalErrors
   _ <- traverse_ traceShowM structMarshalErrors
-  pure (concat [concat structWrappers, concat commandWrappers, handleWrappers])
+  pure
+    (  concat [concat structWrappers, concat commandWrappers, handleWrappers]
+    ++ [ vkStructWriteElement
+       , vkPeekStructWriteElement getHandle enabledStructs
+       , someVkStructWriteElement getHandle enabledStructs
+       ]
+    )
 
 specCWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specCWriteElements s@Spec {..} = do

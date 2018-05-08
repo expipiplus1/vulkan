@@ -6,8 +6,8 @@
 module Spec.Savvy.Command
   ( Command(..)
   , Parameter(..)
-  , CommandLevel(..)
   , ParameterLength(..)
+  , HandleLevel(..)
   , specCommands
   , commandType
   , lowerArrayToPointer
@@ -41,7 +41,8 @@ data Command = Command
   , cAliases      :: [Text]
     -- ^ The closure of aliases to this command, doesn't include aliases in
     -- extensions
-  , cCommandLevel :: Maybe CommandLevel
+  , cCommandLevel :: Maybe HandleLevel
+    -- ^ Some commands are part of no level such as vkCreateInstance
   , cPlatform     :: Maybe Text
     -- ^ The platform this command runs on if it is not universal
   , cSuccessCodes :: Maybe [Text]
@@ -65,15 +66,6 @@ data ParameterLength
     -- example is vkAllocateCommandBuffers
   deriving (Show)
 
--- | The "level" of a command, related to what it is dispatched from.
---
--- Some commands are part of no level such as vkCreateInstance
-data CommandLevel
-  = Instance
-  | PhysicalDevice
-  | Device
-  deriving (Show, Eq)
-
 specCommands
   :: TypeParseContext
   -> P.Spec
@@ -87,7 +79,7 @@ specCommands pc P.Spec {..} handles extensions
         [ (caAlias, caName) | P.CommandAlias {..} <- sCommandAliases ]
       aliasMap :: MultiMap.MultiMap Text Text
       aliasMap = MultiMap.fromList commandAliases
-      commandLevel' :: [Parameter] -> Maybe CommandLevel
+      commandLevel' :: [Parameter] -> Maybe HandleLevel
       commandLevel' = commandLevel handles
     in
       for sCommands $ \P.Command {..} -> do
@@ -125,18 +117,10 @@ lowerArrayToPointer = \case
   Array c _ t -> Ptr c t
   t           -> t
 
-commandLevel :: [Handle] -> [Parameter] -> Maybe CommandLevel
+commandLevel :: [Handle] -> [Parameter] -> Maybe HandleLevel
 commandLevel handles =
   let handleMap :: Text -> Maybe Handle
       handleMap = (`Map.lookup` Map.fromList ((hName &&& id) <$> handles))
-      handleLevel :: Text -> Maybe CommandLevel
-      handleLevel = \case
-        "VkInstance"       -> Just Instance
-        "VkPhysicalDevice" -> Just PhysicalDevice
-        "VkDevice"         -> Just Device
-        handleName                  -> do
-          h <- handleMap handleName
-          asum $ handleLevel <$> hParents h
   in  \case
-        Parameter _ (TypeName n) _ _ : _ -> handleLevel n
+        Parameter _ (TypeName n) _ _ : _ -> hLevel =<< handleMap n
         _                              -> Nothing

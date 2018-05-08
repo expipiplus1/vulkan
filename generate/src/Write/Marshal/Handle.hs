@@ -50,22 +50,35 @@ handleWrapper handle = do
            (runWrap $ wrapHandle handle)
   pure WriteElement {..}
 
-wrapHandle
-  :: Handle
-  -> WrapM (DocMap -> Doc ())
+wrapHandle :: Handle -> WrapM (DocMap -> Doc ())
   -- ^ Returns the docs for this handle, and any aliases
-wrapHandle Handle{..} = do
-  when (hHandleType == NonDispatchable) $
-    throwError [Other "Wrapping a non-dispatchable handle"]
+wrapHandle Handle {..} = do
+  when (hHandleType == NonDispatchable)
+    $ throwError [Other "Wrapping a non-dispatchable handle"]
   let marshalledName = dropVkType hName
   tellExport (Unguarded (TypeConstructor marshalledName))
   tellExport (Unguarded (Term marshalledName))
   tellDepend (Unguarded (WE.TypeName hName))
+  cmdTable <- case hLevel of
+    Just Instance       -> pure "InstanceCmds"
+    Just PhysicalDevice -> pure "InstanceCmds"
+    Just Device         -> pure "DeviceCmds"
+    Nothing             -> throwError [Other "wrapping handle without a level"]
+  tellDepend (Unguarded (WE.TypeName cmdTable))
+  tellImport "Data.Function" "on"
   pure $ \_ -> [qci|
     data {marshalledName} = {marshalledName}
       \{ {T.lowerCaseFirst marshalledName}Handle :: {hName}
+      , {T.lowerCaseFirst marshalledName}Cmds    :: {cmdTable}
       }
-      deriving (Eq, Ord, Show)
+      deriving Show
+
+    instance Eq {marshalledName} where
+      (==) = (==) `on` {T.lowerCaseFirst marshalledName}Handle
+
+    instance Ord {marshalledName} where
+      compare = compare `on` {T.lowerCaseFirst marshalledName}Handle
+
   |]
 
 dropVkType :: Text -> Text

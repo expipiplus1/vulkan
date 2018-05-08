@@ -11,6 +11,8 @@ module Write.Wrapper
   ( commandWrapper
   ) where
 
+import Debug.Trace
+
 import           Control.Arrow                            ((&&&))
 import           Control.Bool
 import           Control.Monad
@@ -30,6 +32,7 @@ import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Command
+import           Spec.Savvy.Handle
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
 
@@ -43,30 +46,48 @@ import           Write.Struct
 {-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
 
 commandWrapper
-  :: (Text -> Bool)
-  -- ^ Is this the name of a handle type
+  :: (Text -> Maybe Handle)
+  -- ^ Lookup a handle
   -> (Text -> Bool)
   -- ^ Is this the name of a bitmask type
   -> (Text -> Bool)
   -- ^ Is this a struct
+  -> (Text -> Maybe Handle)
+  -- ^ Get the dispatchable handle in a struct
   -> Command
   -> Either [SpecError] [WriteElement]
-commandWrapper isHandle isBitmask isStruct command = do
-  let
-    weName              = cName command T.<+> "wrapper"
-    weBootElement       = Nothing
-    isMarshalledHandle  = isHandle . ("Vk" <>)
-    isMarshalledBitmask = isBitmask . ("Vk" <>)
-    isDefaultable t = maybe
-      False
-      (isHandle <||> isMarshalledHandle <||> isMarshalledBitmask <||> isBitmask)
-      (simpleTypeName t)
-    isTypeStruct t = maybe False isStruct (simpleTypeName t)
-  ((weDoc, aliasWriteElements), (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
-    either (throwError . fmap (WithContext (cName command)))
-           (pure . first (first (const . vcat)))
-           (runWrap $ wrapCommand isDefaultable isTypeStruct command)
-  pure (WriteElement {..} : aliasWriteElements)
+commandWrapper getHandle isBitmask isStruct structDispatchableHandle command =
+  do
+    let weName        = cName command T.<+> "wrapper"
+        weBootElement = Nothing
+        isNonDispatchableHandle n = case getHandle n of
+          Just h  -> hHandleType h == NonDispatchable
+          Nothing -> True
+        isMarshalledNonDispatchableHandle = isNonDispatchableHandle . ("Vk" <>)
+        isMarshalledBitmask               = isBitmask . ("Vk" <>)
+        isDefaultable t = maybe
+          False
+          (    isNonDispatchableHandle
+          <||> isMarshalledNonDispatchableHandle
+          <||> isMarshalledBitmask
+          <||> isBitmask
+          )
+          (simpleTypeName t)
+        isTypeStruct t = maybe False isStruct (simpleTypeName t)
+        getTypeHandle h = getHandle . ("Vk" <>) =<< simpleTypeName h
+        structContainsDispatchableHandle s =
+          isJust $ structDispatchableHandle . ("Vk" <>) =<< simpleTypeName s
+    ((weDoc, aliasWriteElements), (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
+      either
+        (throwError . fmap (WithContext (cName command)))
+        (pure . first (first (const . vcat)))
+        (runWrap $ wrapCommand getTypeHandle
+                               isDefaultable
+                               isTypeStruct
+                               structContainsDispatchableHandle
+                               command
+        )
+    pure (WriteElement {..} : aliasWriteElements)
 
 ----------------------------------------------------------------
 -- The wrapping commands
@@ -75,25 +96,31 @@ commandWrapper isHandle isBitmask isStruct command = do
 -- | Take a command and return the 'Doc' for the command's wrapper
 -- Also return 'WriteElement's for any command aliases
 wrapCommand
-  :: (Type -> Bool)
+  :: (Type -> Maybe Handle)
+  -- ^ gethandle
+  -> (Type -> Bool)
   -- ^ Is a defaultable type
   -> (Type -> Bool)
   -- ^ Is this is a struct
+  -> (Type -> Bool)
+  -- ^ Struct contains dispatchable handle
   -> Command
   -> WrapM ([Doc ()], [WriteElement])
-wrapCommand isDefaultable isStruct c@Command {..} = do
+wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle c@Command {..} = do
   let lengthPairs :: [(Parameter, Maybe Text, [Parameter])]
       lengthPairs = getLengthPointerPairs cParameters
       makeWts :: Maybe CommandUsage -> WrapM ([WrappingType], [Constraint])
       makeWts usage = listens getConstraints $
-        parametersToWrappingTypes isDefaultable isStruct usage lengthPairs cParameters
+        parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle usage lengthPairs cParameters
   let printWrapped makeName wts constraints = do
         wrapped <- wrap c wts
         t <- makeType wts constraints
+        tellQualifiedImport "Graphics.Vulkan.C.Dynamic" (dropVk cName)
+        let dynCommandName = [qci|Graphics.Vulkan.C.Dynamic.{dropVk cName}|]
         pure $ line <> [qci|
           -- | Wrapper for {cName}
           {makeName cName} :: {t}
-          {makeName cName} = {wrapped (pretty cName)}|]
+          {makeName cName} = {wrapped dynCommandName}|]
       makeType wts constraints = wtsToSig c constraints wts
   (ds, aliases) <- if isDualUseCommand lengthPairs
     then do
@@ -114,7 +141,6 @@ wrapCommand isDefaultable isStruct c@Command {..} = do
       d <- printWrapped funName wts constraints
       as <- traverse (writeAlias wts constraints c) cAliases
       pure ([d], as)
-  tellDepend (Unguarded (TermName cName))
   pure (ds, aliases)
 
 isDualUseCommand :: [(Parameter, Maybe Text, [Parameter])] -> Bool
@@ -152,6 +178,10 @@ parametersToWrappingTypes
   -- ^ Is this type defaultable (a handle or bitmask)
   -> (Type -> Bool)
   -- ^ Is this a struct
+  -> (Type -> Maybe Handle)
+  -- ^ Get handle
+  -> (Type -> Bool)
+  -- ^ Struct contains dispatchable handle
   -> Maybe CommandUsage
   -- ^ If this is a dual use command, which usage shall we generate
   -> [(Parameter, Maybe Text, [Parameter])]
@@ -159,7 +189,7 @@ parametersToWrappingTypes
   -- vector parameters which must be this length)
   -> [Parameter]
   -> WrapM [WrappingType]
-parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs ps
+parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle maybeCommandUsage lengthPairs ps
   = let
       -- Go from a length name to a list of vectors having that length
       -- TODO: Rename
@@ -247,14 +277,20 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 pure ("withCStruct" <> tyName)
               else do
                 tellImport "Data.Function" "(&)"
-                pure "(&)"
+                pure $ case getHandle t of
+                  Just h
+                    | Dispatchable <- hHandleType h
+                    -> [qci|((&) . {T.lowerCaseFirst . dropVkType . hName $ h}Handle)|]
+                  _ -> [qci|(&)|]
             getPeek t = if isMarshalledStruct t
               then do
                 Just tyName <- pure $ simpleTypeName t
                 tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
                 tellImport "Foreign.Storable" "peek"
                 tellImport "Control.Monad"    "(<=<)"
-                pure [qci|(fromCStruct{tyName} <=< peek)|]
+                pure $ if structContainsDispatchableHandle t
+                  then [qci|(fromCStruct{tyName} commandTable <=< peek)|]
+                  else [qci|(fromCStruct{tyName} <=< peek)|]
               else do
                 tellImport "Foreign.Storable" "peek"
                 pure "peek"
@@ -264,7 +300,9 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
                 tellImport "Foreign.Storable" "peekElemOff"
                 tellImport "Control.Monad"    "(<=<)"
-                pure [qci|(\\p -> fromCStruct{tyName} <=< peekElemOff p)|]
+                pure $ if structContainsDispatchableHandle t
+                  then [qci|(\\p -> fromCStruct{tyName} commandTable <=< peekElemOff p)|]
+                  else [qci|(\\p -> fromCStruct{tyName} <=< peekElemOff p)|]
               else do
                 tellImport "Foreign.Storable" "peekElemOff"
                 pure "peekElemOff"
@@ -314,6 +352,11 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   Just "VkBool32" <- simpleTypeName t
                 , Nothing <- pIsOptional p
                 -> InputType (Input name (pure "Bool")) <$> boolWrap (pName p)
+                | -- A dispatchable Handle argument
+                  Just h <- getHandle t
+                , Dispatchable <- hHandleType h
+                -> InputType (Input name (toHsType t))
+                  <$> handleWrap (pName p) h
                 | -- A ordinary boring argument
                   isSimpleType t
                 , isNothing (pIsOptional p) || isDefaultable t
@@ -446,6 +489,13 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                       ("bool32ToBool" <+> "<$>" <+> parens (peek <+> ptr))
                     )
                     w
+                | -- A pointer to a non-optional return handle
+                  Just h <- getHandle t
+                , Nothing <- pIsOptional p
+                -> do
+                  (w, ptr) <- handleOutputWrap (pName p)
+                  con      <- constructHandle h ptr
+                  pure $ OutputType (Output (toHsType t) con) w
                 | -- A pointer to a non-optional return value
                   Nothing <- pLength p
                 , isSimpleType t
@@ -456,6 +506,27 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                   (w, ptr) <- simpleAllocaOutputWrap (pName p)
                   peek     <- getPeek t
                   pure $ OutputType (Output (toHsType t) (peek <+> ptr)) w
+                | -- The length dual use command output value
+                  -- It is not an array
+                  Nothing <- pLength p
+                , -- It has uint32_t or size_t type
+                  ((Just "uint32_t" ==) <||> (Just "size_t" ==))
+                  (simpleTypeName t)
+                , -- Is is a required pointer to an optional value
+                  Just [False, True] <- pIsOptional p
+                , -- We are generating a dual use command
+                  Just commandUsage <- maybeCommandUsage
+                -> case commandUsage of
+                  CommandGetLength -> do
+                    (w, ptr) <- simpleAllocaOutputWrap (pName p)
+                    peek     <- do
+                      tellImport "Foreign.Storable" "peek"
+                      pure "peek"
+                    pure $ OutputType (Output (toHsType t) (peek <+> ptr)) w
+                  CommandGetValues -> do
+                    alloc <- getAlloc t
+                    w     <- allocaWrap alloc (pName p)
+                    pure $ InputType (Input name (toHsType t)) w
                 | -- A pointer to an optional return value
                   Nothing <- pLength p
                 , isSimpleType t
@@ -533,27 +604,6 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                         tyName <- toHsType t
                         pure ("Vector" <+> tyName)
                   pure $ OutputType (Output vType peek) w
-                | -- The length dual use command output value
-                  -- It is not an array
-                  Nothing <- pLength p
-                , -- It has uint32_t or size_t type
-                  ((Just "uint32_t" ==) <||> (Just "size_t" ==))
-                  (simpleTypeName t)
-                , -- Is is a required pointer to an optional value
-                  Just [False, True] <- pIsOptional p
-                , -- We are generating a dual use command
-                  Just commandUsage <- maybeCommandUsage
-                -> case commandUsage of
-                  CommandGetLength -> do
-                    (w, ptr) <- simpleAllocaOutputWrap (pName p)
-                    peek     <- do
-                      tellImport "Foreign.Storable" "peek"
-                      pure "peek"
-                    pure $ OutputType (Output (toHsType t) (peek <+> ptr)) w
-                  CommandGetValues -> do
-                    alloc <- getAlloc t
-                    w     <- allocaWrap alloc (pName p)
-                    pure $ InputType (Input name (toHsType t)) w
                 | -- The value dual use command output
                   -- It is an array with a parameter length in bytes
                   -- Returned as a ByteString
@@ -590,8 +640,31 @@ parametersToWrappingTypes isDefaultable isStruct maybeCommandUsage lengthPairs p
                 -> case commandUsage of
                   CommandGetLength -> InferredType <$> passNullPtrWrap
                   CommandGetValues -> do
-                    peekElemOff <- getPeekElemOff t
-                    peek        <- peekVectorOutputPeekLength
+                    peekElemOff <- case getHandle t of
+                      Just h | Dispatchable <- hHandleType h -> do
+                        getCommandTable <- case hLevel h of
+                          Nothing ->
+                            throwError
+                              [ Other
+                                  "Getting the command table for a handle without a level"
+                              ]
+                          Just Instance ->
+                            throwError
+                              [ Other
+                                  "Getting the command table for vector of instances"
+                              ]
+                          Just PhysicalDevice ->
+                            pure ("pure commandTable" :: Doc ())
+                          Just Device ->
+                            throwError
+                              [ Other
+                                  "Getting the command table for vector of devices"
+                              ]
+                        tellImport "Foreign.Storable" "peekElemOff"
+                        pure
+                          [qci|(\\p i -> {dropVkType (hName h)} <$> peekElemOff p i <*> {getCommandTable})|]
+                      _ -> getPeekElemOff t
+                    peek <- peekVectorOutputPeekLength
                       peekElemOff
                       (pName p)
                       (ptrName (dropPointer lengthParamName))
@@ -694,6 +767,16 @@ simpleWrap paramName cont e =
   let w = pretty $ unReservedWord paramName
   in [qci|\\{w} -> {cont (e <+> w)}|]
 
+handleWrap
+  :: Text
+  -- ^ Parameter name
+  -> Handle
+  -> WrapM Wrapper
+handleWrap paramName handle = do
+  let w = pretty $ unReservedWord paramName
+      pat = parens [qci|{dropVkType (hName handle)} {w} commandTable|]
+  pure $ \cont e -> [qci|\\{pat} -> {cont (e <+> "commandTable" <+> w)}|]
+
 boolWrap
   :: Text
   -- ^ Parameter name
@@ -746,6 +829,44 @@ simpleAllocaOutputWrap paramName = do
   pure . (,paramPtr) $ \cont e ->
     let withPtr  = [qci|alloca (\\{paramPtr} -> {e} {paramPtr}|]
     in  [qci|{cont withPtr})|]
+
+handleOutputWrap
+  :: Text
+  -- ^ Parameter name
+  -> WrapM (Wrapper, Doc ())
+  -- ^ The wrapper and the name of the pointer used
+handleOutputWrap = simpleAllocaOutputWrap
+
+constructHandle
+  :: Handle
+  -> Doc ()
+  -- ^ The name of the pointer to the C handle
+  -> WrapM (Doc ())
+constructHandle h ptr = case hHandleType h of
+  NonDispatchable -> do
+    tellImport "Foreign.Storable" "peek"
+    pure [qci|peek {ptr}|]
+  Dispatchable -> case hName h of
+    "VkInstance" -> do
+      tellDepend (Unguarded (WE.TypeName "Instance"))
+      tellDepend (Unguarded (TermName "initInstanceCmds"))
+      tellImport "Foreign.Storable" "peek"
+      pure
+        [qci|peek {ptr} >>= (\instanceH -> Instance instanceH <$> initInstanceCmds instanceH)|]
+    "VkDevice" -> do
+      tellDepend (Unguarded (WE.TypeName "Device"))
+      tellDepend (Unguarded (TermName "initDeviceCmds"))
+      tellImport "Foreign.Storable" "peek"
+      pure
+        [qci|peek {ptr} >>= (\deviceH -> Device deviceH <$> initDeviceCmds deviceH)|]
+    _ -> case hLevel h of
+      Just _ -> do
+        let con = dropVkType (hName h)
+        tellImport "Foreign.Storable" "peek"
+        tellDepend (Unguarded (WE.TypeName con))
+        pure [qci|flip {pretty con} commandTable <$> peek {ptr}|]
+      Nothing ->
+        throwError [Other "constructing dispatchable handle with no level"]
 
 allocaWrap
   :: Text

@@ -37,13 +37,13 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Error
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
-
+import           Spec.Savvy.Handle
 import           Documentation
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
 import           Write.Marshal.Monad
 import           Write.Marshal.Util
-import           Write.Marshal.Struct.Utils (doesStructContainUnion)
+import           Write.Marshal.Struct.Utils
 import           Write.Marshal.Wrap
 import           Write.Util
 
@@ -51,8 +51,8 @@ import           Write.Util
 {-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
 
 structWrapper
-  :: (Text -> Bool)
-  -- ^ Is this the name of a handle type
+  :: (Text -> Maybe Handle)
+  -- ^ Is this a handle
   -> (Text -> Bool)
   -- ^ Is this the name of a bitmask type
   -> (Text -> Bool)
@@ -61,31 +61,39 @@ structWrapper
   -- ^ A list of all structs
   -> Struct
   -> Either [SpecError] [WriteElement]
-structWrapper isHandle isBitmask isStruct allStructs struct = do
-  let weName              = sName struct T.<+> "wrapper"
-      weBootElement       = Nothing
-      isMarshalledHandle  = isHandle . ("Vk" <>)
-      isMarshalledBitmask = isBitmask . ("Vk" <>)
-      isMarshalledStruct  = isStruct . ("Vk" <>)
+structWrapper getHandle isBitmask isStruct allStructs struct = do
+  let weName        = sName struct T.<+> "wrapper"
+      weBootElement = Nothing
+      isNonDispatchableHandle n = case getHandle n of
+        Just h  -> hHandleType h == NonDispatchable
+        Nothing -> True
+      isMarshalledNonDispatchableHandle = isNonDispatchableHandle . ("Vk" <>)
+      isMarshalledBitmask               = isBitmask . ("Vk" <>)
+      isMarshalledStruct                = isStruct . ("Vk" <>)
       isDefaultable t = maybe
         False
-        (    isHandle
+        (    isNonDispatchableHandle
+        <||> isMarshalledNonDispatchableHandle
         <||> isBitmask
         <||> isDefaultableForeignType
-        <||> isMarshalledHandle
         <||> isMarshalledBitmask
         )
         (simpleTypeName t)
       isStructType t =
         maybe False (isStruct <||> isMarshalledStruct) (simpleTypeName t)
+      getTypeHandle h = getHandle . ("Vk" <>) =<< simpleTypeName h
       containsUnion = doesStructContainUnion allStructs
+      containsDispatchableHandle =
+        doesStructContainDispatchableHandle (getHandle <=< simpleTypeName) allStructs
   ((weDoc, aliasWriteElements), (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
     either
       (throwError . fmap (WithContext (sName struct)))
       pure
       (runWrap $ wrapStruct isDefaultable
                             isStructType
+                            getTypeHandle
                             (containsUnion (sName struct))
+                            (containsDispatchableHandle (sName struct))
                             struct
       )
   pure (WriteElement {..} : aliasWriteElements)
@@ -99,15 +107,19 @@ wrapStruct
   -- ^ Is a defaultable type
   -> (Type -> Bool)
   -- ^ Is this a struct
+  -> (Type -> Maybe Handle)
+  -- ^ Is this a handle
   -> Bool
   -- ^ Does this struct contain a union
+  -> (Maybe Handle)
+  -- ^ Does this struct contain a dispatchable Handle
   -> Struct
   -> WrapM (DocMap -> Doc (), [WriteElement])
   -- ^ Returns the docs for this struct, and any aliases
-wrapStruct isDefaultable isStruct containsUnion s = do
-  marshalled     <- marshallStruct isStruct isDefaultable s
+wrapStruct isDefaultable isStruct getHandle containsUnion containsDispatchableHandle s = do
+  marshalled     <- marshallStruct isStruct isDefaultable getHandle s
   toCStructDoc   <- writeToCStructInstance marshalled
-  fromCStructDoc <- writeFromCStructInstance containsUnion marshalled
+  fromCStructDoc <- writeFromCStructInstance containsUnion containsDispatchableHandle marshalled
   marshalledDoc  <- writeMarshalled marshalled
   tellExtension "DuplicateRecordFields"
   tellExport (Unguarded (WithConstructors (WE.TypeName (dropVkType (sName s)))))
@@ -182,6 +194,10 @@ data MemberUsage a
       Text --- ^ member name
       Type --- ^ member type
     -- ^ An ordinary member, using the marshalled struct
+  | DispatchableHandle
+      Text --- ^ member name
+      Handle --- ^ member type
+    -- ^ A dispatchable handle
   | Bool
       Text --- ^ member name
     -- ^ This is a bool member
@@ -249,11 +265,17 @@ data MemberUsage a
 -- Changing the member type
 ----------------------------------------------------------------
 
-marshallStruct :: (Type -> Bool) -> (Type -> Bool) -> Struct -> WrapM MarshalledStruct
-marshallStruct isStruct isDefaultable s@Struct {..} = do
+marshallStruct
+  :: (Type -> Bool)
+  -> (Type -> Bool)
+  -> (Type -> Maybe Handle)
+  -> Struct -> WrapM MarshalledStruct
+marshallStruct isStruct isDefaultable getHandle s@Struct {..} = do
   let lengthRelation = getLengthRelation s sMembers
   MarshalledStruct (dropVkType sName)
-    <$> traverse (marshallMember isStruct isDefaultable lengthRelation s) sMembers
+    <$> traverse
+          (marshallMember isStruct isDefaultable getHandle lengthRelation s)
+          sMembers
     <*> pure sStructOrUnion
 
 -- This may
@@ -262,13 +284,15 @@ marshallMember
   -- Is this a struct type
   -> (Type -> Bool)
   -- Is this a defaultable type
+  -> (Type -> Maybe Handle)
+  -- Get a handle if possible
   -> [(StructMember, [StructMember])]
   -- ^ The relation between lengths and arrays (pointers)
   -> Struct
   -- ^ The struct this member inhabits
   -> StructMember
   -> WrapM (MemberUsage MarshalledMember)
-marshallMember isStruct isDefaultable lengthRelation struct m = do
+marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
   let
     -- Go from a length name to a list of vectors having that length
     -- TODO: Rename
@@ -322,6 +346,41 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
           tellImport "Control.Monad"    "(<=<)"
           tellImport "Foreign.Storable" "peekElemOff"
           pure . pretty $ "((fromCStruct" <> tyName <> " <=<) . peekElemOff)"
+        )
+
+    nonStructWithPeekElem :: Type -> WrapM (WrapM (Doc ()), WrapM (Doc ()))
+    nonStructWithPeekElem t = case getHandle t of
+      Just h
+        | Dispatchable <- hHandleType h
+        -> let accessHandle =
+                 pretty
+                   . (<> "Handle")
+                   . T.lowerCaseFirst
+                   . dropVkType
+                   . hName
+                   $ h
+           in
+             case hLevel h of
+               Nothing -> throwError
+                 [ Other
+                     "stripping command table for a dispatchable handle without a level"
+                 ]
+               Just _ -> pure
+                 ( tellImport "Data.Function" "(&)"
+                 $> "((&) . "
+                 <> accessHandle
+                 <> ")"
+                 , do
+                   tellImport "Foreign.Storable" "peekElemOff"
+                   tyName <- toHsType t
+                   pure
+                     $  "(\\p i -> flip "
+                     <> tyName
+                     <> " commandTable <$> peekElemOff p i)"
+                 )
+      _ -> pure
+        ( tellImport "Data.Function"    "(&)" $> "(&)"
+        , tellImport "Foreign.Storable" "peekElemOff" $> "peekElemOff"
         )
 
     structWithPtr :: Type -> WrapM (WrapM (Doc ()), WrapM (Doc ()))
@@ -398,23 +457,11 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
         , vecName == smName m
         ]
       , Just tyName <- simpleTypeName t
-      -> if isStruct t
-        then do
-          (with, peekElem) <- structWithPeekElem t
-          -- If this is a struct, use the marshalled version
-          pure $ Vector countName
-                        multiple
-                        (smName m)
-                        (TypeName tyName)
-                        with
-                        peekElem
-        else pure $ Vector
-          countName
-          multiple
-          (smName m)
-          t
-          (tellImport "Data.Function" "(&)" $> "(&)")
-          (tellImport "Foreign.Storable" "peekElemOff" $> "peekElemOff")
+      -> do
+        (with, peekElem) <- if isStruct t
+          then structWithPeekElem t
+          else nonStructWithPeekElem t
+        pure $ Vector countName multiple (smName m) t with peekElem
       | -- An array with a length specified in bits
         -- TODO: Don't hardcode this
         Just ["(rasterizationSamples + 31) / 32"] <- smLengths m
@@ -447,17 +494,11 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       , Just [lengthName] <- smLengths m
       , Just lengthMember <- findLengthMember lengthName
       , Just tyName <- simpleTypeName t
-      -> if isStruct t
-        then do
-          (with, peekElem) <- structWithPeekElem t
-          pure $ Vector lengthName 1 (smName m) (TypeName tyName) with peekElem
-        else pure $ Vector
-          (smName lengthMember)
-          1
-          (smName m)
-          t
-          (tellImport "Data.Function" "(&)" $> "(&)")
-          (tellImport "Foreign.Storable" "peekElemOff" $> "peekElemOff")
+      -> do
+        (with, peekElem) <- if isStruct t
+          then structWithPeekElem t
+          else nonStructWithPeekElem t
+        pure $ Vector lengthName 1 (smName m) t with peekElem
       | -- An optional array
         Just [True] <- smIsOptional m
       , Just [lengthName] <- smLengths m
@@ -472,13 +513,12 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
                                 (TypeName (dropVkType tyName))
                                 with
                                 peekElem
-        else
-          pure $ OptionalVector
-            (smName lengthMember)
-            (smName m)
-            t
-            (tellImport "Data.Function" "(&)" $> "(&)")
-            (tellImport "Foreign.Storable" "peekElemOff" $> "peekElemOff")
+        else pure $ OptionalVector
+          (smName lengthMember)
+          (smName m)
+          t
+          (tellImport "Data.Function" "(&)" $> "(&)")
+          (tellImport "Foreign.Storable" "peekElemOff" $> "peekElemOff")
       | -- An array of strings
         Nothing <- smIsOptional m
       , Just [lengthName, "null-terminated"] <- smLengths m
@@ -560,13 +600,16 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
             tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
             -- If this is a struct, use the marshalled version
             pure (pretty $ "withCStruct" <> tyName)
-          else do
-            tellImport "Data.Function" "(&)"
-            pure "(&)"
-        let fromCRep = if isStruct t
-              then Just (pretty $ "fromCStruct" <> tyName)
-              else Nothing
-            ty = if isStruct t then TypeName (dropVkType tyName) else t
+          else join (fst <$> nonStructWithPeekElem t)
+        let
+          fromCRep = if isStruct t
+            then Just (pretty $ "fromCStruct" <> tyName)
+            else case getHandle t of
+              Just h | Dispatchable <- hHandleType h ->
+                let con = pretty . dropVkType . hName $ h
+                in  Just (parens $ "\\p -> pure $ " <> con <> " p commandTable")
+              _ -> Nothing
+          ty = if isStruct t then TypeName (dropVkType tyName) else t
         FixedArray (smName countMember) (smName m) size ty alloc
           <$> dummyMember t
           <*> pure fromCRep
@@ -685,7 +728,10 @@ marshallMember isStruct isDefaultable lengthRelation struct m = do
       -> if isStruct t
         then -- If this is a struct, use the marshalled version
              pure $ PreservedMarshalled (smName m) (TypeName tyName)
-        else Preserved <$> toHsType t
+        else case getHandle t of
+          Just h | Dispatchable <- hHandleType h ->
+            pure $ DispatchableHandle (smName m) h
+          _ -> Preserved <$> toHsType t
     _ -> throwError
       [ Other
           (     "Couldn't convert struct member"
@@ -823,6 +869,9 @@ memberWrapper fromType from =
     -- This truncates oversized vectors
     pure $ \cont e -> cont [qci|{e} (Data.Vector.Generic.Sized.convert (padSized 0 {accessMember memberName}))|]
   Preserved member -> pure $ \cont e -> cont [qci|{e} {accessMember (mmName member)}|]
+  DispatchableHandle member h -> do
+    let accessHandle = pretty . (<> "Handle") . T.lowerCaseFirst . dropVkType . hName $ h
+    pure $ \cont e -> cont [qci|{e} ({accessHandle} {accessMember member})|]
   PreservedMarshalled memberName t
     | Just tyName <- simpleTypeName t
     -> do tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
@@ -914,21 +963,43 @@ memberWrapper fromType from =
 writeFromCStructInstance
   :: Bool
   -- ^ Does this struct contain a union
+  -> (Maybe Handle)
+  -- ^ Does this struct contain a dispatchable handle
   -> MarshalledStruct
   -> WrapM (Doc ())
-writeFromCStructInstance containsUnion MarshalledStruct{..} = do
+writeFromCStructInstance containsUnion containsDispatchableHandle MarshalledStruct {..}
+  = do
   tellDepend $ Unguarded (WE.TypeName ("Vk" <> msName))
   case msStructOrUnion of
     AStruct ->
       if containsUnion
         then pure "-- No fromCStruct function for types containing unions"
-        else do
-          members <- traverse (fromCStructMember "c" (pretty $ "Vk" <> msName)) msMembers
-          tellExport (Unguarded (Term ("fromCStruct" <> msName)))
-          pure [qci|
-            fromCStruct{msName} :: Vk{msName} -> IO {msName}
-            fromCStruct{msName} c = {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)}
-            |]
+        else case containsDispatchableHandle of
+               Just h -> do
+                  members <- traverse (fromCStructMember "c" (pretty $ "Vk" <> msName)) msMembers
+                  tellExport (Unguarded (Term ("fromCStruct" <> msName)))
+                  cmdTableType <- case hLevel h of
+                    Just Instance       -> do
+                      tellDepend (Unguarded (WE.TypeName "InstanceCmds"))
+                      pure ("InstanceCmds" :: Doc ())
+                    Just PhysicalDevice -> do
+                      tellDepend (Unguarded (WE.TypeName "InstanceCmds"))
+                      pure "InstanceCmds"
+                    Just Device         -> do
+                      tellDepend (Unguarded (WE.TypeName "DeviceCmds"))
+                      pure "DeviceCmds"
+                    Nothing             -> throwError [Other "Dispatchable handle with no level"]
+                  pure [qci|
+                    fromCStruct{msName} :: {cmdTableType} -> Vk{msName} -> IO {msName}
+                    fromCStruct{msName} commandTable c = {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)}
+                    |]
+               Nothing -> do
+                  members <- traverse (fromCStructMember "c" (pretty $ "Vk" <> msName)) msMembers
+                  tellExport (Unguarded (Term ("fromCStruct" <> msName)))
+                  pure [qci|
+                    fromCStruct{msName} :: Vk{msName} -> IO {msName}
+                    fromCStruct{msName} c = {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)}
+                    |]
     AUnion -> pure "-- No FromCStruct function for sum types"
 
 fromCStructMember
@@ -953,6 +1024,9 @@ fromCStructMember from fromType =
           pure $ Left "-- Fixed array valid count member elided"
         EnabledFlag _ -> pure $ Left "-- enable flag member elided"
         Preserved   m -> pure $ Right [qci|pure {accessMember (mmName m)}|]
+        DispatchableHandle member h ->
+          let con = dropVkType . hName $ h
+          in pure $ Right [qci|pure ({con} {accessMember member} commandTable)|]
         PreservedMarshalled memberName t
           | Just tyName <- simpleTypeName t
           -> do tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
@@ -1217,6 +1291,11 @@ writeMarshalledMember parentName = \case
     pure $ \getDoc -> Right [qci|
       {document getDoc (Nested parentName mmName)}
       {pretty (toMemberName mmName)} :: {mmType}
+    |]
+  DispatchableHandle memberName h ->
+    pure $ \getDoc -> Right [qci|
+      {document getDoc (Nested parentName memberName)}
+      {pretty (toMemberName memberName)} :: {dropVkType (hName h)}
     |]
   PreservedMarshalled memberName memberType -> do
     tyName <- toHsType memberType

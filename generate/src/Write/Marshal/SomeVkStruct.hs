@@ -10,6 +10,7 @@ module Write.Marshal.SomeVkStruct
   , vkPeekStructWriteElement
   ) where
 
+import Control.Monad
 import           Data.Function
 import           Data.Functor
 import           Data.Maybe
@@ -20,15 +21,18 @@ import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Struct
+import           Spec.Savvy.Handle
 
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
-import           Write.Marshal.Struct.Utils               (doesStructContainUnion)
+import           Write.Marshal.Struct.Utils
+import           Write.Marshal.Util
 
-someVkStructWriteElement :: [Struct] -> WriteElement
-someVkStructWriteElement structs =
+someVkStructWriteElement :: (Text -> Maybe Handle) -> [Struct] -> WriteElement
+someVkStructWriteElement getHandle structs =
   let
     containsUnion = doesStructContainUnion structs
+    containsDispatchableHandle = isJust . doesStructContainDispatchableHandle (getHandle <=< simpleTypeName) structs
     weName        = "ToCStruct class declaration"
     weImports
       = [ Import "Control.Applicative"       ["(<|>)"]
@@ -66,6 +70,7 @@ someVkStructWriteElement structs =
           ] ++
           [ WE.TermName ("fromCStruct" <> T.dropPrefix' "Vk" sName)
           | not (containsUnion sName)
+          , not (containsDispatchableHandle sName)
           ]
       ]
     weExtensions =
@@ -130,16 +135,18 @@ someVkStructWriteElement structs =
       ----------------------------------------------------------------
       -- Instances
       ----------------------------------------------------------------
-      {vcat . mapMaybe (writeSomeStructInstances containsUnion) $ structs}
+      {vcat . mapMaybe (writeSomeStructInstances containsUnion containsDispatchableHandle) $ structs}
     |]
   in WriteElement{..}
 
 writeSomeStructInstances
   :: (Text -> Bool)
   -- ^ Does a struct contain a union
+  -> (Text -> Bool)
+  -- ^ Does a struct contain a dispatchable handle
   -> Struct
   -> Maybe (Doc ())
-writeSomeStructInstances containsUnion Struct{..}
+writeSomeStructInstances containsUnion containsDispatchableHandle Struct{..}
   = do
     marshalledName <- T.dropPrefix "Vk" sName
     let toCStructDoc = [qci|
@@ -148,10 +155,12 @@ writeSomeStructInstances containsUnion Struct{..}
           |]
     let fromCStructDoc = if containsUnion sName
           then [qci|-- No FromCStruct instance for {sName} as it contains a union type|]
-          else [qci|
-            instance FromCStruct {marshalledName} {sName} where
-              fromCStruct = fromCStruct{marshalledName}
-            |]
+          else if containsDispatchableHandle sName
+            then [qci|-- No FromCStruct instance for {sName} as it contains a dispatchable handle|]
+            else [qci|
+              instance FromCStruct {marshalledName} {sName} where
+                fromCStruct = fromCStruct{marshalledName}
+              |]
     let hasPNextDoc =
           if any (\case
                      StructMember {smName = "pNext"} -> True
@@ -189,10 +198,11 @@ someVkStructBootElement =
 -- peekVkStruct
 ----------------------------------------------------------------
 
-vkPeekStructWriteElement :: [Struct] -> WriteElement
-vkPeekStructWriteElement structs =
+vkPeekStructWriteElement :: (Text -> Maybe Handle) -> [Struct] -> WriteElement
+vkPeekStructWriteElement getHandle structs =
   let
     containsUnion = doesStructContainUnion structs
+    containsDispatchableHandle = isJust . doesStructContainDispatchableHandle (getHandle <=< simpleTypeName) structs
 
     weName        = "peekVkStruct declaration"
     weImports
@@ -220,6 +230,7 @@ vkPeekStructWriteElement structs =
           ] ++
           [ WE.TermName ("fromCStruct" <> T.dropPrefix' "Vk" sName)
           | not (containsUnion sName)
+          , not (containsDispatchableHandle sName)
           ]
       ]
     weExtensions = ["LambdaCase"]
@@ -237,7 +248,7 @@ vkPeekStructWriteElement structs =
       peekVkStruct :: Ptr SomeVkStruct -> IO SomeVkStruct
       peekVkStruct p = do
         peek (castPtr p :: Ptr VkStructureType) >>= \case
-          {indent 0 . vcat $ mapMaybe (writeSomeStructPeek containsUnion) $ structs}
+          {indent 0 . vcat $ mapMaybe (writeSomeStructPeek containsUnion containsDispatchableHandle) $ structs}
           t -> throwIO (IOError Nothing InvalidArgument "" ("Unknown VkStructureType: " ++ show t) Nothing Nothing)
     |]
   in WriteElement{..}
@@ -245,9 +256,11 @@ vkPeekStructWriteElement structs =
 writeSomeStructPeek
   :: (Text -> Bool)
   -- ^ Does a struct contain a union
+  -> (Text -> Bool)
+  -- ^ Does a struct contain a dispatchable handle
   -> Struct
   -> Maybe (Doc ())
-writeSomeStructPeek containsUnion Struct{..}
+writeSomeStructPeek containsUnion containsDispatchableHandle Struct{..}
   = do
     StructMember {smName = "sType", smValues = Just [enum]} : _ <- pure sMembers
     pure $ if containsUnion sName
@@ -255,7 +268,12 @@ writeSomeStructPeek containsUnion Struct{..}
              -- We are not able to marshal this type back into Haskell as we don't know which union component to use
              {enum} -> throwIO (IOError Nothing InvalidArgument "" ("Unable to marshal Vulkan structure containing unions: " ++ show {enum}) Nothing Nothing)
            |]
-      else [qci|{enum} -> SomeVkStruct <$> (fromCStruct{T.dropPrefix' "Vk" sName} =<< peek (castPtr p :: Ptr {sName}))|]
+      else if containsDispatchableHandle sName
+        then [qci|
+               -- We are not able to marshal this type back into Haskell as we don't have the command table for it
+               {enum} -> throwIO (IOError Nothing InvalidArgument "" ("Unable to marshal Vulkan structure containing dispatchable handles: " ++ show {enum}) Nothing Nothing)
+             |]
+        else [qci|{enum} -> SomeVkStruct <$> (fromCStruct{T.dropPrefix' "Vk" sName} =<< peek (castPtr p :: Ptr {sName}))|]
 
 peekBootElement :: WriteElement
 peekBootElement =

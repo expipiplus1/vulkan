@@ -7,20 +7,26 @@
 module Write.Marshal.Struct.Utils
   ( vkStructWriteElement
   , doesStructContainUnion
+  , doesStructContainDispatchableHandle
   ) where
+
+import Debug.Trace
 
 import           Control.Monad
 import           Data.Closure
 import           Data.Function
 import           Data.Functor
 import           Data.Maybe
+import Data.List.Extra
 import qualified Data.MultiMap                            as MultiMap
+import qualified Data.Map                            as Map
 import qualified Data.Set                                 as Set
 import           Data.Text                                (Text)
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Struct
+import           Spec.Savvy.Handle
 import           Spec.Savvy.Type
 
 import           Write.Element                            hiding (TypeName)
@@ -194,3 +200,33 @@ doesStructContainUnion structs =
     structWithUnions = closeL contains unionNames
   in (`Set.member` Set.fromList structWithUnions)
 
+-- | Returns the names of all structs containing unions
+doesStructContainDispatchableHandle
+  :: (Type -> Maybe Handle) -> [Struct] -> Text -> Maybe Handle
+doesStructContainDispatchableHandle getHandle structs =
+  let dispatchableHandleNames = nubOrd
+        [ hName h
+        | WE.TypeName t <- nubOrd
+          (typeDepends . smType =<< sMembers =<< structs)
+        , Just        h <- pure (getHandle (TypeName t))
+        , Dispatchable  <- pure (hHandleType h)
+        ]
+
+      -- The list of struct names which contain this type
+      contains :: Text -> [Text]
+      contains = (`MultiMap.lookup` m)
+        where
+          m = MultiMap.fromList
+            [ (containee, sName container)
+            | container             <- structs
+            , WE.TypeName containee <-
+              typeDepends . smType =<< sMembers container
+            ]
+
+      structsWithDispatchableHandles = Map.fromList
+        [ (s, n)
+        | h      <- dispatchableHandleNames
+        , s      <- closeNonReflexiveL contains [h]
+        , Just n <- pure $ getHandle (TypeName h)
+        ]
+  in  (`Map.lookup` structsWithDispatchableHandles)
