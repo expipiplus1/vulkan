@@ -27,26 +27,25 @@ writeCommand
   -> Either [SpecError] WriteElement
 writeCommand getEnumName fp@Command {..} = do
   (weDoc, weImports, weExtensions) <- commandDoc fp
-  let
-    weName       = "Command: " <> cName
-    protoDepends = typeDepends $ Proto
-      cReturnType
-      [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
-    weProvides = [ InvGuarded "NO_IMPORT_COMMANDS" $ Term cName
-                 , Unguarded (TypeAlias ("FN_" <> cName))
-                 , Unguarded (TypeAlias ("PFN_" <> cName))
-                 ]
-    weDepends =
-      Unguarded
-        <$> protoDepends
-        <> -- The constructors for an enum type need to be in scope
-            [ TypeName e
-            | TypeName n <- protoDepends
-            , Just e <- [getEnumName n]
-            ]
-    weUndependableProvides = []
-    weSourceDepends        = []
-    weBootElement          = Nothing
+  let weName       = "Command: " <> cName
+      protoDepends = typeDepends $ Proto
+        cReturnType
+        [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
+      weProvides =
+        [ Guarded (InvGuard "NO_IMPORT_COMMANDS") $ Term cName
+        , Unguarded (TypeAlias ("FN_" <> cName))
+        , Unguarded (TypeAlias ("PFN_" <> cName))
+        ]
+      weDepends =
+        (Unguarded <$> protoDepends)
+          <> -- The constructors for an enum type need to be in scope
+             [ Guarded (InvGuard "NO_IMPORT_COMMANDS") (TypeName e)
+             | TypeName n <- protoDepends
+             , Just e <- [getEnumName n]
+             ]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
   pure WriteElement {..}
 
 commandDoc :: Command -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])

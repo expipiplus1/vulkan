@@ -99,17 +99,19 @@ macroToHandleType t
 
 handleLevel
   :: [P.HandleType] -> (Text -> Maybe Text) -> P.HandleType -> Maybe HandleLevel
-handleLevel handles resolveAlias =
-  let handleMap :: Text -> Maybe P.HandleType
+handleLevel handles resolveAlias
+  = let
+      handleMap :: Text -> Maybe P.HandleType
       handleMap = (`Map.lookup` Map.fromList ((P.htName &&& id) <$> handles))
-      handleLevel :: Text -> Maybe HandleLevel
-      handleLevel = \case
+      level :: Text -> Maybe HandleLevel
+      level = \case
         "VkInstance"       -> Just Instance
         "VkPhysicalDevice" -> Just PhysicalDevice
         "VkDevice"         -> Just Device
         handleName         -> do
           h <- handleMap handleName
           asum
-            $ (handleLevel =<< resolveAlias (P.htName h))
-            : (handleLevel <$> P.htParents h)
-  in  handleLevel . P.htName
+            $ (level =<< resolveAlias (P.htName h))
+            : (level <$> P.htParents h)
+    in
+      level . P.htName

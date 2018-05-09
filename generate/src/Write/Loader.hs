@@ -161,7 +161,7 @@ censorGuarded gp Command {..}
         Nothing -> id
         Just g ->
           let replaceGuards :: [Guarded a] -> [Guarded a]
-              replaceGuards = fmap (Guarded g . unGuarded)
+              replaceGuards = fmap (Guarded (Guard g) . unGuarded)
           in  \(a, (exports, undependableExports), (depends, sourceDepends), d, e) ->
                 ( a
                 , (replaceGuards exports, replaceGuards undependableExports)
@@ -229,7 +229,7 @@ commandDepends getEnumName platformGuardMap Command {..} =
              ]
   in  case platformGuardMap =<< cPlatform of
         Nothing -> Unguarded <$> names
-        Just g  -> Guarded g <$> names
+        Just g  -> Guarded (Guard g) <$> names
 
 
 -- | Write the commands which do not require a valid instance

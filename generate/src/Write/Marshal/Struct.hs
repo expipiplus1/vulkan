@@ -111,7 +111,7 @@ wrapStruct
   -- ^ Is this a handle
   -> Bool
   -- ^ Does this struct contain a union
-  -> (Maybe Handle)
+  -> Maybe Handle
   -- ^ Does this struct contain a dispatchable Handle
   -> Struct
   -> WrapM (DocMap -> Doc (), [WriteElement])
@@ -456,7 +456,7 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
         , structName == sName struct
         , vecName == smName m
         ]
-      , Just tyName <- simpleTypeName t
+      , isSimpleType t
       -> do
         (with, peekElem) <- if isStruct t
           then structWithPeekElem t
@@ -492,8 +492,8 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
       | -- An array
         Nothing <- smIsOptional m
       , Just [lengthName] <- smLengths m
-      , Just lengthMember <- findLengthMember lengthName
-      , Just tyName <- simpleTypeName t
+      , Just _ <- findLengthMember lengthName
+      , isSimpleType t
       -> do
         (with, peekElem) <- if isStruct t
           then structWithPeekElem t
@@ -963,7 +963,7 @@ memberWrapper fromType from =
 writeFromCStructInstance
   :: Bool
   -- ^ Does this struct contain a union
-  -> (Maybe Handle)
+  -> Maybe Handle
   -- ^ Does this struct contain a dispatchable handle
   -> MarshalledStruct
   -> WrapM (Doc ())

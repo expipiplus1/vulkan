@@ -9,8 +9,10 @@ module Write.Element
   , HaskellName(..)
   , Import(..)
   , Guarded(..)
+  , Guard(..)
   , unGuarded
   , guardWriteElement
+  , guardCPPGuard
   , pattern Pattern
   , pattern Term
   , pattern TypeConstructor
@@ -18,14 +20,13 @@ module Write.Element
   , DocMap
   ) where
 
-import           Control.Monad.Except
 import           Data.Semigroup
 import           Data.Text
 import           Data.Text.Prettyprint.Doc
 
 import           Documentation
 import           Documentation.Haddock
-import           Spec.Savvy.Error
+import Write.Util(guarded)
 
 data WriteElement = WriteElement
   { weName                 :: Text
@@ -58,33 +59,46 @@ data HaskellName
   | PatternName { unHaskellName :: Text }
   deriving (Show, Eq, Ord)
 
+-- TODO: Remove invguarded
 data Guarded a
-  = Guarded Text a
-  | InvGuarded Text a
+  = Guarded Guard a
   | Unguarded a
   deriving (Show, Eq, Ord, Functor)
+
+data Guard
+  = Guard Text
+  | InvGuard Text
+  deriving (Show, Eq, Ord)
 
 unGuarded :: Guarded a -> a
 unGuarded = \case
   Guarded _ n -> n
-  InvGuarded _ n -> n
   Unguarded  n -> n
 
 -- | Returns nothing if the write element has already got any guarded things
-guardWriteElement :: Text -> WriteElement -> Maybe WriteElement
+guardWriteElement :: Guard -> WriteElement -> Maybe WriteElement
 guardWriteElement g we = do
-  let addGuard = \case
+  let addGuard :: Guarded a -> Maybe (Guarded a)
+      addGuard = \case
         Unguarded x -> pure $ Guarded g x
         _           -> Nothing
   provides             <- traverse addGuard (weProvides we)
   undependableProvides <- traverse addGuard (weUndependableProvides we)
   sourceDepends        <- traverse addGuard (weSourceDepends we)
   depends              <- traverse addGuard (weDepends we)
+  let doc = guarded (Just (guardCPPGuard g)) <$> (weDoc we)
   pure we { weProvides             = provides
           , weUndependableProvides = undependableProvides
           , weSourceDepends        = sourceDepends
           , weDepends              = depends
+          , weDoc                  = doc
           }
+
+-- Get the CPP guard for a Guarded value
+guardCPPGuard :: Guard -> Text
+guardCPPGuard = \case
+  Guard    g -> "defined(" <> g <> ")"
+  InvGuard g -> "!defined(" <> g <> ")"
 
 pattern Pattern :: Text -> Export
 pattern Pattern n = WithoutConstructors (PatternName n)

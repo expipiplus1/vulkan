@@ -1,4 +1,5 @@
 {-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE LambdaCase     #-}
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
@@ -9,6 +10,8 @@ module Write.Partition
   , partitionElements
   , ignoredUnexportedNames
   ) where
+
+import Debug.Trace
 
 import           Control.Monad
 import           Data.Closure
@@ -53,7 +56,7 @@ partitionElements wes ss = validationToEither $ do
             let
               ds = Set.map unGuarded
                 $ Set.fromList (weDepends =<< providingElements name)
-            in      --  Don't allow other modules to grab exports from another seed
+            in                   --  Don't allow other modules to grab exports from another seed
                 ds `Set.difference` allSeedNames
         in  close
               step
@@ -77,15 +80,57 @@ partitionElements wes ss = validationToEither $ do
       []    -> Nothing
       x : _ -> find ((== n) . unExport . unGuarded) (weProvides x)
 
-    modules =
-      [ Module msName closure [] seedReexports []
-      | m@ModuleSeed {..} <- ss
-      , let
-        names   = Set.toList (closeSeed m)
-        closure = nubOrdOn weProvides $ providingElements =<< names
-        seedReexports = nubOrd $ mapMaybe nameExport msSeeds
-      ]
+    modules
+      = [ (if msName
+              == "Graphics.Vulkan.C.Extensions.VK_KHR_device_group_creation"
+           then
+             (\x -> traceShow (mSeedReexports x) x)
+           else
+             id
+          )
+            $ Module msName guardedClosure [] seedReexports []
+        | m@ModuleSeed {..} <- ss
+        , let
+          names = Set.toList (closeSeed m)
+          closure :: [WriteElement]
+          closure        = nubOrdOn weProvides $ providingElements =<< names
+          -- TODO: This only does one level of guards, do this properly
+          guardedClosure = closure <&> \we ->
+            let guards =
+                  [ g
+                  | d                  <- weDepends we ++ weSourceDepends we
+                  , Just (Guarded g _) <- pure $ nameExport (unGuarded d)
+                  ]
+            in  case guards of
+                  [g] -> fromMaybe we (guardWriteElement g we)
+                  -- TODO: Warn here if there are multiple guards
+                  _   -> we
+          guardSeedName :: Guarded Export -> Guarded Export
+          guardSeedName = \case
+            Guarded g n -> Guarded g n
+            Unguarded n ->
+              case
+                  [ Guarded g n'
+                  | Guarded g n' <- weProvides =<< guardedClosure
+                  , n == n'
+                  ]
+                of
+                  []    -> Unguarded n
+                  x : _ -> x
+          seedReexports =
+            fmap guardSeedName . nubOrd $ mapMaybe nameExport msSeeds
+        ]
     prioritizedModules = prioritizeModules modules
+    -- See above TODO: remove this
+    -- guardReexportedNames :: Module -> Module
+    -- guardReexportedNames m =
+              -- let providedNames :: [HaskellName]
+              --     providedNames =
+              --       unExport
+              --         .   unGuarded
+              --         <$> (weProvides =<< closure)
+              --         <>  (weUndependableProvides =<< closure)
+              -- in  nubOrd $ mapMaybe nameExport (msSeeds \\ providedNames)
   _ <- assertUniqueSeedNames ss
   _ <- assertExactlyOneSeeds wes ss
   _ <- assertExactlyOneExport wes prioritizedModules

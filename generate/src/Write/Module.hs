@@ -141,8 +141,11 @@ exportHaskellName isSourceImport e =
         PatternName n -> Just ("pattern" <+> pretty n)
       doc = case unGuarded e of
         WithConstructors _ | not isSourceImport -> (<> "(..)") <$> s
-        _                  -> s
-  in  (, guardCPPGuard e) <$> doc
+        _ -> s
+      cppGuard = case e of
+        Unguarded _ -> Nothing
+        Guarded g _ -> Just $ guardCPPGuard g
+  in  (, cppGuard) <$> doc
 
 isConstructor :: Text -> Bool
 isConstructor = \case
@@ -204,7 +207,9 @@ moduleInternalImports nameModule Module {..} =
         | d           <- deps
         , Just (m, e) <- [nameModule (unGuarded d)]
         , unGuarded d `notElem` (unExport . unGuarded <$> (weProvides =<< mWriteElements))
-        , let g = guardCPPGuard d
+        , let g = case d of
+                    Unguarded _ -> Nothing
+                    Guarded g' _ -> Just (guardCPPGuard g')
         ]
       writeDeps :: Bool -> Doc () -> [Guarded HaskellName] -> [Doc ()]
       writeDeps isSourceImport qualifier deps =
@@ -227,12 +232,7 @@ simplifyDependencies deps =
         | Guarded g d <- deps
         , Unguarded d `Set.notMember` unguarded
         ]
-      invGuarded = Set.fromList
-        [ InvGuarded g d
-        | InvGuarded g d <- deps
-        , Unguarded d `Set.notMember` unguarded
-        ]
-  in  Set.toList unguarded ++ Set.toList guarded' ++ Set.toList invGuarded
+  in  Set.toList unguarded ++ Set.toList guarded'
 
 moduleExtensions :: Module -> [Doc ()]
 moduleExtensions Module {..} =
@@ -246,10 +246,3 @@ moduleExtensions Module {..} =
         ]
       es = nubOrd $ (weExtensions =<< mWriteElements) ++ extraExtensions
   in  es <&> \e -> [qci|\{-# language {e} #-}|]
-
--- Get the CPP guard for a Guarded value
-guardCPPGuard :: Guarded a -> Maybe Text
-guardCPPGuard = \case
-  Guarded    g _ -> Just ("defined(" <> g <> ")")
-  InvGuarded g _ -> Just ("!defined(" <> g <> ")")
-  Unguarded _    -> Nothing

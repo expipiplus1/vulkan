@@ -16,7 +16,6 @@ module Spec.Savvy.Command
 import           Control.Arrow
 import           Data.Closure
 import           Data.Either.Validation
-import           Data.Foldable
 import qualified Data.Map               as Map
 import           Data.Maybe
 import qualified Data.MultiMap          as MultiMap
@@ -123,4 +122,4 @@ commandLevel handles =
       handleMap = (`Map.lookup` Map.fromList ((hName &&& id) <$> handles))
   in  \case
         Parameter _ (TypeName n) _ _ : _ -> hLevel =<< handleMap n
-        _                              -> Nothing
+        _ -> Nothing

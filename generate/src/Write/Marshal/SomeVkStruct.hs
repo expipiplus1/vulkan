@@ -388,7 +388,7 @@ censorGuardedF gp Struct {..}
         Just g
           -> let
                replaceGuards :: [Guarded a] -> [Guarded a]
-               replaceGuards = fmap (Guarded g . unGuarded)
+               replaceGuards = fmap (Guarded (Guard g) . unGuarded)
                cen =
                  \(a, (exports, undependableExports), (depends, sourceDepends), d, e) ->
                    ( a
@@ -415,7 +415,7 @@ censorGuardedNoCPPF gp Struct {..}
         Nothing -> id
         Just g ->
           let replaceGuards :: [Guarded a] -> [Guarded a]
-              replaceGuards = fmap (Guarded g . unGuarded)
+              replaceGuards = fmap (Guarded (Guard g) . unGuarded)
           in  \(a, (exports, undependableExports), (depends, sourceDepends), d, e) ->
                 ( a
                 , (replaceGuards exports, replaceGuards undependableExports)
