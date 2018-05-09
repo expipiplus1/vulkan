@@ -34,17 +34,17 @@ writeAPIConstant ac@APIConstant {..} =
           in  WriteElement {..}
         FloatValue _ ->
           let weExtensions = ["PatternSynonyms"]
-              weImports    = [Import "Foreign.C.Types" ["CFloat"]]
+              weImports    = [Unguarded $ Import "Foreign.C.Types" ["CFloat"]]
               weProvides   = [Unguarded $ Pattern acName]
           in  WriteElement {..}
         Word32Value _ ->
           let weExtensions = ["PatternSynonyms"]
-              weImports    = [Import "Data.Word" ["Word32"]]
+              weImports    = [Unguarded $ Import "Data.Word" ["Word32"]]
               weProvides   = [Unguarded $ Pattern acName]
           in  WriteElement {..}
         Word64Value _ ->
           let weExtensions = ["PatternSynonyms"]
-              weImports    = [Import "Data.Word" ["Word64"]]
+              weImports    = [Unguarded $ Import "Data.Word" ["Word64"]]
               weProvides   = [Unguarded $ Pattern acName]
           in  WriteElement {..}
 

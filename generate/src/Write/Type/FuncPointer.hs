@@ -30,7 +30,9 @@ writeFuncPointer fp@FuncPointer {..} = do
       weBootElement          = Nothing
   pure WriteElement {..}
 
-fpDoc :: FuncPointer -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+fpDoc
+  :: FuncPointer
+  -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
 fpDoc FuncPointer{..} = do
   (t, (is, es)) <- toHsType fpType
   let d getDoc = [qci|

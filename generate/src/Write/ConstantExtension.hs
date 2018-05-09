@@ -22,7 +22,7 @@ writeConstantExtension
   :: (Text -> Maybe Text) -> ConstantExtension -> WriteElement
 writeConstantExtension getEnumerantEnumName ce@ConstantExtension {..} =
   let weImports = case ceValue of
-        EnumValueString _ -> [Import "Data.String" ["IsString"]]
+        EnumValueString _ -> [Unguarded $ Import "Data.String" ["IsString"]]
         EnumValueInt    _ -> []
         EnumValueAlias  _ -> []
       weDoc        = constantExtensionDoc getEnumerantEnumName ce

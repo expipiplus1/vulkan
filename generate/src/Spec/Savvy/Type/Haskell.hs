@@ -24,7 +24,7 @@ import           Write.Element                     hiding (pattern TypeName)
 toHsType
   :: Type
   -- ^ The type to convert to a Haskell string
-  -> Either [SpecError] (Doc (), ([Import], [Text]))
+  -> Either [SpecError] (Doc (), ([Guarded Import], [Text]))
   -- ^ (The type string, (Any imports it requires, Any language extensions it requires))
 toHsType = toHsTypePrec (-1)
 
@@ -33,14 +33,14 @@ toHsTypePrec
   -- ^ The precendence of the sorrounding context
   -> Type
   -- ^ The type to convert to a Haskell string
-  -> Either [SpecError] (Doc (), ([Import], [Text]))
+  -> Either [SpecError] (Doc (), ([Guarded Import], [Text]))
   -- ^ (The type string, (Any imports it requires, Any language extensions it requires))
 toHsTypePrec prec = runWriterT . toHsType' prec Positive
 
 protoToHsTypeNonIO
   :: Type
   -> [(Maybe Text, Type)]
-  -> Either [SpecError] (Doc (), ([Import], [Text]))
+  -> Either [SpecError] (Doc (), ([Guarded Import], [Text]))
 protoToHsTypeNonIO ret ps = runWriterT $ do
   ret' <- toHsType' 10 Positive ret
   -- Although '->' has a precedence of 0, it looks weird to leave the
@@ -107,7 +107,6 @@ paramToHsType :: Int -> Pos -> (Maybe Text, Type) -> TypeM (Doc ())
 paramToHsType prec pos = \case
   (Just n, t) -> do
     t' <- toHsType' 9 pos t
-    tellImport "Graphics.Vulkan.NamedType" "(:::)"
     tellExtension "DataKinds"
     tellExtension "TypeOperators"
     pure . parens' (prec >= 9) $ "\"" <> pretty n <> "\"" <+> ":::" <+> t'
@@ -125,7 +124,7 @@ sizeToType = \case
 
 use
   :: Text
-  -- ^ Modue name
+  -- ^ Module name
   -> Text
   -- ^ Type name
   -> TypeM (Doc ())
@@ -143,13 +142,14 @@ useWithConstructors m name = do
   tellImport m (name <> "(..)")
   pure (pretty name)
 
+-- | Tells an unguarded import
 tellImport :: Text -> Text
   -> TypeM ()
-tellImport m t = tell ([Import m [t]],[])
+tellImport m t = tell ([Unguarded $ Import m [t]],[])
 
 tellExtension :: Text
   -> TypeM ()
 tellExtension e = tell ([], [e])
 
-type TypeM  = WriterT ([Import], [Text]) (Either [SpecError])
+type TypeM  = WriterT ([Guarded Import], [Text]) (Either [SpecError])
 

@@ -71,8 +71,8 @@ writeLoaderDoc getEnumName platformGuardMap commands = do
   dfs <- traverse (writeFunction platformGuardMap "Device") deviceLevelCommands
   irs <- traverse (writeRecordMember getEnumName platformGuardMap) instanceLevelCommands
   ifs <- traverse (writeFunction platformGuardMap "Instance") instanceLevelCommands
-  ifi <- initFunction platformGuardMap "Instance" instanceLevelCommands
-  ifd <- initFunction platformGuardMap "Device" deviceLevelCommands
+  ifi <- initInstanceFunction platformGuardMap instanceLevelCommands
+  ifd <- initDeviceFunction platformGuardMap deviceLevelCommands
   initializationCommands <- writeInitializationCommands commands
   tellExport (Unguarded (TypeConstructor "DeviceCmds"))
   tellExport (Unguarded (TypeConstructor "InstanceCmds"))
@@ -81,12 +81,14 @@ writeLoaderDoc getEnumName platformGuardMap commands = do
       {initializationCommands}
 
       data DeviceCmds = DeviceCmds
-        \{ {indent (-2) . separatedWithGuards "," $ drs}
+        \{ deviceCmdsHandle :: VkDevice
+        , {indent (-2) . separatedWithGuards "," $ drs}
         }
         deriving (Show)
 
       data InstanceCmds = InstanceCmds
-        \{ {indent (-2) . separatedWithGuards "," $ irs}
+        \{ instanceCmdsHandle :: VkInstance
+        , {indent (-2) . separatedWithGuards "," $ irs}
         }
         deriving (Show)
 
@@ -114,27 +116,47 @@ hasFunction gm domain Command{..} = ([qci|
   |], gm =<< cPlatform)
 
 -- | The initialization function for a set of command pointers
-initFunction :: (Text -> Maybe Text) -> Text -> [Command] -> WrapM (Doc ())
-initFunction gm domain commands = do
-  initLines <- traverse initLine commands
-  tellDepend (Unguarded (TermName ("vkGet" <> domain <> "ProcAddr")))
-  tellDepend (Unguarded (TypeName ("Vk" <> domain)))
-  tellExport (Unguarded (Term ("init"<> domain <> "Cmds")))
-  tellExtension "MagicHash"
-  tellExtension "TypeApplications"
-  tellImport "Foreign.Ptr" "castPtrToFunPtr"
+initInstanceFunction :: (Text -> Maybe Text) -> [Command] -> WrapM (Doc ())
+initInstanceFunction gm commands = do
+  initLines <- traverse (initLine gm "vkGetInstanceProcAddr") commands
+  tellDepend (Unguarded (TermName "vkGetInstanceProcAddr"))
+  tellDepend (Unguarded (TypeName "VkInstance"))
+  tellExport (Unguarded (Term "initInstanceCmds"))
   tellQualifiedImport "GHC.Ptr" "Ptr(..)"
   pure [qci|
-    init{domain}Cmds :: Vk{domain} -> IO {domain}Cmds
-    init{domain}Cmds handle = {domain}Cmds
+    initInstanceCmds :: VkInstance -> IO InstanceCmds
+    initInstanceCmds handle = InstanceCmds handle
       <$> {indent (-4) $ separatedWithGuards "<*>"
            (zip initLines ((gm <=< cPlatform) <$> commands))}
   |]
-  where
-    initLine :: Command -> WrapM (Doc ())
-    initLine c@Command{..} = do
-      censorGuarded gm c $ tellDepend (Unguarded (TypeName ("FN_" <> cName)))
-      pure [qci|(castPtrToFunPtr @_ @FN_{cName} <$> vkGet{domain}ProcAddr handle (GHC.Ptr.Ptr "{cName}\NUL"#))|]
+
+-- | The initialization function for a set of command pointers
+initDeviceFunction :: (Text -> Maybe Text) -> [Command] -> WrapM (Doc ())
+initDeviceFunction gm commands = do
+  initLines <- traverse (initLine gm "getDeviceProcAddr'") commands
+  tellDepend (Unguarded (TypeName "VkDevice"))
+  tellExport (Unguarded (Term "initDeviceCmds"))
+  tellExtension "MagicHash"
+  tellExtension "TypeApplications"
+  tellQualifiedImport "GHC.Ptr" "Ptr(..)"
+  pure [qci|
+    initDeviceCmds :: InstanceCmds -> VkDevice -> IO DeviceCmds
+    initDeviceCmds instanceCmds handle = do
+      pGetDeviceProcAddr <- castPtrToFunPtr @_ @FN_vkGetDeviceProcAddr
+        <$> getInstanceProcAddr instanceCmds (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeciceProcAddr\NUL"#)
+      let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
+      DeviceCmds handle
+        <$> {indent (-4) $ separatedWithGuards "<*>"
+             (zip initLines ((gm <=< cPlatform) <$> commands))}
+  |]
+
+initLine :: (Text -> Maybe Text) -> Text -> Command -> WrapM (Doc ())
+initLine gm getProcAddr c@Command{..} = censorGuarded gm c $ do
+  tellDepend (Unguarded (TypeName ("FN_" <> cName)))
+  tellExtension "MagicHash"
+  tellExtension "TypeApplications"
+  tellImport "Foreign.Ptr" "castPtrToFunPtr"
+  pure [qci|(castPtrToFunPtr @_ @FN_{cName} <$> {getProcAddr} handle (GHC.Ptr.Ptr "{cName}\NUL"#))|]
 
 writeRecordMember
   :: (Text -> Maybe Text)

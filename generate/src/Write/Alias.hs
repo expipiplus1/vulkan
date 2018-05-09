@@ -117,7 +117,9 @@ writeStructPatternAlias alias@Alias{..} = eitherToValidation $ do
       weName       = "Struct Pattern Alias: " <> aName
       weProvides   = [Unguarded $ Pattern aName]
       weDepends    = -- This is not correct if we have a struct alias of a struct alias
-                     Unguarded <$> WE.TypeName aAliasName :
+                     Unguarded <$>
+                       WE.TypeName "(:::)" :
+                       WE.TypeName aAliasName :
                        (typeDepends . smType =<< sMembers)
       weUndependableProvides = []
       weSourceDepends        = []

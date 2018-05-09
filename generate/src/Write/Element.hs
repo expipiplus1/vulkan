@@ -8,6 +8,7 @@ module Write.Element
   , Export(..)
   , HaskellName(..)
   , Import(..)
+  , isQualifiedImport
   , Guarded(..)
   , Guard(..)
   , unGuarded
@@ -32,7 +33,7 @@ data WriteElement = WriteElement
   { weName                 :: Text
     -- ^ For debug purposes
   , weExtensions           :: [Text]
-  , weImports              :: [Import]
+  , weImports              :: [Guarded Import]
     -- ^ "system" imports
   , weDoc                  :: DocMap -> Doc ()
   , weProvides             :: [Guarded Export]
@@ -82,12 +83,14 @@ guardWriteElement g we = do
       addGuard = \case
         Unguarded x -> pure $ Guarded g x
         _           -> Nothing
+  imports              <- traverse addGuard (weImports we)
   provides             <- traverse addGuard (weProvides we)
   undependableProvides <- traverse addGuard (weUndependableProvides we)
   sourceDepends        <- traverse addGuard (weSourceDepends we)
   depends              <- traverse addGuard (weDepends we)
   let doc = guarded (Just (guardCPPGuard g)) <$> (weDoc we)
-  pure we { weProvides             = provides
+  pure we { weImports              = imports
+          , weProvides             = provides
           , weUndependableProvides = undependableProvides
           , weSourceDepends        = sourceDepends
           , weDepends              = depends
@@ -122,6 +125,11 @@ data Import
     , iImports :: [Text]
     }
   deriving (Show, Eq, Ord)
+
+isQualifiedImport :: Import -> Bool
+isQualifiedImport = \case
+  Import{}          -> False
+  QualifiedImport{} -> True
 
 type DocMap = Documentee -> Maybe Haddock
 

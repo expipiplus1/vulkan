@@ -30,7 +30,7 @@ writeBaseType bt@BaseType {..} = do
       weDepends  = Unguarded <$> typeDepends btType
   pure WriteElement {..}
 
-hDoc :: BaseType -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+hDoc :: BaseType -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
 hDoc BaseType{..} = do
   (t, (is, es)) <- toHsType btType
   let d getDoc = [qci|

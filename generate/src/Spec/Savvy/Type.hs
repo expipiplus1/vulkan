@@ -242,7 +242,10 @@ typeDepends = \case
   TypeName "Integral a => a"      -> []
   TypeName "ByteString"           -> []
   TypeName t                      -> [WE.TypeName t]
-  Proto t ps -> typeDepends t ++ [ p | (_, pt) <- ps, p <- typeDepends pt ]
+  Proto t ps ->
+    WE.TypeName "(:::)"
+      :  typeDepends t
+      ++ [ p | (_, pt) <- ps, p <- typeDepends pt ]
 
 isPtrType :: Type -> Bool
 isPtrType = \case

@@ -67,7 +67,8 @@ versions =
         _VK_VERSION_PATCH :: Word32 -> Word32
         _VK_VERSION_PATCH v = v .&. 0xfff
       |]
-      weImports = [ Import "Data.Word" ["Word32"]
+      weImports = Unguarded <$>
+                  [ Import "Data.Word" ["Word32"]
                   , Import "Data.Bits" ["(.&.)", "(.|.)", "shiftL", "shiftR"]
                   ]
       weExtensions = ["PatternSynonyms", "ViewPatterns"]
@@ -92,8 +93,7 @@ apiVersionWriteElement major minor =
         pattern {patternName} :: Word32
         pattern {patternName} = VK_MAKE_VERSION {major} {minor} 0
       |]
-      weImports = [ Import "Data.Word" ["Word32"]
-                  ]
+      weImports = [ Unguarded $ Import "Data.Word" ["Word32"] ]
       weExtensions = ["PatternSynonyms"]
       weName = "Version Macro" T.<+> T.tShow major T.<+> T.tShow minor
       weProvides = [ Unguarded $ Pattern patternName ]
@@ -111,7 +111,7 @@ nullHandle =
         pattern VK_NULL_HANDLE <- ((== nullPtr) -> True)
           where VK_NULL_HANDLE = nullPtr
 |]
-      weImports = [Import "Foreign.Ptr" ["Ptr", "nullPtr"]]
+      weImports = [Unguarded $ Import "Foreign.Ptr" ["Ptr", "nullPtr"]]
       weExtensions = ["PatternSynonyms", "ViewPatterns"]
       weName = "Null handle"
       weProvides = [Unguarded $ Pattern "VK_NULL_HANDLE"]
@@ -201,8 +201,8 @@ newtypeOrTypeWriteElement decl n t is ds =
           then pretty ("deriving (Storable)" :: Text)
           else mempty}
 |]
-      weImports = is ++
-        [Import "Foreign.Storable" ["Storable"] | decl == "newtype"]
+      weImports = Unguarded <$>
+        (is ++ [Import "Foreign.Storable" ["Storable"] | decl == "newtype"])
       weExtensions =
         ["GeneralizedNewtypeDeriving" | decl == "newtype"]
       weName = t

@@ -26,7 +26,7 @@ import           Write.Element               hiding (TypeName)
 type Extension = Text
 type Constraint = Text
 type WriteState =
-  ( [Import]
+  ( [Guarded Import]
   , ( [Guarded Export]
     , [Guarded Export]
     )
@@ -60,14 +60,16 @@ wrapMToWriteElements weName weBootElement w = do
     either (throwError . fmap (WithContext weName)) pure (runWrap w)
   pure WriteElement {..}
 
+-- | Tells an unguarded import
 tellImport
   :: Text
   -- ^ Module
   -> Text
   -- ^ Value
   -> WrapM ()
-tellImport m v = tell ([Import m [v]], mempty, mempty, mempty, mempty)
+tellImport m v = tell ([Unguarded $ Import m [v]], mempty, mempty, mempty, mempty)
 
+-- | Tells an unguarded qualified import
 tellQualifiedImport
   :: Text
   -- ^ Module
@@ -75,12 +77,13 @@ tellQualifiedImport
   -- ^ Value
   -> WrapM ()
 tellQualifiedImport m v =
-  tell ([QualifiedImport m [v]], mempty, mempty, mempty, mempty)
+  tell ([Unguarded $ QualifiedImport m [v]], mempty, mempty, mempty, mempty)
 
+-- | Tells some unguarded imports
 tellImports
   :: [Import]
   -> WrapM ()
-tellImports is = tell (is, mempty, mempty, mempty, mempty)
+tellImports is = tell (Unguarded <$> is, mempty, mempty, mempty, mempty)
 
 tellExport
   :: Guarded Export

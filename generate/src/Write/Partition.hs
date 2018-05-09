@@ -82,9 +82,9 @@ partitionElements wes ss = validationToEither $ do
 
     modules
       = [ (if msName
-              == "Graphics.Vulkan.C.Extensions.VK_KHR_device_group_creation"
+              == "Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1"
            then
-             (\x -> traceShow (mSeedReexports x) x)
+             (\x -> traceShow (weDepends <$> mWriteElements x) x)
            else
              id
           )
@@ -121,16 +121,6 @@ partitionElements wes ss = validationToEither $ do
             fmap guardSeedName . nubOrd $ mapMaybe nameExport msSeeds
         ]
     prioritizedModules = prioritizeModules modules
-    -- See above TODO: remove this
-    -- guardReexportedNames :: Module -> Module
-    -- guardReexportedNames m =
-              -- let providedNames :: [HaskellName]
-              --     providedNames =
-              --       unExport
-              --         .   unGuarded
-              --         <$> (weProvides =<< closure)
-              --         <>  (weUndependableProvides =<< closure)
-              -- in  nubOrd $ mapMaybe nameExport (msSeeds \\ providedNames)
   _ <- assertUniqueSeedNames ss
   _ <- assertExactlyOneSeeds wes ss
   _ <- assertExactlyOneExport wes prioritizedModules

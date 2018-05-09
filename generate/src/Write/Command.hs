@@ -48,7 +48,7 @@ writeCommand getEnumName fp@Command {..} = do
       weBootElement          = Nothing
   pure WriteElement {..}
 
-commandDoc :: Command -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+commandDoc :: Command -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
 commandDoc c@Command {..} = do
   (t, (is, es)) <- toHsType (commandType c)
   let d getDoc = [qci|
@@ -63,4 +63,4 @@ commandDoc c@Command {..} = do
   type FN_{cName} = {t}
   type PFN_{cName} = FunPtr FN_{cName}
 |]
-  pure (d, Import "Foreign.Ptr" ["FunPtr"] : is, es)
+  pure (d, Unguarded (Import "Foreign.Ptr" ["FunPtr"]) : is, es)

@@ -154,20 +154,26 @@ isConstructor = \case
 
 moduleImports :: Module -> [Doc ()]
 moduleImports Module {..} =
-  let unqualifiedImportMap = sort <$> Map.fromListWith
+  let simplifiedImports = simplifyDependencies $ weImports =<< mWriteElements
+      guardMaybe = \case
+        Guarded g _ -> Just (guardCPPGuard g)
+        Unguarded _ -> Nothing
+      importMap :: Map.Map (Text, Bool, Maybe Text) [Text]
+      importMap = sort <$> Map.fromListWith
         union
-        ((iModule &&& iImports) <$> [i | i@Import{} <- weImports =<< mWriteElements])
-      qualifiedImportMap = sort <$> Map.fromListWith
-        union
-        ((iModule &&& iImports) <$> [i | i@QualifiedImport{} <- weImports =<< mWriteElements])
-      makeImport :: Doc () -> (Text, [Text]) -> Doc ()
-      makeImport qualifier (moduleName, is) = [qci|
-         import{qualifier}{pretty moduleName}
+        [ ( (iModule import', isQualifiedImport import', guardMaybe guardedImport)
+          , iImports import'
+          )
+        | guardedImport <- simplifiedImports
+        , let import' = unGuarded guardedImport
+        ]
+      makeImport :: ((Text, Bool, Maybe Text), [Text]) -> Doc ()
+      makeImport ((moduleName, qualified, guard), is) = guarded guard [qci|
+         import{if qualified then " qualified " else (" " :: Text)}{pretty moduleName}
            ( {indent (-2) . vcat . intercalatePrepend "," $ pretty <$> is}
            )
        |]
-  in (makeImport " "                <$> Map.assocs unqualifiedImportMap) ++
-     (makeImport " qualified "      <$> Map.assocs qualifiedImportMap)
+  in makeImport <$> Map.assocs importMap
 
 findModuleHN :: [Module] -> HaskellName -> Maybe (Text, Guarded Export)
 findModuleHN ms =
@@ -224,7 +230,7 @@ moduleInternalImports nameModule Module {..} =
             , writeDeps False "" reexportedDeps
             ]
 
-simplifyDependencies :: [Guarded HaskellName] -> [Guarded HaskellName]
+simplifyDependencies :: Ord a => [Guarded a] -> [Guarded a]
 simplifyDependencies deps =
   let unguarded = Set.fromList [ Unguarded d | Unguarded d <- deps ]
       guarded'  = Set.fromList

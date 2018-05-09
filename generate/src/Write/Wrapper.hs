@@ -856,7 +856,7 @@ constructHandle h ptr = case hHandleType h of
       tellDepend (Unguarded (TermName "initDeviceCmds"))
       tellImport "Foreign.Storable" "peek"
       pure
-        [qci|peek {ptr} >>= (\deviceH -> Device deviceH <$> initDeviceCmds deviceH)|]
+        [qci|peek {ptr} >>= (\deviceH -> Device deviceH <$> initDeviceCmds commandTable deviceH)|]
     _ -> case hLevel h of
       Just _ -> do
         let con = dropVkType (hName h)

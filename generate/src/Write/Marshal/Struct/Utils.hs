@@ -35,7 +35,8 @@ vkStructWriteElement =
   let
     weName        = "ToCStruct class declaration"
     weImports
-      = [ Import "Data.Proxy"                ["Proxy(Proxy)"]
+      = Unguarded <$>
+        [ Import "Data.Proxy"                ["Proxy(Proxy)"]
         , Import "Data.Word"                 ["Word8"]
         , Import "Foreign.C.Types"           ["CChar(..)"]
         , Import "Data.ByteString" ["ByteString", "take", "unpack", "packCString"]

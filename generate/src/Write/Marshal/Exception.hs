@@ -29,7 +29,7 @@ vkExceptionWriteElement getDocumentation vkResultEnum =
                   ++ (exName <$> eExtensions vkResultEnum)
 
     weName       = "VulkanException declaration"
-    weImports    = [Import "Control.Exception" ["Exception(..)"]]
+    weImports    = [Unguarded $ Import "Control.Exception" ["Exception(..)"]]
     weProvides   = Unguarded <$>
                      [ TypeConstructor "VulkanException"
                      , Term "VulkanException"

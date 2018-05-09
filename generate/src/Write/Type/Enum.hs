@@ -30,25 +30,26 @@ writeEnum e@Enum {..} =
       weDoc        = enumDoc e
       weExtensions = ["GeneralizedNewtypeDeriving", "PatternSynonyms"]
       weImports =
-        [ Import "Foreign.Storable"                ["Storable(..)"]
-          , Import "Text.Read"                       ["Read(..)", "parens"]
-          , Import "Text.Read.Lex"                   ["Lexeme(Ident)"]
-          , Import "Text.ParserCombinators.ReadPrec" ["(+++)", "prec", "step"]
-          , Import "GHC.Read"                        ["expectP", "choose"]
-          ]
-          ++ case eType of
-               EnumTypeEnum -> [Import "Data.Int" ["Int32"]]
-               EnumTypeBitmask ->
-                 [ Import "Data.Bits" ["Bits", "FiniteBits"]
-                 ]
+        Unguarded
+          <$> [ Import "Foreign.Storable" ["Storable(..)"]
+              , Import "Text.Read"        ["Read(..)", "parens"]
+              , Import "Text.Read.Lex"    ["Lexeme(Ident)"]
+              , Import "Text.ParserCombinators.ReadPrec"
+                       ["(+++)", "prec", "step"]
+              , Import "GHC.Read" ["expectP", "choose"]
+              ]
+          ++  case eType of
+                EnumTypeEnum    -> [Import "Data.Int" ["Int32"]]
+                EnumTypeBitmask -> [Import "Data.Bits" ["Bits", "FiniteBits"]]
 
-      weProvides = Unguarded <$>
-        [TypeConstructor eName, Term eName]
-          ++ [ Pattern eeName | EnumElement {..} <- eElements ]
+      weProvides =
+        Unguarded
+          <$> [TypeConstructor eName, Term eName]
+          ++  [ Pattern eeName | EnumElement {..} <- eElements ]
       weUndependableProvides = []
       weSourceDepends        = []
       weBootElement          = Nothing
-      weDepends = Unguarded <$> case eType of
+      weDepends              = Unguarded <$> case eType of
         EnumTypeEnum    -> []
         EnumTypeBitmask -> [TypeName "VkFlags"]
   in  WriteElement {..}

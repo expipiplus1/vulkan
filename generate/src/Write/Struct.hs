@@ -36,9 +36,11 @@ writeStruct s@Struct {..} = case sStructOrUnion of
       weExtensions = extensions ++ ["DuplicateRecordFields"]
       weImports =
         imports
-          ++ [ Import "Foreign.Ptr"      ["plusPtr"]
-             , Import "Foreign.Storable" ["Storable(..)"]
-             ]
+          ++ (   Unguarded
+             <$> [ Import "Foreign.Ptr"      ["plusPtr"]
+                 , Import "Foreign.Storable" ["Storable(..)"]
+                 ]
+             )
       weProvides = Unguarded <$> [TypeConstructor sName, Term sName]
       weDepends =
         Unguarded <$> nubOrd (concatMap (typeDepends . smType) sMembers)
@@ -54,9 +56,11 @@ writeStruct s@Struct {..} = case sStructOrUnion of
       weExtensions = extensions
       weImports =
         imports
-          ++ [ Import "Foreign.Ptr"      ["castPtr"]
-             , Import "Foreign.Storable" ["Storable(..)"]
-             ]
+          ++ (   Unguarded
+             <$> [ Import "Foreign.Ptr"      ["castPtr"]
+                 , Import "Foreign.Storable" ["Storable(..)"]
+                 ]
+             )
       weProvides = Unguarded <$> TypeConstructor sName : (Term <$> smNames)
       weDepends =
         Unguarded <$> nubOrd (concatMap (typeDepends . smType) sMembers)
@@ -69,7 +73,7 @@ writeStruct s@Struct {..} = case sStructOrUnion of
 -- Struct
 ----------------------------------------------------------------
 
-structDoc :: Struct -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+structDoc :: Struct -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
 structDoc s@Struct {..} = do
   let membersFixedNames = fixMemberName <$> sMembers
   (memberDocs, imports, extensions) <-
@@ -92,9 +96,12 @@ structDoc s@Struct {..} = do
     poke ptr poked = {indent (-3) . vsep $
                       (intercalatePrepend "*>" $
                        memberPokeDoc s <$> membersFixedNames)}
-|], concat imports ++ [Import "Foreign.Storable" ["Storable"]], concat extensions)
+|], concat imports ++ [Unguarded $ Import "Foreign.Storable" ["Storable"]], concat extensions)
 
-memberDoc :: Text -> StructMember -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+memberDoc
+  :: Text
+  -> StructMember
+  -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
 memberDoc parentName StructMember{..} = do
   (t, (is, es)) <- toHsType smType
   pure (\getDoc -> [qci|
@@ -116,7 +123,8 @@ memberPokeDoc Struct{..} StructMember{..} = [qci|
 -- Unions
 ----------------------------------------------------------------
 
-unionDoc :: Struct -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+unionDoc
+  :: Struct -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
 unionDoc Struct{..} = do
   let membersFixedNames = fixUnionMemberName <$> sMembers
   (memberDocs, imports, extensions ) <-
@@ -135,13 +143,13 @@ unionDoc Struct{..} = do
     peek _   = error "peek @{sName}"
     poke ptr = \case
       {indent 0 . vcat $ unionMemberPokeDoc <$> membersFixedNames}
-|], concat imports ++ [Import "Foreign.Storable" ["Storable"]], concat extensions ++ ["LambdaCase"])
+|], concat imports ++ [Unguarded $ Import "Foreign.Storable" ["Storable"]], concat extensions ++ ["LambdaCase"])
 
 unionMemberDoc
   :: Text
   -- ^ Parent name
   -> StructMember
-  -> Either [SpecError] (DocMap -> Doc (), [Import], [Text])
+  -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
 unionMemberDoc parentName StructMember{..} = do
   (t, (is, es)) <- toHsTypePrec 10 smType
   pure (\getDoc -> [qci|

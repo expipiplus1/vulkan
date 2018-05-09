@@ -22,7 +22,7 @@ writeHandle h@Handle {..} = do
   weDoc <- hDoc h
   let weName                 = "Handle: " <> hName
       weExtensions           = []
-      weImports              = [Import "Foreign.Ptr" ["Ptr"]]
+      weImports              = [Unguarded $ Import "Foreign.Ptr" ["Ptr"]]
       weProvides             = [Unguarded $ TypeAlias hName]
       weDepends              = []
       weUndependableProvides = []

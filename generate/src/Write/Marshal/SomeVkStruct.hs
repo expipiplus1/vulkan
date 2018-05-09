@@ -222,7 +222,7 @@ someVkStructBootElement :: WriteElement
 someVkStructBootElement =
   let
     weName                 = "SomeVkStruct boot declaration"
-    weImports              = [ Import "Foreign.Ptr"           ["Ptr"] ]
+    weImports              = [ Unguarded $ Import "Foreign.Ptr"           ["Ptr"] ]
     weProvides             = [ Unguarded (WithoutConstructors $ WE.TypeName "SomeVkStruct")
                              , Unguarded (Term "withSomeVkStruct")
                              ]
@@ -352,7 +352,7 @@ peekBootElement :: WriteElement
 peekBootElement =
   let
     weName                 = "peekVkStruct boot declaration"
-    weImports              = [ Import "Foreign.Ptr"           ["Ptr"] ]
+    weImports              = [ Unguarded $ Import "Foreign.Ptr"           ["Ptr"] ]
     weProvides             = [Unguarded (Term "peekVkStruct")]
     weUndependableProvides = []
     weSourceDepends        = []
