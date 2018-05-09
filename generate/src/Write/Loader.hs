@@ -96,6 +96,12 @@ writeLoaderDoc getEnumName platformGuardMap commands = do
 
       {ifi}
 
+      #if defined(NO_IMPORT_COMMANDS)
+      -- When we have no commands create a dummy vkGetInstanceProcAddr function
+      vkGetInstanceProcAddr :: VkInstance -> Ptr CChar -> IO PFN_vkVoidFunction
+      vkGetInstanceProcAddr _ _ = pure nullPtr
+      #endif
+
       -- * Device commands
       {separatedWithGuards "" $ dfs}
 
