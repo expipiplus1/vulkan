@@ -125,3 +125,7 @@ options.
 - Use `Bool` instead of `VkBool32`
 
 - For the marshalled version use stronger typing for handles and device size
+
+- The `getAll` wrappers for functions such as `vkGetShaderInfoAMD` are oddly
+  named
+  - Write better names for the functions dealing with bytes

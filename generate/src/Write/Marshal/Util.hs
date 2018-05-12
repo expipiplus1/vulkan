@@ -12,6 +12,7 @@ module Write.Marshal.Util
   , intercalateArrows
   , funName
   , funGetLengthName
+  , funGetAllName
   , ptrName
   , dropVk
   , dropPointer
@@ -19,6 +20,8 @@ module Write.Marshal.Util
   , simpleTypeName
   , isSimpleType
   ) where
+
+import           Debug.Trace
 
 import           Control.Category                         ((>>>))
 import           Data.Foldable
@@ -78,9 +81,26 @@ intercalateArrows = hsep . punctuate (space <> "->" <> space)
 funName :: Text -> Text
 funName = T.lowerCaseFirst . dropVk
 
-funGetLengthName :: Text -> Text
-funGetLengthName =
-  ("getNum" <>) . T.dropPrefix' "Get" . dropVk
+funGetLengthName :: Text -> Maybe Text
+funGetLengthName n =
+  let withoutVk = dropVk n
+  in  asum
+      $   ($ withoutVk)
+      .   uncurry replacePrefix
+      <$> [("get", "getNum"), ("enumerate", "getNum")]
+
+funGetAllName :: Text -> Maybe Text
+funGetAllName n = traceShowId $
+  let withoutVk = dropVk n
+  in  asum
+      $   ($ withoutVk)
+      .   uncurry replacePrefix
+      <$> [("get", "getAll"), ("enumerate", "enumerateAll")]
+
+replacePrefix :: Text -> Text -> Text -> Maybe Text
+replacePrefix prefix replacement t = do
+  dropped <- T.dropPrefix prefix t
+  pure $ replacement <> dropped
 
 ptrName :: Text -> Text
 ptrName = ("p" <>) . T.upperCaseFirst

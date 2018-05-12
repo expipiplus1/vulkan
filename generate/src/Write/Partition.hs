@@ -1,6 +1,6 @@
 {-# LANGUAGE ApplicativeDo     #-}
-{-# LANGUAGE LambdaCase     #-}
 {-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
@@ -10,8 +10,6 @@ module Write.Partition
   , partitionElements
   , ignoredUnexportedNames
   ) where
-
-import Debug.Trace
 
 import           Control.Monad
 import           Data.Closure
@@ -81,14 +79,7 @@ partitionElements wes ss = validationToEither $ do
       x : _ -> find ((== n) . unExport . unGuarded) (weProvides x)
 
     modules
-      = [ (if msName
-              == "Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1"
-           then
-             (\x -> traceShow (weDepends <$> mWriteElements x) x)
-           else
-             id
-          )
-            $ Module msName guardedClosure [] seedReexports []
+      = [ Module msName guardedClosure [] seedReexports []
         | m@ModuleSeed {..} <- ss
         , let
           names = Set.toList (closeSeed m)

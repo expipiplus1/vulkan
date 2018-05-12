@@ -13,7 +13,6 @@ module Write.Module
   )where
 
 import           Control.Applicative
-import           Control.Arrow                            ((&&&))
 import           Data.Char
 import           Data.Functor.Extra
 import           Data.List.Extra
@@ -141,7 +140,7 @@ exportHaskellName isSourceImport e =
         PatternName n -> Just ("pattern" <+> pretty n)
       doc = case unGuarded e of
         WithConstructors _ | not isSourceImport -> (<> "(..)") <$> s
-        _ -> s
+        _                  -> s
       cppGuard = case e of
         Unguarded _ -> Nothing
         Guarded g _ -> Just $ guardCPPGuard g
@@ -214,7 +213,7 @@ moduleInternalImports nameModule Module {..} =
         , Just (m, e) <- [nameModule (unGuarded d)]
         , unGuarded d `notElem` (unExport . unGuarded <$> (weProvides =<< mWriteElements))
         , let g = case d of
-                    Unguarded _ -> Nothing
+                    Unguarded _  -> Nothing
                     Guarded g' _ -> Just (guardCPPGuard g')
         ]
       writeDeps :: Bool -> Doc () -> [Guarded HaskellName] -> [Doc ()]

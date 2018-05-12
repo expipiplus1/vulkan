@@ -110,33 +110,41 @@ wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle c@
       makeWts :: Maybe CommandUsage -> WrapM ([WrappingType], [Constraint])
       makeWts usage = listens getConstraints $
         parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle usage lengthPairs cParameters
-  let printWrapped makeName wts constraints = do
+  let printWrapped n wts constraints = do
         wrapped <- wrap c wts
         t <- makeType wts constraints
         tellQualifiedImport "Graphics.Vulkan.C.Dynamic" (dropVk cName)
         let dynCommandName = [qci|Graphics.Vulkan.C.Dynamic.{dropVk cName}|]
         pure $ line <> [qci|
           -- | Wrapper for {cName}
-          {makeName cName} :: {t}
-          {makeName cName} = {wrapped dynCommandName}|]
-      makeType wts constraints = wtsToSig c constraints wts
+          {n} :: {t}
+          {n} = {wrapped dynCommandName}|]
+      makeType wts constraints = wtsToSig KeepVkResult c constraints wts
   (ds, aliases) <- if isDualUseCommand lengthPairs
     then do
+      (lengthWts, lengthConstraints) <- makeWts (Just CommandGetLength)
+      (valueWts, valueConstraints) <- makeWts (Just CommandGetValues)
       (wts1, as1) <- do
-        (wts, constraints) <- makeWts (Just CommandGetLength)
-        tellExport (Unguarded (Term (funGetLengthName cName)))
-        (,) <$> printWrapped funGetLengthName wts constraints
+        n <- maybe
+          (throwError [Other $ "Failed to get wrapped function name for" T.<+> cName]) pure
+          (funGetLengthName cName)
+        tellExport (Unguarded (Term n ))
+        (,) <$> printWrapped n lengthWts lengthConstraints
             <*> pure [] -- TODO: write aliases for get length names
       (wts2, as2) <- do
-        (wts, constraints) <- makeWts (Just CommandGetValues)
-        tellExport (Unguarded (Term (funName cName)))
-        (,) <$> printWrapped funName wts constraints
-            <*> traverse (writeAlias wts constraints c) cAliases
-      pure ([wts1, wts2], as1 ++ as2)
+        let n = funName cName
+        tellExport (Unguarded (Term n))
+        (,) <$> printWrapped n valueWts valueConstraints
+            <*> traverse (writeAlias valueWts valueConstraints c) cAliases
+      (wts3, as3) <-
+        (,) <$> writeGetAllCommand lengthWts valueWts c
+            <*> pure [] -- TODO: write aliases for get length names
+      pure ([wts1, wts2, wts3], as1 ++ as2 ++ as3)
     else do
       tellExport (Unguarded (Term (funName cName)))
       (wts, constraints) <- makeWts Nothing
-      d <- printWrapped funName wts constraints
+      let n = funName cName
+      d <- printWrapped n wts constraints
       as <- traverse (writeAlias wts constraints c) cAliases
       pure ([d], as)
   pure (ds, aliases)
@@ -155,14 +163,25 @@ isDualUseCommand = \case
     -> True
   _ -> False
 
-wtsToSig :: Command -> [Constraint] -> [WrappingType] -> WrapM (Doc ())
-wtsToSig c@Command {..} constraints ts = do
+data ReturnValueHandling
+  = KeepVkResult
+  | IgnoreVkResult
+  deriving (Eq)
+
+wtsToSig
+  :: ReturnValueHandling
+  -> Command
+  -> [Constraint]
+  -> [WrappingType]
+  -> WrapM (Doc ())
+wtsToSig returnValueHandling c@Command {..} constraints ts = do
   outputs <- sequenceA [ t | WrappingType _ (Just (Output t _)) _ <- ts ]
-  ret     <- tupled <$> if commandReturnsResult c
-    then do
-      returnTypeDoc <- toHsType cReturnType
-      pure (returnTypeDoc : outputs)
-    else pure outputs
+  ret     <-
+    tupled <$> if commandReturnsResult c && returnValueHandling == KeepVkResult
+      then do
+        returnTypeDoc <- toHsType cReturnType
+        pure (returnTypeDoc : outputs)
+      else pure outputs
   let inputs = mapMaybe wtInput ts
   inputTypes <- traverse iType inputs
   let h  = intercalateArrows (inputTypes <> ["IO" <+> ret])
@@ -734,7 +753,7 @@ data WrappingType = WrappingType
   }
 
 data Input = Input
-  { _iName :: Text
+  { iName :: Text
   , iType :: WrapM (Doc ())
   }
 
@@ -1129,7 +1148,7 @@ writeAlias wts constraints c@Command{..} name = do
   let weName = name T.<+> "alias" T.<+> cName
       weBootElement          = Nothing
       aliasDoc = do
-        t <- wtsToSig c constraints wts
+        t <- wtsToSig KeepVkResult c constraints wts
         tellExport (Unguarded (Term (dropVk name)))
         tellDepend (Unguarded (TermName (dropVk cName)))
         pure $ \_ -> [qci|
@@ -1141,3 +1160,63 @@ writeAlias wts constraints c@Command{..} name = do
     pure
     (runWrap aliasDoc)
   pure WriteElement {..}
+
+----------------------------------------------------------------
+-- Getting all values using a dual use command
+----------------------------------------------------------------
+
+writeGetAllCommand
+  :: [WrappingType]
+  -- ^ The wrapping types for the GetLength command
+  -> [WrappingType]
+  -- ^ The wrapping types for the GetValues command
+  -> Command
+  -> WrapM (Doc ())
+writeGetAllCommand getLengthTypes getValuesTypes c@Command {..} = do
+  getAll <- maybe
+    (throwError [Other $ "Failed to get 'getAll' function name for" T.<+> cName]
+    )
+    pure
+    (funGetAllName cName)
+  getLength <- maybe
+    (throwError [Other $ "Failed to get 'getAll' function name for" T.<+> cName]
+    )
+    pure
+    (funGetLengthName cName)
+  let get     = funName cName
+      inputs  = [ i | WrappingType (Just i) _ _ <- getLengthTypes ]
+      outputs = [ o | WrappingType _ (Just o) _ <- getValuesTypes ]
+      args    = pretty . unReservedWord . iName <$> inputs
+  case outputs of
+    []  -> throwError [Other ("getAll command has no outputs:" T.<+> cName)]
+    [_] -> pure ()
+    _   -> throwError
+      [Other ("getAll command has more than one output:" T.<+> cName)]
+  case cSuccessCodes of
+    -- TODO: why does vkGetPhysicalDeviceQueueFamilyProperties behave like this
+    Nothing | Void <- cReturnType -> pure ()
+    Nothing                       -> throwError
+      [Other ("getAll command doesn't return VK_INCOMPLETE:" T.<+> cName)]
+    Just ["VK_SUCCESS"] -> throwError
+      [Other ("getAll command doesn't return VK_INCOMPLETE:" T.<+> cName)]
+    Just ["VK_SUCCESS", "VK_INCOMPLETE"] -> pure ()
+    Just cs                              -> throwError
+      [Other ("getAll returns unexpected success codes:" T.<+> T.tShow cs)]
+  type' <- wtsToSig
+    IgnoreVkResult
+    c
+    []
+    (  ((\i -> WrappingType (Just i) Nothing id) <$> inputs)
+    <> ((\o -> WrappingType Nothing (Just o) id) <$> outputs)
+    )
+  let takeResult = if cReturnType == Void then "" else "snd <$> " :: Doc ()
+  tellExport (Unguarded (Term getAll))
+  pure [qci|
+    -- | Call '{getLength}' to get the number of return values, then use that
+    -- number to call '{get}' to get all the values.
+    {getAll} :: {type'}
+    {getAll} {hsep args} =
+      {takeResult}{getLength} {hsep args}
+        >>= \num -> {takeResult}{get} {hsep args} num
+
+  |]
