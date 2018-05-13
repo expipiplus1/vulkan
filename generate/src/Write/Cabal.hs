@@ -63,10 +63,34 @@ writeCabal modules platforms guardInfo =
               these then make sure this flag is enabled.
             default: False
 
-        flag no-import-commands
+        flag expose-static-extension-commands
             description:
-              Disable all command importing. This is useful in developing the
-              library without without having to link to libvulkan.
+              Expose statically linked commands for extensions; this is off by
+              default because it can make linking to libvulkan difficult.
+            default: False
+
+        flag expose-core10-commands
+            description:
+              Expose statically linked commands for core version 1.0; this is
+              off by default because it can make linking to libvulkan
+              difficult. The exception to this is vkGetInstanceProcAddr which
+              is the only symbol guaranteed by the specification to be present
+              in libvulkan.
+            default: False
+
+        flag expose-core11-commands
+            description:
+              Expose statically linked commands for core version 1.1; this is
+              off by default because it can make linking to libvulkan
+              difficult.
+            default: False
+
+        flag no-expose-vkGetInstanceProcAddr
+            description:
+              Disable exposing a statically linked vkGetInstanceProcAddr. This
+              is useful in developing the library without without having to
+              link to libvulkan. This replaces vkGetInstanceProcAddr with a
+              function which only returns nullPtr.
             default: False
 
         library
@@ -80,8 +104,17 @@ writeCabal modules platforms guardInfo =
           if flag(safe-foreign-calls)
             cpp-options: -DSAFE_FOREIGN_CALLS
 
-          if flag(no-import-commands)
-            cpp-options: -DNO_IMPORT_COMMANDS
+          if flag(expose-static-extension-commands)
+            cpp-options: -DEXPOSE_STATIC_EXTENSION_COMMANDS
+
+          if flag(expose-core10-commands)
+            cpp-options: -DEXPOSE_CORE10_COMMANDS
+
+          if flag(expose-core11-commands)
+            cpp-options: -DEXPOSE_CORE11_COMMANDS
+
+          if !flag(no-expose-vkGetInstanceProcAddr)
+            cpp-options: -DEXPOSE_VKGETINSTANCEPROCADDR
 
           {indent 0 . vcat $ writeGuardedModules <$> guardGroups}
 

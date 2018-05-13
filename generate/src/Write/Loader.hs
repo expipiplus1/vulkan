@@ -96,12 +96,6 @@ writeLoaderDoc getEnumName platformGuardMap commands = do
 
       {ifi}
 
-      #if defined(NO_IMPORT_COMMANDS)
-      -- When we have no commands create a dummy vkGetInstanceProcAddr function
-      vkGetInstanceProcAddr :: VkInstance -> Ptr CChar -> IO PFN_vkVoidFunction
-      vkGetInstanceProcAddr _ _ = pure nullPtr
-      #endif
-
       -- * Device commands
       {separatedWithGuards "" $ dfs}
 
@@ -149,7 +143,7 @@ initDeviceFunction gm commands = do
     initDeviceCmds :: InstanceCmds -> VkDevice -> IO DeviceCmds
     initDeviceCmds instanceCmds handle = do
       pGetDeviceProcAddr <- castPtrToFunPtr @_ @FN_vkGetDeviceProcAddr
-        <$> getInstanceProcAddr instanceCmds (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeciceProcAddr\NUL"#)
+        <$> getInstanceProcAddr instanceCmds (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr\NUL"#)
       let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
       DeviceCmds handle
         <$> {indent (-4) $ separatedWithGuards "<*>"

@@ -8,6 +8,7 @@ module Write.Command
 
 import           Data.Maybe
 import           Data.Text                                (Text)
+import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
@@ -26,20 +27,28 @@ writeCommand
   -> Command
   -> Either [SpecError] WriteElement
 writeCommand getEnumName fp@Command {..} = do
-  (weDoc, weImports, weExtensions) <- commandDoc fp
+  let staticGuard = if cName == "vkGetInstanceProcAddr"
+        then "EXPOSE_VKGETINSTANCEPROCADDR"
+        else case cAvailability of
+          CoreCommand major minor ->
+            "EXPOSE_CORE" <> T.tShow major <> T.tShow minor <> "_COMMANDS"
+          ExtensionCommand -> "EXPOSE_STATIC_EXTENSION_COMMANDS"
+  (weDoc, weImports, weExtensions) <- commandDoc staticGuard fp
   let weName       = "Command: " <> cName
       protoDepends = typeDepends $ Proto
         cReturnType
         [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
       weProvides =
-        [ Guarded (InvGuard "NO_IMPORT_COMMANDS") $ Term cName
+        [ if cName == "vkGetInstanceProcAddr"
+          then Unguarded (Term cName)
+          else Guarded (Guard staticGuard) $ Term cName
         , Unguarded (TypeAlias ("FN_" <> cName))
         , Unguarded (TypeAlias ("PFN_" <> cName))
         ]
       weDepends =
         (Unguarded <$> protoDepends)
           <> -- The constructors for an enum type need to be in scope
-             [ Guarded (InvGuard "NO_IMPORT_COMMANDS") (TypeName e)
+             [ Guarded (Guard staticGuard) (TypeName e)
              | TypeName n <- protoDepends
              , Just e <- [getEnumName n]
              ]
@@ -48,19 +57,31 @@ writeCommand getEnumName fp@Command {..} = do
       weBootElement          = Nothing
   pure WriteElement {..}
 
-commandDoc :: Command -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
-commandDoc c@Command {..} = do
+commandDoc
+  :: Text
+  -> Command
+  -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
+commandDoc staticGuard c@Command {..} = do
   (t, (is, es)) <- toHsType (commandType c)
   let d getDoc = [qci|
-  #if !defined(NO_IMPORT_COMMANDS)
+  #if defined({staticGuard})
   {document getDoc (TopLevel cName)}
   foreign import ccall
   #if !defined(SAFE_FOREIGN_CALLS)
     unsafe
   #endif
     "{cName}" {cName} :: {t}
+  {if cName == "vkGetInstanceProcAddr"
+    then "#else" <> line <> pretty cName <+> "::" <+> t <> line <>
+         pretty cName <+> "_" <+> "_" <+> "=" <+> "pure nullPtr"
+    else mempty
+  }
   #endif
   type FN_{cName} = {t}
   type PFN_{cName} = FunPtr FN_{cName}
 |]
-  pure (d, Unguarded (Import "Foreign.Ptr" ["FunPtr"]) : is, es)
+  let imports =
+        [ Guarded (InvGuard staticGuard) (Import "Foreign.Ptr" ["nullPtr"])
+        | cName == "vkGetInstanceProcAddr"
+        ] ++ (Unguarded (Import "Foreign.Ptr" ["FunPtr"]) : is)
+  pure (d, imports, es)

@@ -5,6 +5,7 @@
 
 module Spec.Savvy.Command
   ( Command(..)
+  , CommandAvailability(..)
   , Parameter(..)
   , ParameterLength(..)
   , HandleLevel(..)
@@ -14,11 +15,13 @@ module Spec.Savvy.Command
   ) where
 
 import           Control.Arrow
+import           Control.Monad.Except
 import           Data.Closure
 import           Data.Either.Validation
 import qualified Data.Map               as Map
 import           Data.Maybe
 import qualified Data.MultiMap          as MultiMap
+import           Data.Set               as Set
 import           Data.Text              (Text)
 import qualified Data.Text.Extra        as T
 import           Data.Traversable
@@ -26,7 +29,7 @@ import           Data.Traversable
 import qualified Spec.Command           as P
 import           Spec.Savvy.Error
 import           Spec.Savvy.Extension
-import           Spec.Savvy.Feature     (Requirement (..))
+import           Spec.Savvy.Feature
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Type
 import qualified Spec.Spec              as P
@@ -46,7 +49,13 @@ data Command = Command
     -- ^ The platform this command runs on if it is not universal
   , cSuccessCodes :: Maybe [Text]
   , cErrorCodes   :: Maybe [Text]
+  , cAvailability :: CommandAvailability
   }
+  deriving (Show)
+
+data CommandAvailability
+  = CoreCommand Word Word
+  | ExtensionCommand
   deriving (Show)
 
 data Parameter = Parameter
@@ -69,10 +78,28 @@ specCommands
   :: TypeParseContext
   -> P.Spec
   -> [Handle]
+  -> Features
   -> [Extension]
   -> Validation [SpecError] [Command]
-specCommands pc P.Spec {..} handles extensions
+specCommands pc P.Spec {..} handles features extensions
   = let
+      core10CommandNames :: Set.Set Text
+      core10CommandNames = Set.fromList
+        (rCommandNames =<< fRequirements (vulkan10Feature features))
+      core11CommandNames :: Set.Set Text
+      core11CommandNames = Set.fromList
+        (rCommandNames =<< fRequirements (vulkan11Feature features))
+      extensionCommandNames :: Set.Set Text
+      extensionCommandNames =
+        Set.fromList (rCommandNames =<< extRequirements =<< extensions)
+
+      commandAvailability :: Text -> Maybe CommandAvailability
+      commandAvailability n
+        | n `Set.member` core10CommandNames    = pure $ CoreCommand 1 0
+        | n `Set.member` core11CommandNames    = pure $ CoreCommand 1 1
+        | n `Set.member` extensionCommandNames = pure ExtensionCommand
+        | otherwise                            = Nothing
+
       commandAliases :: [(Text, Text)]
       commandAliases =
         [ (caAlias, caName) | P.CommandAlias {..} <- sCommandAliases ]
@@ -81,7 +108,7 @@ specCommands pc P.Spec {..} handles extensions
       commandLevel' :: [Parameter] -> Maybe HandleLevel
       commandLevel' = commandLevel handles
     in
-      for sCommands $ \P.Command {..} -> do
+      fmap catMaybes . for sCommands $ \P.Command {..} -> do
         ret <- eitherToValidation $ stringToTypeExpected pc cName cReturnType
         ps  <- for cParameters $ \P.Parameter {..} -> eitherToValidation $ do
           t <- stringToTypeExpected pc pName pType
@@ -104,7 +131,10 @@ specCommands pc P.Spec {..} handles extensions
                   , TermName n <- rRequiredNames =<< extRequirements e
                   , n == cName
                   ]
-            in  Command {cReturnType = ret, cParameters = ps, ..}
+            in  case commandAvailability cName of
+                  Nothing -> Nothing
+                  Just cAvailability ->
+                    Just $ Command {cReturnType = ret, cParameters = ps, ..}
 
 commandType :: Command -> Type
 commandType Command {..} = Proto

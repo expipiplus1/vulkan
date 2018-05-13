@@ -91,7 +91,7 @@ spec s = do
   (sCommands, sStructs) <-
     validationToEither
     $   (,)
-    <$> specCommands pc s sHandles sExtensions
+    <$> specCommands pc s sHandles sFeatures sExtensions
     <*> specStructs tc s sExtensions
 
   sAliases <- validationToEither
