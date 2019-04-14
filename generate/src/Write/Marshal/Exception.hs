@@ -53,7 +53,7 @@ vkExceptionWriteElement getDocumentation vkResultEnum =
       -- | A human understandable message for each VkResult
       resultString :: VkResult -> String
       resultString = \case
-        {indent 0 . vcat . fmap (displayExceptionCase getDocumentation) $ resultPatterns}
+      {indent 2 . vcat . fmap (displayExceptionCase getDocumentation) $ resultPatterns}
         r -> show r
     |]
   in WriteElement{..}

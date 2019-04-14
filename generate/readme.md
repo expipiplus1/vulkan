@@ -129,3 +129,5 @@ options.
 - The `getAll` wrappers for functions such as `vkGetShaderInfoAMD` are oddly
   named
   - Write better names for the functions dealing with bytes
+
+- In PresentInfoKHR the vkPResults pointer is a return value!

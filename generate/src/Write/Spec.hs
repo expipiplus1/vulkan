@@ -7,24 +7,25 @@ module Write.Spec
   ( writeSpec
   ) where
 
-import           Control.Arrow              ((&&&))
+import           Control.Arrow                            ( (&&&) )
 import           Control.Monad.Except
 import           Data.Bifunctor
 import           Data.Either.Extra
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.List.Extra
-import qualified Data.Map                   as Map
+import qualified Data.Map                      as Map
 import           Data.Maybe
-import qualified Data.Set                   as Set
-import           Data.Text                  (Text)
-import qualified Data.Text                  as T
+import qualified Data.Set                      as Set
+import           Data.Text                                ( Text )
+import qualified Data.Text                     as T
 import           Data.Text.Prettyprint.Doc
+import           Data.Text.Prettyprint.Doc.Render.String
 import           Say
 import           System.Directory
 import           System.FilePath
 import           System.IO.Error
-import qualified System.IO.Strict           as Strict
+import qualified System.IO.Strict              as Strict
 import           System.ProgressBar
 
 import           Documentation
@@ -126,7 +127,7 @@ saveModules getDoc outDir ms = concat
           bootFilename = filename -<.> "hs-boot"
           dir          = takeDirectory filename
       createDirectoryIfMissing True     dir
-      writeFileIfChanged       filename (show doc)
+      writeFileIfChanged       filename (renderWide doc)
       case docBoot of
         Nothing -> pure ()
         Just d  -> writeFileIfChanged bootFilename (show d)
@@ -139,6 +140,10 @@ saveModules getDoc outDir ms = concat
     readFileMay :: FilePath -> IO (Maybe String)
     readFileMay f =
       (Just <$> Strict.readFile f) `catchIOError` const (pure Nothing)
+
+-- Render a Doc with very wide columns
+renderWide :: Doc () -> String
+renderWide = renderString . layoutPretty (LayoutOptions Unbounded)
 
 specWrapperWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specWrapperWriteElements Spec {..} = do
