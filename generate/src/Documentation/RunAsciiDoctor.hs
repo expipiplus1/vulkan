@@ -7,7 +7,6 @@ module Documentation.RunAsciiDoctor
   ) where
 
 import qualified Data.List               as L
-import           Data.Semigroup
 import           Data.Text
 import qualified Data.Text               as T
 import qualified Data.Text.Lazy          as T (toStrict)

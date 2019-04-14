@@ -17,7 +17,6 @@ import           Data.Closure
 import           Data.Either.Validation
 import           Data.Maybe
 import qualified Data.MultiMap           as MultiMap
-import           Data.Semigroup
 import           Data.Text               (Text)
 import qualified Data.Text               as T
 import           Data.Traversable

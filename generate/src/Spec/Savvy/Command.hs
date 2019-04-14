@@ -15,7 +15,6 @@ module Spec.Savvy.Command
   ) where
 
 import           Control.Arrow
-import           Control.Monad.Except
 import           Data.Closure
 import           Data.Either.Validation
 import qualified Data.Map               as Map
@@ -115,8 +114,8 @@ specCommands pc P.Spec {..} handles features extensions
           let pLength = case pLengths of
                 Nothing                  -> Nothing
                 Just ["null-terminated"] -> Just NullTerminated
-                Just [l] | [param, member] <- T.splitOn "::" l ->
-                  Just (NamedMemberLength param member)
+                Just [l] | [param, member'] <- T.splitOn "::" l ->
+                  Just (NamedMemberLength param member')
                 Just [l] -> Just (NamedLength l)
                 Just _   -> error "TODO: Multiple lengths"
           pure Parameter {pType = t, ..}

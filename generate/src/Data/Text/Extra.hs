@@ -17,7 +17,6 @@ module Data.Text.Extra
 
 import           Data.Char
 import           Data.Maybe
-import           Data.Semigroup
 import           Data.String    (IsString)
 import           Data.Text
 import qualified Data.Text      as T

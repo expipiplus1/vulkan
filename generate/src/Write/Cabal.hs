@@ -7,7 +7,7 @@ module Write.Cabal
 
 import           Control.Arrow                            ((&&&))
 import           Data.Either
-import           Data.Functor.Extra
+import           Data.Functor
 import           Data.List.Extra
 import           Data.Text                                (Text)
 import           Data.Text.Prettyprint.Doc

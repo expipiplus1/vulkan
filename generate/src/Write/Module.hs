@@ -14,7 +14,7 @@ module Write.Module
 
 import           Control.Applicative
 import           Data.Char
-import           Data.Functor.Extra
+import           Data.Functor
 import           Data.List.Extra
 import qualified Data.Map                                 as Map
 import           Data.Maybe

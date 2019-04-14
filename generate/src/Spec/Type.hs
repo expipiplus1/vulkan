@@ -3,7 +3,6 @@
 
 module Spec.Type where
 
-import           Data.Semigroup
 import           Data.Text
 
 data TypeDecl

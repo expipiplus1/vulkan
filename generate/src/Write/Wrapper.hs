@@ -19,7 +19,7 @@ import           Control.Monad.Writer.Strict              hiding ((<>))
 import           Data.Bifunctor
 import           Data.Foldable
 import           Data.Function
-import           Data.Functor.Extra
+import           Data.Functor
 import qualified Data.Map                                 as Map
 import           Data.Maybe
 import qualified Data.MultiMap                            as MultiMap
@@ -280,7 +280,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
             name = pName p
             getAlloc t = if isMarshalledStruct t
               then do
-                Just tyName <- pure $ simpleTypeName t
+                let Just tyName = simpleTypeName t
                 tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
                 tellImport "Foreign.Marshal.Utils" "with"
                 pure [qci|(\\a -> withCStruct{tyName} a . flip with)|]
@@ -289,7 +289,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                 pure "with"
             getNonPtrAlloc t = if isMarshalledStruct t
               then do
-                Just tyName <- pure $ simpleTypeName t
+                let Just tyName = simpleTypeName t
                 tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
                 pure ("withCStruct" <> tyName)
               else do
@@ -301,7 +301,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                   _ -> [qci|(&)|]
             getPeek t = if isMarshalledStruct t
               then do
-                Just tyName <- pure $ simpleTypeName t
+                let Just tyName = simpleTypeName t
                 tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
                 tellImport "Foreign.Storable" "peek"
                 tellImport "Control.Monad"    "(<=<)"
@@ -313,7 +313,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                 pure "peek"
             getPeekElemOff t = if isMarshalledStruct t
               then do
-                Just tyName <- pure $ simpleTypeName t
+                let Just tyName = simpleTypeName t
                 tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
                 tellImport "Foreign.Storable" "peekElemOff"
                 tellImport "Control.Monad"    "(<=<)"

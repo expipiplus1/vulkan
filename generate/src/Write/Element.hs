@@ -21,7 +21,6 @@ module Write.Element
   , DocMap
   ) where
 
-import           Data.Semigroup
 import           Data.Text
 import           Data.Text.Prettyprint.Doc
 

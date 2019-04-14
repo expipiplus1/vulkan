@@ -6,7 +6,6 @@ module Data.MultiMap.Extra
 
 import qualified Data.Map       as Map
 import           Data.MultiMap
-import           Data.Semigroup
 
 instance Ord k => Semigroup (MultiMap k v) where
   a <> b = fromMap (Map.unionWith (<>) (toMap a) (toMap b))

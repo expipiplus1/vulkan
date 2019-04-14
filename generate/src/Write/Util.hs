@@ -16,7 +16,7 @@ module Write.Util
 import           Data.Bifunctor
 import           Data.Either
 import           Data.Function
-import           Data.Functor.Extra
+import           Data.Functor
 import           Data.List.NonEmpty
 import qualified Data.List.NonEmpty        as NE
 import           Data.Maybe

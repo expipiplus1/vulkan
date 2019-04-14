@@ -17,11 +17,10 @@ import           Data.Either
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.Function
-import           Data.Functor.Extra
+import           Data.Functor
 import           Data.List.Extra
 import           Data.Maybe
 import qualified Data.MultiMap          as MultiMap
-import           Data.Semigroup
 import qualified Data.Set               as Set
 import           Data.Text              (Text)
 import qualified Data.Text.Extra        as T

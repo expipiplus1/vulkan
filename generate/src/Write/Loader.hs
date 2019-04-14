@@ -17,7 +17,6 @@ import           Data.Foldable
 import           Data.List.Extra
 import qualified Data.Map                                 as Map
 import           Data.Maybe
-import           Data.Semigroup
 import           Data.Text.Extra                          (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
