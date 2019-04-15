@@ -33,7 +33,6 @@ parseSpecXML = isRoot /> hasName "registry" >>> extract
   where extract = proc registry -> do
           setTraceLevel 9 -< ()
           sCopyright <- oneRequired "Copyright" (parseCopyright <<< getChildren) -< registry
-          sVendorIDs <- oneRequired "vendorids" (parseVendorIDs <<< getChildren) -< registry
           sPlatforms <- oneRequired "platforms" (parsePlatforms <<< getChildren) -< registry
           sTags <- oneRequired "tags" (parseTags <<< getChildren) -< registry
           sTypes <- oneRequired "types" (parseTypes <<< getChildren) -< registry

@@ -500,7 +500,8 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
           else nonStructWithPeekElem t
         pure $ Vector lengthName 1 (smName m) t with peekElem
       | -- An optional array
-        Just [True] <- smIsOptional m
+        Just opts <- smIsOptional m
+      , opts == [True] || opts == [True, False]
       , Just [lengthName] <- smLengths m
       , Just tyName <- simpleTypeName t
       , Just lengthMember <- findLengthMember lengthName
@@ -568,6 +569,7 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
           t
           (tellImport "Foreign.Marshal.Utils" "with" $> "with")
           (tellImport "Foreign.Storable" "peek" $> "peek")
+
     (Array _ size t)
       | SymbolicArraySize sizeSymbol <- size
       , sizeSymbol `elem` ["VK_UUID_SIZE", "VK_LUID_SIZE"]
@@ -636,6 +638,13 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
                              (Just (pretty $ "withCStruct" <> tyName))
                              (Just (pretty $ "fromCStruct" <> tyName))
         else FixedArrayTuple (smName m) sizeNumber t Nothing Nothing
+      | -- A fixed length char array
+        Char <- t
+      , SymbolicArraySize _sizeSymbol <- size
+      , Nothing <- smIsOptional m
+      , Nothing <- smLengths m
+      , sReturnedOnly struct
+      -> pure $ FixedArrayNullTerminated (smName m) size
     t
       | -- The length of a vector in bytes
         [(vecName, size)] <-
@@ -1413,7 +1422,11 @@ enableRelation =
   ]
 
 zeroPadMembers :: [(Text, Text)]
-zeroPadMembers = [("VkDeviceGroupPresentCapabilitiesKHR", "presentMask")]
+zeroPadMembers =
+  [ ("VkDeviceGroupPresentCapabilitiesKHR"      , "presentMask")
+  , ("VkPhysicalDeviceMemoryBudgetPropertiesEXT", "heapBudget")
+  , ("VkPhysicalDeviceMemoryBudgetPropertiesEXT", "heapUsage")
+  ]
 
 -- The length member is the length in bytes of the vector
 -- TODO: Extract this from the spec!

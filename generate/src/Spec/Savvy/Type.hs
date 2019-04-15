@@ -237,6 +237,7 @@ typeDepends = \case
   TypeName "xcb_window_t"         -> [WE.TypeName "Xcb_window_t"]
   TypeName "wl_display"           -> [WE.TypeName "Wl_display"]
   TypeName "wl_surface"           -> [WE.TypeName "Wl_surface"]
+  TypeName "zx_handle_t"          -> [WE.TypeName "Zx_handle_t"]
   -- TODO: Remove, this is hacky
   TypeName "Integral a => a"      -> []
   TypeName "ByteString"           -> []

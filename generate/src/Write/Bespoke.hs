@@ -27,7 +27,7 @@ bespokeWriteElements =
     , nullHandle
     , bools
     ]
-    ++ concat [win32, x11, xcb, wayland, mir, android]
+    ++ concat [win32, x11, xcb, wayland, zircon, ggp, metal, android]
     ++ bespokeMarshalledWriteElements
 
 namedType :: WriteElement
@@ -221,6 +221,7 @@ win32 :: [WriteElement]
 win32 =
   [ unitPtrAliasWriteElement "HINSTANCE"
   , unitPtrAliasWriteElement "HWND"
+  , unitPtrAliasWriteElement "HMONITOR"
   , unitPtrAliasWriteElement "HANDLE"
   , voidDataWriteElement "SECURITY_ATTRIBUTES"
   , aliasWriteElement "DWORD" "Word32" [Import "Data.Word" ["Word32"]] []
@@ -245,14 +246,32 @@ xcb =
   , aliasWriteElement "Xcb_window_t"   "Word32" [Import "Data.Word" ["Word32"]] []
   ]
 
+ggp :: [WriteElement]
+ggp =
+  [ aliasWriteElement "GgpStreamDescriptor"
+                      "Word32"
+                      [Import "Data.Word" ["Word32"]]
+                      []
+  , aliasWriteElement "GgpFrameToken"
+                      "Word32"
+                      [Import "Data.Word" ["Word32"]]
+                      []
+  ]
+
+metal :: [WriteElement]
+metal =
+  [ voidDataWriteElement "CAMetalLayer"
+  ]
+
 wayland :: [WriteElement]
 wayland =
   [ voidDataWriteElement "Wl_display"
   , voidDataWriteElement "Wl_surface"
   ]
 
-mir :: [WriteElement]
-mir = [voidDataWriteElement "MirConnection", voidDataWriteElement "MirSurface"]
+zircon :: [WriteElement]
+zircon =
+  [aliasWriteElement "Zx_handle_t" "Word32" [Import "Data.Word" ["Word32"]] []]
 
 android :: [WriteElement]
 android =
@@ -265,7 +284,12 @@ android =
 bespokeMarshalledWriteElements :: [WriteElement]
 bespokeMarshalledWriteElements =
   [ aliasWriteElement "DeviceSize" "VkDeviceSize" [] [TypeName "VkDeviceSize"]
+  , aliasWriteElement "DeviceAddress"
+                      "VkDeviceAddress"
+                      []
+                      [TypeName "VkDeviceAddress"]
   , aliasWriteElement "SampleMask" "VkSampleMask" [] [TypeName "VkSampleMask"]
+  , aliasWriteElement "VendorId" "VkVendorId" [] [TypeName "VkVendorId"]
   , boolConversion
   ]
 

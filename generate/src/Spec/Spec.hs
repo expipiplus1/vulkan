@@ -15,7 +15,6 @@ import           Spec.VendorID
 
 -- | The Specification in a format which closely resembles the xml specification
 data Spec = Spec { sCopyright      :: String
-                 , sVendorIDs      :: [VendorID]
                  , sPlatforms      :: [Platform]
                  , sTags           :: [Tag]
                  , sTypes          :: [TypeDecl]
@@ -30,5 +29,4 @@ data Spec = Spec { sCopyright      :: String
   deriving (Show)
 
 getSpecExtensionTags :: Spec -> [ExtensionTag]
-getSpecExtensionTags spec =
-  (tName <$> sTags spec) ++ (viName <$> sVendorIDs spec)
+getSpecExtensionTags spec = tName <$> sTags spec

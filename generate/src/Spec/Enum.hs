@@ -16,3 +16,9 @@ data EnumElement = EnumElement { eeName    :: Text
                                , eeComment :: Maybe Text
                                }
   deriving (Show)
+
+data EnumElementAlias = EnumElementAlias { eeaName    :: Text
+                                         , eeaAlias   :: Text
+                                         , eeaComment :: Maybe Text
+                                         }
+  deriving (Show)

@@ -245,10 +245,10 @@ enumSanityCheck
 enumSanityCheck tNamesL aliases dNamesL = do
   -- Check that each enum value declaration is referenced by an enum type
   let tNames       = Set.fromList tNamesL
-      dNames       = Set.fromList dNamesL
-      missingNames = dNames Set.\\ tNames
-  _ <- unless (Set.null missingNames)
-    $ Failure (EnumTypeMissing <$> Set.toList missingNames)
+      -- dNames       = Set.fromList dNamesL
+      -- missingNames = dNames Set.\\ tNames
+  -- _ <- unless (Set.null missingNames)
+    -- $ Failure (EnumTypeMissing <$> Set.toList missingNames)
 
   -- Check that each alias references a type
   let aTargets            = Set.fromList $ aliases

@@ -24,6 +24,7 @@ parseEnum = hasName "enums" >>> hasAttrValue "type" (== "enum") >>>
               AComment ^<< enumComment
             , AnUnusedStart ^<< enumUnusedStart
             , AnEnumElement ^<< enumElem
+            , AnEnumElementAlias ^<< enumElemAlias
             ], e)
           let eElements = [e' | AnEnumElement e' <- es]
               eUnusedStart = listToMaybe [e' | AnUnusedStart e' <- es]
@@ -31,6 +32,7 @@ parseEnum = hasName "enums" >>> hasAttrValue "type" (== "enum") >>>
 
 data EnumListMember
   = AnEnumElement EnumElement
+  | AnEnumElementAlias EnumElementAlias
   | AnUnusedStart Text
   | AComment Text
 
@@ -51,6 +53,13 @@ enumElem = proc e -> do
   eeValue   <- requiredRead <<< requiredAttrValue "value" -< e
   eeComment <- optionalAttrValueT "comment" -< e
   returnA -< EnumElement{..}
+
+enumElemAlias :: IOStateArrow s XmlTree EnumElementAlias
+enumElemAlias = proc e -> do
+  eeaName    <- requiredAttrValueT "name" -< e
+  eeaAlias   <- requiredAttrValueT "alias" -< e
+  eeaComment <- optionalAttrValueT "comment" -< e
+  returnA -< EnumElementAlias{..}
 
 --- | Comments which group the values (discarded at the moment)
 enumComment :: IOStateArrow s XmlTree Text

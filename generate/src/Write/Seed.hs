@@ -59,6 +59,7 @@ bespokeSeedsHighPriority =
     , TypeName "VkFormat"
     , TypeName "VkBool32"
     , TypeName "VkObjectType"
+    , TypeName "VkVendorId"
     ]
     Nothing
   , ModuleSeed

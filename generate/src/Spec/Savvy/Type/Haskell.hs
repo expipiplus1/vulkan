@@ -96,6 +96,7 @@ cIdToHsType = \case
   "xcb_window_t"     -> pure "Xcb_window_t"
   "wl_display"       -> pure "Wl_display"
   "wl_surface"       -> pure "Wl_surface"
+  "zx_handle_t"      -> pure "Zx_handle_t"
   t                  -> pure $ pretty t
 
 parens' :: Bool -> Doc () -> Doc ()

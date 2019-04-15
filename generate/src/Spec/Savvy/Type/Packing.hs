@@ -74,12 +74,18 @@ knownNames = \case
   "HWND"         -> Just (SomeStorable (nullPtr :: Ptr ()))
   "HINSTANCE"    -> Just (SomeStorable (nullPtr :: Ptr ()))
   "HANDLE"       -> Just (SomeStorable (nullPtr :: Ptr ()))
+  "HMONITOR"     -> Just (SomeStorable (nullPtr :: Ptr ()))
   "LPCWSTR"      -> Just (SomeStorable (nullPtr :: Ptr Word16))
   "DWORD"        -> Just (SomeStorable (0 :: Word32))
   -- Xlib
   "Window"       -> Just (SomeStorable (0 :: Word32))
   -- xcb
   "xcb_window_t" -> Just (SomeStorable (0 :: Word32))
+  -- Zircon
+  "zx_handle_t"  -> Just (SomeStorable (0 :: Word32))
+  -- Google games platform, guessing here...
+  "GgpStreamDescriptor"  -> Just (SomeStorable (0 :: Word32))
+  "GgpFrameToken"-> Just (SomeStorable (0 :: Word32))
   _              -> Nothing
 
 data SomeStorable where
