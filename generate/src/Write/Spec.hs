@@ -147,7 +147,7 @@ renderWide :: Doc () -> String
 renderWide = renderString . layoutPretty (LayoutOptions Unbounded)
 
 specWrapperWriteElements :: Spec -> Validation [SpecError] [WriteElement]
-specWrapperWriteElements Spec {..} = do
+specWrapperWriteElements spec@Spec {..} = do
   let
     getHandle = (`Map.lookup` Map.fromList ((hName &&& id) <$> sHandles))
     isBitmask =
@@ -182,6 +182,8 @@ specWrapperWriteElements Spec {..} = do
     resolveAlias :: Text -> Text
     resolveAlias t = fromMaybe t (getAlias1 sTypeAliases t)
 
+    brackets' = extractBrackets enabledCommands
+
   commandWrappers <- eitherToValidation $ traverse
     (commandWrapper getHandle
                     isBitmask
@@ -194,17 +196,22 @@ specWrapperWriteElements Spec {..} = do
     (structWrapper getHandle isBitmask isStruct enabledStructs)
     enabledStructs
   handleWrappers <- eitherToValidation
-    $ traverse handleWrapper dispatchableHandles
-  brackets <-
-    fmap unzip . eitherToValidation $ bracketCommands enabledCommands
-  someVkStructWE <- eitherToValidation
+    $ traverse (handleWrapper brackets') dispatchableHandles
+  aliases         <- writeAliases (makeMarshalledAliases spec)
+  bracketWrappers <- eitherToValidation $ traverse bracketCommand brackets'
+  someVkStructWE  <- eitherToValidation
     $ someVkStructWriteElement getHandle sPlatforms enabledStructs
   peekStructWE <- eitherToValidation
     $ vkPeekStructWriteElement getHandle sPlatforms enabledStructs
   pure
-    (  concat [concat structWrappers, concat commandWrappers, handleWrappers]
+    (  concat
+        [ concat structWrappers
+        , concat commandWrappers
+        , handleWrappers
+        , bracketWrappers
+        , insertBracketDependency brackets' <$> aliases
+        ]
     ++ [vkStructWriteElement, peekStructWE, someVkStructWE]
-    ++ snd brackets
     )
 
 specCWriteElements :: Spec -> Validation [SpecError] [WriteElement]
@@ -248,7 +255,6 @@ specCWriteElements s@Spec {..} = do
     $ traverse (writeCommand getEnumAliasTarget) sCommands
   wStructs           <- eitherToValidation $ traverse writeStruct sStructs
   wAliases           <- writeAliases sAliases
-  wMarshalledAliases <- writeAliases (makeMarshalledAliases s)
   wBaseTypes         <-
     let isAllowedBaseType bt = btName bt /= "VkBool32"
     in  eitherToValidation
@@ -268,7 +274,6 @@ specCWriteElements s@Spec {..} = do
     , wCommands
     , wStructs
     , wAliases
-    , wMarshalledAliases
     , wBaseTypes
     , [wLoader]
     ]

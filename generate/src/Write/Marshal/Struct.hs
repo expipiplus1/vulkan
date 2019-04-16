@@ -1372,9 +1372,6 @@ upperCaseHungarian t = case T.break isUpper t of
 toVkMemberName :: Text -> Text
 toVkMemberName = ("vk" <>) . T.upperCaseFirst . upperCaseHungarian
 
-dropVkType :: Text -> Text
-dropVkType = T.dropPrefix' "Vk"
-
 ----------------------------------------------------------------
 -- Quirks
 ----------------------------------------------------------------

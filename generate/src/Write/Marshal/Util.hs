@@ -15,13 +15,12 @@ module Write.Marshal.Util
   , funGetAllName
   , ptrName
   , dropVk
+  , dropVkType
   , dropPointer
   , unReservedWord
   , simpleTypeName
   , isSimpleType
   ) where
-
-import           Debug.Trace
 
 import           Control.Category                         ((>>>))
 import           Data.Foldable
@@ -91,7 +90,7 @@ funGetLengthName n =
       <$> [("get", "getNum"), ("enumerate", "getNum")]
 
 funGetAllName :: Text -> Maybe Text
-funGetAllName n = traceShowId $
+funGetAllName n =
   let withoutVk = dropVk n
   in  asum
       $   ($ withoutVk)
@@ -108,6 +107,9 @@ ptrName = ("p" <>) . T.upperCaseFirst
 
 dropVk :: Text -> Text
 dropVk = T.lowerCaseFirst . T.dropPrefix' "vk"
+
+dropVkType :: Text -> Text
+dropVkType = T.dropPrefix' "Vk"
 
 dropPointer :: Text -> Text
 dropPointer = T.lowerCaseFirst . T.dropPrefix' "p"

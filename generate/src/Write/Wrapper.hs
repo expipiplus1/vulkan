@@ -12,8 +12,6 @@ module Write.Wrapper
   ) where
 
 
-import Debug.Trace
-
 import           Control.Arrow                            ( (&&&) )
 import           Control.Bool
 import           Control.Monad
@@ -125,7 +123,8 @@ wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle re
       makeWts :: Maybe CommandUsage -> WrapM ([WrappingType], [Constraint])
       makeWts usage = listens getConstraints $
         parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle resolveAlias usage lengthPairs cParameters
-  let printWrapped n wts constraints = do
+  let printWrapped ::  Text -> [WrappingType] -> [Constraint] -> WriterT WriteState (Except [SpecError]) (Doc ann)
+      printWrapped n wts constraints = do
         wrapped <- wrap c wts
         t <- makeType wts constraints
         tellQualifiedImport "Graphics.Vulkan.C.Dynamic" (dropVk cName)
@@ -1204,9 +1203,6 @@ tupleA = \case
 data CommandUsage
   = CommandGetLength
   | CommandGetValues
-
-dropVkType :: Text -> Text
-dropVkType = T.dropPrefix' "Vk"
 
 ----------------------------------------------------------------
 -- Aliases

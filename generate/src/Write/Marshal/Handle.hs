@@ -20,24 +20,27 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Command
+import           Spec.Savvy.Type(Type(TypeName))
 
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
+import           Write.Marshal.Bracket
 import           Write.Marshal.Monad
+import           Write.Marshal.Util
 
-handleWrapper :: Handle -> Either [SpecError] WriteElement
-handleWrapper handle = do
+handleWrapper :: [Bracket] -> Handle -> Either [SpecError] WriteElement
+handleWrapper bs handle = do
   let weName        = hName handle T.<+> "wrapper"
       weBootElement = Nothing
   (weDoc, (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
     either (throwError . fmap (WithContext (hName handle)))
            pure
-           (runWrap $ wrapHandle handle)
+           (runWrap $ wrapHandle bs handle)
   pure WriteElement {..}
 
-wrapHandle :: Handle -> WrapM (DocMap -> Doc ())
+wrapHandle :: [Bracket] -> Handle -> WrapM (DocMap -> Doc ())
   -- ^ Returns the docs for this handle, and any aliases
-wrapHandle Handle {..} = do
+wrapHandle bs Handle {..} = do
   when (hHandleType == NonDispatchable)
     $ throwError [Other "Wrapping a non-dispatchable handle"]
   let marshalledName = dropVkType hName
@@ -50,6 +53,7 @@ wrapHandle Handle {..} = do
     Just Device         -> pure "DeviceCmds"
     Nothing             -> throwError [Other "wrapping handle without a level"]
   tellDepend (Unguarded (WE.TypeName cmdTable))
+  traverse (tellDepend . Unguarded) [bName | Bracket {..} <- bs, bType == (TypeName hName) ]
   tellImport "Data.Function" "on"
   pure $ \_ -> [qci|
     data {marshalledName} = {marshalledName}
@@ -65,6 +69,3 @@ wrapHandle Handle {..} = do
       compare = compare `on` {T.lowerCaseFirst marshalledName}Handle
 
   |]
-
-dropVkType :: Text -> Text
-dropVkType = T.dropPrefix' "Vk"

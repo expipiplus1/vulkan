@@ -5,7 +5,10 @@
 {-# LANGUAGE RecordWildCards   #-}
 
 module Write.Marshal.Bracket
-  ( bracketCommands
+  ( Bracket(..)
+  , extractBrackets
+  , bracketCommand
+  , insertBracketDependency
   ) where
 
 import           Control.Monad
@@ -40,8 +43,8 @@ data Bracket = Bracket
   }
   deriving(Show)
 
-brackets :: [Command] -> [Bracket]
-brackets commands =
+extractBrackets :: [Command] -> [Bracket]
+extractBrackets commands =
   let isOpener c@Command{..} = guard ("vkCreate" `T.isPrefixOf` cName) $> c
       isCloser c@Command{..} = guard ("vkDestroy" `T.isPrefixOf` cName) $> c
       isPair co cc
@@ -50,41 +53,44 @@ brackets commands =
         , h == h'
         , Ptr NonConst t <- pType (last (cParameters co))
         , TypeName vn <- t
-        = let name = "with" <> dropVk vn
+        = let name = TermName ("with" <> dropVkType vn)
           in Just (Bracket name t co cc)
         | otherwise = Nothing
-  in  ps = pairs isOpener isCloser isPair commands
+  in  pairs isOpener isCloser isPair commands
+
+insertBracketDependency :: [Bracket] -> WriteElement -> WriteElement
+insertBracketDependency bs we@WriteElement {..} =
+  let weDepends' =
+        weDepends
+          ++ [ p $> bName
+             | Bracket {..} <- bs
+             , p            <- weProvides
+             , TypeName n   <- [bType]
+             , dropVkType n == unHaskellName (unExport (unGuarded p))
+             ]
+  in  WriteElement {weDepends = weDepends', ..}
 
 -- | Find pairs of commands which should be called using the bracket pattern
-bracketCommands :: [Command] -> Either [SpecError] [((Type, HaskellName), WriteElement)]
-bracketCommands commands = do
-  let isOpener c@Command{..} = guard ("vkCreate" `T.isPrefixOf` cName) $> c
-      isCloser c@Command{..} = guard ("vkDestroy" `T.isPrefixOf` cName) $> c
-      isPair co cc
-        | Just h <- T.dropPrefix "vkCreate" (cName co)
-        , Just h' <- T.dropPrefix "vkDestroy" (cName cc)
-        , h == h'
-        = Just (CreateSingle co cc)
-        | otherwise = Nothing
-      ps = pairs isOpener isCloser isPair commands
-  for ps $ \p -> do
-      let weName        = T.tShow p T.<+> "bracket"
-          weBootElement = Nothing
-      ((t, weDoc), (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
-        either (throwError . fmap (WithContext weName))
-               pure
-               (runWrap $ bracketCommand p)
-      pure (t, WriteElement {..})
+bracketCommand :: Bracket -> Either [SpecError] WriteElement
+bracketCommand b = do
+  let weName        = T.tShow (bName b)
+      weBootElement = Nothing
+  (weDoc, (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
+    either (throwError . fmap (WithContext weName))
+           pure
+           (runWrap $ bracketCommand' b)
+  pure WriteElement {..}
 
-bracketCommand :: CommandPair -> WrapM ((Type, HaskellName), DocMap -> Doc ())
-bracketCommand c@(CreateSingle co cc) = do
-  let Ptr NonConst t = traceShowId $ pType (last (cParameters co))
-      TypeName vn = t
-      n = dropVk vn
-      wrapName = "with" <> n
-  tellExport (Unguarded (Term wrapName))
-  pure $ ((t, WE.TermName wrapName),) $ \_ -> [qci|
-    with{n} = _ -- {show c}
+bracketCommand' :: Bracket -> WrapM (DocMap -> Doc ())
+bracketCommand' Bracket{..} = do
+  tellExport (Unguarded (WithoutConstructors bName))
+  tellImport "Control.Exception" "bracket"
+  pure $ \_ -> [qci|
+    {unHaskellName bName} :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+    {unHaskellName bName} createInfo allocationCallbacks =
+      bracket
+        ({cName bOpen} createInfo allocationCallbacks)
+        (`{cName bClose}` allocationCallbacks)
   |]
 
 pairs :: (a -> Maybe l) -> (a -> Maybe r) -> (l -> r -> Maybe p) -> [a] -> [p]
