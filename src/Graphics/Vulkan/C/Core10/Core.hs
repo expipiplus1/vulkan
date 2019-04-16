@@ -290,6 +290,10 @@ module Graphics.Vulkan.C.Core10.Core
   , pattern VK_STRUCTURE_TYPE_MEMORY_BARRIER
   , pattern VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO
   , pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO
+  , VkVendorId(..)
+  , pattern VK_VENDOR_ID_VIV
+  , pattern VK_VENDOR_ID_VSI
+  , pattern VK_VENDOR_ID_KAZAN
   ) where
 
 import Data.Int
@@ -1611,6 +1615,7 @@ instance Show VkObjectType where
   showsPrec _ (VkObjectType 1000086001) = showString "VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX"
   showsPrec _ (VkObjectType 1000128000) = showString "VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT"
   showsPrec _ (VkObjectType 1000160000) = showString "VK_OBJECT_TYPE_VALIDATION_CACHE_EXT"
+  showsPrec _ (VkObjectType 1000165000) = showString "VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV"
   showsPrec p (VkObjectType x) = showParen (p >= 11) (showString "VkObjectType " . showsPrec 11 x)
 
 instance Read VkObjectType where
@@ -1652,6 +1657,7 @@ instance Read VkObjectType where
                              , ("VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX", pure (VkObjectType 1000086001))
                              , ("VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT",    pure (VkObjectType 1000128000))
                              , ("VK_OBJECT_TYPE_VALIDATION_CACHE_EXT",         pure (VkObjectType 1000160000))
+                             , ("VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV",    pure (VkObjectType 1000165000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkObjectType")
@@ -1798,8 +1804,11 @@ instance Show VkResult where
   showsPrec _ (VkResult (-1000003001)) = showString "VK_ERROR_INCOMPATIBLE_DISPLAY_KHR"
   showsPrec _ (VkResult (-1000011001)) = showString "VK_ERROR_VALIDATION_FAILED_EXT"
   showsPrec _ (VkResult (-1000012000)) = showString "VK_ERROR_INVALID_SHADER_NV"
+  showsPrec _ (VkResult (-1000158000)) = showString "VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT"
   showsPrec _ (VkResult (-1000161000)) = showString "VK_ERROR_FRAGMENTATION_EXT"
   showsPrec _ (VkResult (-1000174001)) = showString "VK_ERROR_NOT_PERMITTED_EXT"
+  showsPrec _ (VkResult (-1000244000)) = showString "VK_ERROR_INVALID_DEVICE_ADDRESS_EXT"
+  showsPrec _ (VkResult (-1000255000)) = showString "VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"
   showsPrec p (VkResult x) = showParen (p >= 11) (showString "VkResult " . showsPrec 11 x)
 
 instance Read VkResult where
@@ -1822,17 +1831,20 @@ instance Read VkResult where
                              , ("VK_ERROR_FORMAT_NOT_SUPPORTED",  pure VK_ERROR_FORMAT_NOT_SUPPORTED)
                              , ("VK_ERROR_FRAGMENTED_POOL",       pure VK_ERROR_FRAGMENTED_POOL)
                              , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_ERROR_OUT_OF_POOL_MEMORY",       pure (VkResult (-1000069000)))
-                             , ("VK_ERROR_INVALID_EXTERNAL_HANDLE",  pure (VkResult (-1000072003)))
-                             , ("VK_ERROR_SURFACE_LOST_KHR",         pure (VkResult (-1000000000)))
-                             , ("VK_ERROR_NATIVE_WINDOW_IN_USE_KHR", pure (VkResult (-1000000001)))
-                             , ("VK_SUBOPTIMAL_KHR",                 pure (VkResult 1000001003))
-                             , ("VK_ERROR_OUT_OF_DATE_KHR",          pure (VkResult (-1000001004)))
-                             , ("VK_ERROR_INCOMPATIBLE_DISPLAY_KHR", pure (VkResult (-1000003001)))
-                             , ("VK_ERROR_VALIDATION_FAILED_EXT",    pure (VkResult (-1000011001)))
-                             , ("VK_ERROR_INVALID_SHADER_NV",        pure (VkResult (-1000012000)))
-                             , ("VK_ERROR_FRAGMENTATION_EXT",        pure (VkResult (-1000161000)))
-                             , ("VK_ERROR_NOT_PERMITTED_EXT",        pure (VkResult (-1000174001)))
+                               ("VK_ERROR_OUT_OF_POOL_MEMORY",                           pure (VkResult (-1000069000)))
+                             , ("VK_ERROR_INVALID_EXTERNAL_HANDLE",                      pure (VkResult (-1000072003)))
+                             , ("VK_ERROR_SURFACE_LOST_KHR",                             pure (VkResult (-1000000000)))
+                             , ("VK_ERROR_NATIVE_WINDOW_IN_USE_KHR",                     pure (VkResult (-1000000001)))
+                             , ("VK_SUBOPTIMAL_KHR",                                     pure (VkResult 1000001003))
+                             , ("VK_ERROR_OUT_OF_DATE_KHR",                              pure (VkResult (-1000001004)))
+                             , ("VK_ERROR_INCOMPATIBLE_DISPLAY_KHR",                     pure (VkResult (-1000003001)))
+                             , ("VK_ERROR_VALIDATION_FAILED_EXT",                        pure (VkResult (-1000011001)))
+                             , ("VK_ERROR_INVALID_SHADER_NV",                            pure (VkResult (-1000012000)))
+                             , ("VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT", pure (VkResult (-1000158000)))
+                             , ("VK_ERROR_FRAGMENTATION_EXT",                            pure (VkResult (-1000161000)))
+                             , ("VK_ERROR_NOT_PERMITTED_EXT",                            pure (VkResult (-1000174001)))
+                             , ("VK_ERROR_INVALID_DEVICE_ADDRESS_EXT",                   pure (VkResult (-1000244000)))
+                             , ("VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT",          pure (VkResult (-1000255000)))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkResult")
@@ -2005,7 +2017,7 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000053000) = showString "VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO"
   showsPrec _ (VkStructureType 1000053001) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES"
   showsPrec _ (VkStructureType 1000053002) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES"
-  showsPrec _ (VkStructureType 1000120000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES"
+  showsPrec _ (VkStructureType 1000120000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES"
   showsPrec _ (VkStructureType 1000145000) = showString "VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO"
   showsPrec _ (VkStructureType 1000145001) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES"
   showsPrec _ (VkStructureType 1000145002) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES"
@@ -2033,7 +2045,7 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000076001) = showString "VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES"
   showsPrec _ (VkStructureType 1000168000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES"
   showsPrec _ (VkStructureType 1000168001) = showString "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT"
-  showsPrec _ (VkStructureType 1000063000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES"
+  showsPrec _ (VkStructureType 1000063000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES"
   showsPrec _ (VkStructureType 1000001000) = showString "VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR"
   showsPrec _ (VkStructureType 1000001001) = showString "VK_STRUCTURE_TYPE_PRESENT_INFO_KHR"
   showsPrec _ (VkStructureType 1000060007) = showString "VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR"
@@ -2048,7 +2060,6 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000004000) = showString "VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR"
   showsPrec _ (VkStructureType 1000005000) = showString "VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR"
   showsPrec _ (VkStructureType 1000006000) = showString "VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR"
-  showsPrec _ (VkStructureType 1000007000) = showString "VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR"
   showsPrec _ (VkStructureType 1000008000) = showString "VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR"
   showsPrec _ (VkStructureType 1000009000) = showString "VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR"
   showsPrec _ (VkStructureType 1000010000) = showString "VK_STRUCTURE_TYPE_NATIVE_BUFFER_ANDROID"
@@ -2060,7 +2071,13 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000026000) = showString "VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV"
   showsPrec _ (VkStructureType 1000026001) = showString "VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV"
   showsPrec _ (VkStructureType 1000026002) = showString "VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV"
+  showsPrec _ (VkStructureType 1000028000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000028001) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT"
+  showsPrec _ (VkStructureType 1000028002) = showString "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000030000) = showString "VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX"
   showsPrec _ (VkStructureType 1000041000) = showString "VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD"
+  showsPrec _ (VkStructureType 1000049000) = showString "VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP"
+  showsPrec _ (VkStructureType 1000050000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV"
   showsPrec _ (VkStructureType 1000056000) = showString "VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV"
   showsPrec _ (VkStructureType 1000056001) = showString "VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV"
   showsPrec _ (VkStructureType 1000057000) = showString "VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV"
@@ -2068,6 +2085,8 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000058000) = showString "VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV"
   showsPrec _ (VkStructureType 1000061000) = showString "VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT"
   showsPrec _ (VkStructureType 1000062000) = showString "VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN"
+  showsPrec _ (VkStructureType 1000067000) = showString "VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT"
+  showsPrec _ (VkStructureType 1000067001) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT"
   showsPrec _ (VkStructureType 1000073000) = showString "VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR"
   showsPrec _ (VkStructureType 1000073001) = showString "VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR"
   showsPrec _ (VkStructureType 1000073002) = showString "VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR"
@@ -2083,6 +2102,10 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000079000) = showString "VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR"
   showsPrec _ (VkStructureType 1000079001) = showString "VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR"
   showsPrec _ (VkStructureType 1000080000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR"
+  showsPrec _ (VkStructureType 1000081000) = showString "VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT"
+  showsPrec _ (VkStructureType 1000081001) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000081002) = showString "VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT"
+  showsPrec _ (VkStructureType 1000082000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR"
   showsPrec _ (VkStructureType 1000084000) = showString "VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR"
   showsPrec _ (VkStructureType 1000086000) = showString "VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX"
   showsPrec _ (VkStructureType 1000086001) = showString "VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX"
@@ -2103,7 +2126,16 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000099001) = showString "VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT"
   showsPrec _ (VkStructureType 1000101000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT"
   showsPrec _ (VkStructureType 1000101001) = showString "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000102000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000102001) = showString "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT"
   showsPrec _ (VkStructureType 1000105000) = showString "VK_STRUCTURE_TYPE_HDR_METADATA_EXT"
+  showsPrec _ (VkStructureType 1000109000) = showString "VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2_KHR"
+  showsPrec _ (VkStructureType 1000109001) = showString "VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2_KHR"
+  showsPrec _ (VkStructureType 1000109002) = showString "VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR"
+  showsPrec _ (VkStructureType 1000109003) = showString "VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2_KHR"
+  showsPrec _ (VkStructureType 1000109004) = showString "VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2_KHR"
+  showsPrec _ (VkStructureType 1000109005) = showString "VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO_KHR"
+  showsPrec _ (VkStructureType 1000109006) = showString "VK_STRUCTURE_TYPE_SUBPASS_END_INFO_KHR"
   showsPrec _ (VkStructureType 1000111000) = showString "VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR"
   showsPrec _ (VkStructureType 1000114000) = showString "VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR"
   showsPrec _ (VkStructureType 1000114001) = showString "VK_STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR"
@@ -2113,6 +2145,11 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000119000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR"
   showsPrec _ (VkStructureType 1000119001) = showString "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR"
   showsPrec _ (VkStructureType 1000119002) = showString "VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR"
+  showsPrec _ (VkStructureType 1000121000) = showString "VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR"
+  showsPrec _ (VkStructureType 1000121001) = showString "VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR"
+  showsPrec _ (VkStructureType 1000121002) = showString "VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR"
+  showsPrec _ (VkStructureType 1000121003) = showString "VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR"
+  showsPrec _ (VkStructureType 1000121004) = showString "VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR"
   showsPrec _ (VkStructureType 1000122000) = showString "VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK"
   showsPrec _ (VkStructureType 1000123000) = showString "VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK"
   showsPrec _ (VkStructureType 1000128000) = showString "VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT"
@@ -2128,6 +2165,10 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000129005) = showString "VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID"
   showsPrec _ (VkStructureType 1000130000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT"
   showsPrec _ (VkStructureType 1000130001) = showString "VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000138000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000138001) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT"
+  showsPrec _ (VkStructureType 1000138002) = showString "VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT"
+  showsPrec _ (VkStructureType 1000138003) = showString "VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT"
   showsPrec _ (VkStructureType 1000143000) = showString "VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT"
   showsPrec _ (VkStructureType 1000143001) = showString "VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT"
   showsPrec _ (VkStructureType 1000143002) = showString "VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT"
@@ -2139,6 +2180,12 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000148002) = showString "VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT"
   showsPrec _ (VkStructureType 1000149000) = showString "VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV"
   showsPrec _ (VkStructureType 1000152000) = showString "VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV"
+  showsPrec _ (VkStructureType 1000158000) = showString "VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT"
+  showsPrec _ (VkStructureType 1000158001) = showString "VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT"
+  showsPrec _ (VkStructureType 1000158002) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT"
+  showsPrec _ (VkStructureType 1000158003) = showString "VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000158004) = showString "VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000158005) = showString "VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT"
   showsPrec _ (VkStructureType 1000160000) = showString "VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT"
   showsPrec _ (VkStructureType 1000160001) = showString "VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT"
   showsPrec _ (VkStructureType 1000161000) = showString "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT"
@@ -2146,13 +2193,80 @@ instance Show VkStructureType where
   showsPrec _ (VkStructureType 1000161002) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT"
   showsPrec _ (VkStructureType 1000161003) = showString "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT"
   showsPrec _ (VkStructureType 1000161004) = showString "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT"
+  showsPrec _ (VkStructureType 1000164000) = showString "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV"
+  showsPrec _ (VkStructureType 1000164001) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV"
+  showsPrec _ (VkStructureType 1000164002) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV"
+  showsPrec _ (VkStructureType 1000164005) = showString "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV"
+  showsPrec _ (VkStructureType 1000165000) = showString "VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV"
+  showsPrec _ (VkStructureType 1000165001) = showString "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV"
+  showsPrec _ (VkStructureType 1000165003) = showString "VK_STRUCTURE_TYPE_GEOMETRY_NV"
+  showsPrec _ (VkStructureType 1000165004) = showString "VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV"
+  showsPrec _ (VkStructureType 1000165005) = showString "VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV"
+  showsPrec _ (VkStructureType 1000165006) = showString "VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV"
+  showsPrec _ (VkStructureType 1000165007) = showString "VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV"
+  showsPrec _ (VkStructureType 1000165008) = showString "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV"
+  showsPrec _ (VkStructureType 1000165009) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV"
+  showsPrec _ (VkStructureType 1000165011) = showString "VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV"
+  showsPrec _ (VkStructureType 1000165012) = showString "VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV"
+  showsPrec _ (VkStructureType 1000166000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV"
+  showsPrec _ (VkStructureType 1000166001) = showString "VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV"
+  showsPrec _ (VkStructureType 1000170000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT"
+  showsPrec _ (VkStructureType 1000170001) = showString "VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT"
   showsPrec _ (VkStructureType 1000174000) = showString "VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000177000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR"
   showsPrec _ (VkStructureType 1000178000) = showString "VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT"
   showsPrec _ (VkStructureType 1000178001) = showString "VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT"
   showsPrec _ (VkStructureType 1000178002) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT"
+  showsPrec _ (VkStructureType 1000180000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR"
+  showsPrec _ (VkStructureType 1000184000) = showString "VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT"
   showsPrec _ (VkStructureType 1000185000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD"
+  showsPrec _ (VkStructureType 1000189000) = showString "VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD"
   showsPrec _ (VkStructureType 1000190000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT"
   showsPrec _ (VkStructureType 1000190001) = showString "VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000190002) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000191000) = showString "VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP"
+  showsPrec _ (VkStructureType 1000192000) = showString "VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000196000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR"
+  showsPrec _ (VkStructureType 1000197000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR"
+  showsPrec _ (VkStructureType 1000199000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR"
+  showsPrec _ (VkStructureType 1000199001) = showString "VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR"
+  showsPrec _ (VkStructureType 1000201000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV"
+  showsPrec _ (VkStructureType 1000202000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV"
+  showsPrec _ (VkStructureType 1000202001) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV"
+  showsPrec _ (VkStructureType 1000203000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV"
+  showsPrec _ (VkStructureType 1000204000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV"
+  showsPrec _ (VkStructureType 1000205000) = showString "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV"
+  showsPrec _ (VkStructureType 1000205002) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV"
+  showsPrec _ (VkStructureType 1000206000) = showString "VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV"
+  showsPrec _ (VkStructureType 1000206001) = showString "VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV"
+  showsPrec _ (VkStructureType 1000211000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR"
+  showsPrec _ (VkStructureType 1000212000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT"
+  showsPrec _ (VkStructureType 1000213000) = showString "VK_STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD"
+  showsPrec _ (VkStructureType 1000213001) = showString "VK_STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD"
+  showsPrec _ (VkStructureType 1000214000) = showString "VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA"
+  showsPrec _ (VkStructureType 1000217000) = showString "VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000218000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000218001) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT"
+  showsPrec _ (VkStructureType 1000218002) = showString "VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000221000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000237000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT"
+  showsPrec _ (VkStructureType 1000238000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000238001) = showString "VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000239000) = showString "VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR"
+  showsPrec _ (VkStructureType 1000240000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV"
+  showsPrec _ (VkStructureType 1000244000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000244001) = showString "VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT"
+  showsPrec _ (VkStructureType 1000244002) = showString "VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000246000) = showString "VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000247000) = showString "VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000249000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV"
+  showsPrec _ (VkStructureType 1000249001) = showString "VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV"
+  showsPrec _ (VkStructureType 1000249002) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV"
+  showsPrec _ (VkStructureType 1000252000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_IMAGE_ARRAYS_FEATURES_EXT"
+  showsPrec _ (VkStructureType 1000255000) = showString "VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT"
+  showsPrec _ (VkStructureType 1000255002) = showString "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT"
+  showsPrec _ (VkStructureType 1000255001) = showString "VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT"
+  showsPrec _ (VkStructureType 1000261000) = showString "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT"
   showsPrec p (VkStructureType x) = showParen (p >= 11) (showString "VkStructureType " . showsPrec 11 x)
 
 instance Read VkStructureType where
@@ -2206,196 +2320,298 @@ instance Read VkStructureType where
                              , ("VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO",               pure VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO)
                              , ("VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO",                 pure VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO)
                              , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES",                          pure (VkStructureType 1000094000))
-                             , ("VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO",                                      pure (VkStructureType 1000157000))
-                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO",                                       pure (VkStructureType 1000157001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES",                       pure (VkStructureType 1000083000))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS",                                pure (VkStructureType 1000127000))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO",                               pure (VkStructureType 1000127001))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO",                                   pure (VkStructureType 1000060000))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO",                          pure (VkStructureType 1000060003))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO",                       pure (VkStructureType 1000060004))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO",                                     pure (VkStructureType 1000060005))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO",                                pure (VkStructureType 1000060006))
-                             , ("VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO",                         pure (VkStructureType 1000060013))
-                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO",                          pure (VkStructureType 1000060014))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES",                             pure (VkStructureType 1000070000))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO",                              pure (VkStructureType 1000070001))
-                             , ("VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2",                            pure (VkStructureType 1000146000))
-                             , ("VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2",                             pure (VkStructureType 1000146001))
-                             , ("VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2",                      pure (VkStructureType 1000146002))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2",                                        pure (VkStructureType 1000146003))
-                             , ("VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2",                           pure (VkStructureType 1000146004))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2",                                   pure (VkStructureType 1000059000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2",                                 pure (VkStructureType 1000059001))
-                             , ("VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2",                                          pure (VkStructureType 1000059002))
-                             , ("VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2",                                    pure (VkStructureType 1000059003))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2",                          pure (VkStructureType 1000059004))
-                             , ("VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2",                                    pure (VkStructureType 1000059005))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2",                          pure (VkStructureType 1000059006))
-                             , ("VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2",                             pure (VkStructureType 1000059007))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2",                   pure (VkStructureType 1000059008))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES",                    pure (VkStructureType 1000117000))
-                             , ("VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO",              pure (VkStructureType 1000117001))
-                             , ("VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO",                                 pure (VkStructureType 1000117002))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO",        pure (VkStructureType 1000117003))
-                             , ("VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO",                            pure (VkStructureType 1000053000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES",                           pure (VkStructureType 1000053001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES",                         pure (VkStructureType 1000053002))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES",                    pure (VkStructureType 1000120000))
-                             , ("VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO",                                        pure (VkStructureType 1000145000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES",                    pure (VkStructureType 1000145001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES",                  pure (VkStructureType 1000145002))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2",                                          pure (VkStructureType 1000145003))
-                             , ("VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO",                         pure (VkStructureType 1000156000))
-                             , ("VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO",                                pure (VkStructureType 1000156001))
-                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO",                                 pure (VkStructureType 1000156002))
-                             , ("VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO",                         pure (VkStructureType 1000156003))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES",            pure (VkStructureType 1000156004))
-                             , ("VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES",             pure (VkStructureType 1000156005))
-                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO",                       pure (VkStructureType 1000085000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO",                   pure (VkStructureType 1000071000))
-                             , ("VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES",                             pure (VkStructureType 1000071001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO",                         pure (VkStructureType 1000071002))
-                             , ("VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES",                                   pure (VkStructureType 1000071003))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES",                                pure (VkStructureType 1000071004))
-                             , ("VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO",                           pure (VkStructureType 1000072000))
-                             , ("VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO",                            pure (VkStructureType 1000072001))
-                             , ("VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO",                                  pure (VkStructureType 1000072002))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO",                          pure (VkStructureType 1000112000))
-                             , ("VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES",                                    pure (VkStructureType 1000112001))
-                             , ("VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO",                                     pure (VkStructureType 1000113000))
-                             , ("VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO",                                 pure (VkStructureType 1000077000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO",                      pure (VkStructureType 1000076000))
-                             , ("VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES",                                pure (VkStructureType 1000076001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES",                     pure (VkStructureType 1000168000))
-                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT",                                pure (VkStructureType 1000168001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES",               pure (VkStructureType 1000063000))
-                             , ("VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR",                                    pure (VkStructureType 1000001000))
-                             , ("VK_STRUCTURE_TYPE_PRESENT_INFO_KHR",                                             pure (VkStructureType 1000001001))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR",                        pure (VkStructureType 1000060007))
-                             , ("VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR",                              pure (VkStructureType 1000060008))
-                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR",                         pure (VkStructureType 1000060009))
-                             , ("VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR",                                  pure (VkStructureType 1000060010))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR",                                pure (VkStructureType 1000060011))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR",                       pure (VkStructureType 1000060012))
-                             , ("VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR",                                 pure (VkStructureType 1000002000))
-                             , ("VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR",                              pure (VkStructureType 1000002001))
-                             , ("VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR",                                     pure (VkStructureType 1000003000))
-                             , ("VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR",                                 pure (VkStructureType 1000004000))
-                             , ("VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR",                                  pure (VkStructureType 1000005000))
-                             , ("VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR",                              pure (VkStructureType 1000006000))
-                             , ("VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR",                                  pure (VkStructureType 1000007000))
-                             , ("VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR",                              pure (VkStructureType 1000008000))
-                             , ("VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR",                                pure (VkStructureType 1000009000))
-                             , ("VK_STRUCTURE_TYPE_NATIVE_BUFFER_ANDROID",                                        pure (VkStructureType 1000010000))
-                             , ("VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT",                        pure (VkStructureType 1000011000))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD",         pure (VkStructureType 1000018000))
-                             , ("VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT",                            pure (VkStructureType 1000022000))
-                             , ("VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT",                             pure (VkStructureType 1000022001))
-                             , ("VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT",                                 pure (VkStructureType 1000022002))
-                             , ("VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV",                    pure (VkStructureType 1000026000))
-                             , ("VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV",                   pure (VkStructureType 1000026001))
-                             , ("VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV",                 pure (VkStructureType 1000026002))
-                             , ("VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD",                     pure (VkStructureType 1000041000))
-                             , ("VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV",                         pure (VkStructureType 1000056000))
-                             , ("VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV",                               pure (VkStructureType 1000056001))
-                             , ("VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV",                           pure (VkStructureType 1000057000))
-                             , ("VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV",                           pure (VkStructureType 1000057001))
-                             , ("VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV",                    pure (VkStructureType 1000058000))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR",                        pure (VkStructureType 1000060007))
-                             , ("VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR",                              pure (VkStructureType 1000060008))
-                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR",                         pure (VkStructureType 1000060009))
-                             , ("VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR",                                  pure (VkStructureType 1000060010))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR",                                pure (VkStructureType 1000060011))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR",                       pure (VkStructureType 1000060012))
-                             , ("VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT",                                         pure (VkStructureType 1000061000))
-                             , ("VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN",                                    pure (VkStructureType 1000062000))
-                             , ("VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR",                          pure (VkStructureType 1000073000))
-                             , ("VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR",                          pure (VkStructureType 1000073001))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR",                           pure (VkStructureType 1000073002))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR",                             pure (VkStructureType 1000073003))
-                             , ("VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR",                                    pure (VkStructureType 1000074000))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR",                                     pure (VkStructureType 1000074001))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR",                                       pure (VkStructureType 1000074002))
-                             , ("VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR",                   pure (VkStructureType 1000075000))
-                             , ("VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR",                       pure (VkStructureType 1000078000))
-                             , ("VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR",                       pure (VkStructureType 1000078001))
-                             , ("VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR",                                  pure (VkStructureType 1000078002))
-                             , ("VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR",                          pure (VkStructureType 1000078003))
-                             , ("VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR",                                 pure (VkStructureType 1000079000))
-                             , ("VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR",                                    pure (VkStructureType 1000079001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR",               pure (VkStructureType 1000080000))
-                             , ("VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR",                                          pure (VkStructureType 1000084000))
-                             , ("VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX",                                 pure (VkStructureType 1000086000))
-                             , ("VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX",                     pure (VkStructureType 1000086001))
-                             , ("VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX",                                pure (VkStructureType 1000086002))
-                             , ("VK_STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX",                      pure (VkStructureType 1000086003))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX",                         pure (VkStructureType 1000086004))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX",                       pure (VkStructureType 1000086005))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV",             pure (VkStructureType 1000087000))
-                             , ("VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT",                                   pure (VkStructureType 1000090000))
-                             , ("VK_STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT",                                       pure (VkStructureType 1000091000))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT",                                        pure (VkStructureType 1000091001))
-                             , ("VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT",                                       pure (VkStructureType 1000091002))
-                             , ("VK_STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT",                            pure (VkStructureType 1000091003))
-                             , ("VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE",                                    pure (VkStructureType 1000092000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX", pure (VkStructureType 1000097000))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV",               pure (VkStructureType 1000098000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT",             pure (VkStructureType 1000099000))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT",             pure (VkStructureType 1000099001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT",    pure (VkStructureType 1000101000))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT",    pure (VkStructureType 1000101001))
-                             , ("VK_STRUCTURE_TYPE_HDR_METADATA_EXT",                                             pure (VkStructureType 1000105000))
-                             , ("VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR",                      pure (VkStructureType 1000111000))
-                             , ("VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR",                           pure (VkStructureType 1000114000))
-                             , ("VK_STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR",                           pure (VkStructureType 1000114001))
-                             , ("VK_STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR",                              pure (VkStructureType 1000114002))
-                             , ("VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR",                                     pure (VkStructureType 1000115000))
-                             , ("VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR",                                        pure (VkStructureType 1000115001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR",                           pure (VkStructureType 1000119000))
-                             , ("VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR",                                   pure (VkStructureType 1000119001))
-                             , ("VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR",                                         pure (VkStructureType 1000119002))
-                             , ("VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK",                                  pure (VkStructureType 1000122000))
-                             , ("VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK",                                pure (VkStructureType 1000123000))
-                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT",                             pure (VkStructureType 1000128000))
-                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT",                              pure (VkStructureType 1000128001))
-                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT",                                        pure (VkStructureType 1000128002))
-                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT",                      pure (VkStructureType 1000128003))
-                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT",                        pure (VkStructureType 1000128004))
-                             , ("VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID",                        pure (VkStructureType 1000129000))
-                             , ("VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID",                   pure (VkStructureType 1000129001))
-                             , ("VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID",            pure (VkStructureType 1000129002))
-                             , ("VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID",                  pure (VkStructureType 1000129003))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID",              pure (VkStructureType 1000129004))
-                             , ("VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID",                                      pure (VkStructureType 1000129005))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT",         pure (VkStructureType 1000130000))
-                             , ("VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT",                       pure (VkStructureType 1000130001))
-                             , ("VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT",                                    pure (VkStructureType 1000143000))
-                             , ("VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT",                  pure (VkStructureType 1000143001))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT",              pure (VkStructureType 1000143002))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT",              pure (VkStructureType 1000143003))
-                             , ("VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT",                                   pure (VkStructureType 1000143004))
-                             , ("VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR",                            pure (VkStructureType 1000147000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT",        pure (VkStructureType 1000148000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT",      pure (VkStructureType 1000148001))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT",          pure (VkStructureType 1000148002))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV",              pure (VkStructureType 1000149000))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV",            pure (VkStructureType 1000152000))
-                             , ("VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT",                             pure (VkStructureType 1000160000))
-                             , ("VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT",               pure (VkStructureType 1000160001))
-                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT",          pure (VkStructureType 1000161000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT",             pure (VkStructureType 1000161001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT",           pure (VkStructureType 1000161002))
-                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT",   pure (VkStructureType 1000161003))
-                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT",  pure (VkStructureType 1000161004))
-                             , ("VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT",                 pure (VkStructureType 1000174000))
-                             , ("VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT",                          pure (VkStructureType 1000178000))
-                             , ("VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT",                           pure (VkStructureType 1000178001))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT",          pure (VkStructureType 1000178002))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD",                   pure (VkStructureType 1000185000))
-                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT",      pure (VkStructureType 1000190000))
-                             , ("VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT",          pure (VkStructureType 1000190001))
+                               ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES",                             pure (VkStructureType 1000094000))
+                             , ("VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO",                                         pure (VkStructureType 1000157000))
+                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO",                                          pure (VkStructureType 1000157001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES",                          pure (VkStructureType 1000083000))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS",                                   pure (VkStructureType 1000127000))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO",                                  pure (VkStructureType 1000127001))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO",                                      pure (VkStructureType 1000060000))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO",                             pure (VkStructureType 1000060003))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO",                          pure (VkStructureType 1000060004))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO",                                        pure (VkStructureType 1000060005))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO",                                   pure (VkStructureType 1000060006))
+                             , ("VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO",                            pure (VkStructureType 1000060013))
+                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO",                             pure (VkStructureType 1000060014))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES",                                pure (VkStructureType 1000070000))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO",                                 pure (VkStructureType 1000070001))
+                             , ("VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2",                               pure (VkStructureType 1000146000))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2",                                pure (VkStructureType 1000146001))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2",                         pure (VkStructureType 1000146002))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2",                                           pure (VkStructureType 1000146003))
+                             , ("VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2",                              pure (VkStructureType 1000146004))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2",                                      pure (VkStructureType 1000059000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2",                                    pure (VkStructureType 1000059001))
+                             , ("VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2",                                             pure (VkStructureType 1000059002))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2",                                       pure (VkStructureType 1000059003))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2",                             pure (VkStructureType 1000059004))
+                             , ("VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2",                                       pure (VkStructureType 1000059005))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2",                             pure (VkStructureType 1000059006))
+                             , ("VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2",                                pure (VkStructureType 1000059007))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2",                      pure (VkStructureType 1000059008))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES",                       pure (VkStructureType 1000117000))
+                             , ("VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO",                 pure (VkStructureType 1000117001))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO",                                    pure (VkStructureType 1000117002))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO",           pure (VkStructureType 1000117003))
+                             , ("VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO",                               pure (VkStructureType 1000053000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES",                              pure (VkStructureType 1000053001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES",                            pure (VkStructureType 1000053002))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES",                      pure (VkStructureType 1000120000))
+                             , ("VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO",                                           pure (VkStructureType 1000145000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES",                       pure (VkStructureType 1000145001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES",                     pure (VkStructureType 1000145002))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2",                                             pure (VkStructureType 1000145003))
+                             , ("VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO",                            pure (VkStructureType 1000156000))
+                             , ("VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO",                                   pure (VkStructureType 1000156001))
+                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO",                                    pure (VkStructureType 1000156002))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO",                            pure (VkStructureType 1000156003))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES",               pure (VkStructureType 1000156004))
+                             , ("VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES",                pure (VkStructureType 1000156005))
+                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO",                          pure (VkStructureType 1000085000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO",                      pure (VkStructureType 1000071000))
+                             , ("VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES",                                pure (VkStructureType 1000071001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO",                            pure (VkStructureType 1000071002))
+                             , ("VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES",                                      pure (VkStructureType 1000071003))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES",                                   pure (VkStructureType 1000071004))
+                             , ("VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO",                              pure (VkStructureType 1000072000))
+                             , ("VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO",                               pure (VkStructureType 1000072001))
+                             , ("VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO",                                     pure (VkStructureType 1000072002))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO",                             pure (VkStructureType 1000112000))
+                             , ("VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES",                                       pure (VkStructureType 1000112001))
+                             , ("VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO",                                        pure (VkStructureType 1000113000))
+                             , ("VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO",                                    pure (VkStructureType 1000077000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO",                         pure (VkStructureType 1000076000))
+                             , ("VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES",                                   pure (VkStructureType 1000076001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES",                        pure (VkStructureType 1000168000))
+                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT",                                   pure (VkStructureType 1000168001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES",                 pure (VkStructureType 1000063000))
+                             , ("VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR",                                       pure (VkStructureType 1000001000))
+                             , ("VK_STRUCTURE_TYPE_PRESENT_INFO_KHR",                                                pure (VkStructureType 1000001001))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR",                           pure (VkStructureType 1000060007))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR",                                 pure (VkStructureType 1000060008))
+                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR",                            pure (VkStructureType 1000060009))
+                             , ("VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR",                                     pure (VkStructureType 1000060010))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR",                                   pure (VkStructureType 1000060011))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR",                          pure (VkStructureType 1000060012))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR",                                    pure (VkStructureType 1000002000))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR",                                 pure (VkStructureType 1000002001))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR",                                        pure (VkStructureType 1000003000))
+                             , ("VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR",                                    pure (VkStructureType 1000004000))
+                             , ("VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR",                                     pure (VkStructureType 1000005000))
+                             , ("VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR",                                 pure (VkStructureType 1000006000))
+                             , ("VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR",                                 pure (VkStructureType 1000008000))
+                             , ("VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR",                                   pure (VkStructureType 1000009000))
+                             , ("VK_STRUCTURE_TYPE_NATIVE_BUFFER_ANDROID",                                           pure (VkStructureType 1000010000))
+                             , ("VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT",                           pure (VkStructureType 1000011000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD",            pure (VkStructureType 1000018000))
+                             , ("VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT",                               pure (VkStructureType 1000022000))
+                             , ("VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT",                                pure (VkStructureType 1000022001))
+                             , ("VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT",                                    pure (VkStructureType 1000022002))
+                             , ("VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV",                       pure (VkStructureType 1000026000))
+                             , ("VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV",                      pure (VkStructureType 1000026001))
+                             , ("VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV",                    pure (VkStructureType 1000026002))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT",                 pure (VkStructureType 1000028000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT",               pure (VkStructureType 1000028001))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT",             pure (VkStructureType 1000028002))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX",                                      pure (VkStructureType 1000030000))
+                             , ("VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD",                        pure (VkStructureType 1000041000))
+                             , ("VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP",                       pure (VkStructureType 1000049000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV",                pure (VkStructureType 1000050000))
+                             , ("VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV",                            pure (VkStructureType 1000056000))
+                             , ("VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV",                                  pure (VkStructureType 1000056001))
+                             , ("VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV",                              pure (VkStructureType 1000057000))
+                             , ("VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV",                              pure (VkStructureType 1000057001))
+                             , ("VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV",                       pure (VkStructureType 1000058000))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR",                           pure (VkStructureType 1000060007))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR",                                 pure (VkStructureType 1000060008))
+                             , ("VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR",                            pure (VkStructureType 1000060009))
+                             , ("VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR",                                     pure (VkStructureType 1000060010))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR",                                   pure (VkStructureType 1000060011))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR",                          pure (VkStructureType 1000060012))
+                             , ("VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT",                                            pure (VkStructureType 1000061000))
+                             , ("VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN",                                       pure (VkStructureType 1000062000))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT",                                 pure (VkStructureType 1000067000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT",                        pure (VkStructureType 1000067001))
+                             , ("VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR",                             pure (VkStructureType 1000073000))
+                             , ("VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR",                             pure (VkStructureType 1000073001))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR",                              pure (VkStructureType 1000073002))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR",                                pure (VkStructureType 1000073003))
+                             , ("VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR",                                       pure (VkStructureType 1000074000))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR",                                        pure (VkStructureType 1000074001))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR",                                          pure (VkStructureType 1000074002))
+                             , ("VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR",                      pure (VkStructureType 1000075000))
+                             , ("VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR",                          pure (VkStructureType 1000078000))
+                             , ("VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR",                          pure (VkStructureType 1000078001))
+                             , ("VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR",                                     pure (VkStructureType 1000078002))
+                             , ("VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR",                             pure (VkStructureType 1000078003))
+                             , ("VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR",                                    pure (VkStructureType 1000079000))
+                             , ("VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR",                                       pure (VkStructureType 1000079001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR",                  pure (VkStructureType 1000080000))
+                             , ("VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT",       pure (VkStructureType 1000081000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT",              pure (VkStructureType 1000081001))
+                             , ("VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT",                            pure (VkStructureType 1000081002))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR",                       pure (VkStructureType 1000082000))
+                             , ("VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR",                                             pure (VkStructureType 1000084000))
+                             , ("VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX",                                    pure (VkStructureType 1000086000))
+                             , ("VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX",                        pure (VkStructureType 1000086001))
+                             , ("VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX",                                   pure (VkStructureType 1000086002))
+                             , ("VK_STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX",                         pure (VkStructureType 1000086003))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX",                            pure (VkStructureType 1000086004))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX",                          pure (VkStructureType 1000086005))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV",                pure (VkStructureType 1000087000))
+                             , ("VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT",                                      pure (VkStructureType 1000090000))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT",                                          pure (VkStructureType 1000091000))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT",                                           pure (VkStructureType 1000091001))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT",                                          pure (VkStructureType 1000091002))
+                             , ("VK_STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT",                               pure (VkStructureType 1000091003))
+                             , ("VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE",                                       pure (VkStructureType 1000092000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX",    pure (VkStructureType 1000097000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV",                  pure (VkStructureType 1000098000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT",                pure (VkStructureType 1000099000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT",                pure (VkStructureType 1000099001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT",       pure (VkStructureType 1000101000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT",       pure (VkStructureType 1000101001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT",                  pure (VkStructureType 1000102000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT",         pure (VkStructureType 1000102001))
+                             , ("VK_STRUCTURE_TYPE_HDR_METADATA_EXT",                                                pure (VkStructureType 1000105000))
+                             , ("VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2_KHR",                                    pure (VkStructureType 1000109000))
+                             , ("VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2_KHR",                                      pure (VkStructureType 1000109001))
+                             , ("VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR",                                       pure (VkStructureType 1000109002))
+                             , ("VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2_KHR",                                        pure (VkStructureType 1000109003))
+                             , ("VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2_KHR",                                   pure (VkStructureType 1000109004))
+                             , ("VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO_KHR",                                          pure (VkStructureType 1000109005))
+                             , ("VK_STRUCTURE_TYPE_SUBPASS_END_INFO_KHR",                                            pure (VkStructureType 1000109006))
+                             , ("VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR",                         pure (VkStructureType 1000111000))
+                             , ("VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR",                              pure (VkStructureType 1000114000))
+                             , ("VK_STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR",                              pure (VkStructureType 1000114001))
+                             , ("VK_STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR",                                 pure (VkStructureType 1000114002))
+                             , ("VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR",                                        pure (VkStructureType 1000115000))
+                             , ("VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR",                                           pure (VkStructureType 1000115001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR",                              pure (VkStructureType 1000119000))
+                             , ("VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR",                                      pure (VkStructureType 1000119001))
+                             , ("VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR",                                            pure (VkStructureType 1000119002))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR",                                        pure (VkStructureType 1000121000))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR",                                  pure (VkStructureType 1000121001))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR",                                   pure (VkStructureType 1000121002))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR",                                        pure (VkStructureType 1000121003))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR",                                pure (VkStructureType 1000121004))
+                             , ("VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK",                                     pure (VkStructureType 1000122000))
+                             , ("VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK",                                   pure (VkStructureType 1000123000))
+                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT",                                pure (VkStructureType 1000128000))
+                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT",                                 pure (VkStructureType 1000128001))
+                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT",                                           pure (VkStructureType 1000128002))
+                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT",                         pure (VkStructureType 1000128003))
+                             , ("VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT",                           pure (VkStructureType 1000128004))
+                             , ("VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID",                           pure (VkStructureType 1000129000))
+                             , ("VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID",                      pure (VkStructureType 1000129001))
+                             , ("VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID",               pure (VkStructureType 1000129002))
+                             , ("VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID",                     pure (VkStructureType 1000129003))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID",                 pure (VkStructureType 1000129004))
+                             , ("VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID",                                         pure (VkStructureType 1000129005))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT",            pure (VkStructureType 1000130000))
+                             , ("VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT",                          pure (VkStructureType 1000130001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT",               pure (VkStructureType 1000138000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT",             pure (VkStructureType 1000138001))
+                             , ("VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT",                   pure (VkStructureType 1000138002))
+                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT",            pure (VkStructureType 1000138003))
+                             , ("VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT",                                       pure (VkStructureType 1000143000))
+                             , ("VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT",                     pure (VkStructureType 1000143001))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT",                 pure (VkStructureType 1000143002))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT",                 pure (VkStructureType 1000143003))
+                             , ("VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT",                                      pure (VkStructureType 1000143004))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR",                               pure (VkStructureType 1000147000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT",           pure (VkStructureType 1000148000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT",         pure (VkStructureType 1000148001))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT",             pure (VkStructureType 1000148002))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV",                 pure (VkStructureType 1000149000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV",               pure (VkStructureType 1000152000))
+                             , ("VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT",                         pure (VkStructureType 1000158000))
+                             , ("VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT",                              pure (VkStructureType 1000158001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT",              pure (VkStructureType 1000158002))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT",                  pure (VkStructureType 1000158003))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT",              pure (VkStructureType 1000158004))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT",                        pure (VkStructureType 1000158005))
+                             , ("VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT",                                pure (VkStructureType 1000160000))
+                             , ("VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT",                  pure (VkStructureType 1000160001))
+                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT",             pure (VkStructureType 1000161000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT",                pure (VkStructureType 1000161001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT",              pure (VkStructureType 1000161002))
+                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT",      pure (VkStructureType 1000161003))
+                             , ("VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT",     pure (VkStructureType 1000161004))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV",       pure (VkStructureType 1000164000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV",                  pure (VkStructureType 1000164001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV",                pure (VkStructureType 1000164002))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV",      pure (VkStructureType 1000164005))
+                             , ("VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV",                             pure (VkStructureType 1000165000))
+                             , ("VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV",                           pure (VkStructureType 1000165001))
+                             , ("VK_STRUCTURE_TYPE_GEOMETRY_NV",                                                     pure (VkStructureType 1000165003))
+                             , ("VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV",                                           pure (VkStructureType 1000165004))
+                             , ("VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV",                                                pure (VkStructureType 1000165005))
+                             , ("VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV",                      pure (VkStructureType 1000165006))
+                             , ("VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV",                  pure (VkStructureType 1000165007))
+                             , ("VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV",              pure (VkStructureType 1000165008))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV",                       pure (VkStructureType 1000165009))
+                             , ("VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV",                         pure (VkStructureType 1000165011))
+                             , ("VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV",                                  pure (VkStructureType 1000165012))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV",        pure (VkStructureType 1000166000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV",      pure (VkStructureType 1000166001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT",                pure (VkStructureType 1000170000))
+                             , ("VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT",             pure (VkStructureType 1000170001))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT",                    pure (VkStructureType 1000174000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR",                       pure (VkStructureType 1000177000))
+                             , ("VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT",                             pure (VkStructureType 1000178000))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT",                              pure (VkStructureType 1000178001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT",             pure (VkStructureType 1000178002))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR",                pure (VkStructureType 1000180000))
+                             , ("VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT",                                   pure (VkStructureType 1000184000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD",                      pure (VkStructureType 1000185000))
+                             , ("VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD",                    pure (VkStructureType 1000189000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT",         pure (VkStructureType 1000190000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT",             pure (VkStructureType 1000190001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT",           pure (VkStructureType 1000190002))
+                             , ("VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP",                                         pure (VkStructureType 1000191000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT",                      pure (VkStructureType 1000192000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR",                           pure (VkStructureType 1000196000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR",                   pure (VkStructureType 1000197000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR",            pure (VkStructureType 1000199000))
+                             , ("VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR",                   pure (VkStructureType 1000199001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV",          pure (VkStructureType 1000201000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV",                         pure (VkStructureType 1000202000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV",                       pure (VkStructureType 1000202001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV",         pure (VkStructureType 1000203000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV",              pure (VkStructureType 1000204000))
+                             , ("VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV",        pure (VkStructureType 1000205000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV",                   pure (VkStructureType 1000205002))
+                             , ("VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV",                                              pure (VkStructureType 1000206000))
+                             , ("VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV",                           pure (VkStructureType 1000206001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR",                pure (VkStructureType 1000211000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT",                     pure (VkStructureType 1000212000))
+                             , ("VK_STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD",                     pure (VkStructureType 1000213000))
+                             , ("VK_STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD",                    pure (VkStructureType 1000213001))
+                             , ("VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA",                           pure (VkStructureType 1000214000))
+                             , ("VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT",                                   pure (VkStructureType 1000217000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT",               pure (VkStructureType 1000218000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT",             pure (VkStructureType 1000218001))
+                             , ("VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT",                pure (VkStructureType 1000218002))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT",                pure (VkStructureType 1000221000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT",                    pure (VkStructureType 1000237000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT",                    pure (VkStructureType 1000238000))
+                             , ("VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT",                               pure (VkStructureType 1000238001))
+                             , ("VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR",                              pure (VkStructureType 1000239000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV", pure (VkStructureType 1000240000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT",              pure (VkStructureType 1000244000))
+                             , ("VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT",                                  pure (VkStructureType 1000244001))
+                             , ("VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT",                           pure (VkStructureType 1000244002))
+                             , ("VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT",                             pure (VkStructureType 1000246000))
+                             , ("VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT",                                         pure (VkStructureType 1000247000))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV",                  pure (VkStructureType 1000249000))
+                             , ("VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV",                                pure (VkStructureType 1000249001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV",                pure (VkStructureType 1000249002))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_IMAGE_ARRAYS_FEATURES_EXT",                 pure (VkStructureType 1000252000))
+                             , ("VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT",                          pure (VkStructureType 1000255000))
+                             , ("VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT",                  pure (VkStructureType 1000255002))
+                             , ("VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT",                    pure (VkStructureType 1000255001))
+                             , ("VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT",                   pure (VkStructureType 1000261000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkStructureType")
@@ -2599,3 +2815,38 @@ pattern VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO = VkStructureType 47
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = VkStructureType 48
+-- ** VkVendorId
+
+-- No documentation found for TopLevel "VkVendorId"
+newtype VkVendorId = VkVendorId Int32
+  deriving (Eq, Ord, Storable)
+
+instance Show VkVendorId where
+  showsPrec _ VK_VENDOR_ID_VIV = showString "VK_VENDOR_ID_VIV"
+  showsPrec _ VK_VENDOR_ID_VSI = showString "VK_VENDOR_ID_VSI"
+  showsPrec _ VK_VENDOR_ID_KAZAN = showString "VK_VENDOR_ID_KAZAN"
+  showsPrec p (VkVendorId x) = showParen (p >= 11) (showString "VkVendorId " . showsPrec 11 x)
+
+instance Read VkVendorId where
+  readPrec = parens ( choose [ ("VK_VENDOR_ID_VIV",   pure VK_VENDOR_ID_VIV)
+                             , ("VK_VENDOR_ID_VSI",   pure VK_VENDOR_ID_VSI)
+                             , ("VK_VENDOR_ID_KAZAN", pure VK_VENDOR_ID_KAZAN)
+                             ] +++
+                      prec 10 (do
+                        expectP (Ident "VkVendorId")
+                        v <- step readPrec
+                        pure (VkVendorId v)
+                        )
+                    )
+
+-- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_VIV"
+pattern VK_VENDOR_ID_VIV :: VkVendorId
+pattern VK_VENDOR_ID_VIV = VkVendorId 65537
+
+-- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_VSI"
+pattern VK_VENDOR_ID_VSI :: VkVendorId
+pattern VK_VENDOR_ID_VSI = VkVendorId 65538
+
+-- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_KAZAN"
+pattern VK_VENDOR_ID_KAZAN :: VkVendorId
+pattern VK_VENDOR_ID_KAZAN = VkVendorId 65539

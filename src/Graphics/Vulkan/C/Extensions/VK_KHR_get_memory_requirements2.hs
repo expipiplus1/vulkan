@@ -12,8 +12,6 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2
   , pattern VkImageMemoryRequirementsInfo2KHR
   , VkImageSparseMemoryRequirementsInfo2KHR
   , pattern VkImageSparseMemoryRequirementsInfo2KHR
-  , VkMemoryRequirements2KHR
-  , pattern VkMemoryRequirements2KHR
   , VkSparseImageMemoryRequirements2KHR
   , pattern VkSparseImageMemoryRequirements2KHR
 #if defined(EXPOSE_CORE11_COMMANDS)
@@ -33,6 +31,7 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2
   , pattern VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2
   , pattern VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2
   , pattern VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2
+  , VkMemoryRequirements2KHR
   ) where
 
 import Data.String
@@ -59,8 +58,7 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   )
 #endif
 import Graphics.Vulkan.C.Core10.MemoryManagement
-  ( VkMemoryRequirements(..)
-  , VkBuffer
+  ( VkBuffer
   , VkImage
   )
 import Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
@@ -70,7 +68,6 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
   ( VkBufferMemoryRequirementsInfo2(..)
   , VkImageMemoryRequirementsInfo2(..)
   , VkImageSparseMemoryRequirementsInfo2(..)
-  , VkMemoryRequirements2(..)
   , VkSparseImageMemoryRequirements2(..)
   , pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2
   , pattern VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2
@@ -84,10 +81,14 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
   ( vkGetBufferMemoryRequirements2
   , vkGetImageMemoryRequirements2
   , vkGetImageSparseMemoryRequirements2
+  , VkMemoryRequirements2(..)
   )
 #endif
 import Graphics.Vulkan.NamedType
   ( (:::)
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
+  ( VkMemoryRequirements2KHR
   )
 
 
@@ -112,13 +113,6 @@ type VkImageSparseMemoryRequirementsInfo2KHR = VkImageSparseMemoryRequirementsIn
 -- No documentation found for TopLevel "VkImageSparseMemoryRequirementsInfo2KHR"
 pattern VkImageSparseMemoryRequirementsInfo2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("image" ::: VkImage) -> VkImageSparseMemoryRequirementsInfo2KHR
 pattern VkImageSparseMemoryRequirementsInfo2KHR vkSType vkPNext vkImage = VkImageSparseMemoryRequirementsInfo2 vkSType vkPNext vkImage
--- No documentation found for TopLevel "VkMemoryRequirements2KHR"
-type VkMemoryRequirements2KHR = VkMemoryRequirements2
-
-
--- No documentation found for TopLevel "VkMemoryRequirements2KHR"
-pattern VkMemoryRequirements2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("memoryRequirements" ::: VkMemoryRequirements) -> VkMemoryRequirements2KHR
-pattern VkMemoryRequirements2KHR vkSType vkPNext vkMemoryRequirements = VkMemoryRequirements2 vkSType vkPNext vkMemoryRequirements
 -- No documentation found for TopLevel "VkSparseImageMemoryRequirements2KHR"
 type VkSparseImageMemoryRequirements2KHR = VkSparseImageMemoryRequirements2
 

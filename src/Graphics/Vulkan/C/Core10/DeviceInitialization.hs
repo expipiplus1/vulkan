@@ -395,7 +395,12 @@ instance Show VkFormatFeatureFlagBits where
   showsPrec _ (VkFormatFeatureFlagBits 0x00400000) = showString "VK_FORMAT_FEATURE_DISJOINT_BIT"
   showsPrec _ (VkFormatFeatureFlagBits 0x00800000) = showString "VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT"
   showsPrec _ (VkFormatFeatureFlagBits 0x00002000) = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
+  showsPrec _ (VkFormatFeatureFlagBits 0x08000000) = showString "VK_FORMAT_FEATURE_RESERVED_27_BIT_KHR"
+  showsPrec _ (VkFormatFeatureFlagBits 0x10000000) = showString "VK_FORMAT_FEATURE_RESERVED_28_BIT_KHR"
+  showsPrec _ (VkFormatFeatureFlagBits 0x02000000) = showString "VK_FORMAT_FEATURE_RESERVED_25_BIT_KHR"
+  showsPrec _ (VkFormatFeatureFlagBits 0x04000000) = showString "VK_FORMAT_FEATURE_RESERVED_26_BIT_KHR"
   showsPrec _ (VkFormatFeatureFlagBits 0x00010000) = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT"
+  showsPrec _ (VkFormatFeatureFlagBits 0x01000000) = showString "VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT"
   showsPrec p (VkFormatFeatureFlagBits x) = showParen (p >= 11) (showString "VkFormatFeatureFlagBits " . showsPrec 11 x)
 
 instance Read VkFormatFeatureFlagBits where
@@ -423,7 +428,12 @@ instance Read VkFormatFeatureFlagBits where
                              , ("VK_FORMAT_FEATURE_DISJOINT_BIT",                                                                pure (VkFormatFeatureFlagBits 0x00400000))
                              , ("VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT",                                                  pure (VkFormatFeatureFlagBits 0x00800000))
                              , ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG",                                          pure (VkFormatFeatureFlagBits 0x00002000))
+                             , ("VK_FORMAT_FEATURE_RESERVED_27_BIT_KHR",                                                         pure (VkFormatFeatureFlagBits 0x08000000))
+                             , ("VK_FORMAT_FEATURE_RESERVED_28_BIT_KHR",                                                         pure (VkFormatFeatureFlagBits 0x10000000))
+                             , ("VK_FORMAT_FEATURE_RESERVED_25_BIT_KHR",                                                         pure (VkFormatFeatureFlagBits 0x02000000))
+                             , ("VK_FORMAT_FEATURE_RESERVED_26_BIT_KHR",                                                         pure (VkFormatFeatureFlagBits 0x04000000))
                              , ("VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT",                                         pure (VkFormatFeatureFlagBits 0x00010000))
+                             , ("VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT",                                                pure (VkFormatFeatureFlagBits 0x01000000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkFormatFeatureFlagBits")
@@ -525,7 +535,9 @@ instance Show VkImageCreateFlagBits where
   showsPrec _ (VkImageCreateFlagBits 0x00000100) = showString "VK_IMAGE_CREATE_EXTENDED_USAGE_BIT"
   showsPrec _ (VkImageCreateFlagBits 0x00000800) = showString "VK_IMAGE_CREATE_PROTECTED_BIT"
   showsPrec _ (VkImageCreateFlagBits 0x00000200) = showString "VK_IMAGE_CREATE_DISJOINT_BIT"
+  showsPrec _ (VkImageCreateFlagBits 0x00002000) = showString "VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV"
   showsPrec _ (VkImageCreateFlagBits 0x00001000) = showString "VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT"
+  showsPrec _ (VkImageCreateFlagBits 0x00004000) = showString "VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT"
   showsPrec p (VkImageCreateFlagBits x) = showParen (p >= 11) (showString "VkImageCreateFlagBits " . showsPrec 11 x)
 
 instance Read VkImageCreateFlagBits where
@@ -542,7 +554,9 @@ instance Read VkImageCreateFlagBits where
                              , ("VK_IMAGE_CREATE_EXTENDED_USAGE_BIT",                        pure (VkImageCreateFlagBits 0x00000100))
                              , ("VK_IMAGE_CREATE_PROTECTED_BIT",                             pure (VkImageCreateFlagBits 0x00000800))
                              , ("VK_IMAGE_CREATE_DISJOINT_BIT",                              pure (VkImageCreateFlagBits 0x00000200))
+                             , ("VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV",                     pure (VkImageCreateFlagBits 0x00002000))
                              , ("VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT", pure (VkImageCreateFlagBits 0x00001000))
+                             , ("VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT",                        pure (VkImageCreateFlagBits 0x00004000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkImageCreateFlagBits")
@@ -609,11 +623,15 @@ newtype VkImageTiling = VkImageTiling Int32
 instance Show VkImageTiling where
   showsPrec _ VK_IMAGE_TILING_OPTIMAL = showString "VK_IMAGE_TILING_OPTIMAL"
   showsPrec _ VK_IMAGE_TILING_LINEAR = showString "VK_IMAGE_TILING_LINEAR"
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkImageTiling 1000158000) = showString "VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT"
   showsPrec p (VkImageTiling x) = showParen (p >= 11) (showString "VkImageTiling " . showsPrec 11 x)
 
 instance Read VkImageTiling where
   readPrec = parens ( choose [ ("VK_IMAGE_TILING_OPTIMAL", pure VK_IMAGE_TILING_OPTIMAL)
                              , ("VK_IMAGE_TILING_LINEAR",  pure VK_IMAGE_TILING_LINEAR)
+                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT", pure (VkImageTiling 1000158000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkImageTiling")
@@ -679,6 +697,15 @@ instance Show VkImageUsageFlagBits where
   showsPrec _ VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT"
   showsPrec _ VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT"
   showsPrec _ VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = showString "VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT"
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkImageUsageFlagBits 0x00002000) = showString "VK_IMAGE_USAGE_RESERVED_13_BIT_KHR"
+  showsPrec _ (VkImageUsageFlagBits 0x00004000) = showString "VK_IMAGE_USAGE_RESERVED_14_BIT_KHR"
+  showsPrec _ (VkImageUsageFlagBits 0x00008000) = showString "VK_IMAGE_USAGE_RESERVED_15_BIT_KHR"
+  showsPrec _ (VkImageUsageFlagBits 0x00000400) = showString "VK_IMAGE_USAGE_RESERVED_10_BIT_KHR"
+  showsPrec _ (VkImageUsageFlagBits 0x00000800) = showString "VK_IMAGE_USAGE_RESERVED_11_BIT_KHR"
+  showsPrec _ (VkImageUsageFlagBits 0x00001000) = showString "VK_IMAGE_USAGE_RESERVED_12_BIT_KHR"
+  showsPrec _ (VkImageUsageFlagBits 0x00000100) = showString "VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV"
+  showsPrec _ (VkImageUsageFlagBits 0x00000200) = showString "VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT"
   showsPrec p (VkImageUsageFlagBits x) = showParen (p >= 11) (showString "VkImageUsageFlagBits " . showsPrec 11 x)
 
 instance Read VkImageUsageFlagBits where
@@ -690,6 +717,15 @@ instance Read VkImageUsageFlagBits where
                              , ("VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT", pure VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
                              , ("VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT",     pure VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT)
                              , ("VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT",         pure VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT)
+                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_IMAGE_USAGE_RESERVED_13_BIT_KHR",          pure (VkImageUsageFlagBits 0x00002000))
+                             , ("VK_IMAGE_USAGE_RESERVED_14_BIT_KHR",          pure (VkImageUsageFlagBits 0x00004000))
+                             , ("VK_IMAGE_USAGE_RESERVED_15_BIT_KHR",          pure (VkImageUsageFlagBits 0x00008000))
+                             , ("VK_IMAGE_USAGE_RESERVED_10_BIT_KHR",          pure (VkImageUsageFlagBits 0x00000400))
+                             , ("VK_IMAGE_USAGE_RESERVED_11_BIT_KHR",          pure (VkImageUsageFlagBits 0x00000800))
+                             , ("VK_IMAGE_USAGE_RESERVED_12_BIT_KHR",          pure (VkImageUsageFlagBits 0x00001000))
+                             , ("VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV",    pure (VkImageUsageFlagBits 0x00000100))
+                             , ("VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT", pure (VkImageUsageFlagBits 0x00000200))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkImageUsageFlagBits")
@@ -1777,6 +1813,8 @@ instance Show VkQueueFlagBits where
   showsPrec _ VK_QUEUE_SPARSE_BINDING_BIT = showString "VK_QUEUE_SPARSE_BINDING_BIT"
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
   showsPrec _ (VkQueueFlagBits 0x00000010) = showString "VK_QUEUE_PROTECTED_BIT"
+  showsPrec _ (VkQueueFlagBits 0x00000040) = showString "VK_QUEUE_RESERVED_6_BIT_KHR"
+  showsPrec _ (VkQueueFlagBits 0x00000020) = showString "VK_QUEUE_RESERVED_5_BIT_KHR"
   showsPrec p (VkQueueFlagBits x) = showParen (p >= 11) (showString "VkQueueFlagBits " . showsPrec 11 x)
 
 instance Read VkQueueFlagBits where
@@ -1785,7 +1823,9 @@ instance Read VkQueueFlagBits where
                              , ("VK_QUEUE_TRANSFER_BIT",       pure VK_QUEUE_TRANSFER_BIT)
                              , ("VK_QUEUE_SPARSE_BINDING_BIT", pure VK_QUEUE_SPARSE_BINDING_BIT)
                              , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_QUEUE_PROTECTED_BIT", pure (VkQueueFlagBits 0x00000010))
+                               ("VK_QUEUE_PROTECTED_BIT",      pure (VkQueueFlagBits 0x00000010))
+                             , ("VK_QUEUE_RESERVED_6_BIT_KHR", pure (VkQueueFlagBits 0x00000040))
+                             , ("VK_QUEUE_RESERVED_5_BIT_KHR", pure (VkQueueFlagBits 0x00000020))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkQueueFlagBits")

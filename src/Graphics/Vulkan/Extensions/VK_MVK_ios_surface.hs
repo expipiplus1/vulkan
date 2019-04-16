@@ -1,196 +1,96 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
 {-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
 {-# language DuplicateRecordFields #-}
 
 module Graphics.Vulkan.Extensions.VK_MVK_ios_surface
-  ( VkIOSSurfaceCreateFlagsMVK(..)
-  , pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
+  ( IOSSurfaceCreateFlagsMVK
+  , withCStructIOSSurfaceCreateInfoMVK
+  , fromCStructIOSSurfaceCreateInfoMVK
+  , IOSSurfaceCreateInfoMVK(..)
+  , createIOSSurfaceMVK
   , pattern VK_MVK_IOS_SURFACE_SPEC_VERSION
   , pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME
-  , vkCreateIOSSurfaceMVK
-  , VkIOSSurfaceCreateInfoMVK(..)
+  , pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
   ) where
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
+import Control.Exception
+  ( throwIO
   )
-import Data.String
-  ( IsString
+import Control.Monad
+  ( when
+  )
+import Foreign.Marshal.Alloc
+  ( alloca
+  )
+import Foreign.Marshal.Utils
+  ( maybePeek
+  , maybeWith
+  , with
   )
 import Foreign.Ptr
   ( Ptr
-  , plusPtr
+  , castPtr
   )
 import Foreign.Storable
-  ( Storable
-  , Storable(..)
+  ( peek
   )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
+import qualified Graphics.Vulkan.C.Dynamic
+  ( createIOSSurfaceMVK
   )
 
 
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
+import Graphics.Vulkan.C.Core10.Core
+  ( pattern VK_SUCCESS
+  )
+import Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
+  ( VkIOSSurfaceCreateFlagsMVK(..)
+  , VkIOSSurfaceCreateInfoMVK(..)
+  , pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkAllocationCallbacks(..)
-  , VkInstance
+  ( AllocationCallbacks(..)
+  , Instance(..)
+  , withCStructAllocationCallbacks
+  )
+import Graphics.Vulkan.Exception
+  ( VulkanException(..)
   )
 import Graphics.Vulkan.Extensions.VK_KHR_surface
-  ( VkSurfaceKHR
+  ( SurfaceKHR
+  )
+import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
+  ( SomeVkStruct
+  , peekVkStruct
+  , withSomeVkStruct
+  )
+import Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
+  ( pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME
+  , pattern VK_MVK_IOS_SURFACE_SPEC_VERSION
   )
 
 
--- ** VkIOSSurfaceCreateFlagsMVK
-
--- No documentation found for TopLevel "VkIOSSurfaceCreateFlagsMVK"
-newtype VkIOSSurfaceCreateFlagsMVK = VkIOSSurfaceCreateFlagsMVK VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkIOSSurfaceCreateFlagsMVK where
-  
-  showsPrec p (VkIOSSurfaceCreateFlagsMVK x) = showParen (p >= 11) (showString "VkIOSSurfaceCreateFlagsMVK " . showsPrec 11 x)
-
-instance Read VkIOSSurfaceCreateFlagsMVK where
-  readPrec = parens ( choose [ 
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkIOSSurfaceCreateFlagsMVK")
-                        v <- step readPrec
-                        pure (VkIOSSurfaceCreateFlagsMVK v)
-                        )
-                    )
-
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK"
-pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK :: VkStructureType
-pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK = VkStructureType 1000122000
--- No documentation found for TopLevel "VK_MVK_IOS_SURFACE_SPEC_VERSION"
-pattern VK_MVK_IOS_SURFACE_SPEC_VERSION :: Integral a => a
-pattern VK_MVK_IOS_SURFACE_SPEC_VERSION = 2
--- No documentation found for TopLevel "VK_MVK_IOS_SURFACE_EXTENSION_NAME"
-pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME = "VK_MVK_ios_surface"
--- | vkCreateIOSSurfaceMVK - Create a VkSurfaceKHR object for an iOS UIView
---
--- = Parameters
---
--- -   @instance@ is the instance with which to associate the surface.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'VkIOSSurfaceCreateInfoMVK' structure containing parameters
---     affecting the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
---
--- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
---     surface object is returned.
---
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid @VkInstance@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkIOSSurfaceCreateInfoMVK@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
---
--- == Return Codes
---
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
---
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
---
--- = See Also
---
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'VkIOSSurfaceCreateInfoMVK',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
--- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkCreateIOSSurfaceMVK" vkCreateIOSSurfaceMVK :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkIOSSurfaceCreateInfoMVK) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
--- | VkIOSSurfaceCreateInfoMVK - Structure specifying parameters of a newly
--- created iOS surface object
---
--- == Valid Usage
---
--- -   @pView@ /must/ be a valid @UIView@ and /must/ be backed by a
---     @CALayer@ instance of type @CAMetalLayer@.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be @0@
---
--- = See Also
---
--- 'VkIOSSurfaceCreateFlagsMVK',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateIOSSurfaceMVK'
-data VkIOSSurfaceCreateInfoMVK = VkIOSSurfaceCreateInfoMVK
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
-  vkFlags :: VkIOSSurfaceCreateFlagsMVK
-  , -- | @pView@ is a reference to a @UIView@ object which will display this
-  -- surface. This @UIView@ /must/ be backed by a @CALayer@ instance of type
-  -- @CAMetalLayer@.
+-- No documentation found for TopLevel "IOSSurfaceCreateFlagsMVK"
+type IOSSurfaceCreateFlagsMVK = VkIOSSurfaceCreateFlagsMVK
+-- No documentation found for TopLevel "IOSSurfaceCreateInfoMVK"
+data IOSSurfaceCreateInfoMVK = IOSSurfaceCreateInfoMVK
+  { -- Univalued Member elided
+  -- No documentation found for Nested "IOSSurfaceCreateInfoMVK" "pNext"
+  vkPNext :: Maybe SomeVkStruct
+  , -- No documentation found for Nested "IOSSurfaceCreateInfoMVK" "flags"
+  vkFlags :: IOSSurfaceCreateFlagsMVK
+  , -- No documentation found for Nested "IOSSurfaceCreateInfoMVK" "pView"
   vkPView :: Ptr ()
   }
-  deriving (Eq, Show)
+  deriving (Show, Eq)
+withCStructIOSSurfaceCreateInfoMVK :: IOSSurfaceCreateInfoMVK -> (VkIOSSurfaceCreateInfoMVK -> IO a) -> IO a
+withCStructIOSSurfaceCreateInfoMVK from cont = maybeWith withSomeVkStruct (vkPNext (from :: IOSSurfaceCreateInfoMVK)) (\pPNext -> cont (VkIOSSurfaceCreateInfoMVK VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK pPNext (vkFlags (from :: IOSSurfaceCreateInfoMVK)) (vkPView (from :: IOSSurfaceCreateInfoMVK))))
+fromCStructIOSSurfaceCreateInfoMVK :: VkIOSSurfaceCreateInfoMVK -> IO IOSSurfaceCreateInfoMVK
+fromCStructIOSSurfaceCreateInfoMVK c = IOSSurfaceCreateInfoMVK <$> -- Univalued Member elided
+                                                               maybePeek peekVkStruct (castPtr (vkPNext (c :: VkIOSSurfaceCreateInfoMVK)))
+                                                               <*> pure (vkFlags (c :: VkIOSSurfaceCreateInfoMVK))
+                                                               <*> pure (vkPView (c :: VkIOSSurfaceCreateInfoMVK))
 
-instance Storable VkIOSSurfaceCreateInfoMVK where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek ptr = VkIOSSurfaceCreateInfoMVK <$> peek (ptr `plusPtr` 0)
-                                       <*> peek (ptr `plusPtr` 8)
-                                       <*> peek (ptr `plusPtr` 16)
-                                       <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkIOSSurfaceCreateInfoMVK))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkIOSSurfaceCreateInfoMVK))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkIOSSurfaceCreateInfoMVK))
-                *> poke (ptr `plusPtr` 24) (vkPView (poked :: VkIOSSurfaceCreateInfoMVK))
+-- | Wrapper for vkCreateIOSSurfaceMVK
+createIOSSurfaceMVK :: Instance ->  IOSSurfaceCreateInfoMVK ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
+createIOSSurfaceMVK = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructIOSSurfaceCreateInfoMVK a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createIOSSurfaceMVK commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))

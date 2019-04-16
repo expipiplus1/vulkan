@@ -60,7 +60,6 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_surface
 #endif
   , FN_vkGetPhysicalDeviceSurfaceSupportKHR
   , PFN_vkGetPhysicalDeviceSurfaceSupportKHR
-  , pattern VK_COLORSPACE_SRGB_NONLINEAR_KHR
   , pattern VK_ERROR_NATIVE_WINDOW_IN_USE_KHR
   , pattern VK_ERROR_SURFACE_LOST_KHR
   , pattern VK_KHR_SURFACE_EXTENSION_NAME
@@ -152,6 +151,7 @@ instance Show VkColorSpaceKHR where
   showsPrec _ (VkColorSpaceKHR 1000104012) = showString "VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT"
   showsPrec _ (VkColorSpaceKHR 1000104013) = showString "VK_COLOR_SPACE_PASS_THROUGH_EXT"
   showsPrec _ (VkColorSpaceKHR 1000104014) = showString "VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT"
+  showsPrec _ (VkColorSpaceKHR 1000213000) = showString "VK_COLOR_SPACE_DISPLAY_NATIVE_AMD"
   showsPrec p (VkColorSpaceKHR x) = showParen (p >= 11) (showString "VkColorSpaceKHR " . showsPrec 11 x)
 
 instance Read VkColorSpaceKHR where
@@ -171,6 +171,7 @@ instance Read VkColorSpaceKHR where
                              , ("VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT",      pure (VkColorSpaceKHR 1000104012))
                              , ("VK_COLOR_SPACE_PASS_THROUGH_EXT",            pure (VkColorSpaceKHR 1000104013))
                              , ("VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT", pure (VkColorSpaceKHR 1000104014))
+                             , ("VK_COLOR_SPACE_DISPLAY_NATIVE_AMD",          pure (VkColorSpaceKHR 1000213000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkColorSpaceKHR")
@@ -468,9 +469,6 @@ foreign import ccall
 #endif
 type FN_vkGetPhysicalDeviceSurfaceSupportKHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("surface" ::: VkSurfaceKHR) -> ("pSupported" ::: Ptr VkBool32) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfaceSupportKHR = FunPtr FN_vkGetPhysicalDeviceSurfaceSupportKHR
--- No documentation found for TopLevel "VK_COLORSPACE_SRGB_NONLINEAR_KHR"
-pattern VK_COLORSPACE_SRGB_NONLINEAR_KHR :: VkColorSpaceKHR
-pattern VK_COLORSPACE_SRGB_NONLINEAR_KHR = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR
 -- No documentation found for Nested "VkResult" "VK_ERROR_NATIVE_WINDOW_IN_USE_KHR"
 pattern VK_ERROR_NATIVE_WINDOW_IN_USE_KHR :: VkResult
 pattern VK_ERROR_NATIVE_WINDOW_IN_USE_KHR = VkResult (-1000000001)

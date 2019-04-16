@@ -7,22 +7,19 @@ module Graphics.Vulkan.Extensions
   , module Graphics.Vulkan.Extensions.VK_KHR_swapchain
   , module Graphics.Vulkan.Extensions.VK_KHR_display
   , module Graphics.Vulkan.Extensions.VK_KHR_display_swapchain
-#if defined(VK_USE_PLATFORM_XLIB_KHR)
+#if VK_USE_PLATFORM_XLIB_KHR
   , module Graphics.Vulkan.Extensions.VK_KHR_xlib_surface
 #endif
-#if defined(VK_USE_PLATFORM_XCB_KHR)
+#if VK_USE_PLATFORM_XCB_KHR
   , module Graphics.Vulkan.Extensions.VK_KHR_xcb_surface
 #endif
-#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+#if VK_USE_PLATFORM_WAYLAND_KHR
   , module Graphics.Vulkan.Extensions.VK_KHR_wayland_surface
 #endif
-#if defined(VK_USE_PLATFORM_MIR_KHR)
-  , module Graphics.Vulkan.Extensions.VK_KHR_mir_surface
-#endif
-#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+#if VK_USE_PLATFORM_ANDROID_KHR
   , module Graphics.Vulkan.Extensions.VK_KHR_android_surface
 #endif
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
   , module Graphics.Vulkan.Extensions.VK_KHR_win32_surface
 #endif
   , module Graphics.Vulkan.Extensions.VK_EXT_debug_report
@@ -36,6 +33,8 @@ module Graphics.Vulkan.Extensions
   , module Graphics.Vulkan.Extensions.VK_EXT_debug_marker
   , module Graphics.Vulkan.Extensions.VK_AMD_gcn_shader
   , module Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
+  , module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback
+  , module Graphics.Vulkan.Extensions.VK_NVX_image_view_handle
   , module Graphics.Vulkan.Extensions.VK_AMD_draw_indirect_count
   , module Graphics.Vulkan.Extensions.VK_AMD_negative_viewport_height
   , module Graphics.Vulkan.Extensions.VK_AMD_gpu_shader_half_float
@@ -43,48 +42,55 @@ module Graphics.Vulkan.Extensions
   , module Graphics.Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
   , module Graphics.Vulkan.Extensions.VK_AMD_shader_info
   , module Graphics.Vulkan.Extensions.VK_AMD_shader_image_load_store_lod
+#if VK_USE_PLATFORM_GGP
+  , module Graphics.Vulkan.Extensions.VK_GGP_stream_descriptor_surface
+#endif
+  , module Graphics.Vulkan.Extensions.VK_NV_corner_sampled_image
   , module Graphics.Vulkan.Extensions.VK_KHR_multiview
   , module Graphics.Vulkan.Extensions.VK_IMG_format_pvrtc
   , module Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
   , module Graphics.Vulkan.Extensions.VK_NV_external_memory
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
   , module Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
   , module Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
 #endif
   , module Graphics.Vulkan.Extensions.VK_KHR_get_physical_device_properties2
   , module Graphics.Vulkan.Extensions.VK_KHR_device_group
   , module Graphics.Vulkan.Extensions.VK_EXT_validation_flags
-#if defined(VK_USE_PLATFORM_VI_NN)
+#if VK_USE_PLATFORM_VI_NN
   , module Graphics.Vulkan.Extensions.VK_NN_vi_surface
 #endif
   , module Graphics.Vulkan.Extensions.VK_KHR_shader_draw_parameters
   , module Graphics.Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
   , module Graphics.Vulkan.Extensions.VK_EXT_shader_subgroup_vote
+  , module Graphics.Vulkan.Extensions.VK_EXT_astc_decode_mode
   , module Graphics.Vulkan.Extensions.VK_KHR_maintenance1
   , module Graphics.Vulkan.Extensions.VK_KHR_device_group_creation
   , module Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities
   , module Graphics.Vulkan.Extensions.VK_KHR_external_memory
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
   , module Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32
 #endif
   , module Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
   , module Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex
 #endif
   , module Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_capabilities
   , module Graphics.Vulkan.Extensions.VK_KHR_external_semaphore
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
   , module Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32
 #endif
   , module Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd
   , module Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
+  , module Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering
+  , module Graphics.Vulkan.Extensions.VK_KHR_shader_float16_int8
   , module Graphics.Vulkan.Extensions.VK_KHR_16bit_storage
   , module Graphics.Vulkan.Extensions.VK_KHR_incremental_present
   , module Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template
   , module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
   , module Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling
   , module Graphics.Vulkan.Extensions.VK_EXT_direct_mode_display
-#if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
+#if VK_USE_PLATFORM_XLIB_XRANDR_EXT
   , module Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display
 #endif
   , module Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter
@@ -97,29 +103,32 @@ module Graphics.Vulkan.Extensions
   , module Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
   , module Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles
   , module Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization
+  , module Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable
   , module Graphics.Vulkan.Extensions.VK_EXT_swapchain_colorspace
   , module Graphics.Vulkan.Extensions.VK_EXT_hdr_metadata
+  , module Graphics.Vulkan.Extensions.VK_KHR_create_renderpass2
   , module Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image
   , module Graphics.Vulkan.Extensions.VK_KHR_external_fence_capabilities
   , module Graphics.Vulkan.Extensions.VK_KHR_external_fence
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
   , module Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32
 #endif
   , module Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd
   , module Graphics.Vulkan.Extensions.VK_KHR_maintenance2
   , module Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2
   , module Graphics.Vulkan.Extensions.VK_KHR_variable_pointers
-#if defined(VK_USE_PLATFORM_IOS_MVK)
+  , module Graphics.Vulkan.Extensions.VK_KHR_get_display_properties2
+#if VK_USE_PLATFORM_IOS_MVK
   , module Graphics.Vulkan.Extensions.VK_MVK_ios_surface
 #endif
-#if defined(VK_USE_PLATFORM_MACOS_MVK)
+#if VK_USE_PLATFORM_MACOS_MVK
   , module Graphics.Vulkan.Extensions.VK_MVK_macos_surface
 #endif
   , module Graphics.Vulkan.Extensions.VK_EXT_external_memory_dma_buf
   , module Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
   , module Graphics.Vulkan.Extensions.VK_KHR_dedicated_allocation
   , module Graphics.Vulkan.Extensions.VK_EXT_debug_utils
-#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+#if VK_USE_PLATFORM_ANDROID_KHR
   , module Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
 #endif
   , module Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
@@ -127,6 +136,7 @@ module Graphics.Vulkan.Extensions
   , module Graphics.Vulkan.Extensions.VK_AMD_gpu_shader_int16
   , module Graphics.Vulkan.Extensions.VK_AMD_mixed_attachment_samples
   , module Graphics.Vulkan.Extensions.VK_AMD_shader_fragment_mask
+  , module Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block
   , module Graphics.Vulkan.Extensions.VK_EXT_shader_stencil_export
   , module Graphics.Vulkan.Extensions.VK_EXT_sample_locations
   , module Graphics.Vulkan.Extensions.VK_KHR_relaxed_block_layout
@@ -139,16 +149,66 @@ module Graphics.Vulkan.Extensions
   , module Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
   , module Graphics.Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
   , module Graphics.Vulkan.Extensions.VK_KHR_bind_memory2
+  , module Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier
   , module Graphics.Vulkan.Extensions.VK_EXT_validation_cache
   , module Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing
   , module Graphics.Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
+  , module Graphics.Vulkan.Extensions.VK_NV_shading_rate_image
+  , module Graphics.Vulkan.Extensions.VK_NV_ray_tracing
+  , module Graphics.Vulkan.Extensions.VK_NV_representative_fragment_test
   , module Graphics.Vulkan.Extensions.VK_KHR_maintenance3
+  , module Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count
+  , module Graphics.Vulkan.Extensions.VK_EXT_filter_cubic
   , module Graphics.Vulkan.Extensions.VK_EXT_global_priority
+  , module Graphics.Vulkan.Extensions.VK_KHR_8bit_storage
   , module Graphics.Vulkan.Extensions.VK_EXT_external_memory_host
   , module Graphics.Vulkan.Extensions.VK_AMD_buffer_marker
+  , module Graphics.Vulkan.Extensions.VK_KHR_shader_atomic_int64
+  , module Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps
   , module Graphics.Vulkan.Extensions.VK_AMD_shader_core_properties
+  , module Graphics.Vulkan.Extensions.VK_AMD_memory_overallocation_behavior
   , module Graphics.Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
+#if VK_USE_PLATFORM_GGP
+  , module Graphics.Vulkan.Extensions.VK_GGP_frame_token
+#endif
+  , module Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+  , module Graphics.Vulkan.Extensions.VK_KHR_driver_properties
+  , module Graphics.Vulkan.Extensions.VK_KHR_shader_float_controls
   , module Graphics.Vulkan.Extensions.VK_NV_shader_subgroup_partitioned
+  , module Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve
+  , module Graphics.Vulkan.Extensions.VK_KHR_swapchain_mutable_format
+  , module Graphics.Vulkan.Extensions.VK_NV_compute_shader_derivatives
+  , module Graphics.Vulkan.Extensions.VK_NV_mesh_shader
+  , module Graphics.Vulkan.Extensions.VK_NV_fragment_shader_barycentric
+  , module Graphics.Vulkan.Extensions.VK_NV_shader_image_footprint
+  , module Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive
+  , module Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints
+  , module Graphics.Vulkan.Extensions.VK_KHR_vulkan_memory_model
+  , module Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info
+  , module Graphics.Vulkan.Extensions.VK_AMD_display_native_hdr
+#if VK_USE_PLATFORM_FUCHSIA
+  , module Graphics.Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
+#endif
+#if VK_USE_PLATFORM_METAL_EXT
+  , module Graphics.Vulkan.Extensions.VK_EXT_metal_surface
+#endif
+  , module Graphics.Vulkan.Extensions.VK_EXT_fragment_density_map
+  , module Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
+  , module Graphics.Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
+  , module Graphics.Vulkan.Extensions.VK_GOOGLE_decorate_string
+  , module Graphics.Vulkan.Extensions.VK_EXT_memory_budget
+  , module Graphics.Vulkan.Extensions.VK_EXT_memory_priority
+  , module Graphics.Vulkan.Extensions.VK_KHR_surface_protected_capabilities
+  , module Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing
+  , module Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address
+  , module Graphics.Vulkan.Extensions.VK_EXT_separate_stencil_usage
+  , module Graphics.Vulkan.Extensions.VK_EXT_validation_features
+  , module Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
+  , module Graphics.Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+#if VK_USE_PLATFORM_WIN32_KHR
+  , module Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
+#endif
+  , module Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
   ) where
 
 
@@ -156,22 +216,19 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
 import Graphics.Vulkan.Extensions.VK_KHR_swapchain
 import Graphics.Vulkan.Extensions.VK_KHR_display
 import Graphics.Vulkan.Extensions.VK_KHR_display_swapchain
-#if defined(VK_USE_PLATFORM_XLIB_KHR)
+#if VK_USE_PLATFORM_XLIB_KHR
 import Graphics.Vulkan.Extensions.VK_KHR_xlib_surface
 #endif
-#if defined(VK_USE_PLATFORM_XCB_KHR)
+#if VK_USE_PLATFORM_XCB_KHR
 import Graphics.Vulkan.Extensions.VK_KHR_xcb_surface
 #endif
-#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+#if VK_USE_PLATFORM_WAYLAND_KHR
 import Graphics.Vulkan.Extensions.VK_KHR_wayland_surface
 #endif
-#if defined(VK_USE_PLATFORM_MIR_KHR)
-import Graphics.Vulkan.Extensions.VK_KHR_mir_surface
-#endif
-#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+#if VK_USE_PLATFORM_ANDROID_KHR
 import Graphics.Vulkan.Extensions.VK_KHR_android_surface
 #endif
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
 import Graphics.Vulkan.Extensions.VK_KHR_win32_surface
 #endif
 import Graphics.Vulkan.Extensions.VK_EXT_debug_report
@@ -185,6 +242,8 @@ import Graphics.Vulkan.Extensions.VK_AMD_shader_explicit_vertex_parameter
 import Graphics.Vulkan.Extensions.VK_EXT_debug_marker
 import Graphics.Vulkan.Extensions.VK_AMD_gcn_shader
 import Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
+import Graphics.Vulkan.Extensions.VK_EXT_transform_feedback
+import Graphics.Vulkan.Extensions.VK_NVX_image_view_handle
 import Graphics.Vulkan.Extensions.VK_AMD_draw_indirect_count
 import Graphics.Vulkan.Extensions.VK_AMD_negative_viewport_height
 import Graphics.Vulkan.Extensions.VK_AMD_gpu_shader_half_float
@@ -192,50 +251,57 @@ import Graphics.Vulkan.Extensions.VK_AMD_shader_ballot
 import Graphics.Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
 import Graphics.Vulkan.Extensions.VK_AMD_shader_info
 import Graphics.Vulkan.Extensions.VK_AMD_shader_image_load_store_lod
+#if VK_USE_PLATFORM_GGP
+import Graphics.Vulkan.Extensions.VK_GGP_stream_descriptor_surface
+#endif
+import Graphics.Vulkan.Extensions.VK_NV_corner_sampled_image
 import Graphics.Vulkan.Extensions.VK_KHR_multiview
 import Graphics.Vulkan.Extensions.VK_IMG_format_pvrtc
 import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
 import Graphics.Vulkan.Extensions.VK_NV_external_memory
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
 import Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
 #endif
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
 import Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_get_physical_device_properties2
 import Graphics.Vulkan.Extensions.VK_KHR_device_group
 import Graphics.Vulkan.Extensions.VK_EXT_validation_flags
-#if defined(VK_USE_PLATFORM_VI_NN)
+#if VK_USE_PLATFORM_VI_NN
 import Graphics.Vulkan.Extensions.VK_NN_vi_surface
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_shader_draw_parameters
 import Graphics.Vulkan.Extensions.VK_EXT_shader_subgroup_ballot
 import Graphics.Vulkan.Extensions.VK_EXT_shader_subgroup_vote
+import Graphics.Vulkan.Extensions.VK_EXT_astc_decode_mode
 import Graphics.Vulkan.Extensions.VK_KHR_maintenance1
 import Graphics.Vulkan.Extensions.VK_KHR_device_group_creation
 import Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities
 import Graphics.Vulkan.Extensions.VK_KHR_external_memory
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
 import Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
 import Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_capabilities
 import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
 import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd
 import Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
+import Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering
+import Graphics.Vulkan.Extensions.VK_KHR_shader_float16_int8
 import Graphics.Vulkan.Extensions.VK_KHR_16bit_storage
 import Graphics.Vulkan.Extensions.VK_KHR_incremental_present
 import Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template
 import Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
 import Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling
 import Graphics.Vulkan.Extensions.VK_EXT_direct_mode_display
-#if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
+#if VK_USE_PLATFORM_XLIB_XRANDR_EXT
 import Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display
 #endif
 import Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter
@@ -248,29 +314,32 @@ import Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
 import Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
 import Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles
 import Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization
+import Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable
 import Graphics.Vulkan.Extensions.VK_EXT_swapchain_colorspace
 import Graphics.Vulkan.Extensions.VK_EXT_hdr_metadata
+import Graphics.Vulkan.Extensions.VK_KHR_create_renderpass2
 import Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image
 import Graphics.Vulkan.Extensions.VK_KHR_external_fence_capabilities
 import Graphics.Vulkan.Extensions.VK_KHR_external_fence
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if VK_USE_PLATFORM_WIN32_KHR
 import Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd
 import Graphics.Vulkan.Extensions.VK_KHR_maintenance2
 import Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2
 import Graphics.Vulkan.Extensions.VK_KHR_variable_pointers
-#if defined(VK_USE_PLATFORM_IOS_MVK)
+import Graphics.Vulkan.Extensions.VK_KHR_get_display_properties2
+#if VK_USE_PLATFORM_IOS_MVK
 import Graphics.Vulkan.Extensions.VK_MVK_ios_surface
 #endif
-#if defined(VK_USE_PLATFORM_MACOS_MVK)
+#if VK_USE_PLATFORM_MACOS_MVK
 import Graphics.Vulkan.Extensions.VK_MVK_macos_surface
 #endif
 import Graphics.Vulkan.Extensions.VK_EXT_external_memory_dma_buf
 import Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
 import Graphics.Vulkan.Extensions.VK_KHR_dedicated_allocation
 import Graphics.Vulkan.Extensions.VK_EXT_debug_utils
-#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+#if VK_USE_PLATFORM_ANDROID_KHR
 import Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
 #endif
 import Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
@@ -278,6 +347,7 @@ import Graphics.Vulkan.Extensions.VK_KHR_storage_buffer_storage_class
 import Graphics.Vulkan.Extensions.VK_AMD_gpu_shader_int16
 import Graphics.Vulkan.Extensions.VK_AMD_mixed_attachment_samples
 import Graphics.Vulkan.Extensions.VK_AMD_shader_fragment_mask
+import Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block
 import Graphics.Vulkan.Extensions.VK_EXT_shader_stencil_export
 import Graphics.Vulkan.Extensions.VK_EXT_sample_locations
 import Graphics.Vulkan.Extensions.VK_KHR_relaxed_block_layout
@@ -290,16 +360,66 @@ import Graphics.Vulkan.Extensions.VK_NV_fill_rectangle
 import Graphics.Vulkan.Extensions.VK_EXT_post_depth_coverage
 import Graphics.Vulkan.Extensions.VK_KHR_sampler_ycbcr_conversion
 import Graphics.Vulkan.Extensions.VK_KHR_bind_memory2
+import Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier
 import Graphics.Vulkan.Extensions.VK_EXT_validation_cache
 import Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing
 import Graphics.Vulkan.Extensions.VK_EXT_shader_viewport_index_layer
+import Graphics.Vulkan.Extensions.VK_NV_shading_rate_image
+import Graphics.Vulkan.Extensions.VK_NV_ray_tracing
+import Graphics.Vulkan.Extensions.VK_NV_representative_fragment_test
 import Graphics.Vulkan.Extensions.VK_KHR_maintenance3
+import Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count
+import Graphics.Vulkan.Extensions.VK_EXT_filter_cubic
 import Graphics.Vulkan.Extensions.VK_EXT_global_priority
+import Graphics.Vulkan.Extensions.VK_KHR_8bit_storage
 import Graphics.Vulkan.Extensions.VK_EXT_external_memory_host
 import Graphics.Vulkan.Extensions.VK_AMD_buffer_marker
+import Graphics.Vulkan.Extensions.VK_KHR_shader_atomic_int64
+import Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps
 import Graphics.Vulkan.Extensions.VK_AMD_shader_core_properties
+import Graphics.Vulkan.Extensions.VK_AMD_memory_overallocation_behavior
 import Graphics.Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
+#if VK_USE_PLATFORM_GGP
+import Graphics.Vulkan.Extensions.VK_GGP_frame_token
+#endif
+import Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+import Graphics.Vulkan.Extensions.VK_KHR_driver_properties
+import Graphics.Vulkan.Extensions.VK_KHR_shader_float_controls
 import Graphics.Vulkan.Extensions.VK_NV_shader_subgroup_partitioned
+import Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve
+import Graphics.Vulkan.Extensions.VK_KHR_swapchain_mutable_format
+import Graphics.Vulkan.Extensions.VK_NV_compute_shader_derivatives
+import Graphics.Vulkan.Extensions.VK_NV_mesh_shader
+import Graphics.Vulkan.Extensions.VK_NV_fragment_shader_barycentric
+import Graphics.Vulkan.Extensions.VK_NV_shader_image_footprint
+import Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive
+import Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints
+import Graphics.Vulkan.Extensions.VK_KHR_vulkan_memory_model
+import Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info
+import Graphics.Vulkan.Extensions.VK_AMD_display_native_hdr
+#if VK_USE_PLATFORM_FUCHSIA
+import Graphics.Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
+#endif
+#if VK_USE_PLATFORM_METAL_EXT
+import Graphics.Vulkan.Extensions.VK_EXT_metal_surface
+#endif
+import Graphics.Vulkan.Extensions.VK_EXT_fragment_density_map
+import Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
+import Graphics.Vulkan.Extensions.VK_GOOGLE_hlsl_functionality1
+import Graphics.Vulkan.Extensions.VK_GOOGLE_decorate_string
+import Graphics.Vulkan.Extensions.VK_EXT_memory_budget
+import Graphics.Vulkan.Extensions.VK_EXT_memory_priority
+import Graphics.Vulkan.Extensions.VK_KHR_surface_protected_capabilities
+import Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing
+import Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address
+import Graphics.Vulkan.Extensions.VK_EXT_separate_stencil_usage
+import Graphics.Vulkan.Extensions.VK_EXT_validation_features
+import Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
+import Graphics.Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+#if VK_USE_PLATFORM_WIN32_KHR
+import Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
+#endif
+import Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
 
 
 

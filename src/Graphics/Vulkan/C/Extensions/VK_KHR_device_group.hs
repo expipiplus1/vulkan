@@ -29,6 +29,11 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_device_group
   , vkCmdSetDeviceMaskKHR
   , vkGetDeviceGroupPeerMemoryFeaturesKHR
 #endif
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+  , vkGetDeviceGroupSurfacePresentModes2EXT
+#endif
+  , FN_vkGetDeviceGroupSurfacePresentModes2EXT
+  , PFN_vkGetDeviceGroupSurfacePresentModes2EXT
   , pattern VK_DEPENDENCY_DEVICE_GROUP_BIT_KHR
   , pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
   , pattern VK_KHR_DEVICE_GROUP_EXTENSION_NAME
@@ -95,22 +100,19 @@ import Data.Word
   ( Word32
   )
 import Foreign.Ptr
-  ( Ptr
+  ( FunPtr
+  , Ptr
   )
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( VkStructureType(..)
+  ( VkResult(..)
+  , VkStructureType(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageCreateFlagBits(..)
+  , VkDevice
   )
-
-#if defined(EXPOSE_CORE11_COMMANDS)
-import Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkDevice
-  )
-#endif
 import Graphics.Vulkan.C.Core10.Pass
   ( VkDependencyFlagBits(..)
   )
@@ -163,6 +165,18 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bin
   , pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
   , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
   )
+import Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
+  ( VkPhysicalDeviceSurfaceInfo2KHR(..)
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
+  ( VkDeviceGroupPresentModeFlagsKHR
+  )
+
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+import Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
+  ( VkDeviceGroupPresentModeFlagBitsKHR(..)
+  )
+#endif
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -174,7 +188,6 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
   , VkDeviceGroupPresentModeFlagBitsKHR(..)
   , VkDeviceGroupSwapchainCreateInfoKHR(..)
   , VkImageSwapchainCreateInfoKHR(..)
-  , VkDeviceGroupPresentModeFlagsKHR
   , pattern VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR
   , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR
   , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR
@@ -269,6 +282,17 @@ vkCmdSetDeviceMaskKHR = vkCmdSetDeviceMask
 vkGetDeviceGroupPeerMemoryFeaturesKHR :: ("device" ::: VkDevice) -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> ("pPeerMemoryFeatures" ::: Ptr VkPeerMemoryFeatureFlags) -> IO ()
 vkGetDeviceGroupPeerMemoryFeaturesKHR = vkGetDeviceGroupPeerMemoryFeatures
 #endif
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+-- No documentation found for TopLevel "vkGetDeviceGroupSurfacePresentModes2EXT"
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetDeviceGroupSurfacePresentModes2EXT" vkGetDeviceGroupSurfacePresentModes2EXT :: ("device" ::: VkDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pModes" ::: Ptr VkDeviceGroupPresentModeFlagsKHR) -> IO VkResult
+
+#endif
+type FN_vkGetDeviceGroupSurfacePresentModes2EXT = ("device" ::: VkDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pModes" ::: Ptr VkDeviceGroupPresentModeFlagsKHR) -> IO VkResult
+type PFN_vkGetDeviceGroupSurfacePresentModes2EXT = FunPtr FN_vkGetDeviceGroupSurfacePresentModes2EXT
 -- No documentation found for TopLevel "VK_DEPENDENCY_DEVICE_GROUP_BIT_KHR"
 pattern VK_DEPENDENCY_DEVICE_GROUP_BIT_KHR :: VkDependencyFlagBits
 pattern VK_DEPENDENCY_DEVICE_GROUP_BIT_KHR = VK_DEPENDENCY_DEVICE_GROUP_BIT

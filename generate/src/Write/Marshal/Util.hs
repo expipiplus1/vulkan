@@ -48,6 +48,7 @@ isPassAsPointerType = \case
              , "xcb_connection_t"
              , "AHardwareBuffer"
              , "ANativeWindow"
+             , "CAMetalLayer"
              ]
     -> True
   _ -> False

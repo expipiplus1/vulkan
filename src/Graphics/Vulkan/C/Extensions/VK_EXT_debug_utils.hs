@@ -164,7 +164,7 @@ import Graphics.Vulkan.NamedType
 
 
 -- No documentation found for TopLevel "PFN_vkDebugUtilsMessengerCallbackEXT"
-type PFN_vkDebugUtilsMessengerCallbackEXT = Ptr (("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageType" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO VkBool32)
+type PFN_vkDebugUtilsMessengerCallbackEXT = Ptr (("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageTypes" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO VkBool32)
 -- No documentation found for TopLevel "VkDebugUtilsLabelEXT"
 data VkDebugUtilsLabelEXT = VkDebugUtilsLabelEXT
   { -- No documentation found for Nested "VkDebugUtilsLabelEXT" "sType"

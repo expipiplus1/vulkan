@@ -1,10 +1,10 @@
-{-# LANGUAGE CPP                      #-}
-{-# LANGUAGE DataKinds                #-}
-{-# LANGUAGE ForeignFunctionInterface #-}
-{-# LANGUAGE MagicHash                #-}
-{-# LANGUAGE Strict                   #-}
-{-# LANGUAGE TypeApplications         #-}
-{-# LANGUAGE TypeOperators            #-}
+{-# language Strict #-}
+{-# language CPP #-}
+{-# language DataKinds #-}
+{-# language TypeOperators #-}
+{-# language ForeignFunctionInterface #-}
+{-# language MagicHash #-}
+{-# language TypeApplications #-}
 
 module Graphics.Vulkan.C.Dynamic
   ( initInstanceCmds
@@ -45,6 +45,7 @@ module Graphics.Vulkan.C.Dynamic
   , createQueryPool
   , destroyQueryPool
   , getQueryPoolResults
+  , resetQueryPoolEXT
   , createBuffer
   , destroyBuffer
   , createBufferView
@@ -124,6 +125,8 @@ module Graphics.Vulkan.C.Dynamic
   , cmdPipelineBarrier
   , cmdBeginQuery
   , cmdEndQuery
+  , cmdBeginConditionalRenderingEXT
+  , cmdEndConditionalRenderingEXT
   , cmdResetQueryPool
   , cmdWriteTimestamp
   , cmdCopyQueryPoolResults
@@ -211,6 +214,8 @@ module Graphics.Vulkan.C.Dynamic
   , mergeValidationCachesEXT
   , getDescriptorSetLayoutSupport
   , getShaderInfoAMD
+  , setLocalDimmingAMD
+  , getCalibratedTimestampsEXT
   , setDebugUtilsObjectNameEXT
   , setDebugUtilsObjectTagEXT
   , queueBeginDebugUtilsLabelEXT
@@ -221,9 +226,50 @@ module Graphics.Vulkan.C.Dynamic
   , cmdInsertDebugUtilsLabelEXT
   , getMemoryHostPointerPropertiesEXT
   , cmdWriteBufferMarkerAMD
+  , createRenderPass2KHR
+  , cmdBeginRenderPass2KHR
+  , cmdNextSubpass2KHR
+  , cmdEndRenderPass2KHR
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
   , getAndroidHardwareBufferPropertiesANDROID
   , getMemoryAndroidHardwareBufferANDROID
+#endif
+  , cmdDrawIndirectCountKHR
+  , cmdDrawIndexedIndirectCountKHR
+  , cmdSetCheckpointNV
+  , getQueueCheckpointDataNV
+  , cmdBindTransformFeedbackBuffersEXT
+  , cmdBeginTransformFeedbackEXT
+  , cmdEndTransformFeedbackEXT
+  , cmdBeginQueryIndexedEXT
+  , cmdEndQueryIndexedEXT
+  , cmdDrawIndirectByteCountEXT
+  , cmdSetExclusiveScissorNV
+  , cmdBindShadingRateImageNV
+  , cmdSetViewportShadingRatePaletteNV
+  , cmdSetCoarseSampleOrderNV
+  , cmdDrawMeshTasksNV
+  , cmdDrawMeshTasksIndirectNV
+  , cmdDrawMeshTasksIndirectCountNV
+  , compileDeferredNV
+  , createAccelerationStructureNV
+  , destroyAccelerationStructureNV
+  , getAccelerationStructureMemoryRequirementsNV
+  , bindAccelerationStructureMemoryNV
+  , cmdCopyAccelerationStructureNV
+  , cmdWriteAccelerationStructuresPropertiesNV
+  , cmdBuildAccelerationStructureNV
+  , cmdTraceRaysNV
+  , getRayTracingShaderGroupHandlesNV
+  , getAccelerationStructureHandleNV
+  , createRayTracingPipelinesNV
+  , getImageDrmFormatModifierPropertiesEXT
+  , getBufferDeviceAddressEXT
+  , getImageViewHandleNVX
+  , getDeviceGroupSurfacePresentModes2EXT
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+  , acquireFullScreenExclusiveModeEXT
+  , releaseFullScreenExclusiveModeEXT
 #endif
   , destroyInstance
   , enumeratePhysicalDevices
@@ -248,10 +294,6 @@ module Graphics.Vulkan.C.Dynamic
   , createDisplayModeKHR
   , getDisplayPlaneCapabilitiesKHR
   , createDisplayPlaneSurfaceKHR
-#if defined(VK_USE_PLATFORM_MIR_KHR)
-  , createMirSurfaceKHR
-  , getPhysicalDeviceMirPresentationSupportKHR
-#endif
   , destroySurfaceKHR
   , getPhysicalDeviceSurfaceSupportKHR
   , getPhysicalDeviceSurfaceCapabilitiesKHR
@@ -275,6 +317,12 @@ module Graphics.Vulkan.C.Dynamic
 #if defined(VK_USE_PLATFORM_XCB_KHR)
   , createXcbSurfaceKHR
   , getPhysicalDeviceXcbPresentationSupportKHR
+#endif
+#if defined(VK_USE_PLATFORM_FUCHSIA)
+  , createImagePipeSurfaceFUCHSIA
+#endif
+#if defined(VK_USE_PLATFORM_GGP)
+  , createStreamDescriptorSurfaceGGP
 #endif
   , createDebugReportCallbackEXT
   , destroyDebugReportCallbackEXT
@@ -305,701 +353,941 @@ module Graphics.Vulkan.C.Dynamic
 #if defined(VK_USE_PLATFORM_MACOS_MVK)
   , createMacOSSurfaceMVK
 #endif
+#if defined(VK_USE_PLATFORM_METAL_EXT)
+  , createMetalSurfaceEXT
+#endif
   , getPhysicalDeviceMultisamplePropertiesEXT
   , getPhysicalDeviceSurfaceCapabilities2KHR
   , getPhysicalDeviceSurfaceFormats2KHR
+  , getPhysicalDeviceDisplayProperties2KHR
+  , getPhysicalDeviceDisplayPlaneProperties2KHR
+  , getDisplayModeProperties2KHR
+  , getDisplayPlaneCapabilities2KHR
+  , getPhysicalDeviceCalibrateableTimeDomainsEXT
   , createDebugUtilsMessengerEXT
   , destroyDebugUtilsMessengerEXT
   , submitDebugUtilsMessageEXT
+  , getPhysicalDeviceCooperativeMatrixPropertiesNV
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+  , getPhysicalDeviceSurfacePresentModes2EXT
+#endif
   , enumerateInstanceVersion
   , enumerateInstanceExtensionProperties
   , enumerateInstanceLayerProperties
   , createInstance
   ) where
 
-import           Data.Int
-                                                                                                  (Int32)
-import           Data.Word
-                                                                                                  (Word32,
-                                                                                                  Word64)
-import           Foreign.C.Types
-                                                                                                  (CChar (..),
-                                                                                                  CFloat (..),
-                                                                                                  CInt (..),
-                                                                                                  CSize (..))
-import           Foreign.Ptr
-                                                                                                  (FunPtr,
-                                                                                                  Ptr,
-                                                                                                  castPtrToFunPtr,
-                                                                                                  nullPtr)
+import Data.Int
+  ( Int32
+  )
+import Data.Word
+  ( Word32
+  , Word64
+  )
+import Foreign.C.Types
+  ( CChar(..)
+  , CFloat(..)
+  , CInt(..)
+  , CSize(..)
+  )
+import Foreign.Ptr
+  ( FunPtr
+  , Ptr
+  , castPtrToFunPtr
+  , nullPtr
+  )
 import qualified GHC.Ptr
-                                                                                                  (Ptr (..))
-import           System.IO.Unsafe
-                                                                                                  (unsafeDupablePerformIO)
+  ( Ptr(..)
+  )
+import System.IO.Unsafe
+  ( unsafeDupablePerformIO
+  )
 
 
-import           Graphics.Vulkan.C.Core10.Buffer
-                                                                                                  (FN_vkCreateBuffer,
-                                                                                                  FN_vkDestroyBuffer,
-                                                                                                  VkBufferCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.BufferView
-                                                                                                  (FN_vkCreateBufferView,
-                                                                                                  FN_vkDestroyBufferView,
-                                                                                                  VkBufferView,
-                                                                                                  VkBufferViewCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.CommandBuffer
-                                                                                                  (FN_vkAllocateCommandBuffers,
-                                                                                                  FN_vkBeginCommandBuffer,
-                                                                                                  FN_vkEndCommandBuffer,
-                                                                                                  FN_vkFreeCommandBuffers,
-                                                                                                  FN_vkResetCommandBuffer,
-                                                                                                  VkCommandBufferAllocateInfo (..),
-                                                                                                  VkCommandBufferBeginInfo (..),
-                                                                                                  VkCommandBufferResetFlagBits (..),
-                                                                                                  VkCommandBufferResetFlags,
-                                                                                                  VkQueryControlFlagBits (..),
-                                                                                                  VkQueryControlFlags)
-import           Graphics.Vulkan.C.Core10.CommandBufferBuilding
-                                                                                                  (FN_vkCmdBeginQuery,
-                                                                                                  FN_vkCmdBeginRenderPass,
-                                                                                                  FN_vkCmdBindDescriptorSets,
-                                                                                                  FN_vkCmdBindIndexBuffer,
-                                                                                                  FN_vkCmdBindPipeline,
-                                                                                                  FN_vkCmdBindVertexBuffers,
-                                                                                                  FN_vkCmdBlitImage,
-                                                                                                  FN_vkCmdClearAttachments,
-                                                                                                  FN_vkCmdClearColorImage,
-                                                                                                  FN_vkCmdClearDepthStencilImage,
-                                                                                                  FN_vkCmdCopyBuffer,
-                                                                                                  FN_vkCmdCopyBufferToImage,
-                                                                                                  FN_vkCmdCopyImage,
-                                                                                                  FN_vkCmdCopyImageToBuffer,
-                                                                                                  FN_vkCmdCopyQueryPoolResults,
-                                                                                                  FN_vkCmdDispatch,
-                                                                                                  FN_vkCmdDispatchIndirect,
-                                                                                                  FN_vkCmdDraw,
-                                                                                                  FN_vkCmdDrawIndexed,
-                                                                                                  FN_vkCmdDrawIndexedIndirect,
-                                                                                                  FN_vkCmdDrawIndirect,
-                                                                                                  FN_vkCmdEndQuery,
-                                                                                                  FN_vkCmdEndRenderPass,
-                                                                                                  FN_vkCmdExecuteCommands,
-                                                                                                  FN_vkCmdFillBuffer,
-                                                                                                  FN_vkCmdNextSubpass,
-                                                                                                  FN_vkCmdPipelineBarrier,
-                                                                                                  FN_vkCmdPushConstants,
-                                                                                                  FN_vkCmdResetEvent,
-                                                                                                  FN_vkCmdResetQueryPool,
-                                                                                                  FN_vkCmdResolveImage,
-                                                                                                  FN_vkCmdSetBlendConstants,
-                                                                                                  FN_vkCmdSetDepthBias,
-                                                                                                  FN_vkCmdSetDepthBounds,
-                                                                                                  FN_vkCmdSetEvent,
-                                                                                                  FN_vkCmdSetLineWidth,
-                                                                                                  FN_vkCmdSetScissor,
-                                                                                                  FN_vkCmdSetStencilCompareMask,
-                                                                                                  FN_vkCmdSetStencilReference,
-                                                                                                  FN_vkCmdSetStencilWriteMask,
-                                                                                                  FN_vkCmdSetViewport,
-                                                                                                  FN_vkCmdUpdateBuffer,
-                                                                                                  FN_vkCmdWaitEvents,
-                                                                                                  FN_vkCmdWriteTimestamp,
-                                                                                                  VkBufferCopy (..),
-                                                                                                  VkBufferImageCopy (..),
-                                                                                                  VkBufferMemoryBarrier (..),
-                                                                                                  VkClearAttachment (..),
-                                                                                                  VkClearColorValue (..),
-                                                                                                  VkClearDepthStencilValue (..),
-                                                                                                  VkClearRect (..),
-                                                                                                  VkImageBlit (..),
-                                                                                                  VkImageCopy (..),
-                                                                                                  VkImageMemoryBarrier (..),
-                                                                                                  VkImageResolve (..),
-                                                                                                  VkIndexType (..),
-                                                                                                  VkMemoryBarrier (..),
-                                                                                                  VkRenderPassBeginInfo (..),
-                                                                                                  VkStencilFaceFlagBits (..),
-                                                                                                  VkStencilFaceFlags,
-                                                                                                  VkSubpassContents (..))
-import           Graphics.Vulkan.C.Core10.CommandPool
-                                                                                                  (FN_vkCreateCommandPool,
-                                                                                                  FN_vkDestroyCommandPool,
-                                                                                                  FN_vkResetCommandPool,
-                                                                                                  VkCommandPool,
-                                                                                                  VkCommandPoolCreateInfo (..),
-                                                                                                  VkCommandPoolResetFlagBits (..),
-                                                                                                  VkCommandPoolResetFlags)
-import           Graphics.Vulkan.C.Core10.Core
-                                                                                                  (VkBool32 (..),
-                                                                                                  VkFormat (..),
-                                                                                                  VkResult (..))
-import           Graphics.Vulkan.C.Core10.DescriptorSet
-                                                                                                  (FN_vkAllocateDescriptorSets,
-                                                                                                  FN_vkCreateDescriptorPool,
-                                                                                                  FN_vkCreateDescriptorSetLayout,
-                                                                                                  FN_vkDestroyDescriptorPool,
-                                                                                                  FN_vkDestroyDescriptorSetLayout,
-                                                                                                  FN_vkFreeDescriptorSets,
-                                                                                                  FN_vkResetDescriptorPool,
-                                                                                                  FN_vkUpdateDescriptorSets,
-                                                                                                  VkCopyDescriptorSet (..),
-                                                                                                  VkDescriptorPool,
-                                                                                                  VkDescriptorPoolCreateInfo (..),
-                                                                                                  VkDescriptorPoolResetFlags (..),
-                                                                                                  VkDescriptorSet,
-                                                                                                  VkDescriptorSetAllocateInfo (..),
-                                                                                                  VkDescriptorSetLayoutCreateInfo (..),
-                                                                                                  VkWriteDescriptorSet (..))
-import           Graphics.Vulkan.C.Core10.Device
-                                                                                                  (FN_vkCreateDevice,
-                                                                                                  FN_vkDestroyDevice,
-                                                                                                  VkDeviceCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.DeviceInitialization
-                                                                                                  (FN_vkCreateInstance,
-                                                                                                  FN_vkDestroyInstance,
-                                                                                                  FN_vkEnumeratePhysicalDevices,
-                                                                                                  FN_vkGetDeviceProcAddr,
-                                                                                                  FN_vkGetInstanceProcAddr,
-                                                                                                  FN_vkGetPhysicalDeviceFeatures,
-                                                                                                  FN_vkGetPhysicalDeviceFormatProperties,
-                                                                                                  FN_vkGetPhysicalDeviceImageFormatProperties,
-                                                                                                  FN_vkGetPhysicalDeviceMemoryProperties,
-                                                                                                  FN_vkGetPhysicalDeviceProperties,
-                                                                                                  FN_vkGetPhysicalDeviceQueueFamilyProperties,
-                                                                                                  PFN_vkVoidFunction,
-                                                                                                  VkAllocationCallbacks (..),
-                                                                                                  VkDevice,
-                                                                                                  VkDeviceSize,
-                                                                                                  VkFormatProperties (..),
-                                                                                                  VkImageCreateFlagBits (..),
-                                                                                                  VkImageCreateFlags,
-                                                                                                  VkImageFormatProperties (..),
-                                                                                                  VkImageTiling (..),
-                                                                                                  VkImageType (..),
-                                                                                                  VkImageUsageFlagBits (..),
-                                                                                                  VkImageUsageFlags,
-                                                                                                  VkInstance,
-                                                                                                  VkInstanceCreateInfo (..),
-                                                                                                  VkPhysicalDevice,
-                                                                                                  VkPhysicalDeviceFeatures (..),
-                                                                                                  VkPhysicalDeviceMemoryProperties (..),
-                                                                                                  VkPhysicalDeviceProperties (..),
-                                                                                                  VkQueueFamilyProperties (..),
-                                                                                                  VkSampleCountFlagBits (..),
-                                                                                                  vkGetInstanceProcAddr)
-import           Graphics.Vulkan.C.Core10.Event
-                                                                                                  (FN_vkCreateEvent,
-                                                                                                  FN_vkDestroyEvent,
-                                                                                                  FN_vkGetEventStatus,
-                                                                                                  FN_vkResetEvent,
-                                                                                                  FN_vkSetEvent,
-                                                                                                  VkEvent,
-                                                                                                  VkEventCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.ExtensionDiscovery
-                                                                                                  (FN_vkEnumerateDeviceExtensionProperties,
-                                                                                                  FN_vkEnumerateInstanceExtensionProperties,
-                                                                                                  VkExtensionProperties (..))
-import           Graphics.Vulkan.C.Core10.Fence
-                                                                                                  (FN_vkCreateFence,
-                                                                                                  FN_vkDestroyFence,
-                                                                                                  FN_vkGetFenceStatus,
-                                                                                                  FN_vkResetFences,
-                                                                                                  FN_vkWaitForFences,
-                                                                                                  VkFenceCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.Image
-                                                                                                  (FN_vkCreateImage,
-                                                                                                  FN_vkDestroyImage,
-                                                                                                  FN_vkGetImageSubresourceLayout,
-                                                                                                  VkImageCreateInfo (..),
-                                                                                                  VkImageLayout (..),
-                                                                                                  VkSubresourceLayout (..))
-import           Graphics.Vulkan.C.Core10.ImageView
-                                                                                                  (FN_vkCreateImageView,
-                                                                                                  FN_vkDestroyImageView,
-                                                                                                  VkImageSubresourceRange (..),
-                                                                                                  VkImageView,
-                                                                                                  VkImageViewCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.LayerDiscovery
-                                                                                                  (FN_vkEnumerateDeviceLayerProperties,
-                                                                                                  FN_vkEnumerateInstanceLayerProperties,
-                                                                                                  VkLayerProperties (..))
-import           Graphics.Vulkan.C.Core10.Memory
-                                                                                                  (FN_vkAllocateMemory,
-                                                                                                  FN_vkFlushMappedMemoryRanges,
-                                                                                                  FN_vkFreeMemory,
-                                                                                                  FN_vkGetDeviceMemoryCommitment,
-                                                                                                  FN_vkInvalidateMappedMemoryRanges,
-                                                                                                  FN_vkMapMemory,
-                                                                                                  FN_vkUnmapMemory,
-                                                                                                  VkDeviceMemory,
-                                                                                                  VkMappedMemoryRange (..),
-                                                                                                  VkMemoryAllocateInfo (..),
-                                                                                                  VkMemoryMapFlags (..))
-import           Graphics.Vulkan.C.Core10.MemoryManagement
-                                                                                                  (FN_vkBindBufferMemory,
-                                                                                                  FN_vkBindImageMemory,
-                                                                                                  FN_vkGetBufferMemoryRequirements,
-                                                                                                  FN_vkGetImageMemoryRequirements,
-                                                                                                  VkBuffer,
-                                                                                                  VkImage,
-                                                                                                  VkMemoryRequirements (..))
-import           Graphics.Vulkan.C.Core10.Pass
-                                                                                                  (FN_vkCreateFramebuffer,
-                                                                                                  FN_vkCreateRenderPass,
-                                                                                                  FN_vkDestroyFramebuffer,
-                                                                                                  FN_vkDestroyRenderPass,
-                                                                                                  FN_vkGetRenderAreaGranularity,
-                                                                                                  VkDependencyFlagBits (..),
-                                                                                                  VkDependencyFlags,
-                                                                                                  VkFramebuffer,
-                                                                                                  VkFramebufferCreateInfo (..),
-                                                                                                  VkPipelineBindPoint (..),
-                                                                                                  VkRenderPassCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.Pipeline
-                                                                                                  (FN_vkCreateComputePipelines,
-                                                                                                  FN_vkCreateGraphicsPipelines,
-                                                                                                  FN_vkDestroyPipeline,
-                                                                                                  VkComputePipelineCreateInfo (..),
-                                                                                                  VkExtent2D (..),
-                                                                                                  VkGraphicsPipelineCreateInfo (..),
-                                                                                                  VkPipeline,
-                                                                                                  VkPipelineLayout,
-                                                                                                  VkRect2D (..),
-                                                                                                  VkRenderPass,
-                                                                                                  VkShaderStageFlagBits (..),
-                                                                                                  VkViewport (..))
-import           Graphics.Vulkan.C.Core10.PipelineCache
-                                                                                                  (FN_vkCreatePipelineCache,
-                                                                                                  FN_vkDestroyPipelineCache,
-                                                                                                  FN_vkGetPipelineCacheData,
-                                                                                                  FN_vkMergePipelineCaches,
-                                                                                                  VkPipelineCache,
-                                                                                                  VkPipelineCacheCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.PipelineLayout
-                                                                                                  (FN_vkCreatePipelineLayout,
-                                                                                                  FN_vkDestroyPipelineLayout,
-                                                                                                  VkDescriptorSetLayout,
-                                                                                                  VkPipelineLayoutCreateInfo (..),
-                                                                                                  VkShaderStageFlags)
-import           Graphics.Vulkan.C.Core10.Query
-                                                                                                  (FN_vkCreateQueryPool,
-                                                                                                  FN_vkDestroyQueryPool,
-                                                                                                  FN_vkGetQueryPoolResults,
-                                                                                                  VkQueryPool,
-                                                                                                  VkQueryPoolCreateInfo (..),
-                                                                                                  VkQueryResultFlagBits (..),
-                                                                                                  VkQueryResultFlags)
-import           Graphics.Vulkan.C.Core10.Queue
-                                                                                                  (FN_vkDeviceWaitIdle,
-                                                                                                  FN_vkGetDeviceQueue,
-                                                                                                  FN_vkQueueSubmit,
-                                                                                                  FN_vkQueueWaitIdle,
-                                                                                                  VkCommandBuffer,
-                                                                                                  VkFence,
-                                                                                                  VkPipelineStageFlagBits (..),
-                                                                                                  VkPipelineStageFlags,
-                                                                                                  VkQueue,
-                                                                                                  VkSemaphore,
-                                                                                                  VkSubmitInfo (..))
-import           Graphics.Vulkan.C.Core10.QueueSemaphore
-                                                                                                  (FN_vkCreateSemaphore,
-                                                                                                  FN_vkDestroySemaphore,
-                                                                                                  VkSemaphoreCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.Sampler
-                                                                                                  (FN_vkCreateSampler,
-                                                                                                  FN_vkDestroySampler,
-                                                                                                  VkFilter (..),
-                                                                                                  VkSampler,
-                                                                                                  VkSamplerCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.Shader
-                                                                                                  (FN_vkCreateShaderModule,
-                                                                                                  FN_vkDestroyShaderModule,
-                                                                                                  VkShaderModule,
-                                                                                                  VkShaderModuleCreateInfo (..))
-import           Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
-                                                                                                  (FN_vkGetImageSparseMemoryRequirements,
-                                                                                                  FN_vkGetPhysicalDeviceSparseImageFormatProperties,
-                                                                                                  FN_vkQueueBindSparse,
-                                                                                                  VkBindSparseInfo (..),
-                                                                                                  VkImageSubresource (..),
-                                                                                                  VkSparseImageFormatProperties (..),
-                                                                                                  VkSparseImageMemoryRequirements (..))
-import           Graphics.Vulkan.C.Core11.DeviceInitialization
-                                                                                                  (FN_vkEnumerateInstanceVersion)
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
-                                                                                                  (FN_vkBindBufferMemory2,
-                                                                                                  FN_vkBindImageMemory2,
-                                                                                                  VkBindBufferMemoryInfo (..),
-                                                                                                  VkBindImageMemoryInfo (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
-                                                                                                  (FN_vkCreateDescriptorUpdateTemplate,
-                                                                                                  FN_vkDestroyDescriptorUpdateTemplate,
-                                                                                                  FN_vkUpdateDescriptorSetWithTemplate,
-                                                                                                  VkDescriptorUpdateTemplate,
-                                                                                                  VkDescriptorUpdateTemplateCreateInfo (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
-                                                                                                  (FN_vkCmdDispatchBase,
-                                                                                                  FN_vkCmdSetDeviceMask,
-                                                                                                  FN_vkGetDeviceGroupPeerMemoryFeatures,
-                                                                                                  VkPeerMemoryFeatureFlags)
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation
-                                                                                                  (FN_vkEnumeratePhysicalDeviceGroups,
-                                                                                                  VkPhysicalDeviceGroupProperties (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities
-                                                                                                  (FN_vkGetPhysicalDeviceExternalFenceProperties,
-                                                                                                  VkExternalFenceProperties (..),
-                                                                                                  VkPhysicalDeviceExternalFenceInfo (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities
-                                                                                                  (FN_vkGetPhysicalDeviceExternalBufferProperties,
-                                                                                                  VkExternalBufferProperties (..),
-                                                                                                  VkExternalMemoryHandleTypeFlagBits (..),
-                                                                                                  VkPhysicalDeviceExternalBufferInfo (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
-                                                                                                  (FN_vkGetPhysicalDeviceExternalSemaphoreProperties,
-                                                                                                  VkExternalSemaphoreProperties (..),
-                                                                                                  VkPhysicalDeviceExternalSemaphoreInfo (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
-                                                                                                  (FN_vkGetBufferMemoryRequirements2,
-                                                                                                  FN_vkGetImageMemoryRequirements2,
-                                                                                                  FN_vkGetImageSparseMemoryRequirements2,
-                                                                                                  VkBufferMemoryRequirementsInfo2 (..),
-                                                                                                  VkImageMemoryRequirementsInfo2 (..),
-                                                                                                  VkImageSparseMemoryRequirementsInfo2 (..),
-                                                                                                  VkMemoryRequirements2 (..),
-                                                                                                  VkSparseImageMemoryRequirements2 (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2
-                                                                                                  (FN_vkGetPhysicalDeviceFeatures2,
-                                                                                                  FN_vkGetPhysicalDeviceFormatProperties2,
-                                                                                                  FN_vkGetPhysicalDeviceImageFormatProperties2,
-                                                                                                  FN_vkGetPhysicalDeviceMemoryProperties2,
-                                                                                                  FN_vkGetPhysicalDeviceProperties2,
-                                                                                                  FN_vkGetPhysicalDeviceQueueFamilyProperties2,
-                                                                                                  FN_vkGetPhysicalDeviceSparseImageFormatProperties2,
-                                                                                                  VkFormatProperties2 (..),
-                                                                                                  VkImageFormatProperties2 (..),
-                                                                                                  VkPhysicalDeviceFeatures2 (..),
-                                                                                                  VkPhysicalDeviceImageFormatInfo2 (..),
-                                                                                                  VkPhysicalDeviceMemoryProperties2 (..),
-                                                                                                  VkPhysicalDeviceProperties2 (..),
-                                                                                                  VkPhysicalDeviceSparseImageFormatInfo2 (..),
-                                                                                                  VkQueueFamilyProperties2 (..),
-                                                                                                  VkSparseImageFormatProperties2 (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
-                                                                                                  (FN_vkTrimCommandPool,
-                                                                                                  VkCommandPoolTrimFlags (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3
-                                                                                                  (FN_vkGetDescriptorSetLayoutSupport,
-                                                                                                  VkDescriptorSetLayoutSupport (..))
-import           Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
-                                                                                                  (FN_vkGetDeviceQueue2,
-                                                                                                  VkDeviceQueueInfo2 (..))
-import           Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
-                                                                                                  (FN_vkCreateSamplerYcbcrConversion,
-                                                                                                  FN_vkDestroySamplerYcbcrConversion,
-                                                                                                  VkSamplerYcbcrConversion,
-                                                                                                  VkSamplerYcbcrConversionCreateInfo (..))
-import           Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker
-                                                                                                  (FN_vkCmdWriteBufferMarkerAMD)
-import           Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count
-                                                                                                  (FN_vkCmdDrawIndexedIndirectCountAMD,
-                                                                                                  FN_vkCmdDrawIndirectCountAMD)
-import           Graphics.Vulkan.C.Extensions.VK_AMD_shader_info
-                                                                                                  (FN_vkGetShaderInfoAMD,
-                                                                                                  VkShaderInfoTypeAMD (..))
+import Graphics.Vulkan.C.Core10.Buffer
+  ( VkBufferCreateInfo(..)
+  , FN_vkCreateBuffer
+  , FN_vkDestroyBuffer
+  )
+import Graphics.Vulkan.C.Core10.BufferView
+  ( VkBufferViewCreateInfo(..)
+  , FN_vkCreateBufferView
+  , FN_vkDestroyBufferView
+  , VkBufferView
+  )
+import Graphics.Vulkan.C.Core10.CommandBuffer
+  ( VkCommandBufferAllocateInfo(..)
+  , VkCommandBufferBeginInfo(..)
+  , VkCommandBufferResetFlagBits(..)
+  , VkQueryControlFlagBits(..)
+  , FN_vkAllocateCommandBuffers
+  , FN_vkBeginCommandBuffer
+  , FN_vkEndCommandBuffer
+  , FN_vkFreeCommandBuffers
+  , FN_vkResetCommandBuffer
+  , VkCommandBufferResetFlags
+  , VkQueryControlFlags
+  )
+import Graphics.Vulkan.C.Core10.CommandBufferBuilding
+  ( VkBufferCopy(..)
+  , VkBufferImageCopy(..)
+  , VkBufferMemoryBarrier(..)
+  , VkClearAttachment(..)
+  , VkClearColorValue(..)
+  , VkClearDepthStencilValue(..)
+  , VkClearRect(..)
+  , VkImageBlit(..)
+  , VkImageCopy(..)
+  , VkImageMemoryBarrier(..)
+  , VkImageResolve(..)
+  , VkIndexType(..)
+  , VkMemoryBarrier(..)
+  , VkRenderPassBeginInfo(..)
+  , VkStencilFaceFlagBits(..)
+  , VkSubpassContents(..)
+  , FN_vkCmdBeginQuery
+  , FN_vkCmdBeginRenderPass
+  , FN_vkCmdBindDescriptorSets
+  , FN_vkCmdBindIndexBuffer
+  , FN_vkCmdBindPipeline
+  , FN_vkCmdBindVertexBuffers
+  , FN_vkCmdBlitImage
+  , FN_vkCmdClearAttachments
+  , FN_vkCmdClearColorImage
+  , FN_vkCmdClearDepthStencilImage
+  , FN_vkCmdCopyBuffer
+  , FN_vkCmdCopyBufferToImage
+  , FN_vkCmdCopyImage
+  , FN_vkCmdCopyImageToBuffer
+  , FN_vkCmdCopyQueryPoolResults
+  , FN_vkCmdDispatch
+  , FN_vkCmdDispatchIndirect
+  , FN_vkCmdDraw
+  , FN_vkCmdDrawIndexed
+  , FN_vkCmdDrawIndexedIndirect
+  , FN_vkCmdDrawIndirect
+  , FN_vkCmdEndQuery
+  , FN_vkCmdEndRenderPass
+  , FN_vkCmdExecuteCommands
+  , FN_vkCmdFillBuffer
+  , FN_vkCmdNextSubpass
+  , FN_vkCmdPipelineBarrier
+  , FN_vkCmdPushConstants
+  , FN_vkCmdResetEvent
+  , FN_vkCmdResetQueryPool
+  , FN_vkCmdResolveImage
+  , FN_vkCmdSetBlendConstants
+  , FN_vkCmdSetDepthBias
+  , FN_vkCmdSetDepthBounds
+  , FN_vkCmdSetEvent
+  , FN_vkCmdSetLineWidth
+  , FN_vkCmdSetScissor
+  , FN_vkCmdSetStencilCompareMask
+  , FN_vkCmdSetStencilReference
+  , FN_vkCmdSetStencilWriteMask
+  , FN_vkCmdSetViewport
+  , FN_vkCmdUpdateBuffer
+  , FN_vkCmdWaitEvents
+  , FN_vkCmdWriteTimestamp
+  , VkStencilFaceFlags
+  )
+import Graphics.Vulkan.C.Core10.CommandPool
+  ( VkCommandPoolCreateInfo(..)
+  , VkCommandPoolResetFlagBits(..)
+  , FN_vkCreateCommandPool
+  , FN_vkDestroyCommandPool
+  , FN_vkResetCommandPool
+  , VkCommandPool
+  , VkCommandPoolResetFlags
+  )
+import Graphics.Vulkan.C.Core10.Core
+  ( VkBool32(..)
+  , VkFormat(..)
+  , VkResult(..)
+  )
+import Graphics.Vulkan.C.Core10.DescriptorSet
+  ( VkCopyDescriptorSet(..)
+  , VkDescriptorPoolCreateInfo(..)
+  , VkDescriptorPoolResetFlags(..)
+  , VkDescriptorSetAllocateInfo(..)
+  , VkDescriptorSetLayoutCreateInfo(..)
+  , VkWriteDescriptorSet(..)
+  , FN_vkAllocateDescriptorSets
+  , FN_vkCreateDescriptorPool
+  , FN_vkCreateDescriptorSetLayout
+  , FN_vkDestroyDescriptorPool
+  , FN_vkDestroyDescriptorSetLayout
+  , FN_vkFreeDescriptorSets
+  , FN_vkResetDescriptorPool
+  , FN_vkUpdateDescriptorSets
+  , VkDescriptorPool
+  , VkDescriptorSet
+  )
+import Graphics.Vulkan.C.Core10.Device
+  ( VkDeviceCreateInfo(..)
+  , FN_vkCreateDevice
+  , FN_vkDestroyDevice
+  )
+import Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( VkAllocationCallbacks(..)
+  , VkFormatProperties(..)
+  , VkImageCreateFlagBits(..)
+  , VkImageFormatProperties(..)
+  , VkImageTiling(..)
+  , VkImageType(..)
+  , VkImageUsageFlagBits(..)
+  , VkInstanceCreateInfo(..)
+  , VkPhysicalDeviceFeatures(..)
+  , VkPhysicalDeviceMemoryProperties(..)
+  , VkPhysicalDeviceProperties(..)
+  , VkQueueFamilyProperties(..)
+  , VkSampleCountFlagBits(..)
+  , FN_vkCreateInstance
+  , FN_vkDestroyInstance
+  , FN_vkEnumeratePhysicalDevices
+  , FN_vkGetDeviceProcAddr
+  , FN_vkGetInstanceProcAddr
+  , FN_vkGetPhysicalDeviceFeatures
+  , FN_vkGetPhysicalDeviceFormatProperties
+  , FN_vkGetPhysicalDeviceImageFormatProperties
+  , FN_vkGetPhysicalDeviceMemoryProperties
+  , FN_vkGetPhysicalDeviceProperties
+  , FN_vkGetPhysicalDeviceQueueFamilyProperties
+  , PFN_vkVoidFunction
+  , VkDevice
+  , VkDeviceSize
+  , VkImageCreateFlags
+  , VkImageUsageFlags
+  , VkInstance
+  , VkPhysicalDevice
+  , vkGetInstanceProcAddr
+  )
+import Graphics.Vulkan.C.Core10.Event
+  ( VkEventCreateInfo(..)
+  , FN_vkCreateEvent
+  , FN_vkDestroyEvent
+  , FN_vkGetEventStatus
+  , FN_vkResetEvent
+  , FN_vkSetEvent
+  , VkEvent
+  )
+import Graphics.Vulkan.C.Core10.ExtensionDiscovery
+  ( VkExtensionProperties(..)
+  , FN_vkEnumerateDeviceExtensionProperties
+  , FN_vkEnumerateInstanceExtensionProperties
+  )
+import Graphics.Vulkan.C.Core10.Fence
+  ( VkFenceCreateInfo(..)
+  , FN_vkCreateFence
+  , FN_vkDestroyFence
+  , FN_vkGetFenceStatus
+  , FN_vkResetFences
+  , FN_vkWaitForFences
+  )
+import Graphics.Vulkan.C.Core10.Image
+  ( VkImageCreateInfo(..)
+  , VkImageLayout(..)
+  , VkSubresourceLayout(..)
+  , FN_vkCreateImage
+  , FN_vkDestroyImage
+  , FN_vkGetImageSubresourceLayout
+  )
+import Graphics.Vulkan.C.Core10.ImageView
+  ( VkImageSubresourceRange(..)
+  , VkImageViewCreateInfo(..)
+  , FN_vkCreateImageView
+  , FN_vkDestroyImageView
+  , VkImageView
+  )
+import Graphics.Vulkan.C.Core10.LayerDiscovery
+  ( VkLayerProperties(..)
+  , FN_vkEnumerateDeviceLayerProperties
+  , FN_vkEnumerateInstanceLayerProperties
+  )
+import Graphics.Vulkan.C.Core10.Memory
+  ( VkMappedMemoryRange(..)
+  , VkMemoryAllocateInfo(..)
+  , VkMemoryMapFlags(..)
+  , FN_vkAllocateMemory
+  , FN_vkFlushMappedMemoryRanges
+  , FN_vkFreeMemory
+  , FN_vkGetDeviceMemoryCommitment
+  , FN_vkInvalidateMappedMemoryRanges
+  , FN_vkMapMemory
+  , FN_vkUnmapMemory
+  , VkDeviceMemory
+  )
+import Graphics.Vulkan.C.Core10.MemoryManagement
+  ( VkMemoryRequirements(..)
+  , FN_vkBindBufferMemory
+  , FN_vkBindImageMemory
+  , FN_vkGetBufferMemoryRequirements
+  , FN_vkGetImageMemoryRequirements
+  , VkBuffer
+  , VkImage
+  )
+import Graphics.Vulkan.C.Core10.Pass
+  ( VkDependencyFlagBits(..)
+  , VkFramebufferCreateInfo(..)
+  , VkPipelineBindPoint(..)
+  , VkRenderPassCreateInfo(..)
+  , FN_vkCreateFramebuffer
+  , FN_vkCreateRenderPass
+  , FN_vkDestroyFramebuffer
+  , FN_vkDestroyRenderPass
+  , FN_vkGetRenderAreaGranularity
+  , VkDependencyFlags
+  , VkFramebuffer
+  )
+import Graphics.Vulkan.C.Core10.Pipeline
+  ( VkComputePipelineCreateInfo(..)
+  , VkExtent2D(..)
+  , VkGraphicsPipelineCreateInfo(..)
+  , VkRect2D(..)
+  , VkShaderStageFlagBits(..)
+  , VkViewport(..)
+  , FN_vkCreateComputePipelines
+  , FN_vkCreateGraphicsPipelines
+  , FN_vkDestroyPipeline
+  , VkPipeline
+  , VkPipelineLayout
+  , VkRenderPass
+  )
+import Graphics.Vulkan.C.Core10.PipelineCache
+  ( VkPipelineCacheCreateInfo(..)
+  , FN_vkCreatePipelineCache
+  , FN_vkDestroyPipelineCache
+  , FN_vkGetPipelineCacheData
+  , FN_vkMergePipelineCaches
+  , VkPipelineCache
+  )
+import Graphics.Vulkan.C.Core10.PipelineLayout
+  ( VkPipelineLayoutCreateInfo(..)
+  , FN_vkCreatePipelineLayout
+  , FN_vkDestroyPipelineLayout
+  , VkDescriptorSetLayout
+  , VkShaderStageFlags
+  )
+import Graphics.Vulkan.C.Core10.Query
+  ( VkQueryPoolCreateInfo(..)
+  , VkQueryResultFlagBits(..)
+  , VkQueryType(..)
+  , FN_vkCreateQueryPool
+  , FN_vkDestroyQueryPool
+  , FN_vkGetQueryPoolResults
+  , VkQueryPool
+  , VkQueryResultFlags
+  )
+import Graphics.Vulkan.C.Core10.Queue
+  ( VkPipelineStageFlagBits(..)
+  , VkSubmitInfo(..)
+  , FN_vkDeviceWaitIdle
+  , FN_vkGetDeviceQueue
+  , FN_vkQueueSubmit
+  , FN_vkQueueWaitIdle
+  , VkCommandBuffer
+  , VkFence
+  , VkPipelineStageFlags
+  , VkQueue
+  , VkSemaphore
+  )
+import Graphics.Vulkan.C.Core10.QueueSemaphore
+  ( VkSemaphoreCreateInfo(..)
+  , FN_vkCreateSemaphore
+  , FN_vkDestroySemaphore
+  )
+import Graphics.Vulkan.C.Core10.Sampler
+  ( VkFilter(..)
+  , VkSamplerCreateInfo(..)
+  , FN_vkCreateSampler
+  , FN_vkDestroySampler
+  , VkSampler
+  )
+import Graphics.Vulkan.C.Core10.Shader
+  ( VkShaderModuleCreateInfo(..)
+  , FN_vkCreateShaderModule
+  , FN_vkDestroyShaderModule
+  , VkShaderModule
+  )
+import Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
+  ( VkBindSparseInfo(..)
+  , VkImageSubresource(..)
+  , VkSparseImageFormatProperties(..)
+  , VkSparseImageMemoryRequirements(..)
+  , FN_vkGetImageSparseMemoryRequirements
+  , FN_vkGetPhysicalDeviceSparseImageFormatProperties
+  , FN_vkQueueBindSparse
+  )
+import Graphics.Vulkan.C.Core11.DeviceInitialization
+  ( FN_vkEnumerateInstanceVersion
+  )
+import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
+  ( VkDeviceQueueInfo2(..)
+  , FN_vkGetDeviceQueue2
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
+  ( VkBindBufferMemoryInfo(..)
+  , VkBindImageMemoryInfo(..)
+  , FN_vkBindBufferMemory2
+  , FN_vkBindImageMemory2
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
+  ( VkDescriptorUpdateTemplateCreateInfo(..)
+  , FN_vkCreateDescriptorUpdateTemplate
+  , FN_vkDestroyDescriptorUpdateTemplate
+  , FN_vkUpdateDescriptorSetWithTemplate
+  , VkDescriptorUpdateTemplate
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
+  ( FN_vkCmdDispatchBase
+  , FN_vkCmdSetDeviceMask
+  , FN_vkGetDeviceGroupPeerMemoryFeatures
+  , VkPeerMemoryFeatureFlags
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation
+  ( VkPhysicalDeviceGroupProperties(..)
+  , FN_vkEnumeratePhysicalDeviceGroups
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities
+  ( VkExternalFenceProperties(..)
+  , VkPhysicalDeviceExternalFenceInfo(..)
+  , FN_vkGetPhysicalDeviceExternalFenceProperties
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities
+  ( VkExternalBufferProperties(..)
+  , VkExternalMemoryHandleTypeFlagBits(..)
+  , VkPhysicalDeviceExternalBufferInfo(..)
+  , FN_vkGetPhysicalDeviceExternalBufferProperties
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
+  ( VkExternalSemaphoreProperties(..)
+  , VkPhysicalDeviceExternalSemaphoreInfo(..)
+  , FN_vkGetPhysicalDeviceExternalSemaphoreProperties
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
+  ( VkBufferMemoryRequirementsInfo2(..)
+  , VkImageMemoryRequirementsInfo2(..)
+  , VkImageSparseMemoryRequirementsInfo2(..)
+  , VkMemoryRequirements2(..)
+  , VkSparseImageMemoryRequirements2(..)
+  , FN_vkGetBufferMemoryRequirements2
+  , FN_vkGetImageMemoryRequirements2
+  , FN_vkGetImageSparseMemoryRequirements2
+  , VkMemoryRequirements2KHR
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2
+  ( VkFormatProperties2(..)
+  , VkImageFormatProperties2(..)
+  , VkPhysicalDeviceFeatures2(..)
+  , VkPhysicalDeviceImageFormatInfo2(..)
+  , VkPhysicalDeviceMemoryProperties2(..)
+  , VkPhysicalDeviceProperties2(..)
+  , VkPhysicalDeviceSparseImageFormatInfo2(..)
+  , VkQueueFamilyProperties2(..)
+  , VkSparseImageFormatProperties2(..)
+  , FN_vkGetPhysicalDeviceFeatures2
+  , FN_vkGetPhysicalDeviceFormatProperties2
+  , FN_vkGetPhysicalDeviceImageFormatProperties2
+  , FN_vkGetPhysicalDeviceMemoryProperties2
+  , FN_vkGetPhysicalDeviceProperties2
+  , FN_vkGetPhysicalDeviceQueueFamilyProperties2
+  , FN_vkGetPhysicalDeviceSparseImageFormatProperties2
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
+  ( VkCommandPoolTrimFlags(..)
+  , FN_vkTrimCommandPool
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3
+  ( VkDescriptorSetLayoutSupport(..)
+  , FN_vkGetDescriptorSetLayoutSupport
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
+  ( VkSamplerYcbcrConversionCreateInfo(..)
+  , FN_vkCreateSamplerYcbcrConversion
+  , FN_vkDestroySamplerYcbcrConversion
+  , VkSamplerYcbcrConversion
+  )
+import Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker
+  ( FN_vkCmdWriteBufferMarkerAMD
+  )
+import Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr
+  ( FN_vkSetLocalDimmingAMD
+  )
+import Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count
+  ( FN_vkCmdDrawIndexedIndirectCountAMD
+  , FN_vkCmdDrawIndirectCountAMD
+  )
+import Graphics.Vulkan.C.Extensions.VK_AMD_shader_info
+  ( VkShaderInfoTypeAMD(..)
+  , FN_vkGetShaderInfoAMD
+  )
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
-                                                                                                  (AHardwareBuffer,
-                                                                                                  FN_vkGetAndroidHardwareBufferPropertiesANDROID,
-                                                                                                  FN_vkGetMemoryAndroidHardwareBufferANDROID,
-                                                                                                  VkAndroidHardwareBufferPropertiesANDROID (..),
-                                                                                                  VkMemoryGetAndroidHardwareBufferInfoANDROID (..))
+import Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+  ( VkAndroidHardwareBufferPropertiesANDROID(..)
+  , VkMemoryGetAndroidHardwareBufferInfoANDROID(..)
+  , AHardwareBuffer
+  , FN_vkGetAndroidHardwareBufferPropertiesANDROID
+  , FN_vkGetMemoryAndroidHardwareBufferANDROID
+  )
 #endif
 
 #if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
-import           Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display
-                                                                                                  (FN_vkAcquireXlibDisplayEXT,
-                                                                                                  FN_vkGetRandROutputDisplayEXT,
-                                                                                                  RROutput)
+import Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display
+  ( FN_vkAcquireXlibDisplayEXT
+  , FN_vkGetRandROutputDisplayEXT
+  , RROutput
+  )
 #endif
-import           Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
-                                                                                                  (FN_vkCmdDebugMarkerBeginEXT,
-                                                                                                  FN_vkCmdDebugMarkerEndEXT,
-                                                                                                  FN_vkCmdDebugMarkerInsertEXT,
-                                                                                                  FN_vkDebugMarkerSetObjectNameEXT,
-                                                                                                  FN_vkDebugMarkerSetObjectTagEXT,
-                                                                                                  VkDebugMarkerMarkerInfoEXT (..),
-                                                                                                  VkDebugMarkerObjectNameInfoEXT (..),
-                                                                                                  VkDebugMarkerObjectTagInfoEXT (..))
-import           Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
-                                                                                                  (FN_vkCreateDebugReportCallbackEXT,
-                                                                                                  FN_vkDebugReportMessageEXT,
-                                                                                                  FN_vkDestroyDebugReportCallbackEXT,
-                                                                                                  VkDebugReportCallbackCreateInfoEXT (..),
-                                                                                                  VkDebugReportCallbackEXT,
-                                                                                                  VkDebugReportFlagBitsEXT (..),
-                                                                                                  VkDebugReportFlagsEXT,
-                                                                                                  VkDebugReportObjectTypeEXT (..))
-import           Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
-                                                                                                  (FN_vkCmdBeginDebugUtilsLabelEXT,
-                                                                                                  FN_vkCmdEndDebugUtilsLabelEXT,
-                                                                                                  FN_vkCmdInsertDebugUtilsLabelEXT,
-                                                                                                  FN_vkCreateDebugUtilsMessengerEXT,
-                                                                                                  FN_vkDestroyDebugUtilsMessengerEXT,
-                                                                                                  FN_vkQueueBeginDebugUtilsLabelEXT,
-                                                                                                  FN_vkQueueEndDebugUtilsLabelEXT,
-                                                                                                  FN_vkQueueInsertDebugUtilsLabelEXT,
-                                                                                                  FN_vkSetDebugUtilsObjectNameEXT,
-                                                                                                  FN_vkSetDebugUtilsObjectTagEXT,
-                                                                                                  FN_vkSubmitDebugUtilsMessageEXT,
-                                                                                                  VkDebugUtilsLabelEXT (..),
-                                                                                                  VkDebugUtilsMessageSeverityFlagBitsEXT (..),
-                                                                                                  VkDebugUtilsMessageTypeFlagBitsEXT (..),
-                                                                                                  VkDebugUtilsMessageTypeFlagsEXT,
-                                                                                                  VkDebugUtilsMessengerCallbackDataEXT (..),
-                                                                                                  VkDebugUtilsMessengerCreateInfoEXT (..),
-                                                                                                  VkDebugUtilsMessengerEXT,
-                                                                                                  VkDebugUtilsObjectNameInfoEXT (..),
-                                                                                                  VkDebugUtilsObjectTagInfoEXT (..))
-import           Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display
-                                                                                                  (FN_vkReleaseDisplayEXT)
-import           Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
-                                                                                                  (FN_vkCmdSetDiscardRectangleEXT)
-import           Graphics.Vulkan.C.Extensions.VK_EXT_display_control
-                                                                                                  (FN_vkDisplayPowerControlEXT,
-                                                                                                  FN_vkGetSwapchainCounterEXT,
-                                                                                                  FN_vkRegisterDeviceEventEXT,
-                                                                                                  FN_vkRegisterDisplayEventEXT,
-                                                                                                  VkDeviceEventInfoEXT (..),
-                                                                                                  VkDisplayEventInfoEXT (..),
-                                                                                                  VkDisplayPowerInfoEXT (..))
-import           Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter
-                                                                                                  (FN_vkGetPhysicalDeviceSurfaceCapabilities2EXT,
-                                                                                                  VkSurfaceCapabilities2EXT (..),
-                                                                                                  VkSurfaceCounterFlagBitsEXT (..))
-import           Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host
-                                                                                                  (FN_vkGetMemoryHostPointerPropertiesEXT,
-                                                                                                  VkMemoryHostPointerPropertiesEXT (..))
-import           Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
-                                                                                                  (FN_vkSetHdrMetadataEXT,
-                                                                                                  VkHdrMetadataEXT (..))
-import           Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
-                                                                                                  (FN_vkCmdSetSampleLocationsEXT,
-                                                                                                  FN_vkGetPhysicalDeviceMultisamplePropertiesEXT,
-                                                                                                  VkMultisamplePropertiesEXT (..),
-                                                                                                  VkSampleLocationsInfoEXT (..))
-import           Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
-                                                                                                  (FN_vkCreateValidationCacheEXT,
-                                                                                                  FN_vkDestroyValidationCacheEXT,
-                                                                                                  FN_vkGetValidationCacheDataEXT,
-                                                                                                  FN_vkMergeValidationCachesEXT,
-                                                                                                  VkValidationCacheCreateInfoEXT (..),
-                                                                                                  VkValidationCacheEXT)
-import           Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
-                                                                                                  (FN_vkGetPastPresentationTimingGOOGLE,
-                                                                                                  FN_vkGetRefreshCycleDurationGOOGLE,
-                                                                                                  VkPastPresentationTimingGOOGLE (..),
-                                                                                                  VkRefreshCycleDurationGOOGLE (..))
+import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
+  ( VkBufferDeviceAddressInfoEXT(..)
+  , FN_vkGetBufferDeviceAddressEXT
+  , VkDeviceAddress
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
+  ( VkCalibratedTimestampInfoEXT(..)
+  , VkTimeDomainEXT(..)
+  , FN_vkGetCalibratedTimestampsEXT
+  , FN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering
+  ( VkConditionalRenderingBeginInfoEXT(..)
+  , FN_vkCmdBeginConditionalRenderingEXT
+  , FN_vkCmdEndConditionalRenderingEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
+  ( VkDebugMarkerMarkerInfoEXT(..)
+  , VkDebugMarkerObjectNameInfoEXT(..)
+  , VkDebugMarkerObjectTagInfoEXT(..)
+  , FN_vkCmdDebugMarkerBeginEXT
+  , FN_vkCmdDebugMarkerEndEXT
+  , FN_vkCmdDebugMarkerInsertEXT
+  , FN_vkDebugMarkerSetObjectNameEXT
+  , FN_vkDebugMarkerSetObjectTagEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
+  ( VkDebugReportCallbackCreateInfoEXT(..)
+  , VkDebugReportFlagBitsEXT(..)
+  , VkDebugReportObjectTypeEXT(..)
+  , FN_vkCreateDebugReportCallbackEXT
+  , FN_vkDebugReportMessageEXT
+  , FN_vkDestroyDebugReportCallbackEXT
+  , VkDebugReportCallbackEXT
+  , VkDebugReportFlagsEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
+  ( VkDebugUtilsLabelEXT(..)
+  , VkDebugUtilsMessageSeverityFlagBitsEXT(..)
+  , VkDebugUtilsMessageTypeFlagBitsEXT(..)
+  , VkDebugUtilsMessengerCallbackDataEXT(..)
+  , VkDebugUtilsMessengerCreateInfoEXT(..)
+  , VkDebugUtilsObjectNameInfoEXT(..)
+  , VkDebugUtilsObjectTagInfoEXT(..)
+  , FN_vkCmdBeginDebugUtilsLabelEXT
+  , FN_vkCmdEndDebugUtilsLabelEXT
+  , FN_vkCmdInsertDebugUtilsLabelEXT
+  , FN_vkCreateDebugUtilsMessengerEXT
+  , FN_vkDestroyDebugUtilsMessengerEXT
+  , FN_vkQueueBeginDebugUtilsLabelEXT
+  , FN_vkQueueEndDebugUtilsLabelEXT
+  , FN_vkQueueInsertDebugUtilsLabelEXT
+  , FN_vkSetDebugUtilsObjectNameEXT
+  , FN_vkSetDebugUtilsObjectTagEXT
+  , FN_vkSubmitDebugUtilsMessageEXT
+  , VkDebugUtilsMessageTypeFlagsEXT
+  , VkDebugUtilsMessengerEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display
+  ( FN_vkReleaseDisplayEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
+  ( FN_vkCmdSetDiscardRectangleEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_display_control
+  ( VkDeviceEventInfoEXT(..)
+  , VkDisplayEventInfoEXT(..)
+  , VkDisplayPowerInfoEXT(..)
+  , FN_vkDisplayPowerControlEXT
+  , FN_vkGetSwapchainCounterEXT
+  , FN_vkRegisterDeviceEventEXT
+  , FN_vkRegisterDisplayEventEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter
+  ( VkSurfaceCapabilities2EXT(..)
+  , VkSurfaceCounterFlagBitsEXT(..)
+  , FN_vkGetPhysicalDeviceSurfaceCapabilities2EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host
+  ( VkMemoryHostPointerPropertiesEXT(..)
+  , FN_vkGetMemoryHostPointerPropertiesEXT
+  )
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
+  ( FN_vkAcquireFullScreenExclusiveModeEXT
+  , FN_vkGetPhysicalDeviceSurfacePresentModes2EXT
+  , FN_vkReleaseFullScreenExclusiveModeEXT
+  )
+#endif
+import Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
+  ( VkHdrMetadataEXT(..)
+  , FN_vkSetHdrMetadataEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
+  ( FN_vkResetQueryPoolEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
+  ( VkImageDrmFormatModifierPropertiesEXT(..)
+  , FN_vkGetImageDrmFormatModifierPropertiesEXT
+  )
+
+#if defined(VK_USE_PLATFORM_METAL_EXT)
+import Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
+  ( VkMetalSurfaceCreateInfoEXT(..)
+  , FN_vkCreateMetalSurfaceEXT
+  )
+#endif
+import Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
+  ( VkMultisamplePropertiesEXT(..)
+  , VkSampleLocationsInfoEXT(..)
+  , FN_vkCmdSetSampleLocationsEXT
+  , FN_vkGetPhysicalDeviceMultisamplePropertiesEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
+  ( FN_vkCmdBeginQueryIndexedEXT
+  , FN_vkCmdBeginTransformFeedbackEXT
+  , FN_vkCmdBindTransformFeedbackBuffersEXT
+  , FN_vkCmdDrawIndirectByteCountEXT
+  , FN_vkCmdEndQueryIndexedEXT
+  , FN_vkCmdEndTransformFeedbackEXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
+  ( VkValidationCacheCreateInfoEXT(..)
+  , FN_vkCreateValidationCacheEXT
+  , FN_vkDestroyValidationCacheEXT
+  , FN_vkGetValidationCacheDataEXT
+  , FN_vkMergeValidationCachesEXT
+  , VkValidationCacheEXT
+  )
+
+#if defined(VK_USE_PLATFORM_FUCHSIA)
+import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
+  ( VkImagePipeSurfaceCreateInfoFUCHSIA(..)
+  , FN_vkCreateImagePipeSurfaceFUCHSIA
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
+  ( VkStreamDescriptorSurfaceCreateInfoGGP(..)
+  , FN_vkCreateStreamDescriptorSurfaceGGP
+  )
+#endif
+import Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
+  ( VkPastPresentationTimingGOOGLE(..)
+  , VkRefreshCycleDurationGOOGLE(..)
+  , FN_vkGetPastPresentationTimingGOOGLE
+  , FN_vkGetRefreshCycleDurationGOOGLE
+  )
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
-                                                                                                  (FN_vkCreateAndroidSurfaceKHR,
-                                                                                                  VkAndroidSurfaceCreateInfoKHR (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
+  ( VkAndroidSurfaceCreateInfoKHR(..)
+  , FN_vkCreateAndroidSurfaceKHR
+  )
 #endif
-import           Graphics.Vulkan.C.Extensions.VK_KHR_display
-                                                                                                  (FN_vkCreateDisplayModeKHR,
-                                                                                                  FN_vkCreateDisplayPlaneSurfaceKHR,
-                                                                                                  FN_vkGetDisplayModePropertiesKHR,
-                                                                                                  FN_vkGetDisplayPlaneCapabilitiesKHR,
-                                                                                                  FN_vkGetDisplayPlaneSupportedDisplaysKHR,
-                                                                                                  FN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR,
-                                                                                                  FN_vkGetPhysicalDeviceDisplayPropertiesKHR,
-                                                                                                  VkDisplayKHR,
-                                                                                                  VkDisplayModeCreateInfoKHR (..),
-                                                                                                  VkDisplayModeKHR,
-                                                                                                  VkDisplayModePropertiesKHR (..),
-                                                                                                  VkDisplayPlaneCapabilitiesKHR (..),
-                                                                                                  VkDisplayPlanePropertiesKHR (..),
-                                                                                                  VkDisplayPropertiesKHR (..),
-                                                                                                  VkDisplaySurfaceCreateInfoKHR (..))
-import           Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
-                                                                                                  (FN_vkCreateSharedSwapchainsKHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd
-                                                                                                  (FN_vkGetFenceFdKHR,
-                                                                                                  FN_vkImportFenceFdKHR,
-                                                                                                  VkFenceGetFdInfoKHR (..),
-                                                                                                  VkImportFenceFdInfoKHR (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
+  ( VkRenderPassCreateInfo2KHR(..)
+  , VkSubpassBeginInfoKHR(..)
+  , VkSubpassEndInfoKHR(..)
+  , FN_vkCmdBeginRenderPass2KHR
+  , FN_vkCmdEndRenderPass2KHR
+  , FN_vkCmdNextSubpass2KHR
+  , FN_vkCreateRenderPass2KHR
+  )
+
+import Graphics.Vulkan.C.Extensions.VK_KHR_device_group
+  ( FN_vkGetDeviceGroupSurfacePresentModes2EXT
+  )
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#endif
+import Graphics.Vulkan.C.Extensions.VK_KHR_display
+  ( VkDisplayModeCreateInfoKHR(..)
+  , VkDisplayModePropertiesKHR(..)
+  , VkDisplayPlaneCapabilitiesKHR(..)
+  , VkDisplayPlanePropertiesKHR(..)
+  , VkDisplayPropertiesKHR(..)
+  , VkDisplaySurfaceCreateInfoKHR(..)
+  , FN_vkCreateDisplayModeKHR
+  , FN_vkCreateDisplayPlaneSurfaceKHR
+  , FN_vkGetDisplayModePropertiesKHR
+  , FN_vkGetDisplayPlaneCapabilitiesKHR
+  , FN_vkGetDisplayPlaneSupportedDisplaysKHR
+  , FN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
+  , FN_vkGetPhysicalDeviceDisplayPropertiesKHR
+  , VkDisplayKHR
+  , VkDisplayModeKHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
+  ( FN_vkCreateSharedSwapchainsKHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count
+  ( FN_vkCmdDrawIndexedIndirectCountKHR
+  , FN_vkCmdDrawIndirectCountKHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd
+  ( VkFenceGetFdInfoKHR(..)
+  , VkImportFenceFdInfoKHR(..)
+  , FN_vkGetFenceFdKHR
+  , FN_vkImportFenceFdKHR
+  )
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
-                                                                                                  (FN_vkGetFenceWin32HandleKHR,
-                                                                                                  FN_vkImportFenceWin32HandleKHR,
-                                                                                                  VkFenceGetWin32HandleInfoKHR (..),
-                                                                                                  VkImportFenceWin32HandleInfoKHR (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
+  ( VkFenceGetWin32HandleInfoKHR(..)
+  , VkImportFenceWin32HandleInfoKHR(..)
+  , FN_vkGetFenceWin32HandleKHR
+  , FN_vkImportFenceWin32HandleKHR
+  )
 #endif
-import           Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
-                                                                                                  (FN_vkGetMemoryFdKHR,
-                                                                                                  FN_vkGetMemoryFdPropertiesKHR,
-                                                                                                  VkMemoryFdPropertiesKHR (..),
-                                                                                                  VkMemoryGetFdInfoKHR (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
+  ( VkMemoryFdPropertiesKHR(..)
+  , VkMemoryGetFdInfoKHR(..)
+  , FN_vkGetMemoryFdKHR
+  , FN_vkGetMemoryFdPropertiesKHR
+  )
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
-                                                                                                  (FN_vkGetMemoryWin32HandleKHR,
-                                                                                                  FN_vkGetMemoryWin32HandlePropertiesKHR,
-                                                                                                  VkMemoryGetWin32HandleInfoKHR (..),
-                                                                                                  VkMemoryWin32HandlePropertiesKHR (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
+  ( VkMemoryGetWin32HandleInfoKHR(..)
+  , VkMemoryWin32HandlePropertiesKHR(..)
+  , FN_vkGetMemoryWin32HandleKHR
+  , FN_vkGetMemoryWin32HandlePropertiesKHR
+  )
 #endif
-import           Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
-                                                                                                  (FN_vkGetSemaphoreFdKHR,
-                                                                                                  FN_vkImportSemaphoreFdKHR,
-                                                                                                  VkImportSemaphoreFdInfoKHR (..),
-                                                                                                  VkSemaphoreGetFdInfoKHR (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
+  ( VkImportSemaphoreFdInfoKHR(..)
+  , VkSemaphoreGetFdInfoKHR(..)
+  , FN_vkGetSemaphoreFdKHR
+  , FN_vkImportSemaphoreFdKHR
+  )
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32
-                                                                                                  (FN_vkGetSemaphoreWin32HandleKHR,
-                                                                                                  FN_vkImportSemaphoreWin32HandleKHR,
-                                                                                                  VkImportSemaphoreWin32HandleInfoKHR (..),
-                                                                                                  VkSemaphoreGetWin32HandleInfoKHR (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32
+  ( VkImportSemaphoreWin32HandleInfoKHR(..)
+  , VkSemaphoreGetWin32HandleInfoKHR(..)
+  , FN_vkGetSemaphoreWin32HandleKHR
+  , FN_vkImportSemaphoreWin32HandleKHR
+  )
 #endif
-import           Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
-                                                                                                  (FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR,
-                                                                                                  FN_vkGetPhysicalDeviceSurfaceFormats2KHR,
-                                                                                                  VkPhysicalDeviceSurfaceInfo2KHR (..),
-                                                                                                  VkSurfaceCapabilities2KHR (..),
-                                                                                                  VkSurfaceFormat2KHR (..))
-
-#if defined(VK_USE_PLATFORM_MIR_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_mir_surface
-                                                                                                  (FN_vkCreateMirSurfaceKHR,
-                                                                                                  FN_vkGetPhysicalDeviceMirPresentationSupportKHR,
-                                                                                                  MirConnection,
-                                                                                                  VkMirSurfaceCreateInfoKHR (..))
-#endif
-import           Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
-                                                                                                  (FN_vkCmdPushDescriptorSetKHR,
-                                                                                                  FN_vkCmdPushDescriptorSetWithTemplateKHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
-                                                                                                  (FN_vkGetSwapchainStatusKHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_surface
-                                                                                                  (FN_vkDestroySurfaceKHR,
-                                                                                                  FN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR,
-                                                                                                  FN_vkGetPhysicalDeviceSurfaceFormatsKHR,
-                                                                                                  FN_vkGetPhysicalDeviceSurfacePresentModesKHR,
-                                                                                                  FN_vkGetPhysicalDeviceSurfaceSupportKHR,
-                                                                                                  VkPresentModeKHR (..),
-                                                                                                  VkSurfaceCapabilitiesKHR (..),
-                                                                                                  VkSurfaceFormatKHR (..),
-                                                                                                  VkSurfaceKHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
-                                                                                                  (FN_vkAcquireNextImage2KHR,
-                                                                                                  FN_vkAcquireNextImageKHR,
-                                                                                                  FN_vkCreateSwapchainKHR,
-                                                                                                  FN_vkDestroySwapchainKHR,
-                                                                                                  FN_vkGetDeviceGroupPresentCapabilitiesKHR,
-                                                                                                  FN_vkGetDeviceGroupSurfacePresentModesKHR,
-                                                                                                  FN_vkGetPhysicalDevicePresentRectanglesKHR,
-                                                                                                  FN_vkGetSwapchainImagesKHR,
-                                                                                                  FN_vkQueuePresentKHR,
-                                                                                                  VkAcquireNextImageInfoKHR (..),
-                                                                                                  VkDeviceGroupPresentCapabilitiesKHR (..),
-                                                                                                  VkDeviceGroupPresentModeFlagsKHR,
-                                                                                                  VkPresentInfoKHR (..),
-                                                                                                  VkSwapchainCreateInfoKHR (..),
-                                                                                                  VkSwapchainKHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2
+  ( VkDisplayModeProperties2KHR(..)
+  , VkDisplayPlaneCapabilities2KHR(..)
+  , VkDisplayPlaneInfo2KHR(..)
+  , VkDisplayPlaneProperties2KHR(..)
+  , VkDisplayProperties2KHR(..)
+  , FN_vkGetDisplayModeProperties2KHR
+  , FN_vkGetDisplayPlaneCapabilities2KHR
+  , FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
+  , FN_vkGetPhysicalDeviceDisplayProperties2KHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
+  ( VkPhysicalDeviceSurfaceInfo2KHR(..)
+  , VkSurfaceCapabilities2KHR(..)
+  , VkSurfaceFormat2KHR(..)
+  , FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR
+  , FN_vkGetPhysicalDeviceSurfaceFormats2KHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
+  ( FN_vkCmdPushDescriptorSetKHR
+  , FN_vkCmdPushDescriptorSetWithTemplateKHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
+  ( FN_vkGetSwapchainStatusKHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_surface
+  ( VkPresentModeKHR(..)
+  , VkSurfaceCapabilitiesKHR(..)
+  , VkSurfaceFormatKHR(..)
+  , FN_vkDestroySurfaceKHR
+  , FN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
+  , FN_vkGetPhysicalDeviceSurfaceFormatsKHR
+  , FN_vkGetPhysicalDeviceSurfacePresentModesKHR
+  , FN_vkGetPhysicalDeviceSurfaceSupportKHR
+  , VkSurfaceKHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
+  ( VkAcquireNextImageInfoKHR(..)
+  , VkDeviceGroupPresentCapabilitiesKHR(..)
+  , VkPresentInfoKHR(..)
+  , VkSwapchainCreateInfoKHR(..)
+  , FN_vkAcquireNextImage2KHR
+  , FN_vkAcquireNextImageKHR
+  , FN_vkCreateSwapchainKHR
+  , FN_vkDestroySwapchainKHR
+  , FN_vkGetDeviceGroupPresentCapabilitiesKHR
+  , FN_vkGetDeviceGroupSurfacePresentModesKHR
+  , FN_vkGetPhysicalDevicePresentRectanglesKHR
+  , FN_vkGetSwapchainImagesKHR
+  , FN_vkQueuePresentKHR
+  , VkDeviceGroupPresentModeFlagsKHR
+  , VkSwapchainKHR
+  )
 
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
-                                                                                                  (FN_vkCreateWaylandSurfaceKHR,
-                                                                                                  FN_vkGetPhysicalDeviceWaylandPresentationSupportKHR,
-                                                                                                  VkWaylandSurfaceCreateInfoKHR (..),
-                                                                                                  Wl_display)
+import Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
+  ( VkWaylandSurfaceCreateInfoKHR(..)
+  , FN_vkCreateWaylandSurfaceKHR
+  , FN_vkGetPhysicalDeviceWaylandPresentationSupportKHR
+  , Wl_display
+  )
 #endif
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface
-                                                                                                  (FN_vkCreateWin32SurfaceKHR,
-                                                                                                  FN_vkGetPhysicalDeviceWin32PresentationSupportKHR,
-                                                                                                  VkWin32SurfaceCreateInfoKHR (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface
+  ( VkWin32SurfaceCreateInfoKHR(..)
+  , FN_vkCreateWin32SurfaceKHR
+  , FN_vkGetPhysicalDeviceWin32PresentationSupportKHR
+  )
 #endif
 
 #if defined(VK_USE_PLATFORM_XCB_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface
-                                                                                                  (FN_vkCreateXcbSurfaceKHR,
-                                                                                                  FN_vkGetPhysicalDeviceXcbPresentationSupportKHR,
-                                                                                                  VkXcbSurfaceCreateInfoKHR (..),
-                                                                                                  Xcb_connection_t,
-                                                                                                  Xcb_visualid_t)
+import Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface
+  ( VkXcbSurfaceCreateInfoKHR(..)
+  , FN_vkCreateXcbSurfaceKHR
+  , FN_vkGetPhysicalDeviceXcbPresentationSupportKHR
+  , Xcb_connection_t
+  , Xcb_visualid_t
+  )
 #endif
 
 #if defined(VK_USE_PLATFORM_XLIB_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
-                                                                                                  (Display (..),
-                                                                                                  FN_vkCreateXlibSurfaceKHR,
-                                                                                                  FN_vkGetPhysicalDeviceXlibPresentationSupportKHR,
-                                                                                                  VisualID,
-                                                                                                  VkXlibSurfaceCreateInfoKHR (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
+  ( Display(..)
+  , VkXlibSurfaceCreateInfoKHR(..)
+  , FN_vkCreateXlibSurfaceKHR
+  , FN_vkGetPhysicalDeviceXlibPresentationSupportKHR
+  , VisualID
+  )
 #endif
 
 #if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
-import           Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
-                                                                                                  (Display (..))
+import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
+  ( Display(..)
+  )
 #endif
 
 #if defined(VK_USE_PLATFORM_IOS_MVK)
-import           Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
-                                                                                                  (FN_vkCreateIOSSurfaceMVK,
-                                                                                                  VkIOSSurfaceCreateInfoMVK (..))
+import Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
+  ( VkIOSSurfaceCreateInfoMVK(..)
+  , FN_vkCreateIOSSurfaceMVK
+  )
 #endif
 
 #if defined(VK_USE_PLATFORM_MACOS_MVK)
-import           Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface
-                                                                                                  (FN_vkCreateMacOSSurfaceMVK,
-                                                                                                  VkMacOSSurfaceCreateInfoMVK (..))
+import Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface
+  ( VkMacOSSurfaceCreateInfoMVK(..)
+  , FN_vkCreateMacOSSurfaceMVK
+  )
 #endif
 
 #if defined(VK_USE_PLATFORM_VI_NN)
-import           Graphics.Vulkan.C.Extensions.VK_NN_vi_surface
-                                                                                                  (FN_vkCreateViSurfaceNN,
-                                                                                                  VkViSurfaceCreateInfoNN (..))
+import Graphics.Vulkan.C.Extensions.VK_NN_vi_surface
+  ( VkViSurfaceCreateInfoNN(..)
+  , FN_vkCreateViSurfaceNN
+  )
 #endif
-import           Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
-                                                                                                  (FN_vkCmdSetViewportWScalingNV,
-                                                                                                  VkViewportWScalingNV (..))
-import           Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
-                                                                                                  (FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV,
-                                                                                                  VkExternalImageFormatPropertiesNV (..),
-                                                                                                  VkExternalMemoryHandleTypeFlagBitsNV (..),
-                                                                                                  VkExternalMemoryHandleTypeFlagsNV)
-import           Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands
-                                                                                                  (FN_vkCmdProcessCommandsNVX,
-                                                                                                  FN_vkCmdReserveSpaceForCommandsNVX,
-                                                                                                  FN_vkCreateIndirectCommandsLayoutNVX,
-                                                                                                  FN_vkCreateObjectTableNVX,
-                                                                                                  FN_vkDestroyIndirectCommandsLayoutNVX,
-                                                                                                  FN_vkDestroyObjectTableNVX,
-                                                                                                  FN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX,
-                                                                                                  FN_vkRegisterObjectsNVX,
-                                                                                                  FN_vkUnregisterObjectsNVX,
-                                                                                                  VkCmdProcessCommandsInfoNVX (..),
-                                                                                                  VkCmdReserveSpaceForCommandsInfoNVX (..),
-                                                                                                  VkDeviceGeneratedCommandsFeaturesNVX (..),
-                                                                                                  VkDeviceGeneratedCommandsLimitsNVX (..),
-                                                                                                  VkIndirectCommandsLayoutCreateInfoNVX (..),
-                                                                                                  VkIndirectCommandsLayoutNVX,
-                                                                                                  VkObjectEntryTypeNVX (..),
-                                                                                                  VkObjectTableCreateInfoNVX (..),
-                                                                                                  VkObjectTableEntryNVX (..),
-                                                                                                  VkObjectTableNVX)
+import Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands
+  ( VkCmdProcessCommandsInfoNVX(..)
+  , VkCmdReserveSpaceForCommandsInfoNVX(..)
+  , VkDeviceGeneratedCommandsFeaturesNVX(..)
+  , VkDeviceGeneratedCommandsLimitsNVX(..)
+  , VkIndirectCommandsLayoutCreateInfoNVX(..)
+  , VkObjectEntryTypeNVX(..)
+  , VkObjectTableCreateInfoNVX(..)
+  , VkObjectTableEntryNVX(..)
+  , FN_vkCmdProcessCommandsNVX
+  , FN_vkCmdReserveSpaceForCommandsNVX
+  , FN_vkCreateIndirectCommandsLayoutNVX
+  , FN_vkCreateObjectTableNVX
+  , FN_vkDestroyIndirectCommandsLayoutNVX
+  , FN_vkDestroyObjectTableNVX
+  , FN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX
+  , FN_vkRegisterObjectsNVX
+  , FN_vkUnregisterObjectsNVX
+  , VkIndirectCommandsLayoutNVX
+  , VkObjectTableNVX
+  )
+import Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle
+  ( VkImageViewHandleInfoNVX(..)
+  , FN_vkGetImageViewHandleNVX
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
+  ( VkViewportWScalingNV(..)
+  , FN_vkCmdSetViewportWScalingNV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
+  ( VkCooperativeMatrixPropertiesNV(..)
+  , FN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
+  ( VkCheckpointDataNV(..)
+  , FN_vkCmdSetCheckpointNV
+  , FN_vkGetQueueCheckpointDataNV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
+  ( VkExternalImageFormatPropertiesNV(..)
+  , VkExternalMemoryHandleTypeFlagBitsNV(..)
+  , FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV
+  , VkExternalMemoryHandleTypeFlagsNV
+  )
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
-import           Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
-                                                                                                  (FN_vkGetMemoryWin32HandleNV,
-                                                                                                  HANDLE)
+import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
+  ( FN_vkGetMemoryWin32HandleNV
+  , HANDLE
+  )
 #endif
-import           Graphics.Vulkan.NamedType
-                                                                                                  ((:::))
+import Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader
+  ( FN_vkCmdDrawMeshTasksIndirectCountNV
+  , FN_vkCmdDrawMeshTasksIndirectNV
+  , FN_vkCmdDrawMeshTasksNV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
+  ( VkAccelerationStructureCreateInfoNV(..)
+  , VkAccelerationStructureInfoNV(..)
+  , VkAccelerationStructureMemoryRequirementsInfoNV(..)
+  , VkBindAccelerationStructureMemoryInfoNV(..)
+  , VkCopyAccelerationStructureModeNV(..)
+  , VkRayTracingPipelineCreateInfoNV(..)
+  , FN_vkBindAccelerationStructureMemoryNV
+  , FN_vkCmdBuildAccelerationStructureNV
+  , FN_vkCmdCopyAccelerationStructureNV
+  , FN_vkCmdTraceRaysNV
+  , FN_vkCmdWriteAccelerationStructuresPropertiesNV
+  , FN_vkCompileDeferredNV
+  , FN_vkCreateAccelerationStructureNV
+  , FN_vkCreateRayTracingPipelinesNV
+  , FN_vkDestroyAccelerationStructureNV
+  , FN_vkGetAccelerationStructureHandleNV
+  , FN_vkGetAccelerationStructureMemoryRequirementsNV
+  , FN_vkGetRayTracingShaderGroupHandlesNV
+  , VkAccelerationStructureNV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive
+  ( FN_vkCmdSetExclusiveScissorNV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image
+  ( VkCoarseSampleOrderCustomNV(..)
+  , VkCoarseSampleOrderTypeNV(..)
+  , VkShadingRatePaletteNV(..)
+  , FN_vkCmdBindShadingRateImageNV
+  , FN_vkCmdSetCoarseSampleOrderNV
+  , FN_vkCmdSetViewportShadingRatePaletteNV
+  )
+import Graphics.Vulkan.NamedType
+  ( (:::)
+  )
 
 
 foreign import ccall
@@ -1091,6 +1379,7 @@ data DeviceCmds = DeviceCmds
   , pVkCreateQueryPool :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkQueryPoolCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pQueryPool" ::: Ptr VkQueryPool) -> IO VkResult)
   , pVkDestroyQueryPool :: FunPtr (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
   , pVkGetQueryPoolResults :: FunPtr (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO VkResult)
+  , pVkResetQueryPoolEXT :: FunPtr (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ())
   , pVkCreateBuffer :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkBufferCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pBuffer" ::: Ptr VkBuffer) -> IO VkResult)
   , pVkDestroyBuffer :: FunPtr (("device" ::: VkDevice) -> ("buffer" ::: VkBuffer) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
   , pVkCreateBufferView :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkBufferViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkBufferView) -> IO VkResult)
@@ -1170,6 +1459,8 @@ data DeviceCmds = DeviceCmds
   , pVkCmdPipelineBarrier :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("dependencyFlags" ::: VkDependencyFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ())
   , pVkCmdBeginQuery :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> IO ())
   , pVkCmdEndQuery :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ())
+  , pVkCmdBeginConditionalRenderingEXT :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pConditionalRenderingBegin" ::: Ptr VkConditionalRenderingBeginInfoEXT) -> IO ())
+  , pVkCmdEndConditionalRenderingEXT :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> IO ())
   , pVkCmdResetQueryPool :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ())
   , pVkCmdWriteTimestamp :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ())
   , pVkCmdCopyQueryPoolResults :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO ())
@@ -1257,6 +1548,8 @@ data DeviceCmds = DeviceCmds
   , pVkMergeValidationCachesEXT :: FunPtr (("device" ::: VkDevice) -> ("dstCache" ::: VkValidationCacheEXT) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkValidationCacheEXT) -> IO VkResult)
   , pVkGetDescriptorSetLayoutSupport :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ())
   , pVkGetShaderInfoAMD :: FunPtr (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shaderStage" ::: VkShaderStageFlagBits) -> ("infoType" ::: VkShaderInfoTypeAMD) -> ("pInfoSize" ::: Ptr CSize) -> ("pInfo" ::: Ptr ()) -> IO VkResult)
+  , pVkSetLocalDimmingAMD :: FunPtr (("device" ::: VkDevice) -> ("swapChain" ::: VkSwapchainKHR) -> ("localDimmingEnable" ::: VkBool32) -> IO ())
+  , pVkGetCalibratedTimestampsEXT :: FunPtr (("device" ::: VkDevice) -> ("timestampCount" ::: Word32) -> ("pTimestampInfos" ::: Ptr VkCalibratedTimestampInfoEXT) -> ("pTimestamps" ::: Ptr Word64) -> ("pMaxDeviation" ::: Ptr Word64) -> IO VkResult)
   , pVkSetDebugUtilsObjectNameEXT :: FunPtr (("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugUtilsObjectNameInfoEXT) -> IO VkResult)
   , pVkSetDebugUtilsObjectTagEXT :: FunPtr (("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugUtilsObjectTagInfoEXT) -> IO VkResult)
   , pVkQueueBeginDebugUtilsLabelEXT :: FunPtr (("queue" ::: VkQueue) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ())
@@ -1267,9 +1560,50 @@ data DeviceCmds = DeviceCmds
   , pVkCmdInsertDebugUtilsLabelEXT :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pLabelInfo" ::: Ptr VkDebugUtilsLabelEXT) -> IO ())
   , pVkGetMemoryHostPointerPropertiesEXT :: FunPtr (("device" ::: VkDevice) -> ("handleType" ::: VkExternalMemoryHandleTypeFlagBits) -> ("pHostPointer" ::: Ptr ()) -> ("pMemoryHostPointerProperties" ::: Ptr VkMemoryHostPointerPropertiesEXT) -> IO VkResult)
   , pVkCmdWriteBufferMarkerAMD :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("marker" ::: Word32) -> IO ())
+  , pVkCreateRenderPass2KHR :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkRenderPassCreateInfo2KHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pRenderPass" ::: Ptr VkRenderPass) -> IO VkResult)
+  , pVkCmdBeginRenderPass2KHR :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("pSubpassBeginInfo" ::: Ptr VkSubpassBeginInfoKHR) -> IO ())
+  , pVkCmdNextSubpass2KHR :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pSubpassBeginInfo" ::: Ptr VkSubpassBeginInfoKHR) -> ("pSubpassEndInfo" ::: Ptr VkSubpassEndInfoKHR) -> IO ())
+  , pVkCmdEndRenderPass2KHR :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pSubpassEndInfo" ::: Ptr VkSubpassEndInfoKHR) -> IO ())
 #if VK_USE_PLATFORM_ANDROID_KHR
   , pVkGetAndroidHardwareBufferPropertiesANDROID :: FunPtr (("device" ::: VkDevice) -> ("buffer" ::: Ptr AHardwareBuffer) -> ("pProperties" ::: Ptr VkAndroidHardwareBufferPropertiesANDROID) -> IO VkResult)
   , pVkGetMemoryAndroidHardwareBufferANDROID :: FunPtr (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkMemoryGetAndroidHardwareBufferInfoANDROID) -> ("pBuffer" ::: Ptr (Ptr AHardwareBuffer)) -> IO VkResult)
+#endif
+  , pVkCmdDrawIndirectCountKHR :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+  , pVkCmdDrawIndexedIndirectCountKHR :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+  , pVkCmdSetCheckpointNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ())
+  , pVkGetQueueCheckpointDataNV :: FunPtr (("queue" ::: VkQueue) -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr VkCheckpointDataNV) -> IO ())
+  , pVkCmdBindTransformFeedbackBuffersEXT :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> ("pSizes" ::: Ptr VkDeviceSize) -> IO ())
+  , pVkCmdBeginTransformFeedbackEXT :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ())
+  , pVkCmdEndTransformFeedbackEXT :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ())
+  , pVkCmdBeginQueryIndexedEXT :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> ("index" ::: Word32) -> IO ())
+  , pVkCmdEndQueryIndexedEXT :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ())
+  , pVkCmdDrawIndirectByteCountEXT :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: VkBuffer) -> ("counterBufferOffset" ::: VkDeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ())
+  , pVkCmdSetExclusiveScissorNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ())
+  , pVkCmdBindShadingRateImageNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("imageView" ::: VkImageView) -> ("imageLayout" ::: VkImageLayout) -> IO ())
+  , pVkCmdSetViewportShadingRatePaletteNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pShadingRatePalettes" ::: Ptr VkShadingRatePaletteNV) -> IO ())
+  , pVkCmdSetCoarseSampleOrderNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("sampleOrderType" ::: VkCoarseSampleOrderTypeNV) -> ("customSampleOrderCount" ::: Word32) -> ("pCustomSampleOrders" ::: Ptr VkCoarseSampleOrderCustomNV) -> IO ())
+  , pVkCmdDrawMeshTasksNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ())
+  , pVkCmdDrawMeshTasksIndirectNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+  , pVkCmdDrawMeshTasksIndirectCountNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+  , pVkCompileDeferredNV :: FunPtr (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shader" ::: Word32) -> IO VkResult)
+  , pVkCreateAccelerationStructureNV :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkAccelerationStructureCreateInfoNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr VkAccelerationStructureNV) -> IO VkResult)
+  , pVkDestroyAccelerationStructureNV :: FunPtr (("device" ::: VkDevice) -> ("accelerationStructure" ::: VkAccelerationStructureNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+  , pVkGetAccelerationStructureMemoryRequirementsNV :: FunPtr (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkAccelerationStructureMemoryRequirementsInfoNV) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2KHR) -> IO ())
+  , pVkBindAccelerationStructureMemoryNV :: FunPtr (("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindAccelerationStructureMemoryInfoNV) -> IO VkResult)
+  , pVkCmdCopyAccelerationStructureNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("dst" ::: VkAccelerationStructureNV) -> ("src" ::: VkAccelerationStructureNV) -> ("mode" ::: VkCopyAccelerationStructureModeNV) -> IO ())
+  , pVkCmdWriteAccelerationStructuresPropertiesNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("accelerationStructureCount" ::: Word32) -> ("pAccelerationStructures" ::: Ptr VkAccelerationStructureNV) -> ("queryType" ::: VkQueryType) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> IO ())
+  , pVkCmdBuildAccelerationStructureNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pInfo" ::: Ptr VkAccelerationStructureInfoNV) -> ("instanceData" ::: VkBuffer) -> ("instanceOffset" ::: VkDeviceSize) -> ("update" ::: VkBool32) -> ("dst" ::: VkAccelerationStructureNV) -> ("src" ::: VkAccelerationStructureNV) -> ("scratch" ::: VkBuffer) -> ("scratchOffset" ::: VkDeviceSize) -> IO ())
+  , pVkCmdTraceRaysNV :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("raygenShaderBindingTableBuffer" ::: VkBuffer) -> ("raygenShaderBindingOffset" ::: VkDeviceSize) -> ("missShaderBindingTableBuffer" ::: VkBuffer) -> ("missShaderBindingOffset" ::: VkDeviceSize) -> ("missShaderBindingStride" ::: VkDeviceSize) -> ("hitShaderBindingTableBuffer" ::: VkBuffer) -> ("hitShaderBindingOffset" ::: VkDeviceSize) -> ("hitShaderBindingStride" ::: VkDeviceSize) -> ("callableShaderBindingTableBuffer" ::: VkBuffer) -> ("callableShaderBindingOffset" ::: VkDeviceSize) -> ("callableShaderBindingStride" ::: VkDeviceSize) -> ("width" ::: Word32) -> ("height" ::: Word32) -> ("depth" ::: Word32) -> IO ())
+  , pVkGetRayTracingShaderGroupHandlesNV :: FunPtr (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("firstGroup" ::: Word32) -> ("groupCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> IO VkResult)
+  , pVkGetAccelerationStructureHandleNV :: FunPtr (("device" ::: VkDevice) -> ("accelerationStructure" ::: VkAccelerationStructureNV) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> IO VkResult)
+  , pVkCreateRayTracingPipelinesNV :: FunPtr (("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkRayTracingPipelineCreateInfoNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelines" ::: Ptr VkPipeline) -> IO VkResult)
+  , pVkGetImageDrmFormatModifierPropertiesEXT :: FunPtr (("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pProperties" ::: Ptr VkImageDrmFormatModifierPropertiesEXT) -> IO VkResult)
+  , pVkGetBufferDeviceAddressEXT :: FunPtr (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkBufferDeviceAddressInfoEXT) -> IO VkDeviceAddress)
+  , pVkGetImageViewHandleNVX :: FunPtr (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageViewHandleInfoNVX) -> IO Word32)
+  , pVkGetDeviceGroupSurfacePresentModes2EXT :: FunPtr (("device" ::: VkDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pModes" ::: Ptr VkDeviceGroupPresentModeFlagsKHR) -> IO VkResult)
+#if VK_USE_PLATFORM_WIN32_KHR
+  , pVkAcquireFullScreenExclusiveModeEXT :: FunPtr (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult)
+  , pVkReleaseFullScreenExclusiveModeEXT :: FunPtr (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult)
 #endif
   }
   deriving (Show)
@@ -1299,10 +1633,6 @@ data InstanceCmds = InstanceCmds
   , pVkCreateDisplayModeKHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pCreateInfo" ::: Ptr VkDisplayModeCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pMode" ::: Ptr VkDisplayModeKHR) -> IO VkResult)
   , pVkGetDisplayPlaneCapabilitiesKHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("mode" ::: VkDisplayModeKHR) -> ("planeIndex" ::: Word32) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilitiesKHR) -> IO VkResult)
   , pVkCreateDisplayPlaneSurfaceKHR :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDisplaySurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
-#if VK_USE_PLATFORM_MIR_KHR
-  , pVkCreateMirSurfaceKHR :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMirSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
-  , pVkGetPhysicalDeviceMirPresentationSupportKHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr MirConnection) -> IO VkBool32)
-#endif
   , pVkDestroySurfaceKHR :: FunPtr (("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
   , pVkGetPhysicalDeviceSurfaceSupportKHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("surface" ::: VkSurfaceKHR) -> ("pSupported" ::: Ptr VkBool32) -> IO VkResult)
   , pVkGetPhysicalDeviceSurfaceCapabilitiesKHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilitiesKHR) -> IO VkResult)
@@ -1326,6 +1656,12 @@ data InstanceCmds = InstanceCmds
 #if VK_USE_PLATFORM_XCB_KHR
   , pVkCreateXcbSurfaceKHR :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkXcbSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
   , pVkGetPhysicalDeviceXcbPresentationSupportKHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr Xcb_connection_t) -> ("visual_id" ::: Xcb_visualid_t) -> IO VkBool32)
+#endif
+#if VK_USE_PLATFORM_FUCHSIA
+  , pVkCreateImagePipeSurfaceFUCHSIA :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+#endif
+#if VK_USE_PLATFORM_GGP
+  , pVkCreateStreamDescriptorSurfaceGGP :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkStreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
 #endif
   , pVkCreateDebugReportCallbackEXT :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDebugReportCallbackCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pCallback" ::: Ptr VkDebugReportCallbackEXT) -> IO VkResult)
   , pVkDestroyDebugReportCallbackEXT :: FunPtr (("instance" ::: VkInstance) -> ("callback" ::: VkDebugReportCallbackEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
@@ -1356,12 +1692,24 @@ data InstanceCmds = InstanceCmds
 #if VK_USE_PLATFORM_MACOS_MVK
   , pVkCreateMacOSSurfaceMVK :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMacOSSurfaceCreateInfoMVK) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
 #endif
+#if VK_USE_PLATFORM_METAL_EXT
+  , pVkCreateMetalSurfaceEXT :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+#endif
   , pVkGetPhysicalDeviceMultisamplePropertiesEXT :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("samples" ::: VkSampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr VkMultisamplePropertiesEXT) -> IO ())
   , pVkGetPhysicalDeviceSurfaceCapabilities2KHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2KHR) -> IO VkResult)
   , pVkGetPhysicalDeviceSurfaceFormats2KHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult)
+  , pVkGetPhysicalDeviceDisplayProperties2KHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayProperties2KHR) -> IO VkResult)
+  , pVkGetPhysicalDeviceDisplayPlaneProperties2KHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult)
+  , pVkGetDisplayModeProperties2KHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult)
+  , pVkGetDisplayPlaneCapabilities2KHR :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult)
+  , pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pTimeDomainCount" ::: Ptr Word32) -> ("pTimeDomains" ::: Ptr VkTimeDomainEXT) -> IO VkResult)
   , pVkCreateDebugUtilsMessengerEXT :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDebugUtilsMessengerCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pMessenger" ::: Ptr VkDebugUtilsMessengerEXT) -> IO VkResult)
   , pVkDestroyDebugUtilsMessengerEXT :: FunPtr (("instance" ::: VkInstance) -> ("messenger" ::: VkDebugUtilsMessengerEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
   , pVkSubmitDebugUtilsMessageEXT :: FunPtr (("instance" ::: VkInstance) -> ("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageTypes" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> IO ())
+  , pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkCooperativeMatrixPropertiesNV) -> IO VkResult)
+#if VK_USE_PLATFORM_WIN32_KHR
+  , pVkGetPhysicalDeviceSurfacePresentModes2EXT :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult)
+#endif
   }
   deriving (Show)
 
@@ -1405,6 +1753,7 @@ initDeviceCmds instanceCmds handle = do
     <*> (castPtrToFunPtr @_ @FN_vkCreateQueryPool <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCreateQueryPool\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkDestroyQueryPool <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkDestroyQueryPool\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkGetQueryPoolResults <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetQueryPoolResults\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkResetQueryPoolEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkResetQueryPoolEXT\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkCreateBuffer <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCreateBuffer\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkDestroyBuffer <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkDestroyBuffer\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkCreateBufferView <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCreateBufferView\NUL"#))
@@ -1484,6 +1833,8 @@ initDeviceCmds instanceCmds handle = do
     <*> (castPtrToFunPtr @_ @FN_vkCmdPipelineBarrier <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdPipelineBarrier\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkCmdBeginQuery <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdBeginQuery\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkCmdEndQuery <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdEndQuery\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdBeginConditionalRenderingEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdBeginConditionalRenderingEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdEndConditionalRenderingEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdEndConditionalRenderingEXT\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkCmdResetQueryPool <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdResetQueryPool\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkCmdWriteTimestamp <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdWriteTimestamp\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkCmdCopyQueryPoolResults <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdCopyQueryPoolResults\NUL"#))
@@ -1571,6 +1922,8 @@ initDeviceCmds instanceCmds handle = do
     <*> (castPtrToFunPtr @_ @FN_vkMergeValidationCachesEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkMergeValidationCachesEXT\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkGetDescriptorSetLayoutSupport <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetDescriptorSetLayoutSupport\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkGetShaderInfoAMD <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetShaderInfoAMD\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkSetLocalDimmingAMD <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkSetLocalDimmingAMD\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkGetCalibratedTimestampsEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetCalibratedTimestampsEXT\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkSetDebugUtilsObjectNameEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkSetDebugUtilsObjectNameEXT\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkSetDebugUtilsObjectTagEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkSetDebugUtilsObjectTagEXT\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkQueueBeginDebugUtilsLabelEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkQueueBeginDebugUtilsLabelEXT\NUL"#))
@@ -1581,9 +1934,50 @@ initDeviceCmds instanceCmds handle = do
     <*> (castPtrToFunPtr @_ @FN_vkCmdInsertDebugUtilsLabelEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdInsertDebugUtilsLabelEXT\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkGetMemoryHostPointerPropertiesEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetMemoryHostPointerPropertiesEXT\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkCmdWriteBufferMarkerAMD <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdWriteBufferMarkerAMD\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCreateRenderPass2KHR <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCreateRenderPass2KHR\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdBeginRenderPass2KHR <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdBeginRenderPass2KHR\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdNextSubpass2KHR <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdNextSubpass2KHR\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdEndRenderPass2KHR <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdEndRenderPass2KHR\NUL"#))
 #if VK_USE_PLATFORM_ANDROID_KHR
     <*> (castPtrToFunPtr @_ @FN_vkGetAndroidHardwareBufferPropertiesANDROID <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetAndroidHardwareBufferPropertiesANDROID\NUL"#))
     <*> (castPtrToFunPtr @_ @FN_vkGetMemoryAndroidHardwareBufferANDROID <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetMemoryAndroidHardwareBufferANDROID\NUL"#))
+#endif
+    <*> (castPtrToFunPtr @_ @FN_vkCmdDrawIndirectCountKHR <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdDrawIndirectCountKHR\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdDrawIndexedIndirectCountKHR <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdDrawIndexedIndirectCountKHR\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdSetCheckpointNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdSetCheckpointNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkGetQueueCheckpointDataNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetQueueCheckpointDataNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdBindTransformFeedbackBuffersEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdBindTransformFeedbackBuffersEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdBeginTransformFeedbackEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdBeginTransformFeedbackEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdEndTransformFeedbackEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdEndTransformFeedbackEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdBeginQueryIndexedEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdBeginQueryIndexedEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdEndQueryIndexedEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdEndQueryIndexedEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdDrawIndirectByteCountEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdDrawIndirectByteCountEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdSetExclusiveScissorNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdSetExclusiveScissorNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdBindShadingRateImageNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdBindShadingRateImageNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdSetViewportShadingRatePaletteNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdSetViewportShadingRatePaletteNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdSetCoarseSampleOrderNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdSetCoarseSampleOrderNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdDrawMeshTasksNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdDrawMeshTasksNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdDrawMeshTasksIndirectNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdDrawMeshTasksIndirectNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdDrawMeshTasksIndirectCountNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdDrawMeshTasksIndirectCountNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCompileDeferredNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCompileDeferredNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCreateAccelerationStructureNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCreateAccelerationStructureNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkDestroyAccelerationStructureNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkDestroyAccelerationStructureNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkGetAccelerationStructureMemoryRequirementsNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetAccelerationStructureMemoryRequirementsNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkBindAccelerationStructureMemoryNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkBindAccelerationStructureMemoryNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdCopyAccelerationStructureNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdCopyAccelerationStructureNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdWriteAccelerationStructuresPropertiesNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdWriteAccelerationStructuresPropertiesNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdBuildAccelerationStructureNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdBuildAccelerationStructureNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCmdTraceRaysNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCmdTraceRaysNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkGetRayTracingShaderGroupHandlesNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetRayTracingShaderGroupHandlesNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkGetAccelerationStructureHandleNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetAccelerationStructureHandleNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkCreateRayTracingPipelinesNV <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkCreateRayTracingPipelinesNV\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkGetImageDrmFormatModifierPropertiesEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetImageDrmFormatModifierPropertiesEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkGetBufferDeviceAddressEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetBufferDeviceAddressEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkGetImageViewHandleNVX <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetImageViewHandleNVX\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkGetDeviceGroupSurfacePresentModes2EXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkGetDeviceGroupSurfacePresentModes2EXT\NUL"#))
+#if VK_USE_PLATFORM_WIN32_KHR
+    <*> (castPtrToFunPtr @_ @FN_vkAcquireFullScreenExclusiveModeEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkAcquireFullScreenExclusiveModeEXT\NUL"#))
+    <*> (castPtrToFunPtr @_ @FN_vkReleaseFullScreenExclusiveModeEXT <$> getDeviceProcAddr' handle (GHC.Ptr.Ptr "vkReleaseFullScreenExclusiveModeEXT\NUL"#))
 #endif
 
 initInstanceCmds :: VkInstance -> IO InstanceCmds
@@ -1611,10 +2005,6 @@ initInstanceCmds handle = InstanceCmds handle
   <*> (castPtrToFunPtr @_ @FN_vkCreateDisplayModeKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateDisplayModeKHR\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkGetDisplayPlaneCapabilitiesKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetDisplayPlaneCapabilitiesKHR\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkCreateDisplayPlaneSurfaceKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateDisplayPlaneSurfaceKHR\NUL"#))
-#if VK_USE_PLATFORM_MIR_KHR
-  <*> (castPtrToFunPtr @_ @FN_vkCreateMirSurfaceKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateMirSurfaceKHR\NUL"#))
-  <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceMirPresentationSupportKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceMirPresentationSupportKHR\NUL"#))
-#endif
   <*> (castPtrToFunPtr @_ @FN_vkDestroySurfaceKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkDestroySurfaceKHR\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceSurfaceSupportKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceSurfaceSupportKHR\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceSurfaceCapabilitiesKHR\NUL"#))
@@ -1638,6 +2028,12 @@ initInstanceCmds handle = InstanceCmds handle
 #if VK_USE_PLATFORM_XCB_KHR
   <*> (castPtrToFunPtr @_ @FN_vkCreateXcbSurfaceKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateXcbSurfaceKHR\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceXcbPresentationSupportKHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceXcbPresentationSupportKHR\NUL"#))
+#endif
+#if VK_USE_PLATFORM_FUCHSIA
+  <*> (castPtrToFunPtr @_ @FN_vkCreateImagePipeSurfaceFUCHSIA <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateImagePipeSurfaceFUCHSIA\NUL"#))
+#endif
+#if VK_USE_PLATFORM_GGP
+  <*> (castPtrToFunPtr @_ @FN_vkCreateStreamDescriptorSurfaceGGP <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateStreamDescriptorSurfaceGGP\NUL"#))
 #endif
   <*> (castPtrToFunPtr @_ @FN_vkCreateDebugReportCallbackEXT <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateDebugReportCallbackEXT\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkDestroyDebugReportCallbackEXT <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkDestroyDebugReportCallbackEXT\NUL"#))
@@ -1668,12 +2064,24 @@ initInstanceCmds handle = InstanceCmds handle
 #if VK_USE_PLATFORM_MACOS_MVK
   <*> (castPtrToFunPtr @_ @FN_vkCreateMacOSSurfaceMVK <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateMacOSSurfaceMVK\NUL"#))
 #endif
+#if VK_USE_PLATFORM_METAL_EXT
+  <*> (castPtrToFunPtr @_ @FN_vkCreateMetalSurfaceEXT <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateMetalSurfaceEXT\NUL"#))
+#endif
   <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceMultisamplePropertiesEXT <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceMultisamplePropertiesEXT\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceSurfaceCapabilities2KHR\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceSurfaceFormats2KHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceSurfaceFormats2KHR\NUL"#))
+  <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceDisplayProperties2KHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceDisplayProperties2KHR\NUL"#))
+  <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceDisplayPlaneProperties2KHR\NUL"#))
+  <*> (castPtrToFunPtr @_ @FN_vkGetDisplayModeProperties2KHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetDisplayModeProperties2KHR\NUL"#))
+  <*> (castPtrToFunPtr @_ @FN_vkGetDisplayPlaneCapabilities2KHR <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetDisplayPlaneCapabilities2KHR\NUL"#))
+  <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkCreateDebugUtilsMessengerEXT <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkCreateDebugUtilsMessengerEXT\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkDestroyDebugUtilsMessengerEXT <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkDestroyDebugUtilsMessengerEXT\NUL"#))
   <*> (castPtrToFunPtr @_ @FN_vkSubmitDebugUtilsMessageEXT <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkSubmitDebugUtilsMessageEXT\NUL"#))
+  <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceCooperativeMatrixPropertiesNV\NUL"#))
+#if VK_USE_PLATFORM_WIN32_KHR
+  <*> (castPtrToFunPtr @_ @FN_vkGetPhysicalDeviceSurfacePresentModes2EXT <$> vkGetInstanceProcAddr handle (GHC.Ptr.Ptr "vkGetPhysicalDeviceSurfacePresentModes2EXT\NUL"#))
+#endif
 
 -- * Device commands
 getDeviceProcAddr :: DeviceCmds -> (("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction)
@@ -1948,6 +2356,14 @@ foreign import ccall
 #endif
   "dynamic" mkVkGetQueryPoolResults
   :: FunPtr (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO VkResult) -> (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO VkResult)
+resetQueryPoolEXT :: DeviceCmds -> (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ())
+resetQueryPoolEXT deviceCmds = mkVkResetQueryPoolEXT (pVkResetQueryPoolEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkResetQueryPoolEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()) -> (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ())
 createBuffer :: DeviceCmds -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkBufferCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pBuffer" ::: Ptr VkBuffer) -> IO VkResult)
 createBuffer deviceCmds = mkVkCreateBuffer (pVkCreateBuffer deviceCmds)
 foreign import ccall
@@ -2580,6 +2996,22 @@ foreign import ccall
 #endif
   "dynamic" mkVkCmdEndQuery
   :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ())
+cmdBeginConditionalRenderingEXT :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("pConditionalRenderingBegin" ::: Ptr VkConditionalRenderingBeginInfoEXT) -> IO ())
+cmdBeginConditionalRenderingEXT deviceCmds = mkVkCmdBeginConditionalRenderingEXT (pVkCmdBeginConditionalRenderingEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdBeginConditionalRenderingEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pConditionalRenderingBegin" ::: Ptr VkConditionalRenderingBeginInfoEXT) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pConditionalRenderingBegin" ::: Ptr VkConditionalRenderingBeginInfoEXT) -> IO ())
+cmdEndConditionalRenderingEXT :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> IO ())
+cmdEndConditionalRenderingEXT deviceCmds = mkVkCmdEndConditionalRenderingEXT (pVkCmdEndConditionalRenderingEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdEndConditionalRenderingEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> IO ())
 cmdResetQueryPool :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ())
 cmdResetQueryPool deviceCmds = mkVkCmdResetQueryPool (pVkCmdResetQueryPool deviceCmds)
 foreign import ccall
@@ -3220,6 +3652,22 @@ foreign import ccall
 #endif
   "dynamic" mkVkGetShaderInfoAMD
   :: FunPtr (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shaderStage" ::: VkShaderStageFlagBits) -> ("infoType" ::: VkShaderInfoTypeAMD) -> ("pInfoSize" ::: Ptr CSize) -> ("pInfo" ::: Ptr ()) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shaderStage" ::: VkShaderStageFlagBits) -> ("infoType" ::: VkShaderInfoTypeAMD) -> ("pInfoSize" ::: Ptr CSize) -> ("pInfo" ::: Ptr ()) -> IO VkResult)
+setLocalDimmingAMD :: DeviceCmds -> (("device" ::: VkDevice) -> ("swapChain" ::: VkSwapchainKHR) -> ("localDimmingEnable" ::: VkBool32) -> IO ())
+setLocalDimmingAMD deviceCmds = mkVkSetLocalDimmingAMD (pVkSetLocalDimmingAMD deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkSetLocalDimmingAMD
+  :: FunPtr (("device" ::: VkDevice) -> ("swapChain" ::: VkSwapchainKHR) -> ("localDimmingEnable" ::: VkBool32) -> IO ()) -> (("device" ::: VkDevice) -> ("swapChain" ::: VkSwapchainKHR) -> ("localDimmingEnable" ::: VkBool32) -> IO ())
+getCalibratedTimestampsEXT :: DeviceCmds -> (("device" ::: VkDevice) -> ("timestampCount" ::: Word32) -> ("pTimestampInfos" ::: Ptr VkCalibratedTimestampInfoEXT) -> ("pTimestamps" ::: Ptr Word64) -> ("pMaxDeviation" ::: Ptr Word64) -> IO VkResult)
+getCalibratedTimestampsEXT deviceCmds = mkVkGetCalibratedTimestampsEXT (pVkGetCalibratedTimestampsEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetCalibratedTimestampsEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("timestampCount" ::: Word32) -> ("pTimestampInfos" ::: Ptr VkCalibratedTimestampInfoEXT) -> ("pTimestamps" ::: Ptr Word64) -> ("pMaxDeviation" ::: Ptr Word64) -> IO VkResult) -> (("device" ::: VkDevice) -> ("timestampCount" ::: Word32) -> ("pTimestampInfos" ::: Ptr VkCalibratedTimestampInfoEXT) -> ("pTimestamps" ::: Ptr Word64) -> ("pMaxDeviation" ::: Ptr Word64) -> IO VkResult)
 setDebugUtilsObjectNameEXT :: DeviceCmds -> (("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugUtilsObjectNameInfoEXT) -> IO VkResult)
 setDebugUtilsObjectNameEXT deviceCmds = mkVkSetDebugUtilsObjectNameEXT (pVkSetDebugUtilsObjectNameEXT deviceCmds)
 foreign import ccall
@@ -3300,6 +3748,38 @@ foreign import ccall
 #endif
   "dynamic" mkVkCmdWriteBufferMarkerAMD
   :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("marker" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("marker" ::: Word32) -> IO ())
+createRenderPass2KHR :: DeviceCmds -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkRenderPassCreateInfo2KHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pRenderPass" ::: Ptr VkRenderPass) -> IO VkResult)
+createRenderPass2KHR deviceCmds = mkVkCreateRenderPass2KHR (pVkCreateRenderPass2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCreateRenderPass2KHR
+  :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkRenderPassCreateInfo2KHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pRenderPass" ::: Ptr VkRenderPass) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkRenderPassCreateInfo2KHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pRenderPass" ::: Ptr VkRenderPass) -> IO VkResult)
+cmdBeginRenderPass2KHR :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("pSubpassBeginInfo" ::: Ptr VkSubpassBeginInfoKHR) -> IO ())
+cmdBeginRenderPass2KHR deviceCmds = mkVkCmdBeginRenderPass2KHR (pVkCmdBeginRenderPass2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdBeginRenderPass2KHR
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("pSubpassBeginInfo" ::: Ptr VkSubpassBeginInfoKHR) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("pSubpassBeginInfo" ::: Ptr VkSubpassBeginInfoKHR) -> IO ())
+cmdNextSubpass2KHR :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("pSubpassBeginInfo" ::: Ptr VkSubpassBeginInfoKHR) -> ("pSubpassEndInfo" ::: Ptr VkSubpassEndInfoKHR) -> IO ())
+cmdNextSubpass2KHR deviceCmds = mkVkCmdNextSubpass2KHR (pVkCmdNextSubpass2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdNextSubpass2KHR
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pSubpassBeginInfo" ::: Ptr VkSubpassBeginInfoKHR) -> ("pSubpassEndInfo" ::: Ptr VkSubpassEndInfoKHR) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pSubpassBeginInfo" ::: Ptr VkSubpassBeginInfoKHR) -> ("pSubpassEndInfo" ::: Ptr VkSubpassEndInfoKHR) -> IO ())
+cmdEndRenderPass2KHR :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("pSubpassEndInfo" ::: Ptr VkSubpassEndInfoKHR) -> IO ())
+cmdEndRenderPass2KHR deviceCmds = mkVkCmdEndRenderPass2KHR (pVkCmdEndRenderPass2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdEndRenderPass2KHR
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pSubpassEndInfo" ::: Ptr VkSubpassEndInfoKHR) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pSubpassEndInfo" ::: Ptr VkSubpassEndInfoKHR) -> IO ())
 #if VK_USE_PLATFORM_ANDROID_KHR
 getAndroidHardwareBufferPropertiesANDROID :: DeviceCmds -> (("device" ::: VkDevice) -> ("buffer" ::: Ptr AHardwareBuffer) -> ("pProperties" ::: Ptr VkAndroidHardwareBufferPropertiesANDROID) -> IO VkResult)
 getAndroidHardwareBufferPropertiesANDROID deviceCmds = mkVkGetAndroidHardwareBufferPropertiesANDROID (pVkGetAndroidHardwareBufferPropertiesANDROID deviceCmds)
@@ -3317,6 +3797,288 @@ foreign import ccall
 #endif
   "dynamic" mkVkGetMemoryAndroidHardwareBufferANDROID
   :: FunPtr (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkMemoryGetAndroidHardwareBufferInfoANDROID) -> ("pBuffer" ::: Ptr (Ptr AHardwareBuffer)) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkMemoryGetAndroidHardwareBufferInfoANDROID) -> ("pBuffer" ::: Ptr (Ptr AHardwareBuffer)) -> IO VkResult)
+#endif
+cmdDrawIndirectCountKHR :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+cmdDrawIndirectCountKHR deviceCmds = mkVkCmdDrawIndirectCountKHR (pVkCmdDrawIndirectCountKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdDrawIndirectCountKHR
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+cmdDrawIndexedIndirectCountKHR :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+cmdDrawIndexedIndirectCountKHR deviceCmds = mkVkCmdDrawIndexedIndirectCountKHR (pVkCmdDrawIndexedIndirectCountKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdDrawIndexedIndirectCountKHR
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+cmdSetCheckpointNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ())
+cmdSetCheckpointNV deviceCmds = mkVkCmdSetCheckpointNV (pVkCmdSetCheckpointNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdSetCheckpointNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ())
+getQueueCheckpointDataNV :: DeviceCmds -> (("queue" ::: VkQueue) -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr VkCheckpointDataNV) -> IO ())
+getQueueCheckpointDataNV deviceCmds = mkVkGetQueueCheckpointDataNV (pVkGetQueueCheckpointDataNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetQueueCheckpointDataNV
+  :: FunPtr (("queue" ::: VkQueue) -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr VkCheckpointDataNV) -> IO ()) -> (("queue" ::: VkQueue) -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr VkCheckpointDataNV) -> IO ())
+cmdBindTransformFeedbackBuffersEXT :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> ("pSizes" ::: Ptr VkDeviceSize) -> IO ())
+cmdBindTransformFeedbackBuffersEXT deviceCmds = mkVkCmdBindTransformFeedbackBuffersEXT (pVkCmdBindTransformFeedbackBuffersEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdBindTransformFeedbackBuffersEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> ("pSizes" ::: Ptr VkDeviceSize) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> ("pSizes" ::: Ptr VkDeviceSize) -> IO ())
+cmdBeginTransformFeedbackEXT :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ())
+cmdBeginTransformFeedbackEXT deviceCmds = mkVkCmdBeginTransformFeedbackEXT (pVkCmdBeginTransformFeedbackEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdBeginTransformFeedbackEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ())
+cmdEndTransformFeedbackEXT :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ())
+cmdEndTransformFeedbackEXT deviceCmds = mkVkCmdEndTransformFeedbackEXT (pVkCmdEndTransformFeedbackEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdEndTransformFeedbackEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ())
+cmdBeginQueryIndexedEXT :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> ("index" ::: Word32) -> IO ())
+cmdBeginQueryIndexedEXT deviceCmds = mkVkCmdBeginQueryIndexedEXT (pVkCmdBeginQueryIndexedEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdBeginQueryIndexedEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> ("index" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> ("index" ::: Word32) -> IO ())
+cmdEndQueryIndexedEXT :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ())
+cmdEndQueryIndexedEXT deviceCmds = mkVkCmdEndQueryIndexedEXT (pVkCmdEndQueryIndexedEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdEndQueryIndexedEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ())
+cmdDrawIndirectByteCountEXT :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: VkBuffer) -> ("counterBufferOffset" ::: VkDeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ())
+cmdDrawIndirectByteCountEXT deviceCmds = mkVkCmdDrawIndirectByteCountEXT (pVkCmdDrawIndirectByteCountEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdDrawIndirectByteCountEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: VkBuffer) -> ("counterBufferOffset" ::: VkDeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: VkBuffer) -> ("counterBufferOffset" ::: VkDeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ())
+cmdSetExclusiveScissorNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ())
+cmdSetExclusiveScissorNV deviceCmds = mkVkCmdSetExclusiveScissorNV (pVkCmdSetExclusiveScissorNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdSetExclusiveScissorNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ())
+cmdBindShadingRateImageNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("imageView" ::: VkImageView) -> ("imageLayout" ::: VkImageLayout) -> IO ())
+cmdBindShadingRateImageNV deviceCmds = mkVkCmdBindShadingRateImageNV (pVkCmdBindShadingRateImageNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdBindShadingRateImageNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("imageView" ::: VkImageView) -> ("imageLayout" ::: VkImageLayout) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("imageView" ::: VkImageView) -> ("imageLayout" ::: VkImageLayout) -> IO ())
+cmdSetViewportShadingRatePaletteNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pShadingRatePalettes" ::: Ptr VkShadingRatePaletteNV) -> IO ())
+cmdSetViewportShadingRatePaletteNV deviceCmds = mkVkCmdSetViewportShadingRatePaletteNV (pVkCmdSetViewportShadingRatePaletteNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdSetViewportShadingRatePaletteNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pShadingRatePalettes" ::: Ptr VkShadingRatePaletteNV) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pShadingRatePalettes" ::: Ptr VkShadingRatePaletteNV) -> IO ())
+cmdSetCoarseSampleOrderNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("sampleOrderType" ::: VkCoarseSampleOrderTypeNV) -> ("customSampleOrderCount" ::: Word32) -> ("pCustomSampleOrders" ::: Ptr VkCoarseSampleOrderCustomNV) -> IO ())
+cmdSetCoarseSampleOrderNV deviceCmds = mkVkCmdSetCoarseSampleOrderNV (pVkCmdSetCoarseSampleOrderNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdSetCoarseSampleOrderNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("sampleOrderType" ::: VkCoarseSampleOrderTypeNV) -> ("customSampleOrderCount" ::: Word32) -> ("pCustomSampleOrders" ::: Ptr VkCoarseSampleOrderCustomNV) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("sampleOrderType" ::: VkCoarseSampleOrderTypeNV) -> ("customSampleOrderCount" ::: Word32) -> ("pCustomSampleOrders" ::: Ptr VkCoarseSampleOrderCustomNV) -> IO ())
+cmdDrawMeshTasksNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ())
+cmdDrawMeshTasksNV deviceCmds = mkVkCmdDrawMeshTasksNV (pVkCmdDrawMeshTasksNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdDrawMeshTasksNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ())
+cmdDrawMeshTasksIndirectNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+cmdDrawMeshTasksIndirectNV deviceCmds = mkVkCmdDrawMeshTasksIndirectNV (pVkCmdDrawMeshTasksIndirectNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdDrawMeshTasksIndirectNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+cmdDrawMeshTasksIndirectCountNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+cmdDrawMeshTasksIndirectCountNV deviceCmds = mkVkCmdDrawMeshTasksIndirectCountNV (pVkCmdDrawMeshTasksIndirectCountNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdDrawMeshTasksIndirectCountNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+compileDeferredNV :: DeviceCmds -> (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shader" ::: Word32) -> IO VkResult)
+compileDeferredNV deviceCmds = mkVkCompileDeferredNV (pVkCompileDeferredNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCompileDeferredNV
+  :: FunPtr (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shader" ::: Word32) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shader" ::: Word32) -> IO VkResult)
+createAccelerationStructureNV :: DeviceCmds -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkAccelerationStructureCreateInfoNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr VkAccelerationStructureNV) -> IO VkResult)
+createAccelerationStructureNV deviceCmds = mkVkCreateAccelerationStructureNV (pVkCreateAccelerationStructureNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCreateAccelerationStructureNV
+  :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkAccelerationStructureCreateInfoNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr VkAccelerationStructureNV) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkAccelerationStructureCreateInfoNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pAccelerationStructure" ::: Ptr VkAccelerationStructureNV) -> IO VkResult)
+destroyAccelerationStructureNV :: DeviceCmds -> (("device" ::: VkDevice) -> ("accelerationStructure" ::: VkAccelerationStructureNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+destroyAccelerationStructureNV deviceCmds = mkVkDestroyAccelerationStructureNV (pVkDestroyAccelerationStructureNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkDestroyAccelerationStructureNV
+  :: FunPtr (("device" ::: VkDevice) -> ("accelerationStructure" ::: VkAccelerationStructureNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()) -> (("device" ::: VkDevice) -> ("accelerationStructure" ::: VkAccelerationStructureNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+getAccelerationStructureMemoryRequirementsNV :: DeviceCmds -> (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkAccelerationStructureMemoryRequirementsInfoNV) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2KHR) -> IO ())
+getAccelerationStructureMemoryRequirementsNV deviceCmds = mkVkGetAccelerationStructureMemoryRequirementsNV (pVkGetAccelerationStructureMemoryRequirementsNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetAccelerationStructureMemoryRequirementsNV
+  :: FunPtr (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkAccelerationStructureMemoryRequirementsInfoNV) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2KHR) -> IO ()) -> (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkAccelerationStructureMemoryRequirementsInfoNV) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2KHR) -> IO ())
+bindAccelerationStructureMemoryNV :: DeviceCmds -> (("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindAccelerationStructureMemoryInfoNV) -> IO VkResult)
+bindAccelerationStructureMemoryNV deviceCmds = mkVkBindAccelerationStructureMemoryNV (pVkBindAccelerationStructureMemoryNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkBindAccelerationStructureMemoryNV
+  :: FunPtr (("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindAccelerationStructureMemoryInfoNV) -> IO VkResult) -> (("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindAccelerationStructureMemoryInfoNV) -> IO VkResult)
+cmdCopyAccelerationStructureNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("dst" ::: VkAccelerationStructureNV) -> ("src" ::: VkAccelerationStructureNV) -> ("mode" ::: VkCopyAccelerationStructureModeNV) -> IO ())
+cmdCopyAccelerationStructureNV deviceCmds = mkVkCmdCopyAccelerationStructureNV (pVkCmdCopyAccelerationStructureNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdCopyAccelerationStructureNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("dst" ::: VkAccelerationStructureNV) -> ("src" ::: VkAccelerationStructureNV) -> ("mode" ::: VkCopyAccelerationStructureModeNV) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("dst" ::: VkAccelerationStructureNV) -> ("src" ::: VkAccelerationStructureNV) -> ("mode" ::: VkCopyAccelerationStructureModeNV) -> IO ())
+cmdWriteAccelerationStructuresPropertiesNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("accelerationStructureCount" ::: Word32) -> ("pAccelerationStructures" ::: Ptr VkAccelerationStructureNV) -> ("queryType" ::: VkQueryType) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> IO ())
+cmdWriteAccelerationStructuresPropertiesNV deviceCmds = mkVkCmdWriteAccelerationStructuresPropertiesNV (pVkCmdWriteAccelerationStructuresPropertiesNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdWriteAccelerationStructuresPropertiesNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("accelerationStructureCount" ::: Word32) -> ("pAccelerationStructures" ::: Ptr VkAccelerationStructureNV) -> ("queryType" ::: VkQueryType) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("accelerationStructureCount" ::: Word32) -> ("pAccelerationStructures" ::: Ptr VkAccelerationStructureNV) -> ("queryType" ::: VkQueryType) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> IO ())
+cmdBuildAccelerationStructureNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("pInfo" ::: Ptr VkAccelerationStructureInfoNV) -> ("instanceData" ::: VkBuffer) -> ("instanceOffset" ::: VkDeviceSize) -> ("update" ::: VkBool32) -> ("dst" ::: VkAccelerationStructureNV) -> ("src" ::: VkAccelerationStructureNV) -> ("scratch" ::: VkBuffer) -> ("scratchOffset" ::: VkDeviceSize) -> IO ())
+cmdBuildAccelerationStructureNV deviceCmds = mkVkCmdBuildAccelerationStructureNV (pVkCmdBuildAccelerationStructureNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdBuildAccelerationStructureNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pInfo" ::: Ptr VkAccelerationStructureInfoNV) -> ("instanceData" ::: VkBuffer) -> ("instanceOffset" ::: VkDeviceSize) -> ("update" ::: VkBool32) -> ("dst" ::: VkAccelerationStructureNV) -> ("src" ::: VkAccelerationStructureNV) -> ("scratch" ::: VkBuffer) -> ("scratchOffset" ::: VkDeviceSize) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pInfo" ::: Ptr VkAccelerationStructureInfoNV) -> ("instanceData" ::: VkBuffer) -> ("instanceOffset" ::: VkDeviceSize) -> ("update" ::: VkBool32) -> ("dst" ::: VkAccelerationStructureNV) -> ("src" ::: VkAccelerationStructureNV) -> ("scratch" ::: VkBuffer) -> ("scratchOffset" ::: VkDeviceSize) -> IO ())
+cmdTraceRaysNV :: DeviceCmds -> (("commandBuffer" ::: VkCommandBuffer) -> ("raygenShaderBindingTableBuffer" ::: VkBuffer) -> ("raygenShaderBindingOffset" ::: VkDeviceSize) -> ("missShaderBindingTableBuffer" ::: VkBuffer) -> ("missShaderBindingOffset" ::: VkDeviceSize) -> ("missShaderBindingStride" ::: VkDeviceSize) -> ("hitShaderBindingTableBuffer" ::: VkBuffer) -> ("hitShaderBindingOffset" ::: VkDeviceSize) -> ("hitShaderBindingStride" ::: VkDeviceSize) -> ("callableShaderBindingTableBuffer" ::: VkBuffer) -> ("callableShaderBindingOffset" ::: VkDeviceSize) -> ("callableShaderBindingStride" ::: VkDeviceSize) -> ("width" ::: Word32) -> ("height" ::: Word32) -> ("depth" ::: Word32) -> IO ())
+cmdTraceRaysNV deviceCmds = mkVkCmdTraceRaysNV (pVkCmdTraceRaysNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdTraceRaysNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("raygenShaderBindingTableBuffer" ::: VkBuffer) -> ("raygenShaderBindingOffset" ::: VkDeviceSize) -> ("missShaderBindingTableBuffer" ::: VkBuffer) -> ("missShaderBindingOffset" ::: VkDeviceSize) -> ("missShaderBindingStride" ::: VkDeviceSize) -> ("hitShaderBindingTableBuffer" ::: VkBuffer) -> ("hitShaderBindingOffset" ::: VkDeviceSize) -> ("hitShaderBindingStride" ::: VkDeviceSize) -> ("callableShaderBindingTableBuffer" ::: VkBuffer) -> ("callableShaderBindingOffset" ::: VkDeviceSize) -> ("callableShaderBindingStride" ::: VkDeviceSize) -> ("width" ::: Word32) -> ("height" ::: Word32) -> ("depth" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("raygenShaderBindingTableBuffer" ::: VkBuffer) -> ("raygenShaderBindingOffset" ::: VkDeviceSize) -> ("missShaderBindingTableBuffer" ::: VkBuffer) -> ("missShaderBindingOffset" ::: VkDeviceSize) -> ("missShaderBindingStride" ::: VkDeviceSize) -> ("hitShaderBindingTableBuffer" ::: VkBuffer) -> ("hitShaderBindingOffset" ::: VkDeviceSize) -> ("hitShaderBindingStride" ::: VkDeviceSize) -> ("callableShaderBindingTableBuffer" ::: VkBuffer) -> ("callableShaderBindingOffset" ::: VkDeviceSize) -> ("callableShaderBindingStride" ::: VkDeviceSize) -> ("width" ::: Word32) -> ("height" ::: Word32) -> ("depth" ::: Word32) -> IO ())
+getRayTracingShaderGroupHandlesNV :: DeviceCmds -> (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("firstGroup" ::: Word32) -> ("groupCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> IO VkResult)
+getRayTracingShaderGroupHandlesNV deviceCmds = mkVkGetRayTracingShaderGroupHandlesNV (pVkGetRayTracingShaderGroupHandlesNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetRayTracingShaderGroupHandlesNV
+  :: FunPtr (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("firstGroup" ::: Word32) -> ("groupCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("firstGroup" ::: Word32) -> ("groupCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> IO VkResult)
+getAccelerationStructureHandleNV :: DeviceCmds -> (("device" ::: VkDevice) -> ("accelerationStructure" ::: VkAccelerationStructureNV) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> IO VkResult)
+getAccelerationStructureHandleNV deviceCmds = mkVkGetAccelerationStructureHandleNV (pVkGetAccelerationStructureHandleNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetAccelerationStructureHandleNV
+  :: FunPtr (("device" ::: VkDevice) -> ("accelerationStructure" ::: VkAccelerationStructureNV) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> IO VkResult) -> (("device" ::: VkDevice) -> ("accelerationStructure" ::: VkAccelerationStructureNV) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> IO VkResult)
+createRayTracingPipelinesNV :: DeviceCmds -> (("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkRayTracingPipelineCreateInfoNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelines" ::: Ptr VkPipeline) -> IO VkResult)
+createRayTracingPipelinesNV deviceCmds = mkVkCreateRayTracingPipelinesNV (pVkCreateRayTracingPipelinesNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCreateRayTracingPipelinesNV
+  :: FunPtr (("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkRayTracingPipelineCreateInfoNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelines" ::: Ptr VkPipeline) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("createInfoCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkRayTracingPipelineCreateInfoNV) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelines" ::: Ptr VkPipeline) -> IO VkResult)
+getImageDrmFormatModifierPropertiesEXT :: DeviceCmds -> (("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pProperties" ::: Ptr VkImageDrmFormatModifierPropertiesEXT) -> IO VkResult)
+getImageDrmFormatModifierPropertiesEXT deviceCmds = mkVkGetImageDrmFormatModifierPropertiesEXT (pVkGetImageDrmFormatModifierPropertiesEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetImageDrmFormatModifierPropertiesEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pProperties" ::: Ptr VkImageDrmFormatModifierPropertiesEXT) -> IO VkResult) -> (("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pProperties" ::: Ptr VkImageDrmFormatModifierPropertiesEXT) -> IO VkResult)
+getBufferDeviceAddressEXT :: DeviceCmds -> (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkBufferDeviceAddressInfoEXT) -> IO VkDeviceAddress)
+getBufferDeviceAddressEXT deviceCmds = mkVkGetBufferDeviceAddressEXT (pVkGetBufferDeviceAddressEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetBufferDeviceAddressEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkBufferDeviceAddressInfoEXT) -> IO VkDeviceAddress) -> (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkBufferDeviceAddressInfoEXT) -> IO VkDeviceAddress)
+getImageViewHandleNVX :: DeviceCmds -> (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageViewHandleInfoNVX) -> IO Word32)
+getImageViewHandleNVX deviceCmds = mkVkGetImageViewHandleNVX (pVkGetImageViewHandleNVX deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetImageViewHandleNVX
+  :: FunPtr (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageViewHandleInfoNVX) -> IO Word32) -> (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageViewHandleInfoNVX) -> IO Word32)
+getDeviceGroupSurfacePresentModes2EXT :: DeviceCmds -> (("device" ::: VkDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pModes" ::: Ptr VkDeviceGroupPresentModeFlagsKHR) -> IO VkResult)
+getDeviceGroupSurfacePresentModes2EXT deviceCmds = mkVkGetDeviceGroupSurfacePresentModes2EXT (pVkGetDeviceGroupSurfacePresentModes2EXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetDeviceGroupSurfacePresentModes2EXT
+  :: FunPtr (("device" ::: VkDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pModes" ::: Ptr VkDeviceGroupPresentModeFlagsKHR) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pModes" ::: Ptr VkDeviceGroupPresentModeFlagsKHR) -> IO VkResult)
+#if VK_USE_PLATFORM_WIN32_KHR
+acquireFullScreenExclusiveModeEXT :: DeviceCmds -> (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult)
+acquireFullScreenExclusiveModeEXT deviceCmds = mkVkAcquireFullScreenExclusiveModeEXT (pVkAcquireFullScreenExclusiveModeEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkAcquireFullScreenExclusiveModeEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult) -> (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult)
+releaseFullScreenExclusiveModeEXT :: DeviceCmds -> (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult)
+releaseFullScreenExclusiveModeEXT deviceCmds = mkVkReleaseFullScreenExclusiveModeEXT (pVkReleaseFullScreenExclusiveModeEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkReleaseFullScreenExclusiveModeEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult) -> (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult)
 #endif
 
 -- * Instance commands
@@ -3490,24 +4252,6 @@ foreign import ccall
 #endif
   "dynamic" mkVkCreateDisplayPlaneSurfaceKHR
   :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDisplaySurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDisplaySurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
-#if VK_USE_PLATFORM_MIR_KHR
-createMirSurfaceKHR :: InstanceCmds -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMirSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
-createMirSurfaceKHR deviceCmds = mkVkCreateMirSurfaceKHR (pVkCreateMirSurfaceKHR deviceCmds)
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "dynamic" mkVkCreateMirSurfaceKHR
-  :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMirSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMirSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
-getPhysicalDeviceMirPresentationSupportKHR :: InstanceCmds -> (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr MirConnection) -> IO VkBool32)
-getPhysicalDeviceMirPresentationSupportKHR deviceCmds = mkVkGetPhysicalDeviceMirPresentationSupportKHR (pVkGetPhysicalDeviceMirPresentationSupportKHR deviceCmds)
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "dynamic" mkVkGetPhysicalDeviceMirPresentationSupportKHR
-  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr MirConnection) -> IO VkBool32) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr MirConnection) -> IO VkBool32)
-#endif
 destroySurfaceKHR :: InstanceCmds -> (("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
 destroySurfaceKHR deviceCmds = mkVkDestroySurfaceKHR (pVkDestroySurfaceKHR deviceCmds)
 foreign import ccall
@@ -3629,6 +4373,26 @@ foreign import ccall
 #endif
   "dynamic" mkVkGetPhysicalDeviceXcbPresentationSupportKHR
   :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr Xcb_connection_t) -> ("visual_id" ::: Xcb_visualid_t) -> IO VkBool32) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("connection" ::: Ptr Xcb_connection_t) -> ("visual_id" ::: Xcb_visualid_t) -> IO VkBool32)
+#endif
+#if VK_USE_PLATFORM_FUCHSIA
+createImagePipeSurfaceFUCHSIA :: InstanceCmds -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+createImagePipeSurfaceFUCHSIA deviceCmds = mkVkCreateImagePipeSurfaceFUCHSIA (pVkCreateImagePipeSurfaceFUCHSIA deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCreateImagePipeSurfaceFUCHSIA
+  :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+#endif
+#if VK_USE_PLATFORM_GGP
+createStreamDescriptorSurfaceGGP :: InstanceCmds -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkStreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+createStreamDescriptorSurfaceGGP deviceCmds = mkVkCreateStreamDescriptorSurfaceGGP (pVkCreateStreamDescriptorSurfaceGGP deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCreateStreamDescriptorSurfaceGGP
+  :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkStreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkStreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
 #endif
 createDebugReportCallbackEXT :: InstanceCmds -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDebugReportCallbackCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pCallback" ::: Ptr VkDebugReportCallbackEXT) -> IO VkResult)
 createDebugReportCallbackEXT deviceCmds = mkVkCreateDebugReportCallbackEXT (pVkCreateDebugReportCallbackEXT deviceCmds)
@@ -3820,6 +4584,16 @@ foreign import ccall
   "dynamic" mkVkCreateMacOSSurfaceMVK
   :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMacOSSurfaceCreateInfoMVK) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMacOSSurfaceCreateInfoMVK) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
 #endif
+#if VK_USE_PLATFORM_METAL_EXT
+createMetalSurfaceEXT :: InstanceCmds -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+createMetalSurfaceEXT deviceCmds = mkVkCreateMetalSurfaceEXT (pVkCreateMetalSurfaceEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCreateMetalSurfaceEXT
+  :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+#endif
 getPhysicalDeviceMultisamplePropertiesEXT :: InstanceCmds -> (("physicalDevice" ::: VkPhysicalDevice) -> ("samples" ::: VkSampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr VkMultisamplePropertiesEXT) -> IO ())
 getPhysicalDeviceMultisamplePropertiesEXT deviceCmds = mkVkGetPhysicalDeviceMultisamplePropertiesEXT (pVkGetPhysicalDeviceMultisamplePropertiesEXT deviceCmds)
 foreign import ccall
@@ -3844,6 +4618,46 @@ foreign import ccall
 #endif
   "dynamic" mkVkGetPhysicalDeviceSurfaceFormats2KHR
   :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult)
+getPhysicalDeviceDisplayProperties2KHR :: InstanceCmds -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayProperties2KHR) -> IO VkResult)
+getPhysicalDeviceDisplayProperties2KHR deviceCmds = mkVkGetPhysicalDeviceDisplayProperties2KHR (pVkGetPhysicalDeviceDisplayProperties2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetPhysicalDeviceDisplayProperties2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayProperties2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayProperties2KHR) -> IO VkResult)
+getPhysicalDeviceDisplayPlaneProperties2KHR :: InstanceCmds -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult)
+getPhysicalDeviceDisplayPlaneProperties2KHR deviceCmds = mkVkGetPhysicalDeviceDisplayPlaneProperties2KHR (pVkGetPhysicalDeviceDisplayPlaneProperties2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetPhysicalDeviceDisplayPlaneProperties2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult)
+getDisplayModeProperties2KHR :: InstanceCmds -> (("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult)
+getDisplayModeProperties2KHR deviceCmds = mkVkGetDisplayModeProperties2KHR (pVkGetDisplayModeProperties2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetDisplayModeProperties2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult)
+getDisplayPlaneCapabilities2KHR :: InstanceCmds -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult)
+getDisplayPlaneCapabilities2KHR deviceCmds = mkVkGetDisplayPlaneCapabilities2KHR (pVkGetDisplayPlaneCapabilities2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetDisplayPlaneCapabilities2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult)
+getPhysicalDeviceCalibrateableTimeDomainsEXT :: InstanceCmds -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pTimeDomainCount" ::: Ptr Word32) -> ("pTimeDomains" ::: Ptr VkTimeDomainEXT) -> IO VkResult)
+getPhysicalDeviceCalibrateableTimeDomainsEXT deviceCmds = mkVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetPhysicalDeviceCalibrateableTimeDomainsEXT
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pTimeDomainCount" ::: Ptr Word32) -> ("pTimeDomains" ::: Ptr VkTimeDomainEXT) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pTimeDomainCount" ::: Ptr Word32) -> ("pTimeDomains" ::: Ptr VkTimeDomainEXT) -> IO VkResult)
 createDebugUtilsMessengerEXT :: InstanceCmds -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDebugUtilsMessengerCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pMessenger" ::: Ptr VkDebugUtilsMessengerEXT) -> IO VkResult)
 createDebugUtilsMessengerEXT deviceCmds = mkVkCreateDebugUtilsMessengerEXT (pVkCreateDebugUtilsMessengerEXT deviceCmds)
 foreign import ccall
@@ -3868,3 +4682,21 @@ foreign import ccall
 #endif
   "dynamic" mkVkSubmitDebugUtilsMessageEXT
   :: FunPtr (("instance" ::: VkInstance) -> ("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageTypes" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> IO ()) -> (("instance" ::: VkInstance) -> ("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageTypes" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> IO ())
+getPhysicalDeviceCooperativeMatrixPropertiesNV :: InstanceCmds -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkCooperativeMatrixPropertiesNV) -> IO VkResult)
+getPhysicalDeviceCooperativeMatrixPropertiesNV deviceCmds = mkVkGetPhysicalDeviceCooperativeMatrixPropertiesNV (pVkGetPhysicalDeviceCooperativeMatrixPropertiesNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetPhysicalDeviceCooperativeMatrixPropertiesNV
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkCooperativeMatrixPropertiesNV) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkCooperativeMatrixPropertiesNV) -> IO VkResult)
+#if VK_USE_PLATFORM_WIN32_KHR
+getPhysicalDeviceSurfacePresentModes2EXT :: InstanceCmds -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult)
+getPhysicalDeviceSurfacePresentModes2EXT deviceCmds = mkVkGetPhysicalDeviceSurfacePresentModes2EXT (pVkGetPhysicalDeviceSurfacePresentModes2EXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetPhysicalDeviceSurfacePresentModes2EXT
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult)
+#endif

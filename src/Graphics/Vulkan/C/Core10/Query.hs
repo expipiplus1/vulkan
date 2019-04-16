@@ -300,12 +300,22 @@ instance Show VkQueryType where
   showsPrec _ VK_QUERY_TYPE_OCCLUSION = showString "VK_QUERY_TYPE_OCCLUSION"
   showsPrec _ VK_QUERY_TYPE_PIPELINE_STATISTICS = showString "VK_QUERY_TYPE_PIPELINE_STATISTICS"
   showsPrec _ VK_QUERY_TYPE_TIMESTAMP = showString "VK_QUERY_TYPE_TIMESTAMP"
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkQueryType 1000023008) = showString "VK_QUERY_TYPE_RESERVED_8"
+  showsPrec _ (VkQueryType 1000024004) = showString "VK_QUERY_TYPE_RESERVED_4"
+  showsPrec _ (VkQueryType 1000028004) = showString "VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT"
+  showsPrec _ (VkQueryType 1000165000) = showString "VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV"
   showsPrec p (VkQueryType x) = showParen (p >= 11) (showString "VkQueryType " . showsPrec 11 x)
 
 instance Read VkQueryType where
   readPrec = parens ( choose [ ("VK_QUERY_TYPE_OCCLUSION",           pure VK_QUERY_TYPE_OCCLUSION)
                              , ("VK_QUERY_TYPE_PIPELINE_STATISTICS", pure VK_QUERY_TYPE_PIPELINE_STATISTICS)
                              , ("VK_QUERY_TYPE_TIMESTAMP",           pure VK_QUERY_TYPE_TIMESTAMP)
+                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_QUERY_TYPE_RESERVED_8",                               pure (VkQueryType 1000023008))
+                             , ("VK_QUERY_TYPE_RESERVED_4",                               pure (VkQueryType 1000024004))
+                             , ("VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT",            pure (VkQueryType 1000028004))
+                             , ("VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV", pure (VkQueryType 1000165000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkQueryType")

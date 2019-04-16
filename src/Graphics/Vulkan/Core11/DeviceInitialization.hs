@@ -1,53 +1,40 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
+{-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Core11.DeviceInitialization
-  ( vkEnumerateInstanceVersion
+  ( enumerateInstanceVersion
   ) where
 
+import Control.Exception
+  ( throwIO
+  )
+import Control.Monad
+  ( when
+  )
 import Data.Word
   ( Word32
   )
-import Foreign.Ptr
-  ( Ptr
+import Foreign.Marshal.Alloc
+  ( alloca
   )
-import Graphics.Vulkan.NamedType
-  ( (:::)
+import Foreign.Storable
+  ( peek
   )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
+import qualified Graphics.Vulkan.C.Dynamic
+  ( enumerateInstanceVersion
   )
 
 
--- | vkEnumerateInstanceVersion - Query instance-level version before
--- instance creation
---
--- = Parameters
---
--- -   @pApiVersion@ points to a @uint32_t@, which is the version of Vulkan
---     supported by instance-level functionality, encoded as described in
---     the [API Version Numbers and
---     Semantics](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-versionnum)
---     section.
---
--- == Valid Usage (Implicit)
---
--- -   @pApiVersion@ /must/ be a valid pointer to a @uint32_t@ value
---
--- == Return Codes
---
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
---
--- = See Also
---
--- No cross-references are available
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkEnumerateInstanceVersion" vkEnumerateInstanceVersion :: ("pApiVersion" ::: Ptr Word32) -> IO VkResult
+import Graphics.Vulkan.C.Core10.Core
+  ( pattern VK_SUCCESS
+  )
+import Graphics.Vulkan.Exception
+  ( VulkanException(..)
+  )
+
+
+
+-- | Wrapper for vkEnumerateInstanceVersion
+enumerateInstanceVersion :: IO (Word32)
+enumerateInstanceVersion = alloca (\pApiVersion -> Graphics.Vulkan.C.Dynamic.enumerateInstanceVersion pApiVersion >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pApiVersion)))

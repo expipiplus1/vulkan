@@ -5,11 +5,13 @@
 {-# language OverloadedStrings #-}
 
 module Graphics.Vulkan.C.Extensions.VK_EXT_vertex_attribute_divisor
-  ( VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT(..)
+  ( VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT(..)
+  , VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT(..)
   , VkPipelineVertexInputDivisorStateCreateInfoEXT(..)
   , VkVertexInputBindingDivisorDescriptionEXT(..)
   , pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME
   , pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_SPEC_VERSION
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT
   ) where
@@ -31,10 +33,35 @@ import Foreign.Storable
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( VkStructureType(..)
+  ( VkBool32(..)
+  , VkStructureType(..)
   )
 
 
+-- No documentation found for TopLevel "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT"
+data VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT = VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT
+  { -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "sType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "pNext"
+  vkPNext :: Ptr ()
+  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "vertexAttributeInstanceRateDivisor"
+  vkVertexAttributeInstanceRateDivisor :: VkBool32
+  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "vertexAttributeInstanceRateZeroDivisor"
+  vkVertexAttributeInstanceRateZeroDivisor :: VkBool32
+  }
+  deriving (Eq, Show)
+
+instance Storable VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek ptr = VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT <$> peek (ptr `plusPtr` 0)
+                                                               <*> peek (ptr `plusPtr` 8)
+                                                               <*> peek (ptr `plusPtr` 16)
+                                                               <*> peek (ptr `plusPtr` 20)
+  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT))
+                *> poke (ptr `plusPtr` 16) (vkVertexAttributeInstanceRateDivisor (poked :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT))
+                *> poke (ptr `plusPtr` 20) (vkVertexAttributeInstanceRateZeroDivisor (poked :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT))
 -- No documentation found for TopLevel "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT"
 data VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT = VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "sType"
@@ -100,7 +127,10 @@ pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME :: (Eq a ,IsString a) => 
 pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME = "VK_EXT_vertex_attribute_divisor"
 -- No documentation found for TopLevel "VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_SPEC_VERSION"
 pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_SPEC_VERSION :: Integral a => a
-pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_SPEC_VERSION = 1
+pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_SPEC_VERSION = 3
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT"
+pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT :: VkStructureType
+pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT = VkStructureType 1000190002
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT = VkStructureType 1000190000

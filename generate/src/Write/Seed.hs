@@ -60,6 +60,8 @@ bespokeSeedsHighPriority =
     , TypeName "VkBool32"
     , TypeName "VkObjectType"
     , TypeName "VkVendorId"
+    , TypeName "VkBaseOutStructure"
+    , TypeName "VkBaseInStructure"
     ]
     Nothing
   , ModuleSeed

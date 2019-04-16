@@ -726,6 +726,9 @@ instance Show VkDynamicState where
   showsPrec _ (VkDynamicState 1000087000) = showString "VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV"
   showsPrec _ (VkDynamicState 1000099000) = showString "VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT"
   showsPrec _ (VkDynamicState 1000143000) = showString "VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT"
+  showsPrec _ (VkDynamicState 1000164004) = showString "VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"
+  showsPrec _ (VkDynamicState 1000164006) = showString "VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"
+  showsPrec _ (VkDynamicState 1000205001) = showString "VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"
   showsPrec p (VkDynamicState x) = showParen (p >= 11) (showString "VkDynamicState " . showsPrec 11 x)
 
 instance Read VkDynamicState where
@@ -739,9 +742,12 @@ instance Read VkDynamicState where
                              , ("VK_DYNAMIC_STATE_STENCIL_WRITE_MASK",   pure VK_DYNAMIC_STATE_STENCIL_WRITE_MASK)
                              , ("VK_DYNAMIC_STATE_STENCIL_REFERENCE",    pure VK_DYNAMIC_STATE_STENCIL_REFERENCE)
                              , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV", pure (VkDynamicState 1000087000))
-                             , ("VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT", pure (VkDynamicState 1000099000))
-                             , ("VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT",  pure (VkDynamicState 1000143000))
+                               ("VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV",            pure (VkDynamicState 1000087000))
+                             , ("VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT",            pure (VkDynamicState 1000099000))
+                             , ("VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT",             pure (VkDynamicState 1000143000))
+                             , ("VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV", pure (VkDynamicState 1000164004))
+                             , ("VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV",  pure (VkDynamicState 1000164006))
+                             , ("VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV",             pure (VkDynamicState 1000205001))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkDynamicState")
@@ -1161,6 +1167,7 @@ instance Show VkPipelineCreateFlagBits where
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
   showsPrec _ (VkPipelineCreateFlagBits 0x00000008) = showString "VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"
   showsPrec _ (VkPipelineCreateFlagBits 0x00000010) = showString "VK_PIPELINE_CREATE_DISPATCH_BASE"
+  showsPrec _ (VkPipelineCreateFlagBits 0x00000020) = showString "VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV"
   showsPrec p (VkPipelineCreateFlagBits x) = showParen (p >= 11) (showString "VkPipelineCreateFlagBits " . showsPrec 11 x)
 
 instance Read VkPipelineCreateFlagBits where
@@ -1170,6 +1177,7 @@ instance Read VkPipelineCreateFlagBits where
                              , -- The following values are from extensions, the patterns themselves are exported from the extension modules
                                ("VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT", pure (VkPipelineCreateFlagBits 0x00000008))
                              , ("VK_PIPELINE_CREATE_DISPATCH_BASE",                    pure (VkPipelineCreateFlagBits 0x00000010))
+                             , ("VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV",             pure (VkPipelineCreateFlagBits 0x00000020))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkPipelineCreateFlagBits")
@@ -1891,6 +1899,15 @@ instance Show VkShaderStageFlagBits where
   showsPrec _ VK_SHADER_STAGE_COMPUTE_BIT = showString "VK_SHADER_STAGE_COMPUTE_BIT"
   showsPrec _ VK_SHADER_STAGE_ALL_GRAPHICS = showString "VK_SHADER_STAGE_ALL_GRAPHICS"
   showsPrec _ VK_SHADER_STAGE_ALL = showString "VK_SHADER_STAGE_ALL"
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkShaderStageFlagBits 0x00000100) = showString "VK_SHADER_STAGE_RAYGEN_BIT_NV"
+  showsPrec _ (VkShaderStageFlagBits 0x00000200) = showString "VK_SHADER_STAGE_ANY_HIT_BIT_NV"
+  showsPrec _ (VkShaderStageFlagBits 0x00000400) = showString "VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV"
+  showsPrec _ (VkShaderStageFlagBits 0x00000800) = showString "VK_SHADER_STAGE_MISS_BIT_NV"
+  showsPrec _ (VkShaderStageFlagBits 0x00001000) = showString "VK_SHADER_STAGE_INTERSECTION_BIT_NV"
+  showsPrec _ (VkShaderStageFlagBits 0x00002000) = showString "VK_SHADER_STAGE_CALLABLE_BIT_NV"
+  showsPrec _ (VkShaderStageFlagBits 0x00000040) = showString "VK_SHADER_STAGE_TASK_BIT_NV"
+  showsPrec _ (VkShaderStageFlagBits 0x00000080) = showString "VK_SHADER_STAGE_MESH_BIT_NV"
   showsPrec p (VkShaderStageFlagBits x) = showParen (p >= 11) (showString "VkShaderStageFlagBits " . showsPrec 11 x)
 
 instance Read VkShaderStageFlagBits where
@@ -1902,6 +1919,15 @@ instance Read VkShaderStageFlagBits where
                              , ("VK_SHADER_STAGE_COMPUTE_BIT",                 pure VK_SHADER_STAGE_COMPUTE_BIT)
                              , ("VK_SHADER_STAGE_ALL_GRAPHICS",                pure VK_SHADER_STAGE_ALL_GRAPHICS)
                              , ("VK_SHADER_STAGE_ALL",                         pure VK_SHADER_STAGE_ALL)
+                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_SHADER_STAGE_RAYGEN_BIT_NV",       pure (VkShaderStageFlagBits 0x00000100))
+                             , ("VK_SHADER_STAGE_ANY_HIT_BIT_NV",      pure (VkShaderStageFlagBits 0x00000200))
+                             , ("VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV",  pure (VkShaderStageFlagBits 0x00000400))
+                             , ("VK_SHADER_STAGE_MISS_BIT_NV",         pure (VkShaderStageFlagBits 0x00000800))
+                             , ("VK_SHADER_STAGE_INTERSECTION_BIT_NV", pure (VkShaderStageFlagBits 0x00001000))
+                             , ("VK_SHADER_STAGE_CALLABLE_BIT_NV",     pure (VkShaderStageFlagBits 0x00002000))
+                             , ("VK_SHADER_STAGE_TASK_BIT_NV",         pure (VkShaderStageFlagBits 0x00000040))
+                             , ("VK_SHADER_STAGE_MESH_BIT_NV",         pure (VkShaderStageFlagBits 0x00000080))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkShaderStageFlagBits")

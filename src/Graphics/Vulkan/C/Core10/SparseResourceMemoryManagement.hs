@@ -195,6 +195,10 @@ instance Show VkImageAspectFlagBits where
   showsPrec _ (VkImageAspectFlagBits 0x00000010) = showString "VK_IMAGE_ASPECT_PLANE_0_BIT"
   showsPrec _ (VkImageAspectFlagBits 0x00000020) = showString "VK_IMAGE_ASPECT_PLANE_1_BIT"
   showsPrec _ (VkImageAspectFlagBits 0x00000040) = showString "VK_IMAGE_ASPECT_PLANE_2_BIT"
+  showsPrec _ (VkImageAspectFlagBits 0x00000080) = showString "VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT"
+  showsPrec _ (VkImageAspectFlagBits 0x00000100) = showString "VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT"
+  showsPrec _ (VkImageAspectFlagBits 0x00000200) = showString "VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT"
+  showsPrec _ (VkImageAspectFlagBits 0x00000400) = showString "VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT"
   showsPrec p (VkImageAspectFlagBits x) = showParen (p >= 11) (showString "VkImageAspectFlagBits " . showsPrec 11 x)
 
 instance Read VkImageAspectFlagBits where
@@ -203,9 +207,13 @@ instance Read VkImageAspectFlagBits where
                              , ("VK_IMAGE_ASPECT_STENCIL_BIT",  pure VK_IMAGE_ASPECT_STENCIL_BIT)
                              , ("VK_IMAGE_ASPECT_METADATA_BIT", pure VK_IMAGE_ASPECT_METADATA_BIT)
                              , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_IMAGE_ASPECT_PLANE_0_BIT", pure (VkImageAspectFlagBits 0x00000010))
-                             , ("VK_IMAGE_ASPECT_PLANE_1_BIT", pure (VkImageAspectFlagBits 0x00000020))
-                             , ("VK_IMAGE_ASPECT_PLANE_2_BIT", pure (VkImageAspectFlagBits 0x00000040))
+                               ("VK_IMAGE_ASPECT_PLANE_0_BIT",            pure (VkImageAspectFlagBits 0x00000010))
+                             , ("VK_IMAGE_ASPECT_PLANE_1_BIT",            pure (VkImageAspectFlagBits 0x00000020))
+                             , ("VK_IMAGE_ASPECT_PLANE_2_BIT",            pure (VkImageAspectFlagBits 0x00000040))
+                             , ("VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT", pure (VkImageAspectFlagBits 0x00000080))
+                             , ("VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT", pure (VkImageAspectFlagBits 0x00000100))
+                             , ("VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT", pure (VkImageAspectFlagBits 0x00000200))
+                             , ("VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT", pure (VkImageAspectFlagBits 0x00000400))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkImageAspectFlagBits")

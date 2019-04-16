@@ -48,4 +48,4 @@ pattern VK_API_VERSION_1_0 :: Word32
 pattern VK_API_VERSION_1_0 = VK_MAKE_VERSION 1 0 0
 -- No documentation found for TopLevel "VK_HEADER_VERSION"
 pattern VK_HEADER_VERSION :: Integral a => a
-pattern VK_HEADER_VERSION = 73
+pattern VK_HEADER_VERSION = 106

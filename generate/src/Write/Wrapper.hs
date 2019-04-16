@@ -11,22 +11,26 @@ module Write.Wrapper
   ( commandWrapper
   ) where
 
-import           Control.Arrow                            ((&&&))
+
+import Debug.Trace
+
+import           Control.Arrow                            ( (&&&) )
 import           Control.Bool
 import           Control.Monad
 import           Control.Monad.Except
-import           Control.Monad.Writer.Strict              hiding ((<>))
+import           Control.Monad.Writer.Strict       hiding ( (<>) )
 import           Data.Bifunctor
 import           Data.Foldable
 import           Data.Function
 import           Data.Functor
-import qualified Data.Map                                 as Map
+import qualified Data.Map                      as Map
+import           Data.List                                ( partition )
 import           Data.Maybe
-import qualified Data.MultiMap                            as MultiMap
-import           Data.Text                                (Text)
-import qualified Data.Text.Extra                          as T
+import qualified Data.MultiMap                 as MultiMap
+import           Data.Text                                ( Text )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
-import           Prelude                                  hiding (Enum)
+import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Command
@@ -34,8 +38,8 @@ import           Spec.Savvy.Handle
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
 
-import           Write.Element                            hiding (TypeName)
-import qualified Write.Element                            as WE
+import           Write.Element                     hiding ( TypeName )
+import qualified Write.Element                 as WE
 import           Write.Marshal.Monad
 import           Write.Marshal.Util
 import           Write.Marshal.Wrap
@@ -52,10 +56,12 @@ commandWrapper
   -- ^ Is this a struct
   -> (Text -> Maybe Handle)
   -- ^ Get the dispatchable handle in a struct
+  -> (Text -> Text)
+  -- ^ Alias resolver
   -> Command
   -> Either [SpecError] [WriteElement]
-commandWrapper getHandle isBitmask isStruct structDispatchableHandle command =
-  do
+commandWrapper getHandle isBitmask isStruct structDispatchableHandle resolveAlias command
+  = do
     let weName        = cName command T.<+> "wrapper"
         weBootElement = Nothing
         isNonDispatchableHandle n = case getHandle n of
@@ -83,9 +89,16 @@ commandWrapper getHandle isBitmask isStruct structDispatchableHandle command =
                                isDefaultable
                                isTypeStruct
                                structContainsDispatchableHandle
+                               resolveAlias
                                command
         )
-    pure (WriteElement {..} : aliasWriteElements)
+    let rs = WriteElement { .. } : aliasWriteElements
+        -- TODO: Remove this
+        r  = case cName command of
+          "vkGetDeviceGroupSurfacePresentModes2EXT" -> fromJust
+            (traverse (guardWriteElement (Guard "VK_USE_PLATFORM_WIN32")) rs)
+          _ -> rs
+    pure r
 
 ----------------------------------------------------------------
 -- The wrapping commands
@@ -102,21 +115,23 @@ wrapCommand
   -- ^ Is this is a struct
   -> (Type -> Bool)
   -- ^ Struct contains dispatchable handle
+  -> (Text -> Text)
+  -- ^ Alias resolver
   -> Command
   -> WrapM ([Doc ()], [WriteElement])
-wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle c@Command {..} = do
+wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle resolveAlias c@Command {..} = do
   let lengthPairs :: [(Parameter, Maybe Text, [Parameter])]
       lengthPairs = getLengthPointerPairs cParameters
       makeWts :: Maybe CommandUsage -> WrapM ([WrappingType], [Constraint])
       makeWts usage = listens getConstraints $
-        parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle usage lengthPairs cParameters
+        parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle resolveAlias usage lengthPairs cParameters
   let printWrapped n wts constraints = do
         wrapped <- wrap c wts
         t <- makeType wts constraints
         tellQualifiedImport "Graphics.Vulkan.C.Dynamic" (dropVk cName)
         let dynCommandName = [qci|Graphics.Vulkan.C.Dynamic.{dropVk cName}|]
         pure $ line <> [qci|
-          -- | Wrapper for {cName}
+          -- | Wrapper for '{cName}'
           {n} :: {t}
           {n} = {wrapped dynCommandName}|]
       makeType wts constraints = wtsToSig KeepVkResult c constraints wts
@@ -199,6 +214,8 @@ parametersToWrappingTypes
   -- ^ Get handle
   -> (Type -> Bool)
   -- ^ Struct contains dispatchable handle
+  -> (Text -> Text)
+  -- ^ Alias resolver
   -> Maybe CommandUsage
   -- ^ If this is a dual use command, which usage shall we generate
   -> [(Parameter, Maybe Text, [Parameter])]
@@ -206,7 +223,7 @@ parametersToWrappingTypes
   -- vector parameters which must be this length)
   -> [Parameter]
   -> WrapM [WrappingType]
-parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle maybeCommandUsage lengthPairs ps
+parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle resolveAlias maybeCommandUsage lengthPairs ps
   = let
       -- Go from a length name to a list of vectors having that length
       -- TODO: Rename
@@ -242,7 +259,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
       marshalledType t
         | Just tyName <- simpleTypeName t
         , isStruct t
-        = TypeName (dropVkType tyName)
+        = TypeName (dropVkType (resolveAlias tyName))
         | Just tyName <- simpleTypeName t
         , Just n <- T.dropPrefix "Vk" tyName
         , tyName /= "VkBool32"
@@ -311,16 +328,36 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
               else do
                 tellImport "Foreign.Storable" "peek"
                 pure "peek"
-            getPeekElemOff t = if isMarshalledStruct t
-              then do
-                let Just tyName = simpleTypeName t
-                tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
+            getPeekElemOff t = case getHandle t of
+              Just h | Dispatchable <- hHandleType h -> do
+                getCommandTable <- case hLevel h of
+                  Nothing ->
+                    throwError
+                      [ Other
+                          "Getting the command table for a handle without a level"
+                      ]
+                  Just Instance ->
+                    throwError
+                      [ Other
+                          "Getting the command table for vector of instances"
+                      ]
+                  Just PhysicalDevice ->
+                    pure ("pure commandTable" :: Doc ())
+                  Just Device ->
+                    pure ("pure commandTable" :: Doc ())
                 tellImport "Foreign.Storable" "peekElemOff"
-                tellImport "Control.Monad"    "(<=<)"
-                pure $ if structContainsDispatchableHandle t
-                  then [qci|(\\p -> fromCStruct{tyName} commandTable <=< peekElemOff p)|]
-                  else [qci|(\\p -> fromCStruct{tyName} <=< peekElemOff p)|]
-              else do
+                pure
+                  [qci|(\\p i -> {dropVkType (hName h)} <$> peekElemOff p i <*> {getCommandTable})|]
+              _ | isMarshalledStruct t
+                -> do
+                  let Just tyName = simpleTypeName t
+                  tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
+                  tellImport "Foreign.Storable" "peekElemOff"
+                  tellImport "Control.Monad"    "(<=<)"
+                  pure $ if structContainsDispatchableHandle t
+                    then [qci|(\\p -> fromCStruct{tyName} commandTable <=< peekElemOff p)|]
+                    else [qci|(\\p -> fromCStruct{tyName} <=< peekElemOff p)|]
+              _ -> do
                 tellImport "Foreign.Storable" "peekElemOff"
                 pure "peekElemOff"
           in
@@ -363,7 +400,13 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                 , isSimpleType t
                 , all (isPtrType . pType) vectors
                 -> do
-                  w <- lengthWrap (dropPointer . pName <$> vectors)
+                  let isRequired v = case pIsOptional v of
+                                       Just (True:_) -> True
+                                       _             -> False
+                      (optionals, required) = partition isRequired vectors
+                  w <- lengthWrap
+                    (dropPointer . pName <$> required)
+                    (dropPointer . pName <$> optionals)
                   pure $ InferredType w
                 | -- A Bool argument
                   Just "VkBool32" <- simpleTypeName t
@@ -414,6 +457,18 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                         tellImport "Data.Vector" "Vector"
                         tyName <- toHsType t
                         pure ("Vector" <+> tyName)
+                  pure $ InputType (Input name vType) w
+                | -- An optional vector of values with a length
+                  isLengthPairList (pName p)
+                , isSimpleType t
+                , Just [True] <- pIsOptional p
+                -> do
+                  alloc <- getNonPtrAlloc t
+                  w     <- optionalVecWrap alloc (pName p)
+                  let vType = do
+                        tellImport "Data.Vector" "Vector"
+                        tyName <- toHsType t
+                        pure ("Maybe (Vector" <+> tyName <> ")")
                   pure $ InputType (Input name vType) w
                 | -- A vector of pointers with a length
                   isLengthPairList (pName p)
@@ -509,6 +564,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                 | -- A pointer to a non-optional return handle
                   Just h <- getHandle t
                 , Nothing <- pIsOptional p
+                , Nothing <- pLength p
                 -> do
                   (w, ptr) <- handleOutputWrap (pName p)
                   con      <- constructHandle h ptr
@@ -918,14 +974,21 @@ optionalAllocaWrap alloc paramName = do
 
 lengthWrap
   :: [Text]
-  -- ^ Vector names
+  -- ^ Required vector names
+  -> [Text]
+  -- ^ Optional vector names
   -> WrapM Wrapper
-lengthWrap vecs = do
+lengthWrap vecs optionals = do
+  when (null vecs) $
+    throwError [Other "lengthWrap has no required vectors"]
   tellQualifiedImport "Data.Vector" "length"
-  let lengthExpressions = vecs <&> \n -> [qci|Data.Vector.length {unReservedWord n}|]
+  let lengthExpressions =
+        (vecs <&> \n -> [qci|Data.Vector.length {unReservedWord n}|])
+          ++ (   optionals
+             <&> \n -> [qci|maybe maxBound Data.Vector.length {unReservedWord n}|]
+             )
       minLength = hsep (punctuate " `min`" lengthExpressions)
-  pure $ \cont e ->
-    cont [qci|{e} (fromIntegral $ {minLength})|]
+  pure $ \cont e -> cont [qci|{e} (fromIntegral $ {minLength})|]
 
 lengthBytesWrap
   :: Text
@@ -957,6 +1020,22 @@ vecWrap nonPtrAlloc vecName = do
         paramPtr = pretty (ptrName (dropPointer vecName))
         -- Note the bracket opened here is closed after cont!
         withPtr  = [qci|withVec {nonPtrAlloc} {param} (\\{paramPtr} -> {e} {paramPtr}|]
+    in  [qci|\\{param} -> {cont withPtr})|]
+
+optionalVecWrap
+  :: Text
+  -- ^ Non pointer Allocator
+  -> Text
+  -- ^ vector name
+  -> WrapM Wrapper
+optionalVecWrap nonPtrAlloc vecName = do
+  tellDepend (Unguarded (TermName "withVec"))
+  tellImport "Foreign.Marshal.Utils" "maybeWith"
+  pure $ \cont e ->
+    let param    = pretty (unReservedWord $ dropPointer vecName)
+        paramPtr = pretty (ptrName (dropPointer vecName))
+        -- Note the bracket opened here is closed after cont!
+        withPtr  = [qci|maybeWith (withVec {nonPtrAlloc}) {param} (\\{paramPtr} -> {e} {paramPtr}|]
     in  [qci|\\{param} -> {cont withPtr})|]
 
 voidVecWrap

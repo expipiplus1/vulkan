@@ -23,7 +23,8 @@ module Graphics.Vulkan.C.Core10.Sampler
   , pattern VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
   , pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
   , pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
-  , VkSamplerCreateFlags(..)
+  , VkSamplerCreateFlagBits(..)
+  , VkSamplerCreateFlags
   , VkSamplerCreateInfo(..)
   , VkSamplerMipmapMode(..)
   , pattern VK_SAMPLER_MIPMAP_MODE_NEAREST
@@ -230,27 +231,33 @@ pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = VkSamplerAddressMode 2
 -- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER"
 pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER :: VkSamplerAddressMode
 pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = VkSamplerAddressMode 3
--- ** VkSamplerCreateFlags
+-- ** VkSamplerCreateFlagBits
 
--- No documentation found for TopLevel "VkSamplerCreateFlags"
-newtype VkSamplerCreateFlags = VkSamplerCreateFlags VkFlags
+-- No documentation found for TopLevel "VkSamplerCreateFlagBits"
+newtype VkSamplerCreateFlagBits = VkSamplerCreateFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
-instance Show VkSamplerCreateFlags where
-  
-  showsPrec p (VkSamplerCreateFlags x) = showParen (p >= 11) (showString "VkSamplerCreateFlags " . showsPrec 11 x)
+instance Show VkSamplerCreateFlagBits where
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkSamplerCreateFlagBits 0x00000001) = showString "VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"
+  showsPrec _ (VkSamplerCreateFlagBits 0x00000002) = showString "VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"
+  showsPrec p (VkSamplerCreateFlagBits x) = showParen (p >= 11) (showString "VkSamplerCreateFlagBits " . showsPrec 11 x)
 
-instance Read VkSamplerCreateFlags where
-  readPrec = parens ( choose [ 
+instance Read VkSamplerCreateFlagBits where
+  readPrec = parens ( choose [ -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT",                       pure (VkSamplerCreateFlagBits 0x00000001))
+                             , ("VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT", pure (VkSamplerCreateFlagBits 0x00000002))
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkSamplerCreateFlags")
+                        expectP (Ident "VkSamplerCreateFlagBits")
                         v <- step readPrec
-                        pure (VkSamplerCreateFlags v)
+                        pure (VkSamplerCreateFlagBits v)
                         )
                     )
 
 
+-- No documentation found for TopLevel "VkSamplerCreateFlags"
+type VkSamplerCreateFlags = VkSamplerCreateFlagBits
 -- No documentation found for TopLevel "VkSamplerCreateInfo"
 data VkSamplerCreateInfo = VkSamplerCreateInfo
   { -- No documentation found for Nested "VkSamplerCreateInfo" "sType"

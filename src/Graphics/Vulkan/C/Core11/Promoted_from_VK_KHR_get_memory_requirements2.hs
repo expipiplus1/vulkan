@@ -1,15 +1,17 @@
 {-# language Strict #-}
 {-# language CPP #-}
 {-# language DuplicateRecordFields #-}
+{-# language PatternSynonyms #-}
 {-# language DataKinds #-}
 {-# language TypeOperators #-}
-{-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
   ( VkBufferMemoryRequirementsInfo2(..)
   , VkImageMemoryRequirementsInfo2(..)
   , VkImageSparseMemoryRequirementsInfo2(..)
   , VkMemoryRequirements2(..)
+  , VkMemoryRequirements2KHR
+  , pattern VkMemoryRequirements2KHR
   , VkSparseImageMemoryRequirements2(..)
 #if defined(EXPOSE_CORE11_COMMANDS)
   , vkGetBufferMemoryRequirements2
@@ -146,6 +148,13 @@ instance Storable VkMemoryRequirements2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryRequirements2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryRequirements2))
                 *> poke (ptr `plusPtr` 16) (vkMemoryRequirements (poked :: VkMemoryRequirements2))
+-- No documentation found for TopLevel "VkMemoryRequirements2KHR"
+type VkMemoryRequirements2KHR = VkMemoryRequirements2
+
+
+-- No documentation found for TopLevel "VkMemoryRequirements2KHR"
+pattern VkMemoryRequirements2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("memoryRequirements" ::: VkMemoryRequirements) -> VkMemoryRequirements2KHR
+pattern VkMemoryRequirements2KHR vkSType vkPNext vkMemoryRequirements = VkMemoryRequirements2 vkSType vkPNext vkMemoryRequirements
 -- No documentation found for TopLevel "VkSparseImageMemoryRequirements2"
 data VkSparseImageMemoryRequirements2 = VkSparseImageMemoryRequirements2
   { -- No documentation found for Nested "VkSparseImageMemoryRequirements2" "sType"

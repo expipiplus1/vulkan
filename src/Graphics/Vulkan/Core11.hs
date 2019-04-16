@@ -28,6 +28,7 @@ module Graphics.Vulkan.Core11
   , module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
   , module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3
   , module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_shader_draw_parameters
+  , module Graphics.Vulkan.Core11.Version
   ) where
 
 
@@ -56,6 +57,7 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_shader_draw_parameters
+import Graphics.Vulkan.Core11.Version
 
 
 

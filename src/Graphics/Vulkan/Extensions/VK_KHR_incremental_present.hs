@@ -1,174 +1,121 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
 {-# language DuplicateRecordFields #-}
+{-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Extensions.VK_KHR_incremental_present
-  ( pattern VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR
+  ( withCStructPresentRegionKHR
+  , fromCStructPresentRegionKHR
+  , PresentRegionKHR(..)
+  , withCStructPresentRegionsKHR
+  , fromCStructPresentRegionsKHR
+  , PresentRegionsKHR(..)
+  , withCStructRectLayerKHR
+  , fromCStructRectLayerKHR
+  , RectLayerKHR(..)
   , pattern VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION
   , pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME
-  , VkPresentRegionsKHR(..)
-  , VkPresentRegionKHR(..)
-  , VkRectLayerKHR(..)
+  , pattern VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR
   ) where
 
-import Data.String
-  ( IsString
+import Control.Monad
+  ( (<=<)
+  )
+import Data.Maybe
+  ( maybe
+  )
+import Data.Vector
+  ( Vector
+  )
+import qualified Data.Vector
+  ( generateM
+  , length
   )
 import Data.Word
   ( Word32
   )
+import Foreign.Marshal.Utils
+  ( maybePeek
+  , maybeWith
+  )
 import Foreign.Ptr
-  ( Ptr
-  , plusPtr
+  ( castPtr
   )
 import Foreign.Storable
-  ( Storable
-  , Storable(..)
+  ( peekElemOff
   )
 
 
-import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
+import Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present
+  ( VkPresentRegionKHR(..)
+  , VkPresentRegionsKHR(..)
+  , VkRectLayerKHR(..)
+  , pattern VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR
   )
 import Graphics.Vulkan.Core10.Pipeline
-  ( VkExtent2D(..)
-  , VkOffset2D(..)
+  ( Extent2D(..)
+  , Offset2D(..)
+  , fromCStructExtent2D
+  , fromCStructOffset2D
+  , withCStructExtent2D
+  , withCStructOffset2D
+  )
+import Graphics.Vulkan.Marshal.Utils
+  ( withVec
+  )
+import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
+  ( SomeVkStruct
+  , peekVkStruct
+  , withSomeVkStruct
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present
+  ( pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME
+  , pattern VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION
   )
 
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR"
-pattern VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR :: VkStructureType
-pattern VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR = VkStructureType 1000084000
--- No documentation found for TopLevel "VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION"
-pattern VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION :: Integral a => a
-pattern VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION = 1
--- No documentation found for TopLevel "VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME"
-pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME = "VK_KHR_incremental_present"
--- | VkPresentRegionsKHR - Structure hint of rectangular regions changed by
--- vkQueuePresentKHR
---
--- == Valid Usage
---
--- -   @swapchainCount@ /must/ be the same value as
---     @VkPresentInfoKHR@::@swapchainCount@, where @VkPresentInfoKHR@ is in
---     the pNext-chain of this @VkPresentRegionsKHR@ structure.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR@
---
--- -   If @pRegions@ is not @NULL@, @pRegions@ /must/ be a valid pointer to
---     an array of @swapchainCount@ valid @VkPresentRegionKHR@ structures
---
--- -   @swapchainCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'VkPresentRegionKHR', 'Graphics.Vulkan.Core10.Core.VkStructureType'
-data VkPresentRegionsKHR = VkPresentRegionsKHR
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @swapchainCount@ is the number of swapchains being presented to by this
-  -- command.
-  vkSwapchainCount :: Word32
-  , -- | @pRegions@ is @NULL@ or a pointer to an array of @VkPresentRegionKHR@
-  -- elements with @swapchainCount@ entries. If not @NULL@, each element of
-  -- @pRegions@ contains the region that has changed since the last present
-  -- to the swapchain in the corresponding entry in the
-  -- @VkPresentInfoKHR@::@pSwapchains@ array.
-  vkPRegions :: Ptr VkPresentRegionKHR
+-- No documentation found for TopLevel "PresentRegionKHR"
+data PresentRegionKHR = PresentRegionKHR
+  { -- Optional length valued member elided
+  -- No documentation found for Nested "PresentRegionKHR" "pRectangles"
+  vkPRectangles :: Maybe (Vector RectLayerKHR)
   }
-  deriving (Eq, Show)
-
-instance Storable VkPresentRegionsKHR where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek ptr = VkPresentRegionsKHR <$> peek (ptr `plusPtr` 0)
-                                 <*> peek (ptr `plusPtr` 8)
-                                 <*> peek (ptr `plusPtr` 16)
-                                 <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPresentRegionsKHR))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPresentRegionsKHR))
-                *> poke (ptr `plusPtr` 16) (vkSwapchainCount (poked :: VkPresentRegionsKHR))
-                *> poke (ptr `plusPtr` 24) (vkPRegions (poked :: VkPresentRegionsKHR))
--- | VkPresentRegionKHR - Structure containing rectangular region changed by
--- vkQueuePresentKHR for a given VkImage
---
--- == Valid Usage (Implicit)
---
--- -   If @rectangleCount@ is not @0@, and @pRectangles@ is not @NULL@,
---     @pRectangles@ /must/ be a valid pointer to an array of
---     @rectangleCount@ @VkRectLayerKHR@ structures
---
--- = See Also
---
--- 'VkPresentRegionsKHR', 'VkRectLayerKHR'
-data VkPresentRegionKHR = VkPresentRegionKHR
-  { -- | @rectangleCount@ is the number of rectangles in @pRectangles@, or zero
-  -- if the entire image has changed and should be presented.
-  vkRectangleCount :: Word32
-  , -- | @pRectangles@ is either @NULL@ or a pointer to an array of
-  -- @VkRectLayerKHR@ structures. The @VkRectLayerKHR@ structure is the
-  -- framebuffer coordinates, plus layer, of a portion of a presentable image
-  -- that has changed and /must/ be presented. If non-@NULL@, each entry in
-  -- @pRectangles@ is a rectangle of the given image that has changed since
-  -- the last image was presented to the given swapchain.
-  vkPRectangles :: Ptr VkRectLayerKHR
+  deriving (Show, Eq)
+withCStructPresentRegionKHR :: PresentRegionKHR -> (VkPresentRegionKHR -> IO a) -> IO a
+withCStructPresentRegionKHR from cont = maybeWith (withVec withCStructRectLayerKHR) (vkPRectangles (from :: PresentRegionKHR)) (\pRectangles -> cont (VkPresentRegionKHR (maybe 0 (fromIntegral . Data.Vector.length) (vkPRectangles (from :: PresentRegionKHR))) pRectangles))
+fromCStructPresentRegionKHR :: VkPresentRegionKHR -> IO PresentRegionKHR
+fromCStructPresentRegionKHR c = PresentRegionKHR <$> -- Optional length valued member elided
+                                                 maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkRectangleCount (c :: VkPresentRegionKHR))) (((fromCStructRectLayerKHR <=<) . peekElemOff) p)) (vkPRectangles (c :: VkPresentRegionKHR))
+-- No documentation found for TopLevel "PresentRegionsKHR"
+data PresentRegionsKHR = PresentRegionsKHR
+  { -- Univalued Member elided
+  -- No documentation found for Nested "PresentRegionsKHR" "pNext"
+  vkPNext :: Maybe SomeVkStruct
+  -- Optional length valued member elided
+  , -- No documentation found for Nested "PresentRegionsKHR" "pRegions"
+  vkPRegions :: Maybe (Vector PresentRegionKHR)
   }
-  deriving (Eq, Show)
-
-instance Storable VkPresentRegionKHR where
-  sizeOf ~_ = 16
-  alignment ~_ = 8
-  peek ptr = VkPresentRegionKHR <$> peek (ptr `plusPtr` 0)
-                                <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkRectangleCount (poked :: VkPresentRegionKHR))
-                *> poke (ptr `plusPtr` 8) (vkPRectangles (poked :: VkPresentRegionKHR))
--- | VkRectLayerKHR - Structure containing a rectangle, including layer,
--- changed by vkQueuePresentKHR for a given VkImage
---
--- == Valid Usage
---
--- -   The sum of @offset@ and @extent@ /must/ be no greater than the
---     @imageExtent@ member of the @VkSwapchainCreateInfoKHR@ structure
---     given to
---     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
---
--- -   @layer@ /must/ be less than @imageArrayLayers@ member of the
---     @VkSwapchainCreateInfoKHR@ structure given to
---     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
---
--- Some platforms allow the size of a surface to change, and then scale the
--- pixels of the image to fit the surface. @VkRectLayerKHR@ specifies
--- pixels of the swapchain’s image(s), which will be constant for the life
--- of the swapchain.
---
--- = See Also
---
--- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
--- 'Graphics.Vulkan.Core10.Pipeline.VkOffset2D', 'VkPresentRegionKHR'
-data VkRectLayerKHR = VkRectLayerKHR
-  { -- | @offset@ is the origin of the rectangle, in pixels.
-  vkOffset :: VkOffset2D
-  , -- | @extent@ is the size of the rectangle, in pixels.
-  vkExtent :: VkExtent2D
-  , -- | @layer@ is the layer of the image. For images with only one layer, the
-  -- value of @layer@ /must/ be 0.
+  deriving (Show, Eq)
+withCStructPresentRegionsKHR :: PresentRegionsKHR -> (VkPresentRegionsKHR -> IO a) -> IO a
+withCStructPresentRegionsKHR from cont = maybeWith (withVec withCStructPresentRegionKHR) (vkPRegions (from :: PresentRegionsKHR)) (\pRegions -> maybeWith withSomeVkStruct (vkPNext (from :: PresentRegionsKHR)) (\pPNext -> cont (VkPresentRegionsKHR VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR pPNext (maybe 0 (fromIntegral . Data.Vector.length) (vkPRegions (from :: PresentRegionsKHR))) pRegions)))
+fromCStructPresentRegionsKHR :: VkPresentRegionsKHR -> IO PresentRegionsKHR
+fromCStructPresentRegionsKHR c = PresentRegionsKHR <$> -- Univalued Member elided
+                                                   maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPresentRegionsKHR)))
+                                                   -- Optional length valued member elided
+                                                   <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkSwapchainCount (c :: VkPresentRegionsKHR))) (((fromCStructPresentRegionKHR <=<) . peekElemOff) p)) (vkPRegions (c :: VkPresentRegionsKHR))
+-- No documentation found for TopLevel "RectLayerKHR"
+data RectLayerKHR = RectLayerKHR
+  { -- No documentation found for Nested "RectLayerKHR" "offset"
+  vkOffset :: Offset2D
+  , -- No documentation found for Nested "RectLayerKHR" "extent"
+  vkExtent :: Extent2D
+  , -- No documentation found for Nested "RectLayerKHR" "layer"
   vkLayer :: Word32
   }
-  deriving (Eq, Show)
-
-instance Storable VkRectLayerKHR where
-  sizeOf ~_ = 20
-  alignment ~_ = 4
-  peek ptr = VkRectLayerKHR <$> peek (ptr `plusPtr` 0)
-                            <*> peek (ptr `plusPtr` 8)
-                            <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkOffset (poked :: VkRectLayerKHR))
-                *> poke (ptr `plusPtr` 8) (vkExtent (poked :: VkRectLayerKHR))
-                *> poke (ptr `plusPtr` 16) (vkLayer (poked :: VkRectLayerKHR))
+  deriving (Show, Eq)
+withCStructRectLayerKHR :: RectLayerKHR -> (VkRectLayerKHR -> IO a) -> IO a
+withCStructRectLayerKHR from cont = withCStructExtent2D (vkExtent (from :: RectLayerKHR)) (\extent -> withCStructOffset2D (vkOffset (from :: RectLayerKHR)) (\offset -> cont (VkRectLayerKHR offset extent (vkLayer (from :: RectLayerKHR)))))
+fromCStructRectLayerKHR :: VkRectLayerKHR -> IO RectLayerKHR
+fromCStructRectLayerKHR c = RectLayerKHR <$> (fromCStructOffset2D (vkOffset (c :: VkRectLayerKHR)))
+                                         <*> (fromCStructExtent2D (vkExtent (c :: VkRectLayerKHR)))
+                                         <*> pure (vkLayer (c :: VkRectLayerKHR))

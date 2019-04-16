@@ -811,11 +811,15 @@ newtype VkIndexType = VkIndexType Int32
 instance Show VkIndexType where
   showsPrec _ VK_INDEX_TYPE_UINT16 = showString "VK_INDEX_TYPE_UINT16"
   showsPrec _ VK_INDEX_TYPE_UINT32 = showString "VK_INDEX_TYPE_UINT32"
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkIndexType 1000165000) = showString "VK_INDEX_TYPE_NONE_NV"
   showsPrec p (VkIndexType x) = showParen (p >= 11) (showString "VkIndexType " . showsPrec 11 x)
 
 instance Read VkIndexType where
   readPrec = parens ( choose [ ("VK_INDEX_TYPE_UINT16", pure VK_INDEX_TYPE_UINT16)
                              , ("VK_INDEX_TYPE_UINT32", pure VK_INDEX_TYPE_UINT32)
+                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_INDEX_TYPE_NONE_NV", pure (VkIndexType 1000165000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkIndexType")

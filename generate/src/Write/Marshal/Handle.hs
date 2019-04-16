@@ -19,6 +19,7 @@ import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
+import           Spec.Savvy.Command
 
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE

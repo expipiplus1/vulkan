@@ -133,7 +133,17 @@ instance Show VkPipelineStageFlagBits where
   showsPrec _ VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = showString "VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT"
   showsPrec _ VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = showString "VK_PIPELINE_STAGE_ALL_COMMANDS_BIT"
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkPipelineStageFlagBits 0x08000000) = showString "VK_PIPELINE_STAGE_RESERVED_27_BIT_KHR"
+  showsPrec _ (VkPipelineStageFlagBits 0x04000000) = showString "VK_PIPELINE_STAGE_RESERVED_26_BIT_KHR"
+  showsPrec _ (VkPipelineStageFlagBits 0x01000000) = showString "VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT"
+  showsPrec _ (VkPipelineStageFlagBits 0x00040000) = showString "VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT"
   showsPrec _ (VkPipelineStageFlagBits 0x00020000) = showString "VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX"
+  showsPrec _ (VkPipelineStageFlagBits 0x00400000) = showString "VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV"
+  showsPrec _ (VkPipelineStageFlagBits 0x00200000) = showString "VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV"
+  showsPrec _ (VkPipelineStageFlagBits 0x02000000) = showString "VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV"
+  showsPrec _ (VkPipelineStageFlagBits 0x00080000) = showString "VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV"
+  showsPrec _ (VkPipelineStageFlagBits 0x00100000) = showString "VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV"
+  showsPrec _ (VkPipelineStageFlagBits 0x00800000) = showString "VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT"
   showsPrec p (VkPipelineStageFlagBits x) = showParen (p >= 11) (showString "VkPipelineStageFlagBits " . showsPrec 11 x)
 
 instance Read VkPipelineStageFlagBits where
@@ -155,7 +165,17 @@ instance Read VkPipelineStageFlagBits where
                              , ("VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT",                   pure VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT)
                              , ("VK_PIPELINE_STAGE_ALL_COMMANDS_BIT",                   pure VK_PIPELINE_STAGE_ALL_COMMANDS_BIT)
                              , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX", pure (VkPipelineStageFlagBits 0x00020000))
+                               ("VK_PIPELINE_STAGE_RESERVED_27_BIT_KHR",                 pure (VkPipelineStageFlagBits 0x08000000))
+                             , ("VK_PIPELINE_STAGE_RESERVED_26_BIT_KHR",                 pure (VkPipelineStageFlagBits 0x04000000))
+                             , ("VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT",          pure (VkPipelineStageFlagBits 0x01000000))
+                             , ("VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT",       pure (VkPipelineStageFlagBits 0x00040000))
+                             , ("VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX",             pure (VkPipelineStageFlagBits 0x00020000))
+                             , ("VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV",           pure (VkPipelineStageFlagBits 0x00400000))
+                             , ("VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV",           pure (VkPipelineStageFlagBits 0x00200000))
+                             , ("VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV", pure (VkPipelineStageFlagBits 0x02000000))
+                             , ("VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV",                  pure (VkPipelineStageFlagBits 0x00080000))
+                             , ("VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV",                  pure (VkPipelineStageFlagBits 0x00100000))
+                             , ("VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT",    pure (VkPipelineStageFlagBits 0x00800000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkPipelineStageFlagBits")

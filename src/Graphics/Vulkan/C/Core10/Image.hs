@@ -188,6 +188,8 @@ instance Show VkImageLayout where
   showsPrec _ (VkImageLayout 1000117001) = showString "VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL"
   showsPrec _ (VkImageLayout 1000001002) = showString "VK_IMAGE_LAYOUT_PRESENT_SRC_KHR"
   showsPrec _ (VkImageLayout 1000111000) = showString "VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR"
+  showsPrec _ (VkImageLayout 1000164003) = showString "VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV"
+  showsPrec _ (VkImageLayout 1000218000) = showString "VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT"
   showsPrec p (VkImageLayout x) = showParen (p >= 11) (showString "VkImageLayout " . showsPrec 11 x)
 
 instance Read VkImageLayout where
@@ -205,6 +207,8 @@ instance Read VkImageLayout where
                              , ("VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL", pure (VkImageLayout 1000117001))
                              , ("VK_IMAGE_LAYOUT_PRESENT_SRC_KHR",                            pure (VkImageLayout 1000001002))
                              , ("VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR",                         pure (VkImageLayout 1000111000))
+                             , ("VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV",                    pure (VkImageLayout 1000164003))
+                             , ("VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT",           pure (VkImageLayout 1000218000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkImageLayout")

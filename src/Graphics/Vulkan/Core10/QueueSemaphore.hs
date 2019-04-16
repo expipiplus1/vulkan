@@ -1,239 +1,91 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
 {-# language PatternSynonyms #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
 {-# language DuplicateRecordFields #-}
 
 module Graphics.Vulkan.Core10.QueueSemaphore
-  ( VkSemaphoreCreateFlags(..)
-  , vkCreateSemaphore
-  , vkDestroySemaphore
-  , VkSemaphoreCreateInfo(..)
+  ( SemaphoreCreateFlags
+  , withCStructSemaphoreCreateInfo
+  , fromCStructSemaphoreCreateInfo
+  , SemaphoreCreateInfo(..)
+  , createSemaphore
+  , destroySemaphore
   ) where
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
+import Control.Exception
+  ( throwIO
+  )
+import Control.Monad
+  ( when
+  )
+import Foreign.Marshal.Alloc
+  ( alloca
+  )
+import Foreign.Marshal.Utils
+  ( maybePeek
+  , maybeWith
+  , with
   )
 import Foreign.Ptr
-  ( Ptr
-  , plusPtr
+  ( castPtr
   )
 import Foreign.Storable
-  ( Storable
-  , Storable(..)
+  ( peek
   )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
+import qualified Graphics.Vulkan.C.Dynamic
+  ( createSemaphore
+  , destroySemaphore
   )
 
 
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
+import Graphics.Vulkan.C.Core10.Core
+  ( pattern VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
+  , pattern VK_SUCCESS
+  )
+import Graphics.Vulkan.C.Core10.QueueSemaphore
+  ( VkSemaphoreCreateFlags(..)
+  , VkSemaphoreCreateInfo(..)
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkAllocationCallbacks(..)
-  , VkDevice
+  ( AllocationCallbacks(..)
+  , Device(..)
+  , withCStructAllocationCallbacks
   )
 import Graphics.Vulkan.Core10.Queue
-  ( VkSemaphore
+  ( Semaphore
+  )
+import Graphics.Vulkan.Exception
+  ( VulkanException(..)
+  )
+import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
+  ( SomeVkStruct
+  , peekVkStruct
+  , withSomeVkStruct
   )
 
 
--- ** VkSemaphoreCreateFlags
-
--- | VkSemaphoreCreateFlags - Reserved for future use
---
--- = Description
---
--- @VkSemaphoreCreateFlags@ is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'VkSemaphoreCreateInfo'
-newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkSemaphoreCreateFlags where
-  
-  showsPrec p (VkSemaphoreCreateFlags x) = showParen (p >= 11) (showString "VkSemaphoreCreateFlags " . showsPrec 11 x)
-
-instance Read VkSemaphoreCreateFlags where
-  readPrec = parens ( choose [ 
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkSemaphoreCreateFlags")
-                        v <- step readPrec
-                        pure (VkSemaphoreCreateFlags v)
-                        )
-                    )
-
-
--- | vkCreateSemaphore - Create a new queue semaphore object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the semaphore.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     @VkSemaphoreCreateInfo@ structure which contains information about
---     how the semaphore is to be created.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
---     chapter.
---
--- -   @pSemaphore@ points to a handle in which the resulting semaphore
---     object is returned.
---
--- = Description
---
--- When created, the semaphore is in the unsignaled state.
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkSemaphoreCreateInfo@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pSemaphore@ /must/ be a valid pointer to a @VkSemaphore@ handle
---
--- == Return Codes
---
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
---
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
--- = See Also
---
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.Core10.Queue.VkSemaphore', 'VkSemaphoreCreateInfo'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkCreateSemaphore" vkCreateSemaphore :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSemaphoreCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSemaphore" ::: Ptr VkSemaphore) -> IO VkResult
--- | vkDestroySemaphore - Destroy a semaphore object
---
--- = Parameters
---
--- -   @device@ is the logical device that destroys the semaphore.
---
--- -   @semaphore@ is the handle of the semaphore to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
---     chapter.
---
--- == Valid Usage
---
--- -   All submitted batches that refer to @semaphore@ /must/ have
---     completed execution
---
--- -   If @VkAllocationCallbacks@ were provided when @semaphore@ was
---     created, a compatible set of callbacks /must/ be provided here
---
--- -   If no @VkAllocationCallbacks@ were provided when @semaphore@ was
---     created, @pAllocator@ /must/ be @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   If @semaphore@ is not
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', @semaphore@
---     /must/ be a valid @VkSemaphore@ handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   If @semaphore@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @semaphore@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.Core10.Queue.VkSemaphore'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkDestroySemaphore" vkDestroySemaphore :: ("device" ::: VkDevice) -> ("semaphore" ::: VkSemaphore) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
--- | VkSemaphoreCreateInfo - Structure specifying parameters of a newly
--- created semaphore
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO@
---
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore.VkExportSemaphoreCreateInfo'
---     or
---     'Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32.VkExportSemaphoreWin32HandleInfoKHR'
---
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
---
--- -   @flags@ /must/ be @0@
---
--- = See Also
---
--- 'VkSemaphoreCreateFlags', 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkCreateSemaphore'
-data VkSemaphoreCreateInfo = VkSemaphoreCreateInfo
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
-  vkFlags :: VkSemaphoreCreateFlags
+-- No documentation found for TopLevel "SemaphoreCreateFlags"
+type SemaphoreCreateFlags = VkSemaphoreCreateFlags
+-- No documentation found for TopLevel "SemaphoreCreateInfo"
+data SemaphoreCreateInfo = SemaphoreCreateInfo
+  { -- Univalued Member elided
+  -- No documentation found for Nested "SemaphoreCreateInfo" "pNext"
+  vkPNext :: Maybe SomeVkStruct
+  , -- No documentation found for Nested "SemaphoreCreateInfo" "flags"
+  vkFlags :: SemaphoreCreateFlags
   }
-  deriving (Eq, Show)
+  deriving (Show, Eq)
+withCStructSemaphoreCreateInfo :: SemaphoreCreateInfo -> (VkSemaphoreCreateInfo -> IO a) -> IO a
+withCStructSemaphoreCreateInfo from cont = maybeWith withSomeVkStruct (vkPNext (from :: SemaphoreCreateInfo)) (\pPNext -> cont (VkSemaphoreCreateInfo VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO pPNext (vkFlags (from :: SemaphoreCreateInfo))))
+fromCStructSemaphoreCreateInfo :: VkSemaphoreCreateInfo -> IO SemaphoreCreateInfo
+fromCStructSemaphoreCreateInfo c = SemaphoreCreateInfo <$> -- Univalued Member elided
+                                                       maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSemaphoreCreateInfo)))
+                                                       <*> pure (vkFlags (c :: VkSemaphoreCreateInfo))
 
-instance Storable VkSemaphoreCreateInfo where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek ptr = VkSemaphoreCreateInfo <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 8)
-                                   <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSemaphoreCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSemaphoreCreateInfo))
+-- | Wrapper for vkCreateSemaphore
+createSemaphore :: Device ->  SemaphoreCreateInfo ->  Maybe AllocationCallbacks ->  IO (Semaphore)
+createSemaphore = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pSemaphore -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructSemaphoreCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createSemaphore commandTable device pCreateInfo pAllocator pSemaphore >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSemaphore)))))
+
+-- | Wrapper for vkDestroySemaphore
+destroySemaphore :: Device ->  Semaphore ->  Maybe AllocationCallbacks ->  IO ()
+destroySemaphore = \(Device device commandTable) -> \semaphore -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySemaphore commandTable device semaphore pAllocator *> (pure ()))

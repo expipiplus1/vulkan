@@ -1,10 +1,15 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
 {-# language PatternSynonyms #-}
+{-# language DataKinds #-}
+{-# language TypeOperators #-}
+{-# language DuplicateRecordFields #-}
 
 module Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers
-  ( VkPhysicalDeviceVariablePointerFeatures(..)
+  ( VkPhysicalDeviceVariablePointerFeatures
+  , pattern VkPhysicalDeviceVariablePointerFeatures
+  , VkPhysicalDeviceVariablePointersFeatures(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES
   ) where
 
@@ -22,32 +27,45 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
   )
+import Graphics.Vulkan.NamedType
+  ( (:::)
+  )
 
 
 -- No documentation found for TopLevel "VkPhysicalDeviceVariablePointerFeatures"
-data VkPhysicalDeviceVariablePointerFeatures = VkPhysicalDeviceVariablePointerFeatures
-  { -- No documentation found for Nested "VkPhysicalDeviceVariablePointerFeatures" "sType"
+type VkPhysicalDeviceVariablePointerFeatures = VkPhysicalDeviceVariablePointersFeatures
+
+
+-- No documentation found for TopLevel "VkPhysicalDeviceVariablePointerFeatures"
+pattern VkPhysicalDeviceVariablePointerFeatures :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("variablePointersStorageBuffer" ::: VkBool32) -> ("variablePointers" ::: VkBool32) -> VkPhysicalDeviceVariablePointerFeatures
+pattern VkPhysicalDeviceVariablePointerFeatures vkSType vkPNext vkVariablePointersStorageBuffer vkVariablePointers = VkPhysicalDeviceVariablePointersFeatures vkSType vkPNext vkVariablePointersStorageBuffer vkVariablePointers
+-- No documentation found for TopLevel "VkPhysicalDeviceVariablePointersFeatures"
+data VkPhysicalDeviceVariablePointersFeatures = VkPhysicalDeviceVariablePointersFeatures
+  { -- No documentation found for Nested "VkPhysicalDeviceVariablePointersFeatures" "sType"
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceVariablePointerFeatures" "pNext"
+  , -- No documentation found for Nested "VkPhysicalDeviceVariablePointersFeatures" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceVariablePointerFeatures" "variablePointersStorageBuffer"
+  , -- No documentation found for Nested "VkPhysicalDeviceVariablePointersFeatures" "variablePointersStorageBuffer"
   vkVariablePointersStorageBuffer :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceVariablePointerFeatures" "variablePointers"
+  , -- No documentation found for Nested "VkPhysicalDeviceVariablePointersFeatures" "variablePointers"
   vkVariablePointers :: VkBool32
   }
   deriving (Eq, Show)
 
-instance Storable VkPhysicalDeviceVariablePointerFeatures where
+instance Storable VkPhysicalDeviceVariablePointersFeatures where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkPhysicalDeviceVariablePointerFeatures <$> peek (ptr `plusPtr` 0)
-                                                     <*> peek (ptr `plusPtr` 8)
-                                                     <*> peek (ptr `plusPtr` 16)
-                                                     <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceVariablePointerFeatures))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceVariablePointerFeatures))
-                *> poke (ptr `plusPtr` 16) (vkVariablePointersStorageBuffer (poked :: VkPhysicalDeviceVariablePointerFeatures))
-                *> poke (ptr `plusPtr` 20) (vkVariablePointers (poked :: VkPhysicalDeviceVariablePointerFeatures))
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES"
+  peek ptr = VkPhysicalDeviceVariablePointersFeatures <$> peek (ptr `plusPtr` 0)
+                                                      <*> peek (ptr `plusPtr` 8)
+                                                      <*> peek (ptr `plusPtr` 16)
+                                                      <*> peek (ptr `plusPtr` 20)
+  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceVariablePointersFeatures))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceVariablePointersFeatures))
+                *> poke (ptr `plusPtr` 16) (vkVariablePointersStorageBuffer (poked :: VkPhysicalDeviceVariablePointersFeatures))
+                *> poke (ptr `plusPtr` 20) (vkVariablePointers (poked :: VkPhysicalDeviceVariablePointersFeatures))
+-- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES"
+pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES :: VkStructureType
+pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES = VkStructureType 1000120000
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES :: VkStructureType
-pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = VkStructureType 1000120000
+pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES

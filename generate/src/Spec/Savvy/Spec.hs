@@ -4,6 +4,7 @@
 module Spec.Savvy.Spec
   ( Spec(..)
   , spec
+  , getAlias1
   ) where
 
 import           Control.Applicative

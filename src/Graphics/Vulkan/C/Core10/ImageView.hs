@@ -18,7 +18,8 @@ module Graphics.Vulkan.C.Core10.ImageView
   , pattern VK_COMPONENT_SWIZZLE_A
   , VkImageSubresourceRange(..)
   , VkImageView
-  , VkImageViewCreateFlags(..)
+  , VkImageViewCreateFlagBits(..)
+  , VkImageViewCreateFlags
   , VkImageViewCreateInfo(..)
   , VkImageViewType(..)
   , pattern VK_IMAGE_VIEW_TYPE_1D
@@ -213,27 +214,31 @@ instance Storable VkImageSubresourceRange where
 data VkImageView_T
 -- No documentation found for TopLevel "VkImageView"
 type VkImageView = Ptr VkImageView_T
--- ** VkImageViewCreateFlags
+-- ** VkImageViewCreateFlagBits
 
--- No documentation found for TopLevel "VkImageViewCreateFlags"
-newtype VkImageViewCreateFlags = VkImageViewCreateFlags VkFlags
+-- No documentation found for TopLevel "VkImageViewCreateFlagBits"
+newtype VkImageViewCreateFlagBits = VkImageViewCreateFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits)
 
-instance Show VkImageViewCreateFlags where
-  
-  showsPrec p (VkImageViewCreateFlags x) = showParen (p >= 11) (showString "VkImageViewCreateFlags " . showsPrec 11 x)
+instance Show VkImageViewCreateFlagBits where
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkImageViewCreateFlagBits 0x00000001) = showString "VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT"
+  showsPrec p (VkImageViewCreateFlagBits x) = showParen (p >= 11) (showString "VkImageViewCreateFlagBits " . showsPrec 11 x)
 
-instance Read VkImageViewCreateFlags where
-  readPrec = parens ( choose [ 
+instance Read VkImageViewCreateFlagBits where
+  readPrec = parens ( choose [ -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT", pure (VkImageViewCreateFlagBits 0x00000001))
                              ] +++
                       prec 10 (do
-                        expectP (Ident "VkImageViewCreateFlags")
+                        expectP (Ident "VkImageViewCreateFlagBits")
                         v <- step readPrec
-                        pure (VkImageViewCreateFlags v)
+                        pure (VkImageViewCreateFlagBits v)
                         )
                     )
 
 
+-- No documentation found for TopLevel "VkImageViewCreateFlags"
+type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 -- No documentation found for TopLevel "VkImageViewCreateInfo"
 data VkImageViewCreateInfo = VkImageViewCreateInfo
   { -- No documentation found for Nested "VkImageViewCreateInfo" "sType"

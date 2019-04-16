@@ -421,6 +421,7 @@ instance Show VkSwapchainCreateFlagBitsKHR where
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
   showsPrec _ (VkSwapchainCreateFlagBitsKHR 0x00000001) = showString "VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"
   showsPrec _ (VkSwapchainCreateFlagBitsKHR 0x00000002) = showString "VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR"
+  showsPrec _ (VkSwapchainCreateFlagBitsKHR 0x00000004) = showString "VK_SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR"
   showsPrec p (VkSwapchainCreateFlagBitsKHR x) = showParen (p >= 11) (showString "VkSwapchainCreateFlagBitsKHR " . showsPrec 11 x)
 
 instance Read VkSwapchainCreateFlagBitsKHR where
@@ -428,6 +429,7 @@ instance Read VkSwapchainCreateFlagBitsKHR where
                                ("VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR", pure (VkSwapchainCreateFlagBitsKHR 0x00000001))
                              , ("VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR",                   pure (VkSwapchainCreateFlagBitsKHR 0x00000002))
                              , ("VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR", pure (VkSwapchainCreateFlagBitsKHR 0x00000001))
+                             , ("VK_SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR",              pure (VkSwapchainCreateFlagBitsKHR 0x00000004))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkSwapchainCreateFlagBitsKHR")

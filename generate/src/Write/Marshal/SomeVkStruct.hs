@@ -45,7 +45,8 @@ someVkStructWriteElement
   -- ^ Get a handle by name
   -> [Platform]
   -- ^ Platform guard info
-  -> [Struct] -> Either [SpecError] WriteElement
+  -> [Struct]
+  -> Either [SpecError] WriteElement
 someVkStructWriteElement getHandle platforms structs
   = let
       containsUnion = doesStructContainUnion structs

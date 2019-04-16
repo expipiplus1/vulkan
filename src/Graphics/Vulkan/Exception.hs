@@ -40,14 +40,23 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
   ( pattern VK_ERROR_OUT_OF_POOL_MEMORY
   )
+import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
+  ( pattern VK_ERROR_INVALID_DEVICE_ADDRESS_EXT
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
   ( pattern VK_ERROR_VALIDATION_FAILED_EXT
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
   ( pattern VK_ERROR_FRAGMENTATION_EXT
   )
+import Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
+  ( pattern VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
   ( pattern VK_ERROR_NOT_PERMITTED_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
+  ( pattern VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
   ( pattern VK_ERROR_INCOMPATIBLE_DISPLAY_KHR
@@ -103,6 +112,9 @@ resultString = \case
   VK_ERROR_INCOMPATIBLE_DISPLAY_KHR -> show VK_ERROR_INCOMPATIBLE_DISPLAY_KHR
   VK_ERROR_VALIDATION_FAILED_EXT -> show VK_ERROR_VALIDATION_FAILED_EXT
   VK_ERROR_INVALID_SHADER_NV -> show VK_ERROR_INVALID_SHADER_NV
+  VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT -> show VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
   VK_ERROR_FRAGMENTATION_EXT -> show VK_ERROR_FRAGMENTATION_EXT
   VK_ERROR_NOT_PERMITTED_EXT -> show VK_ERROR_NOT_PERMITTED_EXT
+  VK_ERROR_INVALID_DEVICE_ADDRESS_EXT -> show VK_ERROR_INVALID_DEVICE_ADDRESS_EXT
+  VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT -> show VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
   r -> show r

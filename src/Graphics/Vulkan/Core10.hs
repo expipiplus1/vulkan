@@ -4,7 +4,6 @@
 
 module Graphics.Vulkan.Core10
   ( module Graphics.Vulkan.Core10.Core
-  , module Graphics.Vulkan.Core10.Version
   , module Graphics.Vulkan.Core10.Constants
   , module Graphics.Vulkan.Core10.DeviceInitialization
   , module Graphics.Vulkan.Core10.Device
@@ -32,11 +31,11 @@ module Graphics.Vulkan.Core10
   , module Graphics.Vulkan.Core10.CommandPool
   , module Graphics.Vulkan.Core10.CommandBuffer
   , module Graphics.Vulkan.Core10.CommandBufferBuilding
+  , module Graphics.Vulkan.Core10.Version
   ) where
 
 
 import Graphics.Vulkan.Core10.Core
-import Graphics.Vulkan.Core10.Version
 import Graphics.Vulkan.Core10.Constants
 import Graphics.Vulkan.Core10.DeviceInitialization
 import Graphics.Vulkan.Core10.Device
@@ -64,6 +63,7 @@ import Graphics.Vulkan.Core10.Pass
 import Graphics.Vulkan.Core10.CommandPool
 import Graphics.Vulkan.Core10.CommandBuffer
 import Graphics.Vulkan.Core10.CommandBufferBuilding
+import Graphics.Vulkan.Core10.Version
 
 
 

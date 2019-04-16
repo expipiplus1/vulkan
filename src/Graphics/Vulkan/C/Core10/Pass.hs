@@ -171,9 +171,21 @@ instance Show VkAccessFlagBits where
   showsPrec _ VK_ACCESS_MEMORY_READ_BIT = showString "VK_ACCESS_MEMORY_READ_BIT"
   showsPrec _ VK_ACCESS_MEMORY_WRITE_BIT = showString "VK_ACCESS_MEMORY_WRITE_BIT"
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkAccessFlagBits 0x40000000) = showString "VK_ACCESS_RESERVED_30_BIT_KHR"
+  showsPrec _ (VkAccessFlagBits 0x80000000) = showString "VK_ACCESS_RESERVED_31_BIT_KHR"
+  showsPrec _ (VkAccessFlagBits 0x10000000) = showString "VK_ACCESS_RESERVED_28_BIT_KHR"
+  showsPrec _ (VkAccessFlagBits 0x20000000) = showString "VK_ACCESS_RESERVED_29_BIT_KHR"
+  showsPrec _ (VkAccessFlagBits 0x02000000) = showString "VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT"
+  showsPrec _ (VkAccessFlagBits 0x04000000) = showString "VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT"
+  showsPrec _ (VkAccessFlagBits 0x08000000) = showString "VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT"
+  showsPrec _ (VkAccessFlagBits 0x00100000) = showString "VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT"
   showsPrec _ (VkAccessFlagBits 0x00020000) = showString "VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX"
   showsPrec _ (VkAccessFlagBits 0x00040000) = showString "VK_ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX"
   showsPrec _ (VkAccessFlagBits 0x00080000) = showString "VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"
+  showsPrec _ (VkAccessFlagBits 0x00800000) = showString "VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV"
+  showsPrec _ (VkAccessFlagBits 0x00200000) = showString "VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV"
+  showsPrec _ (VkAccessFlagBits 0x00400000) = showString "VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV"
+  showsPrec _ (VkAccessFlagBits 0x01000000) = showString "VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT"
   showsPrec p (VkAccessFlagBits x) = showParen (p >= 11) (showString "VkAccessFlagBits " . showsPrec 11 x)
 
 instance Read VkAccessFlagBits where
@@ -195,9 +207,21 @@ instance Read VkAccessFlagBits where
                              , ("VK_ACCESS_MEMORY_READ_BIT",                    pure VK_ACCESS_MEMORY_READ_BIT)
                              , ("VK_ACCESS_MEMORY_WRITE_BIT",                   pure VK_ACCESS_MEMORY_WRITE_BIT)
                              , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX",              pure (VkAccessFlagBits 0x00020000))
+                               ("VK_ACCESS_RESERVED_30_BIT_KHR",                       pure (VkAccessFlagBits 0x40000000))
+                             , ("VK_ACCESS_RESERVED_31_BIT_KHR",                       pure (VkAccessFlagBits 0x80000000))
+                             , ("VK_ACCESS_RESERVED_28_BIT_KHR",                       pure (VkAccessFlagBits 0x10000000))
+                             , ("VK_ACCESS_RESERVED_29_BIT_KHR",                       pure (VkAccessFlagBits 0x20000000))
+                             , ("VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT",          pure (VkAccessFlagBits 0x02000000))
+                             , ("VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT",   pure (VkAccessFlagBits 0x04000000))
+                             , ("VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT",  pure (VkAccessFlagBits 0x08000000))
+                             , ("VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT",        pure (VkAccessFlagBits 0x00100000))
+                             , ("VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX",              pure (VkAccessFlagBits 0x00020000))
                              , ("VK_ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX",             pure (VkAccessFlagBits 0x00040000))
                              , ("VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT", pure (VkAccessFlagBits 0x00080000))
+                             , ("VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV",            pure (VkAccessFlagBits 0x00800000))
+                             , ("VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV",        pure (VkAccessFlagBits 0x00200000))
+                             , ("VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV",       pure (VkAccessFlagBits 0x00400000))
+                             , ("VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT",         pure (VkAccessFlagBits 0x01000000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkAccessFlagBits")
@@ -533,11 +557,15 @@ newtype VkPipelineBindPoint = VkPipelineBindPoint Int32
 instance Show VkPipelineBindPoint where
   showsPrec _ VK_PIPELINE_BIND_POINT_GRAPHICS = showString "VK_PIPELINE_BIND_POINT_GRAPHICS"
   showsPrec _ VK_PIPELINE_BIND_POINT_COMPUTE = showString "VK_PIPELINE_BIND_POINT_COMPUTE"
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkPipelineBindPoint 1000165000) = showString "VK_PIPELINE_BIND_POINT_RAY_TRACING_NV"
   showsPrec p (VkPipelineBindPoint x) = showParen (p >= 11) (showString "VkPipelineBindPoint " . showsPrec 11 x)
 
 instance Read VkPipelineBindPoint where
   readPrec = parens ( choose [ ("VK_PIPELINE_BIND_POINT_GRAPHICS", pure VK_PIPELINE_BIND_POINT_GRAPHICS)
                              , ("VK_PIPELINE_BIND_POINT_COMPUTE",  pure VK_PIPELINE_BIND_POINT_COMPUTE)
+                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_PIPELINE_BIND_POINT_RAY_TRACING_NV", pure (VkPipelineBindPoint 1000165000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkPipelineBindPoint")
@@ -712,12 +740,16 @@ instance Show VkSubpassDescriptionFlagBits where
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
   showsPrec _ (VkSubpassDescriptionFlagBits 0x00000001) = showString "VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX"
   showsPrec _ (VkSubpassDescriptionFlagBits 0x00000002) = showString "VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX"
+  showsPrec _ (VkSubpassDescriptionFlagBits 0x00000004) = showString "VK_SUBPASS_DESCRIPTION_RESERVED_2_BIT_QCOM"
+  showsPrec _ (VkSubpassDescriptionFlagBits 0x00000008) = showString "VK_SUBPASS_DESCRIPTION_RESERVED_3_BIT_QCOM"
   showsPrec p (VkSubpassDescriptionFlagBits x) = showParen (p >= 11) (showString "VkSubpassDescriptionFlagBits " . showsPrec 11 x)
 
 instance Read VkSubpassDescriptionFlagBits where
   readPrec = parens ( choose [ -- The following values are from extensions, the patterns themselves are exported from the extension modules
                                ("VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX",      pure (VkSubpassDescriptionFlagBits 0x00000001))
                              , ("VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX", pure (VkSubpassDescriptionFlagBits 0x00000002))
+                             , ("VK_SUBPASS_DESCRIPTION_RESERVED_2_BIT_QCOM",              pure (VkSubpassDescriptionFlagBits 0x00000004))
+                             , ("VK_SUBPASS_DESCRIPTION_RESERVED_3_BIT_QCOM",              pure (VkSubpassDescriptionFlagBits 0x00000008))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkSubpassDescriptionFlagBits")

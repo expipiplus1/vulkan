@@ -1,139 +1,95 @@
 {-# language Strict #-}
 {-# language CPP #-}
 {-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
 {-# language DuplicateRecordFields #-}
 
 module Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex
-  ( pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR
+  ( withCStructWin32KeyedMutexAcquireReleaseInfoKHR
+  , fromCStructWin32KeyedMutexAcquireReleaseInfoKHR
+  , Win32KeyedMutexAcquireReleaseInfoKHR(..)
   , pattern VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION
   , pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME
-  , VkWin32KeyedMutexAcquireReleaseInfoKHR(..)
+  , pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR
   ) where
 
-import Data.String
-  ( IsString
+import Data.Function
+  ( (&)
+  )
+import Data.List
+  ( minimum
+  )
+import Data.Vector
+  ( Vector
+  )
+import qualified Data.Vector
+  ( generateM
+  , length
   )
 import Data.Word
   ( Word32
   , Word64
   )
+import Foreign.Marshal.Utils
+  ( maybePeek
+  , maybeWith
+  )
 import Foreign.Ptr
-  ( Ptr
-  , plusPtr
+  ( castPtr
   )
 import Foreign.Storable
-  ( Storable
-  , Storable(..)
+  ( peekElemOff
   )
 
 
-import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
+import Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex
+  ( VkWin32KeyedMutexAcquireReleaseInfoKHR(..)
+  , pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR
   )
 import Graphics.Vulkan.Core10.Memory
-  ( VkDeviceMemory
+  ( DeviceMemory
+  )
+import Graphics.Vulkan.Marshal.Utils
+  ( withVec
+  )
+import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
+  ( SomeVkStruct
+  , peekVkStruct
+  , withSomeVkStruct
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex
+  ( pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME
+  , pattern VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION
   )
 
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR"
-pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR :: VkStructureType
-pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR = VkStructureType 1000075000
--- No documentation found for TopLevel "VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION"
-pattern VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION :: Integral a => a
-pattern VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION = 1
--- No documentation found for TopLevel "VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME"
-pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME = "VK_KHR_win32_keyed_mutex"
--- | VkWin32KeyedMutexAcquireReleaseInfoKHR - Use the Windows keyed mutex
--- mechanism to synchronize work
---
--- == Valid Usage
---
--- -   Each member of @pAcquireSyncs@ and @pReleaseSyncs@ /must/ be a
---     device memory object imported by setting
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR'::@handleType@
---     to @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT@ or
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT@.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR@
---
--- -   If @acquireCount@ is not @0@, @pAcquireSyncs@ /must/ be a valid
---     pointer to an array of @acquireCount@ valid @VkDeviceMemory@ handles
---
--- -   If @acquireCount@ is not @0@, @pAcquireKeys@ /must/ be a valid
---     pointer to an array of @acquireCount@ @uint64_t@ values
---
--- -   If @acquireCount@ is not @0@, @pAcquireTimeouts@ /must/ be a valid
---     pointer to an array of @acquireCount@ @uint32_t@ values
---
--- -   If @releaseCount@ is not @0@, @pReleaseSyncs@ /must/ be a valid
---     pointer to an array of @releaseCount@ valid @VkDeviceMemory@ handles
---
--- -   If @releaseCount@ is not @0@, @pReleaseKeys@ /must/ be a valid
---     pointer to an array of @releaseCount@ @uint64_t@ values
---
--- -   Both of the elements of @pAcquireSyncs@, and the elements of
---     @pReleaseSyncs@ that are valid handles /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- = See Also
---
--- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType'
-data VkWin32KeyedMutexAcquireReleaseInfoKHR = VkWin32KeyedMutexAcquireReleaseInfoKHR
-  { -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "sType"
-  vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "pNext"
-  vkPNext :: Ptr ()
-  , -- | @acquireCount@ is the number of entries in the @pAcquireSyncs@,
-  -- @pAcquireKeys@, and @pAcquireTimeoutMilliseconds@ arrays.
-  vkAcquireCount :: Word32
-  , -- | @pAcquireSyncs@ is a pointer to an array of
-  -- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory' objects which were
-  -- imported from Direct3D 11 resources.
-  vkPAcquireSyncs :: Ptr VkDeviceMemory
-  , -- | @pAcquireKeys@ is a pointer to an array of mutex key values to wait for
-  -- prior to beginning the submitted work. Entries refer to the keyed mutex
-  -- associated with the corresponding entries in @pAcquireSyncs@.
-  vkPAcquireKeys :: Ptr Word64
-  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoKHR" "pAcquireTimeouts"
-  vkPAcquireTimeouts :: Ptr Word32
-  , -- | @releaseCount@ is the number of entries in the @pReleaseSyncs@ and
-  -- @pReleaseKeys@ arrays.
-  vkReleaseCount :: Word32
-  , -- | @pReleaseSyncs@ is a pointer to an array of
-  -- 'Graphics.Vulkan.Core10.Memory.VkDeviceMemory' objects which were
-  -- imported from Direct3D 11 resources.
-  vkPReleaseSyncs :: Ptr VkDeviceMemory
-  , -- | @pReleaseKeys@ is a pointer to an array of mutex key values to set when
-  -- the submitted work has completed. Entries refer to the keyed mutex
-  -- associated with the corresponding entries in @pReleaseSyncs@.
-  vkPReleaseKeys :: Ptr Word64
+-- No documentation found for TopLevel "Win32KeyedMutexAcquireReleaseInfoKHR"
+data Win32KeyedMutexAcquireReleaseInfoKHR = Win32KeyedMutexAcquireReleaseInfoKHR
+  { -- Univalued Member elided
+  -- No documentation found for Nested "Win32KeyedMutexAcquireReleaseInfoKHR" "pNext"
+  vkPNext :: Maybe SomeVkStruct
+  -- Length valued member elided
+  , -- No documentation found for Nested "Win32KeyedMutexAcquireReleaseInfoKHR" "pAcquireSyncs"
+  vkPAcquireSyncs :: Vector DeviceMemory
+  , -- No documentation found for Nested "Win32KeyedMutexAcquireReleaseInfoKHR" "pAcquireKeys"
+  vkPAcquireKeys :: Vector Word64
+  , -- No documentation found for Nested "Win32KeyedMutexAcquireReleaseInfoKHR" "pAcquireTimeouts"
+  vkPAcquireTimeouts :: Vector Word32
+  -- Length valued member elided
+  , -- No documentation found for Nested "Win32KeyedMutexAcquireReleaseInfoKHR" "pReleaseSyncs"
+  vkPReleaseSyncs :: Vector DeviceMemory
+  , -- No documentation found for Nested "Win32KeyedMutexAcquireReleaseInfoKHR" "pReleaseKeys"
+  vkPReleaseKeys :: Vector Word64
   }
-  deriving (Eq, Show)
-
-instance Storable VkWin32KeyedMutexAcquireReleaseInfoKHR where
-  sizeOf ~_ = 72
-  alignment ~_ = 8
-  peek ptr = VkWin32KeyedMutexAcquireReleaseInfoKHR <$> peek (ptr `plusPtr` 0)
-                                                    <*> peek (ptr `plusPtr` 8)
-                                                    <*> peek (ptr `plusPtr` 16)
-                                                    <*> peek (ptr `plusPtr` 24)
-                                                    <*> peek (ptr `plusPtr` 32)
-                                                    <*> peek (ptr `plusPtr` 40)
-                                                    <*> peek (ptr `plusPtr` 48)
-                                                    <*> peek (ptr `plusPtr` 56)
-                                                    <*> peek (ptr `plusPtr` 64)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 16) (vkAcquireCount (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 24) (vkPAcquireSyncs (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 32) (vkPAcquireKeys (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 40) (vkPAcquireTimeouts (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 48) (vkReleaseCount (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 56) (vkPReleaseSyncs (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
-                *> poke (ptr `plusPtr` 64) (vkPReleaseKeys (poked :: VkWin32KeyedMutexAcquireReleaseInfoKHR))
+  deriving (Show, Eq)
+withCStructWin32KeyedMutexAcquireReleaseInfoKHR :: Win32KeyedMutexAcquireReleaseInfoKHR -> (VkWin32KeyedMutexAcquireReleaseInfoKHR -> IO a) -> IO a
+withCStructWin32KeyedMutexAcquireReleaseInfoKHR from cont = withVec (&) (vkPReleaseKeys (from :: Win32KeyedMutexAcquireReleaseInfoKHR)) (\pReleaseKeys -> withVec (&) (vkPReleaseSyncs (from :: Win32KeyedMutexAcquireReleaseInfoKHR)) (\pReleaseSyncs -> withVec (&) (vkPAcquireTimeouts (from :: Win32KeyedMutexAcquireReleaseInfoKHR)) (\pAcquireTimeouts -> withVec (&) (vkPAcquireKeys (from :: Win32KeyedMutexAcquireReleaseInfoKHR)) (\pAcquireKeys -> withVec (&) (vkPAcquireSyncs (from :: Win32KeyedMutexAcquireReleaseInfoKHR)) (\pAcquireSyncs -> maybeWith withSomeVkStruct (vkPNext (from :: Win32KeyedMutexAcquireReleaseInfoKHR)) (\pPNext -> cont (VkWin32KeyedMutexAcquireReleaseInfoKHR VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR pPNext (fromIntegral (minimum ([Data.Vector.length (vkPAcquireSyncs (from :: Win32KeyedMutexAcquireReleaseInfoKHR)), Data.Vector.length (vkPAcquireKeys (from :: Win32KeyedMutexAcquireReleaseInfoKHR)), Data.Vector.length (vkPAcquireTimeouts (from :: Win32KeyedMutexAcquireReleaseInfoKHR))]))) pAcquireSyncs pAcquireKeys pAcquireTimeouts (fromIntegral (minimum ([Data.Vector.length (vkPReleaseSyncs (from :: Win32KeyedMutexAcquireReleaseInfoKHR)), Data.Vector.length (vkPReleaseKeys (from :: Win32KeyedMutexAcquireReleaseInfoKHR))]))) pReleaseSyncs pReleaseKeys)))))))
+fromCStructWin32KeyedMutexAcquireReleaseInfoKHR :: VkWin32KeyedMutexAcquireReleaseInfoKHR -> IO Win32KeyedMutexAcquireReleaseInfoKHR
+fromCStructWin32KeyedMutexAcquireReleaseInfoKHR c = Win32KeyedMutexAcquireReleaseInfoKHR <$> -- Univalued Member elided
+                                                                                         maybePeek peekVkStruct (castPtr (vkPNext (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR)))
+                                                                                         -- Length valued member elided
+                                                                                         <*> (Data.Vector.generateM (fromIntegral (vkAcquireCount (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))) (peekElemOff (vkPAcquireSyncs (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))))
+                                                                                         <*> (Data.Vector.generateM (fromIntegral (vkAcquireCount (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))) (peekElemOff (vkPAcquireKeys (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))))
+                                                                                         <*> (Data.Vector.generateM (fromIntegral (vkAcquireCount (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))) (peekElemOff (vkPAcquireTimeouts (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))))
+                                                                                         -- Length valued member elided
+                                                                                         <*> (Data.Vector.generateM (fromIntegral (vkReleaseCount (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))) (peekElemOff (vkPReleaseSyncs (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))))
+                                                                                         <*> (Data.Vector.generateM (fromIntegral (vkReleaseCount (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))) (peekElemOff (vkPReleaseKeys (c :: VkWin32KeyedMutexAcquireReleaseInfoKHR))))

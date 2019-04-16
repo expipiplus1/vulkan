@@ -468,6 +468,9 @@ instance Show VkDescriptorType where
   showsPrec _ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC = showString "VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC"
   showsPrec _ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC = showString "VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC"
   showsPrec _ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT = showString "VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT"
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkDescriptorType 1000138000) = showString "VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT"
+  showsPrec _ (VkDescriptorType 1000165000) = showString "VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV"
   showsPrec p (VkDescriptorType x) = showParen (p >= 11) (showString "VkDescriptorType " . showsPrec 11 x)
 
 instance Read VkDescriptorType where
@@ -482,6 +485,9 @@ instance Read VkDescriptorType where
                              , ("VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC", pure VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC)
                              , ("VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC", pure VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC)
                              , ("VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT",       pure VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT)
+                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT",  pure (VkDescriptorType 1000138000))
+                             , ("VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV", pure (VkDescriptorType 1000165000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkDescriptorType")

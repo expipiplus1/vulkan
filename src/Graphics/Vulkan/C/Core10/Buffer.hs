@@ -106,6 +106,7 @@ instance Show VkBufferCreateFlagBits where
   showsPrec _ VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = showString "VK_BUFFER_CREATE_SPARSE_ALIASED_BIT"
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
   showsPrec _ (VkBufferCreateFlagBits 0x00000008) = showString "VK_BUFFER_CREATE_PROTECTED_BIT"
+  showsPrec _ (VkBufferCreateFlagBits 0x00000010) = showString "VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT"
   showsPrec p (VkBufferCreateFlagBits x) = showParen (p >= 11) (showString "VkBufferCreateFlagBits " . showsPrec 11 x)
 
 instance Read VkBufferCreateFlagBits where
@@ -113,7 +114,8 @@ instance Read VkBufferCreateFlagBits where
                              , ("VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT", pure VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT)
                              , ("VK_BUFFER_CREATE_SPARSE_ALIASED_BIT",   pure VK_BUFFER_CREATE_SPARSE_ALIASED_BIT)
                              , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_BUFFER_CREATE_PROTECTED_BIT", pure (VkBufferCreateFlagBits 0x00000008))
+                               ("VK_BUFFER_CREATE_PROTECTED_BIT",                         pure (VkBufferCreateFlagBits 0x00000008))
+                             , ("VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT", pure (VkBufferCreateFlagBits 0x00000010))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkBufferCreateFlagBits")
@@ -191,6 +193,16 @@ instance Show VkBufferUsageFlagBits where
   showsPrec _ VK_BUFFER_USAGE_INDEX_BUFFER_BIT = showString "VK_BUFFER_USAGE_INDEX_BUFFER_BIT"
   showsPrec _ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = showString "VK_BUFFER_USAGE_VERTEX_BUFFER_BIT"
   showsPrec _ VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = showString "VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT"
+  -- The following values are from extensions, the patterns themselves are exported from the extension modules
+  showsPrec _ (VkBufferUsageFlagBits 0x00008000) = showString "VK_BUFFER_USAGE_RESERVED_15_BIT_KHR"
+  showsPrec _ (VkBufferUsageFlagBits 0x00010000) = showString "VK_BUFFER_USAGE_RESERVED_16_BIT_KHR"
+  showsPrec _ (VkBufferUsageFlagBits 0x00002000) = showString "VK_BUFFER_USAGE_RESERVED_13_BIT_KHR"
+  showsPrec _ (VkBufferUsageFlagBits 0x00004000) = showString "VK_BUFFER_USAGE_RESERVED_14_BIT_KHR"
+  showsPrec _ (VkBufferUsageFlagBits 0x00000800) = showString "VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT"
+  showsPrec _ (VkBufferUsageFlagBits 0x00001000) = showString "VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT"
+  showsPrec _ (VkBufferUsageFlagBits 0x00000200) = showString "VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT"
+  showsPrec _ (VkBufferUsageFlagBits 0x00000400) = showString "VK_BUFFER_USAGE_RAY_TRACING_BIT_NV"
+  showsPrec _ (VkBufferUsageFlagBits 0x00020000) = showString "VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT"
   showsPrec p (VkBufferUsageFlagBits x) = showParen (p >= 11) (showString "VkBufferUsageFlagBits " . showsPrec 11 x)
 
 instance Read VkBufferUsageFlagBits where
@@ -203,6 +215,16 @@ instance Read VkBufferUsageFlagBits where
                              , ("VK_BUFFER_USAGE_INDEX_BUFFER_BIT",         pure VK_BUFFER_USAGE_INDEX_BUFFER_BIT)
                              , ("VK_BUFFER_USAGE_VERTEX_BUFFER_BIT",        pure VK_BUFFER_USAGE_VERTEX_BUFFER_BIT)
                              , ("VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT",      pure VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT)
+                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
+                               ("VK_BUFFER_USAGE_RESERVED_15_BIT_KHR",                       pure (VkBufferUsageFlagBits 0x00008000))
+                             , ("VK_BUFFER_USAGE_RESERVED_16_BIT_KHR",                       pure (VkBufferUsageFlagBits 0x00010000))
+                             , ("VK_BUFFER_USAGE_RESERVED_13_BIT_KHR",                       pure (VkBufferUsageFlagBits 0x00002000))
+                             , ("VK_BUFFER_USAGE_RESERVED_14_BIT_KHR",                       pure (VkBufferUsageFlagBits 0x00004000))
+                             , ("VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT",         pure (VkBufferUsageFlagBits 0x00000800))
+                             , ("VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT", pure (VkBufferUsageFlagBits 0x00001000))
+                             , ("VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT",             pure (VkBufferUsageFlagBits 0x00000200))
+                             , ("VK_BUFFER_USAGE_RAY_TRACING_BIT_NV",                        pure (VkBufferUsageFlagBits 0x00000400))
+                             , ("VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT",             pure (VkBufferUsageFlagBits 0x00020000))
                              ] +++
                       prec 10 (do
                         expectP (Ident "VkBufferUsageFlagBits")

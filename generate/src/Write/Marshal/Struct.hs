@@ -703,7 +703,8 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
       | -- The length of an optional vector
         isSimpleType t
       , Just [v] <- lengthMap (smName m)
-      , Just [True] <- smIsOptional v
+      , Just opts <- smIsOptional v
+      , opts == [True] || opts == [True, False]
       -> pure $ OptionalLength (smName v)
       | -- The minimum length of some vectors and optional vectors
         isSimpleType t

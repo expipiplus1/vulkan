@@ -1,5 +1,6 @@
 {-# language Strict #-}
 {-# language CPP #-}
+{-# language DuplicateRecordFields #-}
 {-# language FunctionalDependencies #-}
 {-# language DataKinds #-}
 {-# language ExplicitNamespaces #-}
@@ -11,7 +12,6 @@
 {-# language StandaloneDeriving #-}
 {-# language TypeApplications #-}
 {-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
 {-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Marshal.SomeVkStruct
@@ -25,6 +25,8 @@ module Graphics.Vulkan.Marshal.SomeVkStruct
   , withCStructPtr
   , fromCStructPtr
   , fromCStructPtrElem
+  , VkBaseInStructure(..)
+  , VkBaseOutStructure(..)
   , peekVkStruct
   ) where
 
@@ -33,6 +35,9 @@ import Control.Applicative
   )
 import Control.Exception
   ( throwIO
+  )
+import Control.Monad
+  ( (<=<)
   )
 import Data.Type.Equality
   ( (:~:)(Refl)
@@ -45,12 +50,17 @@ import Data.Typeable
 import Foreign.Marshal.Alloc
   ( alloca
   )
+import Foreign.Marshal.Utils
+  ( with
+  )
 import Foreign.Ptr
   ( Ptr
   , castPtr
+  , plusPtr
   )
 import Foreign.Storable
   ( Storable
+  , Storable(..)
   , peek
   , peekElemOff
   , poke
@@ -442,12 +452,22 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   , pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_shader_draw_parameters
-  ( VkPhysicalDeviceShaderDrawParameterFeatures(..)
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES
+  ( VkPhysicalDeviceShaderDrawParametersFeatures(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers
-  ( VkPhysicalDeviceVariablePointerFeatures(..)
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES
+  ( VkPhysicalDeviceVariablePointersFeatures(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
+  )
+import Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr
+  ( VkDisplayNativeHdrSurfaceCapabilitiesAMD(..)
+  , VkSwapchainDisplayNativeHdrCreateInfoAMD(..)
+  , pattern VK_STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD
+  , pattern VK_STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD
+  )
+import Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior
+  ( VkDeviceMemoryOverallocationCreateInfoAMD(..)
+  , pattern VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD
   )
 import Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order
   ( VkPipelineRasterizationStateRasterizationOrderAMD(..)
@@ -482,6 +502,12 @@ import Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_
   , pattern VK_STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID
   )
 #endif
+import Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode
+  ( VkImageViewASTCDecodeModeEXT(..)
+  , VkPhysicalDeviceASTCDecodeFeaturesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced
   ( VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT(..)
   , VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT(..)
@@ -489,6 +515,26 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
+  ( VkBufferDeviceAddressCreateInfoEXT(..)
+  , VkBufferDeviceAddressInfoEXT(..)
+  , VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT
+  , pattern VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
+  ( VkCalibratedTimestampInfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering
+  ( VkCommandBufferInheritanceConditionalRenderingInfoEXT(..)
+  , VkConditionalRenderingBeginInfoEXT(..)
+  , VkPhysicalDeviceConditionalRenderingFeaturesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT
+  , pattern VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization
   ( VkPhysicalDeviceConservativeRasterizationPropertiesEXT(..)
@@ -519,6 +565,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
   , pattern VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable
+  ( VkPhysicalDeviceDepthClipEnableFeaturesEXT(..)
+  , VkPipelineRasterizationDepthClipStateCreateInfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
   ( VkDescriptorSetLayoutBindingFlagsCreateInfoEXT(..)
@@ -560,6 +612,31 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host
   , pattern VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT
   )
+import Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic
+  ( VkFilterCubicImageViewImageFormatPropertiesEXT(..)
+  , VkPhysicalDeviceImageViewImageFormatInfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map
+  ( VkPhysicalDeviceFragmentDensityMapFeaturesEXT(..)
+  , VkPhysicalDeviceFragmentDensityMapPropertiesEXT(..)
+  , VkRenderPassFragmentDensityMapCreateInfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT
+  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT
+  )
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
+  ( VkSurfaceCapabilitiesFullScreenExclusiveEXT(..)
+  , VkSurfaceFullScreenExclusiveInfoEXT(..)
+  , VkSurfaceFullScreenExclusiveWin32InfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT
+  , pattern VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT
+  , pattern VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT
+  )
+#endif
 import Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
   ( VkDeviceQueueGlobalPriorityCreateInfoEXT(..)
   , pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT
@@ -568,6 +645,59 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
   ( VkHdrMetadataEXT(..)
   , VkXYColorEXT(..)
   , pattern VK_STRUCTURE_TYPE_HDR_METADATA_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
+  ( VkPhysicalDeviceHostQueryResetFeaturesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
+  ( VkDrmFormatModifierPropertiesEXT(..)
+  , VkDrmFormatModifierPropertiesListEXT(..)
+  , VkImageDrmFormatModifierExplicitCreateInfoEXT(..)
+  , VkImageDrmFormatModifierListCreateInfoEXT(..)
+  , VkImageDrmFormatModifierPropertiesEXT(..)
+  , VkPhysicalDeviceImageDrmFormatModifierInfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT
+  , pattern VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT
+  , pattern VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT
+  , pattern VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block
+  ( VkDescriptorPoolInlineUniformBlockCreateInfoEXT(..)
+  , VkPhysicalDeviceInlineUniformBlockFeaturesEXT(..)
+  , VkPhysicalDeviceInlineUniformBlockPropertiesEXT(..)
+  , VkWriteDescriptorSetInlineUniformBlockEXT(..)
+  , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT
+  , pattern VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_memory_budget
+  ( VkPhysicalDeviceMemoryBudgetPropertiesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority
+  ( VkMemoryPriorityAllocateInfoEXT(..)
+  , VkPhysicalDeviceMemoryPriorityFeaturesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT
+  )
+
+#if defined(VK_USE_PLATFORM_METAL_EXT)
+import Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
+  ( VkMetalSurfaceCreateInfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT
+  )
+#endif
+import Graphics.Vulkan.C.Extensions.VK_EXT_pci_bus_info
+  ( VkPhysicalDevicePCIBusInfoPropertiesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback
+  ( VkPipelineCreationFeedbackCreateInfoEXT(..)
+  , VkPipelineCreationFeedbackEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
   ( VkAttachmentSampleLocationsEXT(..)
@@ -590,29 +720,80 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT
   )
+import Graphics.Vulkan.C.Extensions.VK_EXT_scalar_block_layout
+  ( VkPhysicalDeviceScalarBlockLayoutFeaturesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_separate_stencil_usage
+  ( VkImageStencilUsageCreateInfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
+  ( VkPhysicalDeviceTransformFeedbackFeaturesEXT(..)
+  , VkPhysicalDeviceTransformFeedbackPropertiesEXT(..)
+  , VkPipelineRasterizationStateStreamCreateInfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
   ( VkShaderModuleValidationCacheCreateInfoEXT(..)
   , VkValidationCacheCreateInfoEXT(..)
   , pattern VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT
   )
+import Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
+  ( VkValidationFeaturesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags
   ( VkValidationFlagsEXT(..)
   , pattern VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_vertex_attribute_divisor
-  ( VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT(..)
+  ( VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT(..)
+  , VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT(..)
   , VkPipelineVertexInputDivisorStateCreateInfoEXT(..)
   , VkVertexInputBindingDivisorDescriptionEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT
   )
+import Graphics.Vulkan.C.Extensions.VK_EXT_ycbcr_image_arrays
+  ( VkPhysicalDeviceYcbcrImageArraysFeaturesEXT(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_IMAGE_ARRAYS_FEATURES_EXT
+  )
+
+#if defined(VK_USE_PLATFORM_FUCHSIA)
+import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
+  ( VkImagePipeSurfaceCreateInfoFUCHSIA(..)
+  , pattern VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Extensions.VK_GGP_frame_token
+  ( VkPresentFrameTokenGGP(..)
+  , pattern VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
+  ( VkStreamDescriptorSurfaceCreateInfoGGP(..)
+  , pattern VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
+  )
+#endif
 import Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
   ( VkPastPresentationTimingGOOGLE(..)
   , VkPresentTimeGOOGLE(..)
   , VkPresentTimesInfoGOOGLE(..)
   , VkRefreshCycleDurationGOOGLE(..)
   , pattern VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_8bit_storage
+  ( VkPhysicalDevice8BitStorageFeaturesKHR(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR
   )
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
@@ -621,6 +802,28 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
   , pattern VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR
   )
 #endif
+import Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
+  ( VkAttachmentDescription2KHR(..)
+  , VkAttachmentReference2KHR(..)
+  , VkRenderPassCreateInfo2KHR(..)
+  , VkSubpassBeginInfoKHR(..)
+  , VkSubpassDependency2KHR(..)
+  , VkSubpassDescription2KHR(..)
+  , VkSubpassEndInfoKHR(..)
+  , pattern VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2_KHR
+  , pattern VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2_KHR
+  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2_KHR
+  , pattern VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO_KHR
+  , pattern VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2_KHR
+  , pattern VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR
+  , pattern VK_STRUCTURE_TYPE_SUBPASS_END_INFO_KHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve
+  ( VkPhysicalDeviceDepthStencilResolvePropertiesKHR(..)
+  , VkSubpassDescriptionDepthStencilResolveKHR(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR
+  , pattern VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_display
   ( VkDisplayModeCreateInfoKHR(..)
   , VkDisplayModeParametersKHR(..)
@@ -635,6 +838,11 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_display
 import Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
   ( VkDisplayPresentInfoKHR(..)
   , pattern VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties
+  ( VkConformanceVersionKHR(..)
+  , VkPhysicalDeviceDriverPropertiesKHR(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd
   ( VkFenceGetFdInfoKHR(..)
@@ -693,6 +901,18 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32
   , pattern VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR
   )
 #endif
+import Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2
+  ( VkDisplayModeProperties2KHR(..)
+  , VkDisplayPlaneCapabilities2KHR(..)
+  , VkDisplayPlaneInfo2KHR(..)
+  , VkDisplayPlaneProperties2KHR(..)
+  , VkDisplayProperties2KHR(..)
+  , pattern VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR
+  , pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR
+  , pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR
+  , pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR
+  , pattern VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
   ( VkPhysicalDeviceSurfaceInfo2KHR(..)
   , VkSurfaceCapabilities2KHR(..)
@@ -711,16 +931,21 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present
   , VkRectLayerKHR(..)
   , pattern VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR
   )
-
-#if defined(VK_USE_PLATFORM_MIR_KHR)
-import Graphics.Vulkan.C.Extensions.VK_KHR_mir_surface
-  ( VkMirSurfaceCreateInfoKHR(..)
-  , pattern VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR
-  )
-#endif
 import Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
   ( VkPhysicalDevicePushDescriptorPropertiesKHR(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_shader_atomic_int64
+  ( VkPhysicalDeviceShaderAtomicInt64FeaturesKHR(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float16_int8
+  ( VkPhysicalDeviceFloat16Int8FeaturesKHR(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls
+  ( VkPhysicalDeviceFloatControlsPropertiesKHR(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
   ( VkSharedPresentSurfaceCapabilitiesKHR(..)
@@ -729,6 +954,10 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface
   ( VkSurfaceCapabilitiesKHR(..)
   , VkSurfaceFormatKHR(..)
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities
+  ( VkSurfaceProtectedCapabilitiesKHR(..)
+  , pattern VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
   ( VkAcquireNextImageInfoKHR(..)
@@ -747,6 +976,10 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
   , pattern VK_STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR
   , pattern VK_STRUCTURE_TYPE_PRESENT_INFO_KHR
   , pattern VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_vulkan_memory_model
+  ( VkPhysicalDeviceVulkanMemoryModelFeaturesKHR(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR
   )
 
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
@@ -826,6 +1059,10 @@ import Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands
   , pattern VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX
   , pattern VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX
   )
+import Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle
+  ( VkImageViewHandleInfoNVX(..)
+  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
+  )
 import Graphics.Vulkan.C.Extensions.VK_NVX_multiview_per_view_attributes
   ( VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX
@@ -835,6 +1072,22 @@ import Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
   , VkViewportWScalingNV(..)
   , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV
   )
+import Graphics.Vulkan.C.Extensions.VK_NV_compute_shader_derivatives
+  ( VkPhysicalDeviceComputeShaderDerivativesFeaturesNV(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
+  ( VkCooperativeMatrixPropertiesNV(..)
+  , VkPhysicalDeviceCooperativeMatrixFeaturesNV(..)
+  , VkPhysicalDeviceCooperativeMatrixPropertiesNV(..)
+  , pattern VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image
+  ( VkPhysicalDeviceCornerSampledImageFeaturesNV(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation
   ( VkDedicatedAllocationBufferCreateInfoNV(..)
   , VkDedicatedAllocationImageCreateInfoNV(..)
@@ -842,6 +1095,16 @@ import Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation
   , pattern VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV
   , pattern VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV
   , pattern VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation_image_aliasing
+  ( VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
+  ( VkCheckpointDataNV(..)
+  , VkQueueFamilyCheckpointPropertiesNV(..)
+  , pattern VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV
+  , pattern VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV
   )
 import Graphics.Vulkan.C.Extensions.VK_NV_external_memory
   ( VkExportMemoryAllocateInfoNV(..)
@@ -865,9 +1128,74 @@ import Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color
   ( VkPipelineCoverageToColorStateCreateInfoNV(..)
   , pattern VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV
   )
+import Graphics.Vulkan.C.Extensions.VK_NV_fragment_shader_barycentric
+  ( VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples
   ( VkPipelineCoverageModulationStateCreateInfoNV(..)
   , pattern VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader
+  ( VkDrawMeshTasksIndirectCommandNV(..)
+  , VkPhysicalDeviceMeshShaderFeaturesNV(..)
+  , VkPhysicalDeviceMeshShaderPropertiesNV(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
+  ( VkAccelerationStructureCreateInfoNV(..)
+  , VkAccelerationStructureInfoNV(..)
+  , VkAccelerationStructureMemoryRequirementsInfoNV(..)
+  , VkBindAccelerationStructureMemoryInfoNV(..)
+  , VkGeometryAABBNV(..)
+  , VkGeometryDataNV(..)
+  , VkGeometryNV(..)
+  , VkGeometryTrianglesNV(..)
+  , VkPhysicalDeviceRayTracingPropertiesNV(..)
+  , VkRayTracingPipelineCreateInfoNV(..)
+  , VkRayTracingShaderGroupCreateInfoNV(..)
+  , VkWriteDescriptorSetAccelerationStructureNV(..)
+  , pattern VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV
+  , pattern VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV
+  , pattern VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV
+  , pattern VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV
+  , pattern VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV
+  , pattern VK_STRUCTURE_TYPE_GEOMETRY_NV
+  , pattern VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV
+  , pattern VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV
+  , pattern VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV
+  , pattern VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_representative_fragment_test
+  ( VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(..)
+  , VkPipelineRepresentativeFragmentTestStateCreateInfoNV(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive
+  ( VkPhysicalDeviceExclusiveScissorFeaturesNV(..)
+  , VkPipelineViewportExclusiveScissorStateCreateInfoNV(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_shader_image_footprint
+  ( VkPhysicalDeviceShaderImageFootprintFeaturesNV(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image
+  ( VkCoarseSampleLocationNV(..)
+  , VkCoarseSampleOrderCustomNV(..)
+  , VkPhysicalDeviceShadingRateImageFeaturesNV(..)
+  , VkPhysicalDeviceShadingRateImagePropertiesNV(..)
+  , VkPipelineViewportCoarseSampleOrderStateCreateInfoNV(..)
+  , VkPipelineViewportShadingRateImageStateCreateInfoNV(..)
+  , VkShadingRatePaletteNV(..)
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV
+  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV
   )
 import Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle
   ( VkPipelineViewportSwizzleStateCreateInfoNV(..)
@@ -958,6 +1286,9 @@ import Graphics.Vulkan.Core10.CommandPool
   ( CommandPoolCreateInfo(..)
   , fromCStructCommandPoolCreateInfo
   , withCStructCommandPoolCreateInfo
+  )
+import Graphics.Vulkan.Core10.Core
+  ( StructureType
   )
 import Graphics.Vulkan.Core10.DescriptorSet
   ( CopyDescriptorSet(..)
@@ -1488,14 +1819,27 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   , withCStructSamplerYcbcrConversionInfo
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_shader_draw_parameters
-  ( PhysicalDeviceShaderDrawParameterFeatures(..)
-  , fromCStructPhysicalDeviceShaderDrawParameterFeatures
-  , withCStructPhysicalDeviceShaderDrawParameterFeatures
+  ( PhysicalDeviceShaderDrawParametersFeatures(..)
+  , fromCStructPhysicalDeviceShaderDrawParametersFeatures
+  , withCStructPhysicalDeviceShaderDrawParametersFeatures
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_variable_pointers
-  ( PhysicalDeviceVariablePointerFeatures(..)
-  , fromCStructPhysicalDeviceVariablePointerFeatures
-  , withCStructPhysicalDeviceVariablePointerFeatures
+  ( PhysicalDeviceVariablePointersFeatures(..)
+  , fromCStructPhysicalDeviceVariablePointersFeatures
+  , withCStructPhysicalDeviceVariablePointersFeatures
+  )
+import Graphics.Vulkan.Extensions.VK_AMD_display_native_hdr
+  ( DisplayNativeHdrSurfaceCapabilitiesAMD(..)
+  , SwapchainDisplayNativeHdrCreateInfoAMD(..)
+  , fromCStructDisplayNativeHdrSurfaceCapabilitiesAMD
+  , fromCStructSwapchainDisplayNativeHdrCreateInfoAMD
+  , withCStructDisplayNativeHdrSurfaceCapabilitiesAMD
+  , withCStructSwapchainDisplayNativeHdrCreateInfoAMD
+  )
+import Graphics.Vulkan.Extensions.VK_AMD_memory_overallocation_behavior
+  ( DeviceMemoryOverallocationCreateInfoAMD(..)
+  , fromCStructDeviceMemoryOverallocationCreateInfoAMD
+  , withCStructDeviceMemoryOverallocationCreateInfoAMD
   )
 import Graphics.Vulkan.Extensions.VK_AMD_rasterization_order
   ( PipelineRasterizationStateRasterizationOrderAMD(..)
@@ -1543,6 +1887,14 @@ import Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_bu
   , withCStructMemoryGetAndroidHardwareBufferInfoANDROID
   )
 #endif
+import Graphics.Vulkan.Extensions.VK_EXT_astc_decode_mode
+  ( ImageViewASTCDecodeModeEXT(..)
+  , PhysicalDeviceASTCDecodeFeaturesEXT(..)
+  , fromCStructImageViewASTCDecodeModeEXT
+  , fromCStructPhysicalDeviceASTCDecodeFeaturesEXT
+  , withCStructImageViewASTCDecodeModeEXT
+  , withCStructPhysicalDeviceASTCDecodeFeaturesEXT
+  )
 import Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced
   ( PhysicalDeviceBlendOperationAdvancedFeaturesEXT(..)
   , PhysicalDeviceBlendOperationAdvancedPropertiesEXT(..)
@@ -1553,6 +1905,33 @@ import Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced
   , withCStructPhysicalDeviceBlendOperationAdvancedFeaturesEXT
   , withCStructPhysicalDeviceBlendOperationAdvancedPropertiesEXT
   , withCStructPipelineColorBlendAdvancedStateCreateInfoEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address
+  ( BufferDeviceAddressCreateInfoEXT(..)
+  , BufferDeviceAddressInfoEXT(..)
+  , PhysicalDeviceBufferDeviceAddressFeaturesEXT(..)
+  , fromCStructBufferDeviceAddressCreateInfoEXT
+  , fromCStructBufferDeviceAddressInfoEXT
+  , fromCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT
+  , withCStructBufferDeviceAddressCreateInfoEXT
+  , withCStructBufferDeviceAddressInfoEXT
+  , withCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps
+  ( CalibratedTimestampInfoEXT(..)
+  , fromCStructCalibratedTimestampInfoEXT
+  , withCStructCalibratedTimestampInfoEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering
+  ( CommandBufferInheritanceConditionalRenderingInfoEXT(..)
+  , ConditionalRenderingBeginInfoEXT(..)
+  , PhysicalDeviceConditionalRenderingFeaturesEXT(..)
+  , fromCStructCommandBufferInheritanceConditionalRenderingInfoEXT
+  , fromCStructConditionalRenderingBeginInfoEXT
+  , fromCStructPhysicalDeviceConditionalRenderingFeaturesEXT
+  , withCStructCommandBufferInheritanceConditionalRenderingInfoEXT
+  , withCStructConditionalRenderingBeginInfoEXT
+  , withCStructPhysicalDeviceConditionalRenderingFeaturesEXT
   )
 import Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization
   ( PhysicalDeviceConservativeRasterizationPropertiesEXT(..)
@@ -1594,6 +1973,14 @@ import Graphics.Vulkan.Extensions.VK_EXT_debug_utils
   , withCStructDebugUtilsMessengerCreateInfoEXT
   , withCStructDebugUtilsObjectNameInfoEXT
   , withCStructDebugUtilsObjectTagInfoEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable
+  ( PhysicalDeviceDepthClipEnableFeaturesEXT(..)
+  , PipelineRasterizationDepthClipStateCreateInfoEXT(..)
+  , fromCStructPhysicalDeviceDepthClipEnableFeaturesEXT
+  , fromCStructPipelineRasterizationDepthClipStateCreateInfoEXT
+  , withCStructPhysicalDeviceDepthClipEnableFeaturesEXT
+  , withCStructPipelineRasterizationDepthClipStateCreateInfoEXT
   )
 import Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing
   ( DescriptorSetLayoutBindingFlagsCreateInfoEXT(..)
@@ -1650,6 +2037,39 @@ import Graphics.Vulkan.Extensions.VK_EXT_external_memory_host
   , withCStructMemoryHostPointerPropertiesEXT
   , withCStructPhysicalDeviceExternalMemoryHostPropertiesEXT
   )
+import Graphics.Vulkan.Extensions.VK_EXT_filter_cubic
+  ( FilterCubicImageViewImageFormatPropertiesEXT(..)
+  , PhysicalDeviceImageViewImageFormatInfoEXT(..)
+  , fromCStructFilterCubicImageViewImageFormatPropertiesEXT
+  , fromCStructPhysicalDeviceImageViewImageFormatInfoEXT
+  , withCStructFilterCubicImageViewImageFormatPropertiesEXT
+  , withCStructPhysicalDeviceImageViewImageFormatInfoEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_fragment_density_map
+  ( PhysicalDeviceFragmentDensityMapFeaturesEXT(..)
+  , PhysicalDeviceFragmentDensityMapPropertiesEXT(..)
+  , RenderPassFragmentDensityMapCreateInfoEXT(..)
+  , fromCStructPhysicalDeviceFragmentDensityMapFeaturesEXT
+  , fromCStructPhysicalDeviceFragmentDensityMapPropertiesEXT
+  , fromCStructRenderPassFragmentDensityMapCreateInfoEXT
+  , withCStructPhysicalDeviceFragmentDensityMapFeaturesEXT
+  , withCStructPhysicalDeviceFragmentDensityMapPropertiesEXT
+  , withCStructRenderPassFragmentDensityMapCreateInfoEXT
+  )
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
+  ( SurfaceCapabilitiesFullScreenExclusiveEXT(..)
+  , SurfaceFullScreenExclusiveInfoEXT(..)
+  , SurfaceFullScreenExclusiveWin32InfoEXT(..)
+  , fromCStructSurfaceCapabilitiesFullScreenExclusiveEXT
+  , fromCStructSurfaceFullScreenExclusiveInfoEXT
+  , fromCStructSurfaceFullScreenExclusiveWin32InfoEXT
+  , withCStructSurfaceCapabilitiesFullScreenExclusiveEXT
+  , withCStructSurfaceFullScreenExclusiveInfoEXT
+  , withCStructSurfaceFullScreenExclusiveWin32InfoEXT
+  )
+#endif
 import Graphics.Vulkan.Extensions.VK_EXT_global_priority
   ( DeviceQueueGlobalPriorityCreateInfoEXT(..)
   , fromCStructDeviceQueueGlobalPriorityCreateInfoEXT
@@ -1662,6 +2082,79 @@ import Graphics.Vulkan.Extensions.VK_EXT_hdr_metadata
   , fromCStructXYColorEXT
   , withCStructHdrMetadataEXT
   , withCStructXYColorEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
+  ( PhysicalDeviceHostQueryResetFeaturesEXT(..)
+  , fromCStructPhysicalDeviceHostQueryResetFeaturesEXT
+  , withCStructPhysicalDeviceHostQueryResetFeaturesEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier
+  ( DrmFormatModifierPropertiesEXT(..)
+  , DrmFormatModifierPropertiesListEXT(..)
+  , ImageDrmFormatModifierExplicitCreateInfoEXT(..)
+  , ImageDrmFormatModifierListCreateInfoEXT(..)
+  , ImageDrmFormatModifierPropertiesEXT(..)
+  , PhysicalDeviceImageDrmFormatModifierInfoEXT(..)
+  , fromCStructDrmFormatModifierPropertiesEXT
+  , fromCStructDrmFormatModifierPropertiesListEXT
+  , fromCStructImageDrmFormatModifierExplicitCreateInfoEXT
+  , fromCStructImageDrmFormatModifierListCreateInfoEXT
+  , fromCStructImageDrmFormatModifierPropertiesEXT
+  , fromCStructPhysicalDeviceImageDrmFormatModifierInfoEXT
+  , withCStructDrmFormatModifierPropertiesEXT
+  , withCStructDrmFormatModifierPropertiesListEXT
+  , withCStructImageDrmFormatModifierExplicitCreateInfoEXT
+  , withCStructImageDrmFormatModifierListCreateInfoEXT
+  , withCStructImageDrmFormatModifierPropertiesEXT
+  , withCStructPhysicalDeviceImageDrmFormatModifierInfoEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block
+  ( DescriptorPoolInlineUniformBlockCreateInfoEXT(..)
+  , PhysicalDeviceInlineUniformBlockFeaturesEXT(..)
+  , PhysicalDeviceInlineUniformBlockPropertiesEXT(..)
+  , WriteDescriptorSetInlineUniformBlockEXT(..)
+  , fromCStructDescriptorPoolInlineUniformBlockCreateInfoEXT
+  , fromCStructPhysicalDeviceInlineUniformBlockFeaturesEXT
+  , fromCStructPhysicalDeviceInlineUniformBlockPropertiesEXT
+  , fromCStructWriteDescriptorSetInlineUniformBlockEXT
+  , withCStructDescriptorPoolInlineUniformBlockCreateInfoEXT
+  , withCStructPhysicalDeviceInlineUniformBlockFeaturesEXT
+  , withCStructPhysicalDeviceInlineUniformBlockPropertiesEXT
+  , withCStructWriteDescriptorSetInlineUniformBlockEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_memory_budget
+  ( PhysicalDeviceMemoryBudgetPropertiesEXT(..)
+  , fromCStructPhysicalDeviceMemoryBudgetPropertiesEXT
+  , withCStructPhysicalDeviceMemoryBudgetPropertiesEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_memory_priority
+  ( MemoryPriorityAllocateInfoEXT(..)
+  , PhysicalDeviceMemoryPriorityFeaturesEXT(..)
+  , fromCStructMemoryPriorityAllocateInfoEXT
+  , fromCStructPhysicalDeviceMemoryPriorityFeaturesEXT
+  , withCStructMemoryPriorityAllocateInfoEXT
+  , withCStructPhysicalDeviceMemoryPriorityFeaturesEXT
+  )
+
+#if defined(VK_USE_PLATFORM_METAL_EXT)
+import Graphics.Vulkan.Extensions.VK_EXT_metal_surface
+  ( MetalSurfaceCreateInfoEXT(..)
+  , fromCStructMetalSurfaceCreateInfoEXT
+  , withCStructMetalSurfaceCreateInfoEXT
+  )
+#endif
+import Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info
+  ( PhysicalDevicePCIBusInfoPropertiesEXT(..)
+  , fromCStructPhysicalDevicePCIBusInfoPropertiesEXT
+  , withCStructPhysicalDevicePCIBusInfoPropertiesEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
+  ( PipelineCreationFeedbackCreateInfoEXT(..)
+  , PipelineCreationFeedbackEXT(..)
+  , fromCStructPipelineCreationFeedbackCreateInfoEXT
+  , fromCStructPipelineCreationFeedbackEXT
+  , withCStructPipelineCreationFeedbackCreateInfoEXT
+  , withCStructPipelineCreationFeedbackEXT
   )
 import Graphics.Vulkan.Extensions.VK_EXT_sample_locations
   ( AttachmentSampleLocationsEXT(..)
@@ -1697,6 +2190,27 @@ import Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
   , withCStructPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
   , withCStructSamplerReductionModeCreateInfoEXT
   )
+import Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
+  ( PhysicalDeviceScalarBlockLayoutFeaturesEXT(..)
+  , fromCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT
+  , withCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_separate_stencil_usage
+  ( ImageStencilUsageCreateInfoEXT(..)
+  , fromCStructImageStencilUsageCreateInfoEXT
+  , withCStructImageStencilUsageCreateInfoEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_transform_feedback
+  ( PhysicalDeviceTransformFeedbackFeaturesEXT(..)
+  , PhysicalDeviceTransformFeedbackPropertiesEXT(..)
+  , PipelineRasterizationStateStreamCreateInfoEXT(..)
+  , fromCStructPhysicalDeviceTransformFeedbackFeaturesEXT
+  , fromCStructPhysicalDeviceTransformFeedbackPropertiesEXT
+  , fromCStructPipelineRasterizationStateStreamCreateInfoEXT
+  , withCStructPhysicalDeviceTransformFeedbackFeaturesEXT
+  , withCStructPhysicalDeviceTransformFeedbackPropertiesEXT
+  , withCStructPipelineRasterizationStateStreamCreateInfoEXT
+  )
 import Graphics.Vulkan.Extensions.VK_EXT_validation_cache
   ( ShaderModuleValidationCacheCreateInfoEXT(..)
   , ValidationCacheCreateInfoEXT(..)
@@ -1705,22 +2219,59 @@ import Graphics.Vulkan.Extensions.VK_EXT_validation_cache
   , withCStructShaderModuleValidationCacheCreateInfoEXT
   , withCStructValidationCacheCreateInfoEXT
   )
+import Graphics.Vulkan.Extensions.VK_EXT_validation_features
+  ( ValidationFeaturesEXT(..)
+  , fromCStructValidationFeaturesEXT
+  , withCStructValidationFeaturesEXT
+  )
 import Graphics.Vulkan.Extensions.VK_EXT_validation_flags
   ( ValidationFlagsEXT(..)
   , fromCStructValidationFlagsEXT
   , withCStructValidationFlagsEXT
   )
 import Graphics.Vulkan.Extensions.VK_EXT_vertex_attribute_divisor
-  ( PhysicalDeviceVertexAttributeDivisorPropertiesEXT(..)
+  ( PhysicalDeviceVertexAttributeDivisorFeaturesEXT(..)
+  , PhysicalDeviceVertexAttributeDivisorPropertiesEXT(..)
   , PipelineVertexInputDivisorStateCreateInfoEXT(..)
   , VertexInputBindingDivisorDescriptionEXT(..)
+  , fromCStructPhysicalDeviceVertexAttributeDivisorFeaturesEXT
   , fromCStructPhysicalDeviceVertexAttributeDivisorPropertiesEXT
   , fromCStructPipelineVertexInputDivisorStateCreateInfoEXT
   , fromCStructVertexInputBindingDivisorDescriptionEXT
+  , withCStructPhysicalDeviceVertexAttributeDivisorFeaturesEXT
   , withCStructPhysicalDeviceVertexAttributeDivisorPropertiesEXT
   , withCStructPipelineVertexInputDivisorStateCreateInfoEXT
   , withCStructVertexInputBindingDivisorDescriptionEXT
   )
+import Graphics.Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+  ( PhysicalDeviceYcbcrImageArraysFeaturesEXT(..)
+  , fromCStructPhysicalDeviceYcbcrImageArraysFeaturesEXT
+  , withCStructPhysicalDeviceYcbcrImageArraysFeaturesEXT
+  )
+
+#if defined(VK_USE_PLATFORM_FUCHSIA)
+import Graphics.Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
+  ( ImagePipeSurfaceCreateInfoFUCHSIA(..)
+  , fromCStructImagePipeSurfaceCreateInfoFUCHSIA
+  , withCStructImagePipeSurfaceCreateInfoFUCHSIA
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.Extensions.VK_GGP_frame_token
+  ( PresentFrameTokenGGP(..)
+  , fromCStructPresentFrameTokenGGP
+  , withCStructPresentFrameTokenGGP
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.Extensions.VK_GGP_stream_descriptor_surface
+  ( StreamDescriptorSurfaceCreateInfoGGP(..)
+  , fromCStructStreamDescriptorSurfaceCreateInfoGGP
+  , withCStructStreamDescriptorSurfaceCreateInfoGGP
+  )
+#endif
 import Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing
   ( PastPresentationTimingGOOGLE(..)
   , PresentTimeGOOGLE(..)
@@ -1735,6 +2286,11 @@ import Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing
   , withCStructPresentTimesInfoGOOGLE
   , withCStructRefreshCycleDurationGOOGLE
   )
+import Graphics.Vulkan.Extensions.VK_KHR_8bit_storage
+  ( PhysicalDevice8BitStorageFeaturesKHR(..)
+  , fromCStructPhysicalDevice8BitStorageFeaturesKHR
+  , withCStructPhysicalDevice8BitStorageFeaturesKHR
+  )
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_android_surface
@@ -1743,6 +2299,37 @@ import Graphics.Vulkan.Extensions.VK_KHR_android_surface
   , withCStructAndroidSurfaceCreateInfoKHR
   )
 #endif
+import Graphics.Vulkan.Extensions.VK_KHR_create_renderpass2
+  ( AttachmentDescription2KHR(..)
+  , AttachmentReference2KHR(..)
+  , RenderPassCreateInfo2KHR(..)
+  , SubpassBeginInfoKHR(..)
+  , SubpassDependency2KHR(..)
+  , SubpassDescription2KHR(..)
+  , SubpassEndInfoKHR(..)
+  , fromCStructAttachmentDescription2KHR
+  , fromCStructAttachmentReference2KHR
+  , fromCStructRenderPassCreateInfo2KHR
+  , fromCStructSubpassBeginInfoKHR
+  , fromCStructSubpassDependency2KHR
+  , fromCStructSubpassDescription2KHR
+  , fromCStructSubpassEndInfoKHR
+  , withCStructAttachmentDescription2KHR
+  , withCStructAttachmentReference2KHR
+  , withCStructRenderPassCreateInfo2KHR
+  , withCStructSubpassBeginInfoKHR
+  , withCStructSubpassDependency2KHR
+  , withCStructSubpassDescription2KHR
+  , withCStructSubpassEndInfoKHR
+  )
+import Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve
+  ( PhysicalDeviceDepthStencilResolvePropertiesKHR(..)
+  , SubpassDescriptionDepthStencilResolveKHR(..)
+  , fromCStructPhysicalDeviceDepthStencilResolvePropertiesKHR
+  , fromCStructSubpassDescriptionDepthStencilResolveKHR
+  , withCStructPhysicalDeviceDepthStencilResolvePropertiesKHR
+  , withCStructSubpassDescriptionDepthStencilResolveKHR
+  )
 import Graphics.Vulkan.Extensions.VK_KHR_display
   ( DisplayModeCreateInfoKHR(..)
   , DisplayModeParametersKHR(..)
@@ -1770,6 +2357,14 @@ import Graphics.Vulkan.Extensions.VK_KHR_display_swapchain
   ( DisplayPresentInfoKHR(..)
   , fromCStructDisplayPresentInfoKHR
   , withCStructDisplayPresentInfoKHR
+  )
+import Graphics.Vulkan.Extensions.VK_KHR_driver_properties
+  ( ConformanceVersionKHR(..)
+  , PhysicalDeviceDriverPropertiesKHR(..)
+  , fromCStructConformanceVersionKHR
+  , fromCStructPhysicalDeviceDriverPropertiesKHR
+  , withCStructConformanceVersionKHR
+  , withCStructPhysicalDeviceDriverPropertiesKHR
   )
 import Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd
   ( FenceGetFdInfoKHR(..)
@@ -1846,6 +2441,23 @@ import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32
   , withCStructSemaphoreGetWin32HandleInfoKHR
   )
 #endif
+import Graphics.Vulkan.Extensions.VK_KHR_get_display_properties2
+  ( DisplayModeProperties2KHR(..)
+  , DisplayPlaneCapabilities2KHR(..)
+  , DisplayPlaneInfo2KHR(..)
+  , DisplayPlaneProperties2KHR(..)
+  , DisplayProperties2KHR(..)
+  , fromCStructDisplayModeProperties2KHR
+  , fromCStructDisplayPlaneCapabilities2KHR
+  , fromCStructDisplayPlaneInfo2KHR
+  , fromCStructDisplayPlaneProperties2KHR
+  , fromCStructDisplayProperties2KHR
+  , withCStructDisplayModeProperties2KHR
+  , withCStructDisplayPlaneCapabilities2KHR
+  , withCStructDisplayPlaneInfo2KHR
+  , withCStructDisplayPlaneProperties2KHR
+  , withCStructDisplayProperties2KHR
+  )
 import Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2
   ( PhysicalDeviceSurfaceInfo2KHR(..)
   , SurfaceCapabilities2KHR(..)
@@ -1873,18 +2485,25 @@ import Graphics.Vulkan.Extensions.VK_KHR_incremental_present
   , withCStructPresentRegionsKHR
   , withCStructRectLayerKHR
   )
-
-#if defined(VK_USE_PLATFORM_MIR_KHR)
-import Graphics.Vulkan.Extensions.VK_KHR_mir_surface
-  ( MirSurfaceCreateInfoKHR(..)
-  , fromCStructMirSurfaceCreateInfoKHR
-  , withCStructMirSurfaceCreateInfoKHR
-  )
-#endif
 import Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
   ( PhysicalDevicePushDescriptorPropertiesKHR(..)
   , fromCStructPhysicalDevicePushDescriptorPropertiesKHR
   , withCStructPhysicalDevicePushDescriptorPropertiesKHR
+  )
+import Graphics.Vulkan.Extensions.VK_KHR_shader_atomic_int64
+  ( PhysicalDeviceShaderAtomicInt64FeaturesKHR(..)
+  , fromCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR
+  , withCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR
+  )
+import Graphics.Vulkan.Extensions.VK_KHR_shader_float16_int8
+  ( PhysicalDeviceFloat16Int8FeaturesKHR(..)
+  , fromCStructPhysicalDeviceFloat16Int8FeaturesKHR
+  , withCStructPhysicalDeviceFloat16Int8FeaturesKHR
+  )
+import Graphics.Vulkan.Extensions.VK_KHR_shader_float_controls
+  ( PhysicalDeviceFloatControlsPropertiesKHR(..)
+  , fromCStructPhysicalDeviceFloatControlsPropertiesKHR
+  , withCStructPhysicalDeviceFloatControlsPropertiesKHR
   )
 import Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image
   ( SharedPresentSurfaceCapabilitiesKHR(..)
@@ -1898,6 +2517,11 @@ import Graphics.Vulkan.Extensions.VK_KHR_surface
   , fromCStructSurfaceFormatKHR
   , withCStructSurfaceCapabilitiesKHR
   , withCStructSurfaceFormatKHR
+  )
+import Graphics.Vulkan.Extensions.VK_KHR_surface_protected_capabilities
+  ( SurfaceProtectedCapabilitiesKHR(..)
+  , fromCStructSurfaceProtectedCapabilitiesKHR
+  , withCStructSurfaceProtectedCapabilitiesKHR
   )
 import Graphics.Vulkan.Extensions.VK_KHR_swapchain
   ( AcquireNextImageInfoKHR(..)
@@ -1924,6 +2548,11 @@ import Graphics.Vulkan.Extensions.VK_KHR_swapchain
   , withCStructImageSwapchainCreateInfoKHR
   , withCStructPresentInfoKHR
   , withCStructSwapchainCreateInfoKHR
+  )
+import Graphics.Vulkan.Extensions.VK_KHR_vulkan_memory_model
+  ( PhysicalDeviceVulkanMemoryModelFeaturesKHR(..)
+  , fromCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR
+  , withCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR
   )
 
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
@@ -2032,6 +2661,11 @@ import Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
   , withCStructObjectTablePushConstantEntryNVX
   , withCStructObjectTableVertexBufferEntryNVX
   )
+import Graphics.Vulkan.Extensions.VK_NVX_image_view_handle
+  ( ImageViewHandleInfoNVX(..)
+  , fromCStructImageViewHandleInfoNVX
+  , withCStructImageViewHandleInfoNVX
+  )
 import Graphics.Vulkan.Extensions.VK_NVX_multiview_per_view_attributes
   ( PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX(..)
   , fromCStructPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
@@ -2045,6 +2679,27 @@ import Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling
   , withCStructPipelineViewportWScalingStateCreateInfoNV
   , withCStructViewportWScalingNV
   )
+import Graphics.Vulkan.Extensions.VK_NV_compute_shader_derivatives
+  ( PhysicalDeviceComputeShaderDerivativesFeaturesNV(..)
+  , fromCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV
+  , withCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
+  ( CooperativeMatrixPropertiesNV(..)
+  , PhysicalDeviceCooperativeMatrixFeaturesNV(..)
+  , PhysicalDeviceCooperativeMatrixPropertiesNV(..)
+  , fromCStructCooperativeMatrixPropertiesNV
+  , fromCStructPhysicalDeviceCooperativeMatrixFeaturesNV
+  , fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV
+  , withCStructCooperativeMatrixPropertiesNV
+  , withCStructPhysicalDeviceCooperativeMatrixFeaturesNV
+  , withCStructPhysicalDeviceCooperativeMatrixPropertiesNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_corner_sampled_image
+  ( PhysicalDeviceCornerSampledImageFeaturesNV(..)
+  , fromCStructPhysicalDeviceCornerSampledImageFeaturesNV
+  , withCStructPhysicalDeviceCornerSampledImageFeaturesNV
+  )
 import Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
   ( DedicatedAllocationBufferCreateInfoNV(..)
   , DedicatedAllocationImageCreateInfoNV(..)
@@ -2055,6 +2710,19 @@ import Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
   , withCStructDedicatedAllocationBufferCreateInfoNV
   , withCStructDedicatedAllocationImageCreateInfoNV
   , withCStructDedicatedAllocationMemoryAllocateInfoNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation_image_aliasing
+  ( PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(..)
+  , fromCStructPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
+  , withCStructPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints
+  ( CheckpointDataNV(..)
+  , QueueFamilyCheckpointPropertiesNV(..)
+  , fromCStructCheckpointDataNV
+  , fromCStructQueueFamilyCheckpointPropertiesNV
+  , withCStructCheckpointDataNV
+  , withCStructQueueFamilyCheckpointPropertiesNV
   )
 import Graphics.Vulkan.Extensions.VK_NV_external_memory
   ( ExportMemoryAllocateInfoNV(..)
@@ -2085,10 +2753,108 @@ import Graphics.Vulkan.Extensions.VK_NV_fragment_coverage_to_color
   , fromCStructPipelineCoverageToColorStateCreateInfoNV
   , withCStructPipelineCoverageToColorStateCreateInfoNV
   )
+import Graphics.Vulkan.Extensions.VK_NV_fragment_shader_barycentric
+  ( PhysicalDeviceFragmentShaderBarycentricFeaturesNV(..)
+  , fromCStructPhysicalDeviceFragmentShaderBarycentricFeaturesNV
+  , withCStructPhysicalDeviceFragmentShaderBarycentricFeaturesNV
+  )
 import Graphics.Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
   ( PipelineCoverageModulationStateCreateInfoNV(..)
   , fromCStructPipelineCoverageModulationStateCreateInfoNV
   , withCStructPipelineCoverageModulationStateCreateInfoNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_mesh_shader
+  ( DrawMeshTasksIndirectCommandNV(..)
+  , PhysicalDeviceMeshShaderFeaturesNV(..)
+  , PhysicalDeviceMeshShaderPropertiesNV(..)
+  , fromCStructDrawMeshTasksIndirectCommandNV
+  , fromCStructPhysicalDeviceMeshShaderFeaturesNV
+  , fromCStructPhysicalDeviceMeshShaderPropertiesNV
+  , withCStructDrawMeshTasksIndirectCommandNV
+  , withCStructPhysicalDeviceMeshShaderFeaturesNV
+  , withCStructPhysicalDeviceMeshShaderPropertiesNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_ray_tracing
+  ( AccelerationStructureCreateInfoNV(..)
+  , AccelerationStructureInfoNV(..)
+  , AccelerationStructureMemoryRequirementsInfoNV(..)
+  , BindAccelerationStructureMemoryInfoNV(..)
+  , GeometryAABBNV(..)
+  , GeometryDataNV(..)
+  , GeometryNV(..)
+  , GeometryTrianglesNV(..)
+  , PhysicalDeviceRayTracingPropertiesNV(..)
+  , RayTracingPipelineCreateInfoNV(..)
+  , RayTracingShaderGroupCreateInfoNV(..)
+  , WriteDescriptorSetAccelerationStructureNV(..)
+  , fromCStructAccelerationStructureCreateInfoNV
+  , fromCStructAccelerationStructureInfoNV
+  , fromCStructAccelerationStructureMemoryRequirementsInfoNV
+  , fromCStructBindAccelerationStructureMemoryInfoNV
+  , fromCStructGeometryAABBNV
+  , fromCStructGeometryDataNV
+  , fromCStructGeometryNV
+  , fromCStructGeometryTrianglesNV
+  , fromCStructPhysicalDeviceRayTracingPropertiesNV
+  , fromCStructRayTracingPipelineCreateInfoNV
+  , fromCStructRayTracingShaderGroupCreateInfoNV
+  , fromCStructWriteDescriptorSetAccelerationStructureNV
+  , withCStructAccelerationStructureCreateInfoNV
+  , withCStructAccelerationStructureInfoNV
+  , withCStructAccelerationStructureMemoryRequirementsInfoNV
+  , withCStructBindAccelerationStructureMemoryInfoNV
+  , withCStructGeometryAABBNV
+  , withCStructGeometryDataNV
+  , withCStructGeometryNV
+  , withCStructGeometryTrianglesNV
+  , withCStructPhysicalDeviceRayTracingPropertiesNV
+  , withCStructRayTracingPipelineCreateInfoNV
+  , withCStructRayTracingShaderGroupCreateInfoNV
+  , withCStructWriteDescriptorSetAccelerationStructureNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_representative_fragment_test
+  ( PhysicalDeviceRepresentativeFragmentTestFeaturesNV(..)
+  , PipelineRepresentativeFragmentTestStateCreateInfoNV(..)
+  , fromCStructPhysicalDeviceRepresentativeFragmentTestFeaturesNV
+  , fromCStructPipelineRepresentativeFragmentTestStateCreateInfoNV
+  , withCStructPhysicalDeviceRepresentativeFragmentTestFeaturesNV
+  , withCStructPipelineRepresentativeFragmentTestStateCreateInfoNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive
+  ( PhysicalDeviceExclusiveScissorFeaturesNV(..)
+  , PipelineViewportExclusiveScissorStateCreateInfoNV(..)
+  , fromCStructPhysicalDeviceExclusiveScissorFeaturesNV
+  , fromCStructPipelineViewportExclusiveScissorStateCreateInfoNV
+  , withCStructPhysicalDeviceExclusiveScissorFeaturesNV
+  , withCStructPipelineViewportExclusiveScissorStateCreateInfoNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_shader_image_footprint
+  ( PhysicalDeviceShaderImageFootprintFeaturesNV(..)
+  , fromCStructPhysicalDeviceShaderImageFootprintFeaturesNV
+  , withCStructPhysicalDeviceShaderImageFootprintFeaturesNV
+  )
+import Graphics.Vulkan.Extensions.VK_NV_shading_rate_image
+  ( CoarseSampleLocationNV(..)
+  , CoarseSampleOrderCustomNV(..)
+  , PhysicalDeviceShadingRateImageFeaturesNV(..)
+  , PhysicalDeviceShadingRateImagePropertiesNV(..)
+  , PipelineViewportCoarseSampleOrderStateCreateInfoNV(..)
+  , PipelineViewportShadingRateImageStateCreateInfoNV(..)
+  , ShadingRatePaletteNV(..)
+  , fromCStructCoarseSampleLocationNV
+  , fromCStructCoarseSampleOrderCustomNV
+  , fromCStructPhysicalDeviceShadingRateImageFeaturesNV
+  , fromCStructPhysicalDeviceShadingRateImagePropertiesNV
+  , fromCStructPipelineViewportCoarseSampleOrderStateCreateInfoNV
+  , fromCStructPipelineViewportShadingRateImageStateCreateInfoNV
+  , fromCStructShadingRatePaletteNV
+  , withCStructCoarseSampleLocationNV
+  , withCStructCoarseSampleOrderCustomNV
+  , withCStructPhysicalDeviceShadingRateImageFeaturesNV
+  , withCStructPhysicalDeviceShadingRateImagePropertiesNV
+  , withCStructPipelineViewportCoarseSampleOrderStateCreateInfoNV
+  , withCStructPipelineViewportShadingRateImageStateCreateInfoNV
+  , withCStructShadingRatePaletteNV
   )
 import Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
   ( PipelineViewportSwizzleStateCreateInfoNV(..)
@@ -2782,15 +3548,6 @@ instance HasPNext AndroidSurfaceCreateInfoKHR where
   getPNext a = vkPNext (a :: AndroidSurfaceCreateInfoKHR)
 #endif
 
-#if VK_USE_PLATFORM_MIR_KHR
-instance ToCStruct MirSurfaceCreateInfoKHR VkMirSurfaceCreateInfoKHR where
-  withCStruct = withCStructMirSurfaceCreateInfoKHR
-instance FromCStruct MirSurfaceCreateInfoKHR VkMirSurfaceCreateInfoKHR where
-  fromCStruct = fromCStructMirSurfaceCreateInfoKHR
-instance HasPNext MirSurfaceCreateInfoKHR where
-  getPNext a = vkPNext (a :: MirSurfaceCreateInfoKHR)
-#endif
-
 #if VK_USE_PLATFORM_VI_NN
 instance ToCStruct ViSurfaceCreateInfoNN VkViSurfaceCreateInfoNN where
   withCStruct = withCStructViSurfaceCreateInfoNN
@@ -2835,6 +3592,24 @@ instance FromCStruct XcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR where
 instance HasPNext XcbSurfaceCreateInfoKHR where
   getPNext a = vkPNext (a :: XcbSurfaceCreateInfoKHR)
 #endif
+
+#if VK_USE_PLATFORM_FUCHSIA
+instance ToCStruct ImagePipeSurfaceCreateInfoFUCHSIA VkImagePipeSurfaceCreateInfoFUCHSIA where
+  withCStruct = withCStructImagePipeSurfaceCreateInfoFUCHSIA
+instance FromCStruct ImagePipeSurfaceCreateInfoFUCHSIA VkImagePipeSurfaceCreateInfoFUCHSIA where
+  fromCStruct = fromCStructImagePipeSurfaceCreateInfoFUCHSIA
+instance HasPNext ImagePipeSurfaceCreateInfoFUCHSIA where
+  getPNext a = vkPNext (a :: ImagePipeSurfaceCreateInfoFUCHSIA)
+#endif
+
+#if VK_USE_PLATFORM_GGP
+instance ToCStruct StreamDescriptorSurfaceCreateInfoGGP VkStreamDescriptorSurfaceCreateInfoGGP where
+  withCStruct = withCStructStreamDescriptorSurfaceCreateInfoGGP
+instance FromCStruct StreamDescriptorSurfaceCreateInfoGGP VkStreamDescriptorSurfaceCreateInfoGGP where
+  fromCStruct = fromCStructStreamDescriptorSurfaceCreateInfoGGP
+instance HasPNext StreamDescriptorSurfaceCreateInfoGGP where
+  getPNext a = vkPNext (a :: StreamDescriptorSurfaceCreateInfoGGP)
+#endif
 instance ToCStruct SurfaceFormatKHR VkSurfaceFormatKHR where
   withCStruct = withCStructSurfaceFormatKHR
 instance FromCStruct SurfaceFormatKHR VkSurfaceFormatKHR where
@@ -2864,6 +3639,12 @@ instance FromCStruct ValidationFlagsEXT VkValidationFlagsEXT where
   fromCStruct = fromCStructValidationFlagsEXT
 instance HasPNext ValidationFlagsEXT where
   getPNext a = vkPNext (a :: ValidationFlagsEXT)
+instance ToCStruct ValidationFeaturesEXT VkValidationFeaturesEXT where
+  withCStruct = withCStructValidationFeaturesEXT
+instance FromCStruct ValidationFeaturesEXT VkValidationFeaturesEXT where
+  fromCStruct = fromCStructValidationFeaturesEXT
+instance HasPNext ValidationFeaturesEXT where
+  getPNext a = vkPNext (a :: ValidationFeaturesEXT)
 instance ToCStruct PipelineRasterizationStateRasterizationOrderAMD VkPipelineRasterizationStateRasterizationOrderAMD where
   withCStruct = withCStructPipelineRasterizationStateRasterizationOrderAMD
 instance FromCStruct PipelineRasterizationStateRasterizationOrderAMD VkPipelineRasterizationStateRasterizationOrderAMD where
@@ -3085,6 +3866,17 @@ instance FromCStruct PhysicalDevicePushDescriptorPropertiesKHR VkPhysicalDeviceP
   fromCStruct = fromCStructPhysicalDevicePushDescriptorPropertiesKHR
 instance HasPNext PhysicalDevicePushDescriptorPropertiesKHR where
   getPNext a = vkPNext (a :: PhysicalDevicePushDescriptorPropertiesKHR)
+instance ToCStruct ConformanceVersionKHR VkConformanceVersionKHR where
+  withCStruct = withCStructConformanceVersionKHR
+instance FromCStruct ConformanceVersionKHR VkConformanceVersionKHR where
+  fromCStruct = fromCStructConformanceVersionKHR
+
+instance ToCStruct PhysicalDeviceDriverPropertiesKHR VkPhysicalDeviceDriverPropertiesKHR where
+  withCStruct = withCStructPhysicalDeviceDriverPropertiesKHR
+instance FromCStruct PhysicalDeviceDriverPropertiesKHR VkPhysicalDeviceDriverPropertiesKHR where
+  fromCStruct = fromCStructPhysicalDeviceDriverPropertiesKHR
+instance HasPNext PhysicalDeviceDriverPropertiesKHR where
+  getPNext a = vkPNext (a :: PhysicalDeviceDriverPropertiesKHR)
 instance ToCStruct PresentRegionsKHR VkPresentRegionsKHR where
   withCStruct = withCStructPresentRegionsKHR
 instance FromCStruct PresentRegionsKHR VkPresentRegionsKHR where
@@ -3101,12 +3893,12 @@ instance ToCStruct RectLayerKHR VkRectLayerKHR where
 instance FromCStruct RectLayerKHR VkRectLayerKHR where
   fromCStruct = fromCStructRectLayerKHR
 
-instance ToCStruct PhysicalDeviceVariablePointerFeatures VkPhysicalDeviceVariablePointerFeatures where
-  withCStruct = withCStructPhysicalDeviceVariablePointerFeatures
-instance FromCStruct PhysicalDeviceVariablePointerFeatures VkPhysicalDeviceVariablePointerFeatures where
-  fromCStruct = fromCStructPhysicalDeviceVariablePointerFeatures
-instance HasPNext PhysicalDeviceVariablePointerFeatures where
-  getPNext a = vkPNext (a :: PhysicalDeviceVariablePointerFeatures)
+instance ToCStruct PhysicalDeviceVariablePointersFeatures VkPhysicalDeviceVariablePointersFeatures where
+  withCStruct = withCStructPhysicalDeviceVariablePointersFeatures
+instance FromCStruct PhysicalDeviceVariablePointersFeatures VkPhysicalDeviceVariablePointersFeatures where
+  fromCStruct = fromCStructPhysicalDeviceVariablePointersFeatures
+instance HasPNext PhysicalDeviceVariablePointersFeatures where
+  getPNext a = vkPNext (a :: PhysicalDeviceVariablePointersFeatures)
 instance ToCStruct ExternalMemoryProperties VkExternalMemoryProperties where
   withCStruct = withCStructExternalMemoryProperties
 instance FromCStruct ExternalMemoryProperties VkExternalMemoryProperties where
@@ -3516,6 +4308,18 @@ instance FromCStruct HdrMetadataEXT VkHdrMetadataEXT where
   fromCStruct = fromCStructHdrMetadataEXT
 instance HasPNext HdrMetadataEXT where
   getPNext a = vkPNext (a :: HdrMetadataEXT)
+instance ToCStruct DisplayNativeHdrSurfaceCapabilitiesAMD VkDisplayNativeHdrSurfaceCapabilitiesAMD where
+  withCStruct = withCStructDisplayNativeHdrSurfaceCapabilitiesAMD
+instance FromCStruct DisplayNativeHdrSurfaceCapabilitiesAMD VkDisplayNativeHdrSurfaceCapabilitiesAMD where
+  fromCStruct = fromCStructDisplayNativeHdrSurfaceCapabilitiesAMD
+instance HasPNext DisplayNativeHdrSurfaceCapabilitiesAMD where
+  getPNext a = vkPNext (a :: DisplayNativeHdrSurfaceCapabilitiesAMD)
+instance ToCStruct SwapchainDisplayNativeHdrCreateInfoAMD VkSwapchainDisplayNativeHdrCreateInfoAMD where
+  withCStruct = withCStructSwapchainDisplayNativeHdrCreateInfoAMD
+instance FromCStruct SwapchainDisplayNativeHdrCreateInfoAMD VkSwapchainDisplayNativeHdrCreateInfoAMD where
+  fromCStruct = fromCStructSwapchainDisplayNativeHdrCreateInfoAMD
+instance HasPNext SwapchainDisplayNativeHdrCreateInfoAMD where
+  getPNext a = vkPNext (a :: SwapchainDisplayNativeHdrCreateInfoAMD)
 instance ToCStruct RefreshCycleDurationGOOGLE VkRefreshCycleDurationGOOGLE where
   withCStruct = withCStructRefreshCycleDurationGOOGLE
 instance FromCStruct RefreshCycleDurationGOOGLE VkRefreshCycleDurationGOOGLE where
@@ -3554,6 +4358,15 @@ instance FromCStruct MacOSSurfaceCreateInfoMVK VkMacOSSurfaceCreateInfoMVK where
   fromCStruct = fromCStructMacOSSurfaceCreateInfoMVK
 instance HasPNext MacOSSurfaceCreateInfoMVK where
   getPNext a = vkPNext (a :: MacOSSurfaceCreateInfoMVK)
+#endif
+
+#if VK_USE_PLATFORM_METAL_EXT
+instance ToCStruct MetalSurfaceCreateInfoEXT VkMetalSurfaceCreateInfoEXT where
+  withCStruct = withCStructMetalSurfaceCreateInfoEXT
+instance FromCStruct MetalSurfaceCreateInfoEXT VkMetalSurfaceCreateInfoEXT where
+  fromCStruct = fromCStructMetalSurfaceCreateInfoEXT
+instance HasPNext MetalSurfaceCreateInfoEXT where
+  getPNext a = vkPNext (a :: MetalSurfaceCreateInfoEXT)
 #endif
 instance ToCStruct ViewportWScalingNV VkViewportWScalingNV where
   withCStruct = withCStructViewportWScalingNV
@@ -3624,6 +4437,36 @@ instance FromCStruct SurfaceFormat2KHR VkSurfaceFormat2KHR where
   fromCStruct = fromCStructSurfaceFormat2KHR
 instance HasPNext SurfaceFormat2KHR where
   getPNext a = vkPNext (a :: SurfaceFormat2KHR)
+instance ToCStruct DisplayProperties2KHR VkDisplayProperties2KHR where
+  withCStruct = withCStructDisplayProperties2KHR
+instance FromCStruct DisplayProperties2KHR VkDisplayProperties2KHR where
+  fromCStruct = fromCStructDisplayProperties2KHR
+instance HasPNext DisplayProperties2KHR where
+  getPNext a = vkPNext (a :: DisplayProperties2KHR)
+instance ToCStruct DisplayPlaneProperties2KHR VkDisplayPlaneProperties2KHR where
+  withCStruct = withCStructDisplayPlaneProperties2KHR
+instance FromCStruct DisplayPlaneProperties2KHR VkDisplayPlaneProperties2KHR where
+  fromCStruct = fromCStructDisplayPlaneProperties2KHR
+instance HasPNext DisplayPlaneProperties2KHR where
+  getPNext a = vkPNext (a :: DisplayPlaneProperties2KHR)
+instance ToCStruct DisplayModeProperties2KHR VkDisplayModeProperties2KHR where
+  withCStruct = withCStructDisplayModeProperties2KHR
+instance FromCStruct DisplayModeProperties2KHR VkDisplayModeProperties2KHR where
+  fromCStruct = fromCStructDisplayModeProperties2KHR
+instance HasPNext DisplayModeProperties2KHR where
+  getPNext a = vkPNext (a :: DisplayModeProperties2KHR)
+instance ToCStruct DisplayPlaneInfo2KHR VkDisplayPlaneInfo2KHR where
+  withCStruct = withCStructDisplayPlaneInfo2KHR
+instance FromCStruct DisplayPlaneInfo2KHR VkDisplayPlaneInfo2KHR where
+  fromCStruct = fromCStructDisplayPlaneInfo2KHR
+instance HasPNext DisplayPlaneInfo2KHR where
+  getPNext a = vkPNext (a :: DisplayPlaneInfo2KHR)
+instance ToCStruct DisplayPlaneCapabilities2KHR VkDisplayPlaneCapabilities2KHR where
+  withCStruct = withCStructDisplayPlaneCapabilities2KHR
+instance FromCStruct DisplayPlaneCapabilities2KHR VkDisplayPlaneCapabilities2KHR where
+  fromCStruct = fromCStructDisplayPlaneCapabilities2KHR
+instance HasPNext DisplayPlaneCapabilities2KHR where
+  getPNext a = vkPNext (a :: DisplayPlaneCapabilities2KHR)
 instance ToCStruct SharedPresentSurfaceCapabilitiesKHR VkSharedPresentSurfaceCapabilitiesKHR where
   withCStruct = withCStructSharedPresentSurfaceCapabilitiesKHR
 instance FromCStruct SharedPresentSurfaceCapabilitiesKHR VkSharedPresentSurfaceCapabilitiesKHR where
@@ -3744,6 +4587,12 @@ instance FromCStruct TextureLODGatherFormatPropertiesAMD VkTextureLODGatherForma
   fromCStruct = fromCStructTextureLODGatherFormatPropertiesAMD
 instance HasPNext TextureLODGatherFormatPropertiesAMD where
   getPNext a = vkPNext (a :: TextureLODGatherFormatPropertiesAMD)
+instance ToCStruct ConditionalRenderingBeginInfoEXT VkConditionalRenderingBeginInfoEXT where
+  withCStruct = withCStructConditionalRenderingBeginInfoEXT
+instance FromCStruct ConditionalRenderingBeginInfoEXT VkConditionalRenderingBeginInfoEXT where
+  fromCStruct = fromCStructConditionalRenderingBeginInfoEXT
+instance HasPNext ConditionalRenderingBeginInfoEXT where
+  getPNext a = vkPNext (a :: ConditionalRenderingBeginInfoEXT)
 instance ToCStruct ProtectedSubmitInfo VkProtectedSubmitInfo where
   withCStruct = withCStructProtectedSubmitInfo
 instance FromCStruct ProtectedSubmitInfo VkProtectedSubmitInfo where
@@ -3849,6 +4698,30 @@ instance FromCStruct PipelineColorBlendAdvancedStateCreateInfoEXT VkPipelineColo
   fromCStruct = fromCStructPipelineColorBlendAdvancedStateCreateInfoEXT
 instance HasPNext PipelineColorBlendAdvancedStateCreateInfoEXT where
   getPNext a = vkPNext (a :: PipelineColorBlendAdvancedStateCreateInfoEXT)
+instance ToCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT VkPhysicalDeviceInlineUniformBlockFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceInlineUniformBlockFeaturesEXT
+instance FromCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT VkPhysicalDeviceInlineUniformBlockFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceInlineUniformBlockFeaturesEXT
+instance HasPNext PhysicalDeviceInlineUniformBlockFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceInlineUniformBlockFeaturesEXT)
+instance ToCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT VkPhysicalDeviceInlineUniformBlockPropertiesEXT where
+  withCStruct = withCStructPhysicalDeviceInlineUniformBlockPropertiesEXT
+instance FromCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT VkPhysicalDeviceInlineUniformBlockPropertiesEXT where
+  fromCStruct = fromCStructPhysicalDeviceInlineUniformBlockPropertiesEXT
+instance HasPNext PhysicalDeviceInlineUniformBlockPropertiesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceInlineUniformBlockPropertiesEXT)
+instance ToCStruct WriteDescriptorSetInlineUniformBlockEXT VkWriteDescriptorSetInlineUniformBlockEXT where
+  withCStruct = withCStructWriteDescriptorSetInlineUniformBlockEXT
+instance FromCStruct WriteDescriptorSetInlineUniformBlockEXT VkWriteDescriptorSetInlineUniformBlockEXT where
+  fromCStruct = fromCStructWriteDescriptorSetInlineUniformBlockEXT
+instance HasPNext WriteDescriptorSetInlineUniformBlockEXT where
+  getPNext a = vkPNext (a :: WriteDescriptorSetInlineUniformBlockEXT)
+instance ToCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT VkDescriptorPoolInlineUniformBlockCreateInfoEXT where
+  withCStruct = withCStructDescriptorPoolInlineUniformBlockCreateInfoEXT
+instance FromCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT VkDescriptorPoolInlineUniformBlockCreateInfoEXT where
+  fromCStruct = fromCStructDescriptorPoolInlineUniformBlockCreateInfoEXT
+instance HasPNext DescriptorPoolInlineUniformBlockCreateInfoEXT where
+  getPNext a = vkPNext (a :: DescriptorPoolInlineUniformBlockCreateInfoEXT)
 instance ToCStruct PipelineCoverageModulationStateCreateInfoNV VkPipelineCoverageModulationStateCreateInfoNV where
   withCStruct = withCStructPipelineCoverageModulationStateCreateInfoNV
 instance FromCStruct PipelineCoverageModulationStateCreateInfoNV VkPipelineCoverageModulationStateCreateInfoNV where
@@ -3885,12 +4758,30 @@ instance FromCStruct DescriptorSetLayoutSupport VkDescriptorSetLayoutSupport whe
   fromCStruct = fromCStructDescriptorSetLayoutSupport
 instance HasPNext DescriptorSetLayoutSupport where
   getPNext a = vkPNext (a :: DescriptorSetLayoutSupport)
-instance ToCStruct PhysicalDeviceShaderDrawParameterFeatures VkPhysicalDeviceShaderDrawParameterFeatures where
-  withCStruct = withCStructPhysicalDeviceShaderDrawParameterFeatures
-instance FromCStruct PhysicalDeviceShaderDrawParameterFeatures VkPhysicalDeviceShaderDrawParameterFeatures where
-  fromCStruct = fromCStructPhysicalDeviceShaderDrawParameterFeatures
-instance HasPNext PhysicalDeviceShaderDrawParameterFeatures where
-  getPNext a = vkPNext (a :: PhysicalDeviceShaderDrawParameterFeatures)
+instance ToCStruct PhysicalDeviceShaderDrawParametersFeatures VkPhysicalDeviceShaderDrawParametersFeatures where
+  withCStruct = withCStructPhysicalDeviceShaderDrawParametersFeatures
+instance FromCStruct PhysicalDeviceShaderDrawParametersFeatures VkPhysicalDeviceShaderDrawParametersFeatures where
+  fromCStruct = fromCStructPhysicalDeviceShaderDrawParametersFeatures
+instance HasPNext PhysicalDeviceShaderDrawParametersFeatures where
+  getPNext a = vkPNext (a :: PhysicalDeviceShaderDrawParametersFeatures)
+instance ToCStruct PhysicalDeviceFloat16Int8FeaturesKHR VkPhysicalDeviceFloat16Int8FeaturesKHR where
+  withCStruct = withCStructPhysicalDeviceFloat16Int8FeaturesKHR
+instance FromCStruct PhysicalDeviceFloat16Int8FeaturesKHR VkPhysicalDeviceFloat16Int8FeaturesKHR where
+  fromCStruct = fromCStructPhysicalDeviceFloat16Int8FeaturesKHR
+instance HasPNext PhysicalDeviceFloat16Int8FeaturesKHR where
+  getPNext a = vkPNext (a :: PhysicalDeviceFloat16Int8FeaturesKHR)
+instance ToCStruct PhysicalDeviceFloatControlsPropertiesKHR VkPhysicalDeviceFloatControlsPropertiesKHR where
+  withCStruct = withCStructPhysicalDeviceFloatControlsPropertiesKHR
+instance FromCStruct PhysicalDeviceFloatControlsPropertiesKHR VkPhysicalDeviceFloatControlsPropertiesKHR where
+  fromCStruct = fromCStructPhysicalDeviceFloatControlsPropertiesKHR
+instance HasPNext PhysicalDeviceFloatControlsPropertiesKHR where
+  getPNext a = vkPNext (a :: PhysicalDeviceFloatControlsPropertiesKHR)
+instance ToCStruct PhysicalDeviceHostQueryResetFeaturesEXT VkPhysicalDeviceHostQueryResetFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceHostQueryResetFeaturesEXT
+instance FromCStruct PhysicalDeviceHostQueryResetFeaturesEXT VkPhysicalDeviceHostQueryResetFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceHostQueryResetFeaturesEXT
+instance HasPNext PhysicalDeviceHostQueryResetFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceHostQueryResetFeaturesEXT)
 instance ToCStruct ShaderResourceUsageAMD VkShaderResourceUsageAMD where
   withCStruct = withCStructShaderResourceUsageAMD
 instance FromCStruct ShaderResourceUsageAMD VkShaderResourceUsageAMD where
@@ -3961,6 +4852,12 @@ instance FromCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT VkPhys
   fromCStruct = fromCStructPhysicalDeviceConservativeRasterizationPropertiesEXT
 instance HasPNext PhysicalDeviceConservativeRasterizationPropertiesEXT where
   getPNext a = vkPNext (a :: PhysicalDeviceConservativeRasterizationPropertiesEXT)
+instance ToCStruct CalibratedTimestampInfoEXT VkCalibratedTimestampInfoEXT where
+  withCStruct = withCStructCalibratedTimestampInfoEXT
+instance FromCStruct CalibratedTimestampInfoEXT VkCalibratedTimestampInfoEXT where
+  fromCStruct = fromCStructCalibratedTimestampInfoEXT
+instance HasPNext CalibratedTimestampInfoEXT where
+  getPNext a = vkPNext (a :: CalibratedTimestampInfoEXT)
 instance ToCStruct PhysicalDeviceShaderCorePropertiesAMD VkPhysicalDeviceShaderCorePropertiesAMD where
   withCStruct = withCStructPhysicalDeviceShaderCorePropertiesAMD
 instance FromCStruct PhysicalDeviceShaderCorePropertiesAMD VkPhysicalDeviceShaderCorePropertiesAMD where
@@ -4003,6 +4900,48 @@ instance FromCStruct DescriptorSetVariableDescriptorCountLayoutSupportEXT VkDesc
   fromCStruct = fromCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT
 instance HasPNext DescriptorSetVariableDescriptorCountLayoutSupportEXT where
   getPNext a = vkPNext (a :: DescriptorSetVariableDescriptorCountLayoutSupportEXT)
+instance ToCStruct AttachmentDescription2KHR VkAttachmentDescription2KHR where
+  withCStruct = withCStructAttachmentDescription2KHR
+instance FromCStruct AttachmentDescription2KHR VkAttachmentDescription2KHR where
+  fromCStruct = fromCStructAttachmentDescription2KHR
+instance HasPNext AttachmentDescription2KHR where
+  getPNext a = vkPNext (a :: AttachmentDescription2KHR)
+instance ToCStruct AttachmentReference2KHR VkAttachmentReference2KHR where
+  withCStruct = withCStructAttachmentReference2KHR
+instance FromCStruct AttachmentReference2KHR VkAttachmentReference2KHR where
+  fromCStruct = fromCStructAttachmentReference2KHR
+instance HasPNext AttachmentReference2KHR where
+  getPNext a = vkPNext (a :: AttachmentReference2KHR)
+instance ToCStruct SubpassDescription2KHR VkSubpassDescription2KHR where
+  withCStruct = withCStructSubpassDescription2KHR
+instance FromCStruct SubpassDescription2KHR VkSubpassDescription2KHR where
+  fromCStruct = fromCStructSubpassDescription2KHR
+instance HasPNext SubpassDescription2KHR where
+  getPNext a = vkPNext (a :: SubpassDescription2KHR)
+instance ToCStruct SubpassDependency2KHR VkSubpassDependency2KHR where
+  withCStruct = withCStructSubpassDependency2KHR
+instance FromCStruct SubpassDependency2KHR VkSubpassDependency2KHR where
+  fromCStruct = fromCStructSubpassDependency2KHR
+instance HasPNext SubpassDependency2KHR where
+  getPNext a = vkPNext (a :: SubpassDependency2KHR)
+instance ToCStruct RenderPassCreateInfo2KHR VkRenderPassCreateInfo2KHR where
+  withCStruct = withCStructRenderPassCreateInfo2KHR
+instance FromCStruct RenderPassCreateInfo2KHR VkRenderPassCreateInfo2KHR where
+  fromCStruct = fromCStructRenderPassCreateInfo2KHR
+instance HasPNext RenderPassCreateInfo2KHR where
+  getPNext a = vkPNext (a :: RenderPassCreateInfo2KHR)
+instance ToCStruct SubpassBeginInfoKHR VkSubpassBeginInfoKHR where
+  withCStruct = withCStructSubpassBeginInfoKHR
+instance FromCStruct SubpassBeginInfoKHR VkSubpassBeginInfoKHR where
+  fromCStruct = fromCStructSubpassBeginInfoKHR
+instance HasPNext SubpassBeginInfoKHR where
+  getPNext a = vkPNext (a :: SubpassBeginInfoKHR)
+instance ToCStruct SubpassEndInfoKHR VkSubpassEndInfoKHR where
+  withCStruct = withCStructSubpassEndInfoKHR
+instance FromCStruct SubpassEndInfoKHR VkSubpassEndInfoKHR where
+  fromCStruct = fromCStructSubpassEndInfoKHR
+instance HasPNext SubpassEndInfoKHR where
+  getPNext a = vkPNext (a :: SubpassEndInfoKHR)
 instance ToCStruct VertexInputBindingDivisorDescriptionEXT VkVertexInputBindingDivisorDescriptionEXT where
   withCStruct = withCStructVertexInputBindingDivisorDescriptionEXT
 instance FromCStruct VertexInputBindingDivisorDescriptionEXT VkVertexInputBindingDivisorDescriptionEXT where
@@ -4020,6 +4959,12 @@ instance FromCStruct PhysicalDeviceVertexAttributeDivisorPropertiesEXT VkPhysica
   fromCStruct = fromCStructPhysicalDeviceVertexAttributeDivisorPropertiesEXT
 instance HasPNext PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
   getPNext a = vkPNext (a :: PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
+instance ToCStruct PhysicalDevicePCIBusInfoPropertiesEXT VkPhysicalDevicePCIBusInfoPropertiesEXT where
+  withCStruct = withCStructPhysicalDevicePCIBusInfoPropertiesEXT
+instance FromCStruct PhysicalDevicePCIBusInfoPropertiesEXT VkPhysicalDevicePCIBusInfoPropertiesEXT where
+  fromCStruct = fromCStructPhysicalDevicePCIBusInfoPropertiesEXT
+instance HasPNext PhysicalDevicePCIBusInfoPropertiesEXT where
+  getPNext a = vkPNext (a :: PhysicalDevicePCIBusInfoPropertiesEXT)
 
 #if VK_USE_PLATFORM_ANDROID_KHR
 instance ToCStruct ImportAndroidHardwareBufferInfoANDROID VkImportAndroidHardwareBufferInfoANDROID where
@@ -4065,6 +5010,12 @@ instance FromCStruct AndroidHardwareBufferFormatPropertiesANDROID VkAndroidHardw
 instance HasPNext AndroidHardwareBufferFormatPropertiesANDROID where
   getPNext a = vkPNext (a :: AndroidHardwareBufferFormatPropertiesANDROID)
 #endif
+instance ToCStruct CommandBufferInheritanceConditionalRenderingInfoEXT VkCommandBufferInheritanceConditionalRenderingInfoEXT where
+  withCStruct = withCStructCommandBufferInheritanceConditionalRenderingInfoEXT
+instance FromCStruct CommandBufferInheritanceConditionalRenderingInfoEXT VkCommandBufferInheritanceConditionalRenderingInfoEXT where
+  fromCStruct = fromCStructCommandBufferInheritanceConditionalRenderingInfoEXT
+instance HasPNext CommandBufferInheritanceConditionalRenderingInfoEXT where
+  getPNext a = vkPNext (a :: CommandBufferInheritanceConditionalRenderingInfoEXT)
 
 #if VK_USE_PLATFORM_ANDROID_KHR
 instance ToCStruct ExternalFormatANDROID VkExternalFormatANDROID where
@@ -4074,6 +5025,485 @@ instance FromCStruct ExternalFormatANDROID VkExternalFormatANDROID where
 instance HasPNext ExternalFormatANDROID where
   getPNext a = vkPNext (a :: ExternalFormatANDROID)
 #endif
+instance ToCStruct PhysicalDevice8BitStorageFeaturesKHR VkPhysicalDevice8BitStorageFeaturesKHR where
+  withCStruct = withCStructPhysicalDevice8BitStorageFeaturesKHR
+instance FromCStruct PhysicalDevice8BitStorageFeaturesKHR VkPhysicalDevice8BitStorageFeaturesKHR where
+  fromCStruct = fromCStructPhysicalDevice8BitStorageFeaturesKHR
+instance HasPNext PhysicalDevice8BitStorageFeaturesKHR where
+  getPNext a = vkPNext (a :: PhysicalDevice8BitStorageFeaturesKHR)
+instance ToCStruct PhysicalDeviceConditionalRenderingFeaturesEXT VkPhysicalDeviceConditionalRenderingFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceConditionalRenderingFeaturesEXT
+instance FromCStruct PhysicalDeviceConditionalRenderingFeaturesEXT VkPhysicalDeviceConditionalRenderingFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceConditionalRenderingFeaturesEXT
+instance HasPNext PhysicalDeviceConditionalRenderingFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceConditionalRenderingFeaturesEXT)
+instance ToCStruct PhysicalDeviceVulkanMemoryModelFeaturesKHR VkPhysicalDeviceVulkanMemoryModelFeaturesKHR where
+  withCStruct = withCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR
+instance FromCStruct PhysicalDeviceVulkanMemoryModelFeaturesKHR VkPhysicalDeviceVulkanMemoryModelFeaturesKHR where
+  fromCStruct = fromCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR
+instance HasPNext PhysicalDeviceVulkanMemoryModelFeaturesKHR where
+  getPNext a = vkPNext (a :: PhysicalDeviceVulkanMemoryModelFeaturesKHR)
+instance ToCStruct PhysicalDeviceShaderAtomicInt64FeaturesKHR VkPhysicalDeviceShaderAtomicInt64FeaturesKHR where
+  withCStruct = withCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR
+instance FromCStruct PhysicalDeviceShaderAtomicInt64FeaturesKHR VkPhysicalDeviceShaderAtomicInt64FeaturesKHR where
+  fromCStruct = fromCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR
+instance HasPNext PhysicalDeviceShaderAtomicInt64FeaturesKHR where
+  getPNext a = vkPNext (a :: PhysicalDeviceShaderAtomicInt64FeaturesKHR)
+instance ToCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceVertexAttributeDivisorFeaturesEXT
+instance FromCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceVertexAttributeDivisorFeaturesEXT
+instance HasPNext PhysicalDeviceVertexAttributeDivisorFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceVertexAttributeDivisorFeaturesEXT)
+instance ToCStruct QueueFamilyCheckpointPropertiesNV VkQueueFamilyCheckpointPropertiesNV where
+  withCStruct = withCStructQueueFamilyCheckpointPropertiesNV
+instance FromCStruct QueueFamilyCheckpointPropertiesNV VkQueueFamilyCheckpointPropertiesNV where
+  fromCStruct = fromCStructQueueFamilyCheckpointPropertiesNV
+instance HasPNext QueueFamilyCheckpointPropertiesNV where
+  getPNext a = vkPNext (a :: QueueFamilyCheckpointPropertiesNV)
+instance ToCStruct CheckpointDataNV VkCheckpointDataNV where
+  withCStruct = withCStructCheckpointDataNV
+instance FromCStruct CheckpointDataNV VkCheckpointDataNV where
+  fromCStruct = fromCStructCheckpointDataNV
+instance HasPNext CheckpointDataNV where
+  getPNext a = vkPNext (a :: CheckpointDataNV)
+instance ToCStruct PhysicalDeviceDepthStencilResolvePropertiesKHR VkPhysicalDeviceDepthStencilResolvePropertiesKHR where
+  withCStruct = withCStructPhysicalDeviceDepthStencilResolvePropertiesKHR
+instance FromCStruct PhysicalDeviceDepthStencilResolvePropertiesKHR VkPhysicalDeviceDepthStencilResolvePropertiesKHR where
+  fromCStruct = fromCStructPhysicalDeviceDepthStencilResolvePropertiesKHR
+instance HasPNext PhysicalDeviceDepthStencilResolvePropertiesKHR where
+  getPNext a = vkPNext (a :: PhysicalDeviceDepthStencilResolvePropertiesKHR)
+instance ToCStruct SubpassDescriptionDepthStencilResolveKHR VkSubpassDescriptionDepthStencilResolveKHR where
+  withCStruct = withCStructSubpassDescriptionDepthStencilResolveKHR
+instance FromCStruct SubpassDescriptionDepthStencilResolveKHR VkSubpassDescriptionDepthStencilResolveKHR where
+  fromCStruct = fromCStructSubpassDescriptionDepthStencilResolveKHR
+instance HasPNext SubpassDescriptionDepthStencilResolveKHR where
+  getPNext a = vkPNext (a :: SubpassDescriptionDepthStencilResolveKHR)
+instance ToCStruct ImageViewASTCDecodeModeEXT VkImageViewASTCDecodeModeEXT where
+  withCStruct = withCStructImageViewASTCDecodeModeEXT
+instance FromCStruct ImageViewASTCDecodeModeEXT VkImageViewASTCDecodeModeEXT where
+  fromCStruct = fromCStructImageViewASTCDecodeModeEXT
+instance HasPNext ImageViewASTCDecodeModeEXT where
+  getPNext a = vkPNext (a :: ImageViewASTCDecodeModeEXT)
+instance ToCStruct PhysicalDeviceASTCDecodeFeaturesEXT VkPhysicalDeviceASTCDecodeFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceASTCDecodeFeaturesEXT
+instance FromCStruct PhysicalDeviceASTCDecodeFeaturesEXT VkPhysicalDeviceASTCDecodeFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceASTCDecodeFeaturesEXT
+instance HasPNext PhysicalDeviceASTCDecodeFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceASTCDecodeFeaturesEXT)
+instance ToCStruct PhysicalDeviceTransformFeedbackFeaturesEXT VkPhysicalDeviceTransformFeedbackFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceTransformFeedbackFeaturesEXT
+instance FromCStruct PhysicalDeviceTransformFeedbackFeaturesEXT VkPhysicalDeviceTransformFeedbackFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceTransformFeedbackFeaturesEXT
+instance HasPNext PhysicalDeviceTransformFeedbackFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceTransformFeedbackFeaturesEXT)
+instance ToCStruct PhysicalDeviceTransformFeedbackPropertiesEXT VkPhysicalDeviceTransformFeedbackPropertiesEXT where
+  withCStruct = withCStructPhysicalDeviceTransformFeedbackPropertiesEXT
+instance FromCStruct PhysicalDeviceTransformFeedbackPropertiesEXT VkPhysicalDeviceTransformFeedbackPropertiesEXT where
+  fromCStruct = fromCStructPhysicalDeviceTransformFeedbackPropertiesEXT
+instance HasPNext PhysicalDeviceTransformFeedbackPropertiesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceTransformFeedbackPropertiesEXT)
+instance ToCStruct PipelineRasterizationStateStreamCreateInfoEXT VkPipelineRasterizationStateStreamCreateInfoEXT where
+  withCStruct = withCStructPipelineRasterizationStateStreamCreateInfoEXT
+instance FromCStruct PipelineRasterizationStateStreamCreateInfoEXT VkPipelineRasterizationStateStreamCreateInfoEXT where
+  fromCStruct = fromCStructPipelineRasterizationStateStreamCreateInfoEXT
+instance HasPNext PipelineRasterizationStateStreamCreateInfoEXT where
+  getPNext a = vkPNext (a :: PipelineRasterizationStateStreamCreateInfoEXT)
+instance ToCStruct PhysicalDeviceRepresentativeFragmentTestFeaturesNV VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceRepresentativeFragmentTestFeaturesNV
+instance FromCStruct PhysicalDeviceRepresentativeFragmentTestFeaturesNV VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceRepresentativeFragmentTestFeaturesNV
+instance HasPNext PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
+instance ToCStruct PipelineRepresentativeFragmentTestStateCreateInfoNV VkPipelineRepresentativeFragmentTestStateCreateInfoNV where
+  withCStruct = withCStructPipelineRepresentativeFragmentTestStateCreateInfoNV
+instance FromCStruct PipelineRepresentativeFragmentTestStateCreateInfoNV VkPipelineRepresentativeFragmentTestStateCreateInfoNV where
+  fromCStruct = fromCStructPipelineRepresentativeFragmentTestStateCreateInfoNV
+instance HasPNext PipelineRepresentativeFragmentTestStateCreateInfoNV where
+  getPNext a = vkPNext (a :: PipelineRepresentativeFragmentTestStateCreateInfoNV)
+instance ToCStruct PhysicalDeviceExclusiveScissorFeaturesNV VkPhysicalDeviceExclusiveScissorFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceExclusiveScissorFeaturesNV
+instance FromCStruct PhysicalDeviceExclusiveScissorFeaturesNV VkPhysicalDeviceExclusiveScissorFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceExclusiveScissorFeaturesNV
+instance HasPNext PhysicalDeviceExclusiveScissorFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceExclusiveScissorFeaturesNV)
+instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV VkPipelineViewportExclusiveScissorStateCreateInfoNV where
+  withCStruct = withCStructPipelineViewportExclusiveScissorStateCreateInfoNV
+instance FromCStruct PipelineViewportExclusiveScissorStateCreateInfoNV VkPipelineViewportExclusiveScissorStateCreateInfoNV where
+  fromCStruct = fromCStructPipelineViewportExclusiveScissorStateCreateInfoNV
+instance HasPNext PipelineViewportExclusiveScissorStateCreateInfoNV where
+  getPNext a = vkPNext (a :: PipelineViewportExclusiveScissorStateCreateInfoNV)
+instance ToCStruct PhysicalDeviceCornerSampledImageFeaturesNV VkPhysicalDeviceCornerSampledImageFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceCornerSampledImageFeaturesNV
+instance FromCStruct PhysicalDeviceCornerSampledImageFeaturesNV VkPhysicalDeviceCornerSampledImageFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceCornerSampledImageFeaturesNV
+instance HasPNext PhysicalDeviceCornerSampledImageFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceCornerSampledImageFeaturesNV)
+instance ToCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV VkPhysicalDeviceComputeShaderDerivativesFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV
+instance FromCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV VkPhysicalDeviceComputeShaderDerivativesFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV
+instance HasPNext PhysicalDeviceComputeShaderDerivativesFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceComputeShaderDerivativesFeaturesNV)
+instance ToCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceFragmentShaderBarycentricFeaturesNV
+instance FromCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceFragmentShaderBarycentricFeaturesNV
+instance HasPNext PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
+instance ToCStruct PhysicalDeviceShaderImageFootprintFeaturesNV VkPhysicalDeviceShaderImageFootprintFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceShaderImageFootprintFeaturesNV
+instance FromCStruct PhysicalDeviceShaderImageFootprintFeaturesNV VkPhysicalDeviceShaderImageFootprintFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceShaderImageFootprintFeaturesNV
+instance HasPNext PhysicalDeviceShaderImageFootprintFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceShaderImageFootprintFeaturesNV)
+instance ToCStruct PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
+instance FromCStruct PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
+instance HasPNext PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
+instance ToCStruct ShadingRatePaletteNV VkShadingRatePaletteNV where
+  withCStruct = withCStructShadingRatePaletteNV
+instance FromCStruct ShadingRatePaletteNV VkShadingRatePaletteNV where
+  fromCStruct = fromCStructShadingRatePaletteNV
+
+instance ToCStruct PipelineViewportShadingRateImageStateCreateInfoNV VkPipelineViewportShadingRateImageStateCreateInfoNV where
+  withCStruct = withCStructPipelineViewportShadingRateImageStateCreateInfoNV
+instance FromCStruct PipelineViewportShadingRateImageStateCreateInfoNV VkPipelineViewportShadingRateImageStateCreateInfoNV where
+  fromCStruct = fromCStructPipelineViewportShadingRateImageStateCreateInfoNV
+instance HasPNext PipelineViewportShadingRateImageStateCreateInfoNV where
+  getPNext a = vkPNext (a :: PipelineViewportShadingRateImageStateCreateInfoNV)
+instance ToCStruct PhysicalDeviceShadingRateImageFeaturesNV VkPhysicalDeviceShadingRateImageFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceShadingRateImageFeaturesNV
+instance FromCStruct PhysicalDeviceShadingRateImageFeaturesNV VkPhysicalDeviceShadingRateImageFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceShadingRateImageFeaturesNV
+instance HasPNext PhysicalDeviceShadingRateImageFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceShadingRateImageFeaturesNV)
+instance ToCStruct PhysicalDeviceShadingRateImagePropertiesNV VkPhysicalDeviceShadingRateImagePropertiesNV where
+  withCStruct = withCStructPhysicalDeviceShadingRateImagePropertiesNV
+instance FromCStruct PhysicalDeviceShadingRateImagePropertiesNV VkPhysicalDeviceShadingRateImagePropertiesNV where
+  fromCStruct = fromCStructPhysicalDeviceShadingRateImagePropertiesNV
+instance HasPNext PhysicalDeviceShadingRateImagePropertiesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceShadingRateImagePropertiesNV)
+instance ToCStruct CoarseSampleLocationNV VkCoarseSampleLocationNV where
+  withCStruct = withCStructCoarseSampleLocationNV
+instance FromCStruct CoarseSampleLocationNV VkCoarseSampleLocationNV where
+  fromCStruct = fromCStructCoarseSampleLocationNV
+
+instance ToCStruct CoarseSampleOrderCustomNV VkCoarseSampleOrderCustomNV where
+  withCStruct = withCStructCoarseSampleOrderCustomNV
+instance FromCStruct CoarseSampleOrderCustomNV VkCoarseSampleOrderCustomNV where
+  fromCStruct = fromCStructCoarseSampleOrderCustomNV
+
+instance ToCStruct PipelineViewportCoarseSampleOrderStateCreateInfoNV VkPipelineViewportCoarseSampleOrderStateCreateInfoNV where
+  withCStruct = withCStructPipelineViewportCoarseSampleOrderStateCreateInfoNV
+instance FromCStruct PipelineViewportCoarseSampleOrderStateCreateInfoNV VkPipelineViewportCoarseSampleOrderStateCreateInfoNV where
+  fromCStruct = fromCStructPipelineViewportCoarseSampleOrderStateCreateInfoNV
+instance HasPNext PipelineViewportCoarseSampleOrderStateCreateInfoNV where
+  getPNext a = vkPNext (a :: PipelineViewportCoarseSampleOrderStateCreateInfoNV)
+instance ToCStruct PhysicalDeviceMeshShaderFeaturesNV VkPhysicalDeviceMeshShaderFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceMeshShaderFeaturesNV
+instance FromCStruct PhysicalDeviceMeshShaderFeaturesNV VkPhysicalDeviceMeshShaderFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceMeshShaderFeaturesNV
+instance HasPNext PhysicalDeviceMeshShaderFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceMeshShaderFeaturesNV)
+instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV VkPhysicalDeviceMeshShaderPropertiesNV where
+  withCStruct = withCStructPhysicalDeviceMeshShaderPropertiesNV
+instance FromCStruct PhysicalDeviceMeshShaderPropertiesNV VkPhysicalDeviceMeshShaderPropertiesNV where
+  fromCStruct = fromCStructPhysicalDeviceMeshShaderPropertiesNV
+instance HasPNext PhysicalDeviceMeshShaderPropertiesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceMeshShaderPropertiesNV)
+instance ToCStruct DrawMeshTasksIndirectCommandNV VkDrawMeshTasksIndirectCommandNV where
+  withCStruct = withCStructDrawMeshTasksIndirectCommandNV
+instance FromCStruct DrawMeshTasksIndirectCommandNV VkDrawMeshTasksIndirectCommandNV where
+  fromCStruct = fromCStructDrawMeshTasksIndirectCommandNV
+
+instance ToCStruct RayTracingShaderGroupCreateInfoNV VkRayTracingShaderGroupCreateInfoNV where
+  withCStruct = withCStructRayTracingShaderGroupCreateInfoNV
+instance FromCStruct RayTracingShaderGroupCreateInfoNV VkRayTracingShaderGroupCreateInfoNV where
+  fromCStruct = fromCStructRayTracingShaderGroupCreateInfoNV
+instance HasPNext RayTracingShaderGroupCreateInfoNV where
+  getPNext a = vkPNext (a :: RayTracingShaderGroupCreateInfoNV)
+instance ToCStruct RayTracingPipelineCreateInfoNV VkRayTracingPipelineCreateInfoNV where
+  withCStruct = withCStructRayTracingPipelineCreateInfoNV
+instance FromCStruct RayTracingPipelineCreateInfoNV VkRayTracingPipelineCreateInfoNV where
+  fromCStruct = fromCStructRayTracingPipelineCreateInfoNV
+instance HasPNext RayTracingPipelineCreateInfoNV where
+  getPNext a = vkPNext (a :: RayTracingPipelineCreateInfoNV)
+instance ToCStruct GeometryTrianglesNV VkGeometryTrianglesNV where
+  withCStruct = withCStructGeometryTrianglesNV
+instance FromCStruct GeometryTrianglesNV VkGeometryTrianglesNV where
+  fromCStruct = fromCStructGeometryTrianglesNV
+instance HasPNext GeometryTrianglesNV where
+  getPNext a = vkPNext (a :: GeometryTrianglesNV)
+instance ToCStruct GeometryAABBNV VkGeometryAABBNV where
+  withCStruct = withCStructGeometryAABBNV
+instance FromCStruct GeometryAABBNV VkGeometryAABBNV where
+  fromCStruct = fromCStructGeometryAABBNV
+instance HasPNext GeometryAABBNV where
+  getPNext a = vkPNext (a :: GeometryAABBNV)
+instance ToCStruct GeometryDataNV VkGeometryDataNV where
+  withCStruct = withCStructGeometryDataNV
+instance FromCStruct GeometryDataNV VkGeometryDataNV where
+  fromCStruct = fromCStructGeometryDataNV
+
+instance ToCStruct GeometryNV VkGeometryNV where
+  withCStruct = withCStructGeometryNV
+instance FromCStruct GeometryNV VkGeometryNV where
+  fromCStruct = fromCStructGeometryNV
+instance HasPNext GeometryNV where
+  getPNext a = vkPNext (a :: GeometryNV)
+instance ToCStruct AccelerationStructureInfoNV VkAccelerationStructureInfoNV where
+  withCStruct = withCStructAccelerationStructureInfoNV
+instance FromCStruct AccelerationStructureInfoNV VkAccelerationStructureInfoNV where
+  fromCStruct = fromCStructAccelerationStructureInfoNV
+instance HasPNext AccelerationStructureInfoNV where
+  getPNext a = vkPNext (a :: AccelerationStructureInfoNV)
+instance ToCStruct AccelerationStructureCreateInfoNV VkAccelerationStructureCreateInfoNV where
+  withCStruct = withCStructAccelerationStructureCreateInfoNV
+instance FromCStruct AccelerationStructureCreateInfoNV VkAccelerationStructureCreateInfoNV where
+  fromCStruct = fromCStructAccelerationStructureCreateInfoNV
+instance HasPNext AccelerationStructureCreateInfoNV where
+  getPNext a = vkPNext (a :: AccelerationStructureCreateInfoNV)
+instance ToCStruct BindAccelerationStructureMemoryInfoNV VkBindAccelerationStructureMemoryInfoNV where
+  withCStruct = withCStructBindAccelerationStructureMemoryInfoNV
+instance FromCStruct BindAccelerationStructureMemoryInfoNV VkBindAccelerationStructureMemoryInfoNV where
+  fromCStruct = fromCStructBindAccelerationStructureMemoryInfoNV
+instance HasPNext BindAccelerationStructureMemoryInfoNV where
+  getPNext a = vkPNext (a :: BindAccelerationStructureMemoryInfoNV)
+instance ToCStruct WriteDescriptorSetAccelerationStructureNV VkWriteDescriptorSetAccelerationStructureNV where
+  withCStruct = withCStructWriteDescriptorSetAccelerationStructureNV
+instance FromCStruct WriteDescriptorSetAccelerationStructureNV VkWriteDescriptorSetAccelerationStructureNV where
+  fromCStruct = fromCStructWriteDescriptorSetAccelerationStructureNV
+instance HasPNext WriteDescriptorSetAccelerationStructureNV where
+  getPNext a = vkPNext (a :: WriteDescriptorSetAccelerationStructureNV)
+instance ToCStruct AccelerationStructureMemoryRequirementsInfoNV VkAccelerationStructureMemoryRequirementsInfoNV where
+  withCStruct = withCStructAccelerationStructureMemoryRequirementsInfoNV
+instance FromCStruct AccelerationStructureMemoryRequirementsInfoNV VkAccelerationStructureMemoryRequirementsInfoNV where
+  fromCStruct = fromCStructAccelerationStructureMemoryRequirementsInfoNV
+instance HasPNext AccelerationStructureMemoryRequirementsInfoNV where
+  getPNext a = vkPNext (a :: AccelerationStructureMemoryRequirementsInfoNV)
+instance ToCStruct PhysicalDeviceRayTracingPropertiesNV VkPhysicalDeviceRayTracingPropertiesNV where
+  withCStruct = withCStructPhysicalDeviceRayTracingPropertiesNV
+instance FromCStruct PhysicalDeviceRayTracingPropertiesNV VkPhysicalDeviceRayTracingPropertiesNV where
+  fromCStruct = fromCStructPhysicalDeviceRayTracingPropertiesNV
+instance HasPNext PhysicalDeviceRayTracingPropertiesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceRayTracingPropertiesNV)
+instance ToCStruct DrmFormatModifierPropertiesListEXT VkDrmFormatModifierPropertiesListEXT where
+  withCStruct = withCStructDrmFormatModifierPropertiesListEXT
+instance FromCStruct DrmFormatModifierPropertiesListEXT VkDrmFormatModifierPropertiesListEXT where
+  fromCStruct = fromCStructDrmFormatModifierPropertiesListEXT
+instance HasPNext DrmFormatModifierPropertiesListEXT where
+  getPNext a = vkPNext (a :: DrmFormatModifierPropertiesListEXT)
+instance ToCStruct DrmFormatModifierPropertiesEXT VkDrmFormatModifierPropertiesEXT where
+  withCStruct = withCStructDrmFormatModifierPropertiesEXT
+instance FromCStruct DrmFormatModifierPropertiesEXT VkDrmFormatModifierPropertiesEXT where
+  fromCStruct = fromCStructDrmFormatModifierPropertiesEXT
+
+instance ToCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT VkPhysicalDeviceImageDrmFormatModifierInfoEXT where
+  withCStruct = withCStructPhysicalDeviceImageDrmFormatModifierInfoEXT
+instance FromCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT VkPhysicalDeviceImageDrmFormatModifierInfoEXT where
+  fromCStruct = fromCStructPhysicalDeviceImageDrmFormatModifierInfoEXT
+instance HasPNext PhysicalDeviceImageDrmFormatModifierInfoEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceImageDrmFormatModifierInfoEXT)
+instance ToCStruct ImageDrmFormatModifierListCreateInfoEXT VkImageDrmFormatModifierListCreateInfoEXT where
+  withCStruct = withCStructImageDrmFormatModifierListCreateInfoEXT
+instance FromCStruct ImageDrmFormatModifierListCreateInfoEXT VkImageDrmFormatModifierListCreateInfoEXT where
+  fromCStruct = fromCStructImageDrmFormatModifierListCreateInfoEXT
+instance HasPNext ImageDrmFormatModifierListCreateInfoEXT where
+  getPNext a = vkPNext (a :: ImageDrmFormatModifierListCreateInfoEXT)
+instance ToCStruct ImageDrmFormatModifierExplicitCreateInfoEXT VkImageDrmFormatModifierExplicitCreateInfoEXT where
+  withCStruct = withCStructImageDrmFormatModifierExplicitCreateInfoEXT
+instance FromCStruct ImageDrmFormatModifierExplicitCreateInfoEXT VkImageDrmFormatModifierExplicitCreateInfoEXT where
+  fromCStruct = fromCStructImageDrmFormatModifierExplicitCreateInfoEXT
+instance HasPNext ImageDrmFormatModifierExplicitCreateInfoEXT where
+  getPNext a = vkPNext (a :: ImageDrmFormatModifierExplicitCreateInfoEXT)
+instance ToCStruct ImageDrmFormatModifierPropertiesEXT VkImageDrmFormatModifierPropertiesEXT where
+  withCStruct = withCStructImageDrmFormatModifierPropertiesEXT
+instance FromCStruct ImageDrmFormatModifierPropertiesEXT VkImageDrmFormatModifierPropertiesEXT where
+  fromCStruct = fromCStructImageDrmFormatModifierPropertiesEXT
+instance HasPNext ImageDrmFormatModifierPropertiesEXT where
+  getPNext a = vkPNext (a :: ImageDrmFormatModifierPropertiesEXT)
+instance ToCStruct ImageStencilUsageCreateInfoEXT VkImageStencilUsageCreateInfoEXT where
+  withCStruct = withCStructImageStencilUsageCreateInfoEXT
+instance FromCStruct ImageStencilUsageCreateInfoEXT VkImageStencilUsageCreateInfoEXT where
+  fromCStruct = fromCStructImageStencilUsageCreateInfoEXT
+instance HasPNext ImageStencilUsageCreateInfoEXT where
+  getPNext a = vkPNext (a :: ImageStencilUsageCreateInfoEXT)
+instance ToCStruct DeviceMemoryOverallocationCreateInfoAMD VkDeviceMemoryOverallocationCreateInfoAMD where
+  withCStruct = withCStructDeviceMemoryOverallocationCreateInfoAMD
+instance FromCStruct DeviceMemoryOverallocationCreateInfoAMD VkDeviceMemoryOverallocationCreateInfoAMD where
+  fromCStruct = fromCStructDeviceMemoryOverallocationCreateInfoAMD
+instance HasPNext DeviceMemoryOverallocationCreateInfoAMD where
+  getPNext a = vkPNext (a :: DeviceMemoryOverallocationCreateInfoAMD)
+instance ToCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT VkPhysicalDeviceFragmentDensityMapFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceFragmentDensityMapFeaturesEXT
+instance FromCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT VkPhysicalDeviceFragmentDensityMapFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceFragmentDensityMapFeaturesEXT
+instance HasPNext PhysicalDeviceFragmentDensityMapFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceFragmentDensityMapFeaturesEXT)
+instance ToCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT VkPhysicalDeviceFragmentDensityMapPropertiesEXT where
+  withCStruct = withCStructPhysicalDeviceFragmentDensityMapPropertiesEXT
+instance FromCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT VkPhysicalDeviceFragmentDensityMapPropertiesEXT where
+  fromCStruct = fromCStructPhysicalDeviceFragmentDensityMapPropertiesEXT
+instance HasPNext PhysicalDeviceFragmentDensityMapPropertiesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceFragmentDensityMapPropertiesEXT)
+instance ToCStruct RenderPassFragmentDensityMapCreateInfoEXT VkRenderPassFragmentDensityMapCreateInfoEXT where
+  withCStruct = withCStructRenderPassFragmentDensityMapCreateInfoEXT
+instance FromCStruct RenderPassFragmentDensityMapCreateInfoEXT VkRenderPassFragmentDensityMapCreateInfoEXT where
+  fromCStruct = fromCStructRenderPassFragmentDensityMapCreateInfoEXT
+instance HasPNext RenderPassFragmentDensityMapCreateInfoEXT where
+  getPNext a = vkPNext (a :: RenderPassFragmentDensityMapCreateInfoEXT)
+instance ToCStruct PhysicalDeviceScalarBlockLayoutFeaturesEXT VkPhysicalDeviceScalarBlockLayoutFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT
+instance FromCStruct PhysicalDeviceScalarBlockLayoutFeaturesEXT VkPhysicalDeviceScalarBlockLayoutFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT
+instance HasPNext PhysicalDeviceScalarBlockLayoutFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceScalarBlockLayoutFeaturesEXT)
+instance ToCStruct SurfaceProtectedCapabilitiesKHR VkSurfaceProtectedCapabilitiesKHR where
+  withCStruct = withCStructSurfaceProtectedCapabilitiesKHR
+instance FromCStruct SurfaceProtectedCapabilitiesKHR VkSurfaceProtectedCapabilitiesKHR where
+  fromCStruct = fromCStructSurfaceProtectedCapabilitiesKHR
+instance HasPNext SurfaceProtectedCapabilitiesKHR where
+  getPNext a = vkPNext (a :: SurfaceProtectedCapabilitiesKHR)
+instance ToCStruct PhysicalDeviceDepthClipEnableFeaturesEXT VkPhysicalDeviceDepthClipEnableFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceDepthClipEnableFeaturesEXT
+instance FromCStruct PhysicalDeviceDepthClipEnableFeaturesEXT VkPhysicalDeviceDepthClipEnableFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceDepthClipEnableFeaturesEXT
+instance HasPNext PhysicalDeviceDepthClipEnableFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceDepthClipEnableFeaturesEXT)
+instance ToCStruct PipelineRasterizationDepthClipStateCreateInfoEXT VkPipelineRasterizationDepthClipStateCreateInfoEXT where
+  withCStruct = withCStructPipelineRasterizationDepthClipStateCreateInfoEXT
+instance FromCStruct PipelineRasterizationDepthClipStateCreateInfoEXT VkPipelineRasterizationDepthClipStateCreateInfoEXT where
+  fromCStruct = fromCStructPipelineRasterizationDepthClipStateCreateInfoEXT
+instance HasPNext PipelineRasterizationDepthClipStateCreateInfoEXT where
+  getPNext a = vkPNext (a :: PipelineRasterizationDepthClipStateCreateInfoEXT)
+instance ToCStruct PhysicalDeviceMemoryBudgetPropertiesEXT VkPhysicalDeviceMemoryBudgetPropertiesEXT where
+  withCStruct = withCStructPhysicalDeviceMemoryBudgetPropertiesEXT
+instance FromCStruct PhysicalDeviceMemoryBudgetPropertiesEXT VkPhysicalDeviceMemoryBudgetPropertiesEXT where
+  fromCStruct = fromCStructPhysicalDeviceMemoryBudgetPropertiesEXT
+instance HasPNext PhysicalDeviceMemoryBudgetPropertiesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceMemoryBudgetPropertiesEXT)
+instance ToCStruct PhysicalDeviceMemoryPriorityFeaturesEXT VkPhysicalDeviceMemoryPriorityFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceMemoryPriorityFeaturesEXT
+instance FromCStruct PhysicalDeviceMemoryPriorityFeaturesEXT VkPhysicalDeviceMemoryPriorityFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceMemoryPriorityFeaturesEXT
+instance HasPNext PhysicalDeviceMemoryPriorityFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceMemoryPriorityFeaturesEXT)
+instance ToCStruct MemoryPriorityAllocateInfoEXT VkMemoryPriorityAllocateInfoEXT where
+  withCStruct = withCStructMemoryPriorityAllocateInfoEXT
+instance FromCStruct MemoryPriorityAllocateInfoEXT VkMemoryPriorityAllocateInfoEXT where
+  fromCStruct = fromCStructMemoryPriorityAllocateInfoEXT
+instance HasPNext MemoryPriorityAllocateInfoEXT where
+  getPNext a = vkPNext (a :: MemoryPriorityAllocateInfoEXT)
+instance ToCStruct PhysicalDeviceBufferDeviceAddressFeaturesEXT VkPhysicalDeviceBufferDeviceAddressFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT
+instance FromCStruct PhysicalDeviceBufferDeviceAddressFeaturesEXT VkPhysicalDeviceBufferDeviceAddressFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT
+instance HasPNext PhysicalDeviceBufferDeviceAddressFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceBufferDeviceAddressFeaturesEXT)
+instance ToCStruct BufferDeviceAddressInfoEXT VkBufferDeviceAddressInfoEXT where
+  withCStruct = withCStructBufferDeviceAddressInfoEXT
+instance FromCStruct BufferDeviceAddressInfoEXT VkBufferDeviceAddressInfoEXT where
+  fromCStruct = fromCStructBufferDeviceAddressInfoEXT
+instance HasPNext BufferDeviceAddressInfoEXT where
+  getPNext a = vkPNext (a :: BufferDeviceAddressInfoEXT)
+instance ToCStruct BufferDeviceAddressCreateInfoEXT VkBufferDeviceAddressCreateInfoEXT where
+  withCStruct = withCStructBufferDeviceAddressCreateInfoEXT
+instance FromCStruct BufferDeviceAddressCreateInfoEXT VkBufferDeviceAddressCreateInfoEXT where
+  fromCStruct = fromCStructBufferDeviceAddressCreateInfoEXT
+instance HasPNext BufferDeviceAddressCreateInfoEXT where
+  getPNext a = vkPNext (a :: BufferDeviceAddressCreateInfoEXT)
+instance ToCStruct PhysicalDeviceImageViewImageFormatInfoEXT VkPhysicalDeviceImageViewImageFormatInfoEXT where
+  withCStruct = withCStructPhysicalDeviceImageViewImageFormatInfoEXT
+instance FromCStruct PhysicalDeviceImageViewImageFormatInfoEXT VkPhysicalDeviceImageViewImageFormatInfoEXT where
+  fromCStruct = fromCStructPhysicalDeviceImageViewImageFormatInfoEXT
+instance HasPNext PhysicalDeviceImageViewImageFormatInfoEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceImageViewImageFormatInfoEXT)
+instance ToCStruct FilterCubicImageViewImageFormatPropertiesEXT VkFilterCubicImageViewImageFormatPropertiesEXT where
+  withCStruct = withCStructFilterCubicImageViewImageFormatPropertiesEXT
+instance FromCStruct FilterCubicImageViewImageFormatPropertiesEXT VkFilterCubicImageViewImageFormatPropertiesEXT where
+  fromCStruct = fromCStructFilterCubicImageViewImageFormatPropertiesEXT
+instance HasPNext FilterCubicImageViewImageFormatPropertiesEXT where
+  getPNext a = vkPNext (a :: FilterCubicImageViewImageFormatPropertiesEXT)
+instance ToCStruct PhysicalDeviceCooperativeMatrixFeaturesNV VkPhysicalDeviceCooperativeMatrixFeaturesNV where
+  withCStruct = withCStructPhysicalDeviceCooperativeMatrixFeaturesNV
+instance FromCStruct PhysicalDeviceCooperativeMatrixFeaturesNV VkPhysicalDeviceCooperativeMatrixFeaturesNV where
+  fromCStruct = fromCStructPhysicalDeviceCooperativeMatrixFeaturesNV
+instance HasPNext PhysicalDeviceCooperativeMatrixFeaturesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceCooperativeMatrixFeaturesNV)
+instance ToCStruct PhysicalDeviceCooperativeMatrixPropertiesNV VkPhysicalDeviceCooperativeMatrixPropertiesNV where
+  withCStruct = withCStructPhysicalDeviceCooperativeMatrixPropertiesNV
+instance FromCStruct PhysicalDeviceCooperativeMatrixPropertiesNV VkPhysicalDeviceCooperativeMatrixPropertiesNV where
+  fromCStruct = fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV
+instance HasPNext PhysicalDeviceCooperativeMatrixPropertiesNV where
+  getPNext a = vkPNext (a :: PhysicalDeviceCooperativeMatrixPropertiesNV)
+instance ToCStruct CooperativeMatrixPropertiesNV VkCooperativeMatrixPropertiesNV where
+  withCStruct = withCStructCooperativeMatrixPropertiesNV
+instance FromCStruct CooperativeMatrixPropertiesNV VkCooperativeMatrixPropertiesNV where
+  fromCStruct = fromCStructCooperativeMatrixPropertiesNV
+instance HasPNext CooperativeMatrixPropertiesNV where
+  getPNext a = vkPNext (a :: CooperativeMatrixPropertiesNV)
+instance ToCStruct PhysicalDeviceYcbcrImageArraysFeaturesEXT VkPhysicalDeviceYcbcrImageArraysFeaturesEXT where
+  withCStruct = withCStructPhysicalDeviceYcbcrImageArraysFeaturesEXT
+instance FromCStruct PhysicalDeviceYcbcrImageArraysFeaturesEXT VkPhysicalDeviceYcbcrImageArraysFeaturesEXT where
+  fromCStruct = fromCStructPhysicalDeviceYcbcrImageArraysFeaturesEXT
+instance HasPNext PhysicalDeviceYcbcrImageArraysFeaturesEXT where
+  getPNext a = vkPNext (a :: PhysicalDeviceYcbcrImageArraysFeaturesEXT)
+instance ToCStruct ImageViewHandleInfoNVX VkImageViewHandleInfoNVX where
+  withCStruct = withCStructImageViewHandleInfoNVX
+instance FromCStruct ImageViewHandleInfoNVX VkImageViewHandleInfoNVX where
+  fromCStruct = fromCStructImageViewHandleInfoNVX
+instance HasPNext ImageViewHandleInfoNVX where
+  getPNext a = vkPNext (a :: ImageViewHandleInfoNVX)
+
+#if VK_USE_PLATFORM_GGP
+instance ToCStruct PresentFrameTokenGGP VkPresentFrameTokenGGP where
+  withCStruct = withCStructPresentFrameTokenGGP
+instance FromCStruct PresentFrameTokenGGP VkPresentFrameTokenGGP where
+  fromCStruct = fromCStructPresentFrameTokenGGP
+instance HasPNext PresentFrameTokenGGP where
+  getPNext a = vkPNext (a :: PresentFrameTokenGGP)
+#endif
+instance ToCStruct PipelineCreationFeedbackEXT VkPipelineCreationFeedbackEXT where
+  withCStruct = withCStructPipelineCreationFeedbackEXT
+instance FromCStruct PipelineCreationFeedbackEXT VkPipelineCreationFeedbackEXT where
+  fromCStruct = fromCStructPipelineCreationFeedbackEXT
+
+instance ToCStruct PipelineCreationFeedbackCreateInfoEXT VkPipelineCreationFeedbackCreateInfoEXT where
+  withCStruct = withCStructPipelineCreationFeedbackCreateInfoEXT
+instance FromCStruct PipelineCreationFeedbackCreateInfoEXT VkPipelineCreationFeedbackCreateInfoEXT where
+  fromCStruct = fromCStructPipelineCreationFeedbackCreateInfoEXT
+instance HasPNext PipelineCreationFeedbackCreateInfoEXT where
+  getPNext a = vkPNext (a :: PipelineCreationFeedbackCreateInfoEXT)
+
+#if VK_USE_PLATFORM_WIN32_KHR
+instance ToCStruct SurfaceFullScreenExclusiveInfoEXT VkSurfaceFullScreenExclusiveInfoEXT where
+  withCStruct = withCStructSurfaceFullScreenExclusiveInfoEXT
+instance FromCStruct SurfaceFullScreenExclusiveInfoEXT VkSurfaceFullScreenExclusiveInfoEXT where
+  fromCStruct = fromCStructSurfaceFullScreenExclusiveInfoEXT
+instance HasPNext SurfaceFullScreenExclusiveInfoEXT where
+  getPNext a = vkPNext (a :: SurfaceFullScreenExclusiveInfoEXT)
+#endif
+
+#if VK_USE_PLATFORM_WIN32_KHR
+instance ToCStruct SurfaceFullScreenExclusiveWin32InfoEXT VkSurfaceFullScreenExclusiveWin32InfoEXT where
+  withCStruct = withCStructSurfaceFullScreenExclusiveWin32InfoEXT
+instance FromCStruct SurfaceFullScreenExclusiveWin32InfoEXT VkSurfaceFullScreenExclusiveWin32InfoEXT where
+  fromCStruct = fromCStructSurfaceFullScreenExclusiveWin32InfoEXT
+instance HasPNext SurfaceFullScreenExclusiveWin32InfoEXT where
+  getPNext a = vkPNext (a :: SurfaceFullScreenExclusiveWin32InfoEXT)
+#endif
+
+#if VK_USE_PLATFORM_WIN32_KHR
+instance ToCStruct SurfaceCapabilitiesFullScreenExclusiveEXT VkSurfaceCapabilitiesFullScreenExclusiveEXT where
+  withCStruct = withCStructSurfaceCapabilitiesFullScreenExclusiveEXT
+instance FromCStruct SurfaceCapabilitiesFullScreenExclusiveEXT VkSurfaceCapabilitiesFullScreenExclusiveEXT where
+  fromCStruct = fromCStructSurfaceCapabilitiesFullScreenExclusiveEXT
+instance HasPNext SurfaceCapabilitiesFullScreenExclusiveEXT where
+  getPNext a = vkPNext (a :: SurfaceCapabilitiesFullScreenExclusiveEXT)
+#endif
 instance ToCStruct ClearColorValue VkClearColorValue where
   withCStruct = withCStructClearColorValue
 -- No FromCStruct instance for VkClearColorValue as it contains a union type
@@ -4082,6 +5512,38 @@ instance ToCStruct ClearValue VkClearValue where
   withCStruct = withCStructClearValue
 -- No FromCStruct instance for VkClearValue as it contains a union type
 
+-- No documentation found for TopLevel "VkBaseInStructure"
+data VkBaseInStructure = VkBaseInStructure
+  { -- No documentation found for Nested "VkBaseInStructure" "sType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkBaseInStructure" "pNext"
+  vkPNext :: Ptr VkBaseInStructure
+  }
+  deriving (Eq, Show)
+
+instance Storable VkBaseInStructure where
+  sizeOf ~_ = 16
+  alignment ~_ = 8
+  peek ptr = VkBaseInStructure <$> peek (ptr `plusPtr` 0)
+                               <*> peek (ptr `plusPtr` 8)
+  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBaseInStructure))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBaseInStructure))
+-- No documentation found for TopLevel "VkBaseOutStructure"
+data VkBaseOutStructure = VkBaseOutStructure
+  { -- No documentation found for Nested "VkBaseOutStructure" "sType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkBaseOutStructure" "pNext"
+  vkPNext :: Ptr VkBaseOutStructure
+  }
+  deriving (Eq, Show)
+
+instance Storable VkBaseOutStructure where
+  sizeOf ~_ = 16
+  alignment ~_ = 8
+  peek ptr = VkBaseOutStructure <$> peek (ptr `plusPtr` 0)
+                                <*> peek (ptr `plusPtr` 8)
+  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBaseOutStructure))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBaseOutStructure))
 -- | Read the @sType@ member of a Vulkan struct and marshal the struct into
 -- a 'SomeVkStruct'
 --
@@ -4150,9 +5612,6 @@ peekVkStruct p = do
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
     VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR -> SomeVkStruct <$> (fromCStructAndroidSurfaceCreateInfoKHR =<< peek (castPtr p :: Ptr VkAndroidSurfaceCreateInfoKHR))
 #endif
-#if defined(VK_USE_PLATFORM_MIR_KHR)
-    VK_STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR -> SomeVkStruct <$> (fromCStructMirSurfaceCreateInfoKHR =<< peek (castPtr p :: Ptr VkMirSurfaceCreateInfoKHR))
-#endif
 #if defined(VK_USE_PLATFORM_VI_NN)
     VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN -> SomeVkStruct <$> (fromCStructViSurfaceCreateInfoNN =<< peek (castPtr p :: Ptr VkViSurfaceCreateInfoNN))
 #endif
@@ -4168,10 +5627,17 @@ peekVkStruct p = do
 #if defined(VK_USE_PLATFORM_XCB_KHR)
     VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR -> SomeVkStruct <$> (fromCStructXcbSurfaceCreateInfoKHR =<< peek (castPtr p :: Ptr VkXcbSurfaceCreateInfoKHR))
 #endif
+#if defined(VK_USE_PLATFORM_FUCHSIA)
+    VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA -> SomeVkStruct <$> (fromCStructImagePipeSurfaceCreateInfoFUCHSIA =<< peek (castPtr p :: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA))
+#endif
+#if defined(VK_USE_PLATFORM_GGP)
+    VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP -> SomeVkStruct <$> (fromCStructStreamDescriptorSurfaceCreateInfoGGP =<< peek (castPtr p :: Ptr VkStreamDescriptorSurfaceCreateInfoGGP))
+#endif
     VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR -> SomeVkStruct <$> (fromCStructSwapchainCreateInfoKHR =<< peek (castPtr p :: Ptr VkSwapchainCreateInfoKHR))
     VK_STRUCTURE_TYPE_PRESENT_INFO_KHR -> SomeVkStruct <$> (fromCStructPresentInfoKHR =<< peek (castPtr p :: Ptr VkPresentInfoKHR))
     VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructDebugReportCallbackCreateInfoEXT =<< peek (castPtr p :: Ptr VkDebugReportCallbackCreateInfoEXT))
     VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT -> SomeVkStruct <$> (fromCStructValidationFlagsEXT =<< peek (castPtr p :: Ptr VkValidationFlagsEXT))
+    VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT -> SomeVkStruct <$> (fromCStructValidationFeaturesEXT =<< peek (castPtr p :: Ptr VkValidationFeaturesEXT))
     VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD -> SomeVkStruct <$> (fromCStructPipelineRasterizationStateRasterizationOrderAMD =<< peek (castPtr p :: Ptr VkPipelineRasterizationStateRasterizationOrderAMD))
     VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT -> SomeVkStruct <$> (fromCStructDebugMarkerObjectNameInfoEXT =<< peek (castPtr p :: Ptr VkDebugMarkerObjectNameInfoEXT))
     VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT -> SomeVkStruct <$> (fromCStructDebugMarkerObjectTagInfoEXT =<< peek (castPtr p :: Ptr VkDebugMarkerObjectTagInfoEXT))
@@ -4203,8 +5669,9 @@ peekVkStruct p = do
     VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2 -> SomeVkStruct <$> (fromCStructSparseImageFormatProperties2 =<< peek (castPtr p :: Ptr VkSparseImageFormatProperties2))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2 -> SomeVkStruct <$> (fromCStructPhysicalDeviceSparseImageFormatInfo2 =<< peek (castPtr p :: Ptr VkPhysicalDeviceSparseImageFormatInfo2))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR -> SomeVkStruct <$> (fromCStructPhysicalDevicePushDescriptorPropertiesKHR =<< peek (castPtr p :: Ptr VkPhysicalDevicePushDescriptorPropertiesKHR))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR -> SomeVkStruct <$> (fromCStructPhysicalDeviceDriverPropertiesKHR =<< peek (castPtr p :: Ptr VkPhysicalDeviceDriverPropertiesKHR))
     VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR -> SomeVkStruct <$> (fromCStructPresentRegionsKHR =<< peek (castPtr p :: Ptr VkPresentRegionsKHR))
-    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES -> SomeVkStruct <$> (fromCStructPhysicalDeviceVariablePointerFeatures =<< peek (castPtr p :: Ptr VkPhysicalDeviceVariablePointerFeatures))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES -> SomeVkStruct <$> (fromCStructPhysicalDeviceVariablePointersFeatures =<< peek (castPtr p :: Ptr VkPhysicalDeviceVariablePointersFeatures))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO -> SomeVkStruct <$> (fromCStructPhysicalDeviceExternalImageFormatInfo =<< peek (castPtr p :: Ptr VkPhysicalDeviceExternalImageFormatInfo))
     VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES -> SomeVkStruct <$> (fromCStructExternalImageFormatProperties =<< peek (castPtr p :: Ptr VkExternalImageFormatProperties))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO -> SomeVkStruct <$> (fromCStructPhysicalDeviceExternalBufferInfo =<< peek (castPtr p :: Ptr VkPhysicalDeviceExternalBufferInfo))
@@ -4275,12 +5742,17 @@ peekVkStruct p = do
     VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR -> SomeVkStruct <$> (fromCStructDeviceGroupSwapchainCreateInfoKHR =<< peek (castPtr p :: Ptr VkDeviceGroupSwapchainCreateInfoKHR))
     VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO -> SomeVkStruct <$> (fromCStructDescriptorUpdateTemplateCreateInfo =<< peek (castPtr p :: Ptr VkDescriptorUpdateTemplateCreateInfo))
     VK_STRUCTURE_TYPE_HDR_METADATA_EXT -> SomeVkStruct <$> (fromCStructHdrMetadataEXT =<< peek (castPtr p :: Ptr VkHdrMetadataEXT))
+    VK_STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD -> SomeVkStruct <$> (fromCStructDisplayNativeHdrSurfaceCapabilitiesAMD =<< peek (castPtr p :: Ptr VkDisplayNativeHdrSurfaceCapabilitiesAMD))
+    VK_STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD -> SomeVkStruct <$> (fromCStructSwapchainDisplayNativeHdrCreateInfoAMD =<< peek (castPtr p :: Ptr VkSwapchainDisplayNativeHdrCreateInfoAMD))
     VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE -> SomeVkStruct <$> (fromCStructPresentTimesInfoGOOGLE =<< peek (castPtr p :: Ptr VkPresentTimesInfoGOOGLE))
 #if defined(VK_USE_PLATFORM_IOS_MVK)
     VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK -> SomeVkStruct <$> (fromCStructIOSSurfaceCreateInfoMVK =<< peek (castPtr p :: Ptr VkIOSSurfaceCreateInfoMVK))
 #endif
 #if defined(VK_USE_PLATFORM_MACOS_MVK)
     VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK -> SomeVkStruct <$> (fromCStructMacOSSurfaceCreateInfoMVK =<< peek (castPtr p :: Ptr VkMacOSSurfaceCreateInfoMVK))
+#endif
+#if defined(VK_USE_PLATFORM_METAL_EXT)
+    VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructMetalSurfaceCreateInfoEXT =<< peek (castPtr p :: Ptr VkMetalSurfaceCreateInfoEXT))
 #endif
     VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructPipelineViewportWScalingStateCreateInfoNV =<< peek (castPtr p :: Ptr VkPipelineViewportWScalingStateCreateInfoNV))
     VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructPipelineViewportSwizzleStateCreateInfoNV =<< peek (castPtr p :: Ptr VkPipelineViewportSwizzleStateCreateInfoNV))
@@ -4291,6 +5763,11 @@ peekVkStruct p = do
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR -> SomeVkStruct <$> (fromCStructPhysicalDeviceSurfaceInfo2KHR =<< peek (castPtr p :: Ptr VkPhysicalDeviceSurfaceInfo2KHR))
     VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR -> SomeVkStruct <$> (fromCStructSurfaceCapabilities2KHR =<< peek (castPtr p :: Ptr VkSurfaceCapabilities2KHR))
     VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR -> SomeVkStruct <$> (fromCStructSurfaceFormat2KHR =<< peek (castPtr p :: Ptr VkSurfaceFormat2KHR))
+    VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR -> SomeVkStruct <$> (fromCStructDisplayProperties2KHR =<< peek (castPtr p :: Ptr VkDisplayProperties2KHR))
+    VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR -> SomeVkStruct <$> (fromCStructDisplayPlaneProperties2KHR =<< peek (castPtr p :: Ptr VkDisplayPlaneProperties2KHR))
+    VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR -> SomeVkStruct <$> (fromCStructDisplayModeProperties2KHR =<< peek (castPtr p :: Ptr VkDisplayModeProperties2KHR))
+    VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR -> SomeVkStruct <$> (fromCStructDisplayPlaneInfo2KHR =<< peek (castPtr p :: Ptr VkDisplayPlaneInfo2KHR))
+    VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR -> SomeVkStruct <$> (fromCStructDisplayPlaneCapabilities2KHR =<< peek (castPtr p :: Ptr VkDisplayPlaneCapabilities2KHR))
     VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR -> SomeVkStruct <$> (fromCStructSharedPresentSurfaceCapabilitiesKHR =<< peek (castPtr p :: Ptr VkSharedPresentSurfaceCapabilitiesKHR))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES -> SomeVkStruct <$> (fromCStructPhysicalDevice16BitStorageFeatures =<< peek (castPtr p :: Ptr VkPhysicalDevice16BitStorageFeatures))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES -> SomeVkStruct <$> (fromCStructPhysicalDeviceSubgroupProperties =<< peek (castPtr p :: Ptr VkPhysicalDeviceSubgroupProperties))
@@ -4311,6 +5788,7 @@ peekVkStruct p = do
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES -> SomeVkStruct <$> (fromCStructPhysicalDeviceSamplerYcbcrConversionFeatures =<< peek (castPtr p :: Ptr VkPhysicalDeviceSamplerYcbcrConversionFeatures))
     VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES -> SomeVkStruct <$> (fromCStructSamplerYcbcrConversionImageFormatProperties =<< peek (castPtr p :: Ptr VkSamplerYcbcrConversionImageFormatProperties))
     VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD -> SomeVkStruct <$> (fromCStructTextureLODGatherFormatPropertiesAMD =<< peek (castPtr p :: Ptr VkTextureLODGatherFormatPropertiesAMD))
+    VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT -> SomeVkStruct <$> (fromCStructConditionalRenderingBeginInfoEXT =<< peek (castPtr p :: Ptr VkConditionalRenderingBeginInfoEXT))
     VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO -> SomeVkStruct <$> (fromCStructProtectedSubmitInfo =<< peek (castPtr p :: Ptr VkProtectedSubmitInfo))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES -> SomeVkStruct <$> (fromCStructPhysicalDeviceProtectedMemoryFeatures =<< peek (castPtr p :: Ptr VkPhysicalDeviceProtectedMemoryFeatures))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES -> SomeVkStruct <$> (fromCStructPhysicalDeviceProtectedMemoryProperties =<< peek (castPtr p :: Ptr VkPhysicalDeviceProtectedMemoryProperties))
@@ -4326,13 +5804,20 @@ peekVkStruct p = do
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceBlendOperationAdvancedFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceBlendOperationAdvancedPropertiesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT))
     VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructPipelineColorBlendAdvancedStateCreateInfoEXT =<< peek (castPtr p :: Ptr VkPipelineColorBlendAdvancedStateCreateInfoEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceInlineUniformBlockFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceInlineUniformBlockFeaturesEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceInlineUniformBlockPropertiesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
+    VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT -> SomeVkStruct <$> (fromCStructWriteDescriptorSetInlineUniformBlockEXT =<< peek (castPtr p :: Ptr VkWriteDescriptorSetInlineUniformBlockEXT))
+    VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructDescriptorPoolInlineUniformBlockCreateInfoEXT =<< peek (castPtr p :: Ptr VkDescriptorPoolInlineUniformBlockCreateInfoEXT))
     VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructPipelineCoverageModulationStateCreateInfoNV =<< peek (castPtr p :: Ptr VkPipelineCoverageModulationStateCreateInfoNV))
     VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR -> SomeVkStruct <$> (fromCStructImageFormatListCreateInfoKHR =<< peek (castPtr p :: Ptr VkImageFormatListCreateInfoKHR))
     VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructValidationCacheCreateInfoEXT =<< peek (castPtr p :: Ptr VkValidationCacheCreateInfoEXT))
     VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructShaderModuleValidationCacheCreateInfoEXT =<< peek (castPtr p :: Ptr VkShaderModuleValidationCacheCreateInfoEXT))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES -> SomeVkStruct <$> (fromCStructPhysicalDeviceMaintenance3Properties =<< peek (castPtr p :: Ptr VkPhysicalDeviceMaintenance3Properties))
     VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT -> SomeVkStruct <$> (fromCStructDescriptorSetLayoutSupport =<< peek (castPtr p :: Ptr VkDescriptorSetLayoutSupport))
-    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES -> SomeVkStruct <$> (fromCStructPhysicalDeviceShaderDrawParameterFeatures =<< peek (castPtr p :: Ptr VkPhysicalDeviceShaderDrawParameterFeatures))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES -> SomeVkStruct <$> (fromCStructPhysicalDeviceShaderDrawParametersFeatures =<< peek (castPtr p :: Ptr VkPhysicalDeviceShaderDrawParametersFeatures))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR -> SomeVkStruct <$> (fromCStructPhysicalDeviceFloat16Int8FeaturesKHR =<< peek (castPtr p :: Ptr VkPhysicalDeviceFloat16Int8FeaturesKHR))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR -> SomeVkStruct <$> (fromCStructPhysicalDeviceFloatControlsPropertiesKHR =<< peek (castPtr p :: Ptr VkPhysicalDeviceFloatControlsPropertiesKHR))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceHostQueryResetFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceHostQueryResetFeaturesEXT))
     VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructDeviceQueueGlobalPriorityCreateInfoEXT =<< peek (castPtr p :: Ptr VkDeviceQueueGlobalPriorityCreateInfoEXT))
     VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT -> SomeVkStruct <$> (fromCStructDebugUtilsObjectNameInfoEXT =<< peek (castPtr p :: Ptr VkDebugUtilsObjectNameInfoEXT))
     VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT -> SomeVkStruct <$> (fromCStructDebugUtilsObjectTagInfoEXT =<< peek (castPtr p :: Ptr VkDebugUtilsObjectTagInfoEXT))
@@ -4343,6 +5828,7 @@ peekVkStruct p = do
     VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructMemoryHostPointerPropertiesEXT =<< peek (castPtr p :: Ptr VkMemoryHostPointerPropertiesEXT))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceExternalMemoryHostPropertiesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceConservativeRasterizationPropertiesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
+    VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT -> SomeVkStruct <$> (fromCStructCalibratedTimestampInfoEXT =<< peek (castPtr p :: Ptr VkCalibratedTimestampInfoEXT))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD -> SomeVkStruct <$> (fromCStructPhysicalDeviceShaderCorePropertiesAMD =<< peek (castPtr p :: Ptr VkPhysicalDeviceShaderCorePropertiesAMD))
     VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructPipelineRasterizationConservativeStateCreateInfoEXT =<< peek (castPtr p :: Ptr VkPipelineRasterizationConservativeStateCreateInfoEXT))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceDescriptorIndexingFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
@@ -4350,14 +5836,101 @@ peekVkStruct p = do
     VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT =<< peek (castPtr p :: Ptr VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
     VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT -> SomeVkStruct <$> (fromCStructDescriptorSetVariableDescriptorCountAllocateInfoEXT =<< peek (castPtr p :: Ptr VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
     VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT -> SomeVkStruct <$> (fromCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT =<< peek (castPtr p :: Ptr VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
+    VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2_KHR -> SomeVkStruct <$> (fromCStructAttachmentDescription2KHR =<< peek (castPtr p :: Ptr VkAttachmentDescription2KHR))
+    VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2_KHR -> SomeVkStruct <$> (fromCStructAttachmentReference2KHR =<< peek (castPtr p :: Ptr VkAttachmentReference2KHR))
+    VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR -> SomeVkStruct <$> (fromCStructSubpassDescription2KHR =<< peek (castPtr p :: Ptr VkSubpassDescription2KHR))
+    VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2_KHR -> SomeVkStruct <$> (fromCStructSubpassDependency2KHR =<< peek (castPtr p :: Ptr VkSubpassDependency2KHR))
+    VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2_KHR -> SomeVkStruct <$> (fromCStructRenderPassCreateInfo2KHR =<< peek (castPtr p :: Ptr VkRenderPassCreateInfo2KHR))
+    VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO_KHR -> SomeVkStruct <$> (fromCStructSubpassBeginInfoKHR =<< peek (castPtr p :: Ptr VkSubpassBeginInfoKHR))
+    VK_STRUCTURE_TYPE_SUBPASS_END_INFO_KHR -> SomeVkStruct <$> (fromCStructSubpassEndInfoKHR =<< peek (castPtr p :: Ptr VkSubpassEndInfoKHR))
     VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructPipelineVertexInputDivisorStateCreateInfoEXT =<< peek (castPtr p :: Ptr VkPipelineVertexInputDivisorStateCreateInfoEXT))
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceVertexAttributeDivisorPropertiesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDevicePCIBusInfoPropertiesEXT =<< peek (castPtr p :: Ptr VkPhysicalDevicePCIBusInfoPropertiesEXT))
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
     VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID -> SomeVkStruct <$> (fromCStructImportAndroidHardwareBufferInfoANDROID =<< peek (castPtr p :: Ptr VkImportAndroidHardwareBufferInfoANDROID))
     VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID -> SomeVkStruct <$> (fromCStructAndroidHardwareBufferUsageANDROID =<< peek (castPtr p :: Ptr VkAndroidHardwareBufferUsageANDROID))
     VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID -> SomeVkStruct <$> (fromCStructAndroidHardwareBufferPropertiesANDROID =<< peek (castPtr p :: Ptr VkAndroidHardwareBufferPropertiesANDROID))
     VK_STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID -> SomeVkStruct <$> (fromCStructMemoryGetAndroidHardwareBufferInfoANDROID =<< peek (castPtr p :: Ptr VkMemoryGetAndroidHardwareBufferInfoANDROID))
     VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID -> SomeVkStruct <$> (fromCStructAndroidHardwareBufferFormatPropertiesANDROID =<< peek (castPtr p :: Ptr VkAndroidHardwareBufferFormatPropertiesANDROID))
+#endif
+    VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT -> SomeVkStruct <$> (fromCStructCommandBufferInheritanceConditionalRenderingInfoEXT =<< peek (castPtr p :: Ptr VkCommandBufferInheritanceConditionalRenderingInfoEXT))
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
     VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID -> SomeVkStruct <$> (fromCStructExternalFormatANDROID =<< peek (castPtr p :: Ptr VkExternalFormatANDROID))
+#endif
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR -> SomeVkStruct <$> (fromCStructPhysicalDevice8BitStorageFeaturesKHR =<< peek (castPtr p :: Ptr VkPhysicalDevice8BitStorageFeaturesKHR))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceConditionalRenderingFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceConditionalRenderingFeaturesEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR -> SomeVkStruct <$> (fromCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR =<< peek (castPtr p :: Ptr VkPhysicalDeviceVulkanMemoryModelFeaturesKHR))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR -> SomeVkStruct <$> (fromCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR =<< peek (castPtr p :: Ptr VkPhysicalDeviceShaderAtomicInt64FeaturesKHR))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceVertexAttributeDivisorFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT))
+    VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV -> SomeVkStruct <$> (fromCStructQueueFamilyCheckpointPropertiesNV =<< peek (castPtr p :: Ptr VkQueueFamilyCheckpointPropertiesNV))
+    VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV -> SomeVkStruct <$> (fromCStructCheckpointDataNV =<< peek (castPtr p :: Ptr VkCheckpointDataNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR -> SomeVkStruct <$> (fromCStructPhysicalDeviceDepthStencilResolvePropertiesKHR =<< peek (castPtr p :: Ptr VkPhysicalDeviceDepthStencilResolvePropertiesKHR))
+    VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR -> SomeVkStruct <$> (fromCStructSubpassDescriptionDepthStencilResolveKHR =<< peek (castPtr p :: Ptr VkSubpassDescriptionDepthStencilResolveKHR))
+    VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT -> SomeVkStruct <$> (fromCStructImageViewASTCDecodeModeEXT =<< peek (castPtr p :: Ptr VkImageViewASTCDecodeModeEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceASTCDecodeFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceASTCDecodeFeaturesEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceTransformFeedbackFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceTransformFeedbackFeaturesEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceTransformFeedbackPropertiesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceTransformFeedbackPropertiesEXT))
+    VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructPipelineRasterizationStateStreamCreateInfoEXT =<< peek (castPtr p :: Ptr VkPipelineRasterizationStateStreamCreateInfoEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceRepresentativeFragmentTestFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV))
+    VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructPipelineRepresentativeFragmentTestStateCreateInfoNV =<< peek (castPtr p :: Ptr VkPipelineRepresentativeFragmentTestStateCreateInfoNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceExclusiveScissorFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceExclusiveScissorFeaturesNV))
+    VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructPipelineViewportExclusiveScissorStateCreateInfoNV =<< peek (castPtr p :: Ptr VkPipelineViewportExclusiveScissorStateCreateInfoNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceCornerSampledImageFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceCornerSampledImageFeaturesNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceComputeShaderDerivativesFeaturesNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceFragmentShaderBarycentricFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceShaderImageFootprintFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceShaderImageFootprintFeaturesNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV))
+    VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructPipelineViewportShadingRateImageStateCreateInfoNV =<< peek (castPtr p :: Ptr VkPipelineViewportShadingRateImageStateCreateInfoNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceShadingRateImageFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceShadingRateImageFeaturesNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceShadingRateImagePropertiesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceShadingRateImagePropertiesNV))
+    VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructPipelineViewportCoarseSampleOrderStateCreateInfoNV =<< peek (castPtr p :: Ptr VkPipelineViewportCoarseSampleOrderStateCreateInfoNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceMeshShaderFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceMeshShaderFeaturesNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceMeshShaderPropertiesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceMeshShaderPropertiesNV))
+    VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructRayTracingShaderGroupCreateInfoNV =<< peek (castPtr p :: Ptr VkRayTracingShaderGroupCreateInfoNV))
+    VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructRayTracingPipelineCreateInfoNV =<< peek (castPtr p :: Ptr VkRayTracingPipelineCreateInfoNV))
+    VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV -> SomeVkStruct <$> (fromCStructGeometryTrianglesNV =<< peek (castPtr p :: Ptr VkGeometryTrianglesNV))
+    VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV -> SomeVkStruct <$> (fromCStructGeometryAABBNV =<< peek (castPtr p :: Ptr VkGeometryAABBNV))
+    VK_STRUCTURE_TYPE_GEOMETRY_NV -> SomeVkStruct <$> (fromCStructGeometryNV =<< peek (castPtr p :: Ptr VkGeometryNV))
+    VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV -> SomeVkStruct <$> (fromCStructAccelerationStructureInfoNV =<< peek (castPtr p :: Ptr VkAccelerationStructureInfoNV))
+    VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV -> SomeVkStruct <$> (fromCStructAccelerationStructureCreateInfoNV =<< peek (castPtr p :: Ptr VkAccelerationStructureCreateInfoNV))
+    VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV -> SomeVkStruct <$> (fromCStructBindAccelerationStructureMemoryInfoNV =<< peek (castPtr p :: Ptr VkBindAccelerationStructureMemoryInfoNV))
+    VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV -> SomeVkStruct <$> (fromCStructWriteDescriptorSetAccelerationStructureNV =<< peek (castPtr p :: Ptr VkWriteDescriptorSetAccelerationStructureNV))
+    VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV -> SomeVkStruct <$> (fromCStructAccelerationStructureMemoryRequirementsInfoNV =<< peek (castPtr p :: Ptr VkAccelerationStructureMemoryRequirementsInfoNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceRayTracingPropertiesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceRayTracingPropertiesNV))
+    VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT -> SomeVkStruct <$> (fromCStructDrmFormatModifierPropertiesListEXT =<< peek (castPtr p :: Ptr VkDrmFormatModifierPropertiesListEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceImageDrmFormatModifierInfoEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceImageDrmFormatModifierInfoEXT))
+    VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructImageDrmFormatModifierListCreateInfoEXT =<< peek (castPtr p :: Ptr VkImageDrmFormatModifierListCreateInfoEXT))
+    VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructImageDrmFormatModifierExplicitCreateInfoEXT =<< peek (castPtr p :: Ptr VkImageDrmFormatModifierExplicitCreateInfoEXT))
+    VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructImageDrmFormatModifierPropertiesEXT =<< peek (castPtr p :: Ptr VkImageDrmFormatModifierPropertiesEXT))
+    VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructImageStencilUsageCreateInfoEXT =<< peek (castPtr p :: Ptr VkImageStencilUsageCreateInfoEXT))
+    VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD -> SomeVkStruct <$> (fromCStructDeviceMemoryOverallocationCreateInfoAMD =<< peek (castPtr p :: Ptr VkDeviceMemoryOverallocationCreateInfoAMD))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceFragmentDensityMapFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceFragmentDensityMapFeaturesEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceFragmentDensityMapPropertiesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceFragmentDensityMapPropertiesEXT))
+    VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructRenderPassFragmentDensityMapCreateInfoEXT =<< peek (castPtr p :: Ptr VkRenderPassFragmentDensityMapCreateInfoEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceScalarBlockLayoutFeaturesEXT))
+    VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR -> SomeVkStruct <$> (fromCStructSurfaceProtectedCapabilitiesKHR =<< peek (castPtr p :: Ptr VkSurfaceProtectedCapabilitiesKHR))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceDepthClipEnableFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceDepthClipEnableFeaturesEXT))
+    VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructPipelineRasterizationDepthClipStateCreateInfoEXT =<< peek (castPtr p :: Ptr VkPipelineRasterizationDepthClipStateCreateInfoEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceMemoryBudgetPropertiesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceMemoryBudgetPropertiesEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceMemoryPriorityFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceMemoryPriorityFeaturesEXT))
+    VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT -> SomeVkStruct <$> (fromCStructMemoryPriorityAllocateInfoEXT =<< peek (castPtr p :: Ptr VkMemoryPriorityAllocateInfoEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceBufferDeviceAddressFeaturesEXT))
+    VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT -> SomeVkStruct <$> (fromCStructBufferDeviceAddressInfoEXT =<< peek (castPtr p :: Ptr VkBufferDeviceAddressInfoEXT))
+    VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructBufferDeviceAddressCreateInfoEXT =<< peek (castPtr p :: Ptr VkBufferDeviceAddressCreateInfoEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceImageViewImageFormatInfoEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceImageViewImageFormatInfoEXT))
+    VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT -> SomeVkStruct <$> (fromCStructFilterCubicImageViewImageFormatPropertiesEXT =<< peek (castPtr p :: Ptr VkFilterCubicImageViewImageFormatPropertiesEXT))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceCooperativeMatrixFeaturesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceCooperativeMatrixFeaturesNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV -> SomeVkStruct <$> (fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV =<< peek (castPtr p :: Ptr VkPhysicalDeviceCooperativeMatrixPropertiesNV))
+    VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV -> SomeVkStruct <$> (fromCStructCooperativeMatrixPropertiesNV =<< peek (castPtr p :: Ptr VkCooperativeMatrixPropertiesNV))
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_IMAGE_ARRAYS_FEATURES_EXT -> SomeVkStruct <$> (fromCStructPhysicalDeviceYcbcrImageArraysFeaturesEXT =<< peek (castPtr p :: Ptr VkPhysicalDeviceYcbcrImageArraysFeaturesEXT))
+    VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX -> SomeVkStruct <$> (fromCStructImageViewHandleInfoNVX =<< peek (castPtr p :: Ptr VkImageViewHandleInfoNVX))
+#if defined(VK_USE_PLATFORM_GGP)
+    VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP -> SomeVkStruct <$> (fromCStructPresentFrameTokenGGP =<< peek (castPtr p :: Ptr VkPresentFrameTokenGGP))
+#endif
+    VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructPipelineCreationFeedbackCreateInfoEXT =<< peek (castPtr p :: Ptr VkPipelineCreationFeedbackCreateInfoEXT))
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+    VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT -> SomeVkStruct <$> (fromCStructSurfaceFullScreenExclusiveInfoEXT =<< peek (castPtr p :: Ptr VkSurfaceFullScreenExclusiveInfoEXT))
+    VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT -> SomeVkStruct <$> (fromCStructSurfaceFullScreenExclusiveWin32InfoEXT =<< peek (castPtr p :: Ptr VkSurfaceFullScreenExclusiveWin32InfoEXT))
+    VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT -> SomeVkStruct <$> (fromCStructSurfaceCapabilitiesFullScreenExclusiveEXT =<< peek (castPtr p :: Ptr VkSurfaceCapabilitiesFullScreenExclusiveEXT))
 #endif
     t -> throwIO (IOError Nothing InvalidArgument "" ("Unknown VkStructureType: " ++ show t) Nothing Nothing)

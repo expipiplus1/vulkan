@@ -4,6 +4,7 @@
 
 module Write.Bespoke
   ( bespokeWriteElements
+  , unmarshalledTypes
   ) where
 
 import           Data.Text                                (Text)
@@ -280,6 +281,9 @@ android =
 ----------------------------------------------------------------
 -- Marshalled bespoke bits
 ----------------------------------------------------------------
+
+unmarshalledTypes :: [HaskellName]
+unmarshalledTypes = [TypeName "VkBaseOutStructure", TypeName "VkBaseInStructure"]
 
 bespokeMarshalledWriteElements :: [WriteElement]
 bespokeMarshalledWriteElements =

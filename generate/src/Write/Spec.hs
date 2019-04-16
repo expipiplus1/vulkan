@@ -54,6 +54,7 @@ import           Write.Handle
 import           Write.HeaderVersion
 import           Write.Loader
 import           Write.Marshal.Aliases
+import           Write.Marshal.Bracket
 import           Write.Marshal.Exception
 import           Write.Marshal.Handle
 import           Write.Marshal.SomeVkStruct
@@ -157,13 +158,19 @@ specWrapperWriteElements Spec {..} = do
         , eType == EnumTypeBitmask
         ]
       )
-    isStruct = (`Set.member` Set.fromList (sName <$> sStructs))
+    isStruct s = any (`Set.member` Set.fromList (sName <$> sStructs))
+                     (s : [ a | Just a <- [getAlias1 sTypeAliases s] ])
+
     -- TODO: Filter in a better way
     enabledCommands =
       filter ((`notElem` ignoredUnexportedNames) . TermName . cName) sCommands
 
-    enabledStructs =
-      filter ((`notElem` ignoredUnexportedNames) . TypeName . sName) sStructs
+    enabledStructs = filter
+      ( (`notElem` (ignoredUnexportedNames ++ unmarshalledTypes))
+      . TypeName
+      . sName
+      )
+      sStructs
 
     dispatchableHandles =
       [ h | h@Handle { hHandleType = Dispatchable } <- sHandles ]
@@ -172,14 +179,24 @@ specWrapperWriteElements Spec {..} = do
       (getHandle <=< simpleTypeName)
       sStructs
 
+    resolveAlias :: Text -> Text
+    resolveAlias t = fromMaybe t (getAlias1 sTypeAliases t)
+
   commandWrappers <- eitherToValidation $ traverse
-    (commandWrapper getHandle isBitmask isStruct getStructDispatchableHandle)
+    (commandWrapper getHandle
+                    isBitmask
+                    isStruct
+                    getStructDispatchableHandle
+                    resolveAlias
+    )
     enabledCommands
   structWrappers <- eitherToValidation $ traverse
     (structWrapper getHandle isBitmask isStruct enabledStructs)
     enabledStructs
   handleWrappers <- eitherToValidation
     $ traverse handleWrapper dispatchableHandles
+  brackets <-
+    fmap unzip . eitherToValidation $ bracketCommands enabledCommands
   someVkStructWE <- eitherToValidation
     $ someVkStructWriteElement getHandle sPlatforms enabledStructs
   peekStructWE <- eitherToValidation
@@ -187,6 +204,7 @@ specWrapperWriteElements Spec {..} = do
   pure
     (  concat [concat structWrappers, concat commandWrappers, handleWrappers]
     ++ [vkStructWriteElement, peekStructWE, someVkStructWE]
+    ++ snd brackets
     )
 
 specCWriteElements :: Spec -> Validation [SpecError] [WriteElement]

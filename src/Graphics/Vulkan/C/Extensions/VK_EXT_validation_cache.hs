@@ -34,7 +34,6 @@ module Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
 #endif
   , FN_vkMergeValidationCachesEXT
   , PFN_vkMergeValidationCachesEXT
-  , pattern VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT
   , pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME
   , pattern VK_EXT_VALIDATION_CACHE_SPEC_VERSION
   , pattern VK_OBJECT_TYPE_VALIDATION_CACHE_EXT
@@ -94,10 +93,6 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
   , VkDevice
-  )
-import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
-  ( VkDebugReportObjectTypeEXT(..)
-  , pattern VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -244,9 +239,6 @@ foreign import ccall
 #endif
 type FN_vkMergeValidationCachesEXT = ("device" ::: VkDevice) -> ("dstCache" ::: VkValidationCacheEXT) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkValidationCacheEXT) -> IO VkResult
 type PFN_vkMergeValidationCachesEXT = FunPtr FN_vkMergeValidationCachesEXT
--- No documentation found for TopLevel "VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT"
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT :: VkDebugReportObjectTypeEXT
-pattern VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT = VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_CACHE_EXTENSION_NAME"
 pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME = "VK_EXT_validation_cache"
