@@ -1,4 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 -- | Wrappers for the QuasiQuoters in 'Text.InterpolatedString.Perl6' which
 -- remove indentation from the string passed to the quasiquoter.
@@ -18,12 +19,14 @@
 --   foo
 --   |]
 -- @
-module Text.InterpolatedString.Perl6.Unindented (qqi, qci, qi)where
+module Text.InterpolatedString.Perl6.Unindented (qqi, qci, qi, showQ)where
 
 import           Data.Char
 import           Data.List
 import           Language.Haskell.TH.Quote
 import           Text.InterpolatedString.Perl6
+import           Data.Text.Prettyprint.Doc
+import           Data.Text.Prettyprint.Doc.Render.String
 
 wrapQuasi :: (String -> String) -> QuasiQuoter -> QuasiQuoter
 wrapQuasi f QuasiQuoter {..} =
@@ -55,3 +58,6 @@ qci = wrapQuasi unindent qc
 
 qi :: QuasiQuoter
 qi = wrapQuasi unindent q
+
+instance {-# OVERLAPPING  #-} ShowQ (Doc ()) where
+  showQ = renderString . layoutPretty (LayoutOptions Unbounded)

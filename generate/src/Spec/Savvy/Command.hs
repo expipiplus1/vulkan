@@ -63,7 +63,7 @@ data Parameter = Parameter
   , pLength     :: Maybe ParameterLength
   , pIsOptional :: Maybe [Bool]
   }
-  deriving (Show)
+  deriving (Show, Eq)
 
 data ParameterLength
   = NullTerminated
@@ -71,7 +71,7 @@ data ParameterLength
   | NamedMemberLength Text Text
     -- ^ The length is specified by a member of another (struct) parameter, an
     -- example is vkAllocateCommandBuffers
-  deriving (Show)
+  deriving (Show, Eq)
 
 specCommands
   :: TypeParseContext

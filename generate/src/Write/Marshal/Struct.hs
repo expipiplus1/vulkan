@@ -762,7 +762,7 @@ writeToCStructInstance MarshalledStruct{..} = do
       wrapped <- wrap "cont" ("Vk" <> msName) msName "from" msMembers
       pure [qci|
         withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
-        withCStruct{msName} from cont = {wrapped}
+        withCStruct{msName} from cont = {wrapped :: Doc ()}
         |]
     AUnion -> do
       wrappedAlts <- for msMembers $ \case
@@ -826,11 +826,11 @@ memberWrapper fromType from =
   MinLength nonOptionalVectors [] -> do
     tellImports [QualifiedImport "Data.Vector" ["length"]]
     tellImports [Import "Data.List" ["minimum"]]
-    pure $ \cont e -> cont [qci|{e} (fromIntegral (minimum ({list (("Data.Vector.length" <+>) . accessMember <$> nonOptionalVectors)})))|]
+    pure $ \cont e -> cont [qci|{e} (fromIntegral (minimum ({showQ $ list (("Data.Vector.length" <+>) . accessMember <$> nonOptionalVectors)})))|]
   MinLength nonOptionalVectors optionalVectors -> do
     tellImports [QualifiedImport "Data.Vector" ["length"]]
     tellImports [Import "Data.List" ["minimum"]]
-    pure $ \cont e -> cont [qci|{e} (fromIntegral (minimum ({list (("Data.Vector.length" <+>) . accessMember <$> nonOptionalVectors)} ++ [Data.Vector.length v | Just v <- {list (accessMember <$> optionalVectors)}])))|]
+    pure $ \cont e -> cont [qci|{e} (fromIntegral (minimum ({showQ $ list (("Data.Vector.length" <+>) . accessMember <$> nonOptionalVectors)} ++ [Data.Vector.length v | Just v <- {list (accessMember <$> optionalVectors)}])))|]
   OptionalLength vec       -> do
     tellImports [QualifiedImport "Data.Vector" ["length"]]
     tellImport "Data.Maybe" "maybe"

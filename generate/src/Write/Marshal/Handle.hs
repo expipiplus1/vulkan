@@ -24,23 +24,22 @@ import           Spec.Savvy.Type(Type(TypeName))
 
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
-import           Write.Marshal.Bracket
 import           Write.Marshal.Monad
 import           Write.Marshal.Util
 
-handleWrapper :: [Bracket] -> Handle -> Either [SpecError] WriteElement
-handleWrapper bs handle = do
+handleWrapper :: Handle -> Either [SpecError] WriteElement
+handleWrapper handle = do
   let weName        = hName handle T.<+> "wrapper"
       weBootElement = Nothing
   (weDoc, (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
     either (throwError . fmap (WithContext (hName handle)))
            pure
-           (runWrap $ wrapHandle bs handle)
+           (runWrap $ wrapHandle handle)
   pure WriteElement {..}
 
-wrapHandle :: [Bracket] -> Handle -> WrapM (DocMap -> Doc ())
+wrapHandle :: Handle -> WrapM (DocMap -> Doc ())
   -- ^ Returns the docs for this handle, and any aliases
-wrapHandle bs Handle {..} = do
+wrapHandle Handle {..} = do
   when (hHandleType == NonDispatchable)
     $ throwError [Other "Wrapping a non-dispatchable handle"]
   let marshalledName = dropVkType hName
@@ -53,7 +52,6 @@ wrapHandle bs Handle {..} = do
     Just Device         -> pure "DeviceCmds"
     Nothing             -> throwError [Other "wrapping handle without a level"]
   tellDepend (Unguarded (WE.TypeName cmdTable))
-  traverse (tellDepend . Unguarded) [bName | Bracket {..} <- bs, bType == (TypeName hName) ]
   tellImport "Data.Function" "on"
   pure $ \_ -> [qci|
     data {marshalledName} = {marshalledName}

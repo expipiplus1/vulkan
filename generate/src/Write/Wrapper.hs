@@ -56,9 +56,11 @@ commandWrapper
   -- ^ Get the dispatchable handle in a struct
   -> (Text -> Text)
   -- ^ Alias resolver
+  -> (Text -> Maybe HaskellName)
+  -- ^ Get brackets for this command
   -> Command
   -> Either [SpecError] [WriteElement]
-commandWrapper getHandle isBitmask isStruct structDispatchableHandle resolveAlias command
+commandWrapper getHandle isBitmask isStruct structDispatchableHandle resolveAlias getBrackets command
   = do
     let weName        = cName command T.<+> "wrapper"
         weBootElement = Nothing
@@ -88,6 +90,7 @@ commandWrapper getHandle isBitmask isStruct structDispatchableHandle resolveAlia
                                isTypeStruct
                                structContainsDispatchableHandle
                                resolveAlias
+                               getBrackets
                                command
         )
     let rs = WriteElement { .. } : aliasWriteElements
@@ -115,9 +118,11 @@ wrapCommand
   -- ^ Struct contains dispatchable handle
   -> (Text -> Text)
   -- ^ Alias resolver
+  -> (Text -> Maybe HaskellName)
+  -- ^ Get brackets for this command
   -> Command
   -> WrapM ([Doc ()], [WriteElement])
-wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle resolveAlias c@Command {..} = do
+wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle resolveAlias getBrackets c@Command {..} = do
   let lengthPairs :: [(Parameter, Maybe Text, [Parameter])]
       lengthPairs = getLengthPointerPairs cParameters
       makeWts :: Maybe CommandUsage -> WrapM ([WrappingType], [Constraint])
@@ -131,8 +136,8 @@ wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle re
         let dynCommandName = [qci|Graphics.Vulkan.C.Dynamic.{dropVk cName}|]
         pure $ line <> [qci|
           -- | Wrapper for '{cName}'
-          {n} :: {t}
-          {n} = {wrapped dynCommandName}|]
+          {n} :: {t :: Doc ()}
+          {n} = {wrapped dynCommandName :: Doc ()}|]
       makeType wts constraints = wtsToSig KeepVkResult c constraints wts
   (ds, aliases) <- if isDualUseCommand lengthPairs
     then do
@@ -161,6 +166,7 @@ wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle re
       d <- printWrapped n wts constraints
       as <- traverse (writeAlias wts constraints c) cAliases
       pure ([d], as)
+  traverse_ (tellDepend . Unguarded) (getBrackets (dropVk cName))
   pure (ds, aliases)
 
 isDualUseCommand :: [(Parameter, Maybe Text, [Parameter])] -> Bool

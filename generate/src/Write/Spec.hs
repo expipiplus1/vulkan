@@ -19,7 +19,7 @@ import           Data.Maybe
 import qualified Data.Set                      as Set
 import           Data.Text                                ( Text )
 import qualified Data.Text                     as T
-import           Data.Text.Prettyprint.Doc
+import           Data.Text.Prettyprint.Doc         hiding ( brackets )
 import           Data.Text.Prettyprint.Doc.Render.String
 import           Say
 import           System.Directory
@@ -182,34 +182,41 @@ specWrapperWriteElements spec@Spec {..} = do
     resolveAlias :: Text -> Text
     resolveAlias t = fromMaybe t (getAlias1 sTypeAliases t)
 
-    brackets' = extractBrackets enabledCommands
 
-  commandWrappers <- eitherToValidation $ traverse
-    (commandWrapper getHandle
-                    isBitmask
-                    isStruct
-                    getStructDispatchableHandle
-                    resolveAlias
-    )
-    enabledCommands
+  bracketAndCommandWrappers <- eitherToValidation $ do
+    (bracketConstructors, bs) <- unzip <$> brackets sHandles
+    let getBrackets :: Text -> Maybe HaskellName
+        getBrackets commandName = listToMaybe
+          [ bName
+          | (createName, bName) <- bracketConstructors
+          , TermName commandName == createName
+          ]
+    cs <- traverse
+      (commandWrapper getHandle
+                      isBitmask
+                      isStruct
+                      getStructDispatchableHandle
+                      resolveAlias
+                      getBrackets
+      )
+      enabledCommands
+    pure $ bs : cs
   structWrappers <- eitherToValidation $ traverse
     (structWrapper getHandle isBitmask isStruct enabledStructs)
     enabledStructs
   handleWrappers <- eitherToValidation
-    $ traverse (handleWrapper brackets') dispatchableHandles
-  aliases         <- writeAliases (makeMarshalledAliases spec)
-  bracketWrappers <- eitherToValidation $ traverse bracketCommand brackets'
-  someVkStructWE  <- eitherToValidation
+    $ traverse handleWrapper dispatchableHandles
+  aliases        <- writeAliases (makeMarshalledAliases spec)
+  someVkStructWE <- eitherToValidation
     $ someVkStructWriteElement getHandle sPlatforms enabledStructs
   peekStructWE <- eitherToValidation
     $ vkPeekStructWriteElement getHandle sPlatforms enabledStructs
   pure
     (  concat
         [ concat structWrappers
-        , concat commandWrappers
+        , concat bracketAndCommandWrappers
         , handleWrappers
-        , bracketWrappers
-        , insertBracketDependency brackets' <$> aliases
+        , aliases
         ]
     ++ [vkStructWriteElement, peekStructWE, someVkStructWE]
     )
