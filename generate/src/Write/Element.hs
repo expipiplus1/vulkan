@@ -23,10 +23,11 @@ module Write.Element
 
 import           Data.Text
 import           Data.Text.Prettyprint.Doc
+import           Text.InterpolatedString.Perl6(ShowQ(..))
 
 import           Documentation
 import           Documentation.Haddock
-import Write.Util(guarded)
+import           Write.Util                               ( guarded )
 
 data WriteElement = WriteElement
   { weName                 :: Text
@@ -58,6 +59,9 @@ data HaskellName
   | TermName { unHaskellName :: Text }
   | PatternName { unHaskellName :: Text }
   deriving (Show, Eq, Ord)
+
+instance ShowQ HaskellName where
+  showQ = unpack . unHaskellName
 
 -- TODO: Remove invguarded
 data Guarded a

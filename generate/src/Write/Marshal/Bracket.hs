@@ -6,30 +6,28 @@
 {-# LANGUAGE RecordWildCards   #-}
 
 module Write.Marshal.Bracket
-  ( Bracket(..)
-  -- , extractBrackets
-  , bracketCommand
-  , insertBracketDependency
-  , brackets
+  ( brackets
   ) where
 
 import           Control.Monad
+import           Data.Bool
 import           Control.Monad.Except
 import           Data.Foldable
-import           Data.List                                ( (\\) )
+import           Data.List.Extra                          ( (\\)
+                                                          , nubOrd
+                                                          )
 import           Data.Function
 import           Data.Functor
 import           Data.Maybe
 import           Data.Text                                ( Text )
 import qualified Data.Text.Extra               as T
-import           Data.Text.Prettyprint.Doc         hiding ( brackets )
+import           Data.Text.Prettyprint.Doc         hiding ( brackets , plural)
 import           Data.Traversable
 import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
-import           Spec.Savvy.Command
 import           Spec.Savvy.Type
 
 import           Write.Element                     hiding ( TypeName )
@@ -39,240 +37,273 @@ import           Write.Marshal.Util
 
 import           Debug.Trace
 
-data Bracket = Bracket
-  { bName :: HaskellName
-  , bType :: Type
-  , bParentType :: Maybe Type
-  , bCreateInfoType :: Type
-  , bOpen :: Command
-  , bClose :: Command
-  }
-  deriving(Show)
-
--- extractBrackets :: [Command] -> [Bracket]
--- extractBrackets commands =
---   let
---     isOpener c@Command {..} = guard ("vkCreate" `T.isPrefixOf` cName) $> c
---     isCloser c@Command {..} = guard ("vkDestroy" `T.isPrefixOf` cName) $> c
---     splitExtras :: [Parameter] -> ([Parameter], [Parameter])
---     dropParent :: [Parameter] -> (Maybe Parameter, [Parameter])
---     dropParent = \case
---       x : xs
---         | TypeName p <- pType x
---         , p == "VkDevice" || p == "VkInstance"
---         , Nothing <- pIsOptional x
---         -> (Just x, xs)
---       xs -> (Nothing, xs)
---     isPair co cc
---       | Just h <- T.dropPrefix "vkCreate" (cName co)
---       , Just h' <- T.dropPrefix "vkDestroy" (cName cc)
---       , h == h'
---       = case () of
---         _
---           | (parent, [createInfo, allocationCallbacks, result]) <- dropParent
---             $ cParameters co
---           , (parent', [result', allocationCallbacks']) <- dropParent
---             $ cParameters cc
---           , allocationCallbacks == allocationCallbacks'
---           , Ptr Const (TypeName "VkAllocationCallbacks") <- pType
---             allocationCallbacks
---           , parent == parent'
---           , Ptr Const createInfo <- pType createInfo
---           , Ptr NonConst t <- pType result
---           , pType result' == t
---           , TypeName vn <- t
---           -> let name = TermName ("with" <> dropVkType vn)
---              in  Just (Bracket name t (pType <$> parent) createInfo co cc)
---         _ -> error ("unhandled " ++ show (co))
---       | otherwise
---       = Nothing
---   in
---     pairs isOpener isCloser isPair commands
-
--- | TODO: Check that all handles are handled
-brackets :: [Handle] -> Either [SpecError] [((HaskellName, HaskellName), WriteElement)]
+brackets
+  :: [Handle] -> Either [SpecError] [((HaskellName, HaskellName), WriteElement)]
 brackets handles = do
-  noParent <- traverse noParentConstructor ["Instance"]
-  simples  <- traverse
-    (uncurry simpleConstructor)
-    [ -- ("Instance"      , "PhysicalDevice")
-      ("PhysicalDevice", "Device")
-    , ("Device"        , "CommandPool")
-    , ("Device"        , "Buffer")
-    , ("Device"        , "BufferView")
-    , ("Device"        , "Image")
-    , ("Device"        , "ImageView")
-    , ("Device"        , "ShaderModule")
-    , ("Device"        , "PipelineLayout")
-    , ("Device"        , "Sampler")
-    , ("Device"        , "DescriptorSetLayout")
-    , ("Device"        , "DescriptorPool")
-    , ("Device"        , "Fence")
-    , ("Device"        , "Semaphore")
-    , ("Device"        , "Event")
-    , ("Device"        , "QueryPool")
-    , ("Device"        , "Framebuffer")
-    , ("Device"        , "RenderPass")
-    , ("Device"        , "PipelineCache")
-    , ("Device"        , "ObjectTableNVX")
-    , ("Device"        , "IndirectCommandsLayoutNVX")
-    , ( "Device"
-      , "DescriptorUpdateTemplate"
-      )
-   -- <type category="handle" name="VkDescriptorUpdateTemplateKHR" alias="VkDescriptorUpdateTemplate"/>
-    , ( "Device"
-      , "SamplerYcbcrConversion"
-      )
-   -- <type category="handle" name="VkSamplerYcbcrConversionKHR"   alias="VkSamplerYcbcrConversion"/>
-    , ("Device", "ValidationCacheEXT")
-    , ( "Device"
-      , "AccelerationStructureNV"
-      )
-
-    , ("SurfaceKHR"                 , "SwapchainKHR")
-    , ("Instance"                   , "DebugReportCallbackEXT")
-    , ("Instance"                   , "DebugUtilsMessengerEXT")
+  rs <- traverse
+    writePair
+    [ simpleBracket True  "Instance"                  Nothing
+    , simpleBracket False "Device"                    (Just "PhysicalDevice")
+    , simpleBracket True  "CommandPool"               (Just "Device")
+    , simpleBracket True  "Buffer"                    (Just "Device")
+    , simpleBracket True  "BufferView"                (Just "Device")
+    , simpleBracket True  "Image"                     (Just "Device")
+    , simpleBracket True  "ImageView"                 (Just "Device")
+    , simpleBracket True  "ShaderModule"              (Just "Device")
+    , simpleBracket True  "PipelineLayout"            (Just "Device")
+    , simpleBracket True  "Sampler"                   (Just "Device")
+    , simpleBracket True  "DescriptorSetLayout"       (Just "Device")
+    , simpleBracket True  "DescriptorPool"            (Just "Device")
+    , simpleBracket True  "Fence"                     (Just "Device")
+    , simpleBracket True  "Semaphore"                 (Just "Device")
+    , simpleBracket True  "Event"                     (Just "Device")
+    , simpleBracket True  "QueryPool"                 (Just "Device")
+    , simpleBracket True  "Framebuffer"               (Just "Device")
+    , simpleBracket True  "RenderPass"                (Just "Device")
+    , simpleBracket True  "PipelineCache"             (Just "Device")
+    , simpleBracket True  "ObjectTableNVX"            (Just "Device")
+    , simpleBracket True  "IndirectCommandsLayoutNVX" (Just "Device")
+    , simpleBracket True  "DescriptorUpdateTemplate"  (Just "Device")
+    , simpleBracket True  "SamplerYcbcrConversion"    (Just "Device")
+    , simpleBracket True  "ValidationCacheEXT"        (Just "Device")
+    , simpleBracket True  "AccelerationStructureNV"   (Just "Device")
+    , simpleBracket True  "SwapchainKHR"              (Just "Device")
+    , simpleBracket True  "DebugReportCallbackEXT"    (Just "Instance")
+    , simpleBracket True  "DebugUtilsMessengerEXT"    (Just "Instance")
+    , allocateBracket True False  (Just "vkCommandPool") "CommandBuffer" Nothing
+    , allocateBracket False True Nothing "DeviceMemory" (Just "Memory")
+    , allocateBracket True False (Just "vkDescriptorPool") "DescriptorSet" Nothing
+    , createPipeline "Compute"
+    , createPipeline "Graphics"
+    , mapMemory
+    , useCommandBuffer
+    , registerObjectsNVX
     ]
-  allocated <- traverse (uncurry allocateFreePair) [
-                                                   ]
-  let rs               = noParent ++ simples
-      ignoredHandles   = ["PhysicalDevice", "Queue", "DisplayKHR"]
+  let ignoredHandles   = ["PhysicalDevice", "Queue", "DisplayKHR", "DisplayModeKHR", "SurfaceKHR"]
       handleNames      = dropVkType . hName <$> handles
-      bracketNames     = [ unHaskellName n | (n, _, _, _) <- rs ]
+      bracketNames     = [ n | (TypeName n, _, _, _) <- rs ]
       unhandledHandles = handleNames \\ (bracketNames ++ ignoredHandles)
   unless (null unhandledHandles)
-    -- $ throwError [Other ("Unbracketed handles: " <> T.tShow unhandledHandles)]
-    $ traceShowM [Other ("Unbracketed handles: " <> T.tShow unhandledHandles)]
+    $ throwError [Other ("Unbracketed handles: " <> T.tShow unhandledHandles)]
   pure [ ((c, b), w) | (_, c, b, w) <- rs ]
 
-noParentConstructor :: Text -> Either [SpecError] (HaskellName, HaskellName, HaskellName, WriteElement)
-noParentConstructor typename =
-  let objectTerm = unReservedWord $ T.lowerCaseFirst typename
-      create = "create" <> typename
-      destroy = "destroy" <> typename
-      withName = "with" <> typename
-  in fmap (WE.TypeName typename, TermName create, TermName withName,) . wrapMToWriteElements ("with" <> typename) Nothing $ do
-    tellExport (Unguarded (WithoutConstructors (TermName withName)))
-    tellImport "Control.Exception" "bracket"
-    tellDepend (Unguarded (TermName create))
-    tellDepend (Unguarded (TermName destroy))
-    tellDepend (Unguarded (WE.TypeName typename))
-    tellDepend (Unguarded (WE.TypeName "AllocationCallbacks"))
+simpleBracket :: Bool -> Text -> Maybe Text -> Bracket
+simpleBracket passDestructorParent innerType parentMaybe =
+  let parentArg =
+          [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+          | Just parent <- [parentMaybe]
+          ]
+  in  Bracket
+        (Single (TypeName innerType))
+        (TermName ("with" <> innerType))
+        (TermName ("create" <> innerType))
+        (TermName ("destroy" <> innerType))
+        (  parentArg
+        ++ [ Provided
+             (Single (TypeName (innerType `appendWithVendor` "CreateInfo")))
+             (T.lowerCaseFirst innerType `appendWithVendor` "CreateInfo")
+           , Provided (Optional (TypeName "AllocationCallbacks"))
+                      "allocationCallbacks"
+           ]
+        )
+        (  [ a | passDestructorParent, a <- parentArg ]
+        ++ [ Resource
+           , Provided (Optional (TypeName "AllocationCallbacks"))
+                      "allocationCallbacks"
+           ]
+        )
+        False
+
+allocateBracket :: Bool -> Bool -> Maybe Text -> Text -> Maybe Text -> Bracket
+allocateBracket plural useAllocationCallbacks poolMaybe innerTypeName functionNameFragment
+  = let
+      suffix = bool "" "s" plural
+      parent = "Device"
+      innerType = fromMaybe innerTypeName functionNameFragment
+      allocateInfoTerm =
+        (T.lowerCaseFirst innerType `appendWithVendor` "AllocateInfo")
+    in
+      Bracket
+        (bool Single Multiple plural (TypeName innerTypeName))
+        (TermName ("with" <> innerType <> suffix))
+        (TermName ("allocate" <> innerType <> suffix))
+        (TermName ("free" <> innerType <> suffix))
+        (  [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+           , Provided
+             (Single (TypeName (innerType `appendWithVendor` "AllocateInfo")))
+             allocateInfoTerm
+           ]
+        ++ [ Provided (Optional (TypeName "AllocationCallbacks"))
+                      "allocationCallbacks"
+           | useAllocationCallbacks
+           ]
+        )
+        (  [Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)]
+        ++ maybeToList ((`Member` allocateInfoTerm) <$> poolMaybe)
+        ++ [Resource]
+        ++ [ Provided (Optional (TypeName "AllocationCallbacks"))
+                      "allocationCallbacks"
+           | useAllocationCallbacks
+           ]
+        )
+        False
+
+createPipeline :: Text -> Bracket
+createPipeline createTypePrefix =
+  let
+    innerType = "Pipeline"
+    suffix    = "s"
+    parent    = "Device"
+    ciType    = (createTypePrefix <> innerType `appendWithVendor` "CreateInfo")
+    cacheType = (innerType `appendWithVendor` "Cache")
+  in
+    Bracket
+      (Multiple (TypeName innerType))
+      (TermName ("with" <> createTypePrefix <> innerType <> suffix))
+      (TermName ("create" <> createTypePrefix <> innerType <> suffix))
+      (TermName ("destroy" <> innerType))
+      [ Provided (Single (TypeName parent))    (T.lowerCaseFirst parent)
+      , Provided (Single (TypeName cacheType)) (T.lowerCaseFirst cacheType)
+      , Provided (Multiple (TypeName ciType))  (T.lowerCaseFirst ciType)
+      , Provided (Optional (TypeName "AllocationCallbacks"))
+                 "allocationCallbacks"
+      ]
+      [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+      , Resource
+      , Provided (Optional (TypeName "AllocationCallbacks"))
+                 "allocationCallbacks"
+      ]
+      True
+
+mapMemory :: Bracket
+mapMemory =
+  let parent = "Device"
+      mem    = "DeviceMemory"
+  in  Bracket
+        (Single (Ptr NonConst Void))
+        (TermName "withMappedMemory")
+        (TermName "mapMemory")
+        (TermName "unmapMemory")
+        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+        , Provided (Single (TypeName mem))              (T.lowerCaseFirst mem)
+        , Provided (Single (TypeName "DeviceSize"))     "offset"
+        , Provided (Single (TypeName "DeviceSize"))     "size"
+        , Provided (Single (TypeName "MemoryMapFlags")) "flags"
+        ]
+        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+        , Provided (Single (TypeName mem))    (T.lowerCaseFirst mem)
+        ]
+        False
+
+useCommandBuffer :: Bracket
+useCommandBuffer =
+  let buf       = "CommandBuffer"
+      beginInfo = "CommandBufferBeginInfo"
+  in  Bracket
+        (Single Void)
+        (TermName "useCommandBuffer")
+        (TermName "beginCommandBuffer")
+        (TermName "endCommandBuffer")
+        [ Provided (Single (TypeName buf))       (T.lowerCaseFirst buf)
+        , Provided (Single (TypeName beginInfo)) (T.lowerCaseFirst beginInfo)
+        ]
+        [Provided (Single (TypeName buf)) (T.lowerCaseFirst buf)]
+        False
+
+registerObjectsNVX :: Bracket
+registerObjectsNVX =
+  let parent     = "Device"
+      table      = "ObjectTableNVX"
+      tableEntry = "ObjectTableEntryNVX"
+      entryType  = "ObjectEntryTypeNVX"
+  in  Bracket
+        (Single Void)
+        (TermName "withRegisteredObjectsNVX")
+        (TermName "registerObjectsNVX")
+        (TermName "unregisterObjectsNVX")
+        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+        , Provided (Single (TypeName table))  (T.lowerCaseFirst table)
+        , Provided (Multiple (TypeName tableEntry))
+                   (T.lowerCaseFirst tableEntry)
+        , Provided (Multiple (TypeName "uint32_t")) "objectIndices"
+        ]
+        [ Provided (Single (TypeName parent))       (T.lowerCaseFirst parent)
+        , Provided (Single (TypeName table))        (T.lowerCaseFirst table)
+        , Provided (Multiple (TypeName entryType))  (T.lowerCaseFirst entryType)
+        , Provided (Multiple (TypeName "uint32_t")) "objectIndices"
+        ]
+        False
+
+data Bracket = Bracket
+  { bInnerType :: ConstructedType
+  , bWrapperName :: HaskellName
+  , bCreate :: HaskellName
+  , bDestroy :: HaskellName
+  , bCreateArguments :: [Argument]
+  , bDestroyArguments :: [Argument]
+  , bDestroyIndividually :: Bool
+  }
+
+data ConstructedType
+  = Single { unConstructedType :: Type }
+  | Optional { unConstructedType :: Type }
+  | Multiple { unConstructedType :: Type }
+  deriving (Eq, Ord)
+
+constructedTypeToHsType :: ConstructedType -> WrapM (Doc ())
+constructedTypeToHsType = \case
+  Single t -> toHsType t
+  Optional t -> ("Maybe" <+>) . parens <$> toHsType t
+  Multiple t -> do
+    tellImport "Data.Vector" "Vector"
+    ("Vector" <+>) . parens <$> toHsType t
+
+data Argument
+  = Provided ConstructedType Text
+  | Resource
+  | Member Text Text
+  deriving (Eq, Ord)
+
+writePair
+  :: Bracket
+  -> Either [SpecError] (Type, HaskellName, HaskellName, WriteElement)
+writePair Bracket{..} =
+  let arguments = nubOrd (bCreateArguments ++ bDestroyArguments)
+  in fmap (unConstructedType bInnerType, bCreate, bWrapperName,) . wrapMToWriteElements (unHaskellName bWrapperName) Nothing $ do
+    tellExport (Unguarded (WithoutConstructors bWrapperName))
+    tellDepend (Unguarded bCreate)
+    tellDepend (Unguarded bDestroy)
+    argHsTypes <- traverse constructedTypeToHsType [ t | Provided t _ <- arguments]
+    let argHsVars = [pretty (unReservedWord v) | Provided _ v <- arguments]
+    createArgVars <- for bCreateArguments $ \case
+      Provided _ v -> pure (pretty (unReservedWord v))
+      Resource -> throwError [Other "Resource used in its own construction"]
+      Member _ _ -> throwError [Other "Member used during construction"]
+    destroyArgVars <- for bDestroyArguments $ \case
+      Provided _ v -> pure $ pretty (unReservedWord v)
+      Resource -> pure "o"
+      Member member argument
+        | [t] <- [t | Provided (Single t) v <- arguments, v == argument]
+        -> do
+          argumentType <- toHsType t
+          pure [qci|({member} ({argument} :: {argumentType})) |]
+        | otherwise
+        -> throwError [Other "Can't find single argument for member"]
+    innerHsType <- constructedTypeToHsType bInnerType
+    let noResource = bInnerType == Single Void && (Resource `notElem` bDestroyArguments)
+        bracket = if noResource
+                    then "bracket_"
+                    else "bracket"
+        cont = if noResource
+                 then "IO a"
+                 else "(" <> innerHsType <> " -> IO a)"
+        wrapperArguments = punctuate " ->" (argHsTypes ++ [cont, "IO a"])
+    tellImport "Control.Exception" bracket
     pure $ \_ -> [qci|
-    -- | Wrapper for '{create}' and '{destroy}' using 'bracket'
-    {withName}
-      :: {typename}CreateInfo
-      -> Maybe AllocationCallbacks
-      -> ({typename} -> IO a)
-      -> IO a
-    {withName} createInfo allocationCallbacks = bracket
-      ({create} createInfo allocationCallbacks)
-      (\\{objectTerm} -> {destroy} {objectTerm} allocationCallbacks)
+    -- | Wrapper for '{bCreate}' and '{bDestroy}' using '{bracket}'
+    {unHaskellName bWrapperName}
+      :: {hsep wrapperArguments}
+    {unHaskellName bWrapperName} {hsep argHsVars} = {bracket}
+      ({bCreate} {hsep createArgVars})
+      {bool emptyDoc "(traverse " bDestroyIndividually }({if noResource then emptyDoc else "\\\\o -> "}{bDestroy} {hsep destroyArgVars}){bool emptyDoc ")" bDestroyIndividually}
   |]
-
-simpleConstructor :: Text -> Text -> Either [SpecError] (HaskellName, HaskellName, HaskellName, WriteElement)
-simpleConstructor parent typename =
-  let parentTerm = unReservedWord $ T.lowerCaseFirst parent
-      objectTerm = unReservedWord $ T.lowerCaseFirst typename
-      create = "create" <> typename
-      destroy = "destroy" <> typename
-      withName = "with" <> typename
-  in fmap (WE.TypeName typename, TermName create, TermName withName,) . wrapMToWriteElements ("with" <> typename) Nothing $ do
-    tellExport (Unguarded (WithoutConstructors (TermName withName)))
-    tellImport "Control.Exception" "bracket"
-    tellDepend (Unguarded (TermName create))
-    tellDepend (Unguarded (TermName destroy))
-    tellDepend (Unguarded (WE.TypeName parent))
-    tellDepend (Unguarded (WE.TypeName typename))
-    pure $ \_ -> [qci|
-    -- | Wrapper for '{create}' and '{destroy}' using 'bracket'
-    {withName}
-      :: {parent}
-      -> {typename}CreateInfo
-      -> Maybe AllocationCallbacks
-      -> ({typename} -> IO a)
-      -> IO a
-    {withName} {parentTerm} createInfo allocationCallbacks = bracket
-      ({create} {parentTerm} createInfo allocationCallbacks)
-      (\\{objectTerm} -> {destroy} {parentTerm} {objectTerm} allocationCallbacks)
-  |]
-
-allocateFreePair :: Text -> Text -> Either [SpecError] (HaskellName, HaskellName, HaskellName, WriteElement)
-allocateFreePair parent typename =
-  let parentTerm = unReservedWord $ T.lowerCaseFirst parent
-      objectTerm = unReservedWord $ T.lowerCaseFirst typename
-      create = "allocate" <> typename <> "s"
-      destroy = "free" <> typename <> "s"
-      withName = "with" <> typename
-  in fmap (WE.TypeName typename, TermName create, TermName withName,) . wrapMToWriteElements ("with" <> typename) Nothing $ do
-    tellExport (Unguarded (WithoutConstructors (TermName withName)))
-    tellImport "Control.Exception" "bracket"
-    tellDepend (Unguarded (TermName create))
-    tellDepend (Unguarded (TermName destroy))
-    tellDepend (Unguarded (WE.TypeName parent))
-    tellDepend (Unguarded (WE.TypeName typename))
-    pure $ \_ -> [qci|
-    -- | Wrapper for '{create}' and '{destroy}' using 'bracket'
-    {withName}
-      :: {parent}
-      -> {typename}CreateInfo
-      -> Maybe AllocationCallbacks
-      -> ({typename} -> IO a)
-      -> IO a
-    {withName} {parentTerm} createInfo allocationCallbacks = bracket
-      ({create} {parentTerm} createInfo allocationCallbacks)
-      (\\{objectTerm} -> {destroy} {parentTerm} {objectTerm} allocationCallbacks)
-  |]
-
-insertBracketDependency :: [Bracket] -> WriteElement -> WriteElement
-insertBracketDependency bs we@WriteElement {..} =
-  let weDepends' =
-        weDepends
-          ++ [ p $> bName
-             | Bracket {..} <- bs
-             , p            <- weProvides
-             , TypeName n   <- [bType]
-             , dropVkType n == unHaskellName (unExport (unGuarded p))
-             ]
-  in  WriteElement {weDepends = weDepends', ..}
-
--- | Find pairs of commands which should be called using the bracket pattern
-bracketCommand :: Bracket -> Either [SpecError] WriteElement
-bracketCommand b = do
-  let weName        = T.tShow (bName b)
-      weBootElement = Nothing
-  (weDoc, (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
-    either (throwError . fmap (WithContext weName))
-           pure
-           (runWrap $ bracketCommand' b)
-  pure WriteElement {..}
-
-bracketCommand' :: Bracket -> WrapM (DocMap -> Doc ())
-bracketCommand' Bracket{..} = do
-  let t = dropVkType . typeName $ bType
-      p = dropVkType . typeName <$> bParentType
-      ci = dropVkType . typeName $ bCreateInfoType
-      co = dropVk $ cName bOpen
-      cc = dropVk $ cName bClose
-  tellExport (Unguarded (WithoutConstructors bName))
-  tellImport "Control.Exception" "bracket"
-  tellDepend (Unguarded (TermName co))
-  tellDepend (Unguarded (TermName cc))
-  traverse_ (tellDepend . Unguarded . WE.TypeName) p
-  pure $ \_ -> [qci|
-    -- | Wrapper for '{co}' and '{cc}' using 'bracket'
-    {unHaskellName bName} :: {maybe "" (<> " -> ") p}{ci} -> Maybe AllocationCallbacks -> ({t} -> IO a) -> IO a
-    {unHaskellName bName} {maybe "" (const "parent ") p}createInfo allocationCallbacks =
-      bracket
-        ({co} {maybe "" (const "parent ") p}createInfo allocationCallbacks)
-        (\o -> {cc} {maybe "" (const "parent ") p}o allocationCallbacks)
-  |]
-
-typeName :: Type -> Text
-typeName = \case
-  TypeName t -> t
-  _          -> error "typeName on non TypeName"
-
-pairs :: (a -> Maybe l) -> (a -> Maybe r) -> (l -> r -> Maybe p) -> [a] -> [p]
-pairs l r p xs =
-  [ p' | Just l' <- l <$> xs, Just r' <- r <$> xs, Just p' <- [p l' r'] ]

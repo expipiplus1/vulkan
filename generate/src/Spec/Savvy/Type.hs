@@ -53,17 +53,17 @@ data Type
     -- ^ Qualifies the pointed to type
   | TypeName Text
   | Proto Type [(Maybe Text, Type)]
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 data ArraySize
   = NumericArraySize Word
   | SymbolicArraySize Text
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 data Qualifier
   = NonConst
   | Const
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 ----------------------------------------------------------------
 -- Type context

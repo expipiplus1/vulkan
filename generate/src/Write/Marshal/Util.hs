@@ -20,16 +20,18 @@ module Write.Marshal.Util
   , unReservedWord
   , simpleTypeName
   , isSimpleType
+  , appendWithVendor
   ) where
 
-import           Control.Category                         ((>>>))
+import           Control.Category                         ( (>>>) )
 import           Data.Foldable
+import           Data.Char
 import           Data.Function
 import           Data.Maybe
-import           Data.Text                                (Text)
-import qualified Data.Text.Extra                          as T
+import           Data.Text                                ( Text )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
-import           Prelude                                  hiding (Enum)
+import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Command
@@ -113,6 +115,12 @@ dropVkType = T.dropPrefix' "Vk"
 
 dropPointer :: Text -> Text
 dropPointer = T.lowerCaseFirst . T.dropPrefix' "p"
+
+appendWithVendor :: Text -> Text -> Text
+appendWithVendor a b =
+  let prefix = T.dropWhileEnd isUpper a
+      vendor = T.takeWhileEnd isUpper a
+  in prefix <> b <> vendor
 
 unReservedWord :: Text -> Text
 unReservedWord t = if t `elem` (keywords ++ preludeWords) then t <> "'" else t
