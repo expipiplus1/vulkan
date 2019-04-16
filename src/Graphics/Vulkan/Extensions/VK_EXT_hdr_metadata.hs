@@ -115,6 +115,6 @@ fromCStructXYColorEXT :: VkXYColorEXT -> IO XYColorEXT
 fromCStructXYColorEXT c = XYColorEXT <$> pure (vkX (c :: VkXYColorEXT))
                                      <*> pure (vkY (c :: VkXYColorEXT))
 
--- | Wrapper for vkSetHdrMetadataEXT
+-- | Wrapper for 'vkSetHdrMetadataEXT'
 setHdrMetadataEXT :: Device ->  Vector SwapchainKHR ->  Vector HdrMetadataEXT ->  IO ()
 setHdrMetadataEXT = \(Device device commandTable) -> \swapchains -> \metadata -> withVec withCStructHdrMetadataEXT metadata (\pMetadata -> withVec (&) swapchains (\pSwapchains -> Graphics.Vulkan.C.Dynamic.setHdrMetadataEXT commandTable device (fromIntegral $ Data.Vector.length swapchains `min` Data.Vector.length metadata) pSwapchains pMetadata *> (pure ())))

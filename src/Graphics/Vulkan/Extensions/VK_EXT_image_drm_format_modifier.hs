@@ -246,6 +246,6 @@ fromCStructPhysicalDeviceImageDrmFormatModifierInfoEXT c = PhysicalDeviceImageDr
                                                                                                        -- Length valued member elided
                                                                                                        <*> (Data.Vector.generateM (fromIntegral (vkQueueFamilyIndexCount (c :: VkPhysicalDeviceImageDrmFormatModifierInfoEXT))) (peekElemOff (vkPQueueFamilyIndices (c :: VkPhysicalDeviceImageDrmFormatModifierInfoEXT))))
 
--- | Wrapper for vkGetImageDrmFormatModifierPropertiesEXT
+-- | Wrapper for 'vkGetImageDrmFormatModifierPropertiesEXT'
 getImageDrmFormatModifierPropertiesEXT :: Device ->  Image ->  IO (ImageDrmFormatModifierPropertiesEXT)
 getImageDrmFormatModifierPropertiesEXT = \(Device device commandTable) -> \image -> alloca (\pProperties -> Graphics.Vulkan.C.Dynamic.getImageDrmFormatModifierPropertiesEXT commandTable device image pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructImageDrmFormatModifierPropertiesEXT <=< peek) pProperties)))

@@ -131,6 +131,6 @@ fromCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT c = PhysicalDeviceBuffer
                                                                                                          <*> pure (bool32ToBool (vkBufferDeviceAddressCaptureReplay (c :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkBufferDeviceAddressMultiDevice (c :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT)))
 
--- | Wrapper for vkGetBufferDeviceAddressEXT
+-- | Wrapper for 'vkGetBufferDeviceAddressEXT'
 getBufferDeviceAddressEXT :: Device ->  BufferDeviceAddressInfoEXT ->  IO (VkDeviceAddress)
 getBufferDeviceAddressEXT = \(Device device commandTable) -> \info -> (\a -> withCStructBufferDeviceAddressInfoEXT a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getBufferDeviceAddressEXT commandTable device pInfo >>= (\r -> pure r))

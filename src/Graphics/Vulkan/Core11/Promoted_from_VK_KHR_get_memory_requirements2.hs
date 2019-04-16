@@ -182,20 +182,20 @@ fromCStructSparseImageMemoryRequirements2 c = SparseImageMemoryRequirements2 <$>
                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSparseImageMemoryRequirements2)))
                                                                              <*> (fromCStructSparseImageMemoryRequirements (vkMemoryRequirements (c :: VkSparseImageMemoryRequirements2)))
 
--- | Wrapper for vkGetBufferMemoryRequirements2
+-- | Wrapper for 'vkGetBufferMemoryRequirements2'
 getBufferMemoryRequirements2 :: Device ->  BufferMemoryRequirementsInfo2 ->  IO (MemoryRequirements2)
 getBufferMemoryRequirements2 = \(Device device commandTable) -> \info -> alloca (\pMemoryRequirements -> (\a -> withCStructBufferMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getBufferMemoryRequirements2 commandTable device pInfo pMemoryRequirements *> ((fromCStructMemoryRequirements2 <=< peek) pMemoryRequirements)))
 
--- | Wrapper for vkGetImageMemoryRequirements2
+-- | Wrapper for 'vkGetImageMemoryRequirements2'
 getImageMemoryRequirements2 :: Device ->  ImageMemoryRequirementsInfo2 ->  IO (MemoryRequirements2)
 getImageMemoryRequirements2 = \(Device device commandTable) -> \info -> alloca (\pMemoryRequirements -> (\a -> withCStructImageMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getImageMemoryRequirements2 commandTable device pInfo pMemoryRequirements *> ((fromCStructMemoryRequirements2 <=< peek) pMemoryRequirements)))
 
--- | Wrapper for vkGetImageSparseMemoryRequirements2
+-- | Wrapper for 'vkGetImageSparseMemoryRequirements2'
 getNumImageSparseMemoryRequirements2 :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  IO (Word32)
 getNumImageSparseMemoryRequirements2 = \(Device device commandTable) -> \info -> alloca (\pSparseMemoryRequirementCount -> (\a -> withCStructImageSparseMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getImageSparseMemoryRequirements2 commandTable device pInfo pSparseMemoryRequirementCount nullPtr *> (peek pSparseMemoryRequirementCount)))
 
--- | Wrapper for vkGetImageSparseMemoryRequirements2
-getImageSparseMemoryRequirements2 :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO (Vector SparseImageMemoryRequirements2)
+-- | Wrapper for 'vkGetImageSparseMemoryRequirements2'
+getImageSparseMemoryRequirements2 :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO ( Vector SparseImageMemoryRequirements2 )
 getImageSparseMemoryRequirements2 = \(Device device commandTable) -> \info -> \sparseMemoryRequirementCount -> allocaArray (fromIntegral sparseMemoryRequirementCount) (\pSparseMemoryRequirements -> with sparseMemoryRequirementCount (\pSparseMemoryRequirementCount -> (\a -> withCStructImageSparseMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getImageSparseMemoryRequirements2 commandTable device pInfo pSparseMemoryRequirementCount pSparseMemoryRequirements *> ((flip Data.Vector.generateM ((\p -> fromCStructSparseImageMemoryRequirements2 <=< peekElemOff p) pSparseMemoryRequirements) =<< (fromIntegral <$> (peek pSparseMemoryRequirementCount)))))))
 -- | Call 'getNumImageSparseMemoryRequirements2' to get the number of return values, then use that
 -- number to call 'getImageSparseMemoryRequirements2' to get all the values.

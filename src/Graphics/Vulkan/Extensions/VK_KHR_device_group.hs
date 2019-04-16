@@ -13,7 +13,9 @@ module Graphics.Vulkan.Extensions.VK_KHR_device_group
   , cmdDispatchBaseKHR
   , cmdSetDeviceMaskKHR
   , getDeviceGroupPeerMemoryFeaturesKHR
+#if defined(VK_USE_PLATFORM_WIN32)
   , getDeviceGroupSurfacePresentModes2EXT
+#endif
   , pattern VK_KHR_DEVICE_GROUP_SPEC_VERSION
   , pattern VK_KHR_DEVICE_GROUP_EXTENSION_NAME
   , pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO_KHR
@@ -73,32 +75,53 @@ module Graphics.Vulkan.Extensions.VK_KHR_device_group
   , acquireNextImage2KHR
   ) where
 
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Control.Exception
   ( throwIO
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Control.Monad
   ( when
   )
+#endif
 import Data.Word
   ( Word32
   )
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Foreign.Marshal.Alloc
   ( alloca
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Foreign.Marshal.Utils
   ( with
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Foreign.Storable
   ( peek
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import qualified Graphics.Vulkan.C.Dynamic
   ( getDeviceGroupSurfacePresentModes2EXT
   )
+#endif
 
 
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Graphics.Vulkan.C.Core10.Core
   ( pattern VK_SUCCESS
   )
+#endif
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( Device(..)
   )
@@ -120,16 +143,25 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_
   ( BindBufferMemoryDeviceGroupInfo(..)
   , BindImageMemoryDeviceGroupInfo(..)
   )
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Graphics.Vulkan.Exception
   ( VulkanException(..)
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2
   ( PhysicalDeviceSurfaceInfo2KHR(..)
   , withCStructPhysicalDeviceSurfaceInfo2KHR
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Graphics.Vulkan.Extensions.VK_KHR_swapchain
   ( DeviceGroupPresentModeFlagsKHR
   )
+#endif
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
   ( pattern VK_DEPENDENCY_DEVICE_GROUP_BIT
   , pattern VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT
@@ -193,6 +225,7 @@ import Graphics.Vulkan.Extensions.VK_KHR_swapchain
   , DeviceGroupSwapchainCreateInfoKHR(..)
   , ImageSwapchainCreateInfoKHR(..)
   , DeviceGroupPresentModeFlagBitsKHR
+  , DeviceGroupPresentModeFlagsKHR
   , acquireNextImage2KHR
   , getDeviceGroupPresentCapabilitiesKHR
   , getDeviceGroupSurfacePresentModesKHR
@@ -214,13 +247,16 @@ type DeviceGroupSubmitInfoKHR = DeviceGroupSubmitInfo
 -- TODO: Pattern constructor alias)
 type MemoryAllocateFlagsInfoKHR = MemoryAllocateFlagsInfo
 -- TODO: Pattern constructor alias)
-cmdDispatchBaseKHR :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO ()
+cmdDispatchBaseKHR :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO (  )
 cmdDispatchBaseKHR = cmdDispatchBase
 cmdSetDeviceMaskKHR :: CommandBuffer ->  Word32 ->  IO ()
 cmdSetDeviceMaskKHR = cmdSetDeviceMask
 getDeviceGroupPeerMemoryFeaturesKHR :: Device ->  Word32 ->  Word32 ->  Word32 ->  IO (PeerMemoryFeatureFlags)
 getDeviceGroupPeerMemoryFeaturesKHR = getDeviceGroupPeerMemoryFeatures
 
--- | Wrapper for vkGetDeviceGroupSurfacePresentModes2EXT
+#if defined(VK_USE_PLATFORM_WIN32)
+
+-- | Wrapper for 'vkGetDeviceGroupSurfacePresentModes2EXT'
 getDeviceGroupSurfacePresentModes2EXT :: Device ->  PhysicalDeviceSurfaceInfo2KHR ->  IO (DeviceGroupPresentModeFlagsKHR)
 getDeviceGroupSurfacePresentModes2EXT = \(Device device commandTable) -> \surfaceInfo -> alloca (\pModes -> (\a -> withCStructPhysicalDeviceSurfaceInfo2KHR a . flip with) surfaceInfo (\pSurfaceInfo -> Graphics.Vulkan.C.Dynamic.getDeviceGroupSurfacePresentModes2EXT commandTable device pSurfaceInfo pModes >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pModes))))
+#endif

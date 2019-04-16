@@ -31,6 +31,7 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   , SamplerYcbcrRangeKHR
   , createSamplerYcbcrConversion
   , destroySamplerYcbcrConversion
+  , withSamplerYcbcrConversion
   , pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
   , pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
   , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
@@ -340,10 +341,15 @@ type SamplerYcbcrRange = VkSamplerYcbcrRange
 -- No documentation found for TopLevel "SamplerYcbcrRangeKHR"
 type SamplerYcbcrRangeKHR = SamplerYcbcrRange
 
--- | Wrapper for vkCreateSamplerYcbcrConversion
-createSamplerYcbcrConversion :: Device ->  SamplerYcbcrConversionCreateInfo ->  Maybe AllocationCallbacks ->  IO (SamplerYcbcrConversion)
+-- | Wrapper for 'vkCreateSamplerYcbcrConversion'
+createSamplerYcbcrConversion :: Device ->  SamplerYcbcrConversionCreateInfo ->  Maybe AllocationCallbacks ->  IO ( SamplerYcbcrConversion )
 createSamplerYcbcrConversion = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pYcbcrConversion -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructSamplerYcbcrConversionCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createSamplerYcbcrConversion commandTable device pCreateInfo pAllocator pYcbcrConversion >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pYcbcrConversion)))))
 
--- | Wrapper for vkDestroySamplerYcbcrConversion
+-- | Wrapper for 'vkDestroySamplerYcbcrConversion'
 destroySamplerYcbcrConversion :: Device ->  SamplerYcbcrConversion ->  Maybe AllocationCallbacks ->  IO ()
 destroySamplerYcbcrConversion = \(Device device commandTable) -> \ycbcrConversion -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySamplerYcbcrConversion commandTable device ycbcrConversion pAllocator *> (pure ()))
+withSamplerYcbcrConversion :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withSamplerYcbcrConversion createInfo allocationCallbacks =
+  bracket
+    (vkCreateSamplerYcbcrConversion createInfo allocationCallbacks)
+    (`vkDestroySamplerYcbcrConversion` allocationCallbacks)

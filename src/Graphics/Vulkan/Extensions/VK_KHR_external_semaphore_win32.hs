@@ -209,10 +209,10 @@ fromCStructSemaphoreGetWin32HandleInfoKHR c = SemaphoreGetWin32HandleInfoKHR <$>
                                                                              <*> pure (vkSemaphore (c :: VkSemaphoreGetWin32HandleInfoKHR))
                                                                              <*> pure (vkHandleType (c :: VkSemaphoreGetWin32HandleInfoKHR))
 
--- | Wrapper for vkGetSemaphoreWin32HandleKHR
+-- | Wrapper for 'vkGetSemaphoreWin32HandleKHR'
 getSemaphoreWin32HandleKHR :: Device ->  SemaphoreGetWin32HandleInfoKHR ->  IO (HANDLE)
 getSemaphoreWin32HandleKHR = \(Device device commandTable) -> \getWin32HandleInfo -> alloca (\pHandle -> (\a -> withCStructSemaphoreGetWin32HandleInfoKHR a . flip with) getWin32HandleInfo (\pGetWin32HandleInfo -> Graphics.Vulkan.C.Dynamic.getSemaphoreWin32HandleKHR commandTable device pGetWin32HandleInfo pHandle >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pHandle))))
 
--- | Wrapper for vkImportSemaphoreWin32HandleKHR
+-- | Wrapper for 'vkImportSemaphoreWin32HandleKHR'
 importSemaphoreWin32HandleKHR :: Device ->  ImportSemaphoreWin32HandleInfoKHR ->  IO ()
 importSemaphoreWin32HandleKHR = \(Device device commandTable) -> \importSemaphoreWin32HandleInfo -> (\a -> withCStructImportSemaphoreWin32HandleInfoKHR a . flip with) importSemaphoreWin32HandleInfo (\pImportSemaphoreWin32HandleInfo -> Graphics.Vulkan.C.Dynamic.importSemaphoreWin32HandleKHR commandTable device pImportSemaphoreWin32HandleInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))

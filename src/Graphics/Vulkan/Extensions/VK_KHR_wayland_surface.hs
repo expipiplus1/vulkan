@@ -103,10 +103,10 @@ fromCStructWaylandSurfaceCreateInfoKHR c = WaylandSurfaceCreateInfoKHR <$> -- Un
                                                                        <*> pure (vkDisplay (c :: VkWaylandSurfaceCreateInfoKHR))
                                                                        <*> pure (vkSurface (c :: VkWaylandSurfaceCreateInfoKHR))
 
--- | Wrapper for vkCreateWaylandSurfaceKHR
-createWaylandSurfaceKHR :: Instance ->  WaylandSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
+-- | Wrapper for 'vkCreateWaylandSurfaceKHR'
+createWaylandSurfaceKHR :: Instance ->  WaylandSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
 createWaylandSurfaceKHR = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructWaylandSurfaceCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createWaylandSurfaceKHR commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))
 
--- | Wrapper for vkGetPhysicalDeviceWaylandPresentationSupportKHR
+-- | Wrapper for 'vkGetPhysicalDeviceWaylandPresentationSupportKHR'
 getPhysicalDeviceWaylandPresentationSupportKHR :: PhysicalDevice ->  Word32 ->  Ptr Wl_display ->  IO (VkBool32)
 getPhysicalDeviceWaylandPresentationSupportKHR = \(PhysicalDevice physicalDevice commandTable) -> \queueFamilyIndex -> \display -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceWaylandPresentationSupportKHR commandTable physicalDevice queueFamilyIndex display >>= (\r -> pure r)

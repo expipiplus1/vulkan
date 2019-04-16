@@ -125,6 +125,6 @@ fromCStructPipelineDiscardRectangleStateCreateInfoEXT c = PipelineDiscardRectang
                                                                                                      -- Optional length valued member elided
                                                                                                      <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkDiscardRectangleCount (c :: VkPipelineDiscardRectangleStateCreateInfoEXT))) (((fromCStructRect2D <=<) . peekElemOff) p)) (vkPDiscardRectangles (c :: VkPipelineDiscardRectangleStateCreateInfoEXT))
 
--- | Wrapper for vkCmdSetDiscardRectangleEXT
+-- | Wrapper for 'vkCmdSetDiscardRectangleEXT'
 cmdSetDiscardRectangleEXT :: CommandBuffer ->  Word32 ->  Vector Rect2D ->  IO ()
 cmdSetDiscardRectangleEXT = \(CommandBuffer commandBuffer commandTable) -> \firstDiscardRectangle -> \discardRectangles -> withVec withCStructRect2D discardRectangles (\pDiscardRectangles -> Graphics.Vulkan.C.Dynamic.cmdSetDiscardRectangleEXT commandTable commandBuffer firstDiscardRectangle (fromIntegral $ Data.Vector.length discardRectangles) pDiscardRectangles *> (pure ()))

@@ -24,10 +24,11 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( length
+  ( generateM
+  , length
   )
-import Foreign.Marshal.Alloc
-  ( alloca
+import Foreign.Marshal.Array
+  ( allocaArray
   )
 import Foreign.Marshal.Utils
   ( maybePeek
@@ -38,7 +39,7 @@ import Foreign.Ptr
   ( castPtr
   )
 import Foreign.Storable
-  ( peek
+  ( peekElemOff
   )
 import qualified Graphics.Vulkan.C.Dynamic
   ( createSharedSwapchainsKHR
@@ -111,6 +112,6 @@ fromCStructDisplayPresentInfoKHR c = DisplayPresentInfoKHR <$> -- Univalued Memb
                                                            <*> (fromCStructRect2D (vkDstRect (c :: VkDisplayPresentInfoKHR)))
                                                            <*> pure (bool32ToBool (vkPersistent (c :: VkDisplayPresentInfoKHR)))
 
--- | Wrapper for vkCreateSharedSwapchainsKHR
-createSharedSwapchainsKHR :: Device ->  Vector SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SwapchainKHR)
-createSharedSwapchainsKHR = \(Device device commandTable) -> \createInfos -> \allocator -> alloca (\pSwapchains -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructSwapchainCreateInfoKHR createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createSharedSwapchainsKHR commandTable device (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pSwapchains >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSwapchains)))))
+-- | Wrapper for 'vkCreateSharedSwapchainsKHR'
+createSharedSwapchainsKHR :: Device ->  Vector SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( Vector SwapchainKHR )
+createSharedSwapchainsKHR = \(Device device commandTable) -> \createInfos -> \allocator -> allocaArray ((Data.Vector.length createInfos)) (\pSwapchains -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructSwapchainCreateInfoKHR createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createSharedSwapchainsKHR commandTable device (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pSwapchains >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos)) (peekElemOff pSwapchains)))))))

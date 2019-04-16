@@ -128,10 +128,10 @@ type BufferUsageFlags = BufferUsageFlagBits
 -- No documentation found for TopLevel "SharingMode"
 type SharingMode = VkSharingMode
 
--- | Wrapper for vkCreateBuffer
+-- | Wrapper for 'vkCreateBuffer'
 createBuffer :: Device ->  BufferCreateInfo ->  Maybe AllocationCallbacks ->  IO (Buffer)
 createBuffer = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pBuffer -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructBufferCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createBuffer commandTable device pCreateInfo pAllocator pBuffer >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pBuffer)))))
 
--- | Wrapper for vkDestroyBuffer
+-- | Wrapper for 'vkDestroyBuffer'
 destroyBuffer :: Device ->  Buffer ->  Maybe AllocationCallbacks ->  IO ()
 destroyBuffer = \(Device device commandTable) -> \buffer -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyBuffer commandTable device buffer pAllocator *> (pure ()))

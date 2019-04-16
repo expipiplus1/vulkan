@@ -144,12 +144,14 @@ fromCStructShaderStatisticsInfoAMD c = ShaderStatisticsInfoAMD <$> pure (vkShade
                                                                , Data.Vector.Storable.Sized.unsafeIndex x 1
                                                                , Data.Vector.Storable.Sized.unsafeIndex x 2 ))
 
--- | Wrapper for vkGetShaderInfoAMD
-getNumShaderInfoAMD :: Device ->  Pipeline ->  ShaderStageFlagBits ->  ShaderInfoTypeAMD ->  IO (VkResult, CSize)
+-- | Wrapper for 'vkGetShaderInfoAMD'
+getNumShaderInfoAMD :: Device ->  Pipeline ->  ShaderStageFlagBits ->  ShaderInfoTypeAMD ->  IO ( VkResult
+, CSize )
 getNumShaderInfoAMD = \(Device device commandTable) -> \pipeline -> \shaderStage -> \infoType -> alloca (\pInfoSize -> Graphics.Vulkan.C.Dynamic.getShaderInfoAMD commandTable device pipeline shaderStage infoType pInfoSize nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pInfoSize)))
 
--- | Wrapper for vkGetShaderInfoAMD
-getShaderInfoAMD :: Device ->  Pipeline ->  ShaderStageFlagBits ->  ShaderInfoTypeAMD ->  CSize ->  IO (VkResult, ByteString)
+-- | Wrapper for 'vkGetShaderInfoAMD'
+getShaderInfoAMD :: Device ->  Pipeline ->  ShaderStageFlagBits ->  ShaderInfoTypeAMD ->  CSize ->  IO ( VkResult
+, ByteString )
 getShaderInfoAMD = \(Device device commandTable) -> \pipeline -> \shaderStage -> \infoType -> \infoSize -> allocaArray (fromIntegral infoSize) (\pInfo -> with infoSize (\pInfoSize -> Graphics.Vulkan.C.Dynamic.getShaderInfoAMD commandTable device pipeline shaderStage infoType pInfoSize (castPtr pInfo) >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(curry packCStringLen pInfo =<< (fromIntegral <$> (peek pInfoSize)))))))
 -- | Call 'getNumShaderInfoAMD' to get the number of return values, then use that
 -- number to call 'getShaderInfoAMD' to get all the values.

@@ -107,15 +107,15 @@ fromCStructCalibratedTimestampInfoEXT c = CalibratedTimestampInfoEXT <$> -- Univ
 -- No documentation found for TopLevel "TimeDomainEXT"
 type TimeDomainEXT = VkTimeDomainEXT
 
--- | Wrapper for vkGetCalibratedTimestampsEXT
+-- | Wrapper for 'vkGetCalibratedTimestampsEXT'
 getCalibratedTimestampsEXT :: Device ->  Vector CalibratedTimestampInfoEXT ->  IO (Vector Word64, Word64)
 getCalibratedTimestampsEXT = \(Device device commandTable) -> \timestampInfos -> alloca (\pMaxDeviation -> allocaArray ((Data.Vector.length timestampInfos)) (\pTimestamps -> withVec withCStructCalibratedTimestampInfoEXT timestampInfos (\pTimestampInfos -> Graphics.Vulkan.C.Dynamic.getCalibratedTimestampsEXT commandTable device (fromIntegral $ Data.Vector.length timestampInfos) pTimestampInfos pTimestamps pMaxDeviation >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> (Data.Vector.generateM ((Data.Vector.length timestampInfos)) (peekElemOff pTimestamps))<*>peek pMaxDeviation)))))
 
--- | Wrapper for vkGetPhysicalDeviceCalibrateableTimeDomainsEXT
+-- | Wrapper for 'vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
 getNumPhysicalDeviceCalibrateableTimeDomainsEXT :: PhysicalDevice ->  IO (VkResult, Word32)
 getNumPhysicalDeviceCalibrateableTimeDomainsEXT = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pTimeDomainCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceCalibrateableTimeDomainsEXT commandTable physicalDevice pTimeDomainCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pTimeDomainCount)))
 
--- | Wrapper for vkGetPhysicalDeviceCalibrateableTimeDomainsEXT
+-- | Wrapper for 'vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
 getPhysicalDeviceCalibrateableTimeDomainsEXT :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector TimeDomainEXT)
 getPhysicalDeviceCalibrateableTimeDomainsEXT = \(PhysicalDevice physicalDevice commandTable) -> \timeDomainCount -> allocaArray (fromIntegral timeDomainCount) (\pTimeDomains -> with timeDomainCount (\pTimeDomainCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceCalibrateableTimeDomainsEXT commandTable physicalDevice pTimeDomainCount pTimeDomains >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM (peekElemOff pTimeDomains) =<< (fromIntegral <$> (peek pTimeDomainCount)))))))
 -- | Call 'getNumPhysicalDeviceCalibrateableTimeDomainsEXT' to get the number of return values, then use that

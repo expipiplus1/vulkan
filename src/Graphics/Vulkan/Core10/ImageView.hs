@@ -20,6 +20,7 @@ module Graphics.Vulkan.Core10.ImageView
   , ImageViewType
   , createImageView
   , destroyImageView
+  , withImageView
   ) where
 
 import Control.Exception
@@ -170,10 +171,15 @@ fromCStructImageViewCreateInfo c = ImageViewCreateInfo <$> -- Univalued Member e
 -- No documentation found for TopLevel "ImageViewType"
 type ImageViewType = VkImageViewType
 
--- | Wrapper for vkCreateImageView
+-- | Wrapper for 'vkCreateImageView'
 createImageView :: Device ->  ImageViewCreateInfo ->  Maybe AllocationCallbacks ->  IO (ImageView)
 createImageView = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pView -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructImageViewCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createImageView commandTable device pCreateInfo pAllocator pView >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pView)))))
 
--- | Wrapper for vkDestroyImageView
+-- | Wrapper for 'vkDestroyImageView'
 destroyImageView :: Device ->  ImageView ->  Maybe AllocationCallbacks ->  IO ()
 destroyImageView = \(Device device commandTable) -> \imageView -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyImageView commandTable device imageView pAllocator *> (pure ()))
+withImageView :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withImageView createInfo allocationCallbacks =
+  bracket
+    (vkCreateImageView createInfo allocationCallbacks)
+    (`vkDestroyImageView` allocationCallbacks)

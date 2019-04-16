@@ -236,10 +236,10 @@ fromCStructMemoryGetAndroidHardwareBufferInfoANDROID c = MemoryGetAndroidHardwar
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryGetAndroidHardwareBufferInfoANDROID)))
                                                                                                    <*> pure (vkMemory (c :: VkMemoryGetAndroidHardwareBufferInfoANDROID))
 
--- | Wrapper for vkGetAndroidHardwareBufferPropertiesANDROID
+-- | Wrapper for 'vkGetAndroidHardwareBufferPropertiesANDROID'
 getAndroidHardwareBufferPropertiesANDROID :: Device ->  Ptr AHardwareBuffer ->  IO (AndroidHardwareBufferPropertiesANDROID)
 getAndroidHardwareBufferPropertiesANDROID = \(Device device commandTable) -> \buffer -> alloca (\pProperties -> Graphics.Vulkan.C.Dynamic.getAndroidHardwareBufferPropertiesANDROID commandTable device buffer pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructAndroidHardwareBufferPropertiesANDROID <=< peek) pProperties)))
 
--- | Wrapper for vkGetMemoryAndroidHardwareBufferANDROID
-getMemoryAndroidHardwareBufferANDROID :: Device ->  MemoryGetAndroidHardwareBufferInfoANDROID ->  IO (Ptr AHardwareBuffer)
+-- | Wrapper for 'vkGetMemoryAndroidHardwareBufferANDROID'
+getMemoryAndroidHardwareBufferANDROID :: Device ->  MemoryGetAndroidHardwareBufferInfoANDROID ->  IO ( Ptr AHardwareBuffer )
 getMemoryAndroidHardwareBufferANDROID = \(Device device commandTable) -> \info -> alloca (\pBuffer -> (\a -> withCStructMemoryGetAndroidHardwareBufferInfoANDROID a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getMemoryAndroidHardwareBufferANDROID commandTable device pInfo pBuffer >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pBuffer))))

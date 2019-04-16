@@ -14,6 +14,7 @@ module Graphics.Vulkan.Core10.Event
   , getEventStatus
   , resetEvent
   , setEvent
+  , withEvent
   ) where
 
 import Control.Exception
@@ -90,22 +91,27 @@ fromCStructEventCreateInfo c = EventCreateInfo <$> -- Univalued Member elided
                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkEventCreateInfo)))
                                                <*> pure (vkFlags (c :: VkEventCreateInfo))
 
--- | Wrapper for vkCreateEvent
+-- | Wrapper for 'vkCreateEvent'
 createEvent :: Device ->  EventCreateInfo ->  Maybe AllocationCallbacks ->  IO (Event)
 createEvent = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pEvent -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructEventCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createEvent commandTable device pCreateInfo pAllocator pEvent >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pEvent)))))
 
--- | Wrapper for vkDestroyEvent
+-- | Wrapper for 'vkDestroyEvent'
 destroyEvent :: Device ->  Event ->  Maybe AllocationCallbacks ->  IO ()
 destroyEvent = \(Device device commandTable) -> \event -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyEvent commandTable device event pAllocator *> (pure ()))
 
--- | Wrapper for vkGetEventStatus
+-- | Wrapper for 'vkGetEventStatus'
 getEventStatus :: Device ->  Event ->  IO (VkResult)
 getEventStatus = \(Device device commandTable) -> \event -> Graphics.Vulkan.C.Dynamic.getEventStatus commandTable device event >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure r))
 
--- | Wrapper for vkResetEvent
+-- | Wrapper for 'vkResetEvent'
 resetEvent :: Device ->  Event ->  IO ()
 resetEvent = \(Device device commandTable) -> \event -> Graphics.Vulkan.C.Dynamic.resetEvent commandTable device event >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
 
--- | Wrapper for vkSetEvent
+-- | Wrapper for 'vkSetEvent'
 setEvent :: Device ->  Event ->  IO ()
 setEvent = \(Device device commandTable) -> \event -> Graphics.Vulkan.C.Dynamic.setEvent commandTable device event >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
+withEvent :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withEvent createInfo allocationCallbacks =
+  bracket
+    (vkCreateEvent createInfo allocationCallbacks)
+    (`vkDestroyEvent` allocationCallbacks)

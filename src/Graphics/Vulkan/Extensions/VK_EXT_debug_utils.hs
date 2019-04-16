@@ -37,6 +37,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils
   , setDebugUtilsObjectNameEXT
   , setDebugUtilsObjectTagEXT
   , submitDebugUtilsMessageEXT
+  , withDebugUtilsMessengerEXT
   , pattern VK_EXT_DEBUG_UTILS_SPEC_VERSION
   , pattern VK_EXT_DEBUG_UTILS_EXTENSION_NAME
   , pattern VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT
@@ -320,46 +321,51 @@ fromCStructDebugUtilsObjectTagInfoEXT c = DebugUtilsObjectTagInfoEXT <$> -- Univ
                                                                      -- Bytestring length valued member elided
                                                                      <*> packCStringLen (castPtr (vkPTag (c :: VkDebugUtilsObjectTagInfoEXT)), fromIntegral (vkTagSize (c :: VkDebugUtilsObjectTagInfoEXT)))
 
--- | Wrapper for vkCmdBeginDebugUtilsLabelEXT
+-- | Wrapper for 'vkCmdBeginDebugUtilsLabelEXT'
 cmdBeginDebugUtilsLabelEXT :: CommandBuffer ->  DebugUtilsLabelEXT ->  IO ()
 cmdBeginDebugUtilsLabelEXT = \(CommandBuffer commandBuffer commandTable) -> \labelInfo -> (\a -> withCStructDebugUtilsLabelEXT a . flip with) labelInfo (\pLabelInfo -> Graphics.Vulkan.C.Dynamic.cmdBeginDebugUtilsLabelEXT commandTable commandBuffer pLabelInfo *> (pure ()))
 
--- | Wrapper for vkCmdEndDebugUtilsLabelEXT
+-- | Wrapper for 'vkCmdEndDebugUtilsLabelEXT'
 cmdEndDebugUtilsLabelEXT :: CommandBuffer ->  IO ()
 cmdEndDebugUtilsLabelEXT = \(CommandBuffer commandBuffer commandTable) -> Graphics.Vulkan.C.Dynamic.cmdEndDebugUtilsLabelEXT commandTable commandBuffer *> (pure ())
 
--- | Wrapper for vkCmdInsertDebugUtilsLabelEXT
+-- | Wrapper for 'vkCmdInsertDebugUtilsLabelEXT'
 cmdInsertDebugUtilsLabelEXT :: CommandBuffer ->  DebugUtilsLabelEXT ->  IO ()
 cmdInsertDebugUtilsLabelEXT = \(CommandBuffer commandBuffer commandTable) -> \labelInfo -> (\a -> withCStructDebugUtilsLabelEXT a . flip with) labelInfo (\pLabelInfo -> Graphics.Vulkan.C.Dynamic.cmdInsertDebugUtilsLabelEXT commandTable commandBuffer pLabelInfo *> (pure ()))
 
--- | Wrapper for vkCreateDebugUtilsMessengerEXT
-createDebugUtilsMessengerEXT :: Instance ->  DebugUtilsMessengerCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO (DebugUtilsMessengerEXT)
+-- | Wrapper for 'vkCreateDebugUtilsMessengerEXT'
+createDebugUtilsMessengerEXT :: Instance ->  DebugUtilsMessengerCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO ( DebugUtilsMessengerEXT )
 createDebugUtilsMessengerEXT = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pMessenger -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDebugUtilsMessengerCreateInfoEXT a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDebugUtilsMessengerEXT commandTable instance' pCreateInfo pAllocator pMessenger >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pMessenger)))))
 
--- | Wrapper for vkDestroyDebugUtilsMessengerEXT
+-- | Wrapper for 'vkDestroyDebugUtilsMessengerEXT'
 destroyDebugUtilsMessengerEXT :: Instance ->  DebugUtilsMessengerEXT ->  Maybe AllocationCallbacks ->  IO ()
 destroyDebugUtilsMessengerEXT = \(Instance instance' commandTable) -> \messenger -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyDebugUtilsMessengerEXT commandTable instance' messenger pAllocator *> (pure ()))
 
--- | Wrapper for vkQueueBeginDebugUtilsLabelEXT
+-- | Wrapper for 'vkQueueBeginDebugUtilsLabelEXT'
 queueBeginDebugUtilsLabelEXT :: Queue ->  DebugUtilsLabelEXT ->  IO ()
 queueBeginDebugUtilsLabelEXT = \(Queue queue commandTable) -> \labelInfo -> (\a -> withCStructDebugUtilsLabelEXT a . flip with) labelInfo (\pLabelInfo -> Graphics.Vulkan.C.Dynamic.queueBeginDebugUtilsLabelEXT commandTable queue pLabelInfo *> (pure ()))
 
--- | Wrapper for vkQueueEndDebugUtilsLabelEXT
+-- | Wrapper for 'vkQueueEndDebugUtilsLabelEXT'
 queueEndDebugUtilsLabelEXT :: Queue ->  IO ()
 queueEndDebugUtilsLabelEXT = \(Queue queue commandTable) -> Graphics.Vulkan.C.Dynamic.queueEndDebugUtilsLabelEXT commandTable queue *> (pure ())
 
--- | Wrapper for vkQueueInsertDebugUtilsLabelEXT
+-- | Wrapper for 'vkQueueInsertDebugUtilsLabelEXT'
 queueInsertDebugUtilsLabelEXT :: Queue ->  DebugUtilsLabelEXT ->  IO ()
 queueInsertDebugUtilsLabelEXT = \(Queue queue commandTable) -> \labelInfo -> (\a -> withCStructDebugUtilsLabelEXT a . flip with) labelInfo (\pLabelInfo -> Graphics.Vulkan.C.Dynamic.queueInsertDebugUtilsLabelEXT commandTable queue pLabelInfo *> (pure ()))
 
--- | Wrapper for vkSetDebugUtilsObjectNameEXT
+-- | Wrapper for 'vkSetDebugUtilsObjectNameEXT'
 setDebugUtilsObjectNameEXT :: Device ->  DebugUtilsObjectNameInfoEXT ->  IO ()
 setDebugUtilsObjectNameEXT = \(Device device commandTable) -> \nameInfo -> (\a -> withCStructDebugUtilsObjectNameInfoEXT a . flip with) nameInfo (\pNameInfo -> Graphics.Vulkan.C.Dynamic.setDebugUtilsObjectNameEXT commandTable device pNameInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkSetDebugUtilsObjectTagEXT
+-- | Wrapper for 'vkSetDebugUtilsObjectTagEXT'
 setDebugUtilsObjectTagEXT :: Device ->  DebugUtilsObjectTagInfoEXT ->  IO ()
 setDebugUtilsObjectTagEXT = \(Device device commandTable) -> \tagInfo -> (\a -> withCStructDebugUtilsObjectTagInfoEXT a . flip with) tagInfo (\pTagInfo -> Graphics.Vulkan.C.Dynamic.setDebugUtilsObjectTagEXT commandTable device pTagInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkSubmitDebugUtilsMessageEXT
-submitDebugUtilsMessageEXT :: Instance ->  DebugUtilsMessageSeverityFlagBitsEXT ->  DebugUtilsMessageTypeFlagsEXT ->  DebugUtilsMessengerCallbackDataEXT ->  IO ()
+-- | Wrapper for 'vkSubmitDebugUtilsMessageEXT'
+submitDebugUtilsMessageEXT :: Instance ->  DebugUtilsMessageSeverityFlagBitsEXT ->  DebugUtilsMessageTypeFlagsEXT ->  DebugUtilsMessengerCallbackDataEXT ->  IO (  )
 submitDebugUtilsMessageEXT = \(Instance instance' commandTable) -> \messageSeverity -> \messageTypes -> \callbackData -> (\a -> withCStructDebugUtilsMessengerCallbackDataEXT a . flip with) callbackData (\pCallbackData -> Graphics.Vulkan.C.Dynamic.submitDebugUtilsMessageEXT commandTable instance' messageSeverity messageTypes pCallbackData *> (pure ()))
+withDebugUtilsMessengerEXT :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withDebugUtilsMessengerEXT createInfo allocationCallbacks =
+  bracket
+    (vkCreateDebugUtilsMessengerEXT createInfo allocationCallbacks)
+    (`vkDestroyDebugUtilsMessengerEXT` allocationCallbacks)

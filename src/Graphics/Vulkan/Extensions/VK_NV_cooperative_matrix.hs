@@ -177,12 +177,13 @@ fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV c = PhysicalDeviceCoopera
 -- No documentation found for TopLevel "ScopeNV"
 type ScopeNV = VkScopeNV
 
--- | Wrapper for vkGetPhysicalDeviceCooperativeMatrixPropertiesNV
+-- | Wrapper for 'vkGetPhysicalDeviceCooperativeMatrixPropertiesNV'
 getNumPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  IO (VkResult, Word32)
 getNumPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
--- | Wrapper for vkGetPhysicalDeviceCooperativeMatrixPropertiesNV
-getPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector CooperativeMatrixPropertiesNV)
+-- | Wrapper for 'vkGetPhysicalDeviceCooperativeMatrixPropertiesNV'
+getPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  Word32 ->  IO ( VkResult
+, Vector CooperativeMatrixPropertiesNV )
 getPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice commandTable) -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructCooperativeMatrixPropertiesNV <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumPhysicalDeviceCooperativeMatrixPropertiesNV' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceCooperativeMatrixPropertiesNV' to get all the values.

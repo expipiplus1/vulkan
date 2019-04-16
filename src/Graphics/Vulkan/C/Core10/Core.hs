@@ -1,10 +1,13 @@
 {-# language Strict #-}
 {-# language CPP #-}
+{-# language DuplicateRecordFields #-}
 {-# language GeneralizedNewtypeDeriving #-}
 {-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.C.Core10.Core
-  ( VkBool32(..)
+  ( VkBaseInStructure(..)
+  , VkBaseOutStructure(..)
+  , VkBool32(..)
   , pattern VK_FALSE
   , pattern VK_TRUE
   , VkFlags
@@ -302,8 +305,13 @@ import Data.Int
 import Data.Word
   ( Word32
   )
+import Foreign.Ptr
+  ( Ptr
+  , plusPtr
+  )
 import Foreign.Storable
-  ( Storable(..)
+  ( Storable
+  , Storable(..)
   )
 import GHC.Read
   ( choose
@@ -326,6 +334,38 @@ import Text.Read.Lex
 
 
 
+-- No documentation found for TopLevel "VkBaseInStructure"
+data VkBaseInStructure = VkBaseInStructure
+  { -- No documentation found for Nested "VkBaseInStructure" "sType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkBaseInStructure" "pNext"
+  vkPNext :: Ptr VkBaseInStructure
+  }
+  deriving (Eq, Show)
+
+instance Storable VkBaseInStructure where
+  sizeOf ~_ = 16
+  alignment ~_ = 8
+  peek ptr = VkBaseInStructure <$> peek (ptr `plusPtr` 0)
+                               <*> peek (ptr `plusPtr` 8)
+  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBaseInStructure))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBaseInStructure))
+-- No documentation found for TopLevel "VkBaseOutStructure"
+data VkBaseOutStructure = VkBaseOutStructure
+  { -- No documentation found for Nested "VkBaseOutStructure" "sType"
+  vkSType :: VkStructureType
+  , -- No documentation found for Nested "VkBaseOutStructure" "pNext"
+  vkPNext :: Ptr VkBaseOutStructure
+  }
+  deriving (Eq, Show)
+
+instance Storable VkBaseOutStructure where
+  sizeOf ~_ = 16
+  alignment ~_ = 8
+  peek ptr = VkBaseOutStructure <$> peek (ptr `plusPtr` 0)
+                                <*> peek (ptr `plusPtr` 8)
+  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBaseOutStructure))
+                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBaseOutStructure))
 -- ** VkBool32
 
 -- No documentation found for TopLevel "VkBool32"

@@ -92,6 +92,6 @@ type ExternalMemoryHandleTypeFlagBitsNV = VkExternalMemoryHandleTypeFlagBitsNV
 -- No documentation found for TopLevel "ExternalMemoryHandleTypeFlagsNV"
 type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
 
--- | Wrapper for vkGetPhysicalDeviceExternalImageFormatPropertiesNV
-getPhysicalDeviceExternalImageFormatPropertiesNV :: PhysicalDevice ->  Format ->  ImageType ->  ImageTiling ->  ImageUsageFlags ->  ImageCreateFlags ->  ExternalMemoryHandleTypeFlagsNV ->  IO (ExternalImageFormatPropertiesNV)
+-- | Wrapper for 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
+getPhysicalDeviceExternalImageFormatPropertiesNV :: PhysicalDevice ->  Format ->  ImageType ->  ImageTiling ->  ImageUsageFlags ->  ImageCreateFlags ->  ExternalMemoryHandleTypeFlagsNV ->  IO ( ExternalImageFormatPropertiesNV )
 getPhysicalDeviceExternalImageFormatPropertiesNV = \(PhysicalDevice physicalDevice commandTable) -> \format -> \type' -> \tiling -> \usage -> \flags -> \externalHandleType -> alloca (\pExternalImageFormatProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceExternalImageFormatPropertiesNV commandTable physicalDevice format type' tiling usage flags externalHandleType pExternalImageFormatProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructExternalImageFormatPropertiesNV <=< peek) pExternalImageFormatProperties)))

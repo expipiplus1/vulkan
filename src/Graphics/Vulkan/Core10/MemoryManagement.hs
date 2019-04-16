@@ -13,6 +13,8 @@ module Graphics.Vulkan.Core10.MemoryManagement
   , bindImageMemory
   , getBufferMemoryRequirements
   , getImageMemoryRequirements
+  , withBuffer
+  , withImage
   ) where
 
 import Control.Exception
@@ -80,18 +82,28 @@ fromCStructMemoryRequirements c = MemoryRequirements <$> pure (vkSize (c :: VkMe
                                                      <*> pure (vkAlignment (c :: VkMemoryRequirements))
                                                      <*> pure (vkMemoryTypeBits (c :: VkMemoryRequirements))
 
--- | Wrapper for vkBindBufferMemory
+-- | Wrapper for 'vkBindBufferMemory'
 bindBufferMemory :: Device ->  Buffer ->  DeviceMemory ->  DeviceSize ->  IO ()
 bindBufferMemory = \(Device device commandTable) -> \buffer -> \memory -> \memoryOffset -> Graphics.Vulkan.C.Dynamic.bindBufferMemory commandTable device buffer memory memoryOffset >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
 
--- | Wrapper for vkBindImageMemory
+-- | Wrapper for 'vkBindImageMemory'
 bindImageMemory :: Device ->  Image ->  DeviceMemory ->  DeviceSize ->  IO ()
 bindImageMemory = \(Device device commandTable) -> \image -> \memory -> \memoryOffset -> Graphics.Vulkan.C.Dynamic.bindImageMemory commandTable device image memory memoryOffset >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
 
--- | Wrapper for vkGetBufferMemoryRequirements
+-- | Wrapper for 'vkGetBufferMemoryRequirements'
 getBufferMemoryRequirements :: Device ->  Buffer ->  IO (MemoryRequirements)
 getBufferMemoryRequirements = \(Device device commandTable) -> \buffer -> alloca (\pMemoryRequirements -> Graphics.Vulkan.C.Dynamic.getBufferMemoryRequirements commandTable device buffer pMemoryRequirements *> ((fromCStructMemoryRequirements <=< peek) pMemoryRequirements))
 
--- | Wrapper for vkGetImageMemoryRequirements
+-- | Wrapper for 'vkGetImageMemoryRequirements'
 getImageMemoryRequirements :: Device ->  Image ->  IO (MemoryRequirements)
 getImageMemoryRequirements = \(Device device commandTable) -> \image -> alloca (\pMemoryRequirements -> Graphics.Vulkan.C.Dynamic.getImageMemoryRequirements commandTable device image pMemoryRequirements *> ((fromCStructMemoryRequirements <=< peek) pMemoryRequirements))
+withBuffer :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withBuffer createInfo allocationCallbacks =
+  bracket
+    (vkCreateBuffer createInfo allocationCallbacks)
+    (`vkDestroyBuffer` allocationCallbacks)
+withImage :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withImage createInfo allocationCallbacks =
+  bracket
+    (vkCreateImage createInfo allocationCallbacks)
+    (`vkDestroyImage` allocationCallbacks)

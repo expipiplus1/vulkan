@@ -91,6 +91,6 @@ fromCStructViSurfaceCreateInfoNN c = ViSurfaceCreateInfoNN <$> -- Univalued Memb
                                                            <*> pure (vkFlags (c :: VkViSurfaceCreateInfoNN))
                                                            <*> pure (vkWindow (c :: VkViSurfaceCreateInfoNN))
 
--- | Wrapper for vkCreateViSurfaceNN
-createViSurfaceNN :: Instance ->  ViSurfaceCreateInfoNN ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
+-- | Wrapper for 'vkCreateViSurfaceNN'
+createViSurfaceNN :: Instance ->  ViSurfaceCreateInfoNN ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
 createViSurfaceNN = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructViSurfaceCreateInfoNN a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createViSurfaceNN commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))

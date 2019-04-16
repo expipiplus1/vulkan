@@ -25,7 +25,9 @@ module Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
   , pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT
   , pattern VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
   , pattern VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT
+#if defined(VK_USE_PLATFORM_WIN32)
   , getDeviceGroupSurfacePresentModes2EXT
+#endif
   ) where
 
 import Control.Exception
@@ -114,9 +116,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
   , pattern VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
   , pattern VK_EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION
   )
+
+#if defined(VK_USE_PLATFORM_WIN32)
 import Graphics.Vulkan.Extensions.VK_KHR_device_group
   ( getDeviceGroupSurfacePresentModes2EXT
   )
+#endif
 
 
 -- No documentation found for TopLevel "FullScreenExclusiveEXT"
@@ -167,16 +172,17 @@ fromCStructSurfaceFullScreenExclusiveWin32InfoEXT c = SurfaceFullScreenExclusive
                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSurfaceFullScreenExclusiveWin32InfoEXT)))
                                                                                              <*> pure (vkHmonitor (c :: VkSurfaceFullScreenExclusiveWin32InfoEXT))
 
--- | Wrapper for vkAcquireFullScreenExclusiveModeEXT
+-- | Wrapper for 'vkAcquireFullScreenExclusiveModeEXT'
 acquireFullScreenExclusiveModeEXT :: Device ->  SwapchainKHR ->  IO ()
 acquireFullScreenExclusiveModeEXT = \(Device device commandTable) -> \swapchain -> Graphics.Vulkan.C.Dynamic.acquireFullScreenExclusiveModeEXT commandTable device swapchain >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
 
--- | Wrapper for vkGetPhysicalDeviceSurfacePresentModes2EXT
+-- | Wrapper for 'vkGetPhysicalDeviceSurfacePresentModes2EXT'
 getNumPhysicalDeviceSurfacePresentModes2EXT :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  IO (VkResult, Word32)
 getNumPhysicalDeviceSurfacePresentModes2EXT = \(PhysicalDevice physicalDevice commandTable) -> \surfaceInfo -> alloca (\pPresentModeCount -> (\a -> withCStructPhysicalDeviceSurfaceInfo2KHR a . flip with) surfaceInfo (\pSurfaceInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfacePresentModes2EXT commandTable physicalDevice pSurfaceInfo pPresentModeCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPresentModeCount))))
 
--- | Wrapper for vkGetPhysicalDeviceSurfacePresentModes2EXT
-getPhysicalDeviceSurfacePresentModes2EXT :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  Word32 ->  IO (VkResult, Vector PresentModeKHR)
+-- | Wrapper for 'vkGetPhysicalDeviceSurfacePresentModes2EXT'
+getPhysicalDeviceSurfacePresentModes2EXT :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  Word32 ->  IO ( VkResult
+, Vector PresentModeKHR )
 getPhysicalDeviceSurfacePresentModes2EXT = \(PhysicalDevice physicalDevice commandTable) -> \surfaceInfo -> \presentModeCount -> allocaArray (fromIntegral presentModeCount) (\pPresentModes -> with presentModeCount (\pPresentModeCount -> (\a -> withCStructPhysicalDeviceSurfaceInfo2KHR a . flip with) surfaceInfo (\pSurfaceInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfacePresentModes2EXT commandTable physicalDevice pSurfaceInfo pPresentModeCount pPresentModes >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM (peekElemOff pPresentModes) =<< (fromIntegral <$> (peek pPresentModeCount))))))))
 -- | Call 'getNumPhysicalDeviceSurfacePresentModes2EXT' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSurfacePresentModes2EXT' to get all the values.
@@ -186,6 +192,6 @@ getAllPhysicalDeviceSurfacePresentModes2EXT physicalDevice pSurfaceInfo =
     >>= \num -> snd <$> getPhysicalDeviceSurfacePresentModes2EXT physicalDevice pSurfaceInfo num
 
 
--- | Wrapper for vkReleaseFullScreenExclusiveModeEXT
+-- | Wrapper for 'vkReleaseFullScreenExclusiveModeEXT'
 releaseFullScreenExclusiveModeEXT :: Device ->  SwapchainKHR ->  IO ()
 releaseFullScreenExclusiveModeEXT = \(Device device commandTable) -> \swapchain -> Graphics.Vulkan.C.Dynamic.releaseFullScreenExclusiveModeEXT commandTable device swapchain >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))

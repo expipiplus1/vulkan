@@ -38,6 +38,6 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display
 
 
 
--- | Wrapper for vkReleaseDisplayEXT
+-- | Wrapper for 'vkReleaseDisplayEXT'
 releaseDisplayEXT :: PhysicalDevice ->  DisplayKHR ->  IO ()
 releaseDisplayEXT = \(PhysicalDevice physicalDevice commandTable) -> \display -> Graphics.Vulkan.C.Dynamic.releaseDisplayEXT commandTable physicalDevice display >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))

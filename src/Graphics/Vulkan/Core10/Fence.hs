@@ -110,22 +110,22 @@ fromCStructFenceCreateInfo c = FenceCreateInfo <$> -- Univalued Member elided
                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkFenceCreateInfo)))
                                                <*> pure (vkFlags (c :: VkFenceCreateInfo))
 
--- | Wrapper for vkCreateFence
+-- | Wrapper for 'vkCreateFence'
 createFence :: Device ->  FenceCreateInfo ->  Maybe AllocationCallbacks ->  IO (Fence)
 createFence = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pFence -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructFenceCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createFence commandTable device pCreateInfo pAllocator pFence >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFence)))))
 
--- | Wrapper for vkDestroyFence
+-- | Wrapper for 'vkDestroyFence'
 destroyFence :: Device ->  Fence ->  Maybe AllocationCallbacks ->  IO ()
 destroyFence = \(Device device commandTable) -> \fence -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyFence commandTable device fence pAllocator *> (pure ()))
 
--- | Wrapper for vkGetFenceStatus
+-- | Wrapper for 'vkGetFenceStatus'
 getFenceStatus :: Device ->  Fence ->  IO (VkResult)
 getFenceStatus = \(Device device commandTable) -> \fence -> Graphics.Vulkan.C.Dynamic.getFenceStatus commandTable device fence >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure r))
 
--- | Wrapper for vkResetFences
+-- | Wrapper for 'vkResetFences'
 resetFences :: Device ->  Vector Fence ->  IO ()
 resetFences = \(Device device commandTable) -> \fences -> withVec (&) fences (\pFences -> Graphics.Vulkan.C.Dynamic.resetFences commandTable device (fromIntegral $ Data.Vector.length fences) pFences >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkWaitForFences
+-- | Wrapper for 'vkWaitForFences'
 waitForFences :: Device ->  Vector Fence ->  Bool ->  Word64 ->  IO (VkResult)
 waitForFences = \(Device device commandTable) -> \fences -> \waitAll -> \timeout -> withVec (&) fences (\pFences -> Graphics.Vulkan.C.Dynamic.waitForFences commandTable device (fromIntegral $ Data.Vector.length fences) pFences (boolToBool32 waitAll) timeout >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure r)))

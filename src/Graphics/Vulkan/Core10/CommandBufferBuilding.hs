@@ -659,178 +659,178 @@ type StencilFaceFlags = StencilFaceFlagBits
 -- No documentation found for TopLevel "SubpassContents"
 type SubpassContents = VkSubpassContents
 
--- | Wrapper for vkCmdBeginQuery
+-- | Wrapper for 'vkCmdBeginQuery'
 cmdBeginQuery :: CommandBuffer ->  QueryPool ->  Word32 ->  QueryControlFlags ->  IO ()
 cmdBeginQuery = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \query -> \flags -> Graphics.Vulkan.C.Dynamic.cmdBeginQuery commandTable commandBuffer queryPool query flags *> (pure ())
 
--- | Wrapper for vkCmdBeginRenderPass
+-- | Wrapper for 'vkCmdBeginRenderPass'
 cmdBeginRenderPass :: CommandBuffer ->  RenderPassBeginInfo ->  SubpassContents ->  IO ()
 cmdBeginRenderPass = \(CommandBuffer commandBuffer commandTable) -> \renderPassBegin -> \contents -> (\a -> withCStructRenderPassBeginInfo a . flip with) renderPassBegin (\pRenderPassBegin -> Graphics.Vulkan.C.Dynamic.cmdBeginRenderPass commandTable commandBuffer pRenderPassBegin contents *> (pure ()))
 
--- | Wrapper for vkCmdBindDescriptorSets
-cmdBindDescriptorSets :: CommandBuffer ->  PipelineBindPoint ->  PipelineLayout ->  Word32 ->  Vector DescriptorSet ->  Vector Word32 ->  IO ()
+-- | Wrapper for 'vkCmdBindDescriptorSets'
+cmdBindDescriptorSets :: CommandBuffer ->  PipelineBindPoint ->  PipelineLayout ->  Word32 ->  Vector DescriptorSet ->  Vector Word32 ->  IO (  )
 cmdBindDescriptorSets = \(CommandBuffer commandBuffer commandTable) -> \pipelineBindPoint -> \layout -> \firstSet -> \descriptorSets -> \dynamicOffsets -> withVec (&) dynamicOffsets (\pDynamicOffsets -> withVec (&) descriptorSets (\pDescriptorSets -> Graphics.Vulkan.C.Dynamic.cmdBindDescriptorSets commandTable commandBuffer pipelineBindPoint layout firstSet (fromIntegral $ Data.Vector.length descriptorSets) pDescriptorSets (fromIntegral $ Data.Vector.length dynamicOffsets) pDynamicOffsets *> (pure ())))
 
--- | Wrapper for vkCmdBindIndexBuffer
+-- | Wrapper for 'vkCmdBindIndexBuffer'
 cmdBindIndexBuffer :: CommandBuffer ->  Buffer ->  DeviceSize ->  IndexType ->  IO ()
 cmdBindIndexBuffer = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \indexType -> Graphics.Vulkan.C.Dynamic.cmdBindIndexBuffer commandTable commandBuffer buffer offset indexType *> (pure ())
 
--- | Wrapper for vkCmdBindPipeline
+-- | Wrapper for 'vkCmdBindPipeline'
 cmdBindPipeline :: CommandBuffer ->  PipelineBindPoint ->  Pipeline ->  IO ()
 cmdBindPipeline = \(CommandBuffer commandBuffer commandTable) -> \pipelineBindPoint -> \pipeline -> Graphics.Vulkan.C.Dynamic.cmdBindPipeline commandTable commandBuffer pipelineBindPoint pipeline *> (pure ())
 
--- | Wrapper for vkCmdBindVertexBuffers
+-- | Wrapper for 'vkCmdBindVertexBuffers'
 cmdBindVertexBuffers :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Vector DeviceSize ->  IO ()
 cmdBindVertexBuffers = \(CommandBuffer commandBuffer commandTable) -> \firstBinding -> \buffers -> \offsets -> withVec (&) offsets (\pOffsets -> withVec (&) buffers (\pBuffers -> Graphics.Vulkan.C.Dynamic.cmdBindVertexBuffers commandTable commandBuffer firstBinding (fromIntegral $ Data.Vector.length buffers `min` Data.Vector.length offsets) pBuffers pOffsets *> (pure ())))
 
--- | Wrapper for vkCmdBlitImage
-cmdBlitImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageBlit ->  Filter ->  IO ()
+-- | Wrapper for 'vkCmdBlitImage'
+cmdBlitImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageBlit ->  Filter ->  IO (  )
 cmdBlitImage = \(CommandBuffer commandBuffer commandTable) -> \srcImage -> \srcImageLayout -> \dstImage -> \dstImageLayout -> \regions -> \filter' -> withVec withCStructImageBlit regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdBlitImage commandTable commandBuffer srcImage srcImageLayout dstImage dstImageLayout (fromIntegral $ Data.Vector.length regions) pRegions filter' *> (pure ()))
 
--- | Wrapper for vkCmdClearAttachments
+-- | Wrapper for 'vkCmdClearAttachments'
 cmdClearAttachments :: CommandBuffer ->  Vector ClearAttachment ->  Vector ClearRect ->  IO ()
 cmdClearAttachments = \(CommandBuffer commandBuffer commandTable) -> \attachments -> \rects -> withVec withCStructClearRect rects (\pRects -> withVec withCStructClearAttachment attachments (\pAttachments -> Graphics.Vulkan.C.Dynamic.cmdClearAttachments commandTable commandBuffer (fromIntegral $ Data.Vector.length attachments) pAttachments (fromIntegral $ Data.Vector.length rects) pRects *> (pure ())))
 
--- | Wrapper for vkCmdClearColorImage
-cmdClearColorImage :: CommandBuffer ->  Image ->  ImageLayout ->  ClearColorValue ->  Vector ImageSubresourceRange ->  IO ()
+-- | Wrapper for 'vkCmdClearColorImage'
+cmdClearColorImage :: CommandBuffer ->  Image ->  ImageLayout ->  ClearColorValue ->  Vector ImageSubresourceRange ->  IO (  )
 cmdClearColorImage = \(CommandBuffer commandBuffer commandTable) -> \image -> \imageLayout -> \color -> \ranges -> withVec withCStructImageSubresourceRange ranges (\pRanges -> (\a -> withCStructClearColorValue a . flip with) color (\pColor -> Graphics.Vulkan.C.Dynamic.cmdClearColorImage commandTable commandBuffer image imageLayout pColor (fromIntegral $ Data.Vector.length ranges) pRanges *> (pure ())))
 
--- | Wrapper for vkCmdClearDepthStencilImage
-cmdClearDepthStencilImage :: CommandBuffer ->  Image ->  ImageLayout ->  ClearDepthStencilValue ->  Vector ImageSubresourceRange ->  IO ()
+-- | Wrapper for 'vkCmdClearDepthStencilImage'
+cmdClearDepthStencilImage :: CommandBuffer ->  Image ->  ImageLayout ->  ClearDepthStencilValue ->  Vector ImageSubresourceRange ->  IO (  )
 cmdClearDepthStencilImage = \(CommandBuffer commandBuffer commandTable) -> \image -> \imageLayout -> \depthStencil -> \ranges -> withVec withCStructImageSubresourceRange ranges (\pRanges -> (\a -> withCStructClearDepthStencilValue a . flip with) depthStencil (\pDepthStencil -> Graphics.Vulkan.C.Dynamic.cmdClearDepthStencilImage commandTable commandBuffer image imageLayout pDepthStencil (fromIntegral $ Data.Vector.length ranges) pRanges *> (pure ())))
 
--- | Wrapper for vkCmdCopyBuffer
+-- | Wrapper for 'vkCmdCopyBuffer'
 cmdCopyBuffer :: CommandBuffer ->  Buffer ->  Buffer ->  Vector BufferCopy ->  IO ()
 cmdCopyBuffer = \(CommandBuffer commandBuffer commandTable) -> \srcBuffer -> \dstBuffer -> \regions -> withVec withCStructBufferCopy regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdCopyBuffer commandTable commandBuffer srcBuffer dstBuffer (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
--- | Wrapper for vkCmdCopyBufferToImage
-cmdCopyBufferToImage :: CommandBuffer ->  Buffer ->  Image ->  ImageLayout ->  Vector BufferImageCopy ->  IO ()
+-- | Wrapper for 'vkCmdCopyBufferToImage'
+cmdCopyBufferToImage :: CommandBuffer ->  Buffer ->  Image ->  ImageLayout ->  Vector BufferImageCopy ->  IO (  )
 cmdCopyBufferToImage = \(CommandBuffer commandBuffer commandTable) -> \srcBuffer -> \dstImage -> \dstImageLayout -> \regions -> withVec withCStructBufferImageCopy regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdCopyBufferToImage commandTable commandBuffer srcBuffer dstImage dstImageLayout (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
--- | Wrapper for vkCmdCopyImage
-cmdCopyImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageCopy ->  IO ()
+-- | Wrapper for 'vkCmdCopyImage'
+cmdCopyImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageCopy ->  IO (  )
 cmdCopyImage = \(CommandBuffer commandBuffer commandTable) -> \srcImage -> \srcImageLayout -> \dstImage -> \dstImageLayout -> \regions -> withVec withCStructImageCopy regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdCopyImage commandTable commandBuffer srcImage srcImageLayout dstImage dstImageLayout (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
--- | Wrapper for vkCmdCopyImageToBuffer
-cmdCopyImageToBuffer :: CommandBuffer ->  Image ->  ImageLayout ->  Buffer ->  Vector BufferImageCopy ->  IO ()
+-- | Wrapper for 'vkCmdCopyImageToBuffer'
+cmdCopyImageToBuffer :: CommandBuffer ->  Image ->  ImageLayout ->  Buffer ->  Vector BufferImageCopy ->  IO (  )
 cmdCopyImageToBuffer = \(CommandBuffer commandBuffer commandTable) -> \srcImage -> \srcImageLayout -> \dstBuffer -> \regions -> withVec withCStructBufferImageCopy regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdCopyImageToBuffer commandTable commandBuffer srcImage srcImageLayout dstBuffer (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
--- | Wrapper for vkCmdCopyQueryPoolResults
-cmdCopyQueryPoolResults :: CommandBuffer ->  QueryPool ->  Word32 ->  Word32 ->  Buffer ->  DeviceSize ->  DeviceSize ->  QueryResultFlags ->  IO ()
+-- | Wrapper for 'vkCmdCopyQueryPoolResults'
+cmdCopyQueryPoolResults :: CommandBuffer ->  QueryPool ->  Word32 ->  Word32 ->  Buffer ->  DeviceSize ->  DeviceSize ->  QueryResultFlags ->  IO (  )
 cmdCopyQueryPoolResults = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \firstQuery -> \queryCount -> \dstBuffer -> \dstOffset -> \stride -> \flags -> Graphics.Vulkan.C.Dynamic.cmdCopyQueryPoolResults commandTable commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags *> (pure ())
 
--- | Wrapper for vkCmdDispatch
+-- | Wrapper for 'vkCmdDispatch'
 cmdDispatch :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  IO ()
 cmdDispatch = \(CommandBuffer commandBuffer commandTable) -> \groupCountX -> \groupCountY -> \groupCountZ -> Graphics.Vulkan.C.Dynamic.cmdDispatch commandTable commandBuffer groupCountX groupCountY groupCountZ *> (pure ())
 
--- | Wrapper for vkCmdDispatchIndirect
+-- | Wrapper for 'vkCmdDispatchIndirect'
 cmdDispatchIndirect :: CommandBuffer ->  Buffer ->  DeviceSize ->  IO ()
 cmdDispatchIndirect = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> Graphics.Vulkan.C.Dynamic.cmdDispatchIndirect commandTable commandBuffer buffer offset *> (pure ())
 
--- | Wrapper for vkCmdDraw
+-- | Wrapper for 'vkCmdDraw'
 cmdDraw :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO ()
 cmdDraw = \(CommandBuffer commandBuffer commandTable) -> \vertexCount -> \instanceCount -> \firstVertex -> \firstInstance -> Graphics.Vulkan.C.Dynamic.cmdDraw commandTable commandBuffer vertexCount instanceCount firstVertex firstInstance *> (pure ())
 
--- | Wrapper for vkCmdDrawIndexed
+-- | Wrapper for 'vkCmdDrawIndexed'
 cmdDrawIndexed :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Int32 ->  Word32 ->  IO ()
 cmdDrawIndexed = \(CommandBuffer commandBuffer commandTable) -> \indexCount -> \instanceCount -> \firstIndex -> \vertexOffset -> \firstInstance -> Graphics.Vulkan.C.Dynamic.cmdDrawIndexed commandTable commandBuffer indexCount instanceCount firstIndex vertexOffset firstInstance *> (pure ())
 
--- | Wrapper for vkCmdDrawIndexedIndirect
+-- | Wrapper for 'vkCmdDrawIndexedIndirect'
 cmdDrawIndexedIndirect :: CommandBuffer ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
 cmdDrawIndexedIndirect = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \drawCount -> \stride -> Graphics.Vulkan.C.Dynamic.cmdDrawIndexedIndirect commandTable commandBuffer buffer offset drawCount stride *> (pure ())
 
--- | Wrapper for vkCmdDrawIndirect
+-- | Wrapper for 'vkCmdDrawIndirect'
 cmdDrawIndirect :: CommandBuffer ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
 cmdDrawIndirect = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \drawCount -> \stride -> Graphics.Vulkan.C.Dynamic.cmdDrawIndirect commandTable commandBuffer buffer offset drawCount stride *> (pure ())
 
--- | Wrapper for vkCmdEndQuery
+-- | Wrapper for 'vkCmdEndQuery'
 cmdEndQuery :: CommandBuffer ->  QueryPool ->  Word32 ->  IO ()
 cmdEndQuery = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \query -> Graphics.Vulkan.C.Dynamic.cmdEndQuery commandTable commandBuffer queryPool query *> (pure ())
 
--- | Wrapper for vkCmdEndRenderPass
+-- | Wrapper for 'vkCmdEndRenderPass'
 cmdEndRenderPass :: CommandBuffer ->  IO ()
 cmdEndRenderPass = \(CommandBuffer commandBuffer commandTable) -> Graphics.Vulkan.C.Dynamic.cmdEndRenderPass commandTable commandBuffer *> (pure ())
 
--- | Wrapper for vkCmdExecuteCommands
+-- | Wrapper for 'vkCmdExecuteCommands'
 cmdExecuteCommands :: CommandBuffer ->  Vector CommandBuffer ->  IO ()
 cmdExecuteCommands = \(CommandBuffer commandBuffer commandTable) -> \commandBuffers -> withVec ((&) . commandBufferHandle) commandBuffers (\pCommandBuffers -> Graphics.Vulkan.C.Dynamic.cmdExecuteCommands commandTable commandBuffer (fromIntegral $ Data.Vector.length commandBuffers) pCommandBuffers *> (pure ()))
 
--- | Wrapper for vkCmdFillBuffer
+-- | Wrapper for 'vkCmdFillBuffer'
 cmdFillBuffer :: CommandBuffer ->  Buffer ->  DeviceSize ->  DeviceSize ->  Word32 ->  IO ()
 cmdFillBuffer = \(CommandBuffer commandBuffer commandTable) -> \dstBuffer -> \dstOffset -> \size -> \data' -> Graphics.Vulkan.C.Dynamic.cmdFillBuffer commandTable commandBuffer dstBuffer dstOffset size data' *> (pure ())
 
--- | Wrapper for vkCmdNextSubpass
+-- | Wrapper for 'vkCmdNextSubpass'
 cmdNextSubpass :: CommandBuffer ->  SubpassContents ->  IO ()
 cmdNextSubpass = \(CommandBuffer commandBuffer commandTable) -> \contents -> Graphics.Vulkan.C.Dynamic.cmdNextSubpass commandTable commandBuffer contents *> (pure ())
 
--- | Wrapper for vkCmdPipelineBarrier
-cmdPipelineBarrier :: CommandBuffer ->  PipelineStageFlags ->  PipelineStageFlags ->  DependencyFlags ->  Vector MemoryBarrier ->  Vector BufferMemoryBarrier ->  Vector ImageMemoryBarrier ->  IO ()
+-- | Wrapper for 'vkCmdPipelineBarrier'
+cmdPipelineBarrier :: CommandBuffer ->  PipelineStageFlags ->  PipelineStageFlags ->  DependencyFlags ->  Vector MemoryBarrier ->  Vector BufferMemoryBarrier ->  Vector ImageMemoryBarrier ->  IO (  )
 cmdPipelineBarrier = \(CommandBuffer commandBuffer commandTable) -> \srcStageMask -> \dstStageMask -> \dependencyFlags -> \memoryBarriers -> \bufferMemoryBarriers -> \imageMemoryBarriers -> withVec withCStructImageMemoryBarrier imageMemoryBarriers (\pImageMemoryBarriers -> withVec withCStructBufferMemoryBarrier bufferMemoryBarriers (\pBufferMemoryBarriers -> withVec withCStructMemoryBarrier memoryBarriers (\pMemoryBarriers -> Graphics.Vulkan.C.Dynamic.cmdPipelineBarrier commandTable commandBuffer srcStageMask dstStageMask dependencyFlags (fromIntegral $ Data.Vector.length memoryBarriers) pMemoryBarriers (fromIntegral $ Data.Vector.length bufferMemoryBarriers) pBufferMemoryBarriers (fromIntegral $ Data.Vector.length imageMemoryBarriers) pImageMemoryBarriers *> (pure ()))))
 
--- | Wrapper for vkCmdPushConstants
-cmdPushConstants :: (Storable a) => CommandBuffer ->  PipelineLayout ->  ShaderStageFlags ->  Word32 ->  Vector a ->  IO ()
+-- | Wrapper for 'vkCmdPushConstants'
+cmdPushConstants :: ( Storable a ) => CommandBuffer ->  PipelineLayout ->  ShaderStageFlags ->  Word32 ->  Vector a ->  IO (  )
 cmdPushConstants = \(CommandBuffer commandBuffer commandTable) -> \layout -> \stageFlags -> \offset -> \values -> withVec (&) values (\pValues -> Graphics.Vulkan.C.Dynamic.cmdPushConstants commandTable commandBuffer layout stageFlags offset (fromIntegral $ sizeOf (Data.Vector.head values) * Data.Vector.length values) (castPtr pValues) *> (pure ()))
 
--- | Wrapper for vkCmdResetEvent
+-- | Wrapper for 'vkCmdResetEvent'
 cmdResetEvent :: CommandBuffer ->  Event ->  PipelineStageFlags ->  IO ()
 cmdResetEvent = \(CommandBuffer commandBuffer commandTable) -> \event -> \stageMask -> Graphics.Vulkan.C.Dynamic.cmdResetEvent commandTable commandBuffer event stageMask *> (pure ())
 
--- | Wrapper for vkCmdResetQueryPool
+-- | Wrapper for 'vkCmdResetQueryPool'
 cmdResetQueryPool :: CommandBuffer ->  QueryPool ->  Word32 ->  Word32 ->  IO ()
 cmdResetQueryPool = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \firstQuery -> \queryCount -> Graphics.Vulkan.C.Dynamic.cmdResetQueryPool commandTable commandBuffer queryPool firstQuery queryCount *> (pure ())
 
--- | Wrapper for vkCmdResolveImage
-cmdResolveImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageResolve ->  IO ()
+-- | Wrapper for 'vkCmdResolveImage'
+cmdResolveImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageResolve ->  IO (  )
 cmdResolveImage = \(CommandBuffer commandBuffer commandTable) -> \srcImage -> \srcImageLayout -> \dstImage -> \dstImageLayout -> \regions -> withVec withCStructImageResolve regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdResolveImage commandTable commandBuffer srcImage srcImageLayout dstImage dstImageLayout (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
--- | Wrapper for vkCmdSetBlendConstants
+-- | Wrapper for 'vkCmdSetBlendConstants'
 cmdSetBlendConstants :: CommandBuffer ->  (CFloat, CFloat, CFloat, CFloat) ->  IO ()
 cmdSetBlendConstants = \(CommandBuffer commandBuffer commandTable) -> \(blendConstants0, blendConstants1, blendConstants2, blendConstants3) -> allocaArray 4 (\pBlendConstants -> pokeElemOff pBlendConstants 0 blendConstants0*> pokeElemOff pBlendConstants 1 blendConstants1*> pokeElemOff pBlendConstants 2 blendConstants2*> pokeElemOff pBlendConstants 3 blendConstants3 *> Graphics.Vulkan.C.Dynamic.cmdSetBlendConstants commandTable commandBuffer pBlendConstants *> (pure ()))
 
--- | Wrapper for vkCmdSetDepthBias
+-- | Wrapper for 'vkCmdSetDepthBias'
 cmdSetDepthBias :: CommandBuffer ->  CFloat ->  CFloat ->  CFloat ->  IO ()
 cmdSetDepthBias = \(CommandBuffer commandBuffer commandTable) -> \depthBiasConstantFactor -> \depthBiasClamp -> \depthBiasSlopeFactor -> Graphics.Vulkan.C.Dynamic.cmdSetDepthBias commandTable commandBuffer depthBiasConstantFactor depthBiasClamp depthBiasSlopeFactor *> (pure ())
 
--- | Wrapper for vkCmdSetDepthBounds
+-- | Wrapper for 'vkCmdSetDepthBounds'
 cmdSetDepthBounds :: CommandBuffer ->  CFloat ->  CFloat ->  IO ()
 cmdSetDepthBounds = \(CommandBuffer commandBuffer commandTable) -> \minDepthBounds -> \maxDepthBounds -> Graphics.Vulkan.C.Dynamic.cmdSetDepthBounds commandTable commandBuffer minDepthBounds maxDepthBounds *> (pure ())
 
--- | Wrapper for vkCmdSetEvent
+-- | Wrapper for 'vkCmdSetEvent'
 cmdSetEvent :: CommandBuffer ->  Event ->  PipelineStageFlags ->  IO ()
 cmdSetEvent = \(CommandBuffer commandBuffer commandTable) -> \event -> \stageMask -> Graphics.Vulkan.C.Dynamic.cmdSetEvent commandTable commandBuffer event stageMask *> (pure ())
 
--- | Wrapper for vkCmdSetLineWidth
+-- | Wrapper for 'vkCmdSetLineWidth'
 cmdSetLineWidth :: CommandBuffer ->  CFloat ->  IO ()
 cmdSetLineWidth = \(CommandBuffer commandBuffer commandTable) -> \lineWidth -> Graphics.Vulkan.C.Dynamic.cmdSetLineWidth commandTable commandBuffer lineWidth *> (pure ())
 
--- | Wrapper for vkCmdSetScissor
+-- | Wrapper for 'vkCmdSetScissor'
 cmdSetScissor :: CommandBuffer ->  Word32 ->  Vector Rect2D ->  IO ()
 cmdSetScissor = \(CommandBuffer commandBuffer commandTable) -> \firstScissor -> \scissors -> withVec withCStructRect2D scissors (\pScissors -> Graphics.Vulkan.C.Dynamic.cmdSetScissor commandTable commandBuffer firstScissor (fromIntegral $ Data.Vector.length scissors) pScissors *> (pure ()))
 
--- | Wrapper for vkCmdSetStencilCompareMask
+-- | Wrapper for 'vkCmdSetStencilCompareMask'
 cmdSetStencilCompareMask :: CommandBuffer ->  StencilFaceFlags ->  Word32 ->  IO ()
 cmdSetStencilCompareMask = \(CommandBuffer commandBuffer commandTable) -> \faceMask -> \compareMask -> Graphics.Vulkan.C.Dynamic.cmdSetStencilCompareMask commandTable commandBuffer faceMask compareMask *> (pure ())
 
--- | Wrapper for vkCmdSetStencilReference
+-- | Wrapper for 'vkCmdSetStencilReference'
 cmdSetStencilReference :: CommandBuffer ->  StencilFaceFlags ->  Word32 ->  IO ()
 cmdSetStencilReference = \(CommandBuffer commandBuffer commandTable) -> \faceMask -> \reference -> Graphics.Vulkan.C.Dynamic.cmdSetStencilReference commandTable commandBuffer faceMask reference *> (pure ())
 
--- | Wrapper for vkCmdSetStencilWriteMask
+-- | Wrapper for 'vkCmdSetStencilWriteMask'
 cmdSetStencilWriteMask :: CommandBuffer ->  StencilFaceFlags ->  Word32 ->  IO ()
 cmdSetStencilWriteMask = \(CommandBuffer commandBuffer commandTable) -> \faceMask -> \writeMask -> Graphics.Vulkan.C.Dynamic.cmdSetStencilWriteMask commandTable commandBuffer faceMask writeMask *> (pure ())
 
--- | Wrapper for vkCmdSetViewport
+-- | Wrapper for 'vkCmdSetViewport'
 cmdSetViewport :: CommandBuffer ->  Word32 ->  Vector Viewport ->  IO ()
 cmdSetViewport = \(CommandBuffer commandBuffer commandTable) -> \firstViewport -> \viewports -> withVec withCStructViewport viewports (\pViewports -> Graphics.Vulkan.C.Dynamic.cmdSetViewport commandTable commandBuffer firstViewport (fromIntegral $ Data.Vector.length viewports) pViewports *> (pure ()))
 
--- | Wrapper for vkCmdUpdateBuffer
+-- | Wrapper for 'vkCmdUpdateBuffer'
 cmdUpdateBuffer :: (Storable a) => CommandBuffer ->  Buffer ->  DeviceSize ->  Vector a ->  IO ()
 cmdUpdateBuffer = \(CommandBuffer commandBuffer commandTable) -> \dstBuffer -> \dstOffset -> \data' -> withVec (&) data' (\pData -> Graphics.Vulkan.C.Dynamic.cmdUpdateBuffer commandTable commandBuffer dstBuffer dstOffset (fromIntegral $ sizeOf (Data.Vector.head data') * Data.Vector.length data') (castPtr pData) *> (pure ()))
 
--- | Wrapper for vkCmdWaitEvents
-cmdWaitEvents :: CommandBuffer ->  Vector Event ->  PipelineStageFlags ->  PipelineStageFlags ->  Vector MemoryBarrier ->  Vector BufferMemoryBarrier ->  Vector ImageMemoryBarrier ->  IO ()
+-- | Wrapper for 'vkCmdWaitEvents'
+cmdWaitEvents :: CommandBuffer ->  Vector Event ->  PipelineStageFlags ->  PipelineStageFlags ->  Vector MemoryBarrier ->  Vector BufferMemoryBarrier ->  Vector ImageMemoryBarrier ->  IO (  )
 cmdWaitEvents = \(CommandBuffer commandBuffer commandTable) -> \events -> \srcStageMask -> \dstStageMask -> \memoryBarriers -> \bufferMemoryBarriers -> \imageMemoryBarriers -> withVec withCStructImageMemoryBarrier imageMemoryBarriers (\pImageMemoryBarriers -> withVec withCStructBufferMemoryBarrier bufferMemoryBarriers (\pBufferMemoryBarriers -> withVec withCStructMemoryBarrier memoryBarriers (\pMemoryBarriers -> withVec (&) events (\pEvents -> Graphics.Vulkan.C.Dynamic.cmdWaitEvents commandTable commandBuffer (fromIntegral $ Data.Vector.length events) pEvents srcStageMask dstStageMask (fromIntegral $ Data.Vector.length memoryBarriers) pMemoryBarriers (fromIntegral $ Data.Vector.length bufferMemoryBarriers) pBufferMemoryBarriers (fromIntegral $ Data.Vector.length imageMemoryBarriers) pImageMemoryBarriers *> (pure ())))))
 
--- | Wrapper for vkCmdWriteTimestamp
+-- | Wrapper for 'vkCmdWriteTimestamp'
 cmdWriteTimestamp :: CommandBuffer ->  PipelineStageFlagBits ->  QueryPool ->  Word32 ->  IO ()
 cmdWriteTimestamp = \(CommandBuffer commandBuffer commandTable) -> \pipelineStage -> \queryPool -> \query -> Graphics.Vulkan.C.Dynamic.cmdWriteTimestamp commandTable commandBuffer pipelineStage queryPool query *> (pure ())

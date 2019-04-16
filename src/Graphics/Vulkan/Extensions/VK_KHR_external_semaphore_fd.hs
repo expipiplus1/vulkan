@@ -125,10 +125,10 @@ fromCStructSemaphoreGetFdInfoKHR c = SemaphoreGetFdInfoKHR <$> -- Univalued Memb
                                                            <*> pure (vkSemaphore (c :: VkSemaphoreGetFdInfoKHR))
                                                            <*> pure (vkHandleType (c :: VkSemaphoreGetFdInfoKHR))
 
--- | Wrapper for vkGetSemaphoreFdKHR
+-- | Wrapper for 'vkGetSemaphoreFdKHR'
 getSemaphoreFdKHR :: Device ->  SemaphoreGetFdInfoKHR ->  IO (CInt)
 getSemaphoreFdKHR = \(Device device commandTable) -> \getFdInfo -> alloca (\pFd -> (\a -> withCStructSemaphoreGetFdInfoKHR a . flip with) getFdInfo (\pGetFdInfo -> Graphics.Vulkan.C.Dynamic.getSemaphoreFdKHR commandTable device pGetFdInfo pFd >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFd))))
 
--- | Wrapper for vkImportSemaphoreFdKHR
+-- | Wrapper for 'vkImportSemaphoreFdKHR'
 importSemaphoreFdKHR :: Device ->  ImportSemaphoreFdInfoKHR ->  IO ()
 importSemaphoreFdKHR = \(Device device commandTable) -> \importSemaphoreFdInfo -> (\a -> withCStructImportSemaphoreFdInfoKHR a . flip with) importSemaphoreFdInfo (\pImportSemaphoreFdInfo -> Graphics.Vulkan.C.Dynamic.importSemaphoreFdKHR commandTable device pImportSemaphoreFdInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))

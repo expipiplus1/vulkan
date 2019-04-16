@@ -314,7 +314,7 @@ type SamplerYcbcrConversionInfoKHR = SamplerYcbcrConversionInfo
 -- TODO: Pattern constructor alias)
 -- No documentation found for TopLevel "SamplerYcbcrConversionKHR"
 type SamplerYcbcrConversionKHR = SamplerYcbcrConversion
-createSamplerYcbcrConversionKHR :: Device ->  SamplerYcbcrConversionCreateInfo ->  Maybe AllocationCallbacks ->  IO (SamplerYcbcrConversion)
+createSamplerYcbcrConversionKHR :: Device ->  SamplerYcbcrConversionCreateInfo ->  Maybe AllocationCallbacks ->  IO ( SamplerYcbcrConversion )
 createSamplerYcbcrConversionKHR = createSamplerYcbcrConversion
 destroySamplerYcbcrConversionKHR :: Device ->  SamplerYcbcrConversion ->  Maybe AllocationCallbacks ->  IO ()
 destroySamplerYcbcrConversionKHR = destroySamplerYcbcrConversion

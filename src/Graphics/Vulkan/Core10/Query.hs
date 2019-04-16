@@ -17,6 +17,7 @@ module Graphics.Vulkan.Core10.Query
   , createQueryPool
   , destroyQueryPool
   , getQueryPoolResults
+  , withQueryPool
   ) where
 
 import Control.Exception
@@ -127,14 +128,20 @@ type QueryResultFlags = QueryResultFlagBits
 -- No documentation found for TopLevel "QueryType"
 type QueryType = VkQueryType
 
--- | Wrapper for vkCreateQueryPool
+-- | Wrapper for 'vkCreateQueryPool'
 createQueryPool :: Device ->  QueryPoolCreateInfo ->  Maybe AllocationCallbacks ->  IO (QueryPool)
 createQueryPool = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pQueryPool -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructQueryPoolCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createQueryPool commandTable device pCreateInfo pAllocator pQueryPool >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pQueryPool)))))
 
--- | Wrapper for vkDestroyQueryPool
+-- | Wrapper for 'vkDestroyQueryPool'
 destroyQueryPool :: Device ->  QueryPool ->  Maybe AllocationCallbacks ->  IO ()
 destroyQueryPool = \(Device device commandTable) -> \queryPool -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyQueryPool commandTable device queryPool pAllocator *> (pure ()))
 
--- | Wrapper for vkGetQueryPoolResults
-getQueryPoolResults :: Device ->  QueryPool ->  Word32 ->  Word32 ->  CSize ->  DeviceSize ->  QueryResultFlags ->  IO (VkResult, ByteString)
+-- | Wrapper for 'vkGetQueryPoolResults'
+getQueryPoolResults :: Device ->  QueryPool ->  Word32 ->  Word32 ->  CSize ->  DeviceSize ->  QueryResultFlags ->  IO ( VkResult
+, ByteString )
 getQueryPoolResults = \(Device device commandTable) -> \queryPool -> \firstQuery -> \queryCount -> \dataSize -> \stride -> \flags -> allocaArray (fromIntegral dataSize) (\pData -> Graphics.Vulkan.C.Dynamic.getQueryPoolResults commandTable device queryPool firstQuery queryCount dataSize (castPtr pData) stride flags >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(packCStringLen (pData, (fromIntegral dataSize))))))
+withQueryPool :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withQueryPool createInfo allocationCallbacks =
+  bracket
+    (vkCreateQueryPool createInfo allocationCallbacks)
+    (`vkDestroyQueryPool` allocationCallbacks)

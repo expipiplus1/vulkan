@@ -232,14 +232,14 @@ type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 -- No documentation found for TopLevel "PeerMemoryFeatureFlagsKHR"
 type PeerMemoryFeatureFlagsKHR = PeerMemoryFeatureFlags
 
--- | Wrapper for vkCmdDispatchBase
-cmdDispatchBase :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO ()
+-- | Wrapper for 'vkCmdDispatchBase'
+cmdDispatchBase :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO (  )
 cmdDispatchBase = \(CommandBuffer commandBuffer commandTable) -> \baseGroupX -> \baseGroupY -> \baseGroupZ -> \groupCountX -> \groupCountY -> \groupCountZ -> Graphics.Vulkan.C.Dynamic.cmdDispatchBase commandTable commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ *> (pure ())
 
--- | Wrapper for vkCmdSetDeviceMask
+-- | Wrapper for 'vkCmdSetDeviceMask'
 cmdSetDeviceMask :: CommandBuffer ->  Word32 ->  IO ()
 cmdSetDeviceMask = \(CommandBuffer commandBuffer commandTable) -> \deviceMask -> Graphics.Vulkan.C.Dynamic.cmdSetDeviceMask commandTable commandBuffer deviceMask *> (pure ())
 
--- | Wrapper for vkGetDeviceGroupPeerMemoryFeatures
+-- | Wrapper for 'vkGetDeviceGroupPeerMemoryFeatures'
 getDeviceGroupPeerMemoryFeatures :: Device ->  Word32 ->  Word32 ->  Word32 ->  IO (PeerMemoryFeatureFlags)
 getDeviceGroupPeerMemoryFeatures = \(Device device commandTable) -> \heapIndex -> \localDeviceIndex -> \remoteDeviceIndex -> alloca (\pPeerMemoryFeatures -> Graphics.Vulkan.C.Dynamic.getDeviceGroupPeerMemoryFeatures commandTable device heapIndex localDeviceIndex remoteDeviceIndex pPeerMemoryFeatures *> (peek pPeerMemoryFeatures))

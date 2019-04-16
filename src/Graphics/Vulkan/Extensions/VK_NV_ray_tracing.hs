@@ -61,7 +61,10 @@ module Graphics.Vulkan.Extensions.VK_NV_ray_tracing
   , createAccelerationStructureNV
   , createRayTracingPipelinesNV
   , destroyAccelerationStructureNV
+  , getAccelerationStructureHandleNV
+  , getAccelerationStructureMemoryRequirementsNV
   , getRayTracingShaderGroupHandlesNV
+  , withAccelerationStructureNV
   , pattern VK_NV_RAY_TRACING_SPEC_VERSION
   , pattern VK_NV_RAY_TRACING_EXTENSION_NAME
   , pattern VK_SHADER_UNUSED_NV
@@ -237,7 +240,8 @@ import Graphics.Vulkan.Core10.Queue
   ( CommandBuffer(..)
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2
-  ( MemoryRequirements2KHR
+  ( MemoryRequirements2(..)
+  , fromCStructMemoryRequirements2
   )
 import Graphics.Vulkan.Exception
   ( VulkanException(..)
@@ -272,6 +276,9 @@ import Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
   , pattern VK_SHADER_STAGE_MISS_BIT_NV
   , pattern VK_SHADER_STAGE_RAYGEN_BIT_NV
   , pattern VK_SHADER_UNUSED_NV
+  )
+import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2
+  ( MemoryRequirements2KHR
   )
 
 
@@ -608,47 +615,55 @@ fromCStructWriteDescriptorSetAccelerationStructureNV c = WriteDescriptorSetAccel
                                                                                                    -- Length valued member elided
                                                                                                    <*> (Data.Vector.generateM (fromIntegral (vkAccelerationStructureCount (c :: VkWriteDescriptorSetAccelerationStructureNV))) (peekElemOff (vkPAccelerationStructures (c :: VkWriteDescriptorSetAccelerationStructureNV))))
 
--- | Wrapper for vkBindAccelerationStructureMemoryNV
+-- | Wrapper for 'vkBindAccelerationStructureMemoryNV'
 bindAccelerationStructureMemoryNV :: Device ->  Vector BindAccelerationStructureMemoryInfoNV ->  IO ()
 bindAccelerationStructureMemoryNV = \(Device device commandTable) -> \bindInfos -> withVec withCStructBindAccelerationStructureMemoryInfoNV bindInfos (\pBindInfos -> Graphics.Vulkan.C.Dynamic.bindAccelerationStructureMemoryNV commandTable device (fromIntegral $ Data.Vector.length bindInfos) pBindInfos >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkCmdBuildAccelerationStructureNV
-cmdBuildAccelerationStructureNV :: CommandBuffer ->  AccelerationStructureInfoNV ->  Buffer ->  DeviceSize ->  Bool ->  AccelerationStructureNV ->  AccelerationStructureNV ->  Buffer ->  DeviceSize ->  IO ()
+-- | Wrapper for 'vkCmdBuildAccelerationStructureNV'
+cmdBuildAccelerationStructureNV :: CommandBuffer ->  AccelerationStructureInfoNV ->  Buffer ->  DeviceSize ->  Bool ->  AccelerationStructureNV ->  AccelerationStructureNV ->  Buffer ->  DeviceSize ->  IO (  )
 cmdBuildAccelerationStructureNV = \(CommandBuffer commandBuffer commandTable) -> \info -> \instanceData -> \instanceOffset -> \update -> \dst -> \src -> \scratch -> \scratchOffset -> (\a -> withCStructAccelerationStructureInfoNV a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.cmdBuildAccelerationStructureNV commandTable commandBuffer pInfo instanceData instanceOffset (boolToBool32 update) dst src scratch scratchOffset *> (pure ()))
 
--- | Wrapper for vkCmdCopyAccelerationStructureNV
-cmdCopyAccelerationStructureNV :: CommandBuffer ->  AccelerationStructureNV ->  AccelerationStructureNV ->  CopyAccelerationStructureModeNV ->  IO ()
+-- | Wrapper for 'vkCmdCopyAccelerationStructureNV'
+cmdCopyAccelerationStructureNV :: CommandBuffer ->  AccelerationStructureNV ->  AccelerationStructureNV ->  CopyAccelerationStructureModeNV ->  IO (  )
 cmdCopyAccelerationStructureNV = \(CommandBuffer commandBuffer commandTable) -> \dst -> \src -> \mode -> Graphics.Vulkan.C.Dynamic.cmdCopyAccelerationStructureNV commandTable commandBuffer dst src mode *> (pure ())
 
--- | Wrapper for vkCmdTraceRaysNV
-cmdTraceRaysNV :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Word32 ->  Word32 ->  Word32 ->  IO ()
+-- | Wrapper for 'vkCmdTraceRaysNV'
+cmdTraceRaysNV :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Word32 ->  Word32 ->  Word32 ->  IO (  )
 cmdTraceRaysNV = \(CommandBuffer commandBuffer commandTable) -> \raygenShaderBindingTableBuffer -> \raygenShaderBindingOffset -> \missShaderBindingTableBuffer -> \missShaderBindingOffset -> \missShaderBindingStride -> \hitShaderBindingTableBuffer -> \hitShaderBindingOffset -> \hitShaderBindingStride -> \callableShaderBindingTableBuffer -> \callableShaderBindingOffset -> \callableShaderBindingStride -> \width -> \height -> \depth -> Graphics.Vulkan.C.Dynamic.cmdTraceRaysNV commandTable commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingOffset missShaderBindingTableBuffer missShaderBindingOffset missShaderBindingStride hitShaderBindingTableBuffer hitShaderBindingOffset hitShaderBindingStride callableShaderBindingTableBuffer callableShaderBindingOffset callableShaderBindingStride width height depth *> (pure ())
 
--- | Wrapper for vkCmdWriteAccelerationStructuresPropertiesNV
-cmdWriteAccelerationStructuresPropertiesNV :: CommandBuffer ->  Vector AccelerationStructureNV ->  QueryType ->  QueryPool ->  Word32 ->  IO ()
+-- | Wrapper for 'vkCmdWriteAccelerationStructuresPropertiesNV'
+cmdWriteAccelerationStructuresPropertiesNV :: CommandBuffer ->  Vector AccelerationStructureNV ->  QueryType ->  QueryPool ->  Word32 ->  IO (  )
 cmdWriteAccelerationStructuresPropertiesNV = \(CommandBuffer commandBuffer commandTable) -> \accelerationStructures -> \queryType -> \queryPool -> \firstQuery -> withVec (&) accelerationStructures (\pAccelerationStructures -> Graphics.Vulkan.C.Dynamic.cmdWriteAccelerationStructuresPropertiesNV commandTable commandBuffer (fromIntegral $ Data.Vector.length accelerationStructures) pAccelerationStructures queryType queryPool firstQuery *> (pure ()))
 
--- | Wrapper for vkCompileDeferredNV
+-- | Wrapper for 'vkCompileDeferredNV'
 compileDeferredNV :: Device ->  Pipeline ->  Word32 ->  IO ()
 compileDeferredNV = \(Device device commandTable) -> \pipeline -> \shader -> Graphics.Vulkan.C.Dynamic.compileDeferredNV commandTable device pipeline shader >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
 
--- | Wrapper for vkCreateAccelerationStructureNV
-createAccelerationStructureNV :: Device ->  AccelerationStructureCreateInfoNV ->  Maybe AllocationCallbacks ->  IO (AccelerationStructureNV)
+-- | Wrapper for 'vkCreateAccelerationStructureNV'
+createAccelerationStructureNV :: Device ->  AccelerationStructureCreateInfoNV ->  Maybe AllocationCallbacks ->  IO ( AccelerationStructureNV )
 createAccelerationStructureNV = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pAccelerationStructure -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructAccelerationStructureCreateInfoNV a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createAccelerationStructureNV commandTable device pCreateInfo pAllocator pAccelerationStructure >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pAccelerationStructure)))))
 
--- | Wrapper for vkCreateRayTracingPipelinesNV
-createRayTracingPipelinesNV :: Device ->  PipelineCache ->  Vector RayTracingPipelineCreateInfoNV ->  Maybe AllocationCallbacks ->  IO (Pipeline)
-createRayTracingPipelinesNV = \(Device device commandTable) -> \pipelineCache -> \createInfos -> \allocator -> alloca (\pPipelines -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructRayTracingPipelineCreateInfoNV createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createRayTracingPipelinesNV commandTable device pipelineCache (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pPipelines)))))
+-- | Wrapper for 'vkCreateRayTracingPipelinesNV'
+createRayTracingPipelinesNV :: Device ->  PipelineCache ->  Vector RayTracingPipelineCreateInfoNV ->  Maybe AllocationCallbacks ->  IO ( Vector Pipeline )
+createRayTracingPipelinesNV = \(Device device commandTable) -> \pipelineCache -> \createInfos -> \allocator -> allocaArray ((Data.Vector.length createInfos)) (\pPipelines -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructRayTracingPipelineCreateInfoNV createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createRayTracingPipelinesNV commandTable device pipelineCache (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos)) (peekElemOff pPipelines)))))))
 
--- | Wrapper for vkDestroyAccelerationStructureNV
+-- | Wrapper for 'vkDestroyAccelerationStructureNV'
 destroyAccelerationStructureNV :: Device ->  AccelerationStructureNV ->  Maybe AllocationCallbacks ->  IO ()
 destroyAccelerationStructureNV = \(Device device commandTable) -> \accelerationStructure -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyAccelerationStructureNV commandTable device accelerationStructure pAllocator *> (pure ()))
 
--- | Wrapper for vkGetAccelerationStructureHandleNV
+-- | Wrapper for 'vkGetAccelerationStructureHandleNV'
 getAccelerationStructureHandleNV :: Device ->  AccelerationStructureNV ->  CSize ->  IO (ByteString)
 getAccelerationStructureHandleNV = \(Device device commandTable) -> \accelerationStructure -> \dataSize -> allocaArray (fromIntegral dataSize) (\pData -> Graphics.Vulkan.C.Dynamic.getAccelerationStructureHandleNV commandTable device accelerationStructure dataSize (castPtr pData) >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((packCStringLen (pData, (fromIntegral dataSize))))))
 
+-- | Wrapper for 'vkGetAccelerationStructureMemoryRequirementsNV'
+getAccelerationStructureMemoryRequirementsNV :: Device ->  AccelerationStructureMemoryRequirementsInfoNV ->  IO ( MemoryRequirements2 )
+getAccelerationStructureMemoryRequirementsNV = \(Device device commandTable) -> \info -> alloca (\pMemoryRequirements -> (\a -> withCStructAccelerationStructureMemoryRequirementsInfoNV a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getAccelerationStructureMemoryRequirementsNV commandTable device pInfo pMemoryRequirements *> ((fromCStructMemoryRequirements2 <=< peek) pMemoryRequirements)))
 
--- | Wrapper for vkGetRayTracingShaderGroupHandlesNV
+-- | Wrapper for 'vkGetRayTracingShaderGroupHandlesNV'
 getRayTracingShaderGroupHandlesNV :: Device ->  Pipeline ->  Word32 ->  Word32 ->  CSize ->  IO (ByteString)
 getRayTracingShaderGroupHandlesNV = \(Device device commandTable) -> \pipeline -> \firstGroup -> \groupCount -> \dataSize -> allocaArray (fromIntegral dataSize) (\pData -> Graphics.Vulkan.C.Dynamic.getRayTracingShaderGroupHandlesNV commandTable device pipeline firstGroup groupCount dataSize (castPtr pData) >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((packCStringLen (pData, (fromIntegral dataSize))))))
+withAccelerationStructureNV :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withAccelerationStructureNV createInfo allocationCallbacks =
+  bracket
+    (vkCreateAccelerationStructureNV createInfo allocationCallbacks)
+    (`vkDestroyAccelerationStructureNV` allocationCallbacks)

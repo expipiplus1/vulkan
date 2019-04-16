@@ -1,6 +1,5 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
 {-# language FunctionalDependencies #-}
 {-# language DataKinds #-}
 {-# language ExplicitNamespaces #-}
@@ -12,6 +11,7 @@
 {-# language StandaloneDeriving #-}
 {-# language TypeApplications #-}
 {-# language TypeOperators #-}
+{-# language DuplicateRecordFields #-}
 {-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Marshal.SomeVkStruct
@@ -25,8 +25,6 @@ module Graphics.Vulkan.Marshal.SomeVkStruct
   , withCStructPtr
   , fromCStructPtr
   , fromCStructPtrElem
-  , VkBaseInStructure(..)
-  , VkBaseOutStructure(..)
   , peekVkStruct
   ) where
 
@@ -35,9 +33,6 @@ import Control.Applicative
   )
 import Control.Exception
   ( throwIO
-  )
-import Control.Monad
-  ( (<=<)
   )
 import Data.Type.Equality
   ( (:~:)(Refl)
@@ -50,17 +45,12 @@ import Data.Typeable
 import Foreign.Marshal.Alloc
   ( alloca
   )
-import Foreign.Marshal.Utils
-  ( with
-  )
 import Foreign.Ptr
   ( Ptr
   , castPtr
-  , plusPtr
   )
 import Foreign.Storable
   ( Storable
-  , Storable(..)
   , peek
   , peekElemOff
   , poke
@@ -1286,9 +1276,6 @@ import Graphics.Vulkan.Core10.CommandPool
   ( CommandPoolCreateInfo(..)
   , fromCStructCommandPoolCreateInfo
   , withCStructCommandPoolCreateInfo
-  )
-import Graphics.Vulkan.Core10.Core
-  ( StructureType
   )
 import Graphics.Vulkan.Core10.DescriptorSet
   ( CopyDescriptorSet(..)
@@ -5512,38 +5499,6 @@ instance ToCStruct ClearValue VkClearValue where
   withCStruct = withCStructClearValue
 -- No FromCStruct instance for VkClearValue as it contains a union type
 
--- No documentation found for TopLevel "VkBaseInStructure"
-data VkBaseInStructure = VkBaseInStructure
-  { -- No documentation found for Nested "VkBaseInStructure" "sType"
-  vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkBaseInStructure" "pNext"
-  vkPNext :: Ptr VkBaseInStructure
-  }
-  deriving (Eq, Show)
-
-instance Storable VkBaseInStructure where
-  sizeOf ~_ = 16
-  alignment ~_ = 8
-  peek ptr = VkBaseInStructure <$> peek (ptr `plusPtr` 0)
-                               <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBaseInStructure))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBaseInStructure))
--- No documentation found for TopLevel "VkBaseOutStructure"
-data VkBaseOutStructure = VkBaseOutStructure
-  { -- No documentation found for Nested "VkBaseOutStructure" "sType"
-  vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkBaseOutStructure" "pNext"
-  vkPNext :: Ptr VkBaseOutStructure
-  }
-  deriving (Eq, Show)
-
-instance Storable VkBaseOutStructure where
-  sizeOf ~_ = 16
-  alignment ~_ = 8
-  peek ptr = VkBaseOutStructure <$> peek (ptr `plusPtr` 0)
-                                <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBaseOutStructure))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBaseOutStructure))
 -- | Read the @sType@ member of a Vulkan struct and marshal the struct into
 -- a 'SomeVkStruct'
 --

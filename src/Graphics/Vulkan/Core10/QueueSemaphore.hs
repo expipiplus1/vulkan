@@ -82,10 +82,10 @@ fromCStructSemaphoreCreateInfo c = SemaphoreCreateInfo <$> -- Univalued Member e
                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSemaphoreCreateInfo)))
                                                        <*> pure (vkFlags (c :: VkSemaphoreCreateInfo))
 
--- | Wrapper for vkCreateSemaphore
+-- | Wrapper for 'vkCreateSemaphore'
 createSemaphore :: Device ->  SemaphoreCreateInfo ->  Maybe AllocationCallbacks ->  IO (Semaphore)
 createSemaphore = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pSemaphore -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructSemaphoreCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createSemaphore commandTable device pCreateInfo pAllocator pSemaphore >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSemaphore)))))
 
--- | Wrapper for vkDestroySemaphore
+-- | Wrapper for 'vkDestroySemaphore'
 destroySemaphore :: Device ->  Semaphore ->  Maybe AllocationCallbacks ->  IO ()
 destroySemaphore = \(Device device commandTable) -> \semaphore -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySemaphore commandTable device semaphore pAllocator *> (pure ()))

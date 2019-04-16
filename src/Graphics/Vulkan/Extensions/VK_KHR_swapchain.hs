@@ -46,6 +46,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_swapchain
   , getSwapchainImagesKHR
   , getAllSwapchainImagesKHR
   , queuePresentKHR
+  , withSwapchainKHR
   , pattern VK_KHR_SWAPCHAIN_SPEC_VERSION
   , pattern VK_KHR_SWAPCHAIN_EXTENSION_NAME
   , pattern VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR
@@ -351,7 +352,8 @@ data PresentInfoKHR = PresentInfoKHR
   }
   deriving (Show, Eq)
 withCStructPresentInfoKHR :: PresentInfoKHR -> (VkPresentInfoKHR -> IO a) -> IO a
-withCStructPresentInfoKHR from cont = maybeWith (withVec (&)) (vkPResults (from :: PresentInfoKHR)) (\pResults -> withVec (&) (vkPImageIndices (from :: PresentInfoKHR)) (\pImageIndices -> withVec (&) (vkPSwapchains (from :: PresentInfoKHR)) (\pSwapchains -> withVec (&) (vkPWaitSemaphores (from :: PresentInfoKHR)) (\pWaitSemaphores -> maybeWith withSomeVkStruct (vkPNext (from :: PresentInfoKHR)) (\pPNext -> cont (VkPresentInfoKHR VK_STRUCTURE_TYPE_PRESENT_INFO_KHR pPNext (fromIntegral (Data.Vector.length (vkPWaitSemaphores (from :: PresentInfoKHR)))) pWaitSemaphores (fromIntegral (minimum ([Data.Vector.length (vkPSwapchains (from :: PresentInfoKHR)), Data.Vector.length (vkPImageIndices (from :: PresentInfoKHR))] ++ [Data.Vector.length v | Just v <- [(vkPResults (from :: PresentInfoKHR))]]))) pSwapchains pImageIndices pResults))))))
+withCStructPresentInfoKHR from cont = maybeWith (withVec (&)) (vkPResults (from :: PresentInfoKHR)) (\pResults -> withVec (&) (vkPImageIndices (from :: PresentInfoKHR)) (\pImageIndices -> withVec (&) (vkPSwapchains (from :: PresentInfoKHR)) (\pSwapchains -> withVec (&) (vkPWaitSemaphores (from :: PresentInfoKHR)) (\pWaitSemaphores -> maybeWith withSomeVkStruct (vkPNext (from :: PresentInfoKHR)) (\pPNext -> cont (VkPresentInfoKHR VK_STRUCTURE_TYPE_PRESENT_INFO_KHR pPNext (fromIntegral (Data.Vector.length (vkPWaitSemaphores (from :: PresentInfoKHR)))) pWaitSemaphores (fromIntegral (minimum ([ Data.Vector.length (vkPSwapchains (from :: PresentInfoKHR))
+, Data.Vector.length (vkPImageIndices (from :: PresentInfoKHR)) ] ++ [Data.Vector.length v | Just v <- [ (vkPResults (from :: PresentInfoKHR)) ]]))) pSwapchains pImageIndices pResults))))))
 fromCStructPresentInfoKHR :: VkPresentInfoKHR -> IO PresentInfoKHR
 fromCStructPresentInfoKHR c = PresentInfoKHR <$> -- Univalued Member elided
                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPresentInfoKHR)))
@@ -427,35 +429,36 @@ fromCStructSwapchainCreateInfoKHR c = SwapchainCreateInfoKHR <$> -- Univalued Me
 -- No documentation found for TopLevel "SwapchainKHR"
 type SwapchainKHR = VkSwapchainKHR
 
--- | Wrapper for vkAcquireNextImage2KHR
+-- | Wrapper for 'vkAcquireNextImage2KHR'
 acquireNextImage2KHR :: Device ->  AcquireNextImageInfoKHR ->  IO (VkResult, Word32)
 acquireNextImage2KHR = \(Device device commandTable) -> \acquireInfo -> alloca (\pImageIndex -> (\a -> withCStructAcquireNextImageInfoKHR a . flip with) acquireInfo (\pAcquireInfo -> Graphics.Vulkan.C.Dynamic.acquireNextImage2KHR commandTable device pAcquireInfo pImageIndex >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pImageIndex))))
 
--- | Wrapper for vkAcquireNextImageKHR
-acquireNextImageKHR :: Device ->  SwapchainKHR ->  Word64 ->  Semaphore ->  Fence ->  IO (VkResult, Word32)
+-- | Wrapper for 'vkAcquireNextImageKHR'
+acquireNextImageKHR :: Device ->  SwapchainKHR ->  Word64 ->  Semaphore ->  Fence ->  IO ( VkResult
+, Word32 )
 acquireNextImageKHR = \(Device device commandTable) -> \swapchain -> \timeout -> \semaphore -> \fence -> alloca (\pImageIndex -> Graphics.Vulkan.C.Dynamic.acquireNextImageKHR commandTable device swapchain timeout semaphore fence pImageIndex >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pImageIndex)))
 
--- | Wrapper for vkCreateSwapchainKHR
-createSwapchainKHR :: Device ->  SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SwapchainKHR)
+-- | Wrapper for 'vkCreateSwapchainKHR'
+createSwapchainKHR :: Device ->  SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SwapchainKHR )
 createSwapchainKHR = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pSwapchain -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructSwapchainCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createSwapchainKHR commandTable device pCreateInfo pAllocator pSwapchain >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSwapchain)))))
 
--- | Wrapper for vkDestroySwapchainKHR
+-- | Wrapper for 'vkDestroySwapchainKHR'
 destroySwapchainKHR :: Device ->  SwapchainKHR ->  Maybe AllocationCallbacks ->  IO ()
 destroySwapchainKHR = \(Device device commandTable) -> \swapchain -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySwapchainKHR commandTable device swapchain pAllocator *> (pure ()))
 
--- | Wrapper for vkGetDeviceGroupPresentCapabilitiesKHR
+-- | Wrapper for 'vkGetDeviceGroupPresentCapabilitiesKHR'
 getDeviceGroupPresentCapabilitiesKHR :: Device ->  IO (DeviceGroupPresentCapabilitiesKHR)
 getDeviceGroupPresentCapabilitiesKHR = \(Device device commandTable) -> alloca (\pDeviceGroupPresentCapabilities -> Graphics.Vulkan.C.Dynamic.getDeviceGroupPresentCapabilitiesKHR commandTable device pDeviceGroupPresentCapabilities >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructDeviceGroupPresentCapabilitiesKHR <=< peek) pDeviceGroupPresentCapabilities)))
 
--- | Wrapper for vkGetDeviceGroupSurfacePresentModesKHR
+-- | Wrapper for 'vkGetDeviceGroupSurfacePresentModesKHR'
 getDeviceGroupSurfacePresentModesKHR :: Device ->  SurfaceKHR ->  IO (DeviceGroupPresentModeFlagsKHR)
 getDeviceGroupSurfacePresentModesKHR = \(Device device commandTable) -> \surface -> alloca (\pModes -> Graphics.Vulkan.C.Dynamic.getDeviceGroupSurfacePresentModesKHR commandTable device surface pModes >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pModes)))
 
--- | Wrapper for vkGetPhysicalDevicePresentRectanglesKHR
+-- | Wrapper for 'vkGetPhysicalDevicePresentRectanglesKHR'
 getNumPhysicalDevicePresentRectanglesKHR :: PhysicalDevice ->  SurfaceKHR ->  IO (VkResult, Word32)
 getNumPhysicalDevicePresentRectanglesKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> alloca (\pRectCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDevicePresentRectanglesKHR commandTable physicalDevice surface pRectCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pRectCount)))
 
--- | Wrapper for vkGetPhysicalDevicePresentRectanglesKHR
+-- | Wrapper for 'vkGetPhysicalDevicePresentRectanglesKHR'
 getPhysicalDevicePresentRectanglesKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO (VkResult, Vector Rect2D)
 getPhysicalDevicePresentRectanglesKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> \rectCount -> allocaArray (fromIntegral rectCount) (\pRects -> with rectCount (\pRectCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDevicePresentRectanglesKHR commandTable physicalDevice surface pRectCount pRects >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructRect2D <=< peekElemOff p) pRects) =<< (fromIntegral <$> (peek pRectCount)))))))
 -- | Call 'getNumPhysicalDevicePresentRectanglesKHR' to get the number of return values, then use that
@@ -466,11 +469,11 @@ getAllPhysicalDevicePresentRectanglesKHR physicalDevice surface =
     >>= \num -> snd <$> getPhysicalDevicePresentRectanglesKHR physicalDevice surface num
 
 
--- | Wrapper for vkGetSwapchainImagesKHR
+-- | Wrapper for 'vkGetSwapchainImagesKHR'
 getNumSwapchainImagesKHR :: Device ->  SwapchainKHR ->  IO (VkResult, Word32)
 getNumSwapchainImagesKHR = \(Device device commandTable) -> \swapchain -> alloca (\pSwapchainImageCount -> Graphics.Vulkan.C.Dynamic.getSwapchainImagesKHR commandTable device swapchain pSwapchainImageCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pSwapchainImageCount)))
 
--- | Wrapper for vkGetSwapchainImagesKHR
+-- | Wrapper for 'vkGetSwapchainImagesKHR'
 getSwapchainImagesKHR :: Device ->  SwapchainKHR ->  Word32 ->  IO (VkResult, Vector Image)
 getSwapchainImagesKHR = \(Device device commandTable) -> \swapchain -> \swapchainImageCount -> allocaArray (fromIntegral swapchainImageCount) (\pSwapchainImages -> with swapchainImageCount (\pSwapchainImageCount -> Graphics.Vulkan.C.Dynamic.getSwapchainImagesKHR commandTable device swapchain pSwapchainImageCount pSwapchainImages >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM (peekElemOff pSwapchainImages) =<< (fromIntegral <$> (peek pSwapchainImageCount)))))))
 -- | Call 'getNumSwapchainImagesKHR' to get the number of return values, then use that
@@ -481,6 +484,11 @@ getAllSwapchainImagesKHR device swapchain =
     >>= \num -> snd <$> getSwapchainImagesKHR device swapchain num
 
 
--- | Wrapper for vkQueuePresentKHR
+-- | Wrapper for 'vkQueuePresentKHR'
 queuePresentKHR :: Queue ->  PresentInfoKHR ->  IO (VkResult)
 queuePresentKHR = \(Queue queue commandTable) -> \presentInfo -> (\a -> withCStructPresentInfoKHR a . flip with) presentInfo (\pPresentInfo -> Graphics.Vulkan.C.Dynamic.queuePresentKHR commandTable queue pPresentInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure r)))
+withSwapchainKHR :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withSwapchainKHR createInfo allocationCallbacks =
+  bracket
+    (vkCreateSwapchainKHR createInfo allocationCallbacks)
+    (`vkDestroySwapchainKHR` allocationCallbacks)

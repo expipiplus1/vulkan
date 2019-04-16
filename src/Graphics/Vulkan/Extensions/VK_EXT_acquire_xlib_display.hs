@@ -52,10 +52,10 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display
 
 
 
--- | Wrapper for vkAcquireXlibDisplayEXT
+-- | Wrapper for 'vkAcquireXlibDisplayEXT'
 acquireXlibDisplayEXT :: PhysicalDevice ->  DisplayKHR ->  IO (Display)
 acquireXlibDisplayEXT = \(PhysicalDevice physicalDevice commandTable) -> \display -> alloca (\pDpy -> Graphics.Vulkan.C.Dynamic.acquireXlibDisplayEXT commandTable physicalDevice pDpy display >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pDpy)))
 
--- | Wrapper for vkGetRandROutputDisplayEXT
+-- | Wrapper for 'vkGetRandROutputDisplayEXT'
 getRandROutputDisplayEXT :: PhysicalDevice ->  RROutput ->  IO (Display, DisplayKHR)
 getRandROutputDisplayEXT = \(PhysicalDevice physicalDevice commandTable) -> \rrOutput -> alloca (\pDisplay -> alloca (\pDpy -> Graphics.Vulkan.C.Dynamic.getRandROutputDisplayEXT commandTable physicalDevice pDpy rrOutput pDisplay >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> peek pDpy<*>peek pDisplay))))

@@ -278,10 +278,10 @@ fromCStructSubpassSampleLocationsEXT :: VkSubpassSampleLocationsEXT -> IO Subpas
 fromCStructSubpassSampleLocationsEXT c = SubpassSampleLocationsEXT <$> pure (vkSubpassIndex (c :: VkSubpassSampleLocationsEXT))
                                                                    <*> (fromCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (c :: VkSubpassSampleLocationsEXT)))
 
--- | Wrapper for vkCmdSetSampleLocationsEXT
+-- | Wrapper for 'vkCmdSetSampleLocationsEXT'
 cmdSetSampleLocationsEXT :: CommandBuffer ->  SampleLocationsInfoEXT ->  IO ()
 cmdSetSampleLocationsEXT = \(CommandBuffer commandBuffer commandTable) -> \sampleLocationsInfo -> (\a -> withCStructSampleLocationsInfoEXT a . flip with) sampleLocationsInfo (\pSampleLocationsInfo -> Graphics.Vulkan.C.Dynamic.cmdSetSampleLocationsEXT commandTable commandBuffer pSampleLocationsInfo *> (pure ()))
 
--- | Wrapper for vkGetPhysicalDeviceMultisamplePropertiesEXT
+-- | Wrapper for 'vkGetPhysicalDeviceMultisamplePropertiesEXT'
 getPhysicalDeviceMultisamplePropertiesEXT :: PhysicalDevice ->  SampleCountFlagBits ->  IO (MultisamplePropertiesEXT)
 getPhysicalDeviceMultisamplePropertiesEXT = \(PhysicalDevice physicalDevice commandTable) -> \samples -> alloca (\pMultisampleProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceMultisamplePropertiesEXT commandTable physicalDevice samples pMultisampleProperties *> ((fromCStructMultisamplePropertiesEXT <=< peek) pMultisampleProperties))

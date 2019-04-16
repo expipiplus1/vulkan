@@ -99,6 +99,6 @@ fromCStructPhysicalDeviceMaintenance3Properties c = PhysicalDeviceMaintenance3Pr
                                                                                          <*> pure (vkMaxPerSetDescriptors (c :: VkPhysicalDeviceMaintenance3Properties))
                                                                                          <*> pure (vkMaxMemoryAllocationSize (c :: VkPhysicalDeviceMaintenance3Properties))
 
--- | Wrapper for vkGetDescriptorSetLayoutSupport
+-- | Wrapper for 'vkGetDescriptorSetLayoutSupport'
 getDescriptorSetLayoutSupport :: Device ->  DescriptorSetLayoutCreateInfo ->  IO (DescriptorSetLayoutSupport)
 getDescriptorSetLayoutSupport = \(Device device commandTable) -> \createInfo -> alloca (\pSupport -> (\a -> withCStructDescriptorSetLayoutCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.getDescriptorSetLayoutSupport commandTable device pCreateInfo pSupport *> ((fromCStructDescriptorSetLayoutSupport <=< peek) pSupport)))

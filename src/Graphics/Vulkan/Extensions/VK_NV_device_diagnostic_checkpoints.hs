@@ -115,15 +115,15 @@ fromCStructQueueFamilyCheckpointPropertiesNV c = QueueFamilyCheckpointProperties
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkQueueFamilyCheckpointPropertiesNV)))
                                                                                    <*> pure (vkCheckpointExecutionStageMask (c :: VkQueueFamilyCheckpointPropertiesNV))
 
--- | Wrapper for vkCmdSetCheckpointNV
+-- | Wrapper for 'vkCmdSetCheckpointNV'
 cmdSetCheckpointNV :: CommandBuffer ->  Ptr () ->  IO ()
 cmdSetCheckpointNV = \(CommandBuffer commandBuffer commandTable) -> \pCheckpointMarker -> Graphics.Vulkan.C.Dynamic.cmdSetCheckpointNV commandTable commandBuffer pCheckpointMarker *> (pure ())
 
--- | Wrapper for vkGetQueueCheckpointDataNV
+-- | Wrapper for 'vkGetQueueCheckpointDataNV'
 getNumQueueCheckpointDataNV :: Queue ->  IO (Word32)
 getNumQueueCheckpointDataNV = \(Queue queue commandTable) -> alloca (\pCheckpointDataCount -> Graphics.Vulkan.C.Dynamic.getQueueCheckpointDataNV commandTable queue pCheckpointDataCount nullPtr *> (peek pCheckpointDataCount))
 
--- | Wrapper for vkGetQueueCheckpointDataNV
+-- | Wrapper for 'vkGetQueueCheckpointDataNV'
 getQueueCheckpointDataNV :: Queue ->  Word32 ->  IO (Vector CheckpointDataNV)
 getQueueCheckpointDataNV = \(Queue queue commandTable) -> \checkpointDataCount -> allocaArray (fromIntegral checkpointDataCount) (\pCheckpointData -> with checkpointDataCount (\pCheckpointDataCount -> Graphics.Vulkan.C.Dynamic.getQueueCheckpointDataNV commandTable queue pCheckpointDataCount pCheckpointData *> ((flip Data.Vector.generateM ((\p -> fromCStructCheckpointDataNV <=< peekElemOff p) pCheckpointData) =<< (fromIntegral <$> (peek pCheckpointDataCount))))))
 -- | Call 'getNumQueueCheckpointDataNV' to get the number of return values, then use that

@@ -11,6 +11,7 @@ module Graphics.Vulkan.Core10.Shader
   , ShaderModuleCreateInfo(..)
   , createShaderModule
   , destroyShaderModule
+  , withShaderModule
   ) where
 
 import Control.Exception
@@ -105,10 +106,15 @@ fromCStructShaderModuleCreateInfo c = ShaderModuleCreateInfo <$> -- Univalued Me
                                                              -- Length multiple valued member elided
                                                              <*> (Data.Vector.generateM (fromIntegral (vkCodeSize (c :: VkShaderModuleCreateInfo)) `quot` 4) (peekElemOff (vkPCode (c :: VkShaderModuleCreateInfo))))
 
--- | Wrapper for vkCreateShaderModule
-createShaderModule :: Device ->  ShaderModuleCreateInfo ->  Maybe AllocationCallbacks ->  IO (ShaderModule)
+-- | Wrapper for 'vkCreateShaderModule'
+createShaderModule :: Device ->  ShaderModuleCreateInfo ->  Maybe AllocationCallbacks ->  IO ( ShaderModule )
 createShaderModule = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pShaderModule -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructShaderModuleCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createShaderModule commandTable device pCreateInfo pAllocator pShaderModule >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pShaderModule)))))
 
--- | Wrapper for vkDestroyShaderModule
+-- | Wrapper for 'vkDestroyShaderModule'
 destroyShaderModule :: Device ->  ShaderModule ->  Maybe AllocationCallbacks ->  IO ()
 destroyShaderModule = \(Device device commandTable) -> \shaderModule -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyShaderModule commandTable device shaderModule pAllocator *> (pure ()))
+withShaderModule :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withShaderModule createInfo allocationCallbacks =
+  bracket
+    (vkCreateShaderModule createInfo allocationCallbacks)
+    (`vkDestroyShaderModule` allocationCallbacks)

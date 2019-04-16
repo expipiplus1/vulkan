@@ -69,6 +69,6 @@ fromCStructPhysicalDeviceHostQueryResetFeaturesEXT c = PhysicalDeviceHostQueryRe
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceHostQueryResetFeaturesEXT)))
                                                                                                <*> pure (bool32ToBool (vkHostQueryReset (c :: VkPhysicalDeviceHostQueryResetFeaturesEXT)))
 
--- | Wrapper for vkResetQueryPoolEXT
+-- | Wrapper for 'vkResetQueryPoolEXT'
 resetQueryPoolEXT :: Device ->  QueryPool ->  Word32 ->  Word32 ->  IO ()
 resetQueryPoolEXT = \(Device device commandTable) -> \queryPool -> \firstQuery -> \queryCount -> Graphics.Vulkan.C.Dynamic.resetQueryPoolEXT commandTable device queryPool firstQuery queryCount *> (pure ())

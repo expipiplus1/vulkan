@@ -156,6 +156,6 @@ fromCStructProtectedSubmitInfo c = ProtectedSubmitInfo <$> -- Univalued Member e
                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkProtectedSubmitInfo)))
                                                        <*> pure (bool32ToBool (vkProtectedSubmit (c :: VkProtectedSubmitInfo)))
 
--- | Wrapper for vkGetDeviceQueue2
+-- | Wrapper for 'vkGetDeviceQueue2'
 getDeviceQueue2 :: Device ->  DeviceQueueInfo2 ->  IO (Queue)
 getDeviceQueue2 = \(Device device commandTable) -> \queueInfo -> alloca (\pQueue -> (\a -> withCStructDeviceQueueInfo2 a . flip with) queueInfo (\pQueueInfo -> Graphics.Vulkan.C.Dynamic.getDeviceQueue2 commandTable device pQueueInfo pQueue *> (flip Queue commandTable <$> peek pQueue)))

@@ -14,6 +14,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_report
   , createDebugReportCallbackEXT
   , debugReportMessageEXT
   , destroyDebugReportCallbackEXT
+  , withDebugReportCallbackEXT
   , pattern VK_EXT_DEBUG_REPORT_SPEC_VERSION
   , pattern VK_EXT_DEBUG_REPORT_EXTENSION_NAME
   , pattern VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
@@ -130,14 +131,19 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 -- No documentation found for TopLevel "DebugReportObjectTypeEXT"
 type DebugReportObjectTypeEXT = VkDebugReportObjectTypeEXT
 
--- | Wrapper for vkCreateDebugReportCallbackEXT
-createDebugReportCallbackEXT :: Instance ->  DebugReportCallbackCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO (DebugReportCallbackEXT)
+-- | Wrapper for 'vkCreateDebugReportCallbackEXT'
+createDebugReportCallbackEXT :: Instance ->  DebugReportCallbackCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO ( DebugReportCallbackEXT )
 createDebugReportCallbackEXT = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pCallback -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDebugReportCallbackCreateInfoEXT a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDebugReportCallbackEXT commandTable instance' pCreateInfo pAllocator pCallback >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pCallback)))))
 
--- | Wrapper for vkDebugReportMessageEXT
-debugReportMessageEXT :: Instance ->  DebugReportFlagsEXT ->  DebugReportObjectTypeEXT ->  Word64 ->  CSize ->  Int32 ->  ByteString ->  ByteString ->  IO ()
+-- | Wrapper for 'vkDebugReportMessageEXT'
+debugReportMessageEXT :: Instance ->  DebugReportFlagsEXT ->  DebugReportObjectTypeEXT ->  Word64 ->  CSize ->  Int32 ->  ByteString ->  ByteString ->  IO (  )
 debugReportMessageEXT = \(Instance instance' commandTable) -> \flags -> \objectType -> \object -> \location -> \messageCode -> \layerPrefix -> \message -> useAsCString message (\pMessage -> useAsCString layerPrefix (\pLayerPrefix -> Graphics.Vulkan.C.Dynamic.debugReportMessageEXT commandTable instance' flags objectType object location messageCode pLayerPrefix pMessage *> (pure ())))
 
--- | Wrapper for vkDestroyDebugReportCallbackEXT
+-- | Wrapper for 'vkDestroyDebugReportCallbackEXT'
 destroyDebugReportCallbackEXT :: Instance ->  DebugReportCallbackEXT ->  Maybe AllocationCallbacks ->  IO ()
 destroyDebugReportCallbackEXT = \(Instance instance' commandTable) -> \callback -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyDebugReportCallbackEXT commandTable instance' callback pAllocator *> (pure ()))
+withDebugReportCallbackEXT :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withDebugReportCallbackEXT createInfo allocationCallbacks =
+  bracket
+    (vkCreateDebugReportCallbackEXT createInfo allocationCallbacks)
+    (`vkDestroyDebugReportCallbackEXT` allocationCallbacks)

@@ -161,10 +161,10 @@ fromCStructImportFenceWin32HandleInfoKHR c = ImportFenceWin32HandleInfoKHR <$> -
                                                                            <*> pure (vkHandle (c :: VkImportFenceWin32HandleInfoKHR))
                                                                            <*> pure (vkName (c :: VkImportFenceWin32HandleInfoKHR))
 
--- | Wrapper for vkGetFenceWin32HandleKHR
+-- | Wrapper for 'vkGetFenceWin32HandleKHR'
 getFenceWin32HandleKHR :: Device ->  FenceGetWin32HandleInfoKHR ->  IO (HANDLE)
 getFenceWin32HandleKHR = \(Device device commandTable) -> \getWin32HandleInfo -> alloca (\pHandle -> (\a -> withCStructFenceGetWin32HandleInfoKHR a . flip with) getWin32HandleInfo (\pGetWin32HandleInfo -> Graphics.Vulkan.C.Dynamic.getFenceWin32HandleKHR commandTable device pGetWin32HandleInfo pHandle >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pHandle))))
 
--- | Wrapper for vkImportFenceWin32HandleKHR
+-- | Wrapper for 'vkImportFenceWin32HandleKHR'
 importFenceWin32HandleKHR :: Device ->  ImportFenceWin32HandleInfoKHR ->  IO ()
 importFenceWin32HandleKHR = \(Device device commandTable) -> \importFenceWin32HandleInfo -> (\a -> withCStructImportFenceWin32HandleInfoKHR a . flip with) importFenceWin32HandleInfo (\pImportFenceWin32HandleInfo -> Graphics.Vulkan.C.Dynamic.importFenceWin32HandleKHR commandTable device pImportFenceWin32HandleInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))

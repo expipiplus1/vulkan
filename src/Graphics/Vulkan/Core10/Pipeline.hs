@@ -104,6 +104,8 @@ module Graphics.Vulkan.Core10.Pipeline
   , createComputePipelines
   , createGraphicsPipelines
   , destroyPipeline
+  , withPipelineLayout
+  , withRenderPass
   ) where
 
 import Control.Exception
@@ -160,8 +162,8 @@ import Foreign.C.Types
   ( CFloat(..)
   , CSize(..)
   )
-import Foreign.Marshal.Alloc
-  ( alloca
+import Foreign.Marshal.Array
+  ( allocaArray
   )
 import Foreign.Marshal.Utils
   ( maybePeek
@@ -916,14 +918,24 @@ fromCStructViewport c = Viewport <$> pure (vkX (c :: VkViewport))
                                  <*> pure (vkMinDepth (c :: VkViewport))
                                  <*> pure (vkMaxDepth (c :: VkViewport))
 
--- | Wrapper for vkCreateComputePipelines
-createComputePipelines :: Device ->  PipelineCache ->  Vector ComputePipelineCreateInfo ->  Maybe AllocationCallbacks ->  IO (Pipeline)
-createComputePipelines = \(Device device commandTable) -> \pipelineCache -> \createInfos -> \allocator -> alloca (\pPipelines -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructComputePipelineCreateInfo createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createComputePipelines commandTable device pipelineCache (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pPipelines)))))
+-- | Wrapper for 'vkCreateComputePipelines'
+createComputePipelines :: Device ->  PipelineCache ->  Vector ComputePipelineCreateInfo ->  Maybe AllocationCallbacks ->  IO ( Vector Pipeline )
+createComputePipelines = \(Device device commandTable) -> \pipelineCache -> \createInfos -> \allocator -> allocaArray ((Data.Vector.length createInfos)) (\pPipelines -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructComputePipelineCreateInfo createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createComputePipelines commandTable device pipelineCache (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos)) (peekElemOff pPipelines)))))))
 
--- | Wrapper for vkCreateGraphicsPipelines
-createGraphicsPipelines :: Device ->  PipelineCache ->  Vector GraphicsPipelineCreateInfo ->  Maybe AllocationCallbacks ->  IO (Pipeline)
-createGraphicsPipelines = \(Device device commandTable) -> \pipelineCache -> \createInfos -> \allocator -> alloca (\pPipelines -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructGraphicsPipelineCreateInfo createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createGraphicsPipelines commandTable device pipelineCache (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pPipelines)))))
+-- | Wrapper for 'vkCreateGraphicsPipelines'
+createGraphicsPipelines :: Device ->  PipelineCache ->  Vector GraphicsPipelineCreateInfo ->  Maybe AllocationCallbacks ->  IO ( Vector Pipeline )
+createGraphicsPipelines = \(Device device commandTable) -> \pipelineCache -> \createInfos -> \allocator -> allocaArray ((Data.Vector.length createInfos)) (\pPipelines -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructGraphicsPipelineCreateInfo createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createGraphicsPipelines commandTable device pipelineCache (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos)) (peekElemOff pPipelines)))))))
 
--- | Wrapper for vkDestroyPipeline
+-- | Wrapper for 'vkDestroyPipeline'
 destroyPipeline :: Device ->  Pipeline ->  Maybe AllocationCallbacks ->  IO ()
 destroyPipeline = \(Device device commandTable) -> \pipeline -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyPipeline commandTable device pipeline pAllocator *> (pure ()))
+withPipelineLayout :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withPipelineLayout createInfo allocationCallbacks =
+  bracket
+    (vkCreatePipelineLayout createInfo allocationCallbacks)
+    (`vkDestroyPipelineLayout` allocationCallbacks)
+withRenderPass :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withRenderPass createInfo allocationCallbacks =
+  bracket
+    (vkCreateRenderPass createInfo allocationCallbacks)
+    (`vkDestroyRenderPass` allocationCallbacks)

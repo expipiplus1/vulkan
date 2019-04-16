@@ -47,6 +47,7 @@ module Graphics.Vulkan.Core10.DescriptorSet
   , freeDescriptorSets
   , resetDescriptorPool
   , updateDescriptorSets
+  , withDescriptorPool
   ) where
 
 import Control.Exception
@@ -77,6 +78,9 @@ import Data.Word
   )
 import Foreign.Marshal.Alloc
   ( alloca
+  )
+import Foreign.Marshal.Array
+  ( allocaArray
   )
 import Foreign.Marshal.Utils
   ( maybePeek
@@ -366,7 +370,9 @@ data WriteDescriptorSet = WriteDescriptorSet
   }
   deriving (Show, Eq)
 withCStructWriteDescriptorSet :: WriteDescriptorSet -> (VkWriteDescriptorSet -> IO a) -> IO a
-withCStructWriteDescriptorSet from cont = withVec (&) (vkPTexelBufferView (from :: WriteDescriptorSet)) (\pTexelBufferView -> withVec withCStructDescriptorBufferInfo (vkPBufferInfo (from :: WriteDescriptorSet)) (\pBufferInfo -> withVec withCStructDescriptorImageInfo (vkPImageInfo (from :: WriteDescriptorSet)) (\pImageInfo -> maybeWith withSomeVkStruct (vkPNext (from :: WriteDescriptorSet)) (\pPNext -> cont (VkWriteDescriptorSet VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET pPNext (vkDstSet (from :: WriteDescriptorSet)) (vkDstBinding (from :: WriteDescriptorSet)) (vkDstArrayElement (from :: WriteDescriptorSet)) (fromIntegral (minimum ([Data.Vector.length (vkPImageInfo (from :: WriteDescriptorSet)), Data.Vector.length (vkPBufferInfo (from :: WriteDescriptorSet)), Data.Vector.length (vkPTexelBufferView (from :: WriteDescriptorSet))]))) (vkDescriptorType (from :: WriteDescriptorSet)) pImageInfo pBufferInfo pTexelBufferView)))))
+withCStructWriteDescriptorSet from cont = withVec (&) (vkPTexelBufferView (from :: WriteDescriptorSet)) (\pTexelBufferView -> withVec withCStructDescriptorBufferInfo (vkPBufferInfo (from :: WriteDescriptorSet)) (\pBufferInfo -> withVec withCStructDescriptorImageInfo (vkPImageInfo (from :: WriteDescriptorSet)) (\pImageInfo -> maybeWith withSomeVkStruct (vkPNext (from :: WriteDescriptorSet)) (\pPNext -> cont (VkWriteDescriptorSet VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET pPNext (vkDstSet (from :: WriteDescriptorSet)) (vkDstBinding (from :: WriteDescriptorSet)) (vkDstArrayElement (from :: WriteDescriptorSet)) (fromIntegral (minimum ([ Data.Vector.length (vkPImageInfo (from :: WriteDescriptorSet))
+, Data.Vector.length (vkPBufferInfo (from :: WriteDescriptorSet))
+, Data.Vector.length (vkPTexelBufferView (from :: WriteDescriptorSet)) ]))) (vkDescriptorType (from :: WriteDescriptorSet)) pImageInfo pBufferInfo pTexelBufferView)))))
 fromCStructWriteDescriptorSet :: VkWriteDescriptorSet -> IO WriteDescriptorSet
 fromCStructWriteDescriptorSet c = WriteDescriptorSet <$> -- Univalued Member elided
                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkWriteDescriptorSet)))
@@ -379,34 +385,39 @@ fromCStructWriteDescriptorSet c = WriteDescriptorSet <$> -- Univalued Member eli
                                                      <*> (Data.Vector.generateM (fromIntegral (vkDescriptorCount (c :: VkWriteDescriptorSet))) (((fromCStructDescriptorBufferInfo <=<) . peekElemOff) (vkPBufferInfo (c :: VkWriteDescriptorSet))))
                                                      <*> (Data.Vector.generateM (fromIntegral (vkDescriptorCount (c :: VkWriteDescriptorSet))) (peekElemOff (vkPTexelBufferView (c :: VkWriteDescriptorSet))))
 
--- | Wrapper for vkAllocateDescriptorSets
-allocateDescriptorSets :: Device ->  DescriptorSetAllocateInfo ->  IO (DescriptorSet)
-allocateDescriptorSets = \(Device device commandTable) -> \allocateInfo -> alloca (\pDescriptorSets -> (\a -> withCStructDescriptorSetAllocateInfo a . flip with) allocateInfo (\pAllocateInfo -> Graphics.Vulkan.C.Dynamic.allocateDescriptorSets commandTable device pAllocateInfo pDescriptorSets >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pDescriptorSets))))
+-- | Wrapper for 'vkAllocateDescriptorSets'
+allocateDescriptorSets :: Device ->  DescriptorSetAllocateInfo ->  IO (Vector DescriptorSet)
+allocateDescriptorSets = \(Device device commandTable) -> \allocateInfo -> allocaArray (Data.Vector.length (vkPSetLayouts (allocateInfo :: DescriptorSetAllocateInfo))) (\pDescriptorSets -> (\a -> withCStructDescriptorSetAllocateInfo a . flip with) allocateInfo (\pAllocateInfo -> Graphics.Vulkan.C.Dynamic.allocateDescriptorSets commandTable device pAllocateInfo pDescriptorSets >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM (Data.Vector.length (vkPSetLayouts (allocateInfo :: DescriptorSetAllocateInfo))) (peekElemOff pDescriptorSets))))))
 
--- | Wrapper for vkCreateDescriptorPool
-createDescriptorPool :: Device ->  DescriptorPoolCreateInfo ->  Maybe AllocationCallbacks ->  IO (DescriptorPool)
+-- | Wrapper for 'vkCreateDescriptorPool'
+createDescriptorPool :: Device ->  DescriptorPoolCreateInfo ->  Maybe AllocationCallbacks ->  IO ( DescriptorPool )
 createDescriptorPool = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pDescriptorPool -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDescriptorPoolCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDescriptorPool commandTable device pCreateInfo pAllocator pDescriptorPool >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pDescriptorPool)))))
 
--- | Wrapper for vkCreateDescriptorSetLayout
-createDescriptorSetLayout :: Device ->  DescriptorSetLayoutCreateInfo ->  Maybe AllocationCallbacks ->  IO (DescriptorSetLayout)
+-- | Wrapper for 'vkCreateDescriptorSetLayout'
+createDescriptorSetLayout :: Device ->  DescriptorSetLayoutCreateInfo ->  Maybe AllocationCallbacks ->  IO ( DescriptorSetLayout )
 createDescriptorSetLayout = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pSetLayout -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDescriptorSetLayoutCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDescriptorSetLayout commandTable device pCreateInfo pAllocator pSetLayout >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSetLayout)))))
 
--- | Wrapper for vkDestroyDescriptorPool
+-- | Wrapper for 'vkDestroyDescriptorPool'
 destroyDescriptorPool :: Device ->  DescriptorPool ->  Maybe AllocationCallbacks ->  IO ()
 destroyDescriptorPool = \(Device device commandTable) -> \descriptorPool -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyDescriptorPool commandTable device descriptorPool pAllocator *> (pure ()))
 
--- | Wrapper for vkDestroyDescriptorSetLayout
+-- | Wrapper for 'vkDestroyDescriptorSetLayout'
 destroyDescriptorSetLayout :: Device ->  DescriptorSetLayout ->  Maybe AllocationCallbacks ->  IO ()
 destroyDescriptorSetLayout = \(Device device commandTable) -> \descriptorSetLayout -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyDescriptorSetLayout commandTable device descriptorSetLayout pAllocator *> (pure ()))
 
--- | Wrapper for vkFreeDescriptorSets
+-- | Wrapper for 'vkFreeDescriptorSets'
 freeDescriptorSets :: Device ->  DescriptorPool ->  Vector DescriptorSet ->  IO ()
 freeDescriptorSets = \(Device device commandTable) -> \descriptorPool -> \descriptorSets -> withVec (&) descriptorSets (\pDescriptorSets -> Graphics.Vulkan.C.Dynamic.freeDescriptorSets commandTable device descriptorPool (fromIntegral $ Data.Vector.length descriptorSets) pDescriptorSets >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkResetDescriptorPool
+-- | Wrapper for 'vkResetDescriptorPool'
 resetDescriptorPool :: Device ->  DescriptorPool ->  DescriptorPoolResetFlags ->  IO ()
 resetDescriptorPool = \(Device device commandTable) -> \descriptorPool -> \flags -> Graphics.Vulkan.C.Dynamic.resetDescriptorPool commandTable device descriptorPool flags >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
 
--- | Wrapper for vkUpdateDescriptorSets
+-- | Wrapper for 'vkUpdateDescriptorSets'
 updateDescriptorSets :: Device ->  Vector WriteDescriptorSet ->  Vector CopyDescriptorSet ->  IO ()
 updateDescriptorSets = \(Device device commandTable) -> \descriptorWrites -> \descriptorCopies -> withVec withCStructCopyDescriptorSet descriptorCopies (\pDescriptorCopies -> withVec withCStructWriteDescriptorSet descriptorWrites (\pDescriptorWrites -> Graphics.Vulkan.C.Dynamic.updateDescriptorSets commandTable device (fromIntegral $ Data.Vector.length descriptorWrites) pDescriptorWrites (fromIntegral $ Data.Vector.length descriptorCopies) pDescriptorCopies *> (pure ())))
+withDescriptorPool :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withDescriptorPool createInfo allocationCallbacks =
+  bracket
+    (vkCreateDescriptorPool createInfo allocationCallbacks)
+    (`vkDestroyDescriptorPool` allocationCallbacks)

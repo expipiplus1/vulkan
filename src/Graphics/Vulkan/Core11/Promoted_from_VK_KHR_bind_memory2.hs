@@ -121,10 +121,10 @@ fromCStructBindImageMemoryInfo c = BindImageMemoryInfo <$> -- Univalued Member e
                                                        <*> pure (vkMemory (c :: VkBindImageMemoryInfo))
                                                        <*> pure (vkMemoryOffset (c :: VkBindImageMemoryInfo))
 
--- | Wrapper for vkBindBufferMemory2
+-- | Wrapper for 'vkBindBufferMemory2'
 bindBufferMemory2 :: Device ->  Vector BindBufferMemoryInfo ->  IO ()
 bindBufferMemory2 = \(Device device commandTable) -> \bindInfos -> withVec withCStructBindBufferMemoryInfo bindInfos (\pBindInfos -> Graphics.Vulkan.C.Dynamic.bindBufferMemory2 commandTable device (fromIntegral $ Data.Vector.length bindInfos) pBindInfos >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkBindImageMemory2
+-- | Wrapper for 'vkBindImageMemory2'
 bindImageMemory2 :: Device ->  Vector BindImageMemoryInfo ->  IO ()
 bindImageMemory2 = \(Device device commandTable) -> \bindInfos -> withVec withCStructBindImageMemoryInfo bindInfos (\pBindInfos -> Graphics.Vulkan.C.Dynamic.bindImageMemory2 commandTable device (fromIntegral $ Data.Vector.length bindInfos) pBindInfos >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))

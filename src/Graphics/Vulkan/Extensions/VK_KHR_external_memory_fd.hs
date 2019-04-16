@@ -141,10 +141,10 @@ fromCStructMemoryGetFdInfoKHR c = MemoryGetFdInfoKHR <$> -- Univalued Member eli
                                                      <*> pure (vkMemory (c :: VkMemoryGetFdInfoKHR))
                                                      <*> pure (vkHandleType (c :: VkMemoryGetFdInfoKHR))
 
--- | Wrapper for vkGetMemoryFdKHR
+-- | Wrapper for 'vkGetMemoryFdKHR'
 getMemoryFdKHR :: Device ->  MemoryGetFdInfoKHR ->  IO (CInt)
 getMemoryFdKHR = \(Device device commandTable) -> \getFdInfo -> alloca (\pFd -> (\a -> withCStructMemoryGetFdInfoKHR a . flip with) getFdInfo (\pGetFdInfo -> Graphics.Vulkan.C.Dynamic.getMemoryFdKHR commandTable device pGetFdInfo pFd >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFd))))
 
--- | Wrapper for vkGetMemoryFdPropertiesKHR
-getMemoryFdPropertiesKHR :: Device ->  ExternalMemoryHandleTypeFlagBits ->  CInt ->  IO (MemoryFdPropertiesKHR)
+-- | Wrapper for 'vkGetMemoryFdPropertiesKHR'
+getMemoryFdPropertiesKHR :: Device ->  ExternalMemoryHandleTypeFlagBits ->  CInt ->  IO ( MemoryFdPropertiesKHR )
 getMemoryFdPropertiesKHR = \(Device device commandTable) -> \handleType -> \fd -> alloca (\pMemoryFdProperties -> Graphics.Vulkan.C.Dynamic.getMemoryFdPropertiesKHR commandTable device handleType fd pMemoryFdProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructMemoryFdPropertiesKHR <=< peek) pMemoryFdProperties)))

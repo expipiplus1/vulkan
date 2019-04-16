@@ -132,6 +132,6 @@ type SurfaceCounterFlagBitsEXT = VkSurfaceCounterFlagBitsEXT
 -- No documentation found for TopLevel "SurfaceCounterFlagsEXT"
 type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
 
--- | Wrapper for vkGetPhysicalDeviceSurfaceCapabilities2EXT
+-- | Wrapper for 'vkGetPhysicalDeviceSurfaceCapabilities2EXT'
 getPhysicalDeviceSurfaceCapabilities2EXT :: PhysicalDevice ->  SurfaceKHR ->  IO (SurfaceCapabilities2EXT)
 getPhysicalDeviceSurfaceCapabilities2EXT = \(PhysicalDevice physicalDevice commandTable) -> \surface -> alloca (\pSurfaceCapabilities -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceCapabilities2EXT commandTable physicalDevice surface pSurfaceCapabilities >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructSurfaceCapabilities2EXT <=< peek) pSurfaceCapabilities)))

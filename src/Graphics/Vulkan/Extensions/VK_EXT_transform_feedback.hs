@@ -193,26 +193,26 @@ fromCStructPipelineRasterizationStateStreamCreateInfoEXT c = PipelineRasterizati
                                                                                                            <*> pure (vkFlags (c :: VkPipelineRasterizationStateStreamCreateInfoEXT))
                                                                                                            <*> pure (vkRasterizationStream (c :: VkPipelineRasterizationStateStreamCreateInfoEXT))
 
--- | Wrapper for vkCmdBeginQueryIndexedEXT
-cmdBeginQueryIndexedEXT :: CommandBuffer ->  QueryPool ->  Word32 ->  QueryControlFlags ->  Word32 ->  IO ()
+-- | Wrapper for 'vkCmdBeginQueryIndexedEXT'
+cmdBeginQueryIndexedEXT :: CommandBuffer ->  QueryPool ->  Word32 ->  QueryControlFlags ->  Word32 ->  IO (  )
 cmdBeginQueryIndexedEXT = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \query -> \flags -> \index -> Graphics.Vulkan.C.Dynamic.cmdBeginQueryIndexedEXT commandTable commandBuffer queryPool query flags index *> (pure ())
 
--- | Wrapper for vkCmdBeginTransformFeedbackEXT
-cmdBeginTransformFeedbackEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Vector DeviceSize ->  IO ()
-cmdBeginTransformFeedbackEXT = \(CommandBuffer commandBuffer commandTable) -> \firstCounterBuffer -> \counterBuffers -> \counterBufferOffsets -> withVec (&) counterBufferOffsets (\pCounterBufferOffsets -> withVec (&) counterBuffers (\pCounterBuffers -> Graphics.Vulkan.C.Dynamic.cmdBeginTransformFeedbackEXT commandTable commandBuffer firstCounterBuffer (fromIntegral $ Data.Vector.length counterBuffers `min` Data.Vector.length counterBufferOffsets) pCounterBuffers pCounterBufferOffsets *> (pure ())))
+-- | Wrapper for 'vkCmdBeginTransformFeedbackEXT'
+cmdBeginTransformFeedbackEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Maybe (Vector DeviceSize) ->  IO (  )
+cmdBeginTransformFeedbackEXT = \(CommandBuffer commandBuffer commandTable) -> \firstCounterBuffer -> \counterBuffers -> \counterBufferOffsets -> maybeWith (withVec (&)) counterBufferOffsets (\pCounterBufferOffsets -> withVec (&) counterBuffers (\pCounterBuffers -> Graphics.Vulkan.C.Dynamic.cmdBeginTransformFeedbackEXT commandTable commandBuffer firstCounterBuffer (fromIntegral $ Data.Vector.length counterBuffers `min` maybe maxBound Data.Vector.length counterBufferOffsets) pCounterBuffers pCounterBufferOffsets *> (pure ())))
 
--- | Wrapper for vkCmdBindTransformFeedbackBuffersEXT
-cmdBindTransformFeedbackBuffersEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Vector DeviceSize ->  Vector DeviceSize ->  IO ()
-cmdBindTransformFeedbackBuffersEXT = \(CommandBuffer commandBuffer commandTable) -> \firstBinding -> \buffers -> \offsets -> \sizes -> withVec (&) sizes (\pSizes -> withVec (&) offsets (\pOffsets -> withVec (&) buffers (\pBuffers -> Graphics.Vulkan.C.Dynamic.cmdBindTransformFeedbackBuffersEXT commandTable commandBuffer firstBinding (fromIntegral $ Data.Vector.length buffers `min` Data.Vector.length offsets `min` Data.Vector.length sizes) pBuffers pOffsets pSizes *> (pure ()))))
+-- | Wrapper for 'vkCmdBindTransformFeedbackBuffersEXT'
+cmdBindTransformFeedbackBuffersEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Vector DeviceSize ->  Maybe (Vector DeviceSize) ->  IO (  )
+cmdBindTransformFeedbackBuffersEXT = \(CommandBuffer commandBuffer commandTable) -> \firstBinding -> \buffers -> \offsets -> \sizes -> maybeWith (withVec (&)) sizes (\pSizes -> withVec (&) offsets (\pOffsets -> withVec (&) buffers (\pBuffers -> Graphics.Vulkan.C.Dynamic.cmdBindTransformFeedbackBuffersEXT commandTable commandBuffer firstBinding (fromIntegral $ Data.Vector.length buffers `min` Data.Vector.length offsets `min` maybe maxBound Data.Vector.length sizes) pBuffers pOffsets pSizes *> (pure ()))))
 
--- | Wrapper for vkCmdDrawIndirectByteCountEXT
-cmdDrawIndirectByteCountEXT :: CommandBuffer ->  Word32 ->  Word32 ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
+-- | Wrapper for 'vkCmdDrawIndirectByteCountEXT'
+cmdDrawIndirectByteCountEXT :: CommandBuffer ->  Word32 ->  Word32 ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO (  )
 cmdDrawIndirectByteCountEXT = \(CommandBuffer commandBuffer commandTable) -> \instanceCount -> \firstInstance -> \counterBuffer -> \counterBufferOffset -> \counterOffset -> \vertexStride -> Graphics.Vulkan.C.Dynamic.cmdDrawIndirectByteCountEXT commandTable commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride *> (pure ())
 
--- | Wrapper for vkCmdEndQueryIndexedEXT
+-- | Wrapper for 'vkCmdEndQueryIndexedEXT'
 cmdEndQueryIndexedEXT :: CommandBuffer ->  QueryPool ->  Word32 ->  Word32 ->  IO ()
 cmdEndQueryIndexedEXT = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \query -> \index -> Graphics.Vulkan.C.Dynamic.cmdEndQueryIndexedEXT commandTable commandBuffer queryPool query index *> (pure ())
 
--- | Wrapper for vkCmdEndTransformFeedbackEXT
-cmdEndTransformFeedbackEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Vector DeviceSize ->  IO ()
-cmdEndTransformFeedbackEXT = \(CommandBuffer commandBuffer commandTable) -> \firstCounterBuffer -> \counterBuffers -> \counterBufferOffsets -> withVec (&) counterBufferOffsets (\pCounterBufferOffsets -> withVec (&) counterBuffers (\pCounterBuffers -> Graphics.Vulkan.C.Dynamic.cmdEndTransformFeedbackEXT commandTable commandBuffer firstCounterBuffer (fromIntegral $ Data.Vector.length counterBuffers `min` Data.Vector.length counterBufferOffsets) pCounterBuffers pCounterBufferOffsets *> (pure ())))
+-- | Wrapper for 'vkCmdEndTransformFeedbackEXT'
+cmdEndTransformFeedbackEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Maybe (Vector DeviceSize) ->  IO (  )
+cmdEndTransformFeedbackEXT = \(CommandBuffer commandBuffer commandTable) -> \firstCounterBuffer -> \counterBuffers -> \counterBufferOffsets -> maybeWith (withVec (&)) counterBufferOffsets (\pCounterBufferOffsets -> withVec (&) counterBuffers (\pCounterBuffers -> Graphics.Vulkan.C.Dynamic.cmdEndTransformFeedbackEXT commandTable commandBuffer firstCounterBuffer (fromIntegral $ Data.Vector.length counterBuffers `min` maybe maxBound Data.Vector.length counterBufferOffsets) pCounterBuffers pCounterBufferOffsets *> (pure ())))

@@ -35,6 +35,6 @@ import Graphics.Vulkan.Exception
 
 
 
--- | Wrapper for vkEnumerateInstanceVersion
+-- | Wrapper for 'vkEnumerateInstanceVersion'
 enumerateInstanceVersion :: IO (Word32)
 enumerateInstanceVersion = alloca (\pApiVersion -> Graphics.Vulkan.C.Dynamic.enumerateInstanceVersion pApiVersion >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pApiVersion)))

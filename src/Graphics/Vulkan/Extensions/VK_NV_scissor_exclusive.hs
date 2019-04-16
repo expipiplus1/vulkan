@@ -115,6 +115,6 @@ fromCStructPipelineViewportExclusiveScissorStateCreateInfoNV c = PipelineViewpor
                                                                                                                    -- Optional length valued member elided
                                                                                                                    <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkExclusiveScissorCount (c :: VkPipelineViewportExclusiveScissorStateCreateInfoNV))) (((fromCStructRect2D <=<) . peekElemOff) p)) (vkPExclusiveScissors (c :: VkPipelineViewportExclusiveScissorStateCreateInfoNV))
 
--- | Wrapper for vkCmdSetExclusiveScissorNV
+-- | Wrapper for 'vkCmdSetExclusiveScissorNV'
 cmdSetExclusiveScissorNV :: CommandBuffer ->  Word32 ->  Vector Rect2D ->  IO ()
 cmdSetExclusiveScissorNV = \(CommandBuffer commandBuffer commandTable) -> \firstExclusiveScissor -> \exclusiveScissors -> withVec withCStructRect2D exclusiveScissors (\pExclusiveScissors -> Graphics.Vulkan.C.Dynamic.cmdSetExclusiveScissorNV commandTable commandBuffer firstExclusiveScissor (fromIntegral $ Data.Vector.length exclusiveScissors) pExclusiveScissors *> (pure ()))

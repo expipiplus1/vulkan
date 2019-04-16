@@ -136,30 +136,30 @@ fromCStructMemoryAllocateInfo c = MemoryAllocateInfo <$> -- Univalued Member eli
 -- No documentation found for TopLevel "MemoryMapFlags"
 type MemoryMapFlags = VkMemoryMapFlags
 
--- | Wrapper for vkAllocateMemory
-allocateMemory :: Device ->  MemoryAllocateInfo ->  Maybe AllocationCallbacks ->  IO (DeviceMemory)
+-- | Wrapper for 'vkAllocateMemory'
+allocateMemory :: Device ->  MemoryAllocateInfo ->  Maybe AllocationCallbacks ->  IO ( DeviceMemory )
 allocateMemory = \(Device device commandTable) -> \allocateInfo -> \allocator -> alloca (\pMemory -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructMemoryAllocateInfo a . flip with) allocateInfo (\pAllocateInfo -> Graphics.Vulkan.C.Dynamic.allocateMemory commandTable device pAllocateInfo pAllocator pMemory >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pMemory)))))
 
--- | Wrapper for vkFlushMappedMemoryRanges
+-- | Wrapper for 'vkFlushMappedMemoryRanges'
 flushMappedMemoryRanges :: Device ->  Vector MappedMemoryRange ->  IO ()
 flushMappedMemoryRanges = \(Device device commandTable) -> \memoryRanges -> withVec withCStructMappedMemoryRange memoryRanges (\pMemoryRanges -> Graphics.Vulkan.C.Dynamic.flushMappedMemoryRanges commandTable device (fromIntegral $ Data.Vector.length memoryRanges) pMemoryRanges >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkFreeMemory
+-- | Wrapper for 'vkFreeMemory'
 freeMemory :: Device ->  DeviceMemory ->  Maybe AllocationCallbacks ->  IO ()
 freeMemory = \(Device device commandTable) -> \memory -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.freeMemory commandTable device memory pAllocator *> (pure ()))
 
--- | Wrapper for vkGetDeviceMemoryCommitment
+-- | Wrapper for 'vkGetDeviceMemoryCommitment'
 getDeviceMemoryCommitment :: Device ->  DeviceMemory ->  IO (DeviceSize)
 getDeviceMemoryCommitment = \(Device device commandTable) -> \memory -> alloca (\pCommittedMemoryInBytes -> Graphics.Vulkan.C.Dynamic.getDeviceMemoryCommitment commandTable device memory pCommittedMemoryInBytes *> (peek pCommittedMemoryInBytes))
 
--- | Wrapper for vkInvalidateMappedMemoryRanges
+-- | Wrapper for 'vkInvalidateMappedMemoryRanges'
 invalidateMappedMemoryRanges :: Device ->  Vector MappedMemoryRange ->  IO ()
 invalidateMappedMemoryRanges = \(Device device commandTable) -> \memoryRanges -> withVec withCStructMappedMemoryRange memoryRanges (\pMemoryRanges -> Graphics.Vulkan.C.Dynamic.invalidateMappedMemoryRanges commandTable device (fromIntegral $ Data.Vector.length memoryRanges) pMemoryRanges >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkMapMemory
-mapMemory :: Device ->  DeviceMemory ->  DeviceSize ->  DeviceSize ->  MemoryMapFlags ->  IO (Ptr ())
+-- | Wrapper for 'vkMapMemory'
+mapMemory :: Device ->  DeviceMemory ->  DeviceSize ->  DeviceSize ->  MemoryMapFlags ->  IO ( Ptr () )
 mapMemory = \(Device device commandTable) -> \memory -> \offset -> \size -> \flags -> alloca (\pPData -> Graphics.Vulkan.C.Dynamic.mapMemory commandTable device memory offset size flags pPData >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pPData)))
 
--- | Wrapper for vkUnmapMemory
+-- | Wrapper for 'vkUnmapMemory'
 unmapMemory :: Device ->  DeviceMemory ->  IO ()
 unmapMemory = \(Device device commandTable) -> \memory -> Graphics.Vulkan.C.Dynamic.unmapMemory commandTable device memory *> (pure ())

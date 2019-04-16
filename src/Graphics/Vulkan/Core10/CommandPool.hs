@@ -15,6 +15,7 @@ module Graphics.Vulkan.Core10.CommandPool
   , createCommandPool
   , destroyCommandPool
   , resetCommandPool
+  , withCommandPool
   ) where
 
 import Control.Exception
@@ -101,14 +102,19 @@ type CommandPoolResetFlagBits = VkCommandPoolResetFlagBits
 -- No documentation found for TopLevel "CommandPoolResetFlags"
 type CommandPoolResetFlags = CommandPoolResetFlagBits
 
--- | Wrapper for vkCreateCommandPool
-createCommandPool :: Device ->  CommandPoolCreateInfo ->  Maybe AllocationCallbacks ->  IO (CommandPool)
+-- | Wrapper for 'vkCreateCommandPool'
+createCommandPool :: Device ->  CommandPoolCreateInfo ->  Maybe AllocationCallbacks ->  IO ( CommandPool )
 createCommandPool = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pCommandPool -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructCommandPoolCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createCommandPool commandTable device pCreateInfo pAllocator pCommandPool >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pCommandPool)))))
 
--- | Wrapper for vkDestroyCommandPool
+-- | Wrapper for 'vkDestroyCommandPool'
 destroyCommandPool :: Device ->  CommandPool ->  Maybe AllocationCallbacks ->  IO ()
 destroyCommandPool = \(Device device commandTable) -> \commandPool -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyCommandPool commandTable device commandPool pAllocator *> (pure ()))
 
--- | Wrapper for vkResetCommandPool
+-- | Wrapper for 'vkResetCommandPool'
 resetCommandPool :: Device ->  CommandPool ->  CommandPoolResetFlags ->  IO ()
 resetCommandPool = \(Device device commandTable) -> \commandPool -> \flags -> Graphics.Vulkan.C.Dynamic.resetCommandPool commandTable device commandPool flags >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
+withCommandPool :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withCommandPool createInfo allocationCallbacks =
+  bracket
+    (vkCreateCommandPool createInfo allocationCallbacks)
+    (`vkDestroyCommandPool` allocationCallbacks)

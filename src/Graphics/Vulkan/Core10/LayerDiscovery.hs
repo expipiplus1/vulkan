@@ -101,11 +101,11 @@ fromCStructLayerProperties c = LayerProperties <$> Data.Vector.Storable.unsafeWi
                                                <*> pure (vkImplementationVersion (c :: VkLayerProperties))
                                                <*> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkDescription (c :: VkLayerProperties))) packCString
 
--- | Wrapper for vkEnumerateDeviceLayerProperties
+-- | Wrapper for 'vkEnumerateDeviceLayerProperties'
 getNumDeviceLayerProperties :: PhysicalDevice ->  IO (VkResult, Word32)
 getNumDeviceLayerProperties = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.enumerateDeviceLayerProperties commandTable physicalDevice pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
--- | Wrapper for vkEnumerateDeviceLayerProperties
+-- | Wrapper for 'vkEnumerateDeviceLayerProperties'
 enumerateDeviceLayerProperties :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector LayerProperties)
 enumerateDeviceLayerProperties = \(PhysicalDevice physicalDevice commandTable) -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.enumerateDeviceLayerProperties commandTable physicalDevice pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructLayerProperties <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumDeviceLayerProperties' to get the number of return values, then use that
@@ -116,11 +116,11 @@ enumerateAllDeviceLayerProperties physicalDevice =
     >>= \num -> snd <$> enumerateDeviceLayerProperties physicalDevice num
 
 
--- | Wrapper for vkEnumerateInstanceLayerProperties
+-- | Wrapper for 'vkEnumerateInstanceLayerProperties'
 getNumInstanceLayerProperties :: IO (VkResult, Word32)
 getNumInstanceLayerProperties = alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.enumerateInstanceLayerProperties pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
--- | Wrapper for vkEnumerateInstanceLayerProperties
+-- | Wrapper for 'vkEnumerateInstanceLayerProperties'
 enumerateInstanceLayerProperties :: Word32 ->  IO (VkResult, Vector LayerProperties)
 enumerateInstanceLayerProperties = \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.enumerateInstanceLayerProperties pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructLayerProperties <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumInstanceLayerProperties' to get the number of return values, then use that

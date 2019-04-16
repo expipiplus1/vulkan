@@ -171,14 +171,14 @@ fromCStructPhysicalDeviceMeshShaderPropertiesNV c = PhysicalDeviceMeshShaderProp
                                                                                          <*> pure (vkMeshOutputPerVertexGranularity (c :: VkPhysicalDeviceMeshShaderPropertiesNV))
                                                                                          <*> pure (vkMeshOutputPerPrimitiveGranularity (c :: VkPhysicalDeviceMeshShaderPropertiesNV))
 
--- | Wrapper for vkCmdDrawMeshTasksIndirectCountNV
-cmdDrawMeshTasksIndirectCountNV :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
+-- | Wrapper for 'vkCmdDrawMeshTasksIndirectCountNV'
+cmdDrawMeshTasksIndirectCountNV :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO (  )
 cmdDrawMeshTasksIndirectCountNV = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \countBuffer -> \countBufferOffset -> \maxDrawCount -> \stride -> Graphics.Vulkan.C.Dynamic.cmdDrawMeshTasksIndirectCountNV commandTable commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride *> (pure ())
 
--- | Wrapper for vkCmdDrawMeshTasksIndirectNV
+-- | Wrapper for 'vkCmdDrawMeshTasksIndirectNV'
 cmdDrawMeshTasksIndirectNV :: CommandBuffer ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
 cmdDrawMeshTasksIndirectNV = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \drawCount -> \stride -> Graphics.Vulkan.C.Dynamic.cmdDrawMeshTasksIndirectNV commandTable commandBuffer buffer offset drawCount stride *> (pure ())
 
--- | Wrapper for vkCmdDrawMeshTasksNV
+-- | Wrapper for 'vkCmdDrawMeshTasksNV'
 cmdDrawMeshTasksNV :: CommandBuffer ->  Word32 ->  Word32 ->  IO ()
 cmdDrawMeshTasksNV = \(CommandBuffer commandBuffer commandTable) -> \taskCount -> \firstTask -> Graphics.Vulkan.C.Dynamic.cmdDrawMeshTasksNV commandTable commandBuffer taskCount firstTask *> (pure ())

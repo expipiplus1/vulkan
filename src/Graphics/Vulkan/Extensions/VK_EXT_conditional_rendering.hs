@@ -136,10 +136,10 @@ fromCStructPhysicalDeviceConditionalRenderingFeaturesEXT c = PhysicalDeviceCondi
                                                                                                            <*> pure (bool32ToBool (vkConditionalRendering (c :: VkPhysicalDeviceConditionalRenderingFeaturesEXT)))
                                                                                                            <*> pure (bool32ToBool (vkInheritedConditionalRendering (c :: VkPhysicalDeviceConditionalRenderingFeaturesEXT)))
 
--- | Wrapper for vkCmdBeginConditionalRenderingEXT
+-- | Wrapper for 'vkCmdBeginConditionalRenderingEXT'
 cmdBeginConditionalRenderingEXT :: CommandBuffer ->  ConditionalRenderingBeginInfoEXT ->  IO ()
 cmdBeginConditionalRenderingEXT = \(CommandBuffer commandBuffer commandTable) -> \conditionalRenderingBegin -> (\a -> withCStructConditionalRenderingBeginInfoEXT a . flip with) conditionalRenderingBegin (\pConditionalRenderingBegin -> Graphics.Vulkan.C.Dynamic.cmdBeginConditionalRenderingEXT commandTable commandBuffer pConditionalRenderingBegin *> (pure ()))
 
--- | Wrapper for vkCmdEndConditionalRenderingEXT
+-- | Wrapper for 'vkCmdEndConditionalRenderingEXT'
 cmdEndConditionalRenderingEXT :: CommandBuffer ->  IO ()
 cmdEndConditionalRenderingEXT = \(CommandBuffer commandBuffer commandTable) -> Graphics.Vulkan.C.Dynamic.cmdEndConditionalRenderingEXT commandTable commandBuffer *> (pure ())

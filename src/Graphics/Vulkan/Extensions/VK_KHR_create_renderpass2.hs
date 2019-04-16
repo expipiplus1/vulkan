@@ -335,7 +335,7 @@ data SubpassDescription2KHR = SubpassDescription2KHR
   }
   deriving (Show, Eq)
 withCStructSubpassDescription2KHR :: SubpassDescription2KHR -> (VkSubpassDescription2KHR -> IO a) -> IO a
-withCStructSubpassDescription2KHR from cont = withVec (&) (vkPPreserveAttachments (from :: SubpassDescription2KHR)) (\pPreserveAttachments -> maybeWith (\a -> withCStructAttachmentReference2KHR a . flip with) (vkPDepthStencilAttachment (from :: SubpassDescription2KHR)) (\pDepthStencilAttachment -> maybeWith (withVec withCStructAttachmentReference2KHR) (vkPResolveAttachments (from :: SubpassDescription2KHR)) (\pResolveAttachments -> withVec withCStructAttachmentReference2KHR (vkPColorAttachments (from :: SubpassDescription2KHR)) (\pColorAttachments -> withVec withCStructAttachmentReference2KHR (vkPInputAttachments (from :: SubpassDescription2KHR)) (\pInputAttachments -> maybeWith withSomeVkStruct (vkPNext (from :: SubpassDescription2KHR)) (\pPNext -> cont (VkSubpassDescription2KHR VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR pPNext (vkFlags (from :: SubpassDescription2KHR)) (vkPipelineBindPoint (from :: SubpassDescription2KHR)) (vkViewMask (from :: SubpassDescription2KHR)) (fromIntegral (Data.Vector.length (vkPInputAttachments (from :: SubpassDescription2KHR)))) pInputAttachments (fromIntegral (minimum ([Data.Vector.length (vkPColorAttachments (from :: SubpassDescription2KHR))] ++ [Data.Vector.length v | Just v <- [(vkPResolveAttachments (from :: SubpassDescription2KHR))]]))) pColorAttachments pResolveAttachments pDepthStencilAttachment (fromIntegral (Data.Vector.length (vkPPreserveAttachments (from :: SubpassDescription2KHR)))) pPreserveAttachments)))))))
+withCStructSubpassDescription2KHR from cont = withVec (&) (vkPPreserveAttachments (from :: SubpassDescription2KHR)) (\pPreserveAttachments -> maybeWith (\a -> withCStructAttachmentReference2KHR a . flip with) (vkPDepthStencilAttachment (from :: SubpassDescription2KHR)) (\pDepthStencilAttachment -> maybeWith (withVec withCStructAttachmentReference2KHR) (vkPResolveAttachments (from :: SubpassDescription2KHR)) (\pResolveAttachments -> withVec withCStructAttachmentReference2KHR (vkPColorAttachments (from :: SubpassDescription2KHR)) (\pColorAttachments -> withVec withCStructAttachmentReference2KHR (vkPInputAttachments (from :: SubpassDescription2KHR)) (\pInputAttachments -> maybeWith withSomeVkStruct (vkPNext (from :: SubpassDescription2KHR)) (\pPNext -> cont (VkSubpassDescription2KHR VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR pPNext (vkFlags (from :: SubpassDescription2KHR)) (vkPipelineBindPoint (from :: SubpassDescription2KHR)) (vkViewMask (from :: SubpassDescription2KHR)) (fromIntegral (Data.Vector.length (vkPInputAttachments (from :: SubpassDescription2KHR)))) pInputAttachments (fromIntegral (minimum ([ Data.Vector.length (vkPColorAttachments (from :: SubpassDescription2KHR)) ] ++ [Data.Vector.length v | Just v <- [ (vkPResolveAttachments (from :: SubpassDescription2KHR)) ]]))) pColorAttachments pResolveAttachments pDepthStencilAttachment (fromIntegral (Data.Vector.length (vkPPreserveAttachments (from :: SubpassDescription2KHR)))) pPreserveAttachments)))))))
 fromCStructSubpassDescription2KHR :: VkSubpassDescription2KHR -> IO SubpassDescription2KHR
 fromCStructSubpassDescription2KHR c = SubpassDescription2KHR <$> -- Univalued Member elided
                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSubpassDescription2KHR)))
@@ -363,18 +363,18 @@ fromCStructSubpassEndInfoKHR :: VkSubpassEndInfoKHR -> IO SubpassEndInfoKHR
 fromCStructSubpassEndInfoKHR c = SubpassEndInfoKHR <$> -- Univalued Member elided
                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSubpassEndInfoKHR)))
 
--- | Wrapper for vkCmdBeginRenderPass2KHR
+-- | Wrapper for 'vkCmdBeginRenderPass2KHR'
 cmdBeginRenderPass2KHR :: CommandBuffer ->  RenderPassBeginInfo ->  SubpassBeginInfoKHR ->  IO ()
 cmdBeginRenderPass2KHR = \(CommandBuffer commandBuffer commandTable) -> \renderPassBegin -> \subpassBeginInfo -> (\a -> withCStructSubpassBeginInfoKHR a . flip with) subpassBeginInfo (\pSubpassBeginInfo -> (\a -> withCStructRenderPassBeginInfo a . flip with) renderPassBegin (\pRenderPassBegin -> Graphics.Vulkan.C.Dynamic.cmdBeginRenderPass2KHR commandTable commandBuffer pRenderPassBegin pSubpassBeginInfo *> (pure ())))
 
--- | Wrapper for vkCmdEndRenderPass2KHR
+-- | Wrapper for 'vkCmdEndRenderPass2KHR'
 cmdEndRenderPass2KHR :: CommandBuffer ->  SubpassEndInfoKHR ->  IO ()
 cmdEndRenderPass2KHR = \(CommandBuffer commandBuffer commandTable) -> \subpassEndInfo -> (\a -> withCStructSubpassEndInfoKHR a . flip with) subpassEndInfo (\pSubpassEndInfo -> Graphics.Vulkan.C.Dynamic.cmdEndRenderPass2KHR commandTable commandBuffer pSubpassEndInfo *> (pure ()))
 
--- | Wrapper for vkCmdNextSubpass2KHR
+-- | Wrapper for 'vkCmdNextSubpass2KHR'
 cmdNextSubpass2KHR :: CommandBuffer ->  SubpassBeginInfoKHR ->  SubpassEndInfoKHR ->  IO ()
 cmdNextSubpass2KHR = \(CommandBuffer commandBuffer commandTable) -> \subpassBeginInfo -> \subpassEndInfo -> (\a -> withCStructSubpassEndInfoKHR a . flip with) subpassEndInfo (\pSubpassEndInfo -> (\a -> withCStructSubpassBeginInfoKHR a . flip with) subpassBeginInfo (\pSubpassBeginInfo -> Graphics.Vulkan.C.Dynamic.cmdNextSubpass2KHR commandTable commandBuffer pSubpassBeginInfo pSubpassEndInfo *> (pure ())))
 
--- | Wrapper for vkCreateRenderPass2KHR
-createRenderPass2KHR :: Device ->  RenderPassCreateInfo2KHR ->  Maybe AllocationCallbacks ->  IO (RenderPass)
+-- | Wrapper for 'vkCreateRenderPass2KHR'
+createRenderPass2KHR :: Device ->  RenderPassCreateInfo2KHR ->  Maybe AllocationCallbacks ->  IO ( RenderPass )
 createRenderPass2KHR = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pRenderPass -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructRenderPassCreateInfo2KHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createRenderPass2KHR commandTable device pCreateInfo pAllocator pRenderPass >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pRenderPass)))))

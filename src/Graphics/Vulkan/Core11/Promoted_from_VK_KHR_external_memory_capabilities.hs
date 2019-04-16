@@ -240,6 +240,6 @@ fromCStructPhysicalDeviceIDProperties c = PhysicalDeviceIDProperties <$> -- Univ
                                                                      <*> pure (vkDeviceNodeMask (c :: VkPhysicalDeviceIDProperties))
                                                                      <*> pure (bool32ToBool (vkDeviceLUIDValid (c :: VkPhysicalDeviceIDProperties)))
 
--- | Wrapper for vkGetPhysicalDeviceExternalBufferProperties
-getPhysicalDeviceExternalBufferProperties :: PhysicalDevice ->  PhysicalDeviceExternalBufferInfo ->  IO (ExternalBufferProperties)
+-- | Wrapper for 'vkGetPhysicalDeviceExternalBufferProperties'
+getPhysicalDeviceExternalBufferProperties :: PhysicalDevice ->  PhysicalDeviceExternalBufferInfo ->  IO ( ExternalBufferProperties )
 getPhysicalDeviceExternalBufferProperties = \(PhysicalDevice physicalDevice commandTable) -> \externalBufferInfo -> alloca (\pExternalBufferProperties -> (\a -> withCStructPhysicalDeviceExternalBufferInfo a . flip with) externalBufferInfo (\pExternalBufferInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceExternalBufferProperties commandTable physicalDevice pExternalBufferInfo pExternalBufferProperties *> ((fromCStructExternalBufferProperties <=< peek) pExternalBufferProperties)))

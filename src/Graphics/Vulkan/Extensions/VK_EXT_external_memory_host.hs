@@ -141,6 +141,6 @@ fromCStructPhysicalDeviceExternalMemoryHostPropertiesEXT c = PhysicalDeviceExter
                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT)))
                                                                                                            <*> pure (vkMinImportedHostPointerAlignment (c :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
 
--- | Wrapper for vkGetMemoryHostPointerPropertiesEXT
-getMemoryHostPointerPropertiesEXT :: Device ->  ExternalMemoryHandleTypeFlagBits ->  Ptr () ->  IO (MemoryHostPointerPropertiesEXT)
+-- | Wrapper for 'vkGetMemoryHostPointerPropertiesEXT'
+getMemoryHostPointerPropertiesEXT :: Device ->  ExternalMemoryHandleTypeFlagBits ->  Ptr () ->  IO ( MemoryHostPointerPropertiesEXT )
 getMemoryHostPointerPropertiesEXT = \(Device device commandTable) -> \handleType -> \pHostPointer -> alloca (\pMemoryHostPointerProperties -> Graphics.Vulkan.C.Dynamic.getMemoryHostPointerPropertiesEXT commandTable device handleType pHostPointer pMemoryHostPointerProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructMemoryHostPointerPropertiesEXT <=< peek) pMemoryHostPointerProperties)))

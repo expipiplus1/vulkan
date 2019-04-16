@@ -87,5 +87,5 @@ type ExternalSemaphorePropertiesKHR = ExternalSemaphoreProperties
 -- TODO: Pattern constructor alias)
 type PhysicalDeviceExternalSemaphoreInfoKHR = PhysicalDeviceExternalSemaphoreInfo
 -- TODO: Pattern constructor alias)
-getPhysicalDeviceExternalSemaphorePropertiesKHR :: PhysicalDevice ->  PhysicalDeviceExternalSemaphoreInfo ->  IO (ExternalSemaphoreProperties)
+getPhysicalDeviceExternalSemaphorePropertiesKHR :: PhysicalDevice ->  PhysicalDeviceExternalSemaphoreInfo ->  IO ( ExternalSemaphoreProperties )
 getPhysicalDeviceExternalSemaphorePropertiesKHR = getPhysicalDeviceExternalSemaphoreProperties

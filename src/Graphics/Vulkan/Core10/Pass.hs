@@ -41,6 +41,7 @@ module Graphics.Vulkan.Core10.Pass
   , destroyFramebuffer
   , destroyRenderPass
   , getRenderAreaGranularity
+  , withFramebuffer
   ) where
 
 import Control.Exception
@@ -332,7 +333,7 @@ data SubpassDescription = SubpassDescription
   }
   deriving (Show, Eq)
 withCStructSubpassDescription :: SubpassDescription -> (VkSubpassDescription -> IO a) -> IO a
-withCStructSubpassDescription from cont = withVec (&) (vkPPreserveAttachments (from :: SubpassDescription)) (\pPreserveAttachments -> maybeWith (\a -> withCStructAttachmentReference a . flip with) (vkPDepthStencilAttachment (from :: SubpassDescription)) (\pDepthStencilAttachment -> maybeWith (withVec withCStructAttachmentReference) (vkPResolveAttachments (from :: SubpassDescription)) (\pResolveAttachments -> withVec withCStructAttachmentReference (vkPColorAttachments (from :: SubpassDescription)) (\pColorAttachments -> withVec withCStructAttachmentReference (vkPInputAttachments (from :: SubpassDescription)) (\pInputAttachments -> cont (VkSubpassDescription (vkFlags (from :: SubpassDescription)) (vkPipelineBindPoint (from :: SubpassDescription)) (fromIntegral (Data.Vector.length (vkPInputAttachments (from :: SubpassDescription)))) pInputAttachments (fromIntegral (minimum ([Data.Vector.length (vkPColorAttachments (from :: SubpassDescription))] ++ [Data.Vector.length v | Just v <- [(vkPResolveAttachments (from :: SubpassDescription))]]))) pColorAttachments pResolveAttachments pDepthStencilAttachment (fromIntegral (Data.Vector.length (vkPPreserveAttachments (from :: SubpassDescription)))) pPreserveAttachments))))))
+withCStructSubpassDescription from cont = withVec (&) (vkPPreserveAttachments (from :: SubpassDescription)) (\pPreserveAttachments -> maybeWith (\a -> withCStructAttachmentReference a . flip with) (vkPDepthStencilAttachment (from :: SubpassDescription)) (\pDepthStencilAttachment -> maybeWith (withVec withCStructAttachmentReference) (vkPResolveAttachments (from :: SubpassDescription)) (\pResolveAttachments -> withVec withCStructAttachmentReference (vkPColorAttachments (from :: SubpassDescription)) (\pColorAttachments -> withVec withCStructAttachmentReference (vkPInputAttachments (from :: SubpassDescription)) (\pInputAttachments -> cont (VkSubpassDescription (vkFlags (from :: SubpassDescription)) (vkPipelineBindPoint (from :: SubpassDescription)) (fromIntegral (Data.Vector.length (vkPInputAttachments (from :: SubpassDescription)))) pInputAttachments (fromIntegral (minimum ([ Data.Vector.length (vkPColorAttachments (from :: SubpassDescription)) ] ++ [Data.Vector.length v | Just v <- [ (vkPResolveAttachments (from :: SubpassDescription)) ]]))) pColorAttachments pResolveAttachments pDepthStencilAttachment (fromIntegral (Data.Vector.length (vkPPreserveAttachments (from :: SubpassDescription)))) pPreserveAttachments))))))
 fromCStructSubpassDescription :: VkSubpassDescription -> IO SubpassDescription
 fromCStructSubpassDescription c = SubpassDescription <$> pure (vkFlags (c :: VkSubpassDescription))
                                                      <*> pure (vkPipelineBindPoint (c :: VkSubpassDescription))
@@ -349,22 +350,27 @@ type SubpassDescriptionFlagBits = VkSubpassDescriptionFlagBits
 -- No documentation found for TopLevel "SubpassDescriptionFlags"
 type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 
--- | Wrapper for vkCreateFramebuffer
-createFramebuffer :: Device ->  FramebufferCreateInfo ->  Maybe AllocationCallbacks ->  IO (Framebuffer)
+-- | Wrapper for 'vkCreateFramebuffer'
+createFramebuffer :: Device ->  FramebufferCreateInfo ->  Maybe AllocationCallbacks ->  IO ( Framebuffer )
 createFramebuffer = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pFramebuffer -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructFramebufferCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createFramebuffer commandTable device pCreateInfo pAllocator pFramebuffer >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFramebuffer)))))
 
--- | Wrapper for vkCreateRenderPass
-createRenderPass :: Device ->  RenderPassCreateInfo ->  Maybe AllocationCallbacks ->  IO (RenderPass)
+-- | Wrapper for 'vkCreateRenderPass'
+createRenderPass :: Device ->  RenderPassCreateInfo ->  Maybe AllocationCallbacks ->  IO ( RenderPass )
 createRenderPass = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pRenderPass -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructRenderPassCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createRenderPass commandTable device pCreateInfo pAllocator pRenderPass >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pRenderPass)))))
 
--- | Wrapper for vkDestroyFramebuffer
+-- | Wrapper for 'vkDestroyFramebuffer'
 destroyFramebuffer :: Device ->  Framebuffer ->  Maybe AllocationCallbacks ->  IO ()
 destroyFramebuffer = \(Device device commandTable) -> \framebuffer -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyFramebuffer commandTable device framebuffer pAllocator *> (pure ()))
 
--- | Wrapper for vkDestroyRenderPass
+-- | Wrapper for 'vkDestroyRenderPass'
 destroyRenderPass :: Device ->  RenderPass ->  Maybe AllocationCallbacks ->  IO ()
 destroyRenderPass = \(Device device commandTable) -> \renderPass -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyRenderPass commandTable device renderPass pAllocator *> (pure ()))
 
--- | Wrapper for vkGetRenderAreaGranularity
+-- | Wrapper for 'vkGetRenderAreaGranularity'
 getRenderAreaGranularity :: Device ->  RenderPass ->  IO (Extent2D)
 getRenderAreaGranularity = \(Device device commandTable) -> \renderPass -> alloca (\pGranularity -> Graphics.Vulkan.C.Dynamic.getRenderAreaGranularity commandTable device renderPass pGranularity *> ((fromCStructExtent2D <=< peek) pGranularity))
+withFramebuffer :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withFramebuffer createInfo allocationCallbacks =
+  bracket
+    (vkCreateFramebuffer createInfo allocationCallbacks)
+    (`vkDestroyFramebuffer` allocationCallbacks)

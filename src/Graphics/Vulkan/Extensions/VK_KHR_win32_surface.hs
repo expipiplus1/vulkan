@@ -102,10 +102,10 @@ fromCStructWin32SurfaceCreateInfoKHR c = Win32SurfaceCreateInfoKHR <$> -- Unival
                                                                    <*> pure (vkHinstance (c :: VkWin32SurfaceCreateInfoKHR))
                                                                    <*> pure (vkHwnd (c :: VkWin32SurfaceCreateInfoKHR))
 
--- | Wrapper for vkCreateWin32SurfaceKHR
-createWin32SurfaceKHR :: Instance ->  Win32SurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
+-- | Wrapper for 'vkCreateWin32SurfaceKHR'
+createWin32SurfaceKHR :: Instance ->  Win32SurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
 createWin32SurfaceKHR = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructWin32SurfaceCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createWin32SurfaceKHR commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))
 
--- | Wrapper for vkGetPhysicalDeviceWin32PresentationSupportKHR
+-- | Wrapper for 'vkGetPhysicalDeviceWin32PresentationSupportKHR'
 getPhysicalDeviceWin32PresentationSupportKHR :: PhysicalDevice ->  Word32 ->  IO (VkBool32)
 getPhysicalDeviceWin32PresentationSupportKHR = \(PhysicalDevice physicalDevice commandTable) -> \queueFamilyIndex -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceWin32PresentationSupportKHR commandTable physicalDevice queueFamilyIndex >>= (\r -> pure r)

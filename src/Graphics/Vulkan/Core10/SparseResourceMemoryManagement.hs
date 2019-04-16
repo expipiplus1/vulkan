@@ -369,11 +369,11 @@ type SparseMemoryBindFlagBits = VkSparseMemoryBindFlagBits
 -- No documentation found for TopLevel "SparseMemoryBindFlags"
 type SparseMemoryBindFlags = SparseMemoryBindFlagBits
 
--- | Wrapper for vkGetImageSparseMemoryRequirements
+-- | Wrapper for 'vkGetImageSparseMemoryRequirements'
 getNumImageSparseMemoryRequirements :: Device ->  Image ->  IO (Word32)
 getNumImageSparseMemoryRequirements = \(Device device commandTable) -> \image -> alloca (\pSparseMemoryRequirementCount -> Graphics.Vulkan.C.Dynamic.getImageSparseMemoryRequirements commandTable device image pSparseMemoryRequirementCount nullPtr *> (peek pSparseMemoryRequirementCount))
 
--- | Wrapper for vkGetImageSparseMemoryRequirements
+-- | Wrapper for 'vkGetImageSparseMemoryRequirements'
 getImageSparseMemoryRequirements :: Device ->  Image ->  Word32 ->  IO (Vector SparseImageMemoryRequirements)
 getImageSparseMemoryRequirements = \(Device device commandTable) -> \image -> \sparseMemoryRequirementCount -> allocaArray (fromIntegral sparseMemoryRequirementCount) (\pSparseMemoryRequirements -> with sparseMemoryRequirementCount (\pSparseMemoryRequirementCount -> Graphics.Vulkan.C.Dynamic.getImageSparseMemoryRequirements commandTable device image pSparseMemoryRequirementCount pSparseMemoryRequirements *> ((flip Data.Vector.generateM ((\p -> fromCStructSparseImageMemoryRequirements <=< peekElemOff p) pSparseMemoryRequirements) =<< (fromIntegral <$> (peek pSparseMemoryRequirementCount))))))
 -- | Call 'getNumImageSparseMemoryRequirements' to get the number of return values, then use that
@@ -384,12 +384,12 @@ getAllImageSparseMemoryRequirements device image =
     >>= \num -> getImageSparseMemoryRequirements device image num
 
 
--- | Wrapper for vkGetPhysicalDeviceSparseImageFormatProperties
-getNumPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  SampleCountFlagBits ->  ImageUsageFlags ->  ImageTiling ->  IO (Word32)
+-- | Wrapper for 'vkGetPhysicalDeviceSparseImageFormatProperties'
+getNumPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  SampleCountFlagBits ->  ImageUsageFlags ->  ImageTiling ->  IO ( Word32 )
 getNumPhysicalDeviceSparseImageFormatProperties = \(PhysicalDevice physicalDevice commandTable) -> \format -> \type' -> \samples -> \usage -> \tiling -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSparseImageFormatProperties commandTable physicalDevice format type' samples usage tiling pPropertyCount nullPtr *> (peek pPropertyCount))
 
--- | Wrapper for vkGetPhysicalDeviceSparseImageFormatProperties
-getPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  SampleCountFlagBits ->  ImageUsageFlags ->  ImageTiling ->  Word32 ->  IO (Vector SparseImageFormatProperties)
+-- | Wrapper for 'vkGetPhysicalDeviceSparseImageFormatProperties'
+getPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  SampleCountFlagBits ->  ImageUsageFlags ->  ImageTiling ->  Word32 ->  IO ( Vector SparseImageFormatProperties )
 getPhysicalDeviceSparseImageFormatProperties = \(PhysicalDevice physicalDevice commandTable) -> \format -> \type' -> \samples -> \usage -> \tiling -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSparseImageFormatProperties commandTable physicalDevice format type' samples usage tiling pPropertyCount pProperties *> ((flip Data.Vector.generateM ((\p -> fromCStructSparseImageFormatProperties <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount))))))
 -- | Call 'getNumPhysicalDeviceSparseImageFormatProperties' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSparseImageFormatProperties' to get all the values.
@@ -399,6 +399,6 @@ getAllPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samp
     >>= \num -> getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling num
 
 
--- | Wrapper for vkQueueBindSparse
+-- | Wrapper for 'vkQueueBindSparse'
 queueBindSparse :: Queue ->  Vector BindSparseInfo ->  Fence ->  IO ()
 queueBindSparse = \(Queue queue commandTable) -> \bindInfo -> \fence -> withVec withCStructBindSparseInfo bindInfo (\pBindInfo -> Graphics.Vulkan.C.Dynamic.queueBindSparse commandTable queue (fromIntegral $ Data.Vector.length bindInfo) pBindInfo fence >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))

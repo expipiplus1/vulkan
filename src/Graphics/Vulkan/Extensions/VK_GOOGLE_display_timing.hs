@@ -168,12 +168,13 @@ withCStructRefreshCycleDurationGOOGLE from cont = cont (VkRefreshCycleDurationGO
 fromCStructRefreshCycleDurationGOOGLE :: VkRefreshCycleDurationGOOGLE -> IO RefreshCycleDurationGOOGLE
 fromCStructRefreshCycleDurationGOOGLE c = RefreshCycleDurationGOOGLE <$> pure (vkRefreshDuration (c :: VkRefreshCycleDurationGOOGLE))
 
--- | Wrapper for vkGetPastPresentationTimingGOOGLE
+-- | Wrapper for 'vkGetPastPresentationTimingGOOGLE'
 getNumPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  IO (VkResult, Word32)
 getNumPastPresentationTimingGOOGLE = \(Device device commandTable) -> \swapchain -> alloca (\pPresentationTimingCount -> Graphics.Vulkan.C.Dynamic.getPastPresentationTimingGOOGLE commandTable device swapchain pPresentationTimingCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPresentationTimingCount)))
 
--- | Wrapper for vkGetPastPresentationTimingGOOGLE
-getPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  Word32 ->  IO (VkResult, Vector PastPresentationTimingGOOGLE)
+-- | Wrapper for 'vkGetPastPresentationTimingGOOGLE'
+getPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  Word32 ->  IO ( VkResult
+, Vector PastPresentationTimingGOOGLE )
 getPastPresentationTimingGOOGLE = \(Device device commandTable) -> \swapchain -> \presentationTimingCount -> allocaArray (fromIntegral presentationTimingCount) (\pPresentationTimings -> with presentationTimingCount (\pPresentationTimingCount -> Graphics.Vulkan.C.Dynamic.getPastPresentationTimingGOOGLE commandTable device swapchain pPresentationTimingCount pPresentationTimings >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructPastPresentationTimingGOOGLE <=< peekElemOff p) pPresentationTimings) =<< (fromIntegral <$> (peek pPresentationTimingCount)))))))
 -- | Call 'getNumPastPresentationTimingGOOGLE' to get the number of return values, then use that
 -- number to call 'getPastPresentationTimingGOOGLE' to get all the values.
@@ -183,6 +184,6 @@ getAllPastPresentationTimingGOOGLE device swapchain =
     >>= \num -> snd <$> getPastPresentationTimingGOOGLE device swapchain num
 
 
--- | Wrapper for vkGetRefreshCycleDurationGOOGLE
+-- | Wrapper for 'vkGetRefreshCycleDurationGOOGLE'
 getRefreshCycleDurationGOOGLE :: Device ->  SwapchainKHR ->  IO (RefreshCycleDurationGOOGLE)
 getRefreshCycleDurationGOOGLE = \(Device device commandTable) -> \swapchain -> alloca (\pDisplayTimingProperties -> Graphics.Vulkan.C.Dynamic.getRefreshCycleDurationGOOGLE commandTable device swapchain pDisplayTimingProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructRefreshCycleDurationGOOGLE <=< peek) pDisplayTimingProperties)))

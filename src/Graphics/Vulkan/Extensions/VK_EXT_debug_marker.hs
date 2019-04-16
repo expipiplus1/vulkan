@@ -176,22 +176,22 @@ fromCStructDebugMarkerObjectTagInfoEXT c = DebugMarkerObjectTagInfoEXT <$> -- Un
                                                                        -- Bytestring length valued member elided
                                                                        <*> packCStringLen (castPtr (vkPTag (c :: VkDebugMarkerObjectTagInfoEXT)), fromIntegral (vkTagSize (c :: VkDebugMarkerObjectTagInfoEXT)))
 
--- | Wrapper for vkCmdDebugMarkerBeginEXT
+-- | Wrapper for 'vkCmdDebugMarkerBeginEXT'
 cmdDebugMarkerBeginEXT :: CommandBuffer ->  DebugMarkerMarkerInfoEXT ->  IO ()
 cmdDebugMarkerBeginEXT = \(CommandBuffer commandBuffer commandTable) -> \markerInfo -> (\a -> withCStructDebugMarkerMarkerInfoEXT a . flip with) markerInfo (\pMarkerInfo -> Graphics.Vulkan.C.Dynamic.cmdDebugMarkerBeginEXT commandTable commandBuffer pMarkerInfo *> (pure ()))
 
--- | Wrapper for vkCmdDebugMarkerEndEXT
+-- | Wrapper for 'vkCmdDebugMarkerEndEXT'
 cmdDebugMarkerEndEXT :: CommandBuffer ->  IO ()
 cmdDebugMarkerEndEXT = \(CommandBuffer commandBuffer commandTable) -> Graphics.Vulkan.C.Dynamic.cmdDebugMarkerEndEXT commandTable commandBuffer *> (pure ())
 
--- | Wrapper for vkCmdDebugMarkerInsertEXT
+-- | Wrapper for 'vkCmdDebugMarkerInsertEXT'
 cmdDebugMarkerInsertEXT :: CommandBuffer ->  DebugMarkerMarkerInfoEXT ->  IO ()
 cmdDebugMarkerInsertEXT = \(CommandBuffer commandBuffer commandTable) -> \markerInfo -> (\a -> withCStructDebugMarkerMarkerInfoEXT a . flip with) markerInfo (\pMarkerInfo -> Graphics.Vulkan.C.Dynamic.cmdDebugMarkerInsertEXT commandTable commandBuffer pMarkerInfo *> (pure ()))
 
--- | Wrapper for vkDebugMarkerSetObjectNameEXT
+-- | Wrapper for 'vkDebugMarkerSetObjectNameEXT'
 debugMarkerSetObjectNameEXT :: Device ->  DebugMarkerObjectNameInfoEXT ->  IO ()
 debugMarkerSetObjectNameEXT = \(Device device commandTable) -> \nameInfo -> (\a -> withCStructDebugMarkerObjectNameInfoEXT a . flip with) nameInfo (\pNameInfo -> Graphics.Vulkan.C.Dynamic.debugMarkerSetObjectNameEXT commandTable device pNameInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkDebugMarkerSetObjectTagEXT
+-- | Wrapper for 'vkDebugMarkerSetObjectTagEXT'
 debugMarkerSetObjectTagEXT :: Device ->  DebugMarkerObjectTagInfoEXT ->  IO ()
 debugMarkerSetObjectTagEXT = \(Device device commandTable) -> \tagInfo -> (\a -> withCStructDebugMarkerObjectTagInfoEXT a . flip with) tagInfo (\pTagInfo -> Graphics.Vulkan.C.Dynamic.debugMarkerSetObjectTagEXT commandTable device pTagInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))

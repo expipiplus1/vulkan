@@ -165,10 +165,10 @@ fromCStructDeviceQueueCreateInfo c = DeviceQueueCreateInfo <$> -- Univalued Memb
                                                            -- Length valued member elided
                                                            <*> (Data.Vector.generateM (fromIntegral (vkQueueCount (c :: VkDeviceQueueCreateInfo))) (peekElemOff (vkPQueuePriorities (c :: VkDeviceQueueCreateInfo))))
 
--- | Wrapper for vkCreateDevice
-createDevice :: PhysicalDevice ->  DeviceCreateInfo ->  Maybe AllocationCallbacks ->  IO (Device)
+-- | Wrapper for 'vkCreateDevice'
+createDevice :: PhysicalDevice ->  DeviceCreateInfo ->  Maybe AllocationCallbacks ->  IO ( Device )
 createDevice = \(PhysicalDevice physicalDevice commandTable) -> \createInfo -> \allocator -> alloca (\pDevice -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDeviceCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDevice commandTable physicalDevice pCreateInfo pAllocator pDevice >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pDevice >>= (\deviceH -> Device deviceH <$> initDeviceCmds commandTable deviceH))))))
 
--- | Wrapper for vkDestroyDevice
+-- | Wrapper for 'vkDestroyDevice'
 destroyDevice :: Device ->  Maybe AllocationCallbacks ->  IO ()
 destroyDevice = \(Device device commandTable) -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyDevice commandTable device pAllocator *> (pure ()))

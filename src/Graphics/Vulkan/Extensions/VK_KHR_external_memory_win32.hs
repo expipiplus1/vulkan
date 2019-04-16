@@ -175,10 +175,10 @@ fromCStructMemoryWin32HandlePropertiesKHR c = MemoryWin32HandlePropertiesKHR <$>
                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryWin32HandlePropertiesKHR)))
                                                                              <*> pure (vkMemoryTypeBits (c :: VkMemoryWin32HandlePropertiesKHR))
 
--- | Wrapper for vkGetMemoryWin32HandleKHR
+-- | Wrapper for 'vkGetMemoryWin32HandleKHR'
 getMemoryWin32HandleKHR :: Device ->  MemoryGetWin32HandleInfoKHR ->  IO (HANDLE)
 getMemoryWin32HandleKHR = \(Device device commandTable) -> \getWin32HandleInfo -> alloca (\pHandle -> (\a -> withCStructMemoryGetWin32HandleInfoKHR a . flip with) getWin32HandleInfo (\pGetWin32HandleInfo -> Graphics.Vulkan.C.Dynamic.getMemoryWin32HandleKHR commandTable device pGetWin32HandleInfo pHandle >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pHandle))))
 
--- | Wrapper for vkGetMemoryWin32HandlePropertiesKHR
-getMemoryWin32HandlePropertiesKHR :: Device ->  ExternalMemoryHandleTypeFlagBits ->  HANDLE ->  IO (MemoryWin32HandlePropertiesKHR)
+-- | Wrapper for 'vkGetMemoryWin32HandlePropertiesKHR'
+getMemoryWin32HandlePropertiesKHR :: Device ->  ExternalMemoryHandleTypeFlagBits ->  HANDLE ->  IO ( MemoryWin32HandlePropertiesKHR )
 getMemoryWin32HandlePropertiesKHR = \(Device device commandTable) -> \handleType -> \handle -> alloca (\pMemoryWin32HandleProperties -> Graphics.Vulkan.C.Dynamic.getMemoryWin32HandlePropertiesKHR commandTable device handleType handle pMemoryWin32HandleProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructMemoryWin32HandlePropertiesKHR <=< peek) pMemoryWin32HandleProperties)))

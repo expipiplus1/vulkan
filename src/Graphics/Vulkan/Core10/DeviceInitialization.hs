@@ -83,6 +83,8 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , getNumPhysicalDeviceQueueFamilyProperties
   , getPhysicalDeviceQueueFamilyProperties
   , getAllPhysicalDeviceQueueFamilyProperties
+  , withDevice
+  , withInstance
   ) where
 
 import Control.Exception
@@ -1078,19 +1080,19 @@ type SampleCountFlagBits = VkSampleCountFlagBits
 -- No documentation found for TopLevel "SampleCountFlags"
 type SampleCountFlags = SampleCountFlagBits
 
--- | Wrapper for vkCreateInstance
+-- | Wrapper for 'vkCreateInstance'
 createInstance :: InstanceCreateInfo ->  Maybe AllocationCallbacks ->  IO (Instance)
 createInstance = \createInfo -> \allocator -> alloca (\pInstance -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructInstanceCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createInstance pCreateInfo pAllocator pInstance >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pInstance >>= (\instanceH -> Instance instanceH <$> initInstanceCmds instanceH))))))
 
--- | Wrapper for vkDestroyInstance
+-- | Wrapper for 'vkDestroyInstance'
 destroyInstance :: Instance ->  Maybe AllocationCallbacks ->  IO ()
 destroyInstance = \(Instance instance' commandTable) -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyInstance commandTable instance' pAllocator *> (pure ()))
 
--- | Wrapper for vkEnumeratePhysicalDevices
+-- | Wrapper for 'vkEnumeratePhysicalDevices'
 getNumPhysicalDevices :: Instance ->  IO (VkResult, Word32)
 getNumPhysicalDevices = \(Instance instance' commandTable) -> alloca (\pPhysicalDeviceCount -> Graphics.Vulkan.C.Dynamic.enumeratePhysicalDevices commandTable instance' pPhysicalDeviceCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPhysicalDeviceCount)))
 
--- | Wrapper for vkEnumeratePhysicalDevices
+-- | Wrapper for 'vkEnumeratePhysicalDevices'
 enumeratePhysicalDevices :: Instance ->  Word32 ->  IO (VkResult, Vector PhysicalDevice)
 enumeratePhysicalDevices = \(Instance instance' commandTable) -> \physicalDeviceCount -> allocaArray (fromIntegral physicalDeviceCount) (\pPhysicalDevices -> with physicalDeviceCount (\pPhysicalDeviceCount -> Graphics.Vulkan.C.Dynamic.enumeratePhysicalDevices commandTable instance' pPhysicalDeviceCount pPhysicalDevices >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p i -> PhysicalDevice <$> peekElemOff p i <*> pure commandTable) pPhysicalDevices) =<< (fromIntegral <$> (peek pPhysicalDeviceCount)))))))
 -- | Call 'getNumPhysicalDevices' to get the number of return values, then use that
@@ -1101,39 +1103,39 @@ enumerateAllPhysicalDevices instance' =
     >>= \num -> snd <$> enumeratePhysicalDevices instance' num
 
 
--- | Wrapper for vkGetDeviceProcAddr
+-- | Wrapper for 'vkGetDeviceProcAddr'
 getDeviceProcAddr :: Device ->  ByteString ->  IO (PFN_vkVoidFunction)
 getDeviceProcAddr = \(Device device commandTable) -> \name -> useAsCString name (\pName -> Graphics.Vulkan.C.Dynamic.getDeviceProcAddr commandTable device pName >>= (\r -> pure r))
 
--- | Wrapper for vkGetInstanceProcAddr
+-- | Wrapper for 'vkGetInstanceProcAddr'
 getInstanceProcAddr :: Instance ->  ByteString ->  IO (PFN_vkVoidFunction)
 getInstanceProcAddr = \(Instance instance' commandTable) -> \name -> useAsCString name (\pName -> Graphics.Vulkan.C.Dynamic.getInstanceProcAddr commandTable instance' pName >>= (\r -> pure r))
 
--- | Wrapper for vkGetPhysicalDeviceFeatures
+-- | Wrapper for 'vkGetPhysicalDeviceFeatures'
 getPhysicalDeviceFeatures :: PhysicalDevice ->  IO (PhysicalDeviceFeatures)
 getPhysicalDeviceFeatures = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pFeatures -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceFeatures commandTable physicalDevice pFeatures *> ((fromCStructPhysicalDeviceFeatures <=< peek) pFeatures))
 
--- | Wrapper for vkGetPhysicalDeviceFormatProperties
+-- | Wrapper for 'vkGetPhysicalDeviceFormatProperties'
 getPhysicalDeviceFormatProperties :: PhysicalDevice ->  Format ->  IO (FormatProperties)
 getPhysicalDeviceFormatProperties = \(PhysicalDevice physicalDevice commandTable) -> \format -> alloca (\pFormatProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceFormatProperties commandTable physicalDevice format pFormatProperties *> ((fromCStructFormatProperties <=< peek) pFormatProperties))
 
--- | Wrapper for vkGetPhysicalDeviceImageFormatProperties
-getPhysicalDeviceImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  ImageTiling ->  ImageUsageFlags ->  ImageCreateFlags ->  IO (ImageFormatProperties)
+-- | Wrapper for 'vkGetPhysicalDeviceImageFormatProperties'
+getPhysicalDeviceImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  ImageTiling ->  ImageUsageFlags ->  ImageCreateFlags ->  IO ( ImageFormatProperties )
 getPhysicalDeviceImageFormatProperties = \(PhysicalDevice physicalDevice commandTable) -> \format -> \type' -> \tiling -> \usage -> \flags -> alloca (\pImageFormatProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceImageFormatProperties commandTable physicalDevice format type' tiling usage flags pImageFormatProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructImageFormatProperties <=< peek) pImageFormatProperties)))
 
--- | Wrapper for vkGetPhysicalDeviceMemoryProperties
+-- | Wrapper for 'vkGetPhysicalDeviceMemoryProperties'
 getPhysicalDeviceMemoryProperties :: PhysicalDevice ->  IO (PhysicalDeviceMemoryProperties)
 getPhysicalDeviceMemoryProperties = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pMemoryProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceMemoryProperties commandTable physicalDevice pMemoryProperties *> ((fromCStructPhysicalDeviceMemoryProperties <=< peek) pMemoryProperties))
 
--- | Wrapper for vkGetPhysicalDeviceProperties
+-- | Wrapper for 'vkGetPhysicalDeviceProperties'
 getPhysicalDeviceProperties :: PhysicalDevice ->  IO (PhysicalDeviceProperties)
 getPhysicalDeviceProperties = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceProperties commandTable physicalDevice pProperties *> ((fromCStructPhysicalDeviceProperties <=< peek) pProperties))
 
--- | Wrapper for vkGetPhysicalDeviceQueueFamilyProperties
+-- | Wrapper for 'vkGetPhysicalDeviceQueueFamilyProperties'
 getNumPhysicalDeviceQueueFamilyProperties :: PhysicalDevice ->  IO (Word32)
 getNumPhysicalDeviceQueueFamilyProperties = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pQueueFamilyPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceQueueFamilyProperties commandTable physicalDevice pQueueFamilyPropertyCount nullPtr *> (peek pQueueFamilyPropertyCount))
 
--- | Wrapper for vkGetPhysicalDeviceQueueFamilyProperties
+-- | Wrapper for 'vkGetPhysicalDeviceQueueFamilyProperties'
 getPhysicalDeviceQueueFamilyProperties :: PhysicalDevice ->  Word32 ->  IO (Vector QueueFamilyProperties)
 getPhysicalDeviceQueueFamilyProperties = \(PhysicalDevice physicalDevice commandTable) -> \queueFamilyPropertyCount -> allocaArray (fromIntegral queueFamilyPropertyCount) (\pQueueFamilyProperties -> with queueFamilyPropertyCount (\pQueueFamilyPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceQueueFamilyProperties commandTable physicalDevice pQueueFamilyPropertyCount pQueueFamilyProperties *> ((flip Data.Vector.generateM ((\p -> fromCStructQueueFamilyProperties <=< peekElemOff p) pQueueFamilyProperties) =<< (fromIntegral <$> (peek pQueueFamilyPropertyCount))))))
 -- | Call 'getNumPhysicalDeviceQueueFamilyProperties' to get the number of return values, then use that
@@ -1143,3 +1145,13 @@ getAllPhysicalDeviceQueueFamilyProperties physicalDevice =
   getNumPhysicalDeviceQueueFamilyProperties physicalDevice
     >>= \num -> getPhysicalDeviceQueueFamilyProperties physicalDevice num
 
+withDevice :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withDevice createInfo allocationCallbacks =
+  bracket
+    (vkCreateDevice createInfo allocationCallbacks)
+    (`vkDestroyDevice` allocationCallbacks)
+withInstance :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withInstance createInfo allocationCallbacks =
+  bracket
+    (vkCreateInstance createInfo allocationCallbacks)
+    (`vkDestroyInstance` allocationCallbacks)

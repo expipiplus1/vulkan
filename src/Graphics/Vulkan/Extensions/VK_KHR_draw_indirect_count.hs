@@ -34,10 +34,10 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count
 
 
 
--- | Wrapper for vkCmdDrawIndexedIndirectCountKHR
-cmdDrawIndexedIndirectCountKHR :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
+-- | Wrapper for 'vkCmdDrawIndexedIndirectCountKHR'
+cmdDrawIndexedIndirectCountKHR :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO (  )
 cmdDrawIndexedIndirectCountKHR = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \countBuffer -> \countBufferOffset -> \maxDrawCount -> \stride -> Graphics.Vulkan.C.Dynamic.cmdDrawIndexedIndirectCountKHR commandTable commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride *> (pure ())
 
--- | Wrapper for vkCmdDrawIndirectCountKHR
-cmdDrawIndirectCountKHR :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
+-- | Wrapper for 'vkCmdDrawIndirectCountKHR'
+cmdDrawIndirectCountKHR :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO (  )
 cmdDrawIndirectCountKHR = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \countBuffer -> \countBufferOffset -> \maxDrawCount -> \stride -> Graphics.Vulkan.C.Dynamic.cmdDrawIndirectCountKHR commandTable commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride *> (pure ())

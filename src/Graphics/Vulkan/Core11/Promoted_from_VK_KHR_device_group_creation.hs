@@ -151,11 +151,11 @@ fromCStructPhysicalDeviceGroupProperties commandTable c = PhysicalDeviceGroupPro
                                                                                         <*> traverse (\p -> pure $ PhysicalDevice p commandTable) (Data.Vector.take (fromIntegral (vkPhysicalDeviceCount (c :: VkPhysicalDeviceGroupProperties))) (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized (vkPhysicalDevices (c :: VkPhysicalDeviceGroupProperties)))))
                                                                                         <*> pure (bool32ToBool (vkSubsetAllocation (c :: VkPhysicalDeviceGroupProperties)))
 
--- | Wrapper for vkEnumeratePhysicalDeviceGroups
+-- | Wrapper for 'vkEnumeratePhysicalDeviceGroups'
 getNumPhysicalDeviceGroups :: Instance ->  IO (VkResult, Word32)
 getNumPhysicalDeviceGroups = \(Instance instance' commandTable) -> alloca (\pPhysicalDeviceGroupCount -> Graphics.Vulkan.C.Dynamic.enumeratePhysicalDeviceGroups commandTable instance' pPhysicalDeviceGroupCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPhysicalDeviceGroupCount)))
 
--- | Wrapper for vkEnumeratePhysicalDeviceGroups
+-- | Wrapper for 'vkEnumeratePhysicalDeviceGroups'
 enumeratePhysicalDeviceGroups :: Instance ->  Word32 ->  IO (VkResult, Vector PhysicalDeviceGroupProperties)
 enumeratePhysicalDeviceGroups = \(Instance instance' commandTable) -> \physicalDeviceGroupCount -> allocaArray (fromIntegral physicalDeviceGroupCount) (\pPhysicalDeviceGroupProperties -> with physicalDeviceGroupCount (\pPhysicalDeviceGroupCount -> Graphics.Vulkan.C.Dynamic.enumeratePhysicalDeviceGroups commandTable instance' pPhysicalDeviceGroupCount pPhysicalDeviceGroupProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructPhysicalDeviceGroupProperties commandTable <=< peekElemOff p) pPhysicalDeviceGroupProperties) =<< (fromIntegral <$> (peek pPhysicalDeviceGroupCount)))))))
 -- | Call 'getNumPhysicalDeviceGroups' to get the number of return values, then use that

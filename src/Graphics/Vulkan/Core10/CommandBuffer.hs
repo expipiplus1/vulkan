@@ -41,13 +41,14 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( length
+  ( generateM
+  , length
   )
 import Data.Word
   ( Word32
   )
-import Foreign.Marshal.Alloc
-  ( alloca
+import Foreign.Marshal.Array
+  ( allocaArray
   )
 import Foreign.Marshal.Utils
   ( maybePeek
@@ -59,6 +60,7 @@ import Foreign.Ptr
   )
 import Foreign.Storable
   ( peek
+  , peekElemOff
   )
 import qualified Graphics.Vulkan.C.Dynamic
   ( allocateCommandBuffers
@@ -203,22 +205,22 @@ type QueryControlFlagBits = VkQueryControlFlagBits
 -- No documentation found for TopLevel "QueryControlFlags"
 type QueryControlFlags = QueryControlFlagBits
 
--- | Wrapper for vkAllocateCommandBuffers
-allocateCommandBuffers :: Device ->  CommandBufferAllocateInfo ->  IO (CommandBuffer)
-allocateCommandBuffers = \(Device device commandTable) -> \allocateInfo -> alloca (\pCommandBuffers -> (\a -> withCStructCommandBufferAllocateInfo a . flip with) allocateInfo (\pAllocateInfo -> Graphics.Vulkan.C.Dynamic.allocateCommandBuffers commandTable device pAllocateInfo pCommandBuffers >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (flip CommandBuffer commandTable <$> peek pCommandBuffers))))
+-- | Wrapper for 'vkAllocateCommandBuffers'
+allocateCommandBuffers :: Device ->  CommandBufferAllocateInfo ->  IO (Vector CommandBuffer)
+allocateCommandBuffers = \(Device device commandTable) -> \allocateInfo -> allocaArray (fromIntegral (vkCommandBufferCount (allocateInfo :: CommandBufferAllocateInfo))) (\pCommandBuffers -> (\a -> withCStructCommandBufferAllocateInfo a . flip with) allocateInfo (\pAllocateInfo -> Graphics.Vulkan.C.Dynamic.allocateCommandBuffers commandTable device pAllocateInfo pCommandBuffers >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM (fromIntegral (vkCommandBufferCount (allocateInfo :: CommandBufferAllocateInfo))) ((\p i -> CommandBuffer <$> peekElemOff p i <*> pure commandTable) pCommandBuffers))))))
 
--- | Wrapper for vkBeginCommandBuffer
+-- | Wrapper for 'vkBeginCommandBuffer'
 beginCommandBuffer :: CommandBuffer ->  CommandBufferBeginInfo ->  IO ()
 beginCommandBuffer = \(CommandBuffer commandBuffer commandTable) -> \beginInfo -> (\a -> withCStructCommandBufferBeginInfo a . flip with) beginInfo (\pBeginInfo -> Graphics.Vulkan.C.Dynamic.beginCommandBuffer commandTable commandBuffer pBeginInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkEndCommandBuffer
+-- | Wrapper for 'vkEndCommandBuffer'
 endCommandBuffer :: CommandBuffer ->  IO ()
 endCommandBuffer = \(CommandBuffer commandBuffer commandTable) -> Graphics.Vulkan.C.Dynamic.endCommandBuffer commandTable commandBuffer >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
 
--- | Wrapper for vkFreeCommandBuffers
+-- | Wrapper for 'vkFreeCommandBuffers'
 freeCommandBuffers :: Device ->  CommandPool ->  Vector CommandBuffer ->  IO ()
 freeCommandBuffers = \(Device device commandTable) -> \commandPool -> \commandBuffers -> withVec ((&) . commandBufferHandle) commandBuffers (\pCommandBuffers -> Graphics.Vulkan.C.Dynamic.freeCommandBuffers commandTable device commandPool (fromIntegral $ Data.Vector.length commandBuffers) pCommandBuffers *> (pure ()))
 
--- | Wrapper for vkResetCommandBuffer
+-- | Wrapper for 'vkResetCommandBuffer'
 resetCommandBuffer :: CommandBuffer ->  CommandBufferResetFlags ->  IO ()
 resetCommandBuffer = \(CommandBuffer commandBuffer commandTable) -> \flags -> Graphics.Vulkan.C.Dynamic.resetCommandBuffer commandTable commandBuffer flags >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))

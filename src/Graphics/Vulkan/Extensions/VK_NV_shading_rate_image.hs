@@ -263,14 +263,14 @@ fromCStructShadingRatePaletteNV :: VkShadingRatePaletteNV -> IO ShadingRatePalet
 fromCStructShadingRatePaletteNV c = ShadingRatePaletteNV <$> -- Length valued member elided
                                                          (Data.Vector.generateM (fromIntegral (vkShadingRatePaletteEntryCount (c :: VkShadingRatePaletteNV))) (peekElemOff (vkPShadingRatePaletteEntries (c :: VkShadingRatePaletteNV))))
 
--- | Wrapper for vkCmdBindShadingRateImageNV
+-- | Wrapper for 'vkCmdBindShadingRateImageNV'
 cmdBindShadingRateImageNV :: CommandBuffer ->  ImageView ->  ImageLayout ->  IO ()
 cmdBindShadingRateImageNV = \(CommandBuffer commandBuffer commandTable) -> \imageView -> \imageLayout -> Graphics.Vulkan.C.Dynamic.cmdBindShadingRateImageNV commandTable commandBuffer imageView imageLayout *> (pure ())
 
--- | Wrapper for vkCmdSetCoarseSampleOrderNV
-cmdSetCoarseSampleOrderNV :: CommandBuffer ->  CoarseSampleOrderTypeNV ->  Vector CoarseSampleOrderCustomNV ->  IO ()
+-- | Wrapper for 'vkCmdSetCoarseSampleOrderNV'
+cmdSetCoarseSampleOrderNV :: CommandBuffer ->  CoarseSampleOrderTypeNV ->  Vector CoarseSampleOrderCustomNV ->  IO (  )
 cmdSetCoarseSampleOrderNV = \(CommandBuffer commandBuffer commandTable) -> \sampleOrderType -> \customSampleOrders -> withVec withCStructCoarseSampleOrderCustomNV customSampleOrders (\pCustomSampleOrders -> Graphics.Vulkan.C.Dynamic.cmdSetCoarseSampleOrderNV commandTable commandBuffer sampleOrderType (fromIntegral $ Data.Vector.length customSampleOrders) pCustomSampleOrders *> (pure ()))
 
--- | Wrapper for vkCmdSetViewportShadingRatePaletteNV
+-- | Wrapper for 'vkCmdSetViewportShadingRatePaletteNV'
 cmdSetViewportShadingRatePaletteNV :: CommandBuffer ->  Word32 ->  Vector ShadingRatePaletteNV ->  IO ()
 cmdSetViewportShadingRatePaletteNV = \(CommandBuffer commandBuffer commandTable) -> \firstViewport -> \shadingRatePalettes -> withVec withCStructShadingRatePaletteNV shadingRatePalettes (\pShadingRatePalettes -> Graphics.Vulkan.C.Dynamic.cmdSetViewportShadingRatePaletteNV commandTable commandBuffer firstViewport (fromIntegral $ Data.Vector.length shadingRatePalettes) pShadingRatePalettes *> (pure ()))

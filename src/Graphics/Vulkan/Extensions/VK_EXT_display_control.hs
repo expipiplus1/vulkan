@@ -177,18 +177,18 @@ fromCStructSwapchainCounterCreateInfoEXT c = SwapchainCounterCreateInfoEXT <$> -
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSwapchainCounterCreateInfoEXT)))
                                                                            <*> pure (vkSurfaceCounters (c :: VkSwapchainCounterCreateInfoEXT))
 
--- | Wrapper for vkDisplayPowerControlEXT
+-- | Wrapper for 'vkDisplayPowerControlEXT'
 displayPowerControlEXT :: Device ->  DisplayKHR ->  DisplayPowerInfoEXT ->  IO ()
 displayPowerControlEXT = \(Device device commandTable) -> \display -> \displayPowerInfo -> (\a -> withCStructDisplayPowerInfoEXT a . flip with) displayPowerInfo (\pDisplayPowerInfo -> Graphics.Vulkan.C.Dynamic.displayPowerControlEXT commandTable device display pDisplayPowerInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkGetSwapchainCounterEXT
+-- | Wrapper for 'vkGetSwapchainCounterEXT'
 getSwapchainCounterEXT :: Device ->  SwapchainKHR ->  SurfaceCounterFlagBitsEXT ->  IO (Word64)
 getSwapchainCounterEXT = \(Device device commandTable) -> \swapchain -> \counter -> alloca (\pCounterValue -> Graphics.Vulkan.C.Dynamic.getSwapchainCounterEXT commandTable device swapchain counter pCounterValue >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pCounterValue)))
 
--- | Wrapper for vkRegisterDeviceEventEXT
+-- | Wrapper for 'vkRegisterDeviceEventEXT'
 registerDeviceEventEXT :: Device ->  DeviceEventInfoEXT ->  Maybe AllocationCallbacks ->  IO (Fence)
 registerDeviceEventEXT = \(Device device commandTable) -> \deviceEventInfo -> \allocator -> alloca (\pFence -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDeviceEventInfoEXT a . flip with) deviceEventInfo (\pDeviceEventInfo -> Graphics.Vulkan.C.Dynamic.registerDeviceEventEXT commandTable device pDeviceEventInfo pAllocator pFence >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFence)))))
 
--- | Wrapper for vkRegisterDisplayEventEXT
-registerDisplayEventEXT :: Device ->  DisplayKHR ->  DisplayEventInfoEXT ->  Maybe AllocationCallbacks ->  IO (Fence)
+-- | Wrapper for 'vkRegisterDisplayEventEXT'
+registerDisplayEventEXT :: Device ->  DisplayKHR ->  DisplayEventInfoEXT ->  Maybe AllocationCallbacks ->  IO ( Fence )
 registerDisplayEventEXT = \(Device device commandTable) -> \display -> \displayEventInfo -> \allocator -> alloca (\pFence -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDisplayEventInfoEXT a . flip with) displayEventInfo (\pDisplayEventInfo -> Graphics.Vulkan.C.Dynamic.registerDisplayEventEXT commandTable device display pDisplayEventInfo pAllocator pFence >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFence)))))

@@ -63,6 +63,8 @@ module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
   , getPhysicalDeviceGeneratedCommandsPropertiesNVX
   , registerObjectsNVX
   , unregisterObjectsNVX
+  , withIndirectCommandsLayoutNVX
+  , withObjectTableNVX
   , pattern VK_NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION
   , pattern VK_NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME
   , pattern VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX
@@ -419,7 +421,9 @@ data ObjectTableCreateInfoNVX = ObjectTableCreateInfoNVX
   }
   deriving (Show, Eq)
 withCStructObjectTableCreateInfoNVX :: ObjectTableCreateInfoNVX -> (VkObjectTableCreateInfoNVX -> IO a) -> IO a
-withCStructObjectTableCreateInfoNVX from cont = withVec (&) (vkPObjectEntryUsageFlags (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryUsageFlags -> withVec (&) (vkPObjectEntryCounts (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryCounts -> withVec (&) (vkPObjectEntryTypes (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryTypes -> maybeWith withSomeVkStruct (vkPNext (from :: ObjectTableCreateInfoNVX)) (\pPNext -> cont (VkObjectTableCreateInfoNVX VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX pPNext (fromIntegral (minimum ([Data.Vector.length (vkPObjectEntryTypes (from :: ObjectTableCreateInfoNVX)), Data.Vector.length (vkPObjectEntryCounts (from :: ObjectTableCreateInfoNVX)), Data.Vector.length (vkPObjectEntryUsageFlags (from :: ObjectTableCreateInfoNVX))]))) pObjectEntryTypes pObjectEntryCounts pObjectEntryUsageFlags (vkMaxUniformBuffersPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxStorageBuffersPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxStorageImagesPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxSampledImagesPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxPipelineLayouts (from :: ObjectTableCreateInfoNVX)))))))
+withCStructObjectTableCreateInfoNVX from cont = withVec (&) (vkPObjectEntryUsageFlags (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryUsageFlags -> withVec (&) (vkPObjectEntryCounts (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryCounts -> withVec (&) (vkPObjectEntryTypes (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryTypes -> maybeWith withSomeVkStruct (vkPNext (from :: ObjectTableCreateInfoNVX)) (\pPNext -> cont (VkObjectTableCreateInfoNVX VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX pPNext (fromIntegral (minimum ([ Data.Vector.length (vkPObjectEntryTypes (from :: ObjectTableCreateInfoNVX))
+, Data.Vector.length (vkPObjectEntryCounts (from :: ObjectTableCreateInfoNVX))
+, Data.Vector.length (vkPObjectEntryUsageFlags (from :: ObjectTableCreateInfoNVX)) ]))) pObjectEntryTypes pObjectEntryCounts pObjectEntryUsageFlags (vkMaxUniformBuffersPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxStorageBuffersPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxStorageImagesPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxSampledImagesPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxPipelineLayouts (from :: ObjectTableCreateInfoNVX)))))))
 fromCStructObjectTableCreateInfoNVX :: VkObjectTableCreateInfoNVX -> IO ObjectTableCreateInfoNVX
 fromCStructObjectTableCreateInfoNVX c = ObjectTableCreateInfoNVX <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkObjectTableCreateInfoNVX)))
@@ -537,38 +541,49 @@ fromCStructObjectTableVertexBufferEntryNVX c = ObjectTableVertexBufferEntryNVX <
                                                                                <*> pure (vkFlags (c :: VkObjectTableVertexBufferEntryNVX))
                                                                                <*> pure (vkBuffer (c :: VkObjectTableVertexBufferEntryNVX))
 
--- | Wrapper for vkCmdProcessCommandsNVX
+-- | Wrapper for 'vkCmdProcessCommandsNVX'
 cmdProcessCommandsNVX :: CommandBuffer ->  CmdProcessCommandsInfoNVX ->  IO ()
 cmdProcessCommandsNVX = \(CommandBuffer commandBuffer commandTable) -> \processCommandsInfo -> (\a -> withCStructCmdProcessCommandsInfoNVX a . flip with) processCommandsInfo (\pProcessCommandsInfo -> Graphics.Vulkan.C.Dynamic.cmdProcessCommandsNVX commandTable commandBuffer pProcessCommandsInfo *> (pure ()))
 
--- | Wrapper for vkCmdReserveSpaceForCommandsNVX
+-- | Wrapper for 'vkCmdReserveSpaceForCommandsNVX'
 cmdReserveSpaceForCommandsNVX :: CommandBuffer ->  CmdReserveSpaceForCommandsInfoNVX ->  IO ()
 cmdReserveSpaceForCommandsNVX = \(CommandBuffer commandBuffer commandTable) -> \reserveSpaceInfo -> (\a -> withCStructCmdReserveSpaceForCommandsInfoNVX a . flip with) reserveSpaceInfo (\pReserveSpaceInfo -> Graphics.Vulkan.C.Dynamic.cmdReserveSpaceForCommandsNVX commandTable commandBuffer pReserveSpaceInfo *> (pure ()))
 
--- | Wrapper for vkCreateIndirectCommandsLayoutNVX
-createIndirectCommandsLayoutNVX :: Device ->  IndirectCommandsLayoutCreateInfoNVX ->  Maybe AllocationCallbacks ->  IO (IndirectCommandsLayoutNVX)
+-- | Wrapper for 'vkCreateIndirectCommandsLayoutNVX'
+createIndirectCommandsLayoutNVX :: Device ->  IndirectCommandsLayoutCreateInfoNVX ->  Maybe AllocationCallbacks ->  IO ( IndirectCommandsLayoutNVX )
 createIndirectCommandsLayoutNVX = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pIndirectCommandsLayout -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructIndirectCommandsLayoutCreateInfoNVX a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createIndirectCommandsLayoutNVX commandTable device pCreateInfo pAllocator pIndirectCommandsLayout >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pIndirectCommandsLayout)))))
 
--- | Wrapper for vkCreateObjectTableNVX
-createObjectTableNVX :: Device ->  ObjectTableCreateInfoNVX ->  Maybe AllocationCallbacks ->  IO (ObjectTableNVX)
+-- | Wrapper for 'vkCreateObjectTableNVX'
+createObjectTableNVX :: Device ->  ObjectTableCreateInfoNVX ->  Maybe AllocationCallbacks ->  IO ( ObjectTableNVX )
 createObjectTableNVX = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pObjectTable -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructObjectTableCreateInfoNVX a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createObjectTableNVX commandTable device pCreateInfo pAllocator pObjectTable >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pObjectTable)))))
 
--- | Wrapper for vkDestroyIndirectCommandsLayoutNVX
+-- | Wrapper for 'vkDestroyIndirectCommandsLayoutNVX'
 destroyIndirectCommandsLayoutNVX :: Device ->  IndirectCommandsLayoutNVX ->  Maybe AllocationCallbacks ->  IO ()
 destroyIndirectCommandsLayoutNVX = \(Device device commandTable) -> \indirectCommandsLayout -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyIndirectCommandsLayoutNVX commandTable device indirectCommandsLayout pAllocator *> (pure ()))
 
--- | Wrapper for vkDestroyObjectTableNVX
+-- | Wrapper for 'vkDestroyObjectTableNVX'
 destroyObjectTableNVX :: Device ->  ObjectTableNVX ->  Maybe AllocationCallbacks ->  IO ()
 destroyObjectTableNVX = \(Device device commandTable) -> \objectTable -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyObjectTableNVX commandTable device objectTable pAllocator *> (pure ()))
 
--- | Wrapper for vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX
-getPhysicalDeviceGeneratedCommandsPropertiesNVX :: PhysicalDevice ->  IO (DeviceGeneratedCommandsFeaturesNVX, DeviceGeneratedCommandsLimitsNVX)
+-- | Wrapper for 'vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX'
+getPhysicalDeviceGeneratedCommandsPropertiesNVX :: PhysicalDevice ->  IO ( DeviceGeneratedCommandsFeaturesNVX
+, DeviceGeneratedCommandsLimitsNVX )
 getPhysicalDeviceGeneratedCommandsPropertiesNVX = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pLimits -> alloca (\pFeatures -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceGeneratedCommandsPropertiesNVX commandTable physicalDevice pFeatures pLimits *> ((,) <$> (fromCStructDeviceGeneratedCommandsFeaturesNVX <=< peek) pFeatures<*>(fromCStructDeviceGeneratedCommandsLimitsNVX <=< peek) pLimits)))
 
--- | Wrapper for vkRegisterObjectsNVX
-registerObjectsNVX :: Device ->  ObjectTableNVX ->  Vector ObjectTableEntryNVX ->  Vector Word32 ->  IO ()
+-- | Wrapper for 'vkRegisterObjectsNVX'
+registerObjectsNVX :: Device ->  ObjectTableNVX ->  Vector ObjectTableEntryNVX ->  Vector Word32 ->  IO (  )
 registerObjectsNVX = \(Device device commandTable) -> \objectTable -> \pObjectTableEntries -> \objectIndices -> withVec (&) objectIndices (\pObjectIndices -> withVec (\a -> withCStructObjectTableEntryNVX a . flip with) pObjectTableEntries (\pPObjectTableEntries -> Graphics.Vulkan.C.Dynamic.registerObjectsNVX commandTable device objectTable (fromIntegral $ Data.Vector.length pObjectTableEntries `min` Data.Vector.length objectIndices) pPObjectTableEntries pObjectIndices >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))))
 
--- | Wrapper for vkUnregisterObjectsNVX
-unregisterObjectsNVX :: Device ->  ObjectTableNVX ->  Vector ObjectEntryTypeNVX ->  Vector Word32 ->  IO ()
+-- | Wrapper for 'vkUnregisterObjectsNVX'
+unregisterObjectsNVX :: Device ->  ObjectTableNVX ->  Vector ObjectEntryTypeNVX ->  Vector Word32 ->  IO (  )
 unregisterObjectsNVX = \(Device device commandTable) -> \objectTable -> \objectEntryTypes -> \objectIndices -> withVec (&) objectIndices (\pObjectIndices -> withVec (&) objectEntryTypes (\pObjectEntryTypes -> Graphics.Vulkan.C.Dynamic.unregisterObjectsNVX commandTable device objectTable (fromIntegral $ Data.Vector.length objectEntryTypes `min` Data.Vector.length objectIndices) pObjectEntryTypes pObjectIndices >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))))
+withIndirectCommandsLayoutNVX :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withIndirectCommandsLayoutNVX createInfo allocationCallbacks =
+  bracket
+    (vkCreateIndirectCommandsLayoutNVX createInfo allocationCallbacks)
+    (`vkDestroyIndirectCommandsLayoutNVX` allocationCallbacks)
+withObjectTableNVX :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withObjectTableNVX createInfo allocationCallbacks =
+  bracket
+    (vkCreateObjectTableNVX createInfo allocationCallbacks)
+    (`vkDestroyObjectTableNVX` allocationCallbacks)

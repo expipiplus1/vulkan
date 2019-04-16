@@ -16,6 +16,7 @@ module Graphics.Vulkan.Core10.Sampler
   , SamplerMipmapMode
   , createSampler
   , destroySampler
+  , withSampler
   ) where
 
 import Control.Exception
@@ -157,10 +158,15 @@ fromCStructSamplerCreateInfo c = SamplerCreateInfo <$> -- Univalued Member elide
 -- No documentation found for TopLevel "SamplerMipmapMode"
 type SamplerMipmapMode = VkSamplerMipmapMode
 
--- | Wrapper for vkCreateSampler
+-- | Wrapper for 'vkCreateSampler'
 createSampler :: Device ->  SamplerCreateInfo ->  Maybe AllocationCallbacks ->  IO (Sampler)
 createSampler = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pSampler -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructSamplerCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createSampler commandTable device pCreateInfo pAllocator pSampler >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSampler)))))
 
--- | Wrapper for vkDestroySampler
+-- | Wrapper for 'vkDestroySampler'
 destroySampler :: Device ->  Sampler ->  Maybe AllocationCallbacks ->  IO ()
 destroySampler = \(Device device commandTable) -> \sampler -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySampler commandTable device sampler pAllocator *> (pure ()))
+withSampler :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withSampler createInfo allocationCallbacks =
+  bracket
+    (vkCreateSampler createInfo allocationCallbacks)
+    (`vkDestroySampler` allocationCallbacks)

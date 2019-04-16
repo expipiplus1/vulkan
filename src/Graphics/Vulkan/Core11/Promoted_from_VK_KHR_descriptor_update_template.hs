@@ -18,6 +18,7 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
   , createDescriptorUpdateTemplate
   , destroyDescriptorUpdateTemplate
   , updateDescriptorSetWithTemplate
+  , withDescriptorUpdateTemplate
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
   , pattern VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
   ) where
@@ -181,14 +182,19 @@ type DescriptorUpdateTemplateType = VkDescriptorUpdateTemplateType
 -- No documentation found for TopLevel "DescriptorUpdateTemplateTypeKHR"
 type DescriptorUpdateTemplateTypeKHR = DescriptorUpdateTemplateType
 
--- | Wrapper for vkCreateDescriptorUpdateTemplate
-createDescriptorUpdateTemplate :: Device ->  DescriptorUpdateTemplateCreateInfo ->  Maybe AllocationCallbacks ->  IO (DescriptorUpdateTemplate)
+-- | Wrapper for 'vkCreateDescriptorUpdateTemplate'
+createDescriptorUpdateTemplate :: Device ->  DescriptorUpdateTemplateCreateInfo ->  Maybe AllocationCallbacks ->  IO ( DescriptorUpdateTemplate )
 createDescriptorUpdateTemplate = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pDescriptorUpdateTemplate -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDescriptorUpdateTemplateCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDescriptorUpdateTemplate commandTable device pCreateInfo pAllocator pDescriptorUpdateTemplate >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pDescriptorUpdateTemplate)))))
 
--- | Wrapper for vkDestroyDescriptorUpdateTemplate
+-- | Wrapper for 'vkDestroyDescriptorUpdateTemplate'
 destroyDescriptorUpdateTemplate :: Device ->  DescriptorUpdateTemplate ->  Maybe AllocationCallbacks ->  IO ()
 destroyDescriptorUpdateTemplate = \(Device device commandTable) -> \descriptorUpdateTemplate -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyDescriptorUpdateTemplate commandTable device descriptorUpdateTemplate pAllocator *> (pure ()))
 
--- | Wrapper for vkUpdateDescriptorSetWithTemplate
+-- | Wrapper for 'vkUpdateDescriptorSetWithTemplate'
 updateDescriptorSetWithTemplate :: Device ->  DescriptorSet ->  DescriptorUpdateTemplate ->  Ptr () ->  IO ()
 updateDescriptorSetWithTemplate = \(Device device commandTable) -> \descriptorSet -> \descriptorUpdateTemplate -> \pData -> Graphics.Vulkan.C.Dynamic.updateDescriptorSetWithTemplate commandTable device descriptorSet descriptorUpdateTemplate pData *> (pure ())
+withDescriptorUpdateTemplate :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withDescriptorUpdateTemplate createInfo allocationCallbacks =
+  bracket
+    (vkCreateDescriptorUpdateTemplate createInfo allocationCallbacks)
+    (`vkDestroyDescriptorUpdateTemplate` allocationCallbacks)

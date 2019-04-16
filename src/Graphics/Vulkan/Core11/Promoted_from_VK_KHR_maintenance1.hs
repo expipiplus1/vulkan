@@ -39,6 +39,6 @@ type CommandPoolTrimFlags = VkCommandPoolTrimFlags
 -- No documentation found for TopLevel "CommandPoolTrimFlagsKHR"
 type CommandPoolTrimFlagsKHR = CommandPoolTrimFlags
 
--- | Wrapper for vkTrimCommandPool
+-- | Wrapper for 'vkTrimCommandPool'
 trimCommandPool :: Device ->  CommandPool ->  CommandPoolTrimFlags ->  IO ()
 trimCommandPool = \(Device device commandTable) -> \commandPool -> \flags -> Graphics.Vulkan.C.Dynamic.trimCommandPool commandTable device commandPool flags *> (pure ())

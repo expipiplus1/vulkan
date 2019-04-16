@@ -79,5 +79,5 @@ getBufferMemoryRequirements2KHR :: Device ->  BufferMemoryRequirementsInfo2 ->  
 getBufferMemoryRequirements2KHR = getBufferMemoryRequirements2
 getImageMemoryRequirements2KHR :: Device ->  ImageMemoryRequirementsInfo2 ->  IO (MemoryRequirements2)
 getImageMemoryRequirements2KHR = getImageMemoryRequirements2
-getImageSparseMemoryRequirements2KHR :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO (Vector SparseImageMemoryRequirements2)
+getImageSparseMemoryRequirements2KHR :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO ( Vector SparseImageMemoryRequirements2 )
 getImageSparseMemoryRequirements2KHR = getImageSparseMemoryRequirements2

@@ -112,6 +112,6 @@ fromCStructViewportWScalingNV :: VkViewportWScalingNV -> IO ViewportWScalingNV
 fromCStructViewportWScalingNV c = ViewportWScalingNV <$> pure (vkXcoeff (c :: VkViewportWScalingNV))
                                                      <*> pure (vkYcoeff (c :: VkViewportWScalingNV))
 
--- | Wrapper for vkCmdSetViewportWScalingNV
+-- | Wrapper for 'vkCmdSetViewportWScalingNV'
 cmdSetViewportWScalingNV :: CommandBuffer ->  Word32 ->  Vector ViewportWScalingNV ->  IO ()
 cmdSetViewportWScalingNV = \(CommandBuffer commandBuffer commandTable) -> \firstViewport -> \viewportWScalings -> withVec withCStructViewportWScalingNV viewportWScalings (\pViewportWScalings -> Graphics.Vulkan.C.Dynamic.cmdSetViewportWScalingNV commandTable commandBuffer firstViewport (fromIntegral $ Data.Vector.length viewportWScalings) pViewportWScalings *> (pure ()))

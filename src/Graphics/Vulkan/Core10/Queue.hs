@@ -17,6 +17,8 @@ module Graphics.Vulkan.Core10.Queue
   , getDeviceQueue
   , queueSubmit
   , queueWaitIdle
+  , withFence
+  , withSemaphore
   ) where
 
 import Control.Exception
@@ -146,7 +148,8 @@ data SubmitInfo = SubmitInfo
   }
   deriving (Show, Eq)
 withCStructSubmitInfo :: SubmitInfo -> (VkSubmitInfo -> IO a) -> IO a
-withCStructSubmitInfo from cont = withVec (&) (vkPSignalSemaphores (from :: SubmitInfo)) (\pSignalSemaphores -> withVec ((&) . commandBufferHandle) (vkPCommandBuffers (from :: SubmitInfo)) (\pCommandBuffers -> withVec (&) (vkPWaitDstStageMask (from :: SubmitInfo)) (\pWaitDstStageMask -> withVec (&) (vkPWaitSemaphores (from :: SubmitInfo)) (\pWaitSemaphores -> maybeWith withSomeVkStruct (vkPNext (from :: SubmitInfo)) (\pPNext -> cont (VkSubmitInfo VK_STRUCTURE_TYPE_SUBMIT_INFO pPNext (fromIntegral (minimum ([Data.Vector.length (vkPWaitSemaphores (from :: SubmitInfo)), Data.Vector.length (vkPWaitDstStageMask (from :: SubmitInfo))]))) pWaitSemaphores pWaitDstStageMask (fromIntegral (Data.Vector.length (vkPCommandBuffers (from :: SubmitInfo)))) pCommandBuffers (fromIntegral (Data.Vector.length (vkPSignalSemaphores (from :: SubmitInfo)))) pSignalSemaphores))))))
+withCStructSubmitInfo from cont = withVec (&) (vkPSignalSemaphores (from :: SubmitInfo)) (\pSignalSemaphores -> withVec ((&) . commandBufferHandle) (vkPCommandBuffers (from :: SubmitInfo)) (\pCommandBuffers -> withVec (&) (vkPWaitDstStageMask (from :: SubmitInfo)) (\pWaitDstStageMask -> withVec (&) (vkPWaitSemaphores (from :: SubmitInfo)) (\pWaitSemaphores -> maybeWith withSomeVkStruct (vkPNext (from :: SubmitInfo)) (\pPNext -> cont (VkSubmitInfo VK_STRUCTURE_TYPE_SUBMIT_INFO pPNext (fromIntegral (minimum ([ Data.Vector.length (vkPWaitSemaphores (from :: SubmitInfo))
+, Data.Vector.length (vkPWaitDstStageMask (from :: SubmitInfo)) ]))) pWaitSemaphores pWaitDstStageMask (fromIntegral (Data.Vector.length (vkPCommandBuffers (from :: SubmitInfo)))) pCommandBuffers (fromIntegral (Data.Vector.length (vkPSignalSemaphores (from :: SubmitInfo)))) pSignalSemaphores))))))
 fromCStructSubmitInfo :: DeviceCmds -> VkSubmitInfo -> IO SubmitInfo
 fromCStructSubmitInfo commandTable c = SubmitInfo <$> -- Univalued Member elided
                                                   maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSubmitInfo)))
@@ -158,18 +161,28 @@ fromCStructSubmitInfo commandTable c = SubmitInfo <$> -- Univalued Member elided
                                                   -- Length valued member elided
                                                   <*> (Data.Vector.generateM (fromIntegral (vkSignalSemaphoreCount (c :: VkSubmitInfo))) (peekElemOff (vkPSignalSemaphores (c :: VkSubmitInfo))))
 
--- | Wrapper for vkDeviceWaitIdle
+-- | Wrapper for 'vkDeviceWaitIdle'
 deviceWaitIdle :: Device ->  IO ()
 deviceWaitIdle = \(Device device commandTable) -> Graphics.Vulkan.C.Dynamic.deviceWaitIdle commandTable device >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
 
--- | Wrapper for vkGetDeviceQueue
+-- | Wrapper for 'vkGetDeviceQueue'
 getDeviceQueue :: Device ->  Word32 ->  Word32 ->  IO (Queue)
 getDeviceQueue = \(Device device commandTable) -> \queueFamilyIndex -> \queueIndex -> alloca (\pQueue -> Graphics.Vulkan.C.Dynamic.getDeviceQueue commandTable device queueFamilyIndex queueIndex pQueue *> (flip Queue commandTable <$> peek pQueue))
 
--- | Wrapper for vkQueueSubmit
+-- | Wrapper for 'vkQueueSubmit'
 queueSubmit :: Queue ->  Vector SubmitInfo ->  Fence ->  IO ()
 queueSubmit = \(Queue queue commandTable) -> \submits -> \fence -> withVec withCStructSubmitInfo submits (\pSubmits -> Graphics.Vulkan.C.Dynamic.queueSubmit commandTable queue (fromIntegral $ Data.Vector.length submits) pSubmits fence >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
--- | Wrapper for vkQueueWaitIdle
+-- | Wrapper for 'vkQueueWaitIdle'
 queueWaitIdle :: Queue ->  IO ()
 queueWaitIdle = \(Queue queue commandTable) -> Graphics.Vulkan.C.Dynamic.queueWaitIdle commandTable queue >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
+withFence :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withFence createInfo allocationCallbacks =
+  bracket
+    (vkCreateFence createInfo allocationCallbacks)
+    (`vkDestroyFence` allocationCallbacks)
+withSemaphore :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withSemaphore createInfo allocationCallbacks =
+  bracket
+    (vkCreateSemaphore createInfo allocationCallbacks)
+    (`vkDestroySemaphore` allocationCallbacks)

@@ -91,10 +91,10 @@ fromCStructPhysicalDevicePushDescriptorPropertiesKHR c = PhysicalDevicePushDescr
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDevicePushDescriptorPropertiesKHR)))
                                                                                                    <*> pure (vkMaxPushDescriptors (c :: VkPhysicalDevicePushDescriptorPropertiesKHR))
 
--- | Wrapper for vkCmdPushDescriptorSetKHR
-cmdPushDescriptorSetKHR :: CommandBuffer ->  PipelineBindPoint ->  PipelineLayout ->  Word32 ->  Vector WriteDescriptorSet ->  IO ()
+-- | Wrapper for 'vkCmdPushDescriptorSetKHR'
+cmdPushDescriptorSetKHR :: CommandBuffer ->  PipelineBindPoint ->  PipelineLayout ->  Word32 ->  Vector WriteDescriptorSet ->  IO (  )
 cmdPushDescriptorSetKHR = \(CommandBuffer commandBuffer commandTable) -> \pipelineBindPoint -> \layout -> \set -> \descriptorWrites -> withVec withCStructWriteDescriptorSet descriptorWrites (\pDescriptorWrites -> Graphics.Vulkan.C.Dynamic.cmdPushDescriptorSetKHR commandTable commandBuffer pipelineBindPoint layout set (fromIntegral $ Data.Vector.length descriptorWrites) pDescriptorWrites *> (pure ()))
 
--- | Wrapper for vkCmdPushDescriptorSetWithTemplateKHR
-cmdPushDescriptorSetWithTemplateKHR :: CommandBuffer ->  DescriptorUpdateTemplate ->  PipelineLayout ->  Word32 ->  Ptr () ->  IO ()
+-- | Wrapper for 'vkCmdPushDescriptorSetWithTemplateKHR'
+cmdPushDescriptorSetWithTemplateKHR :: CommandBuffer ->  DescriptorUpdateTemplate ->  PipelineLayout ->  Word32 ->  Ptr () ->  IO (  )
 cmdPushDescriptorSetWithTemplateKHR = \(CommandBuffer commandBuffer commandTable) -> \descriptorUpdateTemplate -> \layout -> \set -> \pData -> Graphics.Vulkan.C.Dynamic.cmdPushDescriptorSetWithTemplateKHR commandTable commandBuffer descriptorUpdateTemplate layout set pData *> (pure ())

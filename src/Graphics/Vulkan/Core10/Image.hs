@@ -182,14 +182,14 @@ fromCStructSubresourceLayout c = SubresourceLayout <$> pure (vkOffset (c :: VkSu
                                                    <*> pure (vkArrayPitch (c :: VkSubresourceLayout))
                                                    <*> pure (vkDepthPitch (c :: VkSubresourceLayout))
 
--- | Wrapper for vkCreateImage
+-- | Wrapper for 'vkCreateImage'
 createImage :: Device ->  ImageCreateInfo ->  Maybe AllocationCallbacks ->  IO (Image)
 createImage = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pImage -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructImageCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createImage commandTable device pCreateInfo pAllocator pImage >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pImage)))))
 
--- | Wrapper for vkDestroyImage
+-- | Wrapper for 'vkDestroyImage'
 destroyImage :: Device ->  Image ->  Maybe AllocationCallbacks ->  IO ()
 destroyImage = \(Device device commandTable) -> \image -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyImage commandTable device image pAllocator *> (pure ()))
 
--- | Wrapper for vkGetImageSubresourceLayout
+-- | Wrapper for 'vkGetImageSubresourceLayout'
 getImageSubresourceLayout :: Device ->  Image ->  ImageSubresource ->  IO (SubresourceLayout)
 getImageSubresourceLayout = \(Device device commandTable) -> \image -> \subresource -> alloca (\pLayout -> (\a -> withCStructImageSubresource a . flip with) subresource (\pSubresource -> Graphics.Vulkan.C.Dynamic.getImageSubresourceLayout commandTable device image pSubresource pLayout *> ((fromCStructSubresourceLayout <=< peek) pLayout)))

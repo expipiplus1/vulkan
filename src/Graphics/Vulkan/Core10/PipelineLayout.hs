@@ -15,6 +15,7 @@ module Graphics.Vulkan.Core10.PipelineLayout
   , ShaderStageFlags
   , createPipelineLayout
   , destroyPipelineLayout
+  , withDescriptorSetLayout
   ) where
 
 import Control.Exception
@@ -138,10 +139,15 @@ fromCStructPushConstantRange c = PushConstantRange <$> pure (vkStageFlags (c :: 
 -- No documentation found for TopLevel "ShaderStageFlags"
 type ShaderStageFlags = ShaderStageFlagBits
 
--- | Wrapper for vkCreatePipelineLayout
-createPipelineLayout :: Device ->  PipelineLayoutCreateInfo ->  Maybe AllocationCallbacks ->  IO (PipelineLayout)
+-- | Wrapper for 'vkCreatePipelineLayout'
+createPipelineLayout :: Device ->  PipelineLayoutCreateInfo ->  Maybe AllocationCallbacks ->  IO ( PipelineLayout )
 createPipelineLayout = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pPipelineLayout -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructPipelineLayoutCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createPipelineLayout commandTable device pCreateInfo pAllocator pPipelineLayout >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pPipelineLayout)))))
 
--- | Wrapper for vkDestroyPipelineLayout
+-- | Wrapper for 'vkDestroyPipelineLayout'
 destroyPipelineLayout :: Device ->  PipelineLayout ->  Maybe AllocationCallbacks ->  IO ()
 destroyPipelineLayout = \(Device device commandTable) -> \pipelineLayout -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyPipelineLayout commandTable device pipelineLayout pAllocator *> (pure ()))
+withDescriptorSetLayout :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
+withDescriptorSetLayout createInfo allocationCallbacks =
+  bracket
+    (vkCreateDescriptorSetLayout createInfo allocationCallbacks)
+    (`vkDestroyDescriptorSetLayout` allocationCallbacks)

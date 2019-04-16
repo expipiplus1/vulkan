@@ -78,6 +78,6 @@ fromCStructImageViewHandleInfoNVX c = ImageViewHandleInfoNVX <$> -- Univalued Me
                                                              <*> pure (vkDescriptorType (c :: VkImageViewHandleInfoNVX))
                                                              <*> pure (vkSampler (c :: VkImageViewHandleInfoNVX))
 
--- | Wrapper for vkGetImageViewHandleNVX
+-- | Wrapper for 'vkGetImageViewHandleNVX'
 getImageViewHandleNVX :: Device ->  ImageViewHandleInfoNVX ->  IO (Word32)
 getImageViewHandleNVX = \(Device device commandTable) -> \info -> (\a -> withCStructImageViewHandleInfoNVX a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getImageViewHandleNVX commandTable device pInfo >>= (\r -> pure r))

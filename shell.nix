@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}
+{ pkgs ? import (import ./pkgs.nix) {}
 , compiler ? "ghc864"
 , hoogle ? true
 }:

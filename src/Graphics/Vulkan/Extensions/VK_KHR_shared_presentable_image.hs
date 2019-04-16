@@ -82,6 +82,6 @@ fromCStructSharedPresentSurfaceCapabilitiesKHR c = SharedPresentSurfaceCapabilit
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSharedPresentSurfaceCapabilitiesKHR)))
                                                                                        <*> pure (vkSharedPresentSupportedUsageFlags (c :: VkSharedPresentSurfaceCapabilitiesKHR))
 
--- | Wrapper for vkGetSwapchainStatusKHR
+-- | Wrapper for 'vkGetSwapchainStatusKHR'
 getSwapchainStatusKHR :: Device ->  SwapchainKHR ->  IO (VkResult)
 getSwapchainStatusKHR = \(Device device commandTable) -> \swapchain -> Graphics.Vulkan.C.Dynamic.getSwapchainStatusKHR commandTable device swapchain >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure r))

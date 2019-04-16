@@ -33,6 +33,6 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker
 
 
 
--- | Wrapper for vkCmdWriteBufferMarkerAMD
-cmdWriteBufferMarkerAMD :: CommandBuffer ->  PipelineStageFlagBits ->  Buffer ->  DeviceSize ->  Word32 ->  IO ()
+-- | Wrapper for 'vkCmdWriteBufferMarkerAMD'
+cmdWriteBufferMarkerAMD :: CommandBuffer ->  PipelineStageFlagBits ->  Buffer ->  DeviceSize ->  Word32 ->  IO (  )
 cmdWriteBufferMarkerAMD = \(CommandBuffer commandBuffer commandTable) -> \pipelineStage -> \dstBuffer -> \dstOffset -> \marker -> Graphics.Vulkan.C.Dynamic.cmdWriteBufferMarkerAMD commandTable commandBuffer pipelineStage dstBuffer dstOffset marker *> (pure ())

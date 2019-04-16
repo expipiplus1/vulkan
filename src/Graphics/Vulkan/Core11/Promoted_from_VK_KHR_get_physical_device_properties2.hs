@@ -326,31 +326,31 @@ fromCStructSparseImageFormatProperties2 c = SparseImageFormatProperties2 <$> -- 
                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSparseImageFormatProperties2)))
                                                                          <*> (fromCStructSparseImageFormatProperties (vkProperties (c :: VkSparseImageFormatProperties2)))
 
--- | Wrapper for vkGetPhysicalDeviceFeatures2
+-- | Wrapper for 'vkGetPhysicalDeviceFeatures2'
 getPhysicalDeviceFeatures2 :: PhysicalDevice ->  IO (PhysicalDeviceFeatures2)
 getPhysicalDeviceFeatures2 = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pFeatures -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceFeatures2 commandTable physicalDevice pFeatures *> ((fromCStructPhysicalDeviceFeatures2 <=< peek) pFeatures))
 
--- | Wrapper for vkGetPhysicalDeviceFormatProperties2
+-- | Wrapper for 'vkGetPhysicalDeviceFormatProperties2'
 getPhysicalDeviceFormatProperties2 :: PhysicalDevice ->  Format ->  IO (FormatProperties2)
 getPhysicalDeviceFormatProperties2 = \(PhysicalDevice physicalDevice commandTable) -> \format -> alloca (\pFormatProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceFormatProperties2 commandTable physicalDevice format pFormatProperties *> ((fromCStructFormatProperties2 <=< peek) pFormatProperties))
 
--- | Wrapper for vkGetPhysicalDeviceImageFormatProperties2
-getPhysicalDeviceImageFormatProperties2 :: PhysicalDevice ->  PhysicalDeviceImageFormatInfo2 ->  IO (ImageFormatProperties2)
+-- | Wrapper for 'vkGetPhysicalDeviceImageFormatProperties2'
+getPhysicalDeviceImageFormatProperties2 :: PhysicalDevice ->  PhysicalDeviceImageFormatInfo2 ->  IO ( ImageFormatProperties2 )
 getPhysicalDeviceImageFormatProperties2 = \(PhysicalDevice physicalDevice commandTable) -> \imageFormatInfo -> alloca (\pImageFormatProperties -> (\a -> withCStructPhysicalDeviceImageFormatInfo2 a . flip with) imageFormatInfo (\pImageFormatInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceImageFormatProperties2 commandTable physicalDevice pImageFormatInfo pImageFormatProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructImageFormatProperties2 <=< peek) pImageFormatProperties))))
 
--- | Wrapper for vkGetPhysicalDeviceMemoryProperties2
+-- | Wrapper for 'vkGetPhysicalDeviceMemoryProperties2'
 getPhysicalDeviceMemoryProperties2 :: PhysicalDevice ->  IO (PhysicalDeviceMemoryProperties2)
 getPhysicalDeviceMemoryProperties2 = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pMemoryProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceMemoryProperties2 commandTable physicalDevice pMemoryProperties *> ((fromCStructPhysicalDeviceMemoryProperties2 <=< peek) pMemoryProperties))
 
--- | Wrapper for vkGetPhysicalDeviceProperties2
+-- | Wrapper for 'vkGetPhysicalDeviceProperties2'
 getPhysicalDeviceProperties2 :: PhysicalDevice ->  IO (PhysicalDeviceProperties2)
 getPhysicalDeviceProperties2 = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceProperties2 commandTable physicalDevice pProperties *> ((fromCStructPhysicalDeviceProperties2 <=< peek) pProperties))
 
--- | Wrapper for vkGetPhysicalDeviceQueueFamilyProperties2
+-- | Wrapper for 'vkGetPhysicalDeviceQueueFamilyProperties2'
 getNumPhysicalDeviceQueueFamilyProperties2 :: PhysicalDevice ->  IO (Word32)
 getNumPhysicalDeviceQueueFamilyProperties2 = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pQueueFamilyPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceQueueFamilyProperties2 commandTable physicalDevice pQueueFamilyPropertyCount nullPtr *> (peek pQueueFamilyPropertyCount))
 
--- | Wrapper for vkGetPhysicalDeviceQueueFamilyProperties2
+-- | Wrapper for 'vkGetPhysicalDeviceQueueFamilyProperties2'
 getPhysicalDeviceQueueFamilyProperties2 :: PhysicalDevice ->  Word32 ->  IO (Vector QueueFamilyProperties2)
 getPhysicalDeviceQueueFamilyProperties2 = \(PhysicalDevice physicalDevice commandTable) -> \queueFamilyPropertyCount -> allocaArray (fromIntegral queueFamilyPropertyCount) (\pQueueFamilyProperties -> with queueFamilyPropertyCount (\pQueueFamilyPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceQueueFamilyProperties2 commandTable physicalDevice pQueueFamilyPropertyCount pQueueFamilyProperties *> ((flip Data.Vector.generateM ((\p -> fromCStructQueueFamilyProperties2 <=< peekElemOff p) pQueueFamilyProperties) =<< (fromIntegral <$> (peek pQueueFamilyPropertyCount))))))
 -- | Call 'getNumPhysicalDeviceQueueFamilyProperties2' to get the number of return values, then use that
@@ -361,12 +361,12 @@ getAllPhysicalDeviceQueueFamilyProperties2 physicalDevice =
     >>= \num -> getPhysicalDeviceQueueFamilyProperties2 physicalDevice num
 
 
--- | Wrapper for vkGetPhysicalDeviceSparseImageFormatProperties2
+-- | Wrapper for 'vkGetPhysicalDeviceSparseImageFormatProperties2'
 getNumPhysicalDeviceSparseImageFormatProperties2 :: PhysicalDevice ->  PhysicalDeviceSparseImageFormatInfo2 ->  IO (Word32)
 getNumPhysicalDeviceSparseImageFormatProperties2 = \(PhysicalDevice physicalDevice commandTable) -> \formatInfo -> alloca (\pPropertyCount -> (\a -> withCStructPhysicalDeviceSparseImageFormatInfo2 a . flip with) formatInfo (\pFormatInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSparseImageFormatProperties2 commandTable physicalDevice pFormatInfo pPropertyCount nullPtr *> (peek pPropertyCount)))
 
--- | Wrapper for vkGetPhysicalDeviceSparseImageFormatProperties2
-getPhysicalDeviceSparseImageFormatProperties2 :: PhysicalDevice ->  PhysicalDeviceSparseImageFormatInfo2 ->  Word32 ->  IO (Vector SparseImageFormatProperties2)
+-- | Wrapper for 'vkGetPhysicalDeviceSparseImageFormatProperties2'
+getPhysicalDeviceSparseImageFormatProperties2 :: PhysicalDevice ->  PhysicalDeviceSparseImageFormatInfo2 ->  Word32 ->  IO ( Vector SparseImageFormatProperties2 )
 getPhysicalDeviceSparseImageFormatProperties2 = \(PhysicalDevice physicalDevice commandTable) -> \formatInfo -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> (\a -> withCStructPhysicalDeviceSparseImageFormatInfo2 a . flip with) formatInfo (\pFormatInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSparseImageFormatProperties2 commandTable physicalDevice pFormatInfo pPropertyCount pProperties *> ((flip Data.Vector.generateM ((\p -> fromCStructSparseImageFormatProperties2 <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumPhysicalDeviceSparseImageFormatProperties2' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSparseImageFormatProperties2' to get all the values.

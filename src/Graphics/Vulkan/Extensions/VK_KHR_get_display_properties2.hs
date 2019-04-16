@@ -209,12 +209,13 @@ fromCStructDisplayProperties2KHR c = DisplayProperties2KHR <$> -- Univalued Memb
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayProperties2KHR)))
                                                            <*> (fromCStructDisplayPropertiesKHR (vkDisplayProperties (c :: VkDisplayProperties2KHR)))
 
--- | Wrapper for vkGetDisplayModeProperties2KHR
+-- | Wrapper for 'vkGetDisplayModeProperties2KHR'
 getNumDisplayModeProperties2KHR :: PhysicalDevice ->  DisplayKHR ->  IO (VkResult, Word32)
 getNumDisplayModeProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \display -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getDisplayModeProperties2KHR commandTable physicalDevice display pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
--- | Wrapper for vkGetDisplayModeProperties2KHR
-getDisplayModeProperties2KHR :: PhysicalDevice ->  DisplayKHR ->  Word32 ->  IO (VkResult, Vector DisplayModeProperties2KHR)
+-- | Wrapper for 'vkGetDisplayModeProperties2KHR'
+getDisplayModeProperties2KHR :: PhysicalDevice ->  DisplayKHR ->  Word32 ->  IO ( VkResult
+, Vector DisplayModeProperties2KHR )
 getDisplayModeProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \display -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getDisplayModeProperties2KHR commandTable physicalDevice display pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayModeProperties2KHR <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumDisplayModeProperties2KHR' to get the number of return values, then use that
 -- number to call 'getDisplayModeProperties2KHR' to get all the values.
@@ -224,15 +225,15 @@ getAllDisplayModeProperties2KHR physicalDevice display =
     >>= \num -> snd <$> getDisplayModeProperties2KHR physicalDevice display num
 
 
--- | Wrapper for vkGetDisplayPlaneCapabilities2KHR
+-- | Wrapper for 'vkGetDisplayPlaneCapabilities2KHR'
 getDisplayPlaneCapabilities2KHR :: PhysicalDevice ->  DisplayPlaneInfo2KHR ->  IO (DisplayPlaneCapabilities2KHR)
 getDisplayPlaneCapabilities2KHR = \(PhysicalDevice physicalDevice commandTable) -> \displayPlaneInfo -> alloca (\pCapabilities -> (\a -> withCStructDisplayPlaneInfo2KHR a . flip with) displayPlaneInfo (\pDisplayPlaneInfo -> Graphics.Vulkan.C.Dynamic.getDisplayPlaneCapabilities2KHR commandTable physicalDevice pDisplayPlaneInfo pCapabilities >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructDisplayPlaneCapabilities2KHR <=< peek) pCapabilities))))
 
--- | Wrapper for vkGetPhysicalDeviceDisplayPlaneProperties2KHR
+-- | Wrapper for 'vkGetPhysicalDeviceDisplayPlaneProperties2KHR'
 getNumPhysicalDeviceDisplayPlaneProperties2KHR :: PhysicalDevice ->  IO (VkResult, Word32)
 getNumPhysicalDeviceDisplayPlaneProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceDisplayPlaneProperties2KHR commandTable physicalDevice pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
--- | Wrapper for vkGetPhysicalDeviceDisplayPlaneProperties2KHR
+-- | Wrapper for 'vkGetPhysicalDeviceDisplayPlaneProperties2KHR'
 getPhysicalDeviceDisplayPlaneProperties2KHR :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector DisplayPlaneProperties2KHR)
 getPhysicalDeviceDisplayPlaneProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceDisplayPlaneProperties2KHR commandTable physicalDevice pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayPlaneProperties2KHR <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumPhysicalDeviceDisplayPlaneProperties2KHR' to get the number of return values, then use that
@@ -243,11 +244,11 @@ getAllPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice =
     >>= \num -> snd <$> getPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice num
 
 
--- | Wrapper for vkGetPhysicalDeviceDisplayProperties2KHR
+-- | Wrapper for 'vkGetPhysicalDeviceDisplayProperties2KHR'
 getNumPhysicalDeviceDisplayProperties2KHR :: PhysicalDevice ->  IO (VkResult, Word32)
 getNumPhysicalDeviceDisplayProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceDisplayProperties2KHR commandTable physicalDevice pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
--- | Wrapper for vkGetPhysicalDeviceDisplayProperties2KHR
+-- | Wrapper for 'vkGetPhysicalDeviceDisplayProperties2KHR'
 getPhysicalDeviceDisplayProperties2KHR :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector DisplayProperties2KHR)
 getPhysicalDeviceDisplayProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceDisplayProperties2KHR commandTable physicalDevice pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayProperties2KHR <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumPhysicalDeviceDisplayProperties2KHR' to get the number of return values, then use that

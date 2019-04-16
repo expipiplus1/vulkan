@@ -181,20 +181,21 @@ type SurfaceTransformFlagBitsKHR = VkSurfaceTransformFlagBitsKHR
 -- No documentation found for TopLevel "SurfaceTransformFlagsKHR"
 type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 
--- | Wrapper for vkDestroySurfaceKHR
+-- | Wrapper for 'vkDestroySurfaceKHR'
 destroySurfaceKHR :: Instance ->  SurfaceKHR ->  Maybe AllocationCallbacks ->  IO ()
 destroySurfaceKHR = \(Instance instance' commandTable) -> \surface -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySurfaceKHR commandTable instance' surface pAllocator *> (pure ()))
 
--- | Wrapper for vkGetPhysicalDeviceSurfaceCapabilitiesKHR
+-- | Wrapper for 'vkGetPhysicalDeviceSurfaceCapabilitiesKHR'
 getPhysicalDeviceSurfaceCapabilitiesKHR :: PhysicalDevice ->  SurfaceKHR ->  IO (SurfaceCapabilitiesKHR)
 getPhysicalDeviceSurfaceCapabilitiesKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> alloca (\pSurfaceCapabilities -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceCapabilitiesKHR commandTable physicalDevice surface pSurfaceCapabilities >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructSurfaceCapabilitiesKHR <=< peek) pSurfaceCapabilities)))
 
--- | Wrapper for vkGetPhysicalDeviceSurfaceFormatsKHR
+-- | Wrapper for 'vkGetPhysicalDeviceSurfaceFormatsKHR'
 getNumPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice ->  SurfaceKHR ->  IO (VkResult, Word32)
 getNumPhysicalDeviceSurfaceFormatsKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> alloca (\pSurfaceFormatCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceFormatsKHR commandTable physicalDevice surface pSurfaceFormatCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pSurfaceFormatCount)))
 
--- | Wrapper for vkGetPhysicalDeviceSurfaceFormatsKHR
-getPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO (VkResult, Vector SurfaceFormatKHR)
+-- | Wrapper for 'vkGetPhysicalDeviceSurfaceFormatsKHR'
+getPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO ( VkResult
+, Vector SurfaceFormatKHR )
 getPhysicalDeviceSurfaceFormatsKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> \surfaceFormatCount -> allocaArray (fromIntegral surfaceFormatCount) (\pSurfaceFormats -> with surfaceFormatCount (\pSurfaceFormatCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceFormatsKHR commandTable physicalDevice surface pSurfaceFormatCount pSurfaceFormats >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructSurfaceFormatKHR <=< peekElemOff p) pSurfaceFormats) =<< (fromIntegral <$> (peek pSurfaceFormatCount)))))))
 -- | Call 'getNumPhysicalDeviceSurfaceFormatsKHR' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSurfaceFormatsKHR' to get all the values.
@@ -204,12 +205,13 @@ getAllPhysicalDeviceSurfaceFormatsKHR physicalDevice surface =
     >>= \num -> snd <$> getPhysicalDeviceSurfaceFormatsKHR physicalDevice surface num
 
 
--- | Wrapper for vkGetPhysicalDeviceSurfacePresentModesKHR
+-- | Wrapper for 'vkGetPhysicalDeviceSurfacePresentModesKHR'
 getNumPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice ->  SurfaceKHR ->  IO (VkResult, Word32)
 getNumPhysicalDeviceSurfacePresentModesKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> alloca (\pPresentModeCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfacePresentModesKHR commandTable physicalDevice surface pPresentModeCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPresentModeCount)))
 
--- | Wrapper for vkGetPhysicalDeviceSurfacePresentModesKHR
-getPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO (VkResult, Vector PresentModeKHR)
+-- | Wrapper for 'vkGetPhysicalDeviceSurfacePresentModesKHR'
+getPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO ( VkResult
+, Vector PresentModeKHR )
 getPhysicalDeviceSurfacePresentModesKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> \presentModeCount -> allocaArray (fromIntegral presentModeCount) (\pPresentModes -> with presentModeCount (\pPresentModeCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfacePresentModesKHR commandTable physicalDevice surface pPresentModeCount pPresentModes >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM (peekElemOff pPresentModes) =<< (fromIntegral <$> (peek pPresentModeCount)))))))
 -- | Call 'getNumPhysicalDeviceSurfacePresentModesKHR' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSurfacePresentModesKHR' to get all the values.
@@ -219,6 +221,6 @@ getAllPhysicalDeviceSurfacePresentModesKHR physicalDevice surface =
     >>= \num -> snd <$> getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface num
 
 
--- | Wrapper for vkGetPhysicalDeviceSurfaceSupportKHR
+-- | Wrapper for 'vkGetPhysicalDeviceSurfaceSupportKHR'
 getPhysicalDeviceSurfaceSupportKHR :: PhysicalDevice ->  Word32 ->  SurfaceKHR ->  IO (Bool)
 getPhysicalDeviceSurfaceSupportKHR = \(PhysicalDevice physicalDevice commandTable) -> \queueFamilyIndex -> \surface -> alloca (\pSupported -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceSupportKHR commandTable physicalDevice queueFamilyIndex surface pSupported >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (bool32ToBool <$> (peek pSupported))))

@@ -114,6 +114,6 @@ fromCStructImportMemoryWin32HandleInfoNV c = ImportMemoryWin32HandleInfoNV <$> -
                                                                            <*> pure (vkHandleType (c :: VkImportMemoryWin32HandleInfoNV))
                                                                            <*> pure (vkHandle (c :: VkImportMemoryWin32HandleInfoNV))
 
--- | Wrapper for vkGetMemoryWin32HandleNV
+-- | Wrapper for 'vkGetMemoryWin32HandleNV'
 getMemoryWin32HandleNV :: Device ->  DeviceMemory ->  ExternalMemoryHandleTypeFlagsNV ->  IO (HANDLE)
 getMemoryWin32HandleNV = \(Device device commandTable) -> \memory -> \handleType -> alloca (\pHandle -> Graphics.Vulkan.C.Dynamic.getMemoryWin32HandleNV commandTable device memory handleType pHandle >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pHandle)))

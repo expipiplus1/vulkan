@@ -116,6 +116,6 @@ fromCStructPhysicalDeviceExternalSemaphoreInfo c = PhysicalDeviceExternalSemapho
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceExternalSemaphoreInfo)))
                                                                                        <*> pure (vkHandleType (c :: VkPhysicalDeviceExternalSemaphoreInfo))
 
--- | Wrapper for vkGetPhysicalDeviceExternalSemaphoreProperties
-getPhysicalDeviceExternalSemaphoreProperties :: PhysicalDevice ->  PhysicalDeviceExternalSemaphoreInfo ->  IO (ExternalSemaphoreProperties)
+-- | Wrapper for 'vkGetPhysicalDeviceExternalSemaphoreProperties'
+getPhysicalDeviceExternalSemaphoreProperties :: PhysicalDevice ->  PhysicalDeviceExternalSemaphoreInfo ->  IO ( ExternalSemaphoreProperties )
 getPhysicalDeviceExternalSemaphoreProperties = \(PhysicalDevice physicalDevice commandTable) -> \externalSemaphoreInfo -> alloca (\pExternalSemaphoreProperties -> (\a -> withCStructPhysicalDeviceExternalSemaphoreInfo a . flip with) externalSemaphoreInfo (\pExternalSemaphoreInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceExternalSemaphoreProperties commandTable physicalDevice pExternalSemaphoreInfo pExternalSemaphoreProperties *> ((fromCStructExternalSemaphoreProperties <=< peek) pExternalSemaphoreProperties)))

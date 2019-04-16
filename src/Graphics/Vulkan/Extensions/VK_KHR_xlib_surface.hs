@@ -104,10 +104,10 @@ fromCStructXlibSurfaceCreateInfoKHR c = XlibSurfaceCreateInfoKHR <$> -- Univalue
                                                                  <*> pure (vkDpy (c :: VkXlibSurfaceCreateInfoKHR))
                                                                  <*> pure (vkWindow (c :: VkXlibSurfaceCreateInfoKHR))
 
--- | Wrapper for vkCreateXlibSurfaceKHR
-createXlibSurfaceKHR :: Instance ->  XlibSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
+-- | Wrapper for 'vkCreateXlibSurfaceKHR'
+createXlibSurfaceKHR :: Instance ->  XlibSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
 createXlibSurfaceKHR = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructXlibSurfaceCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createXlibSurfaceKHR commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))
 
--- | Wrapper for vkGetPhysicalDeviceXlibPresentationSupportKHR
+-- | Wrapper for 'vkGetPhysicalDeviceXlibPresentationSupportKHR'
 getPhysicalDeviceXlibPresentationSupportKHR :: PhysicalDevice ->  Word32 ->  VisualID ->  IO (VkBool32, Display)
 getPhysicalDeviceXlibPresentationSupportKHR = \(PhysicalDevice physicalDevice commandTable) -> \queueFamilyIndex -> \visualID -> alloca (\pDpy -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceXlibPresentationSupportKHR commandTable physicalDevice queueFamilyIndex pDpy visualID >>= (\r -> (,) <$> pure r<*>peek pDpy))

@@ -125,10 +125,10 @@ fromCStructImportFenceFdInfoKHR c = ImportFenceFdInfoKHR <$> -- Univalued Member
                                                          <*> pure (vkHandleType (c :: VkImportFenceFdInfoKHR))
                                                          <*> pure (vkFd (c :: VkImportFenceFdInfoKHR))
 
--- | Wrapper for vkGetFenceFdKHR
+-- | Wrapper for 'vkGetFenceFdKHR'
 getFenceFdKHR :: Device ->  FenceGetFdInfoKHR ->  IO (CInt)
 getFenceFdKHR = \(Device device commandTable) -> \getFdInfo -> alloca (\pFd -> (\a -> withCStructFenceGetFdInfoKHR a . flip with) getFdInfo (\pGetFdInfo -> Graphics.Vulkan.C.Dynamic.getFenceFdKHR commandTable device pGetFdInfo pFd >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFd))))
 
--- | Wrapper for vkImportFenceFdKHR
+-- | Wrapper for 'vkImportFenceFdKHR'
 importFenceFdKHR :: Device ->  ImportFenceFdInfoKHR ->  IO ()
 importFenceFdKHR = \(Device device commandTable) -> \importFenceFdInfo -> (\a -> withCStructImportFenceFdInfoKHR a . flip with) importFenceFdInfo (\pImportFenceFdInfo -> Graphics.Vulkan.C.Dynamic.importFenceFdKHR commandTable device pImportFenceFdInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))

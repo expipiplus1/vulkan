@@ -91,6 +91,6 @@ fromCStructMacOSSurfaceCreateInfoMVK c = MacOSSurfaceCreateInfoMVK <$> -- Unival
                                                                    <*> pure (vkFlags (c :: VkMacOSSurfaceCreateInfoMVK))
                                                                    <*> pure (vkPView (c :: VkMacOSSurfaceCreateInfoMVK))
 
--- | Wrapper for vkCreateMacOSSurfaceMVK
-createMacOSSurfaceMVK :: Instance ->  MacOSSurfaceCreateInfoMVK ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
+-- | Wrapper for 'vkCreateMacOSSurfaceMVK'
+createMacOSSurfaceMVK :: Instance ->  MacOSSurfaceCreateInfoMVK ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
 createMacOSSurfaceMVK = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructMacOSSurfaceCreateInfoMVK a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createMacOSSurfaceMVK commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))

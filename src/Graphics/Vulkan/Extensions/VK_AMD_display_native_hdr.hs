@@ -89,6 +89,6 @@ fromCStructSwapchainDisplayNativeHdrCreateInfoAMD c = SwapchainDisplayNativeHdrC
                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSwapchainDisplayNativeHdrCreateInfoAMD)))
                                                                                              <*> pure (bool32ToBool (vkLocalDimmingEnable (c :: VkSwapchainDisplayNativeHdrCreateInfoAMD)))
 
--- | Wrapper for vkSetLocalDimmingAMD
+-- | Wrapper for 'vkSetLocalDimmingAMD'
 setLocalDimmingAMD :: Device ->  SwapchainKHR ->  Bool ->  IO ()
 setLocalDimmingAMD = \(Device device commandTable) -> \swapChain -> \localDimmingEnable -> Graphics.Vulkan.C.Dynamic.setLocalDimmingAMD commandTable device swapChain (boolToBool32 localDimmingEnable) *> (pure ())
