@@ -1,4 +1,5 @@
 {-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE LambdaCase     #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PatternSynonyms   #-}
 {-# LANGUAGE QuasiQuotes       #-}
@@ -13,6 +14,7 @@ module Write.Struct
 import           Control.Bool
 import           Data.Char
 import           Data.List.Extra
+import           Data.Functor
 import           Data.Text                                (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
@@ -43,8 +45,13 @@ writeStruct s@Struct {..} = case sStructOrUnion of
                  ]
              )
       weProvides = Unguarded <$> [TypeConstructor sName, Term sName]
+      termDepends = \case
+        Just vs -> PatternName <$> vs
+        Nothing -> []
       weDepends =
-        Unguarded <$> (WE.TypeName "Zero" : nubOrd (concatMap (typeDepends . smType) sMembers))
+        Unguarded <$> nubOrd (WE.TypeName "Zero"
+                             : concatMap (typeDepends . smType) sMembers
+                             ++ concatMap (termDepends . smValues ) sMembers)
       weUndependableProvides = []
       weSourceDepends        = []
       weBootElement          = Nothing
@@ -79,6 +86,14 @@ structDoc s@Struct {..} = do
   let membersFixedNames = fixMemberName <$> sMembers
   (memberDocs, imports, extensions) <-
     unzip3 <$> traverse (memberDoc sName) sMembers
+  let zeroDocs = membersFixedNames <&> \case
+        StructMember{..}
+          | smName == "vkSType"
+          , smType == TypeName "VkStructureType"
+          , Just [v] <- smValues
+          -> pretty v
+          | otherwise
+          -> "zero"
   pure (\getDoc -> [qci|
   {document getDoc (TopLevel sName)}
   data {sName} = {sName}
@@ -99,8 +114,7 @@ structDoc s@Struct {..} = do
                        memberPokeDoc s <$> membersFixedNames)}
 
   instance Zero {sName} where
-    zero = {sName} {indent 0 . vsep $
-                    ("zero" :: Doc ()) <$ membersFixedNames}
+    zero = {sName} {indent 0 . vsep $ (zeroDocs :: [Doc()])}
 |], concat imports ++ [Unguarded $ Import "Foreign.Storable" ["Storable"]], concat extensions)
 
 memberDoc
