@@ -68,7 +68,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
   ( VkAndroidHardwareBufferFormatPropertiesANDROID(..)
@@ -157,6 +158,16 @@ fromCStructAndroidHardwareBufferFormatPropertiesANDROID c = AndroidHardwareBuffe
                                                                                                          <*> pure (vkSuggestedYcbcrRange (c :: VkAndroidHardwareBufferFormatPropertiesANDROID))
                                                                                                          <*> pure (vkSuggestedXChromaOffset (c :: VkAndroidHardwareBufferFormatPropertiesANDROID))
                                                                                                          <*> pure (vkSuggestedYChromaOffset (c :: VkAndroidHardwareBufferFormatPropertiesANDROID))
+instance Zero AndroidHardwareBufferFormatPropertiesANDROID where
+  zero = AndroidHardwareBufferFormatPropertiesANDROID Nothing
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
 -- No documentation found for TopLevel "AndroidHardwareBufferPropertiesANDROID"
 data AndroidHardwareBufferPropertiesANDROID = AndroidHardwareBufferPropertiesANDROID
   { -- Univalued Member elided
@@ -175,6 +186,10 @@ fromCStructAndroidHardwareBufferPropertiesANDROID c = AndroidHardwareBufferPrope
                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkAndroidHardwareBufferPropertiesANDROID)))
                                                                                              <*> pure (vkAllocationSize (c :: VkAndroidHardwareBufferPropertiesANDROID))
                                                                                              <*> pure (vkMemoryTypeBits (c :: VkAndroidHardwareBufferPropertiesANDROID))
+instance Zero AndroidHardwareBufferPropertiesANDROID where
+  zero = AndroidHardwareBufferPropertiesANDROID Nothing
+                                                zero
+                                                zero
 -- No documentation found for TopLevel "AndroidHardwareBufferUsageANDROID"
 data AndroidHardwareBufferUsageANDROID = AndroidHardwareBufferUsageANDROID
   { -- Univalued Member elided
@@ -190,6 +205,9 @@ fromCStructAndroidHardwareBufferUsageANDROID :: VkAndroidHardwareBufferUsageANDR
 fromCStructAndroidHardwareBufferUsageANDROID c = AndroidHardwareBufferUsageANDROID <$> -- Univalued Member elided
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkAndroidHardwareBufferUsageANDROID)))
                                                                                    <*> pure (vkAndroidHardwareBufferUsage (c :: VkAndroidHardwareBufferUsageANDROID))
+instance Zero AndroidHardwareBufferUsageANDROID where
+  zero = AndroidHardwareBufferUsageANDROID Nothing
+                                           zero
 -- No documentation found for TopLevel "ExternalFormatANDROID"
 data ExternalFormatANDROID = ExternalFormatANDROID
   { -- Univalued Member elided
@@ -205,6 +223,9 @@ fromCStructExternalFormatANDROID :: VkExternalFormatANDROID -> IO ExternalFormat
 fromCStructExternalFormatANDROID c = ExternalFormatANDROID <$> -- Univalued Member elided
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExternalFormatANDROID)))
                                                            <*> pure (vkExternalFormat (c :: VkExternalFormatANDROID))
+instance Zero ExternalFormatANDROID where
+  zero = ExternalFormatANDROID Nothing
+                               zero
 -- No documentation found for TopLevel "ImportAndroidHardwareBufferInfoANDROID"
 data ImportAndroidHardwareBufferInfoANDROID = ImportAndroidHardwareBufferInfoANDROID
   { -- Univalued Member elided
@@ -220,6 +241,9 @@ fromCStructImportAndroidHardwareBufferInfoANDROID :: VkImportAndroidHardwareBuff
 fromCStructImportAndroidHardwareBufferInfoANDROID c = ImportAndroidHardwareBufferInfoANDROID <$> -- Univalued Member elided
                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImportAndroidHardwareBufferInfoANDROID)))
                                                                                              <*> pure (vkBuffer (c :: VkImportAndroidHardwareBufferInfoANDROID))
+instance Zero ImportAndroidHardwareBufferInfoANDROID where
+  zero = ImportAndroidHardwareBufferInfoANDROID Nothing
+                                                zero
 -- No documentation found for TopLevel "MemoryGetAndroidHardwareBufferInfoANDROID"
 data MemoryGetAndroidHardwareBufferInfoANDROID = MemoryGetAndroidHardwareBufferInfoANDROID
   { -- Univalued Member elided
@@ -235,11 +259,14 @@ fromCStructMemoryGetAndroidHardwareBufferInfoANDROID :: VkMemoryGetAndroidHardwa
 fromCStructMemoryGetAndroidHardwareBufferInfoANDROID c = MemoryGetAndroidHardwareBufferInfoANDROID <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryGetAndroidHardwareBufferInfoANDROID)))
                                                                                                    <*> pure (vkMemory (c :: VkMemoryGetAndroidHardwareBufferInfoANDROID))
+instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
+  zero = MemoryGetAndroidHardwareBufferInfoANDROID Nothing
+                                                   zero
 
 -- | Wrapper for 'vkGetAndroidHardwareBufferPropertiesANDROID'
 getAndroidHardwareBufferPropertiesANDROID :: Device ->  Ptr AHardwareBuffer ->  IO (AndroidHardwareBufferPropertiesANDROID)
 getAndroidHardwareBufferPropertiesANDROID = \(Device device commandTable) -> \buffer -> alloca (\pProperties -> Graphics.Vulkan.C.Dynamic.getAndroidHardwareBufferPropertiesANDROID commandTable device buffer pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructAndroidHardwareBufferPropertiesANDROID <=< peek) pProperties)))
 
 -- | Wrapper for 'vkGetMemoryAndroidHardwareBufferANDROID'
-getMemoryAndroidHardwareBufferANDROID :: Device ->  MemoryGetAndroidHardwareBufferInfoANDROID ->  IO ( Ptr AHardwareBuffer )
+getMemoryAndroidHardwareBufferANDROID :: Device ->  MemoryGetAndroidHardwareBufferInfoANDROID ->  IO (Ptr AHardwareBuffer)
 getMemoryAndroidHardwareBufferANDROID = \(Device device commandTable) -> \info -> alloca (\pBuffer -> (\a -> withCStructMemoryGetAndroidHardwareBufferInfoANDROID a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getMemoryAndroidHardwareBufferANDROID commandTable device pInfo pBuffer >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pBuffer))))

@@ -87,6 +87,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
@@ -130,11 +131,16 @@ instance Storable VkDeviceEventInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceEventInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceEventInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkDeviceEvent (poked :: VkDeviceEventInfoEXT))
+
+instance Zero VkDeviceEventInfoEXT where
+  zero = VkDeviceEventInfoEXT zero
+                              zero
+                              zero
 -- ** VkDeviceEventTypeEXT
 
 -- No documentation found for TopLevel "VkDeviceEventTypeEXT"
 newtype VkDeviceEventTypeEXT = VkDeviceEventTypeEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkDeviceEventTypeEXT where
   showsPrec _ VK_DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT = showString "VK_DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT"
@@ -173,11 +179,16 @@ instance Storable VkDisplayEventInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayEventInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayEventInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkDisplayEvent (poked :: VkDisplayEventInfoEXT))
+
+instance Zero VkDisplayEventInfoEXT where
+  zero = VkDisplayEventInfoEXT zero
+                               zero
+                               zero
 -- ** VkDisplayEventTypeEXT
 
 -- No documentation found for TopLevel "VkDisplayEventTypeEXT"
 newtype VkDisplayEventTypeEXT = VkDisplayEventTypeEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkDisplayEventTypeEXT where
   showsPrec _ VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT = showString "VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT"
@@ -216,11 +227,16 @@ instance Storable VkDisplayPowerInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayPowerInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayPowerInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkPowerState (poked :: VkDisplayPowerInfoEXT))
+
+instance Zero VkDisplayPowerInfoEXT where
+  zero = VkDisplayPowerInfoEXT zero
+                               zero
+                               zero
 -- ** VkDisplayPowerStateEXT
 
 -- No documentation found for TopLevel "VkDisplayPowerStateEXT"
 newtype VkDisplayPowerStateEXT = VkDisplayPowerStateEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkDisplayPowerStateEXT where
   showsPrec _ VK_DISPLAY_POWER_STATE_OFF_EXT = showString "VK_DISPLAY_POWER_STATE_OFF_EXT"
@@ -271,6 +287,11 @@ instance Storable VkSwapchainCounterCreateInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSwapchainCounterCreateInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSwapchainCounterCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkSurfaceCounters (poked :: VkSwapchainCounterCreateInfoEXT))
+
+instance Zero VkSwapchainCounterCreateInfoEXT where
+  zero = VkSwapchainCounterCreateInfoEXT zero
+                                         zero
+                                         zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkDisplayPowerControlEXT"
 foreign import ccall

@@ -48,10 +48,13 @@ module Graphics.Vulkan.Core10.DescriptorSet
   , resetDescriptorPool
   , updateDescriptorSets
   , withDescriptorPool
+  , withDescriptorSetLayout
+  , withDescriptorSets
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -70,7 +73,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -107,7 +111,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
@@ -202,6 +207,15 @@ fromCStructCopyDescriptorSet c = CopyDescriptorSet <$> -- Univalued Member elide
                                                    <*> pure (vkDstBinding (c :: VkCopyDescriptorSet))
                                                    <*> pure (vkDstArrayElement (c :: VkCopyDescriptorSet))
                                                    <*> pure (vkDescriptorCount (c :: VkCopyDescriptorSet))
+instance Zero CopyDescriptorSet where
+  zero = CopyDescriptorSet Nothing
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
 -- No documentation found for TopLevel "DescriptorBufferInfo"
 data DescriptorBufferInfo = DescriptorBufferInfo
   { -- No documentation found for Nested "DescriptorBufferInfo" "buffer"
@@ -218,6 +232,10 @@ fromCStructDescriptorBufferInfo :: VkDescriptorBufferInfo -> IO DescriptorBuffer
 fromCStructDescriptorBufferInfo c = DescriptorBufferInfo <$> pure (vkBuffer (c :: VkDescriptorBufferInfo))
                                                          <*> pure (vkOffset (c :: VkDescriptorBufferInfo))
                                                          <*> pure (vkRange (c :: VkDescriptorBufferInfo))
+instance Zero DescriptorBufferInfo where
+  zero = DescriptorBufferInfo zero
+                              zero
+                              zero
 -- No documentation found for TopLevel "DescriptorImageInfo"
 data DescriptorImageInfo = DescriptorImageInfo
   { -- No documentation found for Nested "DescriptorImageInfo" "sampler"
@@ -234,6 +252,10 @@ fromCStructDescriptorImageInfo :: VkDescriptorImageInfo -> IO DescriptorImageInf
 fromCStructDescriptorImageInfo c = DescriptorImageInfo <$> pure (vkSampler (c :: VkDescriptorImageInfo))
                                                        <*> pure (vkImageView (c :: VkDescriptorImageInfo))
                                                        <*> pure (vkImageLayout (c :: VkDescriptorImageInfo))
+instance Zero DescriptorImageInfo where
+  zero = DescriptorImageInfo zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "DescriptorPool"
 type DescriptorPool = VkDescriptorPool
 -- No documentation found for TopLevel "DescriptorPoolCreateFlagBits"
@@ -263,6 +285,11 @@ fromCStructDescriptorPoolCreateInfo c = DescriptorPoolCreateInfo <$> -- Univalue
                                                                  <*> pure (vkMaxSets (c :: VkDescriptorPoolCreateInfo))
                                                                  -- Length valued member elided
                                                                  <*> (Data.Vector.generateM (fromIntegral (vkPoolSizeCount (c :: VkDescriptorPoolCreateInfo))) (((fromCStructDescriptorPoolSize <=<) . peekElemOff) (vkPPoolSizes (c :: VkDescriptorPoolCreateInfo))))
+instance Zero DescriptorPoolCreateInfo where
+  zero = DescriptorPoolCreateInfo Nothing
+                                  zero
+                                  zero
+                                  Data.Vector.empty
 -- No documentation found for TopLevel "DescriptorPoolResetFlags"
 type DescriptorPoolResetFlags = VkDescriptorPoolResetFlags
 -- No documentation found for TopLevel "DescriptorPoolSize"
@@ -278,6 +305,9 @@ withCStructDescriptorPoolSize from cont = cont (VkDescriptorPoolSize (vkType (fr
 fromCStructDescriptorPoolSize :: VkDescriptorPoolSize -> IO DescriptorPoolSize
 fromCStructDescriptorPoolSize c = DescriptorPoolSize <$> pure (vkType (c :: VkDescriptorPoolSize))
                                                      <*> pure (vkDescriptorCount (c :: VkDescriptorPoolSize))
+instance Zero DescriptorPoolSize where
+  zero = DescriptorPoolSize zero
+                            zero
 -- No documentation found for TopLevel "DescriptorSet"
 type DescriptorSet = VkDescriptorSet
 -- No documentation found for TopLevel "DescriptorSetAllocateInfo"
@@ -300,6 +330,10 @@ fromCStructDescriptorSetAllocateInfo c = DescriptorSetAllocateInfo <$> -- Unival
                                                                    <*> pure (vkDescriptorPool (c :: VkDescriptorSetAllocateInfo))
                                                                    -- Length valued member elided
                                                                    <*> (Data.Vector.generateM (fromIntegral (vkDescriptorSetCount (c :: VkDescriptorSetAllocateInfo))) (peekElemOff (vkPSetLayouts (c :: VkDescriptorSetAllocateInfo))))
+instance Zero DescriptorSetAllocateInfo where
+  zero = DescriptorSetAllocateInfo Nothing
+                                   zero
+                                   Data.Vector.empty
 -- No documentation found for TopLevel "DescriptorSetLayoutBinding"
 data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
   { -- No documentation found for Nested "DescriptorSetLayoutBinding" "binding"
@@ -321,6 +355,11 @@ fromCStructDescriptorSetLayoutBinding c = DescriptorSetLayoutBinding <$> pure (v
                                                                      -- Optional length valued member elided
                                                                      <*> pure (vkStageFlags (c :: VkDescriptorSetLayoutBinding))
                                                                      <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkDescriptorCount (c :: VkDescriptorSetLayoutBinding))) (peekElemOff p)) (vkPImmutableSamplers (c :: VkDescriptorSetLayoutBinding))
+instance Zero DescriptorSetLayoutBinding where
+  zero = DescriptorSetLayoutBinding zero
+                                    zero
+                                    zero
+                                    Nothing
 -- No documentation found for TopLevel "DescriptorSetLayoutCreateFlagBits"
 type DescriptorSetLayoutCreateFlagBits = VkDescriptorSetLayoutCreateFlagBits
 -- No documentation found for TopLevel "DescriptorSetLayoutCreateFlags"
@@ -345,6 +384,10 @@ fromCStructDescriptorSetLayoutCreateInfo c = DescriptorSetLayoutCreateInfo <$> -
                                                                            <*> pure (vkFlags (c :: VkDescriptorSetLayoutCreateInfo))
                                                                            -- Length valued member elided
                                                                            <*> (Data.Vector.generateM (fromIntegral (vkBindingCount (c :: VkDescriptorSetLayoutCreateInfo))) (((fromCStructDescriptorSetLayoutBinding <=<) . peekElemOff) (vkPBindings (c :: VkDescriptorSetLayoutCreateInfo))))
+instance Zero DescriptorSetLayoutCreateInfo where
+  zero = DescriptorSetLayoutCreateInfo Nothing
+                                       zero
+                                       Data.Vector.empty
 -- No documentation found for TopLevel "DescriptorType"
 type DescriptorType = VkDescriptorType
 -- No documentation found for TopLevel "WriteDescriptorSet"
@@ -370,9 +413,7 @@ data WriteDescriptorSet = WriteDescriptorSet
   }
   deriving (Show, Eq)
 withCStructWriteDescriptorSet :: WriteDescriptorSet -> (VkWriteDescriptorSet -> IO a) -> IO a
-withCStructWriteDescriptorSet from cont = withVec (&) (vkPTexelBufferView (from :: WriteDescriptorSet)) (\pTexelBufferView -> withVec withCStructDescriptorBufferInfo (vkPBufferInfo (from :: WriteDescriptorSet)) (\pBufferInfo -> withVec withCStructDescriptorImageInfo (vkPImageInfo (from :: WriteDescriptorSet)) (\pImageInfo -> maybeWith withSomeVkStruct (vkPNext (from :: WriteDescriptorSet)) (\pPNext -> cont (VkWriteDescriptorSet VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET pPNext (vkDstSet (from :: WriteDescriptorSet)) (vkDstBinding (from :: WriteDescriptorSet)) (vkDstArrayElement (from :: WriteDescriptorSet)) (fromIntegral (minimum ([ Data.Vector.length (vkPImageInfo (from :: WriteDescriptorSet))
-, Data.Vector.length (vkPBufferInfo (from :: WriteDescriptorSet))
-, Data.Vector.length (vkPTexelBufferView (from :: WriteDescriptorSet)) ]))) (vkDescriptorType (from :: WriteDescriptorSet)) pImageInfo pBufferInfo pTexelBufferView)))))
+withCStructWriteDescriptorSet from cont = withVec (&) (vkPTexelBufferView (from :: WriteDescriptorSet)) (\pTexelBufferView -> withVec withCStructDescriptorBufferInfo (vkPBufferInfo (from :: WriteDescriptorSet)) (\pBufferInfo -> withVec withCStructDescriptorImageInfo (vkPImageInfo (from :: WriteDescriptorSet)) (\pImageInfo -> maybeWith withSomeVkStruct (vkPNext (from :: WriteDescriptorSet)) (\pPNext -> cont (VkWriteDescriptorSet VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET pPNext (vkDstSet (from :: WriteDescriptorSet)) (vkDstBinding (from :: WriteDescriptorSet)) (vkDstArrayElement (from :: WriteDescriptorSet)) (fromIntegral (minimum ([Data.Vector.length (vkPImageInfo (from :: WriteDescriptorSet)), Data.Vector.length (vkPBufferInfo (from :: WriteDescriptorSet)), Data.Vector.length (vkPTexelBufferView (from :: WriteDescriptorSet))]))) (vkDescriptorType (from :: WriteDescriptorSet)) pImageInfo pBufferInfo pTexelBufferView)))))
 fromCStructWriteDescriptorSet :: VkWriteDescriptorSet -> IO WriteDescriptorSet
 fromCStructWriteDescriptorSet c = WriteDescriptorSet <$> -- Univalued Member elided
                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkWriteDescriptorSet)))
@@ -384,17 +425,26 @@ fromCStructWriteDescriptorSet c = WriteDescriptorSet <$> -- Univalued Member eli
                                                      <*> (Data.Vector.generateM (fromIntegral (vkDescriptorCount (c :: VkWriteDescriptorSet))) (((fromCStructDescriptorImageInfo <=<) . peekElemOff) (vkPImageInfo (c :: VkWriteDescriptorSet))))
                                                      <*> (Data.Vector.generateM (fromIntegral (vkDescriptorCount (c :: VkWriteDescriptorSet))) (((fromCStructDescriptorBufferInfo <=<) . peekElemOff) (vkPBufferInfo (c :: VkWriteDescriptorSet))))
                                                      <*> (Data.Vector.generateM (fromIntegral (vkDescriptorCount (c :: VkWriteDescriptorSet))) (peekElemOff (vkPTexelBufferView (c :: VkWriteDescriptorSet))))
+instance Zero WriteDescriptorSet where
+  zero = WriteDescriptorSet Nothing
+                            zero
+                            zero
+                            zero
+                            zero
+                            Data.Vector.empty
+                            Data.Vector.empty
+                            Data.Vector.empty
 
 -- | Wrapper for 'vkAllocateDescriptorSets'
 allocateDescriptorSets :: Device ->  DescriptorSetAllocateInfo ->  IO (Vector DescriptorSet)
 allocateDescriptorSets = \(Device device commandTable) -> \allocateInfo -> allocaArray (Data.Vector.length (vkPSetLayouts (allocateInfo :: DescriptorSetAllocateInfo))) (\pDescriptorSets -> (\a -> withCStructDescriptorSetAllocateInfo a . flip with) allocateInfo (\pAllocateInfo -> Graphics.Vulkan.C.Dynamic.allocateDescriptorSets commandTable device pAllocateInfo pDescriptorSets >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM (Data.Vector.length (vkPSetLayouts (allocateInfo :: DescriptorSetAllocateInfo))) (peekElemOff pDescriptorSets))))))
 
 -- | Wrapper for 'vkCreateDescriptorPool'
-createDescriptorPool :: Device ->  DescriptorPoolCreateInfo ->  Maybe AllocationCallbacks ->  IO ( DescriptorPool )
+createDescriptorPool :: Device ->  DescriptorPoolCreateInfo ->  Maybe AllocationCallbacks ->  IO (DescriptorPool)
 createDescriptorPool = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pDescriptorPool -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDescriptorPoolCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDescriptorPool commandTable device pCreateInfo pAllocator pDescriptorPool >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pDescriptorPool)))))
 
 -- | Wrapper for 'vkCreateDescriptorSetLayout'
-createDescriptorSetLayout :: Device ->  DescriptorSetLayoutCreateInfo ->  Maybe AllocationCallbacks ->  IO ( DescriptorSetLayout )
+createDescriptorSetLayout :: Device ->  DescriptorSetLayoutCreateInfo ->  Maybe AllocationCallbacks ->  IO (DescriptorSetLayout)
 createDescriptorSetLayout = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pSetLayout -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDescriptorSetLayoutCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDescriptorSetLayout commandTable device pCreateInfo pAllocator pSetLayout >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSetLayout)))))
 
 -- | Wrapper for 'vkDestroyDescriptorPool'
@@ -416,8 +466,21 @@ resetDescriptorPool = \(Device device commandTable) -> \descriptorPool -> \flags
 -- | Wrapper for 'vkUpdateDescriptorSets'
 updateDescriptorSets :: Device ->  Vector WriteDescriptorSet ->  Vector CopyDescriptorSet ->  IO ()
 updateDescriptorSets = \(Device device commandTable) -> \descriptorWrites -> \descriptorCopies -> withVec withCStructCopyDescriptorSet descriptorCopies (\pDescriptorCopies -> withVec withCStructWriteDescriptorSet descriptorWrites (\pDescriptorWrites -> Graphics.Vulkan.C.Dynamic.updateDescriptorSets commandTable device (fromIntegral $ Data.Vector.length descriptorWrites) pDescriptorWrites (fromIntegral $ Data.Vector.length descriptorCopies) pDescriptorCopies *> (pure ())))
-withDescriptorPool :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withDescriptorPool createInfo allocationCallbacks =
-  bracket
-    (vkCreateDescriptorPool createInfo allocationCallbacks)
-    (`vkDestroyDescriptorPool` allocationCallbacks)
+-- | Wrapper for 'createDescriptorPool' and 'destroyDescriptorPool' using 'bracket'
+withDescriptorPool
+  :: Device -> DescriptorPoolCreateInfo -> Maybe (AllocationCallbacks) -> (DescriptorPool -> IO a) -> IO a
+withDescriptorPool device descriptorPoolCreateInfo allocationCallbacks = bracket
+  (createDescriptorPool device descriptorPoolCreateInfo allocationCallbacks)
+  (\o -> destroyDescriptorPool device o allocationCallbacks)
+-- | Wrapper for 'createDescriptorSetLayout' and 'destroyDescriptorSetLayout' using 'bracket'
+withDescriptorSetLayout
+  :: Device -> DescriptorSetLayoutCreateInfo -> Maybe (AllocationCallbacks) -> (DescriptorSetLayout -> IO a) -> IO a
+withDescriptorSetLayout device descriptorSetLayoutCreateInfo allocationCallbacks = bracket
+  (createDescriptorSetLayout device descriptorSetLayoutCreateInfo allocationCallbacks)
+  (\o -> destroyDescriptorSetLayout device o allocationCallbacks)
+-- | Wrapper for 'allocateDescriptorSets' and 'freeDescriptorSets' using 'bracket'
+withDescriptorSets
+  :: Device -> DescriptorSetAllocateInfo -> (Vector (DescriptorSet) -> IO a) -> IO a
+withDescriptorSets device descriptorSetAllocateInfo = bracket
+  (allocateDescriptorSets device descriptorSetAllocateInfo)
+  (\o -> freeDescriptorSets device (vkDescriptorPool (descriptorSetAllocateInfo :: DescriptorSetAllocateInfo))  o)

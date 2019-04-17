@@ -50,6 +50,7 @@ import Graphics.Vulkan.C.Core10.CommandPool
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.Device
   ( VkDeviceQueueCreateFlagBits(..)
@@ -97,6 +98,13 @@ instance Storable VkDeviceQueueInfo2 where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDeviceQueueInfo2))
                 *> poke (ptr `plusPtr` 20) (vkQueueFamilyIndex (poked :: VkDeviceQueueInfo2))
                 *> poke (ptr `plusPtr` 24) (vkQueueIndex (poked :: VkDeviceQueueInfo2))
+
+instance Zero VkDeviceQueueInfo2 where
+  zero = VkDeviceQueueInfo2 zero
+                            zero
+                            zero
+                            zero
+                            zero
 -- No documentation found for TopLevel "VkPhysicalDeviceProtectedMemoryFeatures"
 data VkPhysicalDeviceProtectedMemoryFeatures = VkPhysicalDeviceProtectedMemoryFeatures
   { -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryFeatures" "sType"
@@ -117,6 +125,11 @@ instance Storable VkPhysicalDeviceProtectedMemoryFeatures where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceProtectedMemoryFeatures))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceProtectedMemoryFeatures))
                 *> poke (ptr `plusPtr` 16) (vkProtectedMemory (poked :: VkPhysicalDeviceProtectedMemoryFeatures))
+
+instance Zero VkPhysicalDeviceProtectedMemoryFeatures where
+  zero = VkPhysicalDeviceProtectedMemoryFeatures zero
+                                                 zero
+                                                 zero
 -- No documentation found for TopLevel "VkPhysicalDeviceProtectedMemoryProperties"
 data VkPhysicalDeviceProtectedMemoryProperties = VkPhysicalDeviceProtectedMemoryProperties
   { -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryProperties" "sType"
@@ -137,6 +150,11 @@ instance Storable VkPhysicalDeviceProtectedMemoryProperties where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceProtectedMemoryProperties))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceProtectedMemoryProperties))
                 *> poke (ptr `plusPtr` 16) (vkProtectedNoFault (poked :: VkPhysicalDeviceProtectedMemoryProperties))
+
+instance Zero VkPhysicalDeviceProtectedMemoryProperties where
+  zero = VkPhysicalDeviceProtectedMemoryProperties zero
+                                                   zero
+                                                   zero
 -- No documentation found for TopLevel "VkProtectedSubmitInfo"
 data VkProtectedSubmitInfo = VkProtectedSubmitInfo
   { -- No documentation found for Nested "VkProtectedSubmitInfo" "sType"
@@ -157,6 +175,11 @@ instance Storable VkProtectedSubmitInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkProtectedSubmitInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkProtectedSubmitInfo))
                 *> poke (ptr `plusPtr` 16) (vkProtectedSubmit (poked :: VkProtectedSubmitInfo))
+
+instance Zero VkProtectedSubmitInfo where
+  zero = VkProtectedSubmitInfo zero
+                               zero
+                               zero
 #if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkGetDeviceQueue2"
 foreign import ccall

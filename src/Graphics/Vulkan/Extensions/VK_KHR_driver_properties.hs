@@ -22,6 +22,9 @@ import Data.ByteString
   ( ByteString
   , packCString
   )
+import qualified Data.ByteString
+  ( empty
+  )
 import qualified Data.Vector.Storable
   ( unsafeWith
   )
@@ -40,6 +43,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties
   ( VkConformanceVersionKHR(..)
   , VkDriverIdKHR(..)
@@ -81,6 +87,11 @@ fromCStructConformanceVersionKHR c = ConformanceVersionKHR <$> pure (vkMajor (c 
                                                            <*> pure (vkMinor (c :: VkConformanceVersionKHR))
                                                            <*> pure (vkSubminor (c :: VkConformanceVersionKHR))
                                                            <*> pure (vkPatch (c :: VkConformanceVersionKHR))
+instance Zero ConformanceVersionKHR where
+  zero = ConformanceVersionKHR zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "DriverIdKHR"
 type DriverIdKHR = VkDriverIdKHR
 -- No documentation found for TopLevel "PhysicalDeviceDriverPropertiesKHR"
@@ -107,3 +118,9 @@ fromCStructPhysicalDeviceDriverPropertiesKHR c = PhysicalDeviceDriverPropertiesK
                                                                                    <*> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkDriverName (c :: VkPhysicalDeviceDriverPropertiesKHR))) packCString
                                                                                    <*> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkDriverInfo (c :: VkPhysicalDeviceDriverPropertiesKHR))) packCString
                                                                                    <*> (fromCStructConformanceVersionKHR (vkConformanceVersion (c :: VkPhysicalDeviceDriverPropertiesKHR)))
+instance Zero PhysicalDeviceDriverPropertiesKHR where
+  zero = PhysicalDeviceDriverPropertiesKHR Nothing
+                                           zero
+                                           Data.ByteString.empty
+                                           Data.ByteString.empty
+                                           zero

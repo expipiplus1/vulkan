@@ -29,6 +29,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VK_MAX_MEMORY_HEAPS
@@ -60,6 +61,12 @@ instance Storable VkPhysicalDeviceMemoryBudgetPropertiesEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMemoryBudgetPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkHeapBudget (poked :: VkPhysicalDeviceMemoryBudgetPropertiesEXT))
                 *> poke (ptr `plusPtr` 144) (vkHeapUsage (poked :: VkPhysicalDeviceMemoryBudgetPropertiesEXT))
+
+instance Zero VkPhysicalDeviceMemoryBudgetPropertiesEXT where
+  zero = VkPhysicalDeviceMemoryBudgetPropertiesEXT zero
+                                                   zero
+                                                   zero
+                                                   zero
 -- No documentation found for TopLevel "VK_EXT_MEMORY_BUDGET_EXTENSION_NAME"
 pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME = "VK_EXT_memory_budget"

@@ -105,6 +105,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.Pass
   ( VkAccessFlagBits(..)
@@ -118,7 +119,7 @@ import Graphics.Vulkan.C.Core10.Pipeline
 
 -- No documentation found for TopLevel "VkBlendOverlapEXT"
 newtype VkBlendOverlapEXT = VkBlendOverlapEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkBlendOverlapEXT where
   showsPrec _ VK_BLEND_OVERLAP_UNCORRELATED_EXT = showString "VK_BLEND_OVERLAP_UNCORRELATED_EXT"
@@ -169,6 +170,11 @@ instance Storable VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkAdvancedBlendCoherentOperations (poked :: VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT))
+
+instance Zero VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT where
+  zero = VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT zero
+                                                           zero
+                                                           zero
 -- No documentation found for TopLevel "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT"
 data VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT = VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "sType"
@@ -209,6 +215,16 @@ instance Storable VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT where
                 *> poke (ptr `plusPtr` 28) (vkAdvancedBlendNonPremultipliedDstColor (poked :: VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT))
                 *> poke (ptr `plusPtr` 32) (vkAdvancedBlendCorrelatedOverlap (poked :: VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT))
                 *> poke (ptr `plusPtr` 36) (vkAdvancedBlendAllOperations (poked :: VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT))
+
+instance Zero VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT where
+  zero = VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT zero
+                                                             zero
+                                                             zero
+                                                             zero
+                                                             zero
+                                                             zero
+                                                             zero
+                                                             zero
 -- No documentation found for TopLevel "VkPipelineColorBlendAdvancedStateCreateInfoEXT"
 data VkPipelineColorBlendAdvancedStateCreateInfoEXT = VkPipelineColorBlendAdvancedStateCreateInfoEXT
   { -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "sType"
@@ -237,6 +253,13 @@ instance Storable VkPipelineColorBlendAdvancedStateCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkSrcPremultiplied (poked :: VkPipelineColorBlendAdvancedStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 20) (vkDstPremultiplied (poked :: VkPipelineColorBlendAdvancedStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkBlendOverlap (poked :: VkPipelineColorBlendAdvancedStateCreateInfoEXT))
+
+instance Zero VkPipelineColorBlendAdvancedStateCreateInfoEXT where
+  zero = VkPipelineColorBlendAdvancedStateCreateInfoEXT zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
 -- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"
 pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = VkAccessFlagBits 0x00080000

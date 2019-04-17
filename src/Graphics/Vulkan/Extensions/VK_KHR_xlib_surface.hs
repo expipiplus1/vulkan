@@ -47,6 +47,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
@@ -103,9 +104,14 @@ fromCStructXlibSurfaceCreateInfoKHR c = XlibSurfaceCreateInfoKHR <$> -- Univalue
                                                                  <*> pure (vkFlags (c :: VkXlibSurfaceCreateInfoKHR))
                                                                  <*> pure (vkDpy (c :: VkXlibSurfaceCreateInfoKHR))
                                                                  <*> pure (vkWindow (c :: VkXlibSurfaceCreateInfoKHR))
+instance Zero XlibSurfaceCreateInfoKHR where
+  zero = XlibSurfaceCreateInfoKHR Nothing
+                                  zero
+                                  zero
+                                  zero
 
 -- | Wrapper for 'vkCreateXlibSurfaceKHR'
-createXlibSurfaceKHR :: Instance ->  XlibSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createXlibSurfaceKHR :: Instance ->  XlibSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createXlibSurfaceKHR = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructXlibSurfaceCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createXlibSurfaceKHR commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))
 
 -- | Wrapper for 'vkGetPhysicalDeviceXlibPresentationSupportKHR'

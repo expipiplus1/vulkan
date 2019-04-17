@@ -121,6 +121,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -150,7 +151,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkAccessFlagBits"
 newtype VkAccessFlagBits = VkAccessFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkAccessFlagBits where
   showsPrec _ VK_ACCESS_INDIRECT_COMMAND_READ_BIT = showString "VK_ACCESS_INDIRECT_COMMAND_READ_BIT"
@@ -343,11 +344,22 @@ instance Storable VkAttachmentDescription where
                 *> poke (ptr `plusPtr` 24) (vkStencilStoreOp (poked :: VkAttachmentDescription))
                 *> poke (ptr `plusPtr` 28) (vkInitialLayout (poked :: VkAttachmentDescription))
                 *> poke (ptr `plusPtr` 32) (vkFinalLayout (poked :: VkAttachmentDescription))
+
+instance Zero VkAttachmentDescription where
+  zero = VkAttachmentDescription zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- ** VkAttachmentDescriptionFlagBits
 
 -- No documentation found for TopLevel "VkAttachmentDescriptionFlagBits"
 newtype VkAttachmentDescriptionFlagBits = VkAttachmentDescriptionFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkAttachmentDescriptionFlagBits where
   showsPrec _ VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT = showString "VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"
@@ -372,7 +384,7 @@ type VkAttachmentDescriptionFlags = VkAttachmentDescriptionFlagBits
 
 -- No documentation found for TopLevel "VkAttachmentLoadOp"
 newtype VkAttachmentLoadOp = VkAttachmentLoadOp Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkAttachmentLoadOp where
   showsPrec _ VK_ATTACHMENT_LOAD_OP_LOAD = showString "VK_ATTACHMENT_LOAD_OP_LOAD"
@@ -419,11 +431,15 @@ instance Storable VkAttachmentReference where
                                    <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkAttachment (poked :: VkAttachmentReference))
                 *> poke (ptr `plusPtr` 4) (vkLayout (poked :: VkAttachmentReference))
+
+instance Zero VkAttachmentReference where
+  zero = VkAttachmentReference zero
+                               zero
 -- ** VkAttachmentStoreOp
 
 -- No documentation found for TopLevel "VkAttachmentStoreOp"
 newtype VkAttachmentStoreOp = VkAttachmentStoreOp Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkAttachmentStoreOp where
   showsPrec _ VK_ATTACHMENT_STORE_OP_STORE = showString "VK_ATTACHMENT_STORE_OP_STORE"
@@ -452,7 +468,7 @@ pattern VK_ATTACHMENT_STORE_OP_DONT_CARE = VkAttachmentStoreOp 1
 
 -- No documentation found for TopLevel "VkDependencyFlagBits"
 newtype VkDependencyFlagBits = VkDependencyFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDependencyFlagBits where
   showsPrec _ VK_DEPENDENCY_BY_REGION_BIT = showString "VK_DEPENDENCY_BY_REGION_BIT"
@@ -487,7 +503,7 @@ type VkFramebuffer = Ptr VkFramebuffer_T
 
 -- No documentation found for TopLevel "VkFramebufferCreateFlags"
 newtype VkFramebufferCreateFlags = VkFramebufferCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkFramebufferCreateFlags where
   
@@ -548,11 +564,22 @@ instance Storable VkFramebufferCreateInfo where
                 *> poke (ptr `plusPtr` 48) (vkWidth (poked :: VkFramebufferCreateInfo))
                 *> poke (ptr `plusPtr` 52) (vkHeight (poked :: VkFramebufferCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkLayers (poked :: VkFramebufferCreateInfo))
+
+instance Zero VkFramebufferCreateInfo where
+  zero = VkFramebufferCreateInfo zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- ** VkPipelineBindPoint
 
 -- No documentation found for TopLevel "VkPipelineBindPoint"
 newtype VkPipelineBindPoint = VkPipelineBindPoint Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkPipelineBindPoint where
   showsPrec _ VK_PIPELINE_BIND_POINT_GRAPHICS = showString "VK_PIPELINE_BIND_POINT_GRAPHICS"
@@ -585,7 +612,7 @@ pattern VK_PIPELINE_BIND_POINT_COMPUTE = VkPipelineBindPoint 1
 
 -- No documentation found for TopLevel "VkRenderPassCreateFlags"
 newtype VkRenderPassCreateFlags = VkRenderPassCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkRenderPassCreateFlags where
   
@@ -646,6 +673,17 @@ instance Storable VkRenderPassCreateInfo where
                 *> poke (ptr `plusPtr` 40) (vkPSubpasses (poked :: VkRenderPassCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkDependencyCount (poked :: VkRenderPassCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkPDependencies (poked :: VkRenderPassCreateInfo))
+
+instance Zero VkRenderPassCreateInfo where
+  zero = VkRenderPassCreateInfo zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "VkSubpassDependency"
 data VkSubpassDependency = VkSubpassDependency
   { -- No documentation found for Nested "VkSubpassDependency" "srcSubpass"
@@ -682,6 +720,15 @@ instance Storable VkSubpassDependency where
                 *> poke (ptr `plusPtr` 16) (vkSrcAccessMask (poked :: VkSubpassDependency))
                 *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkSubpassDependency))
                 *> poke (ptr `plusPtr` 24) (vkDependencyFlags (poked :: VkSubpassDependency))
+
+instance Zero VkSubpassDependency where
+  zero = VkSubpassDependency zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "VkSubpassDescription"
 data VkSubpassDescription = VkSubpassDescription
   { -- No documentation found for Nested "VkSubpassDescription" "flags"
@@ -730,11 +777,23 @@ instance Storable VkSubpassDescription where
                 *> poke (ptr `plusPtr` 48) (vkPDepthStencilAttachment (poked :: VkSubpassDescription))
                 *> poke (ptr `plusPtr` 56) (vkPreserveAttachmentCount (poked :: VkSubpassDescription))
                 *> poke (ptr `plusPtr` 64) (vkPPreserveAttachments (poked :: VkSubpassDescription))
+
+instance Zero VkSubpassDescription where
+  zero = VkSubpassDescription zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
 -- ** VkSubpassDescriptionFlagBits
 
 -- No documentation found for TopLevel "VkSubpassDescriptionFlagBits"
 newtype VkSubpassDescriptionFlagBits = VkSubpassDescriptionFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSubpassDescriptionFlagBits where
   -- The following values are from extensions, the patterns themselves are exported from the extension modules

@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_ycbcr_image_arrays
   ( VkPhysicalDeviceYcbcrImageArraysFeaturesEXT(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_IMAGE_ARRAYS_FEATURES_EXT
@@ -55,3 +58,6 @@ fromCStructPhysicalDeviceYcbcrImageArraysFeaturesEXT :: VkPhysicalDeviceYcbcrIma
 fromCStructPhysicalDeviceYcbcrImageArraysFeaturesEXT c = PhysicalDeviceYcbcrImageArraysFeaturesEXT <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceYcbcrImageArraysFeaturesEXT)))
                                                                                                    <*> pure (bool32ToBool (vkYcbcrImageArrays (c :: VkPhysicalDeviceYcbcrImageArraysFeaturesEXT)))
+instance Zero PhysicalDeviceYcbcrImageArraysFeaturesEXT where
+  zero = PhysicalDeviceYcbcrImageArraysFeaturesEXT Nothing
+                                                   False

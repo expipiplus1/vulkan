@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_compute_shader_derivatives
   ( VkPhysicalDeviceComputeShaderDerivativesFeaturesNV(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV
@@ -58,3 +61,7 @@ fromCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV c = PhysicalDeviceCo
                                                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceComputeShaderDerivativesFeaturesNV)))
                                                                                                                  <*> pure (bool32ToBool (vkComputeDerivativeGroupQuads (c :: VkPhysicalDeviceComputeShaderDerivativesFeaturesNV)))
                                                                                                                  <*> pure (bool32ToBool (vkComputeDerivativeGroupLinear (c :: VkPhysicalDeviceComputeShaderDerivativesFeaturesNV)))
+instance Zero PhysicalDeviceComputeShaderDerivativesFeaturesNV where
+  zero = PhysicalDeviceComputeShaderDerivativesFeaturesNV Nothing
+                                                          False
+                                                          False

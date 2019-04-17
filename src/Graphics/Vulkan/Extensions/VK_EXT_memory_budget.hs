@@ -15,6 +15,9 @@ module Graphics.Vulkan.Extensions.VK_EXT_memory_budget
 import Data.Vector
   ( Vector
   )
+import qualified Data.Vector
+  ( empty
+  )
 import qualified Data.Vector.Generic
   ( convert
   )
@@ -33,6 +36,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_memory_budget
   ( VkPhysicalDeviceMemoryBudgetPropertiesEXT(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT
@@ -72,3 +78,7 @@ fromCStructPhysicalDeviceMemoryBudgetPropertiesEXT c = PhysicalDeviceMemoryBudge
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceMemoryBudgetPropertiesEXT)))
                                                                                                <*> pure (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized (vkHeapBudget (c :: VkPhysicalDeviceMemoryBudgetPropertiesEXT))))
                                                                                                <*> pure (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized (vkHeapUsage (c :: VkPhysicalDeviceMemoryBudgetPropertiesEXT))))
+instance Zero PhysicalDeviceMemoryBudgetPropertiesEXT where
+  zero = PhysicalDeviceMemoryBudgetPropertiesEXT Nothing
+                                                 Data.Vector.empty
+                                                 Data.Vector.empty

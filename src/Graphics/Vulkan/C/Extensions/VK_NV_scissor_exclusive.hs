@@ -41,6 +41,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.Pipeline
   ( VkDynamicState(..)
@@ -74,6 +75,11 @@ instance Storable VkPhysicalDeviceExclusiveScissorFeaturesNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExclusiveScissorFeaturesNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExclusiveScissorFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkExclusiveScissor (poked :: VkPhysicalDeviceExclusiveScissorFeaturesNV))
+
+instance Zero VkPhysicalDeviceExclusiveScissorFeaturesNV where
+  zero = VkPhysicalDeviceExclusiveScissorFeaturesNV zero
+                                                    zero
+                                                    zero
 -- No documentation found for TopLevel "VkPipelineViewportExclusiveScissorStateCreateInfoNV"
 data VkPipelineViewportExclusiveScissorStateCreateInfoNV = VkPipelineViewportExclusiveScissorStateCreateInfoNV
   { -- No documentation found for Nested "VkPipelineViewportExclusiveScissorStateCreateInfoNV" "sType"
@@ -98,6 +104,12 @@ instance Storable VkPipelineViewportExclusiveScissorStateCreateInfoNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineViewportExclusiveScissorStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkExclusiveScissorCount (poked :: VkPipelineViewportExclusiveScissorStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkPExclusiveScissors (poked :: VkPipelineViewportExclusiveScissorStateCreateInfoNV))
+
+instance Zero VkPipelineViewportExclusiveScissorStateCreateInfoNV where
+  zero = VkPipelineViewportExclusiveScissorStateCreateInfoNV zero
+                                                             zero
+                                                             zero
+                                                             zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdSetExclusiveScissorNV"
 foreign import ccall

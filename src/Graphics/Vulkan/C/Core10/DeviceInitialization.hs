@@ -231,6 +231,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.NamedType
@@ -302,6 +303,14 @@ instance Storable VkAllocationCallbacks where
                 *> poke (ptr `plusPtr` 24) (vkPfnFree (poked :: VkAllocationCallbacks))
                 *> poke (ptr `plusPtr` 32) (vkPfnInternalAllocation (poked :: VkAllocationCallbacks))
                 *> poke (ptr `plusPtr` 40) (vkPfnInternalFree (poked :: VkAllocationCallbacks))
+
+instance Zero VkAllocationCallbacks where
+  zero = VkAllocationCallbacks zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "VkApplicationInfo"
 data VkApplicationInfo = VkApplicationInfo
   { -- No documentation found for Nested "VkApplicationInfo" "sType"
@@ -338,6 +347,15 @@ instance Storable VkApplicationInfo where
                 *> poke (ptr `plusPtr` 32) (vkPEngineName (poked :: VkApplicationInfo))
                 *> poke (ptr `plusPtr` 40) (vkEngineVersion (poked :: VkApplicationInfo))
                 *> poke (ptr `plusPtr` 44) (vkApiVersion (poked :: VkApplicationInfo))
+
+instance Zero VkApplicationInfo where
+  zero = VkApplicationInfo zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
 -- | Dummy data to tag the 'Ptr' with
 data VkDevice_T
 -- No documentation found for TopLevel "VkDevice"
@@ -364,11 +382,16 @@ instance Storable VkExtent3D where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkWidth (poked :: VkExtent3D))
                 *> poke (ptr `plusPtr` 4) (vkHeight (poked :: VkExtent3D))
                 *> poke (ptr `plusPtr` 8) (vkDepth (poked :: VkExtent3D))
+
+instance Zero VkExtent3D where
+  zero = VkExtent3D zero
+                    zero
+                    zero
 -- ** VkFormatFeatureFlagBits
 
 -- No documentation found for TopLevel "VkFormatFeatureFlagBits"
 newtype VkFormatFeatureFlagBits = VkFormatFeatureFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkFormatFeatureFlagBits where
   showsPrec _ VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = showString "VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT"
@@ -515,11 +538,16 @@ instance Storable VkFormatProperties where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkLinearTilingFeatures (poked :: VkFormatProperties))
                 *> poke (ptr `plusPtr` 4) (vkOptimalTilingFeatures (poked :: VkFormatProperties))
                 *> poke (ptr `plusPtr` 8) (vkBufferFeatures (poked :: VkFormatProperties))
+
+instance Zero VkFormatProperties where
+  zero = VkFormatProperties zero
+                            zero
+                            zero
 -- ** VkImageCreateFlagBits
 
 -- No documentation found for TopLevel "VkImageCreateFlagBits"
 newtype VkImageCreateFlagBits = VkImageCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkImageCreateFlagBits where
   showsPrec _ VK_IMAGE_CREATE_SPARSE_BINDING_BIT = showString "VK_IMAGE_CREATE_SPARSE_BINDING_BIT"
@@ -614,11 +642,18 @@ instance Storable VkImageFormatProperties where
                 *> poke (ptr `plusPtr` 16) (vkMaxArrayLayers (poked :: VkImageFormatProperties))
                 *> poke (ptr `plusPtr` 20) (vkSampleCounts (poked :: VkImageFormatProperties))
                 *> poke (ptr `plusPtr` 24) (vkMaxResourceSize (poked :: VkImageFormatProperties))
+
+instance Zero VkImageFormatProperties where
+  zero = VkImageFormatProperties zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- ** VkImageTiling
 
 -- No documentation found for TopLevel "VkImageTiling"
 newtype VkImageTiling = VkImageTiling Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkImageTiling where
   showsPrec _ VK_IMAGE_TILING_OPTIMAL = showString "VK_IMAGE_TILING_OPTIMAL"
@@ -651,7 +686,7 @@ pattern VK_IMAGE_TILING_LINEAR = VkImageTiling 1
 
 -- No documentation found for TopLevel "VkImageType"
 newtype VkImageType = VkImageType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkImageType where
   showsPrec _ VK_IMAGE_TYPE_1D = showString "VK_IMAGE_TYPE_1D"
@@ -686,7 +721,7 @@ pattern VK_IMAGE_TYPE_3D = VkImageType 2
 
 -- No documentation found for TopLevel "VkImageUsageFlagBits"
 newtype VkImageUsageFlagBits = VkImageUsageFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkImageUsageFlagBits where
   showsPrec _ VK_IMAGE_USAGE_TRANSFER_SRC_BIT = showString "VK_IMAGE_USAGE_TRANSFER_SRC_BIT"
@@ -775,7 +810,7 @@ type VkInstance = Ptr VkInstance_T
 
 -- No documentation found for TopLevel "VkInstanceCreateFlags"
 newtype VkInstanceCreateFlags = VkInstanceCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkInstanceCreateFlags where
   
@@ -832,11 +867,21 @@ instance Storable VkInstanceCreateInfo where
                 *> poke (ptr `plusPtr` 40) (vkPPEnabledLayerNames (poked :: VkInstanceCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkEnabledExtensionCount (poked :: VkInstanceCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkPPEnabledExtensionNames (poked :: VkInstanceCreateInfo))
+
+instance Zero VkInstanceCreateInfo where
+  zero = VkInstanceCreateInfo zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
 -- ** VkInternalAllocationType
 
 -- No documentation found for TopLevel "VkInternalAllocationType"
 newtype VkInternalAllocationType = VkInternalAllocationType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkInternalAllocationType where
   showsPrec _ VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = showString "VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE"
@@ -871,11 +916,15 @@ instance Storable VkMemoryHeap where
                           <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSize (poked :: VkMemoryHeap))
                 *> poke (ptr `plusPtr` 8) (vkFlags (poked :: VkMemoryHeap))
+
+instance Zero VkMemoryHeap where
+  zero = VkMemoryHeap zero
+                      zero
 -- ** VkMemoryHeapFlagBits
 
 -- No documentation found for TopLevel "VkMemoryHeapFlagBits"
 newtype VkMemoryHeapFlagBits = VkMemoryHeapFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkMemoryHeapFlagBits where
   showsPrec _ VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = showString "VK_MEMORY_HEAP_DEVICE_LOCAL_BIT"
@@ -904,7 +953,7 @@ type VkMemoryHeapFlags = VkMemoryHeapFlagBits
 
 -- No documentation found for TopLevel "VkMemoryPropertyFlagBits"
 newtype VkMemoryPropertyFlagBits = VkMemoryPropertyFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkMemoryPropertyFlagBits where
   showsPrec _ VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = showString "VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT"
@@ -969,6 +1018,10 @@ instance Storable VkMemoryType where
                           <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkPropertyFlags (poked :: VkMemoryType))
                 *> poke (ptr `plusPtr` 4) (vkHeapIndex (poked :: VkMemoryType))
+
+instance Zero VkMemoryType where
+  zero = VkMemoryType zero
+                      zero
 -- | Dummy data to tag the 'Ptr' with
 data VkPhysicalDevice_T
 -- No documentation found for TopLevel "VkPhysicalDevice"
@@ -1201,6 +1254,63 @@ instance Storable VkPhysicalDeviceFeatures where
                 *> poke (ptr `plusPtr` 208) (vkSparseResidencyAliased (poked :: VkPhysicalDeviceFeatures))
                 *> poke (ptr `plusPtr` 212) (vkVariableMultisampleRate (poked :: VkPhysicalDeviceFeatures))
                 *> poke (ptr `plusPtr` 216) (vkInheritedQueries (poked :: VkPhysicalDeviceFeatures))
+
+instance Zero VkPhysicalDeviceFeatures where
+  zero = VkPhysicalDeviceFeatures zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkPhysicalDeviceLimits"
 data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   { -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxImageDimension1D"
@@ -1633,6 +1743,114 @@ instance Storable VkPhysicalDeviceLimits where
                 *> poke (ptr `plusPtr` 480) (vkOptimalBufferCopyOffsetAlignment (poked :: VkPhysicalDeviceLimits))
                 *> poke (ptr `plusPtr` 488) (vkOptimalBufferCopyRowPitchAlignment (poked :: VkPhysicalDeviceLimits))
                 *> poke (ptr `plusPtr` 496) (vkNonCoherentAtomSize (poked :: VkPhysicalDeviceLimits))
+
+instance Zero VkPhysicalDeviceLimits where
+  zero = VkPhysicalDeviceLimits zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "VkPhysicalDeviceMemoryProperties"
 data VkPhysicalDeviceMemoryProperties = VkPhysicalDeviceMemoryProperties
   { -- No documentation found for Nested "VkPhysicalDeviceMemoryProperties" "memoryTypeCount"
@@ -1657,6 +1875,12 @@ instance Storable VkPhysicalDeviceMemoryProperties where
                 *> poke (ptr `plusPtr` 4) (vkMemoryTypes (poked :: VkPhysicalDeviceMemoryProperties))
                 *> poke (ptr `plusPtr` 260) (vkMemoryHeapCount (poked :: VkPhysicalDeviceMemoryProperties))
                 *> poke (ptr `plusPtr` 264) (vkMemoryHeaps (poked :: VkPhysicalDeviceMemoryProperties))
+
+instance Zero VkPhysicalDeviceMemoryProperties where
+  zero = VkPhysicalDeviceMemoryProperties zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkPhysicalDeviceProperties"
 data VkPhysicalDeviceProperties = VkPhysicalDeviceProperties
   { -- No documentation found for Nested "VkPhysicalDeviceProperties" "apiVersion"
@@ -1701,6 +1925,17 @@ instance Storable VkPhysicalDeviceProperties where
                 *> poke (ptr `plusPtr` 276) (vkPipelineCacheUUID (poked :: VkPhysicalDeviceProperties))
                 *> poke (ptr `plusPtr` 296) (vkLimits (poked :: VkPhysicalDeviceProperties))
                 *> poke (ptr `plusPtr` 800) (vkSparseProperties (poked :: VkPhysicalDeviceProperties))
+
+instance Zero VkPhysicalDeviceProperties where
+  zero = VkPhysicalDeviceProperties zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkPhysicalDeviceSparseProperties"
 data VkPhysicalDeviceSparseProperties = VkPhysicalDeviceSparseProperties
   { -- No documentation found for Nested "VkPhysicalDeviceSparseProperties" "residencyStandard2DBlockShape"
@@ -1729,11 +1964,18 @@ instance Storable VkPhysicalDeviceSparseProperties where
                 *> poke (ptr `plusPtr` 8) (vkResidencyStandard3DBlockShape (poked :: VkPhysicalDeviceSparseProperties))
                 *> poke (ptr `plusPtr` 12) (vkResidencyAlignedMipSize (poked :: VkPhysicalDeviceSparseProperties))
                 *> poke (ptr `plusPtr` 16) (vkResidencyNonResidentStrict (poked :: VkPhysicalDeviceSparseProperties))
+
+instance Zero VkPhysicalDeviceSparseProperties where
+  zero = VkPhysicalDeviceSparseProperties zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- ** VkPhysicalDeviceType
 
 -- No documentation found for TopLevel "VkPhysicalDeviceType"
 newtype VkPhysicalDeviceType = VkPhysicalDeviceType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkPhysicalDeviceType where
   showsPrec _ VK_PHYSICAL_DEVICE_TYPE_OTHER = showString "VK_PHYSICAL_DEVICE_TYPE_OTHER"
@@ -1800,11 +2042,17 @@ instance Storable VkQueueFamilyProperties where
                 *> poke (ptr `plusPtr` 4) (vkQueueCount (poked :: VkQueueFamilyProperties))
                 *> poke (ptr `plusPtr` 8) (vkTimestampValidBits (poked :: VkQueueFamilyProperties))
                 *> poke (ptr `plusPtr` 12) (vkMinImageTransferGranularity (poked :: VkQueueFamilyProperties))
+
+instance Zero VkQueueFamilyProperties where
+  zero = VkQueueFamilyProperties zero
+                                 zero
+                                 zero
+                                 zero
 -- ** VkQueueFlagBits
 
 -- No documentation found for TopLevel "VkQueueFlagBits"
 newtype VkQueueFlagBits = VkQueueFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkQueueFlagBits where
   showsPrec _ VK_QUEUE_GRAPHICS_BIT = showString "VK_QUEUE_GRAPHICS_BIT"
@@ -1855,7 +2103,7 @@ type VkQueueFlags = VkQueueFlagBits
 
 -- No documentation found for TopLevel "VkSampleCountFlagBits"
 newtype VkSampleCountFlagBits = VkSampleCountFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSampleCountFlagBits where
   showsPrec _ VK_SAMPLE_COUNT_1_BIT = showString "VK_SAMPLE_COUNT_1_BIT"
@@ -1916,7 +2164,7 @@ type VkSampleCountFlags = VkSampleCountFlagBits
 
 -- No documentation found for TopLevel "VkSystemAllocationScope"
 newtype VkSystemAllocationScope = VkSystemAllocationScope Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkSystemAllocationScope where
   showsPrec _ VK_SYSTEM_ALLOCATION_SCOPE_COMMAND = showString "VK_SYSTEM_ALLOCATION_SCOPE_COMMAND"

@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_scalar_block_layout
   ( VkPhysicalDeviceScalarBlockLayoutFeaturesEXT(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT
@@ -55,3 +58,6 @@ fromCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT :: VkPhysicalDeviceScalarB
 fromCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT c = PhysicalDeviceScalarBlockLayoutFeaturesEXT <$> -- Univalued Member elided
                                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceScalarBlockLayoutFeaturesEXT)))
                                                                                                      <*> pure (bool32ToBool (vkScalarBlockLayout (c :: VkPhysicalDeviceScalarBlockLayoutFeaturesEXT)))
+instance Zero PhysicalDeviceScalarBlockLayoutFeaturesEXT where
+  zero = PhysicalDeviceScalarBlockLayoutFeaturesEXT Nothing
+                                                    False

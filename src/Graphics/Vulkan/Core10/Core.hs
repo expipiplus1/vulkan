@@ -10,6 +10,7 @@ module Graphics.Vulkan.Core10.Core
   , StructureType
   , bool32ToBool
   , boolToBool32
+  , Zero(..)
   ) where
 
 
@@ -23,6 +24,9 @@ import Graphics.Vulkan.C.Core10.Core
   , VkStructureType(..)
   , pattern VK_FALSE
   , pattern VK_TRUE
+  )
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
   )
 
 

@@ -27,6 +27,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax
   ( VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT(..)
   , VkSamplerReductionModeCreateInfoEXT(..)
@@ -68,6 +71,10 @@ fromCStructPhysicalDeviceSamplerFilterMinmaxPropertiesEXT c = PhysicalDeviceSamp
                                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT)))
                                                                                                              <*> pure (bool32ToBool (vkFilterMinmaxSingleComponentFormats (c :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT)))
                                                                                                              <*> pure (bool32ToBool (vkFilterMinmaxImageComponentMapping (c :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT)))
+instance Zero PhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
+  zero = PhysicalDeviceSamplerFilterMinmaxPropertiesEXT Nothing
+                                                        False
+                                                        False
 -- No documentation found for TopLevel "SamplerReductionModeCreateInfoEXT"
 data SamplerReductionModeCreateInfoEXT = SamplerReductionModeCreateInfoEXT
   { -- Univalued Member elided
@@ -83,5 +90,8 @@ fromCStructSamplerReductionModeCreateInfoEXT :: VkSamplerReductionModeCreateInfo
 fromCStructSamplerReductionModeCreateInfoEXT c = SamplerReductionModeCreateInfoEXT <$> -- Univalued Member elided
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSamplerReductionModeCreateInfoEXT)))
                                                                                    <*> pure (vkReductionMode (c :: VkSamplerReductionModeCreateInfoEXT))
+instance Zero SamplerReductionModeCreateInfoEXT where
+  zero = SamplerReductionModeCreateInfoEXT Nothing
+                                           zero
 -- No documentation found for TopLevel "SamplerReductionModeEXT"
 type SamplerReductionModeEXT = VkSamplerReductionModeEXT

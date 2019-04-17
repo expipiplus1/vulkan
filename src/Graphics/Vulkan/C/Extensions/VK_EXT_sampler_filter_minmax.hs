@@ -54,6 +54,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkFormatFeatureFlagBits(..)
@@ -84,6 +85,12 @@ instance Storable VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkFilterMinmaxSingleComponentFormats (poked :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT))
                 *> poke (ptr `plusPtr` 20) (vkFilterMinmaxImageComponentMapping (poked :: VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT))
+
+instance Zero VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
+  zero = VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT zero
+                                                          zero
+                                                          zero
+                                                          zero
 -- No documentation found for TopLevel "VkSamplerReductionModeCreateInfoEXT"
 data VkSamplerReductionModeCreateInfoEXT = VkSamplerReductionModeCreateInfoEXT
   { -- No documentation found for Nested "VkSamplerReductionModeCreateInfoEXT" "sType"
@@ -104,11 +111,16 @@ instance Storable VkSamplerReductionModeCreateInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerReductionModeCreateInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerReductionModeCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkReductionMode (poked :: VkSamplerReductionModeCreateInfoEXT))
+
+instance Zero VkSamplerReductionModeCreateInfoEXT where
+  zero = VkSamplerReductionModeCreateInfoEXT zero
+                                             zero
+                                             zero
 -- ** VkSamplerReductionModeEXT
 
 -- No documentation found for TopLevel "VkSamplerReductionModeEXT"
 newtype VkSamplerReductionModeEXT = VkSamplerReductionModeEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkSamplerReductionModeEXT where
   showsPrec _ VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT = showString "VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT"

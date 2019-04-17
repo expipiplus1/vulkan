@@ -73,6 +73,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
@@ -127,6 +128,12 @@ fromCStructPastPresentationTimingGOOGLE c = PastPresentationTimingGOOGLE <$> pur
                                                                          <*> pure (vkActualPresentTime (c :: VkPastPresentationTimingGOOGLE))
                                                                          <*> pure (vkEarliestPresentTime (c :: VkPastPresentationTimingGOOGLE))
                                                                          <*> pure (vkPresentMargin (c :: VkPastPresentationTimingGOOGLE))
+instance Zero PastPresentationTimingGOOGLE where
+  zero = PastPresentationTimingGOOGLE zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
 -- No documentation found for TopLevel "PresentTimeGOOGLE"
 data PresentTimeGOOGLE = PresentTimeGOOGLE
   { -- No documentation found for Nested "PresentTimeGOOGLE" "presentID"
@@ -140,6 +147,9 @@ withCStructPresentTimeGOOGLE from cont = cont (VkPresentTimeGOOGLE (vkPresentID 
 fromCStructPresentTimeGOOGLE :: VkPresentTimeGOOGLE -> IO PresentTimeGOOGLE
 fromCStructPresentTimeGOOGLE c = PresentTimeGOOGLE <$> pure (vkPresentID (c :: VkPresentTimeGOOGLE))
                                                    <*> pure (vkDesiredPresentTime (c :: VkPresentTimeGOOGLE))
+instance Zero PresentTimeGOOGLE where
+  zero = PresentTimeGOOGLE zero
+                           zero
 -- No documentation found for TopLevel "PresentTimesInfoGOOGLE"
 data PresentTimesInfoGOOGLE = PresentTimesInfoGOOGLE
   { -- Univalued Member elided
@@ -157,6 +167,9 @@ fromCStructPresentTimesInfoGOOGLE c = PresentTimesInfoGOOGLE <$> -- Univalued Me
                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPresentTimesInfoGOOGLE)))
                                                              -- Optional length valued member elided
                                                              <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkSwapchainCount (c :: VkPresentTimesInfoGOOGLE))) (((fromCStructPresentTimeGOOGLE <=<) . peekElemOff) p)) (vkPTimes (c :: VkPresentTimesInfoGOOGLE))
+instance Zero PresentTimesInfoGOOGLE where
+  zero = PresentTimesInfoGOOGLE Nothing
+                                Nothing
 -- No documentation found for TopLevel "RefreshCycleDurationGOOGLE"
 data RefreshCycleDurationGOOGLE = RefreshCycleDurationGOOGLE
   { -- No documentation found for Nested "RefreshCycleDurationGOOGLE" "refreshDuration"
@@ -167,14 +180,15 @@ withCStructRefreshCycleDurationGOOGLE :: RefreshCycleDurationGOOGLE -> (VkRefres
 withCStructRefreshCycleDurationGOOGLE from cont = cont (VkRefreshCycleDurationGOOGLE (vkRefreshDuration (from :: RefreshCycleDurationGOOGLE)))
 fromCStructRefreshCycleDurationGOOGLE :: VkRefreshCycleDurationGOOGLE -> IO RefreshCycleDurationGOOGLE
 fromCStructRefreshCycleDurationGOOGLE c = RefreshCycleDurationGOOGLE <$> pure (vkRefreshDuration (c :: VkRefreshCycleDurationGOOGLE))
+instance Zero RefreshCycleDurationGOOGLE where
+  zero = RefreshCycleDurationGOOGLE zero
 
 -- | Wrapper for 'vkGetPastPresentationTimingGOOGLE'
 getNumPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  IO (VkResult, Word32)
 getNumPastPresentationTimingGOOGLE = \(Device device commandTable) -> \swapchain -> alloca (\pPresentationTimingCount -> Graphics.Vulkan.C.Dynamic.getPastPresentationTimingGOOGLE commandTable device swapchain pPresentationTimingCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPresentationTimingCount)))
 
 -- | Wrapper for 'vkGetPastPresentationTimingGOOGLE'
-getPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  Word32 ->  IO ( VkResult
-, Vector PastPresentationTimingGOOGLE )
+getPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  Word32 ->  IO (VkResult, Vector PastPresentationTimingGOOGLE)
 getPastPresentationTimingGOOGLE = \(Device device commandTable) -> \swapchain -> \presentationTimingCount -> allocaArray (fromIntegral presentationTimingCount) (\pPresentationTimings -> with presentationTimingCount (\pPresentationTimingCount -> Graphics.Vulkan.C.Dynamic.getPastPresentationTimingGOOGLE commandTable device swapchain pPresentationTimingCount pPresentationTimings >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructPastPresentationTimingGOOGLE <=< peekElemOff p) pPresentationTimings) =<< (fromIntegral <$> (peek pPresentationTimingCount)))))))
 -- | Call 'getNumPastPresentationTimingGOOGLE' to get the number of return values, then use that
 -- number to call 'getPastPresentationTimingGOOGLE' to get all the values.

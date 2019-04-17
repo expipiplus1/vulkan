@@ -93,6 +93,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -109,7 +110,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkQueryPipelineStatisticFlagBits"
 newtype VkQueryPipelineStatisticFlagBits = VkQueryPipelineStatisticFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkQueryPipelineStatisticFlagBits where
   showsPrec _ VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT = showString "VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT"
@@ -198,7 +199,7 @@ type VkQueryPool = Ptr VkQueryPool_T
 
 -- No documentation found for TopLevel "VkQueryPoolCreateFlags"
 newtype VkQueryPoolCreateFlags = VkQueryPoolCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkQueryPoolCreateFlags where
   
@@ -247,11 +248,19 @@ instance Storable VkQueryPoolCreateInfo where
                 *> poke (ptr `plusPtr` 20) (vkQueryType (poked :: VkQueryPoolCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkQueryCount (poked :: VkQueryPoolCreateInfo))
                 *> poke (ptr `plusPtr` 28) (vkPipelineStatistics (poked :: VkQueryPoolCreateInfo))
+
+instance Zero VkQueryPoolCreateInfo where
+  zero = VkQueryPoolCreateInfo zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- ** VkQueryResultFlagBits
 
 -- No documentation found for TopLevel "VkQueryResultFlagBits"
 newtype VkQueryResultFlagBits = VkQueryResultFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkQueryResultFlagBits where
   showsPrec _ VK_QUERY_RESULT_64_BIT = showString "VK_QUERY_RESULT_64_BIT"
@@ -294,7 +303,7 @@ type VkQueryResultFlags = VkQueryResultFlagBits
 
 -- No documentation found for TopLevel "VkQueryType"
 newtype VkQueryType = VkQueryType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkQueryType where
   showsPrec _ VK_QUERY_TYPE_OCCLUSION = showString "VK_QUERY_TYPE_OCCLUSION"

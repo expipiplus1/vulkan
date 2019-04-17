@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float16_int8
   ( VkPhysicalDeviceFloat16Int8FeaturesKHR(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
@@ -58,3 +61,7 @@ fromCStructPhysicalDeviceFloat16Int8FeaturesKHR c = PhysicalDeviceFloat16Int8Fea
                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceFloat16Int8FeaturesKHR)))
                                                                                          <*> pure (bool32ToBool (vkShaderFloat16 (c :: VkPhysicalDeviceFloat16Int8FeaturesKHR)))
                                                                                          <*> pure (bool32ToBool (vkShaderInt8 (c :: VkPhysicalDeviceFloat16Int8FeaturesKHR)))
+instance Zero PhysicalDeviceFloat16Int8FeaturesKHR where
+  zero = PhysicalDeviceFloat16Int8FeaturesKHR Nothing
+                                              False
+                                              False

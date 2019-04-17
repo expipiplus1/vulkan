@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers
   ( VkPhysicalDeviceVariablePointersFeatures(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
@@ -59,3 +62,7 @@ fromCStructPhysicalDeviceVariablePointersFeatures c = PhysicalDeviceVariablePoin
                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceVariablePointersFeatures)))
                                                                                              <*> pure (bool32ToBool (vkVariablePointersStorageBuffer (c :: VkPhysicalDeviceVariablePointersFeatures)))
                                                                                              <*> pure (bool32ToBool (vkVariablePointers (c :: VkPhysicalDeviceVariablePointersFeatures)))
+instance Zero PhysicalDeviceVariablePointersFeatures where
+  zero = PhysicalDeviceVariablePointersFeatures Nothing
+                                                False
+                                                False

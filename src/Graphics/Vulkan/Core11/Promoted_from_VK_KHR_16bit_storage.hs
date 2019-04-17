@@ -19,6 +19,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_16bit_storage
   ( VkPhysicalDevice16BitStorageFeatures(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
@@ -58,3 +61,9 @@ fromCStructPhysicalDevice16BitStorageFeatures c = PhysicalDevice16BitStorageFeat
                                                                                      <*> pure (bool32ToBool (vkUniformAndStorageBuffer16BitAccess (c :: VkPhysicalDevice16BitStorageFeatures)))
                                                                                      <*> pure (bool32ToBool (vkStoragePushConstant16 (c :: VkPhysicalDevice16BitStorageFeatures)))
                                                                                      <*> pure (bool32ToBool (vkStorageInputOutput16 (c :: VkPhysicalDevice16BitStorageFeatures)))
+instance Zero PhysicalDevice16BitStorageFeatures where
+  zero = PhysicalDevice16BitStorageFeatures Nothing
+                                            False
+                                            False
+                                            False
+                                            False

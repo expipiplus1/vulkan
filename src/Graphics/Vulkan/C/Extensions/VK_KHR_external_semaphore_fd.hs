@@ -45,6 +45,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -95,6 +96,14 @@ instance Storable VkImportSemaphoreFdInfoKHR where
                 *> poke (ptr `plusPtr` 24) (vkFlags (poked :: VkImportSemaphoreFdInfoKHR))
                 *> poke (ptr `plusPtr` 28) (vkHandleType (poked :: VkImportSemaphoreFdInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkFd (poked :: VkImportSemaphoreFdInfoKHR))
+
+instance Zero VkImportSemaphoreFdInfoKHR where
+  zero = VkImportSemaphoreFdInfoKHR zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkSemaphoreGetFdInfoKHR"
 data VkSemaphoreGetFdInfoKHR = VkSemaphoreGetFdInfoKHR
   { -- No documentation found for Nested "VkSemaphoreGetFdInfoKHR" "sType"
@@ -119,6 +128,12 @@ instance Storable VkSemaphoreGetFdInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSemaphoreGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkSemaphore (poked :: VkSemaphoreGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkSemaphoreGetFdInfoKHR))
+
+instance Zero VkSemaphoreGetFdInfoKHR where
+  zero = VkSemaphoreGetFdInfoKHR zero
+                                 zero
+                                 zero
+                                 zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetSemaphoreFdKHR"
 foreign import ccall

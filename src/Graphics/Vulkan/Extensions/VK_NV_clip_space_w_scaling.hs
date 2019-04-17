@@ -51,6 +51,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
   ( VkPipelineViewportWScalingStateCreateInfoNV(..)
   , VkViewportWScalingNV(..)
@@ -98,6 +101,10 @@ fromCStructPipelineViewportWScalingStateCreateInfoNV c = PipelineViewportWScalin
                                                                                                    <*> pure (bool32ToBool (vkViewportWScalingEnable (c :: VkPipelineViewportWScalingStateCreateInfoNV)))
                                                                                                    -- Optional length valued member elided
                                                                                                    <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkViewportCount (c :: VkPipelineViewportWScalingStateCreateInfoNV))) (((fromCStructViewportWScalingNV <=<) . peekElemOff) p)) (vkPViewportWScalings (c :: VkPipelineViewportWScalingStateCreateInfoNV))
+instance Zero PipelineViewportWScalingStateCreateInfoNV where
+  zero = PipelineViewportWScalingStateCreateInfoNV Nothing
+                                                   False
+                                                   Nothing
 -- No documentation found for TopLevel "ViewportWScalingNV"
 data ViewportWScalingNV = ViewportWScalingNV
   { -- No documentation found for Nested "ViewportWScalingNV" "xcoeff"
@@ -111,6 +118,9 @@ withCStructViewportWScalingNV from cont = cont (VkViewportWScalingNV (vkXcoeff (
 fromCStructViewportWScalingNV :: VkViewportWScalingNV -> IO ViewportWScalingNV
 fromCStructViewportWScalingNV c = ViewportWScalingNV <$> pure (vkXcoeff (c :: VkViewportWScalingNV))
                                                      <*> pure (vkYcoeff (c :: VkViewportWScalingNV))
+instance Zero ViewportWScalingNV where
+  zero = ViewportWScalingNV zero
+                            zero
 
 -- | Wrapper for 'vkCmdSetViewportWScalingNV'
 cmdSetViewportWScalingNV :: CommandBuffer ->  Word32 ->  Vector ViewportWScalingNV ->  IO ()

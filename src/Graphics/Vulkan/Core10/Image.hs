@@ -14,10 +14,12 @@ module Graphics.Vulkan.Core10.Image
   , createImage
   , destroyImage
   , getImageSubresourceLayout
+  , withImage
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -30,7 +32,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -59,7 +62,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.Image
@@ -157,6 +161,20 @@ fromCStructImageCreateInfo c = ImageCreateInfo <$> -- Univalued Member elided
                                                -- Length valued member elided
                                                <*> (Data.Vector.generateM (fromIntegral (vkQueueFamilyIndexCount (c :: VkImageCreateInfo))) (peekElemOff (vkPQueueFamilyIndices (c :: VkImageCreateInfo))))
                                                <*> pure (vkInitialLayout (c :: VkImageCreateInfo))
+instance Zero ImageCreateInfo where
+  zero = ImageCreateInfo Nothing
+                         zero
+                         zero
+                         zero
+                         zero
+                         zero
+                         zero
+                         zero
+                         zero
+                         zero
+                         zero
+                         Data.Vector.empty
+                         zero
 -- No documentation found for TopLevel "ImageLayout"
 type ImageLayout = VkImageLayout
 -- No documentation found for TopLevel "SubresourceLayout"
@@ -181,6 +199,12 @@ fromCStructSubresourceLayout c = SubresourceLayout <$> pure (vkOffset (c :: VkSu
                                                    <*> pure (vkRowPitch (c :: VkSubresourceLayout))
                                                    <*> pure (vkArrayPitch (c :: VkSubresourceLayout))
                                                    <*> pure (vkDepthPitch (c :: VkSubresourceLayout))
+instance Zero SubresourceLayout where
+  zero = SubresourceLayout zero
+                           zero
+                           zero
+                           zero
+                           zero
 
 -- | Wrapper for 'vkCreateImage'
 createImage :: Device ->  ImageCreateInfo ->  Maybe AllocationCallbacks ->  IO (Image)
@@ -193,3 +217,9 @@ destroyImage = \(Device device commandTable) -> \image -> \allocator -> maybeWit
 -- | Wrapper for 'vkGetImageSubresourceLayout'
 getImageSubresourceLayout :: Device ->  Image ->  ImageSubresource ->  IO (SubresourceLayout)
 getImageSubresourceLayout = \(Device device commandTable) -> \image -> \subresource -> alloca (\pLayout -> (\a -> withCStructImageSubresource a . flip with) subresource (\pSubresource -> Graphics.Vulkan.C.Dynamic.getImageSubresourceLayout commandTable device image pSubresource pLayout *> ((fromCStructSubresourceLayout <=< peek) pLayout)))
+-- | Wrapper for 'createImage' and 'destroyImage' using 'bracket'
+withImage
+  :: Device -> ImageCreateInfo -> Maybe (AllocationCallbacks) -> (Image -> IO a) -> IO a
+withImage device imageCreateInfo allocationCallbacks = bracket
+  (createImage device imageCreateInfo allocationCallbacks)
+  (\o -> destroyImage device o allocationCallbacks)

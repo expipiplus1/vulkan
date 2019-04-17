@@ -47,6 +47,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -87,6 +88,13 @@ instance Storable VkPastPresentationTimingGOOGLE where
                 *> poke (ptr `plusPtr` 16) (vkActualPresentTime (poked :: VkPastPresentationTimingGOOGLE))
                 *> poke (ptr `plusPtr` 24) (vkEarliestPresentTime (poked :: VkPastPresentationTimingGOOGLE))
                 *> poke (ptr `plusPtr` 32) (vkPresentMargin (poked :: VkPastPresentationTimingGOOGLE))
+
+instance Zero VkPastPresentationTimingGOOGLE where
+  zero = VkPastPresentationTimingGOOGLE zero
+                                        zero
+                                        zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "VkPresentTimeGOOGLE"
 data VkPresentTimeGOOGLE = VkPresentTimeGOOGLE
   { -- No documentation found for Nested "VkPresentTimeGOOGLE" "presentID"
@@ -103,6 +111,10 @@ instance Storable VkPresentTimeGOOGLE where
                                  <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkPresentID (poked :: VkPresentTimeGOOGLE))
                 *> poke (ptr `plusPtr` 8) (vkDesiredPresentTime (poked :: VkPresentTimeGOOGLE))
+
+instance Zero VkPresentTimeGOOGLE where
+  zero = VkPresentTimeGOOGLE zero
+                             zero
 -- No documentation found for TopLevel "VkPresentTimesInfoGOOGLE"
 data VkPresentTimesInfoGOOGLE = VkPresentTimesInfoGOOGLE
   { -- No documentation found for Nested "VkPresentTimesInfoGOOGLE" "sType"
@@ -127,6 +139,12 @@ instance Storable VkPresentTimesInfoGOOGLE where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPresentTimesInfoGOOGLE))
                 *> poke (ptr `plusPtr` 16) (vkSwapchainCount (poked :: VkPresentTimesInfoGOOGLE))
                 *> poke (ptr `plusPtr` 24) (vkPTimes (poked :: VkPresentTimesInfoGOOGLE))
+
+instance Zero VkPresentTimesInfoGOOGLE where
+  zero = VkPresentTimesInfoGOOGLE zero
+                                  zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkRefreshCycleDurationGOOGLE"
 data VkRefreshCycleDurationGOOGLE = VkRefreshCycleDurationGOOGLE
   { -- No documentation found for Nested "VkRefreshCycleDurationGOOGLE" "refreshDuration"
@@ -139,6 +157,9 @@ instance Storable VkRefreshCycleDurationGOOGLE where
   alignment ~_ = 8
   peek ptr = VkRefreshCycleDurationGOOGLE <$> peek (ptr `plusPtr` 0)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkRefreshDuration (poked :: VkRefreshCycleDurationGOOGLE))
+
+instance Zero VkRefreshCycleDurationGOOGLE where
+  zero = VkRefreshCycleDurationGOOGLE zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetPastPresentationTimingGOOGLE"
 foreign import ccall

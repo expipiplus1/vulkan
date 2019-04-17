@@ -44,6 +44,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
@@ -71,11 +72,16 @@ instance Storable VkExportSemaphoreCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportSemaphoreCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportSemaphoreCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportSemaphoreCreateInfo))
+
+instance Zero VkExportSemaphoreCreateInfo where
+  zero = VkExportSemaphoreCreateInfo zero
+                                     zero
+                                     zero
 -- ** VkSemaphoreImportFlagBits
 
 -- No documentation found for TopLevel "VkSemaphoreImportFlagBits"
 newtype VkSemaphoreImportFlagBits = VkSemaphoreImportFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSemaphoreImportFlagBits where
   showsPrec _ VK_SEMAPHORE_IMPORT_TEMPORARY_BIT = showString "VK_SEMAPHORE_IMPORT_TEMPORARY_BIT"

@@ -101,7 +101,8 @@ module Graphics.Vulkan.Extensions.VK_NV_ray_tracing
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -121,7 +122,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -166,7 +168,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
   ( VkAccelerationStructureCreateInfoNV(..)
@@ -300,6 +303,10 @@ fromCStructAccelerationStructureCreateInfoNV c = AccelerationStructureCreateInfo
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkAccelerationStructureCreateInfoNV)))
                                                                                    <*> pure (vkCompactedSize (c :: VkAccelerationStructureCreateInfoNV))
                                                                                    <*> (fromCStructAccelerationStructureInfoNV (vkInfo (c :: VkAccelerationStructureCreateInfoNV)))
+instance Zero AccelerationStructureCreateInfoNV where
+  zero = AccelerationStructureCreateInfoNV Nothing
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "AccelerationStructureInfoNV"
 data AccelerationStructureInfoNV = AccelerationStructureInfoNV
   { -- Univalued Member elided
@@ -326,6 +333,12 @@ fromCStructAccelerationStructureInfoNV c = AccelerationStructureInfoNV <$> -- Un
                                                                        <*> pure (vkInstanceCount (c :: VkAccelerationStructureInfoNV))
                                                                        -- Length valued member elided
                                                                        <*> (Data.Vector.generateM (fromIntegral (vkGeometryCount (c :: VkAccelerationStructureInfoNV))) (((fromCStructGeometryNV <=<) . peekElemOff) (vkPGeometries (c :: VkAccelerationStructureInfoNV))))
+instance Zero AccelerationStructureInfoNV where
+  zero = AccelerationStructureInfoNV Nothing
+                                     zero
+                                     zero
+                                     zero
+                                     Data.Vector.empty
 -- No documentation found for TopLevel "AccelerationStructureMemoryRequirementsInfoNV"
 data AccelerationStructureMemoryRequirementsInfoNV = AccelerationStructureMemoryRequirementsInfoNV
   { -- Univalued Member elided
@@ -344,6 +357,10 @@ fromCStructAccelerationStructureMemoryRequirementsInfoNV c = AccelerationStructu
                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkAccelerationStructureMemoryRequirementsInfoNV)))
                                                                                                            <*> pure (vkType (c :: VkAccelerationStructureMemoryRequirementsInfoNV))
                                                                                                            <*> pure (vkAccelerationStructure (c :: VkAccelerationStructureMemoryRequirementsInfoNV))
+instance Zero AccelerationStructureMemoryRequirementsInfoNV where
+  zero = AccelerationStructureMemoryRequirementsInfoNV Nothing
+                                                       zero
+                                                       zero
 -- No documentation found for TopLevel "AccelerationStructureMemoryRequirementsTypeNV"
 type AccelerationStructureMemoryRequirementsTypeNV = VkAccelerationStructureMemoryRequirementsTypeNV
 -- No documentation found for TopLevel "AccelerationStructureNV"
@@ -376,6 +393,12 @@ fromCStructBindAccelerationStructureMemoryInfoNV c = BindAccelerationStructureMe
                                                                                            <*> pure (vkMemoryOffset (c :: VkBindAccelerationStructureMemoryInfoNV))
                                                                                            -- Length valued member elided
                                                                                            <*> (Data.Vector.generateM (fromIntegral (vkDeviceIndexCount (c :: VkBindAccelerationStructureMemoryInfoNV))) (peekElemOff (vkPDeviceIndices (c :: VkBindAccelerationStructureMemoryInfoNV))))
+instance Zero BindAccelerationStructureMemoryInfoNV where
+  zero = BindAccelerationStructureMemoryInfoNV Nothing
+                                               zero
+                                               zero
+                                               zero
+                                               Data.Vector.empty
 -- No documentation found for TopLevel "BuildAccelerationStructureFlagBitsNV"
 type BuildAccelerationStructureFlagBitsNV = VkBuildAccelerationStructureFlagBitsNV
 -- No documentation found for TopLevel "BuildAccelerationStructureFlagsNV"
@@ -406,6 +429,12 @@ fromCStructGeometryAABBNV c = GeometryAABBNV <$> -- Univalued Member elided
                                              <*> pure (vkNumAABBs (c :: VkGeometryAABBNV))
                                              <*> pure (vkStride (c :: VkGeometryAABBNV))
                                              <*> pure (vkOffset (c :: VkGeometryAABBNV))
+instance Zero GeometryAABBNV where
+  zero = GeometryAABBNV Nothing
+                        zero
+                        zero
+                        zero
+                        zero
 -- No documentation found for TopLevel "GeometryDataNV"
 data GeometryDataNV = GeometryDataNV
   { -- No documentation found for Nested "GeometryDataNV" "triangles"
@@ -419,6 +448,9 @@ withCStructGeometryDataNV from cont = withCStructGeometryAABBNV (vkAabbs (from :
 fromCStructGeometryDataNV :: VkGeometryDataNV -> IO GeometryDataNV
 fromCStructGeometryDataNV c = GeometryDataNV <$> (fromCStructGeometryTrianglesNV (vkTriangles (c :: VkGeometryDataNV)))
                                              <*> (fromCStructGeometryAABBNV (vkAabbs (c :: VkGeometryDataNV)))
+instance Zero GeometryDataNV where
+  zero = GeometryDataNV zero
+                        zero
 -- No documentation found for TopLevel "GeometryFlagBitsNV"
 type GeometryFlagBitsNV = VkGeometryFlagBitsNV
 -- No documentation found for TopLevel "GeometryFlagsNV"
@@ -448,6 +480,11 @@ fromCStructGeometryNV c = GeometryNV <$> -- Univalued Member elided
                                      <*> pure (vkGeometryType (c :: VkGeometryNV))
                                      <*> (fromCStructGeometryDataNV (vkGeometry (c :: VkGeometryNV)))
                                      <*> pure (vkFlags (c :: VkGeometryNV))
+instance Zero GeometryNV where
+  zero = GeometryNV Nothing
+                    zero
+                    zero
+                    zero
 -- No documentation found for TopLevel "GeometryTrianglesNV"
 data GeometryTrianglesNV = GeometryTrianglesNV
   { -- Univalued Member elided
@@ -493,6 +530,19 @@ fromCStructGeometryTrianglesNV c = GeometryTrianglesNV <$> -- Univalued Member e
                                                        <*> pure (vkIndexType (c :: VkGeometryTrianglesNV))
                                                        <*> pure (vkTransformData (c :: VkGeometryTrianglesNV))
                                                        <*> pure (vkTransformOffset (c :: VkGeometryTrianglesNV))
+instance Zero GeometryTrianglesNV where
+  zero = GeometryTrianglesNV Nothing
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "GeometryTypeNV"
 type GeometryTypeNV = VkGeometryTypeNV
 -- No documentation found for TopLevel "PhysicalDeviceRayTracingPropertiesNV"
@@ -531,6 +581,16 @@ fromCStructPhysicalDeviceRayTracingPropertiesNV c = PhysicalDeviceRayTracingProp
                                                                                          <*> pure (vkMaxInstanceCount (c :: VkPhysicalDeviceRayTracingPropertiesNV))
                                                                                          <*> pure (vkMaxTriangleCount (c :: VkPhysicalDeviceRayTracingPropertiesNV))
                                                                                          <*> pure (vkMaxDescriptorSetAccelerationStructures (c :: VkPhysicalDeviceRayTracingPropertiesNV))
+instance Zero PhysicalDeviceRayTracingPropertiesNV where
+  zero = PhysicalDeviceRayTracingPropertiesNV Nothing
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
 -- No documentation found for TopLevel "RayTracingPipelineCreateInfoNV"
 data RayTracingPipelineCreateInfoNV = RayTracingPipelineCreateInfoNV
   { -- Univalued Member elided
@@ -568,6 +628,15 @@ fromCStructRayTracingPipelineCreateInfoNV c = RayTracingPipelineCreateInfoNV <$>
                                                                              <*> pure (vkLayout (c :: VkRayTracingPipelineCreateInfoNV))
                                                                              <*> pure (vkBasePipelineHandle (c :: VkRayTracingPipelineCreateInfoNV))
                                                                              <*> pure (vkBasePipelineIndex (c :: VkRayTracingPipelineCreateInfoNV))
+instance Zero RayTracingPipelineCreateInfoNV where
+  zero = RayTracingPipelineCreateInfoNV Nothing
+                                        zero
+                                        Data.Vector.empty
+                                        Data.Vector.empty
+                                        zero
+                                        zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "RayTracingShaderGroupCreateInfoNV"
 data RayTracingShaderGroupCreateInfoNV = RayTracingShaderGroupCreateInfoNV
   { -- Univalued Member elided
@@ -595,6 +664,13 @@ fromCStructRayTracingShaderGroupCreateInfoNV c = RayTracingShaderGroupCreateInfo
                                                                                    <*> pure (vkClosestHitShader (c :: VkRayTracingShaderGroupCreateInfoNV))
                                                                                    <*> pure (vkAnyHitShader (c :: VkRayTracingShaderGroupCreateInfoNV))
                                                                                    <*> pure (vkIntersectionShader (c :: VkRayTracingShaderGroupCreateInfoNV))
+instance Zero RayTracingShaderGroupCreateInfoNV where
+  zero = RayTracingShaderGroupCreateInfoNV Nothing
+                                           zero
+                                           zero
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "RayTracingShaderGroupTypeNV"
 type RayTracingShaderGroupTypeNV = VkRayTracingShaderGroupTypeNV
 -- No documentation found for TopLevel "WriteDescriptorSetAccelerationStructureNV"
@@ -614,25 +690,28 @@ fromCStructWriteDescriptorSetAccelerationStructureNV c = WriteDescriptorSetAccel
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkWriteDescriptorSetAccelerationStructureNV)))
                                                                                                    -- Length valued member elided
                                                                                                    <*> (Data.Vector.generateM (fromIntegral (vkAccelerationStructureCount (c :: VkWriteDescriptorSetAccelerationStructureNV))) (peekElemOff (vkPAccelerationStructures (c :: VkWriteDescriptorSetAccelerationStructureNV))))
+instance Zero WriteDescriptorSetAccelerationStructureNV where
+  zero = WriteDescriptorSetAccelerationStructureNV Nothing
+                                                   Data.Vector.empty
 
 -- | Wrapper for 'vkBindAccelerationStructureMemoryNV'
 bindAccelerationStructureMemoryNV :: Device ->  Vector BindAccelerationStructureMemoryInfoNV ->  IO ()
 bindAccelerationStructureMemoryNV = \(Device device commandTable) -> \bindInfos -> withVec withCStructBindAccelerationStructureMemoryInfoNV bindInfos (\pBindInfos -> Graphics.Vulkan.C.Dynamic.bindAccelerationStructureMemoryNV commandTable device (fromIntegral $ Data.Vector.length bindInfos) pBindInfos >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
 -- | Wrapper for 'vkCmdBuildAccelerationStructureNV'
-cmdBuildAccelerationStructureNV :: CommandBuffer ->  AccelerationStructureInfoNV ->  Buffer ->  DeviceSize ->  Bool ->  AccelerationStructureNV ->  AccelerationStructureNV ->  Buffer ->  DeviceSize ->  IO (  )
+cmdBuildAccelerationStructureNV :: CommandBuffer ->  AccelerationStructureInfoNV ->  Buffer ->  DeviceSize ->  Bool ->  AccelerationStructureNV ->  AccelerationStructureNV ->  Buffer ->  DeviceSize ->  IO ()
 cmdBuildAccelerationStructureNV = \(CommandBuffer commandBuffer commandTable) -> \info -> \instanceData -> \instanceOffset -> \update -> \dst -> \src -> \scratch -> \scratchOffset -> (\a -> withCStructAccelerationStructureInfoNV a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.cmdBuildAccelerationStructureNV commandTable commandBuffer pInfo instanceData instanceOffset (boolToBool32 update) dst src scratch scratchOffset *> (pure ()))
 
 -- | Wrapper for 'vkCmdCopyAccelerationStructureNV'
-cmdCopyAccelerationStructureNV :: CommandBuffer ->  AccelerationStructureNV ->  AccelerationStructureNV ->  CopyAccelerationStructureModeNV ->  IO (  )
+cmdCopyAccelerationStructureNV :: CommandBuffer ->  AccelerationStructureNV ->  AccelerationStructureNV ->  CopyAccelerationStructureModeNV ->  IO ()
 cmdCopyAccelerationStructureNV = \(CommandBuffer commandBuffer commandTable) -> \dst -> \src -> \mode -> Graphics.Vulkan.C.Dynamic.cmdCopyAccelerationStructureNV commandTable commandBuffer dst src mode *> (pure ())
 
 -- | Wrapper for 'vkCmdTraceRaysNV'
-cmdTraceRaysNV :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Word32 ->  Word32 ->  Word32 ->  IO (  )
+cmdTraceRaysNV :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Buffer ->  DeviceSize ->  DeviceSize ->  Word32 ->  Word32 ->  Word32 ->  IO ()
 cmdTraceRaysNV = \(CommandBuffer commandBuffer commandTable) -> \raygenShaderBindingTableBuffer -> \raygenShaderBindingOffset -> \missShaderBindingTableBuffer -> \missShaderBindingOffset -> \missShaderBindingStride -> \hitShaderBindingTableBuffer -> \hitShaderBindingOffset -> \hitShaderBindingStride -> \callableShaderBindingTableBuffer -> \callableShaderBindingOffset -> \callableShaderBindingStride -> \width -> \height -> \depth -> Graphics.Vulkan.C.Dynamic.cmdTraceRaysNV commandTable commandBuffer raygenShaderBindingTableBuffer raygenShaderBindingOffset missShaderBindingTableBuffer missShaderBindingOffset missShaderBindingStride hitShaderBindingTableBuffer hitShaderBindingOffset hitShaderBindingStride callableShaderBindingTableBuffer callableShaderBindingOffset callableShaderBindingStride width height depth *> (pure ())
 
 -- | Wrapper for 'vkCmdWriteAccelerationStructuresPropertiesNV'
-cmdWriteAccelerationStructuresPropertiesNV :: CommandBuffer ->  Vector AccelerationStructureNV ->  QueryType ->  QueryPool ->  Word32 ->  IO (  )
+cmdWriteAccelerationStructuresPropertiesNV :: CommandBuffer ->  Vector AccelerationStructureNV ->  QueryType ->  QueryPool ->  Word32 ->  IO ()
 cmdWriteAccelerationStructuresPropertiesNV = \(CommandBuffer commandBuffer commandTable) -> \accelerationStructures -> \queryType -> \queryPool -> \firstQuery -> withVec (&) accelerationStructures (\pAccelerationStructures -> Graphics.Vulkan.C.Dynamic.cmdWriteAccelerationStructuresPropertiesNV commandTable commandBuffer (fromIntegral $ Data.Vector.length accelerationStructures) pAccelerationStructures queryType queryPool firstQuery *> (pure ()))
 
 -- | Wrapper for 'vkCompileDeferredNV'
@@ -640,11 +719,11 @@ compileDeferredNV :: Device ->  Pipeline ->  Word32 ->  IO ()
 compileDeferredNV = \(Device device commandTable) -> \pipeline -> \shader -> Graphics.Vulkan.C.Dynamic.compileDeferredNV commandTable device pipeline shader >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
 
 -- | Wrapper for 'vkCreateAccelerationStructureNV'
-createAccelerationStructureNV :: Device ->  AccelerationStructureCreateInfoNV ->  Maybe AllocationCallbacks ->  IO ( AccelerationStructureNV )
+createAccelerationStructureNV :: Device ->  AccelerationStructureCreateInfoNV ->  Maybe AllocationCallbacks ->  IO (AccelerationStructureNV)
 createAccelerationStructureNV = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pAccelerationStructure -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructAccelerationStructureCreateInfoNV a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createAccelerationStructureNV commandTable device pCreateInfo pAllocator pAccelerationStructure >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pAccelerationStructure)))))
 
 -- | Wrapper for 'vkCreateRayTracingPipelinesNV'
-createRayTracingPipelinesNV :: Device ->  PipelineCache ->  Vector RayTracingPipelineCreateInfoNV ->  Maybe AllocationCallbacks ->  IO ( Vector Pipeline )
+createRayTracingPipelinesNV :: Device ->  PipelineCache ->  Vector RayTracingPipelineCreateInfoNV ->  Maybe AllocationCallbacks ->  IO (Vector Pipeline)
 createRayTracingPipelinesNV = \(Device device commandTable) -> \pipelineCache -> \createInfos -> \allocator -> allocaArray ((Data.Vector.length createInfos)) (\pPipelines -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructRayTracingPipelineCreateInfoNV createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createRayTracingPipelinesNV commandTable device pipelineCache (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos)) (peekElemOff pPipelines)))))))
 
 -- | Wrapper for 'vkDestroyAccelerationStructureNV'
@@ -656,14 +735,15 @@ getAccelerationStructureHandleNV :: Device ->  AccelerationStructureNV ->  CSize
 getAccelerationStructureHandleNV = \(Device device commandTable) -> \accelerationStructure -> \dataSize -> allocaArray (fromIntegral dataSize) (\pData -> Graphics.Vulkan.C.Dynamic.getAccelerationStructureHandleNV commandTable device accelerationStructure dataSize (castPtr pData) >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((packCStringLen (pData, (fromIntegral dataSize))))))
 
 -- | Wrapper for 'vkGetAccelerationStructureMemoryRequirementsNV'
-getAccelerationStructureMemoryRequirementsNV :: Device ->  AccelerationStructureMemoryRequirementsInfoNV ->  IO ( MemoryRequirements2 )
+getAccelerationStructureMemoryRequirementsNV :: Device ->  AccelerationStructureMemoryRequirementsInfoNV ->  IO (MemoryRequirements2)
 getAccelerationStructureMemoryRequirementsNV = \(Device device commandTable) -> \info -> alloca (\pMemoryRequirements -> (\a -> withCStructAccelerationStructureMemoryRequirementsInfoNV a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getAccelerationStructureMemoryRequirementsNV commandTable device pInfo pMemoryRequirements *> ((fromCStructMemoryRequirements2 <=< peek) pMemoryRequirements)))
 
 -- | Wrapper for 'vkGetRayTracingShaderGroupHandlesNV'
 getRayTracingShaderGroupHandlesNV :: Device ->  Pipeline ->  Word32 ->  Word32 ->  CSize ->  IO (ByteString)
 getRayTracingShaderGroupHandlesNV = \(Device device commandTable) -> \pipeline -> \firstGroup -> \groupCount -> \dataSize -> allocaArray (fromIntegral dataSize) (\pData -> Graphics.Vulkan.C.Dynamic.getRayTracingShaderGroupHandlesNV commandTable device pipeline firstGroup groupCount dataSize (castPtr pData) >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((packCStringLen (pData, (fromIntegral dataSize))))))
-withAccelerationStructureNV :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withAccelerationStructureNV createInfo allocationCallbacks =
-  bracket
-    (vkCreateAccelerationStructureNV createInfo allocationCallbacks)
-    (`vkDestroyAccelerationStructureNV` allocationCallbacks)
+-- | Wrapper for 'createAccelerationStructureNV' and 'destroyAccelerationStructureNV' using 'bracket'
+withAccelerationStructureNV
+  :: Device -> AccelerationStructureCreateInfoNV -> Maybe (AllocationCallbacks) -> (AccelerationStructureNV -> IO a) -> IO a
+withAccelerationStructureNV device accelerationStructureCreateInfoNV allocationCallbacks = bracket
+  (createAccelerationStructureNV device accelerationStructureCreateInfoNV allocationCallbacks)
+  (\o -> destroyAccelerationStructureNV device o allocationCallbacks)

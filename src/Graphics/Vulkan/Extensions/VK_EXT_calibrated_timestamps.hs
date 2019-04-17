@@ -61,6 +61,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
@@ -104,6 +105,9 @@ fromCStructCalibratedTimestampInfoEXT :: VkCalibratedTimestampInfoEXT -> IO Cali
 fromCStructCalibratedTimestampInfoEXT c = CalibratedTimestampInfoEXT <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkCalibratedTimestampInfoEXT)))
                                                                      <*> pure (vkTimeDomain (c :: VkCalibratedTimestampInfoEXT))
+instance Zero CalibratedTimestampInfoEXT where
+  zero = CalibratedTimestampInfoEXT Nothing
+                                    zero
 -- No documentation found for TopLevel "TimeDomainEXT"
 type TimeDomainEXT = VkTimeDomainEXT
 

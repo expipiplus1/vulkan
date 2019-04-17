@@ -30,7 +30,8 @@ import Foreign.Ptr
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_FALSE
+  ( Zero(..)
+  , pattern VK_FALSE
   , pattern VK_TRUE
   )
 import Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color
@@ -71,3 +72,7 @@ fromCStructPipelineCoverageToColorStateCreateInfoNV c = PipelineCoverageToColorS
                                                                                                  <*> pure (vkFlags (c :: VkPipelineCoverageToColorStateCreateInfoNV))
                                                                                                  -- enable flag member elided
                                                                                                  <*> pure (let x = (vkCoverageToColorLocation (c :: VkPipelineCoverageToColorStateCreateInfoNV)) in if x == 0 then Nothing else Just x)
+instance Zero PipelineCoverageToColorStateCreateInfoNV where
+  zero = PipelineCoverageToColorStateCreateInfoNV Nothing
+                                                  zero
+                                                  Nothing

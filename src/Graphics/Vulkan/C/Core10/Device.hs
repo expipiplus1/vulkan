@@ -65,6 +65,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -82,7 +83,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkDeviceCreateFlags"
 newtype VkDeviceCreateFlags = VkDeviceCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDeviceCreateFlags where
   
@@ -147,11 +148,23 @@ instance Storable VkDeviceCreateInfo where
                 *> poke (ptr `plusPtr` 48) (vkEnabledExtensionCount (poked :: VkDeviceCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkPPEnabledExtensionNames (poked :: VkDeviceCreateInfo))
                 *> poke (ptr `plusPtr` 64) (vkPEnabledFeatures (poked :: VkDeviceCreateInfo))
+
+instance Zero VkDeviceCreateInfo where
+  zero = VkDeviceCreateInfo zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
 -- ** VkDeviceQueueCreateFlagBits
 
 -- No documentation found for TopLevel "VkDeviceQueueCreateFlagBits"
 newtype VkDeviceQueueCreateFlagBits = VkDeviceQueueCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDeviceQueueCreateFlagBits where
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
@@ -204,6 +217,14 @@ instance Storable VkDeviceQueueCreateInfo where
                 *> poke (ptr `plusPtr` 20) (vkQueueFamilyIndex (poked :: VkDeviceQueueCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkQueueCount (poked :: VkDeviceQueueCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkPQueuePriorities (poked :: VkDeviceQueueCreateInfo))
+
+instance Zero VkDeviceQueueCreateInfo where
+  zero = VkDeviceQueueCreateInfo zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkCreateDevice"
 foreign import ccall

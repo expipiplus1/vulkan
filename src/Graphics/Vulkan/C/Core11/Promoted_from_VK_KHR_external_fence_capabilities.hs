@@ -61,6 +61,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -75,7 +76,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkExternalFenceFeatureFlagBits"
 newtype VkExternalFenceFeatureFlagBits = VkExternalFenceFeatureFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkExternalFenceFeatureFlagBits where
   showsPrec _ VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = showString "VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"
@@ -106,7 +107,7 @@ type VkExternalFenceFeatureFlags = VkExternalFenceFeatureFlagBits
 
 -- No documentation found for TopLevel "VkExternalFenceHandleTypeFlagBits"
 newtype VkExternalFenceHandleTypeFlagBits = VkExternalFenceHandleTypeFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkExternalFenceHandleTypeFlagBits where
   showsPrec _ VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT = showString "VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT"
@@ -173,6 +174,13 @@ instance Storable VkExternalFenceProperties where
                 *> poke (ptr `plusPtr` 16) (vkExportFromImportedHandleTypes (poked :: VkExternalFenceProperties))
                 *> poke (ptr `plusPtr` 20) (vkCompatibleHandleTypes (poked :: VkExternalFenceProperties))
                 *> poke (ptr `plusPtr` 24) (vkExternalFenceFeatures (poked :: VkExternalFenceProperties))
+
+instance Zero VkExternalFenceProperties where
+  zero = VkExternalFenceProperties zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "VkPhysicalDeviceExternalFenceInfo"
 data VkPhysicalDeviceExternalFenceInfo = VkPhysicalDeviceExternalFenceInfo
   { -- No documentation found for Nested "VkPhysicalDeviceExternalFenceInfo" "sType"
@@ -193,6 +201,11 @@ instance Storable VkPhysicalDeviceExternalFenceInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalFenceInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalFenceInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkPhysicalDeviceExternalFenceInfo))
+
+instance Zero VkPhysicalDeviceExternalFenceInfo where
+  zero = VkPhysicalDeviceExternalFenceInfo zero
+                                           zero
+                                           zero
 #if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkGetPhysicalDeviceExternalFenceProperties"
 foreign import ccall

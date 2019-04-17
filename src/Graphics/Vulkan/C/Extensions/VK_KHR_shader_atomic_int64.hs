@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -54,6 +55,12 @@ instance Storable VkPhysicalDeviceShaderAtomicInt64FeaturesKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceShaderAtomicInt64FeaturesKHR))
                 *> poke (ptr `plusPtr` 16) (vkShaderBufferInt64Atomics (poked :: VkPhysicalDeviceShaderAtomicInt64FeaturesKHR))
                 *> poke (ptr `plusPtr` 20) (vkShaderSharedInt64Atomics (poked :: VkPhysicalDeviceShaderAtomicInt64FeaturesKHR))
+
+instance Zero VkPhysicalDeviceShaderAtomicInt64FeaturesKHR where
+  zero = VkPhysicalDeviceShaderAtomicInt64FeaturesKHR zero
+                                                      zero
+                                                      zero
+                                                      zero
 -- No documentation found for TopLevel "VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME"
 pattern VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME = "VK_KHR_shader_atomic_int64"

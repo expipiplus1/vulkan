@@ -15,7 +15,8 @@ module Graphics.Vulkan.Core10.Shader
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -27,7 +28,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -55,7 +57,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.Shader
@@ -105,16 +108,21 @@ fromCStructShaderModuleCreateInfo c = ShaderModuleCreateInfo <$> -- Univalued Me
                                                              <*> pure (vkFlags (c :: VkShaderModuleCreateInfo))
                                                              -- Length multiple valued member elided
                                                              <*> (Data.Vector.generateM (fromIntegral (vkCodeSize (c :: VkShaderModuleCreateInfo)) `quot` 4) (peekElemOff (vkPCode (c :: VkShaderModuleCreateInfo))))
+instance Zero ShaderModuleCreateInfo where
+  zero = ShaderModuleCreateInfo Nothing
+                                zero
+                                Data.Vector.empty
 
 -- | Wrapper for 'vkCreateShaderModule'
-createShaderModule :: Device ->  ShaderModuleCreateInfo ->  Maybe AllocationCallbacks ->  IO ( ShaderModule )
+createShaderModule :: Device ->  ShaderModuleCreateInfo ->  Maybe AllocationCallbacks ->  IO (ShaderModule)
 createShaderModule = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pShaderModule -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructShaderModuleCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createShaderModule commandTable device pCreateInfo pAllocator pShaderModule >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pShaderModule)))))
 
 -- | Wrapper for 'vkDestroyShaderModule'
 destroyShaderModule :: Device ->  ShaderModule ->  Maybe AllocationCallbacks ->  IO ()
 destroyShaderModule = \(Device device commandTable) -> \shaderModule -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyShaderModule commandTable device shaderModule pAllocator *> (pure ()))
-withShaderModule :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withShaderModule createInfo allocationCallbacks =
-  bracket
-    (vkCreateShaderModule createInfo allocationCallbacks)
-    (`vkDestroyShaderModule` allocationCallbacks)
+-- | Wrapper for 'createShaderModule' and 'destroyShaderModule' using 'bracket'
+withShaderModule
+  :: Device -> ShaderModuleCreateInfo -> Maybe (AllocationCallbacks) -> (ShaderModule -> IO a) -> IO a
+withShaderModule device shaderModuleCreateInfo allocationCallbacks = bracket
+  (createShaderModule device shaderModuleCreateInfo allocationCallbacks)
+  (\o -> destroyShaderModule device o allocationCallbacks)

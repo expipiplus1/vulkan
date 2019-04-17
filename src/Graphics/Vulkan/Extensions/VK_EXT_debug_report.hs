@@ -26,7 +26,8 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_report
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -67,7 +68,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
   ( VkDebugReportCallbackCreateInfoEXT(..)
@@ -122,6 +124,11 @@ fromCStructDebugReportCallbackCreateInfoEXT c = DebugReportCallbackCreateInfoEXT
                                                                                  <*> pure (vkFlags (c :: VkDebugReportCallbackCreateInfoEXT))
                                                                                  <*> pure (vkPfnCallback (c :: VkDebugReportCallbackCreateInfoEXT))
                                                                                  <*> pure (vkPUserData (c :: VkDebugReportCallbackCreateInfoEXT))
+instance Zero DebugReportCallbackCreateInfoEXT where
+  zero = DebugReportCallbackCreateInfoEXT Nothing
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "DebugReportCallbackEXT"
 type DebugReportCallbackEXT = VkDebugReportCallbackEXT
 -- No documentation found for TopLevel "DebugReportFlagBitsEXT"
@@ -132,18 +139,19 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 type DebugReportObjectTypeEXT = VkDebugReportObjectTypeEXT
 
 -- | Wrapper for 'vkCreateDebugReportCallbackEXT'
-createDebugReportCallbackEXT :: Instance ->  DebugReportCallbackCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO ( DebugReportCallbackEXT )
+createDebugReportCallbackEXT :: Instance ->  DebugReportCallbackCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO (DebugReportCallbackEXT)
 createDebugReportCallbackEXT = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pCallback -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDebugReportCallbackCreateInfoEXT a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDebugReportCallbackEXT commandTable instance' pCreateInfo pAllocator pCallback >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pCallback)))))
 
 -- | Wrapper for 'vkDebugReportMessageEXT'
-debugReportMessageEXT :: Instance ->  DebugReportFlagsEXT ->  DebugReportObjectTypeEXT ->  Word64 ->  CSize ->  Int32 ->  ByteString ->  ByteString ->  IO (  )
+debugReportMessageEXT :: Instance ->  DebugReportFlagsEXT ->  DebugReportObjectTypeEXT ->  Word64 ->  CSize ->  Int32 ->  ByteString ->  ByteString ->  IO ()
 debugReportMessageEXT = \(Instance instance' commandTable) -> \flags -> \objectType -> \object -> \location -> \messageCode -> \layerPrefix -> \message -> useAsCString message (\pMessage -> useAsCString layerPrefix (\pLayerPrefix -> Graphics.Vulkan.C.Dynamic.debugReportMessageEXT commandTable instance' flags objectType object location messageCode pLayerPrefix pMessage *> (pure ())))
 
 -- | Wrapper for 'vkDestroyDebugReportCallbackEXT'
 destroyDebugReportCallbackEXT :: Instance ->  DebugReportCallbackEXT ->  Maybe AllocationCallbacks ->  IO ()
 destroyDebugReportCallbackEXT = \(Instance instance' commandTable) -> \callback -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyDebugReportCallbackEXT commandTable instance' callback pAllocator *> (pure ()))
-withDebugReportCallbackEXT :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withDebugReportCallbackEXT createInfo allocationCallbacks =
-  bracket
-    (vkCreateDebugReportCallbackEXT createInfo allocationCallbacks)
-    (`vkDestroyDebugReportCallbackEXT` allocationCallbacks)
+-- | Wrapper for 'createDebugReportCallbackEXT' and 'destroyDebugReportCallbackEXT' using 'bracket'
+withDebugReportCallbackEXT
+  :: Instance -> DebugReportCallbackCreateInfoEXT -> Maybe (AllocationCallbacks) -> (DebugReportCallbackEXT -> IO a) -> IO a
+withDebugReportCallbackEXT instance' debugReportCallbackCreateInfoEXT allocationCallbacks = bracket
+  (createDebugReportCallbackEXT instance' debugReportCallbackCreateInfoEXT allocationCallbacks)
+  (\o -> destroyDebugReportCallbackEXT instance' o allocationCallbacks)

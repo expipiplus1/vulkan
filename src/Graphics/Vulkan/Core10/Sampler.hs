@@ -20,7 +20,8 @@ module Graphics.Vulkan.Core10.Sampler
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -49,7 +50,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.Sampler
@@ -155,6 +157,24 @@ fromCStructSamplerCreateInfo c = SamplerCreateInfo <$> -- Univalued Member elide
                                                    <*> pure (vkMaxLod (c :: VkSamplerCreateInfo))
                                                    <*> pure (vkBorderColor (c :: VkSamplerCreateInfo))
                                                    <*> pure (bool32ToBool (vkUnnormalizedCoordinates (c :: VkSamplerCreateInfo)))
+instance Zero SamplerCreateInfo where
+  zero = SamplerCreateInfo Nothing
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           False
+                           zero
+                           False
+                           zero
+                           zero
+                           zero
+                           zero
+                           False
 -- No documentation found for TopLevel "SamplerMipmapMode"
 type SamplerMipmapMode = VkSamplerMipmapMode
 
@@ -165,8 +185,9 @@ createSampler = \(Device device commandTable) -> \createInfo -> \allocator -> al
 -- | Wrapper for 'vkDestroySampler'
 destroySampler :: Device ->  Sampler ->  Maybe AllocationCallbacks ->  IO ()
 destroySampler = \(Device device commandTable) -> \sampler -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySampler commandTable device sampler pAllocator *> (pure ()))
-withSampler :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withSampler createInfo allocationCallbacks =
-  bracket
-    (vkCreateSampler createInfo allocationCallbacks)
-    (`vkDestroySampler` allocationCallbacks)
+-- | Wrapper for 'createSampler' and 'destroySampler' using 'bracket'
+withSampler
+  :: Device -> SamplerCreateInfo -> Maybe (AllocationCallbacks) -> (Sampler -> IO a) -> IO a
+withSampler device samplerCreateInfo allocationCallbacks = bracket
+  (createSampler device samplerCreateInfo allocationCallbacks)
+  (\o -> destroySampler device o allocationCallbacks)

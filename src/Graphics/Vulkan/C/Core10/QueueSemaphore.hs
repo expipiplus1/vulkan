@@ -55,6 +55,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -73,7 +74,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkSemaphoreCreateFlags"
 newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSemaphoreCreateFlags where
   
@@ -110,6 +111,11 @@ instance Storable VkSemaphoreCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSemaphoreCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSemaphoreCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSemaphoreCreateInfo))
+
+instance Zero VkSemaphoreCreateInfo where
+  zero = VkSemaphoreCreateInfo zero
+                               zero
+                               zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkCreateSemaphore"
 foreign import ccall

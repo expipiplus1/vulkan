@@ -34,6 +34,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
   ( VkDescriptorSetLayoutCreateInfo(..)
@@ -67,6 +68,11 @@ instance Storable VkDescriptorSetLayoutSupport where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorSetLayoutSupport))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetLayoutSupport))
                 *> poke (ptr `plusPtr` 16) (vkSupported (poked :: VkDescriptorSetLayoutSupport))
+
+instance Zero VkDescriptorSetLayoutSupport where
+  zero = VkDescriptorSetLayoutSupport zero
+                                      zero
+                                      zero
 -- No documentation found for TopLevel "VkPhysicalDeviceMaintenance3Properties"
 data VkPhysicalDeviceMaintenance3Properties = VkPhysicalDeviceMaintenance3Properties
   { -- No documentation found for Nested "VkPhysicalDeviceMaintenance3Properties" "sType"
@@ -91,6 +97,12 @@ instance Storable VkPhysicalDeviceMaintenance3Properties where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMaintenance3Properties))
                 *> poke (ptr `plusPtr` 16) (vkMaxPerSetDescriptors (poked :: VkPhysicalDeviceMaintenance3Properties))
                 *> poke (ptr `plusPtr` 24) (vkMaxMemoryAllocationSize (poked :: VkPhysicalDeviceMaintenance3Properties))
+
+instance Zero VkPhysicalDeviceMaintenance3Properties where
+  zero = VkPhysicalDeviceMaintenance3Properties zero
+                                                zero
+                                                zero
+                                                zero
 #if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkGetDescriptorSetLayoutSupport"
 foreign import ccall

@@ -73,6 +73,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -100,11 +101,17 @@ instance Storable VkConformanceVersionKHR where
                 *> poke (ptr `plusPtr` 1) (vkMinor (poked :: VkConformanceVersionKHR))
                 *> poke (ptr `plusPtr` 2) (vkSubminor (poked :: VkConformanceVersionKHR))
                 *> poke (ptr `plusPtr` 3) (vkPatch (poked :: VkConformanceVersionKHR))
+
+instance Zero VkConformanceVersionKHR where
+  zero = VkConformanceVersionKHR zero
+                                 zero
+                                 zero
+                                 zero
 -- ** VkDriverIdKHR
 
 -- No documentation found for TopLevel "VkDriverIdKHR"
 newtype VkDriverIdKHR = VkDriverIdKHR Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkDriverIdKHR where
   showsPrec _ VK_DRIVER_ID_AMD_PROPRIETARY_KHR = showString "VK_DRIVER_ID_AMD_PROPRIETARY_KHR"
@@ -215,6 +222,14 @@ instance Storable VkPhysicalDeviceDriverPropertiesKHR where
                 *> poke (ptr `plusPtr` 20) (vkDriverName (poked :: VkPhysicalDeviceDriverPropertiesKHR))
                 *> poke (ptr `plusPtr` 276) (vkDriverInfo (poked :: VkPhysicalDeviceDriverPropertiesKHR))
                 *> poke (ptr `plusPtr` 532) (vkConformanceVersion (poked :: VkPhysicalDeviceDriverPropertiesKHR))
+
+instance Zero VkPhysicalDeviceDriverPropertiesKHR where
+  zero = VkPhysicalDeviceDriverPropertiesKHR zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME"
 pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME = "VK_KHR_driver_properties"

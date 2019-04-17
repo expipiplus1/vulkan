@@ -41,7 +41,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
   ( VkIOSSurfaceCreateFlagsMVK(..)
@@ -90,7 +91,11 @@ fromCStructIOSSurfaceCreateInfoMVK c = IOSSurfaceCreateInfoMVK <$> -- Univalued 
                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkIOSSurfaceCreateInfoMVK)))
                                                                <*> pure (vkFlags (c :: VkIOSSurfaceCreateInfoMVK))
                                                                <*> pure (vkPView (c :: VkIOSSurfaceCreateInfoMVK))
+instance Zero IOSSurfaceCreateInfoMVK where
+  zero = IOSSurfaceCreateInfoMVK Nothing
+                                 zero
+                                 zero
 
 -- | Wrapper for 'vkCreateIOSSurfaceMVK'
-createIOSSurfaceMVK :: Instance ->  IOSSurfaceCreateInfoMVK ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createIOSSurfaceMVK :: Instance ->  IOSSurfaceCreateInfoMVK ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createIOSSurfaceMVK = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructIOSSurfaceCreateInfoMVK a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createIOSSurfaceMVK commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))

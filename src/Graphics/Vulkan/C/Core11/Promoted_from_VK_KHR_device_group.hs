@@ -82,6 +82,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -126,6 +127,12 @@ instance Storable VkDeviceGroupBindSparseInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupBindSparseInfo))
                 *> poke (ptr `plusPtr` 16) (vkResourceDeviceIndex (poked :: VkDeviceGroupBindSparseInfo))
                 *> poke (ptr `plusPtr` 20) (vkMemoryDeviceIndex (poked :: VkDeviceGroupBindSparseInfo))
+
+instance Zero VkDeviceGroupBindSparseInfo where
+  zero = VkDeviceGroupBindSparseInfo zero
+                                     zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "VkDeviceGroupCommandBufferBeginInfo"
 data VkDeviceGroupCommandBufferBeginInfo = VkDeviceGroupCommandBufferBeginInfo
   { -- No documentation found for Nested "VkDeviceGroupCommandBufferBeginInfo" "sType"
@@ -146,6 +153,11 @@ instance Storable VkDeviceGroupCommandBufferBeginInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGroupCommandBufferBeginInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupCommandBufferBeginInfo))
                 *> poke (ptr `plusPtr` 16) (vkDeviceMask (poked :: VkDeviceGroupCommandBufferBeginInfo))
+
+instance Zero VkDeviceGroupCommandBufferBeginInfo where
+  zero = VkDeviceGroupCommandBufferBeginInfo zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkDeviceGroupRenderPassBeginInfo"
 data VkDeviceGroupRenderPassBeginInfo = VkDeviceGroupRenderPassBeginInfo
   { -- No documentation found for Nested "VkDeviceGroupRenderPassBeginInfo" "sType"
@@ -174,6 +186,13 @@ instance Storable VkDeviceGroupRenderPassBeginInfo where
                 *> poke (ptr `plusPtr` 16) (vkDeviceMask (poked :: VkDeviceGroupRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 20) (vkDeviceRenderAreaCount (poked :: VkDeviceGroupRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 24) (vkPDeviceRenderAreas (poked :: VkDeviceGroupRenderPassBeginInfo))
+
+instance Zero VkDeviceGroupRenderPassBeginInfo where
+  zero = VkDeviceGroupRenderPassBeginInfo zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkDeviceGroupSubmitInfo"
 data VkDeviceGroupSubmitInfo = VkDeviceGroupSubmitInfo
   { -- No documentation found for Nested "VkDeviceGroupSubmitInfo" "sType"
@@ -214,11 +233,21 @@ instance Storable VkDeviceGroupSubmitInfo where
                 *> poke (ptr `plusPtr` 40) (vkPCommandBufferDeviceMasks (poked :: VkDeviceGroupSubmitInfo))
                 *> poke (ptr `plusPtr` 48) (vkSignalSemaphoreCount (poked :: VkDeviceGroupSubmitInfo))
                 *> poke (ptr `plusPtr` 56) (vkPSignalSemaphoreDeviceIndices (poked :: VkDeviceGroupSubmitInfo))
+
+instance Zero VkDeviceGroupSubmitInfo where
+  zero = VkDeviceGroupSubmitInfo zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- ** VkMemoryAllocateFlagBits
 
 -- No documentation found for TopLevel "VkMemoryAllocateFlagBits"
 newtype VkMemoryAllocateFlagBits = VkMemoryAllocateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkMemoryAllocateFlagBits where
   showsPrec _ VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT = showString "VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT"
@@ -263,11 +292,17 @@ instance Storable VkMemoryAllocateFlagsInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryAllocateFlagsInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkMemoryAllocateFlagsInfo))
                 *> poke (ptr `plusPtr` 20) (vkDeviceMask (poked :: VkMemoryAllocateFlagsInfo))
+
+instance Zero VkMemoryAllocateFlagsInfo where
+  zero = VkMemoryAllocateFlagsInfo zero
+                                   zero
+                                   zero
+                                   zero
 -- ** VkPeerMemoryFeatureFlagBits
 
 -- No documentation found for TopLevel "VkPeerMemoryFeatureFlagBits"
 newtype VkPeerMemoryFeatureFlagBits = VkPeerMemoryFeatureFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPeerMemoryFeatureFlagBits where
   showsPrec _ VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT = showString "VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT"

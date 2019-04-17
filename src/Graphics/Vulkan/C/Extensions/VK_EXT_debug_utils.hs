@@ -147,6 +147,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkObjectType(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -189,11 +190,17 @@ instance Storable VkDebugUtilsLabelEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugUtilsLabelEXT))
                 *> poke (ptr `plusPtr` 16) (vkPLabelName (poked :: VkDebugUtilsLabelEXT))
                 *> poke (ptr `plusPtr` 24) (vkColor (poked :: VkDebugUtilsLabelEXT))
+
+instance Zero VkDebugUtilsLabelEXT where
+  zero = VkDebugUtilsLabelEXT zero
+                              zero
+                              zero
+                              zero
 -- ** VkDebugUtilsMessageSeverityFlagBitsEXT
 
 -- No documentation found for TopLevel "VkDebugUtilsMessageSeverityFlagBitsEXT"
 newtype VkDebugUtilsMessageSeverityFlagBitsEXT = VkDebugUtilsMessageSeverityFlagBitsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDebugUtilsMessageSeverityFlagBitsEXT where
   showsPrec _ VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT = showString "VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT"
@@ -236,7 +243,7 @@ type VkDebugUtilsMessageSeverityFlagsEXT = VkDebugUtilsMessageSeverityFlagBitsEX
 
 -- No documentation found for TopLevel "VkDebugUtilsMessageTypeFlagBitsEXT"
 newtype VkDebugUtilsMessageTypeFlagBitsEXT = VkDebugUtilsMessageTypeFlagBitsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDebugUtilsMessageTypeFlagBitsEXT where
   showsPrec _ VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT = showString "VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT"
@@ -325,11 +332,25 @@ instance Storable VkDebugUtilsMessengerCallbackDataEXT where
                 *> poke (ptr `plusPtr` 72) (vkPCmdBufLabels (poked :: VkDebugUtilsMessengerCallbackDataEXT))
                 *> poke (ptr `plusPtr` 80) (vkObjectCount (poked :: VkDebugUtilsMessengerCallbackDataEXT))
                 *> poke (ptr `plusPtr` 88) (vkPObjects (poked :: VkDebugUtilsMessengerCallbackDataEXT))
+
+instance Zero VkDebugUtilsMessengerCallbackDataEXT where
+  zero = VkDebugUtilsMessengerCallbackDataEXT zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
 -- ** VkDebugUtilsMessengerCallbackDataFlagsEXT
 
 -- No documentation found for TopLevel "VkDebugUtilsMessengerCallbackDataFlagsEXT"
 newtype VkDebugUtilsMessengerCallbackDataFlagsEXT = VkDebugUtilsMessengerCallbackDataFlagsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDebugUtilsMessengerCallbackDataFlagsEXT where
   
@@ -350,7 +371,7 @@ instance Read VkDebugUtilsMessengerCallbackDataFlagsEXT where
 
 -- No documentation found for TopLevel "VkDebugUtilsMessengerCreateFlagsEXT"
 newtype VkDebugUtilsMessengerCreateFlagsEXT = VkDebugUtilsMessengerCreateFlagsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDebugUtilsMessengerCreateFlagsEXT where
   
@@ -403,6 +424,15 @@ instance Storable VkDebugUtilsMessengerCreateInfoEXT where
                 *> poke (ptr `plusPtr` 24) (vkMessageType (poked :: VkDebugUtilsMessengerCreateInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPfnUserCallback (poked :: VkDebugUtilsMessengerCreateInfoEXT))
                 *> poke (ptr `plusPtr` 40) (vkPUserData (poked :: VkDebugUtilsMessengerCreateInfoEXT))
+
+instance Zero VkDebugUtilsMessengerCreateInfoEXT where
+  zero = VkDebugUtilsMessengerCreateInfoEXT zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
 -- | Dummy data to tag the 'Ptr' with
 data VkDebugUtilsMessengerEXT_T
 -- No documentation found for TopLevel "VkDebugUtilsMessengerEXT"
@@ -435,6 +465,13 @@ instance Storable VkDebugUtilsObjectNameInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkObjectType (poked :: VkDebugUtilsObjectNameInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkObjectHandle (poked :: VkDebugUtilsObjectNameInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPObjectName (poked :: VkDebugUtilsObjectNameInfoEXT))
+
+instance Zero VkDebugUtilsObjectNameInfoEXT where
+  zero = VkDebugUtilsObjectNameInfoEXT zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkDebugUtilsObjectTagInfoEXT"
 data VkDebugUtilsObjectTagInfoEXT = VkDebugUtilsObjectTagInfoEXT
   { -- No documentation found for Nested "VkDebugUtilsObjectTagInfoEXT" "sType"
@@ -471,6 +508,15 @@ instance Storable VkDebugUtilsObjectTagInfoEXT where
                 *> poke (ptr `plusPtr` 32) (vkTagName (poked :: VkDebugUtilsObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 40) (vkTagSize (poked :: VkDebugUtilsObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 48) (vkPTag (poked :: VkDebugUtilsObjectTagInfoEXT))
+
+instance Zero VkDebugUtilsObjectTagInfoEXT where
+  zero = VkDebugUtilsObjectTagInfoEXT zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdBeginDebugUtilsLabelEXT"
 foreign import ccall

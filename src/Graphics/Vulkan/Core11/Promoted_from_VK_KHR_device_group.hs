@@ -50,7 +50,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -77,6 +78,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
   ( VkDeviceGroupBindSparseInfo(..)
   , VkDeviceGroupCommandBufferBeginInfo(..)
@@ -135,6 +139,10 @@ fromCStructDeviceGroupBindSparseInfo c = DeviceGroupBindSparseInfo <$> -- Unival
                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDeviceGroupBindSparseInfo)))
                                                                    <*> pure (vkResourceDeviceIndex (c :: VkDeviceGroupBindSparseInfo))
                                                                    <*> pure (vkMemoryDeviceIndex (c :: VkDeviceGroupBindSparseInfo))
+instance Zero DeviceGroupBindSparseInfo where
+  zero = DeviceGroupBindSparseInfo Nothing
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "DeviceGroupCommandBufferBeginInfo"
 data DeviceGroupCommandBufferBeginInfo = DeviceGroupCommandBufferBeginInfo
   { -- Univalued Member elided
@@ -150,6 +158,9 @@ fromCStructDeviceGroupCommandBufferBeginInfo :: VkDeviceGroupCommandBufferBeginI
 fromCStructDeviceGroupCommandBufferBeginInfo c = DeviceGroupCommandBufferBeginInfo <$> -- Univalued Member elided
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDeviceGroupCommandBufferBeginInfo)))
                                                                                    <*> pure (vkDeviceMask (c :: VkDeviceGroupCommandBufferBeginInfo))
+instance Zero DeviceGroupCommandBufferBeginInfo where
+  zero = DeviceGroupCommandBufferBeginInfo Nothing
+                                           zero
 -- No documentation found for TopLevel "DeviceGroupRenderPassBeginInfo"
 data DeviceGroupRenderPassBeginInfo = DeviceGroupRenderPassBeginInfo
   { -- Univalued Member elided
@@ -170,6 +181,10 @@ fromCStructDeviceGroupRenderPassBeginInfo c = DeviceGroupRenderPassBeginInfo <$>
                                                                              <*> pure (vkDeviceMask (c :: VkDeviceGroupRenderPassBeginInfo))
                                                                              -- Length valued member elided
                                                                              <*> (Data.Vector.generateM (fromIntegral (vkDeviceRenderAreaCount (c :: VkDeviceGroupRenderPassBeginInfo))) (((fromCStructRect2D <=<) . peekElemOff) (vkPDeviceRenderAreas (c :: VkDeviceGroupRenderPassBeginInfo))))
+instance Zero DeviceGroupRenderPassBeginInfo where
+  zero = DeviceGroupRenderPassBeginInfo Nothing
+                                        zero
+                                        Data.Vector.empty
 -- No documentation found for TopLevel "DeviceGroupSubmitInfo"
 data DeviceGroupSubmitInfo = DeviceGroupSubmitInfo
   { -- Univalued Member elided
@@ -197,6 +212,11 @@ fromCStructDeviceGroupSubmitInfo c = DeviceGroupSubmitInfo <$> -- Univalued Memb
                                                            <*> (Data.Vector.generateM (fromIntegral (vkCommandBufferCount (c :: VkDeviceGroupSubmitInfo))) (peekElemOff (vkPCommandBufferDeviceMasks (c :: VkDeviceGroupSubmitInfo))))
                                                            -- Length valued member elided
                                                            <*> (Data.Vector.generateM (fromIntegral (vkSignalSemaphoreCount (c :: VkDeviceGroupSubmitInfo))) (peekElemOff (vkPSignalSemaphoreDeviceIndices (c :: VkDeviceGroupSubmitInfo))))
+instance Zero DeviceGroupSubmitInfo where
+  zero = DeviceGroupSubmitInfo Nothing
+                               Data.Vector.empty
+                               Data.Vector.empty
+                               Data.Vector.empty
 -- No documentation found for TopLevel "MemoryAllocateFlagBits"
 type MemoryAllocateFlagBits = VkMemoryAllocateFlagBits
 -- No documentation found for TopLevel "MemoryAllocateFlagBitsKHR"
@@ -221,6 +241,10 @@ fromCStructMemoryAllocateFlagsInfo c = MemoryAllocateFlagsInfo <$> -- Univalued 
                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryAllocateFlagsInfo)))
                                                                <*> pure (vkFlags (c :: VkMemoryAllocateFlagsInfo))
                                                                <*> pure (vkDeviceMask (c :: VkMemoryAllocateFlagsInfo))
+instance Zero MemoryAllocateFlagsInfo where
+  zero = MemoryAllocateFlagsInfo Nothing
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "MemoryAllocateFlagsKHR"
 type MemoryAllocateFlagsKHR = MemoryAllocateFlags
 -- No documentation found for TopLevel "PeerMemoryFeatureFlagBits"
@@ -233,7 +257,7 @@ type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 type PeerMemoryFeatureFlagsKHR = PeerMemoryFeatureFlags
 
 -- | Wrapper for 'vkCmdDispatchBase'
-cmdDispatchBase :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO (  )
+cmdDispatchBase :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO ()
 cmdDispatchBase = \(CommandBuffer commandBuffer commandTable) -> \baseGroupX -> \baseGroupY -> \baseGroupZ -> \groupCountX -> \groupCountY -> \groupCountZ -> Graphics.Vulkan.C.Dynamic.cmdDispatchBase commandTable commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ *> (pure ())
 
 -- | Wrapper for 'vkCmdSetDeviceMask'

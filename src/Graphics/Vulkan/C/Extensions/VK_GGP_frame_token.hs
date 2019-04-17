@@ -30,6 +30,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -56,6 +57,11 @@ instance Storable VkPresentFrameTokenGGP where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPresentFrameTokenGGP))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPresentFrameTokenGGP))
                 *> poke (ptr `plusPtr` 16) (vkFrameToken (poked :: VkPresentFrameTokenGGP))
+
+instance Zero VkPresentFrameTokenGGP where
+  zero = VkPresentFrameTokenGGP zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "VK_GGP_FRAME_TOKEN_EXTENSION_NAME"
 pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME = "VK_GGP_frame_token"

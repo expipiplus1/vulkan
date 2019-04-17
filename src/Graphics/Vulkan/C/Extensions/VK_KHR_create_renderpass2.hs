@@ -73,6 +73,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
@@ -159,6 +160,19 @@ instance Storable VkAttachmentDescription2KHR where
                 *> poke (ptr `plusPtr` 40) (vkStencilStoreOp (poked :: VkAttachmentDescription2KHR))
                 *> poke (ptr `plusPtr` 44) (vkInitialLayout (poked :: VkAttachmentDescription2KHR))
                 *> poke (ptr `plusPtr` 48) (vkFinalLayout (poked :: VkAttachmentDescription2KHR))
+
+instance Zero VkAttachmentDescription2KHR where
+  zero = VkAttachmentDescription2KHR zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "VkAttachmentReference2KHR"
 data VkAttachmentReference2KHR = VkAttachmentReference2KHR
   { -- No documentation found for Nested "VkAttachmentReference2KHR" "sType"
@@ -187,6 +201,13 @@ instance Storable VkAttachmentReference2KHR where
                 *> poke (ptr `plusPtr` 16) (vkAttachment (poked :: VkAttachmentReference2KHR))
                 *> poke (ptr `plusPtr` 20) (vkLayout (poked :: VkAttachmentReference2KHR))
                 *> poke (ptr `plusPtr` 24) (vkAspectMask (poked :: VkAttachmentReference2KHR))
+
+instance Zero VkAttachmentReference2KHR where
+  zero = VkAttachmentReference2KHR zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "VkRenderPassCreateInfo2KHR"
 data VkRenderPassCreateInfo2KHR = VkRenderPassCreateInfo2KHR
   { -- No documentation found for Nested "VkRenderPassCreateInfo2KHR" "sType"
@@ -239,6 +260,19 @@ instance Storable VkRenderPassCreateInfo2KHR where
                 *> poke (ptr `plusPtr` 56) (vkPDependencies (poked :: VkRenderPassCreateInfo2KHR))
                 *> poke (ptr `plusPtr` 64) (vkCorrelatedViewMaskCount (poked :: VkRenderPassCreateInfo2KHR))
                 *> poke (ptr `plusPtr` 72) (vkPCorrelatedViewMasks (poked :: VkRenderPassCreateInfo2KHR))
+
+instance Zero VkRenderPassCreateInfo2KHR where
+  zero = VkRenderPassCreateInfo2KHR zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkSubpassBeginInfoKHR"
 data VkSubpassBeginInfoKHR = VkSubpassBeginInfoKHR
   { -- No documentation found for Nested "VkSubpassBeginInfoKHR" "sType"
@@ -259,6 +293,11 @@ instance Storable VkSubpassBeginInfoKHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSubpassBeginInfoKHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSubpassBeginInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkContents (poked :: VkSubpassBeginInfoKHR))
+
+instance Zero VkSubpassBeginInfoKHR where
+  zero = VkSubpassBeginInfoKHR zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "VkSubpassDependency2KHR"
 data VkSubpassDependency2KHR = VkSubpassDependency2KHR
   { -- No documentation found for Nested "VkSubpassDependency2KHR" "sType"
@@ -307,6 +346,18 @@ instance Storable VkSubpassDependency2KHR where
                 *> poke (ptr `plusPtr` 36) (vkDstAccessMask (poked :: VkSubpassDependency2KHR))
                 *> poke (ptr `plusPtr` 40) (vkDependencyFlags (poked :: VkSubpassDependency2KHR))
                 *> poke (ptr `plusPtr` 44) (vkViewOffset (poked :: VkSubpassDependency2KHR))
+
+instance Zero VkSubpassDependency2KHR where
+  zero = VkSubpassDependency2KHR zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "VkSubpassDescription2KHR"
 data VkSubpassDescription2KHR = VkSubpassDescription2KHR
   { -- No documentation found for Nested "VkSubpassDescription2KHR" "sType"
@@ -367,6 +418,21 @@ instance Storable VkSubpassDescription2KHR where
                 *> poke (ptr `plusPtr` 64) (vkPDepthStencilAttachment (poked :: VkSubpassDescription2KHR))
                 *> poke (ptr `plusPtr` 72) (vkPreserveAttachmentCount (poked :: VkSubpassDescription2KHR))
                 *> poke (ptr `plusPtr` 80) (vkPPreserveAttachments (poked :: VkSubpassDescription2KHR))
+
+instance Zero VkSubpassDescription2KHR where
+  zero = VkSubpassDescription2KHR zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkSubpassEndInfoKHR"
 data VkSubpassEndInfoKHR = VkSubpassEndInfoKHR
   { -- No documentation found for Nested "VkSubpassEndInfoKHR" "sType"
@@ -383,6 +449,10 @@ instance Storable VkSubpassEndInfoKHR where
                                  <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSubpassEndInfoKHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSubpassEndInfoKHR))
+
+instance Zero VkSubpassEndInfoKHR where
+  zero = VkSubpassEndInfoKHR zero
+                             zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdBeginRenderPass2KHR"
 foreign import ccall

@@ -314,6 +314,7 @@ import Graphics.Vulkan.C.Core10.CommandBuffer
 #endif
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
@@ -411,6 +412,11 @@ instance Storable VkBufferCopy where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSrcOffset (poked :: VkBufferCopy))
                 *> poke (ptr `plusPtr` 8) (vkDstOffset (poked :: VkBufferCopy))
                 *> poke (ptr `plusPtr` 16) (vkSize (poked :: VkBufferCopy))
+
+instance Zero VkBufferCopy where
+  zero = VkBufferCopy zero
+                      zero
+                      zero
 -- No documentation found for TopLevel "VkBufferImageCopy"
 data VkBufferImageCopy = VkBufferImageCopy
   { -- No documentation found for Nested "VkBufferImageCopy" "bufferOffset"
@@ -443,6 +449,14 @@ instance Storable VkBufferImageCopy where
                 *> poke (ptr `plusPtr` 16) (vkImageSubresource (poked :: VkBufferImageCopy))
                 *> poke (ptr `plusPtr` 32) (vkImageOffset (poked :: VkBufferImageCopy))
                 *> poke (ptr `plusPtr` 44) (vkImageExtent (poked :: VkBufferImageCopy))
+
+instance Zero VkBufferImageCopy where
+  zero = VkBufferImageCopy zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
 -- No documentation found for TopLevel "VkBufferMemoryBarrier"
 data VkBufferMemoryBarrier = VkBufferMemoryBarrier
   { -- No documentation found for Nested "VkBufferMemoryBarrier" "sType"
@@ -487,6 +501,17 @@ instance Storable VkBufferMemoryBarrier where
                 *> poke (ptr `plusPtr` 32) (vkBuffer (poked :: VkBufferMemoryBarrier))
                 *> poke (ptr `plusPtr` 40) (vkOffset (poked :: VkBufferMemoryBarrier))
                 *> poke (ptr `plusPtr` 48) (vkSize (poked :: VkBufferMemoryBarrier))
+
+instance Zero VkBufferMemoryBarrier where
+  zero = VkBufferMemoryBarrier zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "VkClearAttachment"
 data VkClearAttachment = VkClearAttachment
   { -- No documentation found for Nested "VkClearAttachment" "aspectMask"
@@ -507,6 +532,11 @@ instance Storable VkClearAttachment where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkAspectMask (poked :: VkClearAttachment))
                 *> poke (ptr `plusPtr` 4) (vkColorAttachment (poked :: VkClearAttachment))
                 *> poke (ptr `plusPtr` 8) (vkClearValue (poked :: VkClearAttachment))
+
+instance Zero VkClearAttachment where
+  zero = VkClearAttachment zero
+                           zero
+                           zero
 -- No documentation found for TopLevel "VkClearColorValue"
 data VkClearColorValue
   = -- No documentation found for Nested "VkClearColorValue" "VkFloat32"
@@ -526,6 +556,9 @@ instance Storable VkClearColorValue where
     VkFloat32 e -> poke (castPtr ptr) e
     VkInt32 e -> poke (castPtr ptr) e
     VkUint32 e -> poke (castPtr ptr) e
+
+instance Zero VkClearColorValue where
+  zero = VkFloat32 zero
 -- No documentation found for TopLevel "VkClearDepthStencilValue"
 data VkClearDepthStencilValue = VkClearDepthStencilValue
   { -- No documentation found for Nested "VkClearDepthStencilValue" "depth"
@@ -542,6 +575,10 @@ instance Storable VkClearDepthStencilValue where
                                       <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkDepth (poked :: VkClearDepthStencilValue))
                 *> poke (ptr `plusPtr` 4) (vkStencil (poked :: VkClearDepthStencilValue))
+
+instance Zero VkClearDepthStencilValue where
+  zero = VkClearDepthStencilValue zero
+                                  zero
 -- No documentation found for TopLevel "VkClearRect"
 data VkClearRect = VkClearRect
   { -- No documentation found for Nested "VkClearRect" "rect"
@@ -562,6 +599,11 @@ instance Storable VkClearRect where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkRect (poked :: VkClearRect))
                 *> poke (ptr `plusPtr` 16) (vkBaseArrayLayer (poked :: VkClearRect))
                 *> poke (ptr `plusPtr` 20) (vkLayerCount (poked :: VkClearRect))
+
+instance Zero VkClearRect where
+  zero = VkClearRect zero
+                     zero
+                     zero
 -- No documentation found for TopLevel "VkClearValue"
 data VkClearValue
   = -- No documentation found for Nested "VkClearValue" "VkColor"
@@ -578,6 +620,9 @@ instance Storable VkClearValue where
   poke ptr = \case
     VkColor e -> poke (castPtr ptr) e
     VkDepthStencil e -> poke (castPtr ptr) e
+
+instance Zero VkClearValue where
+  zero = VkColor zero
 -- No documentation found for TopLevel "VkDispatchIndirectCommand"
 data VkDispatchIndirectCommand = VkDispatchIndirectCommand
   { -- No documentation found for Nested "VkDispatchIndirectCommand" "x"
@@ -598,6 +643,11 @@ instance Storable VkDispatchIndirectCommand where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkDispatchIndirectCommand))
                 *> poke (ptr `plusPtr` 4) (vkY (poked :: VkDispatchIndirectCommand))
                 *> poke (ptr `plusPtr` 8) (vkZ (poked :: VkDispatchIndirectCommand))
+
+instance Zero VkDispatchIndirectCommand where
+  zero = VkDispatchIndirectCommand zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "VkDrawIndexedIndirectCommand"
 data VkDrawIndexedIndirectCommand = VkDrawIndexedIndirectCommand
   { -- No documentation found for Nested "VkDrawIndexedIndirectCommand" "indexCount"
@@ -626,6 +676,13 @@ instance Storable VkDrawIndexedIndirectCommand where
                 *> poke (ptr `plusPtr` 8) (vkFirstIndex (poked :: VkDrawIndexedIndirectCommand))
                 *> poke (ptr `plusPtr` 12) (vkVertexOffset (poked :: VkDrawIndexedIndirectCommand))
                 *> poke (ptr `plusPtr` 16) (vkFirstInstance (poked :: VkDrawIndexedIndirectCommand))
+
+instance Zero VkDrawIndexedIndirectCommand where
+  zero = VkDrawIndexedIndirectCommand zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
 -- No documentation found for TopLevel "VkDrawIndirectCommand"
 data VkDrawIndirectCommand = VkDrawIndirectCommand
   { -- No documentation found for Nested "VkDrawIndirectCommand" "vertexCount"
@@ -650,6 +707,12 @@ instance Storable VkDrawIndirectCommand where
                 *> poke (ptr `plusPtr` 4) (vkInstanceCount (poked :: VkDrawIndirectCommand))
                 *> poke (ptr `plusPtr` 8) (vkFirstVertex (poked :: VkDrawIndirectCommand))
                 *> poke (ptr `plusPtr` 12) (vkFirstInstance (poked :: VkDrawIndirectCommand))
+
+instance Zero VkDrawIndirectCommand where
+  zero = VkDrawIndirectCommand zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "VkImageBlit"
 data VkImageBlit = VkImageBlit
   { -- No documentation found for Nested "VkImageBlit" "srcSubresource"
@@ -674,6 +737,12 @@ instance Storable VkImageBlit where
                 *> poke (ptr `plusPtr` 16) (vkSrcOffsets (poked :: VkImageBlit))
                 *> poke (ptr `plusPtr` 40) (vkDstSubresource (poked :: VkImageBlit))
                 *> poke (ptr `plusPtr` 56) (vkDstOffsets (poked :: VkImageBlit))
+
+instance Zero VkImageBlit where
+  zero = VkImageBlit zero
+                     zero
+                     zero
+                     zero
 -- No documentation found for TopLevel "VkImageCopy"
 data VkImageCopy = VkImageCopy
   { -- No documentation found for Nested "VkImageCopy" "srcSubresource"
@@ -702,6 +771,13 @@ instance Storable VkImageCopy where
                 *> poke (ptr `plusPtr` 28) (vkDstSubresource (poked :: VkImageCopy))
                 *> poke (ptr `plusPtr` 44) (vkDstOffset (poked :: VkImageCopy))
                 *> poke (ptr `plusPtr` 56) (vkExtent (poked :: VkImageCopy))
+
+instance Zero VkImageCopy where
+  zero = VkImageCopy zero
+                     zero
+                     zero
+                     zero
+                     zero
 -- No documentation found for TopLevel "VkImageMemoryBarrier"
 data VkImageMemoryBarrier = VkImageMemoryBarrier
   { -- No documentation found for Nested "VkImageMemoryBarrier" "sType"
@@ -750,6 +826,18 @@ instance Storable VkImageMemoryBarrier where
                 *> poke (ptr `plusPtr` 36) (vkDstQueueFamilyIndex (poked :: VkImageMemoryBarrier))
                 *> poke (ptr `plusPtr` 40) (vkImage (poked :: VkImageMemoryBarrier))
                 *> poke (ptr `plusPtr` 48) (vkSubresourceRange (poked :: VkImageMemoryBarrier))
+
+instance Zero VkImageMemoryBarrier where
+  zero = VkImageMemoryBarrier zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
 -- No documentation found for TopLevel "VkImageResolve"
 data VkImageResolve = VkImageResolve
   { -- No documentation found for Nested "VkImageResolve" "srcSubresource"
@@ -778,6 +866,13 @@ instance Storable VkImageResolve where
                 *> poke (ptr `plusPtr` 28) (vkDstSubresource (poked :: VkImageResolve))
                 *> poke (ptr `plusPtr` 44) (vkDstOffset (poked :: VkImageResolve))
                 *> poke (ptr `plusPtr` 56) (vkExtent (poked :: VkImageResolve))
+
+instance Zero VkImageResolve where
+  zero = VkImageResolve zero
+                        zero
+                        zero
+                        zero
+                        zero
 -- No documentation found for TopLevel "VkImageSubresourceLayers"
 data VkImageSubresourceLayers = VkImageSubresourceLayers
   { -- No documentation found for Nested "VkImageSubresourceLayers" "aspectMask"
@@ -802,11 +897,17 @@ instance Storable VkImageSubresourceLayers where
                 *> poke (ptr `plusPtr` 4) (vkMipLevel (poked :: VkImageSubresourceLayers))
                 *> poke (ptr `plusPtr` 8) (vkBaseArrayLayer (poked :: VkImageSubresourceLayers))
                 *> poke (ptr `plusPtr` 12) (vkLayerCount (poked :: VkImageSubresourceLayers))
+
+instance Zero VkImageSubresourceLayers where
+  zero = VkImageSubresourceLayers zero
+                                  zero
+                                  zero
+                                  zero
 -- ** VkIndexType
 
 -- No documentation found for TopLevel "VkIndexType"
 newtype VkIndexType = VkIndexType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkIndexType where
   showsPrec _ VK_INDEX_TYPE_UINT16 = showString "VK_INDEX_TYPE_UINT16"
@@ -859,6 +960,12 @@ instance Storable VkMemoryBarrier where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryBarrier))
                 *> poke (ptr `plusPtr` 16) (vkSrcAccessMask (poked :: VkMemoryBarrier))
                 *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkMemoryBarrier))
+
+instance Zero VkMemoryBarrier where
+  zero = VkMemoryBarrier zero
+                         zero
+                         zero
+                         zero
 -- No documentation found for TopLevel "VkRenderPassBeginInfo"
 data VkRenderPassBeginInfo = VkRenderPassBeginInfo
   { -- No documentation found for Nested "VkRenderPassBeginInfo" "sType"
@@ -895,11 +1002,20 @@ instance Storable VkRenderPassBeginInfo where
                 *> poke (ptr `plusPtr` 32) (vkRenderArea (poked :: VkRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 48) (vkClearValueCount (poked :: VkRenderPassBeginInfo))
                 *> poke (ptr `plusPtr` 56) (vkPClearValues (poked :: VkRenderPassBeginInfo))
+
+instance Zero VkRenderPassBeginInfo where
+  zero = VkRenderPassBeginInfo zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- ** VkStencilFaceFlagBits
 
 -- No documentation found for TopLevel "VkStencilFaceFlagBits"
 newtype VkStencilFaceFlagBits = VkStencilFaceFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkStencilFaceFlagBits where
   showsPrec _ VK_STENCIL_FACE_FRONT_BIT = showString "VK_STENCIL_FACE_FRONT_BIT"
@@ -936,7 +1052,7 @@ type VkStencilFaceFlags = VkStencilFaceFlagBits
 
 -- No documentation found for TopLevel "VkSubpassContents"
 newtype VkSubpassContents = VkSubpassContents Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkSubpassContents where
   showsPrec _ VK_SUBPASS_CONTENTS_INLINE = showString "VK_SUBPASS_CONTENTS_INLINE"

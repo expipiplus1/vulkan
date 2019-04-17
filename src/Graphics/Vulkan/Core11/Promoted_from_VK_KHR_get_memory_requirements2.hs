@@ -70,6 +70,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
   ( VkBufferMemoryRequirementsInfo2(..)
   , VkImageMemoryRequirementsInfo2(..)
@@ -119,6 +122,9 @@ fromCStructBufferMemoryRequirementsInfo2 :: VkBufferMemoryRequirementsInfo2 -> I
 fromCStructBufferMemoryRequirementsInfo2 c = BufferMemoryRequirementsInfo2 <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBufferMemoryRequirementsInfo2)))
                                                                            <*> pure (vkBuffer (c :: VkBufferMemoryRequirementsInfo2))
+instance Zero BufferMemoryRequirementsInfo2 where
+  zero = BufferMemoryRequirementsInfo2 Nothing
+                                       zero
 -- No documentation found for TopLevel "ImageMemoryRequirementsInfo2"
 data ImageMemoryRequirementsInfo2 = ImageMemoryRequirementsInfo2
   { -- Univalued Member elided
@@ -134,6 +140,9 @@ fromCStructImageMemoryRequirementsInfo2 :: VkImageMemoryRequirementsInfo2 -> IO 
 fromCStructImageMemoryRequirementsInfo2 c = ImageMemoryRequirementsInfo2 <$> -- Univalued Member elided
                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageMemoryRequirementsInfo2)))
                                                                          <*> pure (vkImage (c :: VkImageMemoryRequirementsInfo2))
+instance Zero ImageMemoryRequirementsInfo2 where
+  zero = ImageMemoryRequirementsInfo2 Nothing
+                                      zero
 -- No documentation found for TopLevel "ImageSparseMemoryRequirementsInfo2"
 data ImageSparseMemoryRequirementsInfo2 = ImageSparseMemoryRequirementsInfo2
   { -- Univalued Member elided
@@ -149,6 +158,9 @@ fromCStructImageSparseMemoryRequirementsInfo2 :: VkImageSparseMemoryRequirements
 fromCStructImageSparseMemoryRequirementsInfo2 c = ImageSparseMemoryRequirementsInfo2 <$> -- Univalued Member elided
                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageSparseMemoryRequirementsInfo2)))
                                                                                      <*> pure (vkImage (c :: VkImageSparseMemoryRequirementsInfo2))
+instance Zero ImageSparseMemoryRequirementsInfo2 where
+  zero = ImageSparseMemoryRequirementsInfo2 Nothing
+                                            zero
 -- No documentation found for TopLevel "MemoryRequirements2"
 data MemoryRequirements2 = MemoryRequirements2
   { -- Univalued Member elided
@@ -164,6 +176,9 @@ fromCStructMemoryRequirements2 :: VkMemoryRequirements2 -> IO MemoryRequirements
 fromCStructMemoryRequirements2 c = MemoryRequirements2 <$> -- Univalued Member elided
                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryRequirements2)))
                                                        <*> (fromCStructMemoryRequirements (vkMemoryRequirements (c :: VkMemoryRequirements2)))
+instance Zero MemoryRequirements2 where
+  zero = MemoryRequirements2 Nothing
+                             zero
 type MemoryRequirements2KHR = MemoryRequirements2
 -- TODO: Pattern constructor alias)
 -- No documentation found for TopLevel "SparseImageMemoryRequirements2"
@@ -181,6 +196,9 @@ fromCStructSparseImageMemoryRequirements2 :: VkSparseImageMemoryRequirements2 ->
 fromCStructSparseImageMemoryRequirements2 c = SparseImageMemoryRequirements2 <$> -- Univalued Member elided
                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSparseImageMemoryRequirements2)))
                                                                              <*> (fromCStructSparseImageMemoryRequirements (vkMemoryRequirements (c :: VkSparseImageMemoryRequirements2)))
+instance Zero SparseImageMemoryRequirements2 where
+  zero = SparseImageMemoryRequirements2 Nothing
+                                        zero
 
 -- | Wrapper for 'vkGetBufferMemoryRequirements2'
 getBufferMemoryRequirements2 :: Device ->  BufferMemoryRequirementsInfo2 ->  IO (MemoryRequirements2)
@@ -195,7 +213,7 @@ getNumImageSparseMemoryRequirements2 :: Device ->  ImageSparseMemoryRequirements
 getNumImageSparseMemoryRequirements2 = \(Device device commandTable) -> \info -> alloca (\pSparseMemoryRequirementCount -> (\a -> withCStructImageSparseMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getImageSparseMemoryRequirements2 commandTable device pInfo pSparseMemoryRequirementCount nullPtr *> (peek pSparseMemoryRequirementCount)))
 
 -- | Wrapper for 'vkGetImageSparseMemoryRequirements2'
-getImageSparseMemoryRequirements2 :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO ( Vector SparseImageMemoryRequirements2 )
+getImageSparseMemoryRequirements2 :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO (Vector SparseImageMemoryRequirements2)
 getImageSparseMemoryRequirements2 = \(Device device commandTable) -> \info -> \sparseMemoryRequirementCount -> allocaArray (fromIntegral sparseMemoryRequirementCount) (\pSparseMemoryRequirements -> with sparseMemoryRequirementCount (\pSparseMemoryRequirementCount -> (\a -> withCStructImageSparseMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getImageSparseMemoryRequirements2 commandTable device pInfo pSparseMemoryRequirementCount pSparseMemoryRequirements *> ((flip Data.Vector.generateM ((\p -> fromCStructSparseImageMemoryRequirements2 <=< peekElemOff p) pSparseMemoryRequirements) =<< (fromIntegral <$> (peek pSparseMemoryRequirementCount)))))))
 -- | Call 'getNumImageSparseMemoryRequirements2' to get the number of return values, then use that
 -- number to call 'getImageSparseMemoryRequirements2' to get all the values.

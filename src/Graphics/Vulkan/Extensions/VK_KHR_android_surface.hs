@@ -42,7 +42,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
   ( VkAndroidSurfaceCreateFlagsKHR(..)
@@ -92,7 +93,11 @@ fromCStructAndroidSurfaceCreateInfoKHR c = AndroidSurfaceCreateInfoKHR <$> -- Un
                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkAndroidSurfaceCreateInfoKHR)))
                                                                        <*> pure (vkFlags (c :: VkAndroidSurfaceCreateInfoKHR))
                                                                        <*> pure (vkWindow (c :: VkAndroidSurfaceCreateInfoKHR))
+instance Zero AndroidSurfaceCreateInfoKHR where
+  zero = AndroidSurfaceCreateInfoKHR Nothing
+                                     zero
+                                     zero
 
 -- | Wrapper for 'vkCreateAndroidSurfaceKHR'
-createAndroidSurfaceKHR :: Instance ->  AndroidSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createAndroidSurfaceKHR :: Instance ->  AndroidSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createAndroidSurfaceKHR = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructAndroidSurfaceCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createAndroidSurfaceKHR commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))

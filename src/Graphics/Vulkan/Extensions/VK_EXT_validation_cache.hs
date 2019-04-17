@@ -28,7 +28,8 @@ module Graphics.Vulkan.Extensions.VK_EXT_validation_cache
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -38,7 +39,8 @@ import Data.ByteString
   , packCStringLen
   )
 import qualified Data.ByteString
-  ( length
+  ( empty
+  , length
   )
 import Data.ByteString.Unsafe
   ( unsafeUseAsCString
@@ -83,6 +85,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
@@ -132,6 +135,9 @@ fromCStructShaderModuleValidationCacheCreateInfoEXT :: VkShaderModuleValidationC
 fromCStructShaderModuleValidationCacheCreateInfoEXT c = ShaderModuleValidationCacheCreateInfoEXT <$> -- Univalued Member elided
                                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkShaderModuleValidationCacheCreateInfoEXT)))
                                                                                                  <*> pure (vkValidationCache (c :: VkShaderModuleValidationCacheCreateInfoEXT))
+instance Zero ShaderModuleValidationCacheCreateInfoEXT where
+  zero = ShaderModuleValidationCacheCreateInfoEXT Nothing
+                                                  zero
 -- No documentation found for TopLevel "ValidationCacheCreateFlagsEXT"
 type ValidationCacheCreateFlagsEXT = VkValidationCacheCreateFlagsEXT
 -- No documentation found for TopLevel "ValidationCacheCreateInfoEXT"
@@ -154,13 +160,17 @@ fromCStructValidationCacheCreateInfoEXT c = ValidationCacheCreateInfoEXT <$> -- 
                                                                          <*> pure (vkFlags (c :: VkValidationCacheCreateInfoEXT))
                                                                          -- Bytestring length valued member elided
                                                                          <*> packCStringLen (castPtr (vkPInitialData (c :: VkValidationCacheCreateInfoEXT)), fromIntegral (vkInitialDataSize (c :: VkValidationCacheCreateInfoEXT)))
+instance Zero ValidationCacheCreateInfoEXT where
+  zero = ValidationCacheCreateInfoEXT Nothing
+                                      zero
+                                      Data.ByteString.empty
 -- No documentation found for TopLevel "ValidationCacheEXT"
 type ValidationCacheEXT = VkValidationCacheEXT
 -- No documentation found for TopLevel "ValidationCacheHeaderVersionEXT"
 type ValidationCacheHeaderVersionEXT = VkValidationCacheHeaderVersionEXT
 
 -- | Wrapper for 'vkCreateValidationCacheEXT'
-createValidationCacheEXT :: Device ->  ValidationCacheCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO ( ValidationCacheEXT )
+createValidationCacheEXT :: Device ->  ValidationCacheCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO (ValidationCacheEXT)
 createValidationCacheEXT = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pValidationCache -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructValidationCacheCreateInfoEXT a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createValidationCacheEXT commandTable device pCreateInfo pAllocator pValidationCache >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pValidationCache)))))
 
 -- | Wrapper for 'vkDestroyValidationCacheEXT'
@@ -185,8 +195,9 @@ getAllValidationCacheDataEXT device validationCache =
 -- | Wrapper for 'vkMergeValidationCachesEXT'
 mergeValidationCachesEXT :: Device ->  ValidationCacheEXT ->  Vector ValidationCacheEXT ->  IO ()
 mergeValidationCachesEXT = \(Device device commandTable) -> \dstCache -> \srcCaches -> withVec (&) srcCaches (\pSrcCaches -> Graphics.Vulkan.C.Dynamic.mergeValidationCachesEXT commandTable device dstCache (fromIntegral $ Data.Vector.length srcCaches) pSrcCaches >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
-withValidationCacheEXT :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withValidationCacheEXT createInfo allocationCallbacks =
-  bracket
-    (vkCreateValidationCacheEXT createInfo allocationCallbacks)
-    (`vkDestroyValidationCacheEXT` allocationCallbacks)
+-- | Wrapper for 'createValidationCacheEXT' and 'destroyValidationCacheEXT' using 'bracket'
+withValidationCacheEXT
+  :: Device -> ValidationCacheCreateInfoEXT -> Maybe (AllocationCallbacks) -> (ValidationCacheEXT -> IO a) -> IO a
+withValidationCacheEXT device validationCacheCreateInfoEXT allocationCallbacks = bracket
+  (createValidationCacheEXT device validationCacheCreateInfoEXT allocationCallbacks)
+  (\o -> destroyValidationCacheEXT device o allocationCallbacks)

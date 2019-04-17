@@ -86,6 +86,7 @@ import Graphics.Vulkan.C.Core10.Buffer
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -117,6 +118,11 @@ instance Storable VkExternalBufferProperties where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalBufferProperties))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalBufferProperties))
                 *> poke (ptr `plusPtr` 16) (vkExternalMemoryProperties (poked :: VkExternalBufferProperties))
+
+instance Zero VkExternalBufferProperties where
+  zero = VkExternalBufferProperties zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkExternalImageFormatProperties"
 data VkExternalImageFormatProperties = VkExternalImageFormatProperties
   { -- No documentation found for Nested "VkExternalImageFormatProperties" "sType"
@@ -137,11 +143,16 @@ instance Storable VkExternalImageFormatProperties where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalImageFormatProperties))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalImageFormatProperties))
                 *> poke (ptr `plusPtr` 16) (vkExternalMemoryProperties (poked :: VkExternalImageFormatProperties))
+
+instance Zero VkExternalImageFormatProperties where
+  zero = VkExternalImageFormatProperties zero
+                                         zero
+                                         zero
 -- ** VkExternalMemoryFeatureFlagBits
 
 -- No documentation found for TopLevel "VkExternalMemoryFeatureFlagBits"
 newtype VkExternalMemoryFeatureFlagBits = VkExternalMemoryFeatureFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkExternalMemoryFeatureFlagBits where
   showsPrec _ VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT = showString "VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT"
@@ -178,7 +189,7 @@ type VkExternalMemoryFeatureFlags = VkExternalMemoryFeatureFlagBits
 
 -- No documentation found for TopLevel "VkExternalMemoryHandleTypeFlagBits"
 newtype VkExternalMemoryHandleTypeFlagBits = VkExternalMemoryHandleTypeFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkExternalMemoryHandleTypeFlagBits where
   showsPrec _ VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT = showString "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT"
@@ -265,6 +276,11 @@ instance Storable VkExternalMemoryProperties where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkExternalMemoryFeatures (poked :: VkExternalMemoryProperties))
                 *> poke (ptr `plusPtr` 4) (vkExportFromImportedHandleTypes (poked :: VkExternalMemoryProperties))
                 *> poke (ptr `plusPtr` 8) (vkCompatibleHandleTypes (poked :: VkExternalMemoryProperties))
+
+instance Zero VkExternalMemoryProperties where
+  zero = VkExternalMemoryProperties zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkPhysicalDeviceExternalBufferInfo"
 data VkPhysicalDeviceExternalBufferInfo = VkPhysicalDeviceExternalBufferInfo
   { -- No documentation found for Nested "VkPhysicalDeviceExternalBufferInfo" "sType"
@@ -293,6 +309,13 @@ instance Storable VkPhysicalDeviceExternalBufferInfo where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPhysicalDeviceExternalBufferInfo))
                 *> poke (ptr `plusPtr` 20) (vkUsage (poked :: VkPhysicalDeviceExternalBufferInfo))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkPhysicalDeviceExternalBufferInfo))
+
+instance Zero VkPhysicalDeviceExternalBufferInfo where
+  zero = VkPhysicalDeviceExternalBufferInfo zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
 -- No documentation found for TopLevel "VkPhysicalDeviceExternalImageFormatInfo"
 data VkPhysicalDeviceExternalImageFormatInfo = VkPhysicalDeviceExternalImageFormatInfo
   { -- No documentation found for Nested "VkPhysicalDeviceExternalImageFormatInfo" "sType"
@@ -313,6 +336,11 @@ instance Storable VkPhysicalDeviceExternalImageFormatInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalImageFormatInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalImageFormatInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkPhysicalDeviceExternalImageFormatInfo))
+
+instance Zero VkPhysicalDeviceExternalImageFormatInfo where
+  zero = VkPhysicalDeviceExternalImageFormatInfo zero
+                                                 zero
+                                                 zero
 -- No documentation found for TopLevel "VkPhysicalDeviceIDProperties"
 data VkPhysicalDeviceIDProperties = VkPhysicalDeviceIDProperties
   { -- No documentation found for Nested "VkPhysicalDeviceIDProperties" "sType"
@@ -349,6 +377,15 @@ instance Storable VkPhysicalDeviceIDProperties where
                 *> poke (ptr `plusPtr` 48) (vkDeviceLUID (poked :: VkPhysicalDeviceIDProperties))
                 *> poke (ptr `plusPtr` 56) (vkDeviceNodeMask (poked :: VkPhysicalDeviceIDProperties))
                 *> poke (ptr `plusPtr` 60) (vkDeviceLUIDValid (poked :: VkPhysicalDeviceIDProperties))
+
+instance Zero VkPhysicalDeviceIDProperties where
+  zero = VkPhysicalDeviceIDProperties zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
 #if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkGetPhysicalDeviceExternalBufferProperties"
 foreign import ccall

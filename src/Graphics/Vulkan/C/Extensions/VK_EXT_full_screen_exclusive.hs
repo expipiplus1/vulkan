@@ -83,6 +83,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -115,7 +116,7 @@ type HMONITOR = Ptr ()
 
 -- No documentation found for TopLevel "VkFullScreenExclusiveEXT"
 newtype VkFullScreenExclusiveEXT = VkFullScreenExclusiveEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkFullScreenExclusiveEXT where
   showsPrec _ VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = showString "VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT"
@@ -172,6 +173,11 @@ instance Storable VkSurfaceCapabilitiesFullScreenExclusiveEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSurfaceCapabilitiesFullScreenExclusiveEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSurfaceCapabilitiesFullScreenExclusiveEXT))
                 *> poke (ptr `plusPtr` 16) (vkFullScreenExclusiveSupported (poked :: VkSurfaceCapabilitiesFullScreenExclusiveEXT))
+
+instance Zero VkSurfaceCapabilitiesFullScreenExclusiveEXT where
+  zero = VkSurfaceCapabilitiesFullScreenExclusiveEXT zero
+                                                     zero
+                                                     zero
 -- No documentation found for TopLevel "VkSurfaceFullScreenExclusiveInfoEXT"
 data VkSurfaceFullScreenExclusiveInfoEXT = VkSurfaceFullScreenExclusiveInfoEXT
   { -- No documentation found for Nested "VkSurfaceFullScreenExclusiveInfoEXT" "sType"
@@ -192,6 +198,11 @@ instance Storable VkSurfaceFullScreenExclusiveInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSurfaceFullScreenExclusiveInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSurfaceFullScreenExclusiveInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFullScreenExclusive (poked :: VkSurfaceFullScreenExclusiveInfoEXT))
+
+instance Zero VkSurfaceFullScreenExclusiveInfoEXT where
+  zero = VkSurfaceFullScreenExclusiveInfoEXT zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkSurfaceFullScreenExclusiveWin32InfoEXT"
 data VkSurfaceFullScreenExclusiveWin32InfoEXT = VkSurfaceFullScreenExclusiveWin32InfoEXT
   { -- No documentation found for Nested "VkSurfaceFullScreenExclusiveWin32InfoEXT" "sType"
@@ -212,6 +223,11 @@ instance Storable VkSurfaceFullScreenExclusiveWin32InfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSurfaceFullScreenExclusiveWin32InfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSurfaceFullScreenExclusiveWin32InfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkHmonitor (poked :: VkSurfaceFullScreenExclusiveWin32InfoEXT))
+
+instance Zero VkSurfaceFullScreenExclusiveWin32InfoEXT where
+  zero = VkSurfaceFullScreenExclusiveWin32InfoEXT zero
+                                                  zero
+                                                  zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkAcquireFullScreenExclusiveModeEXT"
 foreign import ccall

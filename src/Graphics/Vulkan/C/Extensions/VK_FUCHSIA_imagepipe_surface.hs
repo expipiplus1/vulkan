@@ -61,6 +61,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -79,7 +80,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkImagePipeSurfaceCreateFlagsFUCHSIA"
 newtype VkImagePipeSurfaceCreateFlagsFUCHSIA = VkImagePipeSurfaceCreateFlagsFUCHSIA VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkImagePipeSurfaceCreateFlagsFUCHSIA where
   
@@ -120,6 +121,12 @@ instance Storable VkImagePipeSurfaceCreateInfoFUCHSIA where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImagePipeSurfaceCreateInfoFUCHSIA))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkImagePipeSurfaceCreateInfoFUCHSIA))
                 *> poke (ptr `plusPtr` 20) (vkImagePipeHandle (poked :: VkImagePipeSurfaceCreateInfoFUCHSIA))
+
+instance Zero VkImagePipeSurfaceCreateInfoFUCHSIA where
+  zero = VkImagePipeSurfaceCreateInfoFUCHSIA zero
+                                             zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "Zx_handle_t"
 type Zx_handle_t = Word32
   

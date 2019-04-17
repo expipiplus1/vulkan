@@ -70,6 +70,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -89,7 +90,7 @@ type VkCommandPool = Ptr VkCommandPool_T
 
 -- No documentation found for TopLevel "VkCommandPoolCreateFlagBits"
 newtype VkCommandPoolCreateFlagBits = VkCommandPoolCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkCommandPoolCreateFlagBits where
   showsPrec _ VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = showString "VK_COMMAND_POOL_CREATE_TRANSIENT_BIT"
@@ -144,11 +145,17 @@ instance Storable VkCommandPoolCreateInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandPoolCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkCommandPoolCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkQueueFamilyIndex (poked :: VkCommandPoolCreateInfo))
+
+instance Zero VkCommandPoolCreateInfo where
+  zero = VkCommandPoolCreateInfo zero
+                                 zero
+                                 zero
+                                 zero
 -- ** VkCommandPoolResetFlagBits
 
 -- No documentation found for TopLevel "VkCommandPoolResetFlagBits"
 newtype VkCommandPoolResetFlagBits = VkCommandPoolResetFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkCommandPoolResetFlagBits where
   showsPrec _ VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"

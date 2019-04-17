@@ -46,6 +46,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -87,6 +88,11 @@ instance Storable VkMemoryRequirements where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSize (poked :: VkMemoryRequirements))
                 *> poke (ptr `plusPtr` 8) (vkAlignment (poked :: VkMemoryRequirements))
                 *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryRequirements))
+
+instance Zero VkMemoryRequirements where
+  zero = VkMemoryRequirements zero
+                              zero
+                              zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkBindBufferMemory"
 foreign import ccall

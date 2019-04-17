@@ -58,7 +58,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
   ( VkExportMemoryWin32HandleInfoKHR(..)
@@ -120,6 +121,11 @@ fromCStructExportMemoryWin32HandleInfoKHR c = ExportMemoryWin32HandleInfoKHR <$>
                                                                              <*> pure (vkPAttributes (c :: VkExportMemoryWin32HandleInfoKHR))
                                                                              <*> pure (vkDwAccess (c :: VkExportMemoryWin32HandleInfoKHR))
                                                                              <*> pure (vkName (c :: VkExportMemoryWin32HandleInfoKHR))
+instance Zero ExportMemoryWin32HandleInfoKHR where
+  zero = ExportMemoryWin32HandleInfoKHR Nothing
+                                        zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "ImportMemoryWin32HandleInfoKHR"
 data ImportMemoryWin32HandleInfoKHR = ImportMemoryWin32HandleInfoKHR
   { -- Univalued Member elided
@@ -141,6 +147,11 @@ fromCStructImportMemoryWin32HandleInfoKHR c = ImportMemoryWin32HandleInfoKHR <$>
                                                                              <*> pure (vkHandleType (c :: VkImportMemoryWin32HandleInfoKHR))
                                                                              <*> pure (vkHandle (c :: VkImportMemoryWin32HandleInfoKHR))
                                                                              <*> pure (vkName (c :: VkImportMemoryWin32HandleInfoKHR))
+instance Zero ImportMemoryWin32HandleInfoKHR where
+  zero = ImportMemoryWin32HandleInfoKHR Nothing
+                                        zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "MemoryGetWin32HandleInfoKHR"
 data MemoryGetWin32HandleInfoKHR = MemoryGetWin32HandleInfoKHR
   { -- Univalued Member elided
@@ -159,6 +170,10 @@ fromCStructMemoryGetWin32HandleInfoKHR c = MemoryGetWin32HandleInfoKHR <$> -- Un
                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryGetWin32HandleInfoKHR)))
                                                                        <*> pure (vkMemory (c :: VkMemoryGetWin32HandleInfoKHR))
                                                                        <*> pure (vkHandleType (c :: VkMemoryGetWin32HandleInfoKHR))
+instance Zero MemoryGetWin32HandleInfoKHR where
+  zero = MemoryGetWin32HandleInfoKHR Nothing
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "MemoryWin32HandlePropertiesKHR"
 data MemoryWin32HandlePropertiesKHR = MemoryWin32HandlePropertiesKHR
   { -- Univalued Member elided
@@ -174,11 +189,14 @@ fromCStructMemoryWin32HandlePropertiesKHR :: VkMemoryWin32HandlePropertiesKHR ->
 fromCStructMemoryWin32HandlePropertiesKHR c = MemoryWin32HandlePropertiesKHR <$> -- Univalued Member elided
                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryWin32HandlePropertiesKHR)))
                                                                              <*> pure (vkMemoryTypeBits (c :: VkMemoryWin32HandlePropertiesKHR))
+instance Zero MemoryWin32HandlePropertiesKHR where
+  zero = MemoryWin32HandlePropertiesKHR Nothing
+                                        zero
 
 -- | Wrapper for 'vkGetMemoryWin32HandleKHR'
 getMemoryWin32HandleKHR :: Device ->  MemoryGetWin32HandleInfoKHR ->  IO (HANDLE)
 getMemoryWin32HandleKHR = \(Device device commandTable) -> \getWin32HandleInfo -> alloca (\pHandle -> (\a -> withCStructMemoryGetWin32HandleInfoKHR a . flip with) getWin32HandleInfo (\pGetWin32HandleInfo -> Graphics.Vulkan.C.Dynamic.getMemoryWin32HandleKHR commandTable device pGetWin32HandleInfo pHandle >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pHandle))))
 
 -- | Wrapper for 'vkGetMemoryWin32HandlePropertiesKHR'
-getMemoryWin32HandlePropertiesKHR :: Device ->  ExternalMemoryHandleTypeFlagBits ->  HANDLE ->  IO ( MemoryWin32HandlePropertiesKHR )
+getMemoryWin32HandlePropertiesKHR :: Device ->  ExternalMemoryHandleTypeFlagBits ->  HANDLE ->  IO (MemoryWin32HandlePropertiesKHR)
 getMemoryWin32HandlePropertiesKHR = \(Device device commandTable) -> \handleType -> \handle -> alloca (\pMemoryWin32HandleProperties -> Graphics.Vulkan.C.Dynamic.getMemoryWin32HandlePropertiesKHR commandTable device handleType handle pMemoryWin32HandleProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructMemoryWin32HandlePropertiesKHR <=< peek) pMemoryWin32HandleProperties)))

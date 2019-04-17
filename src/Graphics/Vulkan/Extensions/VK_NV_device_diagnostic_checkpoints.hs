@@ -58,6 +58,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
   ( VkCheckpointDataNV(..)
   , VkQueueFamilyCheckpointPropertiesNV(..)
@@ -99,6 +102,10 @@ fromCStructCheckpointDataNV c = CheckpointDataNV <$> -- Univalued Member elided
                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkCheckpointDataNV)))
                                                  <*> pure (vkStage (c :: VkCheckpointDataNV))
                                                  <*> pure (vkPCheckpointMarker (c :: VkCheckpointDataNV))
+instance Zero CheckpointDataNV where
+  zero = CheckpointDataNV Nothing
+                          zero
+                          zero
 -- No documentation found for TopLevel "QueueFamilyCheckpointPropertiesNV"
 data QueueFamilyCheckpointPropertiesNV = QueueFamilyCheckpointPropertiesNV
   { -- Univalued Member elided
@@ -114,6 +121,9 @@ fromCStructQueueFamilyCheckpointPropertiesNV :: VkQueueFamilyCheckpointPropertie
 fromCStructQueueFamilyCheckpointPropertiesNV c = QueueFamilyCheckpointPropertiesNV <$> -- Univalued Member elided
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkQueueFamilyCheckpointPropertiesNV)))
                                                                                    <*> pure (vkCheckpointExecutionStageMask (c :: VkQueueFamilyCheckpointPropertiesNV))
+instance Zero QueueFamilyCheckpointPropertiesNV where
+  zero = QueueFamilyCheckpointPropertiesNV Nothing
+                                           zero
 
 -- | Wrapper for 'vkCmdSetCheckpointNV'
 cmdSetCheckpointNV :: CommandBuffer ->  Ptr () ->  IO ()

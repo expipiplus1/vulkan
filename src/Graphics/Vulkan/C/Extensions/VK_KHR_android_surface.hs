@@ -58,6 +58,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -78,7 +79,7 @@ data ANativeWindow
 
 -- No documentation found for TopLevel "VkAndroidSurfaceCreateFlagsKHR"
 newtype VkAndroidSurfaceCreateFlagsKHR = VkAndroidSurfaceCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkAndroidSurfaceCreateFlagsKHR where
   
@@ -119,6 +120,12 @@ instance Storable VkAndroidSurfaceCreateInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkAndroidSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkAndroidSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkWindow (poked :: VkAndroidSurfaceCreateInfoKHR))
+
+instance Zero VkAndroidSurfaceCreateInfoKHR where
+  zero = VkAndroidSurfaceCreateInfoKHR zero
+                                       zero
+                                       zero
+                                       zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCreateAndroidSurfaceKHR"
 foreign import ccall

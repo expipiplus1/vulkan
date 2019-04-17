@@ -41,6 +41,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -101,6 +102,18 @@ instance Storable VkHdrMetadataEXT where
                 *> poke (ptr `plusPtr` 52) (vkMinLuminance (poked :: VkHdrMetadataEXT))
                 *> poke (ptr `plusPtr` 56) (vkMaxContentLightLevel (poked :: VkHdrMetadataEXT))
                 *> poke (ptr `plusPtr` 60) (vkMaxFrameAverageLightLevel (poked :: VkHdrMetadataEXT))
+
+instance Zero VkHdrMetadataEXT where
+  zero = VkHdrMetadataEXT zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
 -- No documentation found for TopLevel "VkXYColorEXT"
 data VkXYColorEXT = VkXYColorEXT
   { -- No documentation found for Nested "VkXYColorEXT" "x"
@@ -117,6 +130,10 @@ instance Storable VkXYColorEXT where
                           <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkXYColorEXT))
                 *> poke (ptr `plusPtr` 4) (vkY (poked :: VkXYColorEXT))
+
+instance Zero VkXYColorEXT where
+  zero = VkXYColorEXT zero
+                      zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkSetHdrMetadataEXT"
 foreign import ccall

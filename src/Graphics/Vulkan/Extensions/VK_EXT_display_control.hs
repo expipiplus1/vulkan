@@ -63,7 +63,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_display_control
   ( VkDeviceEventInfoEXT(..)
@@ -125,6 +126,9 @@ fromCStructDeviceEventInfoEXT :: VkDeviceEventInfoEXT -> IO DeviceEventInfoEXT
 fromCStructDeviceEventInfoEXT c = DeviceEventInfoEXT <$> -- Univalued Member elided
                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDeviceEventInfoEXT)))
                                                      <*> pure (vkDeviceEvent (c :: VkDeviceEventInfoEXT))
+instance Zero DeviceEventInfoEXT where
+  zero = DeviceEventInfoEXT Nothing
+                            zero
 -- No documentation found for TopLevel "DeviceEventTypeEXT"
 type DeviceEventTypeEXT = VkDeviceEventTypeEXT
 -- No documentation found for TopLevel "DisplayEventInfoEXT"
@@ -142,6 +146,9 @@ fromCStructDisplayEventInfoEXT :: VkDisplayEventInfoEXT -> IO DisplayEventInfoEX
 fromCStructDisplayEventInfoEXT c = DisplayEventInfoEXT <$> -- Univalued Member elided
                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayEventInfoEXT)))
                                                        <*> pure (vkDisplayEvent (c :: VkDisplayEventInfoEXT))
+instance Zero DisplayEventInfoEXT where
+  zero = DisplayEventInfoEXT Nothing
+                             zero
 -- No documentation found for TopLevel "DisplayEventTypeEXT"
 type DisplayEventTypeEXT = VkDisplayEventTypeEXT
 -- No documentation found for TopLevel "DisplayPowerInfoEXT"
@@ -159,6 +166,9 @@ fromCStructDisplayPowerInfoEXT :: VkDisplayPowerInfoEXT -> IO DisplayPowerInfoEX
 fromCStructDisplayPowerInfoEXT c = DisplayPowerInfoEXT <$> -- Univalued Member elided
                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayPowerInfoEXT)))
                                                        <*> pure (vkPowerState (c :: VkDisplayPowerInfoEXT))
+instance Zero DisplayPowerInfoEXT where
+  zero = DisplayPowerInfoEXT Nothing
+                             zero
 -- No documentation found for TopLevel "DisplayPowerStateEXT"
 type DisplayPowerStateEXT = VkDisplayPowerStateEXT
 -- No documentation found for TopLevel "SwapchainCounterCreateInfoEXT"
@@ -176,6 +186,9 @@ fromCStructSwapchainCounterCreateInfoEXT :: VkSwapchainCounterCreateInfoEXT -> I
 fromCStructSwapchainCounterCreateInfoEXT c = SwapchainCounterCreateInfoEXT <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSwapchainCounterCreateInfoEXT)))
                                                                            <*> pure (vkSurfaceCounters (c :: VkSwapchainCounterCreateInfoEXT))
+instance Zero SwapchainCounterCreateInfoEXT where
+  zero = SwapchainCounterCreateInfoEXT Nothing
+                                       zero
 
 -- | Wrapper for 'vkDisplayPowerControlEXT'
 displayPowerControlEXT :: Device ->  DisplayKHR ->  DisplayPowerInfoEXT ->  IO ()
@@ -190,5 +203,5 @@ registerDeviceEventEXT :: Device ->  DeviceEventInfoEXT ->  Maybe AllocationCall
 registerDeviceEventEXT = \(Device device commandTable) -> \deviceEventInfo -> \allocator -> alloca (\pFence -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDeviceEventInfoEXT a . flip with) deviceEventInfo (\pDeviceEventInfo -> Graphics.Vulkan.C.Dynamic.registerDeviceEventEXT commandTable device pDeviceEventInfo pAllocator pFence >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFence)))))
 
 -- | Wrapper for 'vkRegisterDisplayEventEXT'
-registerDisplayEventEXT :: Device ->  DisplayKHR ->  DisplayEventInfoEXT ->  Maybe AllocationCallbacks ->  IO ( Fence )
+registerDisplayEventEXT :: Device ->  DisplayKHR ->  DisplayEventInfoEXT ->  Maybe AllocationCallbacks ->  IO (Fence)
 registerDisplayEventEXT = \(Device device commandTable) -> \display -> \displayEventInfo -> \allocator -> alloca (\pFence -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDisplayEventInfoEXT a . flip with) displayEventInfo (\pDisplayEventInfo -> Graphics.Vulkan.C.Dynamic.registerDisplayEventEXT commandTable device display pDisplayEventInfo pAllocator pFence >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFence)))))

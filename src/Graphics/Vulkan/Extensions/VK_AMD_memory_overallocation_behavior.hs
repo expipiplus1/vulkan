@@ -22,6 +22,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior
   ( VkDeviceMemoryOverallocationCreateInfoAMD(..)
   , VkMemoryOverallocationBehaviorAMD(..)
@@ -53,5 +56,8 @@ fromCStructDeviceMemoryOverallocationCreateInfoAMD :: VkDeviceMemoryOverallocati
 fromCStructDeviceMemoryOverallocationCreateInfoAMD c = DeviceMemoryOverallocationCreateInfoAMD <$> -- Univalued Member elided
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDeviceMemoryOverallocationCreateInfoAMD)))
                                                                                                <*> pure (vkOverallocationBehavior (c :: VkDeviceMemoryOverallocationCreateInfoAMD))
+instance Zero DeviceMemoryOverallocationCreateInfoAMD where
+  zero = DeviceMemoryOverallocationCreateInfoAMD Nothing
+                                                 zero
 -- No documentation found for TopLevel "MemoryOverallocationBehaviorAMD"
 type MemoryOverallocationBehaviorAMD = VkMemoryOverallocationBehaviorAMD

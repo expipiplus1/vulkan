@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -54,6 +55,12 @@ instance Storable VkPhysicalDeviceFloat16Int8FeaturesKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceFloat16Int8FeaturesKHR))
                 *> poke (ptr `plusPtr` 16) (vkShaderFloat16 (poked :: VkPhysicalDeviceFloat16Int8FeaturesKHR))
                 *> poke (ptr `plusPtr` 20) (vkShaderInt8 (poked :: VkPhysicalDeviceFloat16Int8FeaturesKHR))
+
+instance Zero VkPhysicalDeviceFloat16Int8FeaturesKHR where
+  zero = VkPhysicalDeviceFloat16Int8FeaturesKHR zero
+                                                zero
+                                                zero
+                                                zero
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME"
 pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME = "VK_KHR_shader_float16_int8"

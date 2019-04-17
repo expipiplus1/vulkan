@@ -32,6 +32,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.Pass
   ( VkDependencyFlagBits(..)
@@ -66,6 +67,13 @@ instance Storable VkPhysicalDeviceMultiviewFeatures where
                 *> poke (ptr `plusPtr` 16) (vkMultiview (poked :: VkPhysicalDeviceMultiviewFeatures))
                 *> poke (ptr `plusPtr` 20) (vkMultiviewGeometryShader (poked :: VkPhysicalDeviceMultiviewFeatures))
                 *> poke (ptr `plusPtr` 24) (vkMultiviewTessellationShader (poked :: VkPhysicalDeviceMultiviewFeatures))
+
+instance Zero VkPhysicalDeviceMultiviewFeatures where
+  zero = VkPhysicalDeviceMultiviewFeatures zero
+                                           zero
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "VkPhysicalDeviceMultiviewProperties"
 data VkPhysicalDeviceMultiviewProperties = VkPhysicalDeviceMultiviewProperties
   { -- No documentation found for Nested "VkPhysicalDeviceMultiviewProperties" "sType"
@@ -90,6 +98,12 @@ instance Storable VkPhysicalDeviceMultiviewProperties where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMultiviewProperties))
                 *> poke (ptr `plusPtr` 16) (vkMaxMultiviewViewCount (poked :: VkPhysicalDeviceMultiviewProperties))
                 *> poke (ptr `plusPtr` 20) (vkMaxMultiviewInstanceIndex (poked :: VkPhysicalDeviceMultiviewProperties))
+
+instance Zero VkPhysicalDeviceMultiviewProperties where
+  zero = VkPhysicalDeviceMultiviewProperties zero
+                                             zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkRenderPassMultiviewCreateInfo"
 data VkRenderPassMultiviewCreateInfo = VkRenderPassMultiviewCreateInfo
   { -- No documentation found for Nested "VkRenderPassMultiviewCreateInfo" "sType"
@@ -130,6 +144,16 @@ instance Storable VkRenderPassMultiviewCreateInfo where
                 *> poke (ptr `plusPtr` 40) (vkPViewOffsets (poked :: VkRenderPassMultiviewCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkCorrelationMaskCount (poked :: VkRenderPassMultiviewCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkPCorrelationMasks (poked :: VkRenderPassMultiviewCreateInfo))
+
+instance Zero VkRenderPassMultiviewCreateInfo where
+  zero = VkRenderPassMultiviewCreateInfo zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
 -- No documentation found for Nested "VkDependencyFlagBits" "VK_DEPENDENCY_VIEW_LOCAL_BIT"
 pattern VK_DEPENDENCY_VIEW_LOCAL_BIT :: VkDependencyFlagBits
 pattern VK_DEPENDENCY_VIEW_LOCAL_BIT = VkDependencyFlagBits 0x00000002

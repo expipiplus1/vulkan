@@ -43,6 +43,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -96,6 +97,12 @@ instance Storable VkExportMemoryWin32HandleInfoNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportMemoryWin32HandleInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkPAttributes (poked :: VkExportMemoryWin32HandleInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkDwAccess (poked :: VkExportMemoryWin32HandleInfoNV))
+
+instance Zero VkExportMemoryWin32HandleInfoNV where
+  zero = VkExportMemoryWin32HandleInfoNV zero
+                                         zero
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "VkImportMemoryWin32HandleInfoNV"
 data VkImportMemoryWin32HandleInfoNV = VkImportMemoryWin32HandleInfoNV
   { -- No documentation found for Nested "VkImportMemoryWin32HandleInfoNV" "sType"
@@ -120,6 +127,12 @@ instance Storable VkImportMemoryWin32HandleInfoNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportMemoryWin32HandleInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkImportMemoryWin32HandleInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkHandle (poked :: VkImportMemoryWin32HandleInfoNV))
+
+instance Zero VkImportMemoryWin32HandleInfoNV where
+  zero = VkImportMemoryWin32HandleInfoNV zero
+                                         zero
+                                         zero
+                                         zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetMemoryWin32HandleNV"
 foreign import ccall

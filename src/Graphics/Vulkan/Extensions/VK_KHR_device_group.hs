@@ -247,7 +247,7 @@ type DeviceGroupSubmitInfoKHR = DeviceGroupSubmitInfo
 -- TODO: Pattern constructor alias)
 type MemoryAllocateFlagsInfoKHR = MemoryAllocateFlagsInfo
 -- TODO: Pattern constructor alias)
-cmdDispatchBaseKHR :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO (  )
+cmdDispatchBaseKHR :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO ()
 cmdDispatchBaseKHR = cmdDispatchBase
 cmdSetDeviceMaskKHR :: CommandBuffer ->  Word32 ->  IO ()
 cmdSetDeviceMaskKHR = cmdSetDeviceMask

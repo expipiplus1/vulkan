@@ -50,6 +50,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -73,11 +74,16 @@ instance Storable VkDeviceMemoryOverallocationCreateInfoAMD where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceMemoryOverallocationCreateInfoAMD))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceMemoryOverallocationCreateInfoAMD))
                 *> poke (ptr `plusPtr` 16) (vkOverallocationBehavior (poked :: VkDeviceMemoryOverallocationCreateInfoAMD))
+
+instance Zero VkDeviceMemoryOverallocationCreateInfoAMD where
+  zero = VkDeviceMemoryOverallocationCreateInfoAMD zero
+                                                   zero
+                                                   zero
 -- ** VkMemoryOverallocationBehaviorAMD
 
 -- No documentation found for TopLevel "VkMemoryOverallocationBehaviorAMD"
 newtype VkMemoryOverallocationBehaviorAMD = VkMemoryOverallocationBehaviorAMD Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkMemoryOverallocationBehaviorAMD where
   showsPrec _ VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD = showString "VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD"

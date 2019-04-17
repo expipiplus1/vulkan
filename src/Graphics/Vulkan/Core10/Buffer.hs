@@ -14,10 +14,12 @@ module Graphics.Vulkan.Core10.Buffer
   , SharingMode
   , createBuffer
   , destroyBuffer
+  , withBuffer
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -29,7 +31,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -63,7 +66,8 @@ import Graphics.Vulkan.C.Core10.Buffer
   , VkSharingMode(..)
   )
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -121,6 +125,13 @@ fromCStructBufferCreateInfo c = BufferCreateInfo <$> -- Univalued Member elided
                                                  <*> pure (vkSharingMode (c :: VkBufferCreateInfo))
                                                  -- Length valued member elided
                                                  <*> (Data.Vector.generateM (fromIntegral (vkQueueFamilyIndexCount (c :: VkBufferCreateInfo))) (peekElemOff (vkPQueueFamilyIndices (c :: VkBufferCreateInfo))))
+instance Zero BufferCreateInfo where
+  zero = BufferCreateInfo Nothing
+                          zero
+                          zero
+                          zero
+                          zero
+                          Data.Vector.empty
 -- No documentation found for TopLevel "BufferUsageFlagBits"
 type BufferUsageFlagBits = VkBufferUsageFlagBits
 -- No documentation found for TopLevel "BufferUsageFlags"
@@ -135,3 +146,9 @@ createBuffer = \(Device device commandTable) -> \createInfo -> \allocator -> all
 -- | Wrapper for 'vkDestroyBuffer'
 destroyBuffer :: Device ->  Buffer ->  Maybe AllocationCallbacks ->  IO ()
 destroyBuffer = \(Device device commandTable) -> \buffer -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyBuffer commandTable device buffer pAllocator *> (pure ()))
+-- | Wrapper for 'createBuffer' and 'destroyBuffer' using 'bracket'
+withBuffer
+  :: Device -> BufferCreateInfo -> Maybe (AllocationCallbacks) -> (Buffer -> IO a) -> IO a
+withBuffer device bufferCreateInfo allocationCallbacks = bracket
+  (createBuffer device bufferCreateInfo allocationCallbacks)
+  (\o -> destroyBuffer device o allocationCallbacks)

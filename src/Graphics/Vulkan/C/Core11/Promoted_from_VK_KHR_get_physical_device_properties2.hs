@@ -79,6 +79,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkFormatProperties(..)
@@ -122,6 +123,11 @@ instance Storable VkFormatProperties2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFormatProperties2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFormatProperties2))
                 *> poke (ptr `plusPtr` 16) (vkFormatProperties (poked :: VkFormatProperties2))
+
+instance Zero VkFormatProperties2 where
+  zero = VkFormatProperties2 zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "VkImageFormatProperties2"
 data VkImageFormatProperties2 = VkImageFormatProperties2
   { -- No documentation found for Nested "VkImageFormatProperties2" "sType"
@@ -142,6 +148,11 @@ instance Storable VkImageFormatProperties2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageFormatProperties2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageFormatProperties2))
                 *> poke (ptr `plusPtr` 16) (vkImageFormatProperties (poked :: VkImageFormatProperties2))
+
+instance Zero VkImageFormatProperties2 where
+  zero = VkImageFormatProperties2 zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkPhysicalDeviceFeatures2"
 data VkPhysicalDeviceFeatures2 = VkPhysicalDeviceFeatures2
   { -- No documentation found for Nested "VkPhysicalDeviceFeatures2" "sType"
@@ -162,6 +173,11 @@ instance Storable VkPhysicalDeviceFeatures2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceFeatures2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceFeatures2))
                 *> poke (ptr `plusPtr` 16) (vkFeatures (poked :: VkPhysicalDeviceFeatures2))
+
+instance Zero VkPhysicalDeviceFeatures2 where
+  zero = VkPhysicalDeviceFeatures2 zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "VkPhysicalDeviceImageFormatInfo2"
 data VkPhysicalDeviceImageFormatInfo2 = VkPhysicalDeviceImageFormatInfo2
   { -- No documentation found for Nested "VkPhysicalDeviceImageFormatInfo2" "sType"
@@ -198,6 +214,15 @@ instance Storable VkPhysicalDeviceImageFormatInfo2 where
                 *> poke (ptr `plusPtr` 24) (vkTiling (poked :: VkPhysicalDeviceImageFormatInfo2))
                 *> poke (ptr `plusPtr` 28) (vkUsage (poked :: VkPhysicalDeviceImageFormatInfo2))
                 *> poke (ptr `plusPtr` 32) (vkFlags (poked :: VkPhysicalDeviceImageFormatInfo2))
+
+instance Zero VkPhysicalDeviceImageFormatInfo2 where
+  zero = VkPhysicalDeviceImageFormatInfo2 zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkPhysicalDeviceMemoryProperties2"
 data VkPhysicalDeviceMemoryProperties2 = VkPhysicalDeviceMemoryProperties2
   { -- No documentation found for Nested "VkPhysicalDeviceMemoryProperties2" "sType"
@@ -218,6 +243,11 @@ instance Storable VkPhysicalDeviceMemoryProperties2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceMemoryProperties2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMemoryProperties2))
                 *> poke (ptr `plusPtr` 16) (vkMemoryProperties (poked :: VkPhysicalDeviceMemoryProperties2))
+
+instance Zero VkPhysicalDeviceMemoryProperties2 where
+  zero = VkPhysicalDeviceMemoryProperties2 zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "VkPhysicalDeviceProperties2"
 data VkPhysicalDeviceProperties2 = VkPhysicalDeviceProperties2
   { -- No documentation found for Nested "VkPhysicalDeviceProperties2" "sType"
@@ -238,6 +268,11 @@ instance Storable VkPhysicalDeviceProperties2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceProperties2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceProperties2))
                 *> poke (ptr `plusPtr` 16) (vkProperties (poked :: VkPhysicalDeviceProperties2))
+
+instance Zero VkPhysicalDeviceProperties2 where
+  zero = VkPhysicalDeviceProperties2 zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "VkPhysicalDeviceSparseImageFormatInfo2"
 data VkPhysicalDeviceSparseImageFormatInfo2 = VkPhysicalDeviceSparseImageFormatInfo2
   { -- No documentation found for Nested "VkPhysicalDeviceSparseImageFormatInfo2" "sType"
@@ -274,6 +309,15 @@ instance Storable VkPhysicalDeviceSparseImageFormatInfo2 where
                 *> poke (ptr `plusPtr` 24) (vkSamples (poked :: VkPhysicalDeviceSparseImageFormatInfo2))
                 *> poke (ptr `plusPtr` 28) (vkUsage (poked :: VkPhysicalDeviceSparseImageFormatInfo2))
                 *> poke (ptr `plusPtr` 32) (vkTiling (poked :: VkPhysicalDeviceSparseImageFormatInfo2))
+
+instance Zero VkPhysicalDeviceSparseImageFormatInfo2 where
+  zero = VkPhysicalDeviceSparseImageFormatInfo2 zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
 -- No documentation found for TopLevel "VkQueueFamilyProperties2"
 data VkQueueFamilyProperties2 = VkQueueFamilyProperties2
   { -- No documentation found for Nested "VkQueueFamilyProperties2" "sType"
@@ -294,6 +338,11 @@ instance Storable VkQueueFamilyProperties2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkQueueFamilyProperties2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkQueueFamilyProperties2))
                 *> poke (ptr `plusPtr` 16) (vkQueueFamilyProperties (poked :: VkQueueFamilyProperties2))
+
+instance Zero VkQueueFamilyProperties2 where
+  zero = VkQueueFamilyProperties2 zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkSparseImageFormatProperties2"
 data VkSparseImageFormatProperties2 = VkSparseImageFormatProperties2
   { -- No documentation found for Nested "VkSparseImageFormatProperties2" "sType"
@@ -314,6 +363,11 @@ instance Storable VkSparseImageFormatProperties2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSparseImageFormatProperties2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSparseImageFormatProperties2))
                 *> poke (ptr `plusPtr` 16) (vkProperties (poked :: VkSparseImageFormatProperties2))
+
+instance Zero VkSparseImageFormatProperties2 where
+  zero = VkSparseImageFormatProperties2 zero
+                                        zero
+                                        zero
 #if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkGetPhysicalDeviceFeatures2"
 foreign import ccall

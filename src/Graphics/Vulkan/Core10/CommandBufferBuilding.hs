@@ -114,7 +114,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( head
+  ( empty
+  , head
   , length
   )
 import Data.Vector.Generic.Sized
@@ -218,7 +219,8 @@ import Graphics.Vulkan.C.Core10.CommandBufferBuilding
   , VkSubpassContents(..)
   )
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
   , pattern VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
   , pattern VK_STRUCTURE_TYPE_MEMORY_BARRIER
   , pattern VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
@@ -314,6 +316,10 @@ fromCStructBufferCopy :: VkBufferCopy -> IO BufferCopy
 fromCStructBufferCopy c = BufferCopy <$> pure (vkSrcOffset (c :: VkBufferCopy))
                                      <*> pure (vkDstOffset (c :: VkBufferCopy))
                                      <*> pure (vkSize (c :: VkBufferCopy))
+instance Zero BufferCopy where
+  zero = BufferCopy zero
+                    zero
+                    zero
 -- No documentation found for TopLevel "BufferImageCopy"
 data BufferImageCopy = BufferImageCopy
   { -- No documentation found for Nested "BufferImageCopy" "bufferOffset"
@@ -339,6 +345,13 @@ fromCStructBufferImageCopy c = BufferImageCopy <$> pure (vkBufferOffset (c :: Vk
                                                <*> (fromCStructImageSubresourceLayers (vkImageSubresource (c :: VkBufferImageCopy)))
                                                <*> (fromCStructOffset3D (vkImageOffset (c :: VkBufferImageCopy)))
                                                <*> (fromCStructExtent3D (vkImageExtent (c :: VkBufferImageCopy)))
+instance Zero BufferImageCopy where
+  zero = BufferImageCopy zero
+                         zero
+                         zero
+                         zero
+                         zero
+                         zero
 -- No documentation found for TopLevel "BufferMemoryBarrier"
 data BufferMemoryBarrier = BufferMemoryBarrier
   { -- Univalued Member elided
@@ -372,6 +385,15 @@ fromCStructBufferMemoryBarrier c = BufferMemoryBarrier <$> -- Univalued Member e
                                                        <*> pure (vkBuffer (c :: VkBufferMemoryBarrier))
                                                        <*> pure (vkOffset (c :: VkBufferMemoryBarrier))
                                                        <*> pure (vkSize (c :: VkBufferMemoryBarrier))
+instance Zero BufferMemoryBarrier where
+  zero = BufferMemoryBarrier Nothing
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "ClearAttachment"
 data ClearAttachment = ClearAttachment
   { -- No documentation found for Nested "ClearAttachment" "aspectMask"
@@ -385,6 +407,10 @@ data ClearAttachment = ClearAttachment
 withCStructClearAttachment :: ClearAttachment -> (VkClearAttachment -> IO a) -> IO a
 withCStructClearAttachment from cont = withCStructClearValue (vkClearValue (from :: ClearAttachment)) (\clearValue -> cont (VkClearAttachment (vkAspectMask (from :: ClearAttachment)) (vkColorAttachment (from :: ClearAttachment)) clearValue))
 -- No fromCStruct function for types containing unions
+instance Zero ClearAttachment where
+  zero = ClearAttachment zero
+                         zero
+                         zero
 -- No documentation found for TopLevel "ClearColorValue"
 data ClearColorValue
   = Float32 (CFloat, CFloat, CFloat, CFloat)
@@ -397,6 +423,8 @@ withCStructClearColorValue from cont = case from of
   Int32 x -> cont (VkInt32 (fromTuple x))
   Uint32 x -> cont (VkUint32 (fromTuple x))
 -- No FromCStruct function for sum types
+instance Zero ClearColorValue where
+  zero = Float32 (zero, zero, zero, zero)
 -- No documentation found for TopLevel "ClearDepthStencilValue"
 data ClearDepthStencilValue = ClearDepthStencilValue
   { -- No documentation found for Nested "ClearDepthStencilValue" "depth"
@@ -410,6 +438,9 @@ withCStructClearDepthStencilValue from cont = cont (VkClearDepthStencilValue (vk
 fromCStructClearDepthStencilValue :: VkClearDepthStencilValue -> IO ClearDepthStencilValue
 fromCStructClearDepthStencilValue c = ClearDepthStencilValue <$> pure (vkDepth (c :: VkClearDepthStencilValue))
                                                              <*> pure (vkStencil (c :: VkClearDepthStencilValue))
+instance Zero ClearDepthStencilValue where
+  zero = ClearDepthStencilValue zero
+                                zero
 -- No documentation found for TopLevel "ClearRect"
 data ClearRect = ClearRect
   { -- No documentation found for Nested "ClearRect" "rect"
@@ -426,6 +457,10 @@ fromCStructClearRect :: VkClearRect -> IO ClearRect
 fromCStructClearRect c = ClearRect <$> (fromCStructRect2D (vkRect (c :: VkClearRect)))
                                    <*> pure (vkBaseArrayLayer (c :: VkClearRect))
                                    <*> pure (vkLayerCount (c :: VkClearRect))
+instance Zero ClearRect where
+  zero = ClearRect zero
+                   zero
+                   zero
 -- No documentation found for TopLevel "ClearValue"
 data ClearValue
   = Color ClearColorValue
@@ -436,6 +471,8 @@ withCStructClearValue from cont = case from of
   Color x -> withCStructClearColorValue x (cont . VkColor)
   DepthStencil x -> withCStructClearDepthStencilValue x (cont . VkDepthStencil)
 -- No FromCStruct function for sum types
+instance Zero ClearValue where
+  zero = Color zero
 -- No documentation found for TopLevel "DispatchIndirectCommand"
 data DispatchIndirectCommand = DispatchIndirectCommand
   { -- No documentation found for Nested "DispatchIndirectCommand" "x"
@@ -452,6 +489,10 @@ fromCStructDispatchIndirectCommand :: VkDispatchIndirectCommand -> IO DispatchIn
 fromCStructDispatchIndirectCommand c = DispatchIndirectCommand <$> pure (vkX (c :: VkDispatchIndirectCommand))
                                                                <*> pure (vkY (c :: VkDispatchIndirectCommand))
                                                                <*> pure (vkZ (c :: VkDispatchIndirectCommand))
+instance Zero DispatchIndirectCommand where
+  zero = DispatchIndirectCommand zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "DrawIndexedIndirectCommand"
 data DrawIndexedIndirectCommand = DrawIndexedIndirectCommand
   { -- No documentation found for Nested "DrawIndexedIndirectCommand" "indexCount"
@@ -474,6 +515,12 @@ fromCStructDrawIndexedIndirectCommand c = DrawIndexedIndirectCommand <$> pure (v
                                                                      <*> pure (vkFirstIndex (c :: VkDrawIndexedIndirectCommand))
                                                                      <*> pure (vkVertexOffset (c :: VkDrawIndexedIndirectCommand))
                                                                      <*> pure (vkFirstInstance (c :: VkDrawIndexedIndirectCommand))
+instance Zero DrawIndexedIndirectCommand where
+  zero = DrawIndexedIndirectCommand zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "DrawIndirectCommand"
 data DrawIndirectCommand = DrawIndirectCommand
   { -- No documentation found for Nested "DrawIndirectCommand" "vertexCount"
@@ -493,6 +540,11 @@ fromCStructDrawIndirectCommand c = DrawIndirectCommand <$> pure (vkVertexCount (
                                                        <*> pure (vkInstanceCount (c :: VkDrawIndirectCommand))
                                                        <*> pure (vkFirstVertex (c :: VkDrawIndirectCommand))
                                                        <*> pure (vkFirstInstance (c :: VkDrawIndirectCommand))
+instance Zero DrawIndirectCommand where
+  zero = DrawIndirectCommand zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "ImageBlit"
 data ImageBlit = ImageBlit
   { -- No documentation found for Nested "ImageBlit" "srcSubresource"
@@ -514,6 +566,11 @@ fromCStructImageBlit c = ImageBlit <$> (fromCStructImageSubresourceLayers (vkSrc
                                    <*> (fromCStructImageSubresourceLayers (vkDstSubresource (c :: VkImageBlit)))
                                    <*> (let x = (vkDstOffsets (c :: VkImageBlit)) in (, ) <$> fromCStructOffset3D (Data.Vector.Storable.Sized.unsafeIndex x 0)
                                                                                           <*> fromCStructOffset3D (Data.Vector.Storable.Sized.unsafeIndex x 1))
+instance Zero ImageBlit where
+  zero = ImageBlit zero
+                   (zero, zero)
+                   zero
+                   (zero, zero)
 -- No documentation found for TopLevel "ImageCopy"
 data ImageCopy = ImageCopy
   { -- No documentation found for Nested "ImageCopy" "srcSubresource"
@@ -536,6 +593,12 @@ fromCStructImageCopy c = ImageCopy <$> (fromCStructImageSubresourceLayers (vkSrc
                                    <*> (fromCStructImageSubresourceLayers (vkDstSubresource (c :: VkImageCopy)))
                                    <*> (fromCStructOffset3D (vkDstOffset (c :: VkImageCopy)))
                                    <*> (fromCStructExtent3D (vkExtent (c :: VkImageCopy)))
+instance Zero ImageCopy where
+  zero = ImageCopy zero
+                   zero
+                   zero
+                   zero
+                   zero
 -- No documentation found for TopLevel "ImageMemoryBarrier"
 data ImageMemoryBarrier = ImageMemoryBarrier
   { -- Univalued Member elided
@@ -572,6 +635,16 @@ fromCStructImageMemoryBarrier c = ImageMemoryBarrier <$> -- Univalued Member eli
                                                      <*> pure (vkDstQueueFamilyIndex (c :: VkImageMemoryBarrier))
                                                      <*> pure (vkImage (c :: VkImageMemoryBarrier))
                                                      <*> (fromCStructImageSubresourceRange (vkSubresourceRange (c :: VkImageMemoryBarrier)))
+instance Zero ImageMemoryBarrier where
+  zero = ImageMemoryBarrier Nothing
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
 -- No documentation found for TopLevel "ImageResolve"
 data ImageResolve = ImageResolve
   { -- No documentation found for Nested "ImageResolve" "srcSubresource"
@@ -594,6 +667,12 @@ fromCStructImageResolve c = ImageResolve <$> (fromCStructImageSubresourceLayers 
                                          <*> (fromCStructImageSubresourceLayers (vkDstSubresource (c :: VkImageResolve)))
                                          <*> (fromCStructOffset3D (vkDstOffset (c :: VkImageResolve)))
                                          <*> (fromCStructExtent3D (vkExtent (c :: VkImageResolve)))
+instance Zero ImageResolve where
+  zero = ImageResolve zero
+                      zero
+                      zero
+                      zero
+                      zero
 -- No documentation found for TopLevel "ImageSubresourceLayers"
 data ImageSubresourceLayers = ImageSubresourceLayers
   { -- No documentation found for Nested "ImageSubresourceLayers" "aspectMask"
@@ -613,6 +692,11 @@ fromCStructImageSubresourceLayers c = ImageSubresourceLayers <$> pure (vkAspectM
                                                              <*> pure (vkMipLevel (c :: VkImageSubresourceLayers))
                                                              <*> pure (vkBaseArrayLayer (c :: VkImageSubresourceLayers))
                                                              <*> pure (vkLayerCount (c :: VkImageSubresourceLayers))
+instance Zero ImageSubresourceLayers where
+  zero = ImageSubresourceLayers zero
+                                zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "IndexType"
 type IndexType = VkIndexType
 -- No documentation found for TopLevel "MemoryBarrier"
@@ -633,6 +717,10 @@ fromCStructMemoryBarrier c = MemoryBarrier <$> -- Univalued Member elided
                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryBarrier)))
                                            <*> pure (vkSrcAccessMask (c :: VkMemoryBarrier))
                                            <*> pure (vkDstAccessMask (c :: VkMemoryBarrier))
+instance Zero MemoryBarrier where
+  zero = MemoryBarrier Nothing
+                       zero
+                       zero
 -- No documentation found for TopLevel "RenderPassBeginInfo"
 data RenderPassBeginInfo = RenderPassBeginInfo
   { -- Univalued Member elided
@@ -652,6 +740,12 @@ data RenderPassBeginInfo = RenderPassBeginInfo
 withCStructRenderPassBeginInfo :: RenderPassBeginInfo -> (VkRenderPassBeginInfo -> IO a) -> IO a
 withCStructRenderPassBeginInfo from cont = withVec withCStructClearValue (vkPClearValues (from :: RenderPassBeginInfo)) (\pClearValues -> withCStructRect2D (vkRenderArea (from :: RenderPassBeginInfo)) (\renderArea -> maybeWith withSomeVkStruct (vkPNext (from :: RenderPassBeginInfo)) (\pPNext -> cont (VkRenderPassBeginInfo VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO pPNext (vkRenderPass (from :: RenderPassBeginInfo)) (vkFramebuffer (from :: RenderPassBeginInfo)) renderArea (fromIntegral (Data.Vector.length (vkPClearValues (from :: RenderPassBeginInfo)))) pClearValues))))
 -- No fromCStruct function for types containing unions
+instance Zero RenderPassBeginInfo where
+  zero = RenderPassBeginInfo Nothing
+                             zero
+                             zero
+                             zero
+                             Data.Vector.empty
 -- No documentation found for TopLevel "StencilFaceFlagBits"
 type StencilFaceFlagBits = VkStencilFaceFlagBits
 -- No documentation found for TopLevel "StencilFaceFlags"
@@ -668,7 +762,7 @@ cmdBeginRenderPass :: CommandBuffer ->  RenderPassBeginInfo ->  SubpassContents 
 cmdBeginRenderPass = \(CommandBuffer commandBuffer commandTable) -> \renderPassBegin -> \contents -> (\a -> withCStructRenderPassBeginInfo a . flip with) renderPassBegin (\pRenderPassBegin -> Graphics.Vulkan.C.Dynamic.cmdBeginRenderPass commandTable commandBuffer pRenderPassBegin contents *> (pure ()))
 
 -- | Wrapper for 'vkCmdBindDescriptorSets'
-cmdBindDescriptorSets :: CommandBuffer ->  PipelineBindPoint ->  PipelineLayout ->  Word32 ->  Vector DescriptorSet ->  Vector Word32 ->  IO (  )
+cmdBindDescriptorSets :: CommandBuffer ->  PipelineBindPoint ->  PipelineLayout ->  Word32 ->  Vector DescriptorSet ->  Vector Word32 ->  IO ()
 cmdBindDescriptorSets = \(CommandBuffer commandBuffer commandTable) -> \pipelineBindPoint -> \layout -> \firstSet -> \descriptorSets -> \dynamicOffsets -> withVec (&) dynamicOffsets (\pDynamicOffsets -> withVec (&) descriptorSets (\pDescriptorSets -> Graphics.Vulkan.C.Dynamic.cmdBindDescriptorSets commandTable commandBuffer pipelineBindPoint layout firstSet (fromIntegral $ Data.Vector.length descriptorSets) pDescriptorSets (fromIntegral $ Data.Vector.length dynamicOffsets) pDynamicOffsets *> (pure ())))
 
 -- | Wrapper for 'vkCmdBindIndexBuffer'
@@ -684,7 +778,7 @@ cmdBindVertexBuffers :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Vector De
 cmdBindVertexBuffers = \(CommandBuffer commandBuffer commandTable) -> \firstBinding -> \buffers -> \offsets -> withVec (&) offsets (\pOffsets -> withVec (&) buffers (\pBuffers -> Graphics.Vulkan.C.Dynamic.cmdBindVertexBuffers commandTable commandBuffer firstBinding (fromIntegral $ Data.Vector.length buffers `min` Data.Vector.length offsets) pBuffers pOffsets *> (pure ())))
 
 -- | Wrapper for 'vkCmdBlitImage'
-cmdBlitImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageBlit ->  Filter ->  IO (  )
+cmdBlitImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageBlit ->  Filter ->  IO ()
 cmdBlitImage = \(CommandBuffer commandBuffer commandTable) -> \srcImage -> \srcImageLayout -> \dstImage -> \dstImageLayout -> \regions -> \filter' -> withVec withCStructImageBlit regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdBlitImage commandTable commandBuffer srcImage srcImageLayout dstImage dstImageLayout (fromIntegral $ Data.Vector.length regions) pRegions filter' *> (pure ()))
 
 -- | Wrapper for 'vkCmdClearAttachments'
@@ -692,11 +786,11 @@ cmdClearAttachments :: CommandBuffer ->  Vector ClearAttachment ->  Vector Clear
 cmdClearAttachments = \(CommandBuffer commandBuffer commandTable) -> \attachments -> \rects -> withVec withCStructClearRect rects (\pRects -> withVec withCStructClearAttachment attachments (\pAttachments -> Graphics.Vulkan.C.Dynamic.cmdClearAttachments commandTable commandBuffer (fromIntegral $ Data.Vector.length attachments) pAttachments (fromIntegral $ Data.Vector.length rects) pRects *> (pure ())))
 
 -- | Wrapper for 'vkCmdClearColorImage'
-cmdClearColorImage :: CommandBuffer ->  Image ->  ImageLayout ->  ClearColorValue ->  Vector ImageSubresourceRange ->  IO (  )
+cmdClearColorImage :: CommandBuffer ->  Image ->  ImageLayout ->  ClearColorValue ->  Vector ImageSubresourceRange ->  IO ()
 cmdClearColorImage = \(CommandBuffer commandBuffer commandTable) -> \image -> \imageLayout -> \color -> \ranges -> withVec withCStructImageSubresourceRange ranges (\pRanges -> (\a -> withCStructClearColorValue a . flip with) color (\pColor -> Graphics.Vulkan.C.Dynamic.cmdClearColorImage commandTable commandBuffer image imageLayout pColor (fromIntegral $ Data.Vector.length ranges) pRanges *> (pure ())))
 
 -- | Wrapper for 'vkCmdClearDepthStencilImage'
-cmdClearDepthStencilImage :: CommandBuffer ->  Image ->  ImageLayout ->  ClearDepthStencilValue ->  Vector ImageSubresourceRange ->  IO (  )
+cmdClearDepthStencilImage :: CommandBuffer ->  Image ->  ImageLayout ->  ClearDepthStencilValue ->  Vector ImageSubresourceRange ->  IO ()
 cmdClearDepthStencilImage = \(CommandBuffer commandBuffer commandTable) -> \image -> \imageLayout -> \depthStencil -> \ranges -> withVec withCStructImageSubresourceRange ranges (\pRanges -> (\a -> withCStructClearDepthStencilValue a . flip with) depthStencil (\pDepthStencil -> Graphics.Vulkan.C.Dynamic.cmdClearDepthStencilImage commandTable commandBuffer image imageLayout pDepthStencil (fromIntegral $ Data.Vector.length ranges) pRanges *> (pure ())))
 
 -- | Wrapper for 'vkCmdCopyBuffer'
@@ -704,19 +798,19 @@ cmdCopyBuffer :: CommandBuffer ->  Buffer ->  Buffer ->  Vector BufferCopy ->  I
 cmdCopyBuffer = \(CommandBuffer commandBuffer commandTable) -> \srcBuffer -> \dstBuffer -> \regions -> withVec withCStructBufferCopy regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdCopyBuffer commandTable commandBuffer srcBuffer dstBuffer (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
 -- | Wrapper for 'vkCmdCopyBufferToImage'
-cmdCopyBufferToImage :: CommandBuffer ->  Buffer ->  Image ->  ImageLayout ->  Vector BufferImageCopy ->  IO (  )
+cmdCopyBufferToImage :: CommandBuffer ->  Buffer ->  Image ->  ImageLayout ->  Vector BufferImageCopy ->  IO ()
 cmdCopyBufferToImage = \(CommandBuffer commandBuffer commandTable) -> \srcBuffer -> \dstImage -> \dstImageLayout -> \regions -> withVec withCStructBufferImageCopy regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdCopyBufferToImage commandTable commandBuffer srcBuffer dstImage dstImageLayout (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
 -- | Wrapper for 'vkCmdCopyImage'
-cmdCopyImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageCopy ->  IO (  )
+cmdCopyImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageCopy ->  IO ()
 cmdCopyImage = \(CommandBuffer commandBuffer commandTable) -> \srcImage -> \srcImageLayout -> \dstImage -> \dstImageLayout -> \regions -> withVec withCStructImageCopy regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdCopyImage commandTable commandBuffer srcImage srcImageLayout dstImage dstImageLayout (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
 -- | Wrapper for 'vkCmdCopyImageToBuffer'
-cmdCopyImageToBuffer :: CommandBuffer ->  Image ->  ImageLayout ->  Buffer ->  Vector BufferImageCopy ->  IO (  )
+cmdCopyImageToBuffer :: CommandBuffer ->  Image ->  ImageLayout ->  Buffer ->  Vector BufferImageCopy ->  IO ()
 cmdCopyImageToBuffer = \(CommandBuffer commandBuffer commandTable) -> \srcImage -> \srcImageLayout -> \dstBuffer -> \regions -> withVec withCStructBufferImageCopy regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdCopyImageToBuffer commandTable commandBuffer srcImage srcImageLayout dstBuffer (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
 -- | Wrapper for 'vkCmdCopyQueryPoolResults'
-cmdCopyQueryPoolResults :: CommandBuffer ->  QueryPool ->  Word32 ->  Word32 ->  Buffer ->  DeviceSize ->  DeviceSize ->  QueryResultFlags ->  IO (  )
+cmdCopyQueryPoolResults :: CommandBuffer ->  QueryPool ->  Word32 ->  Word32 ->  Buffer ->  DeviceSize ->  DeviceSize ->  QueryResultFlags ->  IO ()
 cmdCopyQueryPoolResults = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \firstQuery -> \queryCount -> \dstBuffer -> \dstOffset -> \stride -> \flags -> Graphics.Vulkan.C.Dynamic.cmdCopyQueryPoolResults commandTable commandBuffer queryPool firstQuery queryCount dstBuffer dstOffset stride flags *> (pure ())
 
 -- | Wrapper for 'vkCmdDispatch'
@@ -764,11 +858,11 @@ cmdNextSubpass :: CommandBuffer ->  SubpassContents ->  IO ()
 cmdNextSubpass = \(CommandBuffer commandBuffer commandTable) -> \contents -> Graphics.Vulkan.C.Dynamic.cmdNextSubpass commandTable commandBuffer contents *> (pure ())
 
 -- | Wrapper for 'vkCmdPipelineBarrier'
-cmdPipelineBarrier :: CommandBuffer ->  PipelineStageFlags ->  PipelineStageFlags ->  DependencyFlags ->  Vector MemoryBarrier ->  Vector BufferMemoryBarrier ->  Vector ImageMemoryBarrier ->  IO (  )
+cmdPipelineBarrier :: CommandBuffer ->  PipelineStageFlags ->  PipelineStageFlags ->  DependencyFlags ->  Vector MemoryBarrier ->  Vector BufferMemoryBarrier ->  Vector ImageMemoryBarrier ->  IO ()
 cmdPipelineBarrier = \(CommandBuffer commandBuffer commandTable) -> \srcStageMask -> \dstStageMask -> \dependencyFlags -> \memoryBarriers -> \bufferMemoryBarriers -> \imageMemoryBarriers -> withVec withCStructImageMemoryBarrier imageMemoryBarriers (\pImageMemoryBarriers -> withVec withCStructBufferMemoryBarrier bufferMemoryBarriers (\pBufferMemoryBarriers -> withVec withCStructMemoryBarrier memoryBarriers (\pMemoryBarriers -> Graphics.Vulkan.C.Dynamic.cmdPipelineBarrier commandTable commandBuffer srcStageMask dstStageMask dependencyFlags (fromIntegral $ Data.Vector.length memoryBarriers) pMemoryBarriers (fromIntegral $ Data.Vector.length bufferMemoryBarriers) pBufferMemoryBarriers (fromIntegral $ Data.Vector.length imageMemoryBarriers) pImageMemoryBarriers *> (pure ()))))
 
 -- | Wrapper for 'vkCmdPushConstants'
-cmdPushConstants :: ( Storable a ) => CommandBuffer ->  PipelineLayout ->  ShaderStageFlags ->  Word32 ->  Vector a ->  IO (  )
+cmdPushConstants :: (Storable a) => CommandBuffer ->  PipelineLayout ->  ShaderStageFlags ->  Word32 ->  Vector a ->  IO ()
 cmdPushConstants = \(CommandBuffer commandBuffer commandTable) -> \layout -> \stageFlags -> \offset -> \values -> withVec (&) values (\pValues -> Graphics.Vulkan.C.Dynamic.cmdPushConstants commandTable commandBuffer layout stageFlags offset (fromIntegral $ sizeOf (Data.Vector.head values) * Data.Vector.length values) (castPtr pValues) *> (pure ()))
 
 -- | Wrapper for 'vkCmdResetEvent'
@@ -780,7 +874,7 @@ cmdResetQueryPool :: CommandBuffer ->  QueryPool ->  Word32 ->  Word32 ->  IO ()
 cmdResetQueryPool = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \firstQuery -> \queryCount -> Graphics.Vulkan.C.Dynamic.cmdResetQueryPool commandTable commandBuffer queryPool firstQuery queryCount *> (pure ())
 
 -- | Wrapper for 'vkCmdResolveImage'
-cmdResolveImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageResolve ->  IO (  )
+cmdResolveImage :: CommandBuffer ->  Image ->  ImageLayout ->  Image ->  ImageLayout ->  Vector ImageResolve ->  IO ()
 cmdResolveImage = \(CommandBuffer commandBuffer commandTable) -> \srcImage -> \srcImageLayout -> \dstImage -> \dstImageLayout -> \regions -> withVec withCStructImageResolve regions (\pRegions -> Graphics.Vulkan.C.Dynamic.cmdResolveImage commandTable commandBuffer srcImage srcImageLayout dstImage dstImageLayout (fromIntegral $ Data.Vector.length regions) pRegions *> (pure ()))
 
 -- | Wrapper for 'vkCmdSetBlendConstants'
@@ -828,7 +922,7 @@ cmdUpdateBuffer :: (Storable a) => CommandBuffer ->  Buffer ->  DeviceSize ->  V
 cmdUpdateBuffer = \(CommandBuffer commandBuffer commandTable) -> \dstBuffer -> \dstOffset -> \data' -> withVec (&) data' (\pData -> Graphics.Vulkan.C.Dynamic.cmdUpdateBuffer commandTable commandBuffer dstBuffer dstOffset (fromIntegral $ sizeOf (Data.Vector.head data') * Data.Vector.length data') (castPtr pData) *> (pure ()))
 
 -- | Wrapper for 'vkCmdWaitEvents'
-cmdWaitEvents :: CommandBuffer ->  Vector Event ->  PipelineStageFlags ->  PipelineStageFlags ->  Vector MemoryBarrier ->  Vector BufferMemoryBarrier ->  Vector ImageMemoryBarrier ->  IO (  )
+cmdWaitEvents :: CommandBuffer ->  Vector Event ->  PipelineStageFlags ->  PipelineStageFlags ->  Vector MemoryBarrier ->  Vector BufferMemoryBarrier ->  Vector ImageMemoryBarrier ->  IO ()
 cmdWaitEvents = \(CommandBuffer commandBuffer commandTable) -> \events -> \srcStageMask -> \dstStageMask -> \memoryBarriers -> \bufferMemoryBarriers -> \imageMemoryBarriers -> withVec withCStructImageMemoryBarrier imageMemoryBarriers (\pImageMemoryBarriers -> withVec withCStructBufferMemoryBarrier bufferMemoryBarriers (\pBufferMemoryBarriers -> withVec withCStructMemoryBarrier memoryBarriers (\pMemoryBarriers -> withVec (&) events (\pEvents -> Graphics.Vulkan.C.Dynamic.cmdWaitEvents commandTable commandBuffer (fromIntegral $ Data.Vector.length events) pEvents srcStageMask dstStageMask (fromIntegral $ Data.Vector.length memoryBarriers) pMemoryBarriers (fromIntegral $ Data.Vector.length bufferMemoryBarriers) pBufferMemoryBarriers (fromIntegral $ Data.Vector.length imageMemoryBarriers) pImageMemoryBarriers *> (pure ())))))
 
 -- | Wrapper for 'vkCmdWriteTimestamp'

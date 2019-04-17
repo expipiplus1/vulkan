@@ -58,6 +58,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -78,7 +79,7 @@ data CAMetalLayer
 
 -- No documentation found for TopLevel "VkMetalSurfaceCreateFlagsEXT"
 newtype VkMetalSurfaceCreateFlagsEXT = VkMetalSurfaceCreateFlagsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkMetalSurfaceCreateFlagsEXT where
   
@@ -119,6 +120,12 @@ instance Storable VkMetalSurfaceCreateInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMetalSurfaceCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkMetalSurfaceCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkPLayer (poked :: VkMetalSurfaceCreateInfoEXT))
+
+instance Zero VkMetalSurfaceCreateInfoEXT where
+  zero = VkMetalSurfaceCreateInfoEXT zero
+                                     zero
+                                     zero
+                                     zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCreateMetalSurfaceEXT"
 foreign import ccall

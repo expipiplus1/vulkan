@@ -90,6 +90,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -112,7 +113,7 @@ type VkFence = Ptr VkFence_T
 
 -- No documentation found for TopLevel "VkPipelineStageFlagBits"
 newtype VkPipelineStageFlagBits = VkPipelineStageFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineStageFlagBits where
   showsPrec _ VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = showString "VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT"
@@ -305,6 +306,17 @@ instance Storable VkSubmitInfo where
                 *> poke (ptr `plusPtr` 48) (vkPCommandBuffers (poked :: VkSubmitInfo))
                 *> poke (ptr `plusPtr` 56) (vkSignalSemaphoreCount (poked :: VkSubmitInfo))
                 *> poke (ptr `plusPtr` 64) (vkPSignalSemaphores (poked :: VkSubmitInfo))
+
+instance Zero VkSubmitInfo where
+  zero = VkSubmitInfo zero
+                      zero
+                      zero
+                      zero
+                      zero
+                      zero
+                      zero
+                      zero
+                      zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkDeviceWaitIdle"
 foreign import ccall

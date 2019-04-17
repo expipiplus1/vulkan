@@ -82,6 +82,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -100,7 +101,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkBorderColor"
 newtype VkBorderColor = VkBorderColor Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkBorderColor where
   showsPrec _ VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = showString "VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"
@@ -153,7 +154,7 @@ pattern VK_BORDER_COLOR_INT_OPAQUE_WHITE = VkBorderColor 5
 
 -- No documentation found for TopLevel "VkFilter"
 newtype VkFilter = VkFilter Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkFilter where
   showsPrec _ VK_FILTER_NEAREST = showString "VK_FILTER_NEAREST"
@@ -190,7 +191,7 @@ type VkSampler = Ptr VkSampler_T
 
 -- No documentation found for TopLevel "VkSamplerAddressMode"
 newtype VkSamplerAddressMode = VkSamplerAddressMode Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkSamplerAddressMode where
   showsPrec _ VK_SAMPLER_ADDRESS_MODE_REPEAT = showString "VK_SAMPLER_ADDRESS_MODE_REPEAT"
@@ -235,7 +236,7 @@ pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = VkSamplerAddressMode 3
 
 -- No documentation found for TopLevel "VkSamplerCreateFlagBits"
 newtype VkSamplerCreateFlagBits = VkSamplerCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSamplerCreateFlagBits where
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
@@ -338,11 +339,31 @@ instance Storable VkSamplerCreateInfo where
                 *> poke (ptr `plusPtr` 68) (vkMaxLod (poked :: VkSamplerCreateInfo))
                 *> poke (ptr `plusPtr` 72) (vkBorderColor (poked :: VkSamplerCreateInfo))
                 *> poke (ptr `plusPtr` 76) (vkUnnormalizedCoordinates (poked :: VkSamplerCreateInfo))
+
+instance Zero VkSamplerCreateInfo where
+  zero = VkSamplerCreateInfo zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
 -- ** VkSamplerMipmapMode
 
 -- No documentation found for TopLevel "VkSamplerMipmapMode"
 newtype VkSamplerMipmapMode = VkSamplerMipmapMode Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkSamplerMipmapMode where
   showsPrec _ VK_SAMPLER_MIPMAP_MODE_NEAREST = showString "VK_SAMPLER_MIPMAP_MODE_NEAREST"

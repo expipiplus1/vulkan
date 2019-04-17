@@ -52,6 +52,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 
@@ -60,7 +61,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- No documentation found for TopLevel "VkPipelineCoverageToColorStateCreateFlagsNV"
 newtype VkPipelineCoverageToColorStateCreateFlagsNV = VkPipelineCoverageToColorStateCreateFlagsNV VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineCoverageToColorStateCreateFlagsNV where
   
@@ -105,6 +106,13 @@ instance Storable VkPipelineCoverageToColorStateCreateInfoNV where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineCoverageToColorStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 20) (vkCoverageToColorEnable (poked :: VkPipelineCoverageToColorStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkCoverageToColorLocation (poked :: VkPipelineCoverageToColorStateCreateInfoNV))
+
+instance Zero VkPipelineCoverageToColorStateCreateInfoNV where
+  zero = VkPipelineCoverageToColorStateCreateInfoNV zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
 -- No documentation found for TopLevel "VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME"
 pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME = "VK_NV_fragment_coverage_to_color"

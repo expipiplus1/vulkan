@@ -50,6 +50,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -89,6 +90,12 @@ instance Storable VkImportMemoryFdInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportMemoryFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkImportMemoryFdInfoKHR))
                 *> poke (ptr `plusPtr` 20) (vkFd (poked :: VkImportMemoryFdInfoKHR))
+
+instance Zero VkImportMemoryFdInfoKHR where
+  zero = VkImportMemoryFdInfoKHR zero
+                                 zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "VkMemoryFdPropertiesKHR"
 data VkMemoryFdPropertiesKHR = VkMemoryFdPropertiesKHR
   { -- No documentation found for Nested "VkMemoryFdPropertiesKHR" "sType"
@@ -109,6 +116,11 @@ instance Storable VkMemoryFdPropertiesKHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryFdPropertiesKHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryFdPropertiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryFdPropertiesKHR))
+
+instance Zero VkMemoryFdPropertiesKHR where
+  zero = VkMemoryFdPropertiesKHR zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "VkMemoryGetFdInfoKHR"
 data VkMemoryGetFdInfoKHR = VkMemoryGetFdInfoKHR
   { -- No documentation found for Nested "VkMemoryGetFdInfoKHR" "sType"
@@ -133,6 +145,12 @@ instance Storable VkMemoryGetFdInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkMemoryGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkMemoryGetFdInfoKHR))
+
+instance Zero VkMemoryGetFdInfoKHR where
+  zero = VkMemoryGetFdInfoKHR zero
+                              zero
+                              zero
+                              zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetMemoryFdKHR"
 foreign import ccall

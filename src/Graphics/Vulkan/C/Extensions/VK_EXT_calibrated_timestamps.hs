@@ -69,6 +69,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -99,11 +100,16 @@ instance Storable VkCalibratedTimestampInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCalibratedTimestampInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCalibratedTimestampInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkTimeDomain (poked :: VkCalibratedTimestampInfoEXT))
+
+instance Zero VkCalibratedTimestampInfoEXT where
+  zero = VkCalibratedTimestampInfoEXT zero
+                                      zero
+                                      zero
 -- ** VkTimeDomainEXT
 
 -- No documentation found for TopLevel "VkTimeDomainEXT"
 newtype VkTimeDomainEXT = VkTimeDomainEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkTimeDomainEXT where
   showsPrec _ VK_TIME_DOMAIN_DEVICE_EXT = showString "VK_TIME_DOMAIN_DEVICE_EXT"

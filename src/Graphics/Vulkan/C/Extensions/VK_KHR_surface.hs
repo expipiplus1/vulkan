@@ -112,6 +112,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkFormat(..)
   , VkObjectType(..)
   , VkResult(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -132,7 +133,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkColorSpaceKHR"
 newtype VkColorSpaceKHR = VkColorSpaceKHR Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkColorSpaceKHR where
   showsPrec _ VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = showString "VK_COLOR_SPACE_SRGB_NONLINEAR_KHR"
@@ -187,7 +188,7 @@ pattern VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = VkColorSpaceKHR 0
 
 -- No documentation found for TopLevel "VkCompositeAlphaFlagBitsKHR"
 newtype VkCompositeAlphaFlagBitsKHR = VkCompositeAlphaFlagBitsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkCompositeAlphaFlagBitsKHR where
   showsPrec _ VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = showString "VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR"
@@ -230,7 +231,7 @@ type VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagBitsKHR
 
 -- No documentation found for TopLevel "VkPresentModeKHR"
 newtype VkPresentModeKHR = VkPresentModeKHR Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkPresentModeKHR where
   showsPrec _ VK_PRESENT_MODE_IMMEDIATE_KHR = showString "VK_PRESENT_MODE_IMMEDIATE_KHR"
@@ -321,6 +322,18 @@ instance Storable VkSurfaceCapabilitiesKHR where
                 *> poke (ptr `plusPtr` 40) (vkCurrentTransform (poked :: VkSurfaceCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 44) (vkSupportedCompositeAlpha (poked :: VkSurfaceCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 48) (vkSupportedUsageFlags (poked :: VkSurfaceCapabilitiesKHR))
+
+instance Zero VkSurfaceCapabilitiesKHR where
+  zero = VkSurfaceCapabilitiesKHR zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkSurfaceFormatKHR"
 data VkSurfaceFormatKHR = VkSurfaceFormatKHR
   { -- No documentation found for Nested "VkSurfaceFormatKHR" "format"
@@ -337,6 +350,10 @@ instance Storable VkSurfaceFormatKHR where
                                 <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkFormat (poked :: VkSurfaceFormatKHR))
                 *> poke (ptr `plusPtr` 4) (vkColorSpace (poked :: VkSurfaceFormatKHR))
+
+instance Zero VkSurfaceFormatKHR where
+  zero = VkSurfaceFormatKHR zero
+                            zero
 -- | Dummy data to tag the 'Ptr' with
 data VkSurfaceKHR_T
 -- No documentation found for TopLevel "VkSurfaceKHR"
@@ -345,7 +362,7 @@ type VkSurfaceKHR = Ptr VkSurfaceKHR_T
 
 -- No documentation found for TopLevel "VkSurfaceTransformFlagBitsKHR"
 newtype VkSurfaceTransformFlagBitsKHR = VkSurfaceTransformFlagBitsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSurfaceTransformFlagBitsKHR where
   showsPrec _ VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = showString "VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR"

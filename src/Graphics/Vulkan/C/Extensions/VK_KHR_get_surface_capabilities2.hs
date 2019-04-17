@@ -47,6 +47,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkPhysicalDevice
@@ -81,6 +82,11 @@ instance Storable VkPhysicalDeviceSurfaceInfo2KHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceSurfaceInfo2KHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSurfaceInfo2KHR))
                 *> poke (ptr `plusPtr` 16) (vkSurface (poked :: VkPhysicalDeviceSurfaceInfo2KHR))
+
+instance Zero VkPhysicalDeviceSurfaceInfo2KHR where
+  zero = VkPhysicalDeviceSurfaceInfo2KHR zero
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "VkSurfaceCapabilities2KHR"
 data VkSurfaceCapabilities2KHR = VkSurfaceCapabilities2KHR
   { -- No documentation found for Nested "VkSurfaceCapabilities2KHR" "sType"
@@ -101,6 +107,11 @@ instance Storable VkSurfaceCapabilities2KHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSurfaceCapabilities2KHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSurfaceCapabilities2KHR))
                 *> poke (ptr `plusPtr` 16) (vkSurfaceCapabilities (poked :: VkSurfaceCapabilities2KHR))
+
+instance Zero VkSurfaceCapabilities2KHR where
+  zero = VkSurfaceCapabilities2KHR zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "VkSurfaceFormat2KHR"
 data VkSurfaceFormat2KHR = VkSurfaceFormat2KHR
   { -- No documentation found for Nested "VkSurfaceFormat2KHR" "sType"
@@ -121,6 +132,11 @@ instance Storable VkSurfaceFormat2KHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSurfaceFormat2KHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSurfaceFormat2KHR))
                 *> poke (ptr `plusPtr` 16) (vkSurfaceFormat (poked :: VkSurfaceFormat2KHR))
+
+instance Zero VkSurfaceFormat2KHR where
+  zero = VkSurfaceFormat2KHR zero
+                             zero
+                             zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetPhysicalDeviceSurfaceCapabilities2KHR"
 foreign import ccall

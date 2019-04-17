@@ -38,6 +38,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -77,6 +78,11 @@ instance Storable VkSharedPresentSurfaceCapabilitiesKHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSharedPresentSurfaceCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSharedPresentSurfaceCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkSharedPresentSupportedUsageFlags (poked :: VkSharedPresentSurfaceCapabilitiesKHR))
+
+instance Zero VkSharedPresentSurfaceCapabilitiesKHR where
+  zero = VkSharedPresentSurfaceCapabilitiesKHR zero
+                                               zero
+                                               zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetSwapchainStatusKHR"
 foreign import ccall

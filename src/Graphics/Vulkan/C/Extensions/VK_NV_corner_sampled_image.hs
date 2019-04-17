@@ -28,6 +28,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageCreateFlagBits(..)
@@ -54,6 +55,11 @@ instance Storable VkPhysicalDeviceCornerSampledImageFeaturesNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceCornerSampledImageFeaturesNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceCornerSampledImageFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkCornerSampledImage (poked :: VkPhysicalDeviceCornerSampledImageFeaturesNV))
+
+instance Zero VkPhysicalDeviceCornerSampledImageFeaturesNV where
+  zero = VkPhysicalDeviceCornerSampledImageFeaturesNV zero
+                                                      zero
+                                                      zero
 -- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV"
 pattern VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV = VkImageCreateFlagBits 0x00002000

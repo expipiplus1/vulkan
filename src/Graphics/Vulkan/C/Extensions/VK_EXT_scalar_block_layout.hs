@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -50,6 +51,11 @@ instance Storable VkPhysicalDeviceScalarBlockLayoutFeaturesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceScalarBlockLayoutFeaturesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceScalarBlockLayoutFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkScalarBlockLayout (poked :: VkPhysicalDeviceScalarBlockLayoutFeaturesEXT))
+
+instance Zero VkPhysicalDeviceScalarBlockLayoutFeaturesEXT where
+  zero = VkPhysicalDeviceScalarBlockLayoutFeaturesEXT zero
+                                                      zero
+                                                      zero
 -- No documentation found for TopLevel "VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME"
 pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME = "VK_EXT_scalar_block_layout"

@@ -68,6 +68,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -93,7 +94,7 @@ type HWND = Ptr ()
 
 -- No documentation found for TopLevel "VkWin32SurfaceCreateFlagsKHR"
 newtype VkWin32SurfaceCreateFlagsKHR = VkWin32SurfaceCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkWin32SurfaceCreateFlagsKHR where
   
@@ -138,6 +139,13 @@ instance Storable VkWin32SurfaceCreateInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkWin32SurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHinstance (poked :: VkWin32SurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkHwnd (poked :: VkWin32SurfaceCreateInfoKHR))
+
+instance Zero VkWin32SurfaceCreateInfoKHR where
+  zero = VkWin32SurfaceCreateInfoKHR zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCreateWin32SurfaceKHR"
 foreign import ccall

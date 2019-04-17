@@ -48,7 +48,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Vector.Generic.Sized
@@ -84,6 +85,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
   ( VkAttachmentSampleLocationsEXT(..)
   , VkMultisamplePropertiesEXT(..)
@@ -145,6 +149,9 @@ withCStructAttachmentSampleLocationsEXT from cont = withCStructSampleLocationsIn
 fromCStructAttachmentSampleLocationsEXT :: VkAttachmentSampleLocationsEXT -> IO AttachmentSampleLocationsEXT
 fromCStructAttachmentSampleLocationsEXT c = AttachmentSampleLocationsEXT <$> pure (vkAttachmentIndex (c :: VkAttachmentSampleLocationsEXT))
                                                                          <*> (fromCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (c :: VkAttachmentSampleLocationsEXT)))
+instance Zero AttachmentSampleLocationsEXT where
+  zero = AttachmentSampleLocationsEXT zero
+                                      zero
 -- No documentation found for TopLevel "MultisamplePropertiesEXT"
 data MultisamplePropertiesEXT = MultisamplePropertiesEXT
   { -- Univalued Member elided
@@ -160,6 +167,9 @@ fromCStructMultisamplePropertiesEXT :: VkMultisamplePropertiesEXT -> IO Multisam
 fromCStructMultisamplePropertiesEXT c = MultisamplePropertiesEXT <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMultisamplePropertiesEXT)))
                                                                  <*> (fromCStructExtent2D (vkMaxSampleLocationGridSize (c :: VkMultisamplePropertiesEXT)))
+instance Zero MultisamplePropertiesEXT where
+  zero = MultisamplePropertiesEXT Nothing
+                                  zero
 -- No documentation found for TopLevel "PhysicalDeviceSampleLocationsPropertiesEXT"
 data PhysicalDeviceSampleLocationsPropertiesEXT = PhysicalDeviceSampleLocationsPropertiesEXT
   { -- Univalued Member elided
@@ -188,6 +198,13 @@ fromCStructPhysicalDeviceSampleLocationsPropertiesEXT c = PhysicalDeviceSampleLo
                                                                                                      , Data.Vector.Storable.Sized.unsafeIndex x 1 ))
                                                                                                      <*> pure (vkSampleLocationSubPixelBits (c :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
                                                                                                      <*> pure (bool32ToBool (vkVariableSampleLocations (c :: VkPhysicalDeviceSampleLocationsPropertiesEXT)))
+instance Zero PhysicalDeviceSampleLocationsPropertiesEXT where
+  zero = PhysicalDeviceSampleLocationsPropertiesEXT Nothing
+                                                    zero
+                                                    zero
+                                                    (zero, zero)
+                                                    zero
+                                                    False
 -- No documentation found for TopLevel "PipelineSampleLocationsStateCreateInfoEXT"
 data PipelineSampleLocationsStateCreateInfoEXT = PipelineSampleLocationsStateCreateInfoEXT
   { -- Univalued Member elided
@@ -206,6 +223,10 @@ fromCStructPipelineSampleLocationsStateCreateInfoEXT c = PipelineSampleLocations
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineSampleLocationsStateCreateInfoEXT)))
                                                                                                    <*> pure (bool32ToBool (vkSampleLocationsEnable (c :: VkPipelineSampleLocationsStateCreateInfoEXT)))
                                                                                                    <*> (fromCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (c :: VkPipelineSampleLocationsStateCreateInfoEXT)))
+instance Zero PipelineSampleLocationsStateCreateInfoEXT where
+  zero = PipelineSampleLocationsStateCreateInfoEXT Nothing
+                                                   False
+                                                   zero
 -- No documentation found for TopLevel "RenderPassSampleLocationsBeginInfoEXT"
 data RenderPassSampleLocationsBeginInfoEXT = RenderPassSampleLocationsBeginInfoEXT
   { -- Univalued Member elided
@@ -228,6 +249,10 @@ fromCStructRenderPassSampleLocationsBeginInfoEXT c = RenderPassSampleLocationsBe
                                                                                            <*> (Data.Vector.generateM (fromIntegral (vkAttachmentInitialSampleLocationsCount (c :: VkRenderPassSampleLocationsBeginInfoEXT))) (((fromCStructAttachmentSampleLocationsEXT <=<) . peekElemOff) (vkPAttachmentInitialSampleLocations (c :: VkRenderPassSampleLocationsBeginInfoEXT))))
                                                                                            -- Length valued member elided
                                                                                            <*> (Data.Vector.generateM (fromIntegral (vkPostSubpassSampleLocationsCount (c :: VkRenderPassSampleLocationsBeginInfoEXT))) (((fromCStructSubpassSampleLocationsEXT <=<) . peekElemOff) (vkPPostSubpassSampleLocations (c :: VkRenderPassSampleLocationsBeginInfoEXT))))
+instance Zero RenderPassSampleLocationsBeginInfoEXT where
+  zero = RenderPassSampleLocationsBeginInfoEXT Nothing
+                                               Data.Vector.empty
+                                               Data.Vector.empty
 -- No documentation found for TopLevel "SampleLocationEXT"
 data SampleLocationEXT = SampleLocationEXT
   { -- No documentation found for Nested "SampleLocationEXT" "x"
@@ -241,6 +266,9 @@ withCStructSampleLocationEXT from cont = cont (VkSampleLocationEXT (vkX (from ::
 fromCStructSampleLocationEXT :: VkSampleLocationEXT -> IO SampleLocationEXT
 fromCStructSampleLocationEXT c = SampleLocationEXT <$> pure (vkX (c :: VkSampleLocationEXT))
                                                    <*> pure (vkY (c :: VkSampleLocationEXT))
+instance Zero SampleLocationEXT where
+  zero = SampleLocationEXT zero
+                           zero
 -- No documentation found for TopLevel "SampleLocationsInfoEXT"
 data SampleLocationsInfoEXT = SampleLocationsInfoEXT
   { -- Univalued Member elided
@@ -264,6 +292,11 @@ fromCStructSampleLocationsInfoEXT c = SampleLocationsInfoEXT <$> -- Univalued Me
                                                              <*> (fromCStructExtent2D (vkSampleLocationGridSize (c :: VkSampleLocationsInfoEXT)))
                                                              -- Length valued member elided
                                                              <*> (Data.Vector.generateM (fromIntegral (vkSampleLocationsCount (c :: VkSampleLocationsInfoEXT))) (((fromCStructSampleLocationEXT <=<) . peekElemOff) (vkPSampleLocations (c :: VkSampleLocationsInfoEXT))))
+instance Zero SampleLocationsInfoEXT where
+  zero = SampleLocationsInfoEXT Nothing
+                                zero
+                                zero
+                                Data.Vector.empty
 -- No documentation found for TopLevel "SubpassSampleLocationsEXT"
 data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
   { -- No documentation found for Nested "SubpassSampleLocationsEXT" "subpassIndex"
@@ -277,6 +310,9 @@ withCStructSubpassSampleLocationsEXT from cont = withCStructSampleLocationsInfoE
 fromCStructSubpassSampleLocationsEXT :: VkSubpassSampleLocationsEXT -> IO SubpassSampleLocationsEXT
 fromCStructSubpassSampleLocationsEXT c = SubpassSampleLocationsEXT <$> pure (vkSubpassIndex (c :: VkSubpassSampleLocationsEXT))
                                                                    <*> (fromCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (c :: VkSubpassSampleLocationsEXT)))
+instance Zero SubpassSampleLocationsEXT where
+  zero = SubpassSampleLocationsEXT zero
+                                   zero
 
 -- | Wrapper for 'vkCmdSetSampleLocationsEXT'
 cmdSetSampleLocationsEXT :: CommandBuffer ->  SampleLocationsInfoEXT ->  IO ()

@@ -26,6 +26,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -59,6 +60,11 @@ instance Storable VkPhysicalDeviceShaderDrawParametersFeatures where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceShaderDrawParametersFeatures))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceShaderDrawParametersFeatures))
                 *> poke (ptr `plusPtr` 16) (vkShaderDrawParameters (poked :: VkPhysicalDeviceShaderDrawParametersFeatures))
+
+instance Zero VkPhysicalDeviceShaderDrawParametersFeatures where
+  zero = VkPhysicalDeviceShaderDrawParametersFeatures zero
+                                                      zero
+                                                      zero
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES = VkStructureType 1000063000

@@ -62,6 +62,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageCreateFlagBits(..)
@@ -97,6 +98,10 @@ instance Storable VkAttachmentSampleLocationsEXT where
                                             <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkAttachmentIndex (poked :: VkAttachmentSampleLocationsEXT))
                 *> poke (ptr `plusPtr` 8) (vkSampleLocationsInfo (poked :: VkAttachmentSampleLocationsEXT))
+
+instance Zero VkAttachmentSampleLocationsEXT where
+  zero = VkAttachmentSampleLocationsEXT zero
+                                        zero
 -- No documentation found for TopLevel "VkMultisamplePropertiesEXT"
 data VkMultisamplePropertiesEXT = VkMultisamplePropertiesEXT
   { -- No documentation found for Nested "VkMultisamplePropertiesEXT" "sType"
@@ -117,6 +122,11 @@ instance Storable VkMultisamplePropertiesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMultisamplePropertiesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMultisamplePropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxSampleLocationGridSize (poked :: VkMultisamplePropertiesEXT))
+
+instance Zero VkMultisamplePropertiesEXT where
+  zero = VkMultisamplePropertiesEXT zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkPhysicalDeviceSampleLocationsPropertiesEXT"
 data VkPhysicalDeviceSampleLocationsPropertiesEXT = VkPhysicalDeviceSampleLocationsPropertiesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceSampleLocationsPropertiesEXT" "sType"
@@ -153,6 +163,15 @@ instance Storable VkPhysicalDeviceSampleLocationsPropertiesEXT where
                 *> poke (ptr `plusPtr` 28) (vkSampleLocationCoordinateRange (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
                 *> poke (ptr `plusPtr` 36) (vkSampleLocationSubPixelBits (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
                 *> poke (ptr `plusPtr` 40) (vkVariableSampleLocations (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
+
+instance Zero VkPhysicalDeviceSampleLocationsPropertiesEXT where
+  zero = VkPhysicalDeviceSampleLocationsPropertiesEXT zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
 -- No documentation found for TopLevel "VkPipelineSampleLocationsStateCreateInfoEXT"
 data VkPipelineSampleLocationsStateCreateInfoEXT = VkPipelineSampleLocationsStateCreateInfoEXT
   { -- No documentation found for Nested "VkPipelineSampleLocationsStateCreateInfoEXT" "sType"
@@ -177,6 +196,12 @@ instance Storable VkPipelineSampleLocationsStateCreateInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineSampleLocationsStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkSampleLocationsEnable (poked :: VkPipelineSampleLocationsStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkSampleLocationsInfo (poked :: VkPipelineSampleLocationsStateCreateInfoEXT))
+
+instance Zero VkPipelineSampleLocationsStateCreateInfoEXT where
+  zero = VkPipelineSampleLocationsStateCreateInfoEXT zero
+                                                     zero
+                                                     zero
+                                                     zero
 -- No documentation found for TopLevel "VkRenderPassSampleLocationsBeginInfoEXT"
 data VkRenderPassSampleLocationsBeginInfoEXT = VkRenderPassSampleLocationsBeginInfoEXT
   { -- No documentation found for Nested "VkRenderPassSampleLocationsBeginInfoEXT" "sType"
@@ -209,6 +234,14 @@ instance Storable VkRenderPassSampleLocationsBeginInfoEXT where
                 *> poke (ptr `plusPtr` 24) (vkPAttachmentInitialSampleLocations (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPostSubpassSampleLocationsCount (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
                 *> poke (ptr `plusPtr` 40) (vkPPostSubpassSampleLocations (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
+
+instance Zero VkRenderPassSampleLocationsBeginInfoEXT where
+  zero = VkRenderPassSampleLocationsBeginInfoEXT zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
 -- No documentation found for TopLevel "VkSampleLocationEXT"
 data VkSampleLocationEXT = VkSampleLocationEXT
   { -- No documentation found for Nested "VkSampleLocationEXT" "x"
@@ -225,6 +258,10 @@ instance Storable VkSampleLocationEXT where
                                  <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkSampleLocationEXT))
                 *> poke (ptr `plusPtr` 4) (vkY (poked :: VkSampleLocationEXT))
+
+instance Zero VkSampleLocationEXT where
+  zero = VkSampleLocationEXT zero
+                             zero
 -- No documentation found for TopLevel "VkSampleLocationsInfoEXT"
 data VkSampleLocationsInfoEXT = VkSampleLocationsInfoEXT
   { -- No documentation found for Nested "VkSampleLocationsInfoEXT" "sType"
@@ -257,6 +294,14 @@ instance Storable VkSampleLocationsInfoEXT where
                 *> poke (ptr `plusPtr` 20) (vkSampleLocationGridSize (poked :: VkSampleLocationsInfoEXT))
                 *> poke (ptr `plusPtr` 28) (vkSampleLocationsCount (poked :: VkSampleLocationsInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPSampleLocations (poked :: VkSampleLocationsInfoEXT))
+
+instance Zero VkSampleLocationsInfoEXT where
+  zero = VkSampleLocationsInfoEXT zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkSubpassSampleLocationsEXT"
 data VkSubpassSampleLocationsEXT = VkSubpassSampleLocationsEXT
   { -- No documentation found for Nested "VkSubpassSampleLocationsEXT" "subpassIndex"
@@ -273,6 +318,10 @@ instance Storable VkSubpassSampleLocationsEXT where
                                          <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSubpassIndex (poked :: VkSubpassSampleLocationsEXT))
                 *> poke (ptr `plusPtr` 8) (vkSampleLocationsInfo (poked :: VkSubpassSampleLocationsEXT))
+
+instance Zero VkSubpassSampleLocationsEXT where
+  zero = VkSubpassSampleLocationsEXT zero
+                                     zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdSetSampleLocationsEXT"
 foreign import ccall

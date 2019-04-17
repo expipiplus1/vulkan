@@ -44,6 +44,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.Queue
   ( VkPipelineStageFlagBits(..)
@@ -80,6 +81,12 @@ instance Storable VkCheckpointDataNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCheckpointDataNV))
                 *> poke (ptr `plusPtr` 16) (vkStage (poked :: VkCheckpointDataNV))
                 *> poke (ptr `plusPtr` 24) (vkPCheckpointMarker (poked :: VkCheckpointDataNV))
+
+instance Zero VkCheckpointDataNV where
+  zero = VkCheckpointDataNV zero
+                            zero
+                            zero
+                            zero
 -- No documentation found for TopLevel "VkQueueFamilyCheckpointPropertiesNV"
 data VkQueueFamilyCheckpointPropertiesNV = VkQueueFamilyCheckpointPropertiesNV
   { -- No documentation found for Nested "VkQueueFamilyCheckpointPropertiesNV" "sType"
@@ -100,6 +107,11 @@ instance Storable VkQueueFamilyCheckpointPropertiesNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkQueueFamilyCheckpointPropertiesNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkQueueFamilyCheckpointPropertiesNV))
                 *> poke (ptr `plusPtr` 16) (vkCheckpointExecutionStageMask (poked :: VkQueueFamilyCheckpointPropertiesNV))
+
+instance Zero VkQueueFamilyCheckpointPropertiesNV where
+  zero = VkQueueFamilyCheckpointPropertiesNV zero
+                                             zero
+                                             zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdSetCheckpointNV"
 foreign import ccall

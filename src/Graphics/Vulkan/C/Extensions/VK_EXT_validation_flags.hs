@@ -52,6 +52,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -59,7 +60,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- No documentation found for TopLevel "VkValidationCheckEXT"
 newtype VkValidationCheckEXT = VkValidationCheckEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkValidationCheckEXT where
   showsPrec _ VK_VALIDATION_CHECK_ALL_EXT = showString "VK_VALIDATION_CHECK_ALL_EXT"
@@ -108,6 +109,12 @@ instance Storable VkValidationFlagsEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkValidationFlagsEXT))
                 *> poke (ptr `plusPtr` 16) (vkDisabledValidationCheckCount (poked :: VkValidationFlagsEXT))
                 *> poke (ptr `plusPtr` 24) (vkPDisabledValidationChecks (poked :: VkValidationFlagsEXT))
+
+instance Zero VkValidationFlagsEXT where
+  zero = VkValidationFlagsEXT zero
+                              zero
+                              zero
+                              zero
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME"
 pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME = "VK_EXT_validation_flags"

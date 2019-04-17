@@ -26,6 +26,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageCreateFlagBits(..)
@@ -59,6 +60,12 @@ instance Storable VkBindBufferMemoryDeviceGroupInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindBufferMemoryDeviceGroupInfo))
                 *> poke (ptr `plusPtr` 16) (vkDeviceIndexCount (poked :: VkBindBufferMemoryDeviceGroupInfo))
                 *> poke (ptr `plusPtr` 24) (vkPDeviceIndices (poked :: VkBindBufferMemoryDeviceGroupInfo))
+
+instance Zero VkBindBufferMemoryDeviceGroupInfo where
+  zero = VkBindBufferMemoryDeviceGroupInfo zero
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "VkBindImageMemoryDeviceGroupInfo"
 data VkBindImageMemoryDeviceGroupInfo = VkBindImageMemoryDeviceGroupInfo
   { -- No documentation found for Nested "VkBindImageMemoryDeviceGroupInfo" "sType"
@@ -91,6 +98,14 @@ instance Storable VkBindImageMemoryDeviceGroupInfo where
                 *> poke (ptr `plusPtr` 24) (vkPDeviceIndices (poked :: VkBindImageMemoryDeviceGroupInfo))
                 *> poke (ptr `plusPtr` 32) (vkSplitInstanceBindRegionCount (poked :: VkBindImageMemoryDeviceGroupInfo))
                 *> poke (ptr `plusPtr` 40) (vkPSplitInstanceBindRegions (poked :: VkBindImageMemoryDeviceGroupInfo))
+
+instance Zero VkBindImageMemoryDeviceGroupInfo where
+  zero = VkBindImageMemoryDeviceGroupInfo zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT"
 pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = VkImageCreateFlagBits 0x00000040

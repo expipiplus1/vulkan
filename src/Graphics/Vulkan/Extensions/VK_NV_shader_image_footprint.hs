@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_shader_image_footprint
   ( VkPhysicalDeviceShaderImageFootprintFeaturesNV(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV
@@ -55,3 +58,6 @@ fromCStructPhysicalDeviceShaderImageFootprintFeaturesNV :: VkPhysicalDeviceShade
 fromCStructPhysicalDeviceShaderImageFootprintFeaturesNV c = PhysicalDeviceShaderImageFootprintFeaturesNV <$> -- Univalued Member elided
                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceShaderImageFootprintFeaturesNV)))
                                                                                                          <*> pure (bool32ToBool (vkImageFootprint (c :: VkPhysicalDeviceShaderImageFootprintFeaturesNV)))
+instance Zero PhysicalDeviceShaderImageFootprintFeaturesNV where
+  zero = PhysicalDeviceShaderImageFootprintFeaturesNV Nothing
+                                                      False

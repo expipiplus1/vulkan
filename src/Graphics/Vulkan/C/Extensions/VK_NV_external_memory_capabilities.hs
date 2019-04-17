@@ -66,6 +66,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkResult(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -112,11 +113,17 @@ instance Storable VkExternalImageFormatPropertiesNV where
                 *> poke (ptr `plusPtr` 32) (vkExternalMemoryFeatures (poked :: VkExternalImageFormatPropertiesNV))
                 *> poke (ptr `plusPtr` 36) (vkExportFromImportedHandleTypes (poked :: VkExternalImageFormatPropertiesNV))
                 *> poke (ptr `plusPtr` 40) (vkCompatibleHandleTypes (poked :: VkExternalImageFormatPropertiesNV))
+
+instance Zero VkExternalImageFormatPropertiesNV where
+  zero = VkExternalImageFormatPropertiesNV zero
+                                           zero
+                                           zero
+                                           zero
 -- ** VkExternalMemoryFeatureFlagBitsNV
 
 -- No documentation found for TopLevel "VkExternalMemoryFeatureFlagBitsNV"
 newtype VkExternalMemoryFeatureFlagBitsNV = VkExternalMemoryFeatureFlagBitsNV VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkExternalMemoryFeatureFlagBitsNV where
   showsPrec _ VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV = showString "VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV"
@@ -153,7 +160,7 @@ type VkExternalMemoryFeatureFlagsNV = VkExternalMemoryFeatureFlagBitsNV
 
 -- No documentation found for TopLevel "VkExternalMemoryHandleTypeFlagBitsNV"
 newtype VkExternalMemoryHandleTypeFlagBitsNV = VkExternalMemoryHandleTypeFlagBitsNV VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkExternalMemoryHandleTypeFlagBitsNV where
   showsPrec _ VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV = showString "VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV"

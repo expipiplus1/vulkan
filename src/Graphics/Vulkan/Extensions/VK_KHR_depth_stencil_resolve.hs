@@ -34,6 +34,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve
   ( VkPhysicalDeviceDepthStencilResolvePropertiesKHR(..)
   , VkResolveModeFlagBitsKHR(..)
@@ -85,6 +88,12 @@ fromCStructPhysicalDeviceDepthStencilResolvePropertiesKHR c = PhysicalDeviceDept
                                                                                                              <*> pure (vkSupportedStencilResolveModes (c :: VkPhysicalDeviceDepthStencilResolvePropertiesKHR))
                                                                                                              <*> pure (bool32ToBool (vkIndependentResolveNone (c :: VkPhysicalDeviceDepthStencilResolvePropertiesKHR)))
                                                                                                              <*> pure (bool32ToBool (vkIndependentResolve (c :: VkPhysicalDeviceDepthStencilResolvePropertiesKHR)))
+instance Zero PhysicalDeviceDepthStencilResolvePropertiesKHR where
+  zero = PhysicalDeviceDepthStencilResolvePropertiesKHR Nothing
+                                                        zero
+                                                        zero
+                                                        False
+                                                        False
 -- No documentation found for TopLevel "ResolveModeFlagBitsKHR"
 type ResolveModeFlagBitsKHR = VkResolveModeFlagBitsKHR
 -- No documentation found for TopLevel "ResolveModeFlagsKHR"
@@ -110,3 +119,8 @@ fromCStructSubpassDescriptionDepthStencilResolveKHR c = SubpassDescriptionDepthS
                                                                                                  <*> pure (vkDepthResolveMode (c :: VkSubpassDescriptionDepthStencilResolveKHR))
                                                                                                  <*> pure (vkStencilResolveMode (c :: VkSubpassDescriptionDepthStencilResolveKHR))
                                                                                                  <*> maybePeek (fromCStructAttachmentReference2KHR <=< peek) (vkPDepthStencilResolveAttachment (c :: VkSubpassDescriptionDepthStencilResolveKHR))
+instance Zero SubpassDescriptionDepthStencilResolveKHR where
+  zero = SubpassDescriptionDepthStencilResolveKHR Nothing
+                                                  zero
+                                                  zero
+                                                  Nothing

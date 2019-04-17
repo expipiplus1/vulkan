@@ -85,6 +85,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -129,6 +130,13 @@ instance Storable VkMappedMemoryRange where
                 *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkMappedMemoryRange))
                 *> poke (ptr `plusPtr` 24) (vkOffset (poked :: VkMappedMemoryRange))
                 *> poke (ptr `plusPtr` 32) (vkSize (poked :: VkMappedMemoryRange))
+
+instance Zero VkMappedMemoryRange where
+  zero = VkMappedMemoryRange zero
+                             zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "VkMemoryAllocateInfo"
 data VkMemoryAllocateInfo = VkMemoryAllocateInfo
   { -- No documentation found for Nested "VkMemoryAllocateInfo" "sType"
@@ -153,11 +161,17 @@ instance Storable VkMemoryAllocateInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryAllocateInfo))
                 *> poke (ptr `plusPtr` 16) (vkAllocationSize (poked :: VkMemoryAllocateInfo))
                 *> poke (ptr `plusPtr` 24) (vkMemoryTypeIndex (poked :: VkMemoryAllocateInfo))
+
+instance Zero VkMemoryAllocateInfo where
+  zero = VkMemoryAllocateInfo zero
+                              zero
+                              zero
+                              zero
 -- ** VkMemoryMapFlags
 
 -- No documentation found for TopLevel "VkMemoryMapFlags"
 newtype VkMemoryMapFlags = VkMemoryMapFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkMemoryMapFlags where
   

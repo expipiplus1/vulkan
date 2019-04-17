@@ -87,7 +87,8 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -116,7 +117,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   ( VkBindImagePlaneMemoryInfo(..)
@@ -230,6 +232,9 @@ fromCStructBindImagePlaneMemoryInfo :: VkBindImagePlaneMemoryInfo -> IO BindImag
 fromCStructBindImagePlaneMemoryInfo c = BindImagePlaneMemoryInfo <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBindImagePlaneMemoryInfo)))
                                                                  <*> pure (vkPlaneAspect (c :: VkBindImagePlaneMemoryInfo))
+instance Zero BindImagePlaneMemoryInfo where
+  zero = BindImagePlaneMemoryInfo Nothing
+                                  zero
 -- No documentation found for TopLevel "ChromaLocation"
 type ChromaLocation = VkChromaLocation
 -- No documentation found for TopLevel "ChromaLocationKHR"
@@ -249,6 +254,9 @@ fromCStructImagePlaneMemoryRequirementsInfo :: VkImagePlaneMemoryRequirementsInf
 fromCStructImagePlaneMemoryRequirementsInfo c = ImagePlaneMemoryRequirementsInfo <$> -- Univalued Member elided
                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImagePlaneMemoryRequirementsInfo)))
                                                                                  <*> pure (vkPlaneAspect (c :: VkImagePlaneMemoryRequirementsInfo))
+instance Zero ImagePlaneMemoryRequirementsInfo where
+  zero = ImagePlaneMemoryRequirementsInfo Nothing
+                                          zero
 -- No documentation found for TopLevel "PhysicalDeviceSamplerYcbcrConversionFeatures"
 data PhysicalDeviceSamplerYcbcrConversionFeatures = PhysicalDeviceSamplerYcbcrConversionFeatures
   { -- Univalued Member elided
@@ -264,6 +272,9 @@ fromCStructPhysicalDeviceSamplerYcbcrConversionFeatures :: VkPhysicalDeviceSampl
 fromCStructPhysicalDeviceSamplerYcbcrConversionFeatures c = PhysicalDeviceSamplerYcbcrConversionFeatures <$> -- Univalued Member elided
                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceSamplerYcbcrConversionFeatures)))
                                                                                                          <*> pure (bool32ToBool (vkSamplerYcbcrConversion (c :: VkPhysicalDeviceSamplerYcbcrConversionFeatures)))
+instance Zero PhysicalDeviceSamplerYcbcrConversionFeatures where
+  zero = PhysicalDeviceSamplerYcbcrConversionFeatures Nothing
+                                                      False
 -- No documentation found for TopLevel "SamplerYcbcrConversion"
 type SamplerYcbcrConversion = VkSamplerYcbcrConversion
 -- No documentation found for TopLevel "SamplerYcbcrConversionCreateInfo"
@@ -302,6 +313,16 @@ fromCStructSamplerYcbcrConversionCreateInfo c = SamplerYcbcrConversionCreateInfo
                                                                                  <*> pure (vkYChromaOffset (c :: VkSamplerYcbcrConversionCreateInfo))
                                                                                  <*> pure (vkChromaFilter (c :: VkSamplerYcbcrConversionCreateInfo))
                                                                                  <*> pure (bool32ToBool (vkForceExplicitReconstruction (c :: VkSamplerYcbcrConversionCreateInfo)))
+instance Zero SamplerYcbcrConversionCreateInfo where
+  zero = SamplerYcbcrConversionCreateInfo Nothing
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          False
 -- No documentation found for TopLevel "SamplerYcbcrConversionImageFormatProperties"
 data SamplerYcbcrConversionImageFormatProperties = SamplerYcbcrConversionImageFormatProperties
   { -- Univalued Member elided
@@ -317,6 +338,9 @@ fromCStructSamplerYcbcrConversionImageFormatProperties :: VkSamplerYcbcrConversi
 fromCStructSamplerYcbcrConversionImageFormatProperties c = SamplerYcbcrConversionImageFormatProperties <$> -- Univalued Member elided
                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSamplerYcbcrConversionImageFormatProperties)))
                                                                                                        <*> pure (vkCombinedImageSamplerDescriptorCount (c :: VkSamplerYcbcrConversionImageFormatProperties))
+instance Zero SamplerYcbcrConversionImageFormatProperties where
+  zero = SamplerYcbcrConversionImageFormatProperties Nothing
+                                                     zero
 -- No documentation found for TopLevel "SamplerYcbcrConversionInfo"
 data SamplerYcbcrConversionInfo = SamplerYcbcrConversionInfo
   { -- Univalued Member elided
@@ -332,6 +356,9 @@ fromCStructSamplerYcbcrConversionInfo :: VkSamplerYcbcrConversionInfo -> IO Samp
 fromCStructSamplerYcbcrConversionInfo c = SamplerYcbcrConversionInfo <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSamplerYcbcrConversionInfo)))
                                                                      <*> pure (vkConversion (c :: VkSamplerYcbcrConversionInfo))
+instance Zero SamplerYcbcrConversionInfo where
+  zero = SamplerYcbcrConversionInfo Nothing
+                                    zero
 -- No documentation found for TopLevel "SamplerYcbcrModelConversion"
 type SamplerYcbcrModelConversion = VkSamplerYcbcrModelConversion
 -- No documentation found for TopLevel "SamplerYcbcrModelConversionKHR"
@@ -342,14 +369,15 @@ type SamplerYcbcrRange = VkSamplerYcbcrRange
 type SamplerYcbcrRangeKHR = SamplerYcbcrRange
 
 -- | Wrapper for 'vkCreateSamplerYcbcrConversion'
-createSamplerYcbcrConversion :: Device ->  SamplerYcbcrConversionCreateInfo ->  Maybe AllocationCallbacks ->  IO ( SamplerYcbcrConversion )
+createSamplerYcbcrConversion :: Device ->  SamplerYcbcrConversionCreateInfo ->  Maybe AllocationCallbacks ->  IO (SamplerYcbcrConversion)
 createSamplerYcbcrConversion = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pYcbcrConversion -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructSamplerYcbcrConversionCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createSamplerYcbcrConversion commandTable device pCreateInfo pAllocator pYcbcrConversion >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pYcbcrConversion)))))
 
 -- | Wrapper for 'vkDestroySamplerYcbcrConversion'
 destroySamplerYcbcrConversion :: Device ->  SamplerYcbcrConversion ->  Maybe AllocationCallbacks ->  IO ()
 destroySamplerYcbcrConversion = \(Device device commandTable) -> \ycbcrConversion -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySamplerYcbcrConversion commandTable device ycbcrConversion pAllocator *> (pure ()))
-withSamplerYcbcrConversion :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withSamplerYcbcrConversion createInfo allocationCallbacks =
-  bracket
-    (vkCreateSamplerYcbcrConversion createInfo allocationCallbacks)
-    (`vkDestroySamplerYcbcrConversion` allocationCallbacks)
+-- | Wrapper for 'createSamplerYcbcrConversion' and 'destroySamplerYcbcrConversion' using 'bracket'
+withSamplerYcbcrConversion
+  :: Device -> SamplerYcbcrConversionCreateInfo -> Maybe (AllocationCallbacks) -> (SamplerYcbcrConversion -> IO a) -> IO a
+withSamplerYcbcrConversion device samplerYcbcrConversionCreateInfo allocationCallbacks = bracket
+  (createSamplerYcbcrConversion device samplerYcbcrConversionCreateInfo allocationCallbacks)
+  (\o -> destroySamplerYcbcrConversion device o allocationCallbacks)

@@ -28,6 +28,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
   ( VkExternalMemoryHandleTypeFlagsNV
@@ -54,6 +55,11 @@ instance Storable VkExportMemoryAllocateInfoNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportMemoryAllocateInfoNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportMemoryAllocateInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportMemoryAllocateInfoNV))
+
+instance Zero VkExportMemoryAllocateInfoNV where
+  zero = VkExportMemoryAllocateInfoNV zero
+                                      zero
+                                      zero
 -- No documentation found for TopLevel "VkExternalMemoryImageCreateInfoNV"
 data VkExternalMemoryImageCreateInfoNV = VkExternalMemoryImageCreateInfoNV
   { -- No documentation found for Nested "VkExternalMemoryImageCreateInfoNV" "sType"
@@ -74,6 +80,11 @@ instance Storable VkExternalMemoryImageCreateInfoNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalMemoryImageCreateInfoNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalMemoryImageCreateInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryImageCreateInfoNV))
+
+instance Zero VkExternalMemoryImageCreateInfoNV where
+  zero = VkExternalMemoryImageCreateInfoNV zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME"
 pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME = "VK_NV_external_memory"

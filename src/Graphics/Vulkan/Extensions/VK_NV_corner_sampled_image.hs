@@ -22,6 +22,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image
   ( VkPhysicalDeviceCornerSampledImageFeaturesNV(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV
@@ -57,3 +60,6 @@ fromCStructPhysicalDeviceCornerSampledImageFeaturesNV :: VkPhysicalDeviceCornerS
 fromCStructPhysicalDeviceCornerSampledImageFeaturesNV c = PhysicalDeviceCornerSampledImageFeaturesNV <$> -- Univalued Member elided
                                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceCornerSampledImageFeaturesNV)))
                                                                                                      <*> pure (bool32ToBool (vkCornerSampledImage (c :: VkPhysicalDeviceCornerSampledImageFeaturesNV)))
+instance Zero PhysicalDeviceCornerSampledImageFeaturesNV where
+  zero = PhysicalDeviceCornerSampledImageFeaturesNV Nothing
+                                                    False

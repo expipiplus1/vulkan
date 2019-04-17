@@ -23,6 +23,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence
   ( VkExportFenceCreateInfo(..)
   , VkFenceImportFlagBits(..)
@@ -53,6 +56,9 @@ fromCStructExportFenceCreateInfo :: VkExportFenceCreateInfo -> IO ExportFenceCre
 fromCStructExportFenceCreateInfo c = ExportFenceCreateInfo <$> -- Univalued Member elided
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExportFenceCreateInfo)))
                                                            <*> pure (vkHandleTypes (c :: VkExportFenceCreateInfo))
+instance Zero ExportFenceCreateInfo where
+  zero = ExportFenceCreateInfo Nothing
+                               zero
 -- No documentation found for TopLevel "FenceImportFlagBits"
 type FenceImportFlagBits = VkFenceImportFlagBits
 -- No documentation found for TopLevel "FenceImportFlagBitsKHR"

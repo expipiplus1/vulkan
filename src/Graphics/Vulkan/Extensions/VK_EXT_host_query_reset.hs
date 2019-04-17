@@ -28,6 +28,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
   ( VkPhysicalDeviceHostQueryResetFeaturesEXT(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
@@ -68,6 +71,9 @@ fromCStructPhysicalDeviceHostQueryResetFeaturesEXT :: VkPhysicalDeviceHostQueryR
 fromCStructPhysicalDeviceHostQueryResetFeaturesEXT c = PhysicalDeviceHostQueryResetFeaturesEXT <$> -- Univalued Member elided
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceHostQueryResetFeaturesEXT)))
                                                                                                <*> pure (bool32ToBool (vkHostQueryReset (c :: VkPhysicalDeviceHostQueryResetFeaturesEXT)))
+instance Zero PhysicalDeviceHostQueryResetFeaturesEXT where
+  zero = PhysicalDeviceHostQueryResetFeaturesEXT Nothing
+                                                 False
 
 -- | Wrapper for 'vkResetQueryPoolEXT'
 resetQueryPoolEXT :: Device ->  QueryPool ->  Word32 ->  Word32 ->  IO ()

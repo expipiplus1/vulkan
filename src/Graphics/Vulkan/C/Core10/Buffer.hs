@@ -79,6 +79,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -98,7 +99,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkBufferCreateFlagBits"
 newtype VkBufferCreateFlagBits = VkBufferCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkBufferCreateFlagBits where
   showsPrec _ VK_BUFFER_CREATE_SPARSE_BINDING_BIT = showString "VK_BUFFER_CREATE_SPARSE_BINDING_BIT"
@@ -177,11 +178,21 @@ instance Storable VkBufferCreateInfo where
                 *> poke (ptr `plusPtr` 36) (vkSharingMode (poked :: VkBufferCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkQueueFamilyIndexCount (poked :: VkBufferCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkPQueueFamilyIndices (poked :: VkBufferCreateInfo))
+
+instance Zero VkBufferCreateInfo where
+  zero = VkBufferCreateInfo zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
+                            zero
 -- ** VkBufferUsageFlagBits
 
 -- No documentation found for TopLevel "VkBufferUsageFlagBits"
 newtype VkBufferUsageFlagBits = VkBufferUsageFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkBufferUsageFlagBits where
   showsPrec _ VK_BUFFER_USAGE_TRANSFER_SRC_BIT = showString "VK_BUFFER_USAGE_TRANSFER_SRC_BIT"
@@ -274,7 +285,7 @@ type VkBufferUsageFlags = VkBufferUsageFlagBits
 
 -- No documentation found for TopLevel "VkSharingMode"
 newtype VkSharingMode = VkSharingMode Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkSharingMode where
   showsPrec _ VK_SHARING_MODE_EXCLUSIVE = showString "VK_SHARING_MODE_EXCLUSIVE"

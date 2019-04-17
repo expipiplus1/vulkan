@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_fragment_shader_barycentric
   ( VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV
@@ -55,3 +58,6 @@ fromCStructPhysicalDeviceFragmentShaderBarycentricFeaturesNV :: VkPhysicalDevice
 fromCStructPhysicalDeviceFragmentShaderBarycentricFeaturesNV c = PhysicalDeviceFragmentShaderBarycentricFeaturesNV <$> -- Univalued Member elided
                                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV)))
                                                                                                                    <*> pure (bool32ToBool (vkFragmentShaderBarycentric (c :: VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV)))
+instance Zero PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
+  zero = PhysicalDeviceFragmentShaderBarycentricFeaturesNV Nothing
+                                                           False

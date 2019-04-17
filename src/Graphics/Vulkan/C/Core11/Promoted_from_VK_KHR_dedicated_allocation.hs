@@ -23,6 +23,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.MemoryManagement
   ( VkBuffer
@@ -54,6 +55,12 @@ instance Storable VkMemoryDedicatedAllocateInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryDedicatedAllocateInfo))
                 *> poke (ptr `plusPtr` 16) (vkImage (poked :: VkMemoryDedicatedAllocateInfo))
                 *> poke (ptr `plusPtr` 24) (vkBuffer (poked :: VkMemoryDedicatedAllocateInfo))
+
+instance Zero VkMemoryDedicatedAllocateInfo where
+  zero = VkMemoryDedicatedAllocateInfo zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkMemoryDedicatedRequirements"
 data VkMemoryDedicatedRequirements = VkMemoryDedicatedRequirements
   { -- No documentation found for Nested "VkMemoryDedicatedRequirements" "sType"
@@ -78,6 +85,12 @@ instance Storable VkMemoryDedicatedRequirements where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryDedicatedRequirements))
                 *> poke (ptr `plusPtr` 16) (vkPrefersDedicatedAllocation (poked :: VkMemoryDedicatedRequirements))
                 *> poke (ptr `plusPtr` 20) (vkRequiresDedicatedAllocation (poked :: VkMemoryDedicatedRequirements))
+
+instance Zero VkMemoryDedicatedRequirements where
+  zero = VkMemoryDedicatedRequirements zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO"
 pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO = VkStructureType 1000127001

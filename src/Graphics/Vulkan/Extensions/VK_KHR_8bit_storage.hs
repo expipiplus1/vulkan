@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_8bit_storage
   ( VkPhysicalDevice8BitStorageFeaturesKHR(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR
@@ -61,3 +64,8 @@ fromCStructPhysicalDevice8BitStorageFeaturesKHR c = PhysicalDevice8BitStorageFea
                                                                                          <*> pure (bool32ToBool (vkStorageBuffer8BitAccess (c :: VkPhysicalDevice8BitStorageFeaturesKHR)))
                                                                                          <*> pure (bool32ToBool (vkUniformAndStorageBuffer8BitAccess (c :: VkPhysicalDevice8BitStorageFeaturesKHR)))
                                                                                          <*> pure (bool32ToBool (vkStoragePushConstant8 (c :: VkPhysicalDevice8BitStorageFeaturesKHR)))
+instance Zero PhysicalDevice8BitStorageFeaturesKHR where
+  zero = PhysicalDevice8BitStorageFeaturesKHR Nothing
+                                              False
+                                              False
+                                              False

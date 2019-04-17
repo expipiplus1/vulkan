@@ -69,6 +69,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
@@ -81,7 +82,7 @@ import Graphics.Vulkan.C.Core10.DescriptorSet
 
 -- No documentation found for TopLevel "VkDescriptorBindingFlagBitsEXT"
 newtype VkDescriptorBindingFlagBitsEXT = VkDescriptorBindingFlagBitsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDescriptorBindingFlagBitsEXT where
   showsPrec _ VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT = showString "VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT"
@@ -144,6 +145,12 @@ instance Storable VkDescriptorSetLayoutBindingFlagsCreateInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkBindingCount (poked :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkPBindingFlags (poked :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
+
+instance Zero VkDescriptorSetLayoutBindingFlagsCreateInfoEXT where
+  zero = VkDescriptorSetLayoutBindingFlagsCreateInfoEXT zero
+                                                        zero
+                                                        zero
+                                                        zero
 -- No documentation found for TopLevel "VkDescriptorSetVariableDescriptorCountAllocateInfoEXT"
 data VkDescriptorSetVariableDescriptorCountAllocateInfoEXT = VkDescriptorSetVariableDescriptorCountAllocateInfoEXT
   { -- No documentation found for Nested "VkDescriptorSetVariableDescriptorCountAllocateInfoEXT" "sType"
@@ -168,6 +175,12 @@ instance Storable VkDescriptorSetVariableDescriptorCountAllocateInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkDescriptorSetCount (poked :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkPDescriptorCounts (poked :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))
+
+instance Zero VkDescriptorSetVariableDescriptorCountAllocateInfoEXT where
+  zero = VkDescriptorSetVariableDescriptorCountAllocateInfoEXT zero
+                                                               zero
+                                                               zero
+                                                               zero
 -- No documentation found for TopLevel "VkDescriptorSetVariableDescriptorCountLayoutSupportEXT"
 data VkDescriptorSetVariableDescriptorCountLayoutSupportEXT = VkDescriptorSetVariableDescriptorCountLayoutSupportEXT
   { -- No documentation found for Nested "VkDescriptorSetVariableDescriptorCountLayoutSupportEXT" "sType"
@@ -188,6 +201,11 @@ instance Storable VkDescriptorSetVariableDescriptorCountLayoutSupportEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxVariableDescriptorCount (poked :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
+
+instance Zero VkDescriptorSetVariableDescriptorCountLayoutSupportEXT where
+  zero = VkDescriptorSetVariableDescriptorCountLayoutSupportEXT zero
+                                                                zero
+                                                                zero
 -- No documentation found for TopLevel "VkPhysicalDeviceDescriptorIndexingFeaturesEXT"
 data VkPhysicalDeviceDescriptorIndexingFeaturesEXT = VkPhysicalDeviceDescriptorIndexingFeaturesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingFeaturesEXT" "sType"
@@ -284,6 +302,30 @@ instance Storable VkPhysicalDeviceDescriptorIndexingFeaturesEXT where
                 *> poke (ptr `plusPtr` 84) (vkDescriptorBindingPartiallyBound (poked :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
                 *> poke (ptr `plusPtr` 88) (vkDescriptorBindingVariableDescriptorCount (poked :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
                 *> poke (ptr `plusPtr` 92) (vkRuntimeDescriptorArray (poked :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT))
+
+instance Zero VkPhysicalDeviceDescriptorIndexingFeaturesEXT where
+  zero = VkPhysicalDeviceDescriptorIndexingFeaturesEXT zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
 -- No documentation found for TopLevel "VkPhysicalDeviceDescriptorIndexingPropertiesEXT"
 data VkPhysicalDeviceDescriptorIndexingPropertiesEXT = VkPhysicalDeviceDescriptorIndexingPropertiesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceDescriptorIndexingPropertiesEXT" "sType"
@@ -392,6 +434,33 @@ instance Storable VkPhysicalDeviceDescriptorIndexingPropertiesEXT where
                 *> poke (ptr `plusPtr` 96) (vkMaxDescriptorSetUpdateAfterBindSampledImages (poked :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
                 *> poke (ptr `plusPtr` 100) (vkMaxDescriptorSetUpdateAfterBindStorageImages (poked :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
                 *> poke (ptr `plusPtr` 104) (vkMaxDescriptorSetUpdateAfterBindInputAttachments (poked :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
+
+instance Zero VkPhysicalDeviceDescriptorIndexingPropertiesEXT where
+  zero = VkPhysicalDeviceDescriptorIndexingPropertiesEXT zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
 -- No documentation found for Nested "VkDescriptorPoolCreateFlagBits" "VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT"
 pattern VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT :: VkDescriptorPoolCreateFlagBits
 pattern VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT = VkDescriptorPoolCreateFlagBits 0x00000002

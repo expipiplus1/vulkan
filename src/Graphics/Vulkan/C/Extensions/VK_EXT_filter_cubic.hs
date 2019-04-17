@@ -33,6 +33,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkFormatFeatureFlagBits(..)
@@ -73,6 +74,12 @@ instance Storable VkFilterCubicImageViewImageFormatPropertiesEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFilterCubicImageViewImageFormatPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkFilterCubic (poked :: VkFilterCubicImageViewImageFormatPropertiesEXT))
                 *> poke (ptr `plusPtr` 20) (vkFilterCubicMinmax (poked :: VkFilterCubicImageViewImageFormatPropertiesEXT))
+
+instance Zero VkFilterCubicImageViewImageFormatPropertiesEXT where
+  zero = VkFilterCubicImageViewImageFormatPropertiesEXT zero
+                                                        zero
+                                                        zero
+                                                        zero
 -- No documentation found for TopLevel "VkPhysicalDeviceImageViewImageFormatInfoEXT"
 data VkPhysicalDeviceImageViewImageFormatInfoEXT = VkPhysicalDeviceImageViewImageFormatInfoEXT
   { -- No documentation found for Nested "VkPhysicalDeviceImageViewImageFormatInfoEXT" "sType"
@@ -93,6 +100,11 @@ instance Storable VkPhysicalDeviceImageViewImageFormatInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceImageViewImageFormatInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceImageViewImageFormatInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkImageViewType (poked :: VkPhysicalDeviceImageViewImageFormatInfoEXT))
+
+instance Zero VkPhysicalDeviceImageViewImageFormatInfoEXT where
+  zero = VkPhysicalDeviceImageViewImageFormatInfoEXT zero
+                                                     zero
+                                                     zero
 -- No documentation found for TopLevel "VK_EXT_FILTER_CUBIC_EXTENSION_NAME"
 pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME = "VK_EXT_filter_cubic"

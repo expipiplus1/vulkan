@@ -30,6 +30,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr
   ( VkDisplayNativeHdrSurfaceCapabilitiesAMD(..)
   , VkSwapchainDisplayNativeHdrCreateInfoAMD(..)
@@ -73,6 +76,9 @@ fromCStructDisplayNativeHdrSurfaceCapabilitiesAMD :: VkDisplayNativeHdrSurfaceCa
 fromCStructDisplayNativeHdrSurfaceCapabilitiesAMD c = DisplayNativeHdrSurfaceCapabilitiesAMD <$> -- Univalued Member elided
                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayNativeHdrSurfaceCapabilitiesAMD)))
                                                                                              <*> pure (bool32ToBool (vkLocalDimmingSupport (c :: VkDisplayNativeHdrSurfaceCapabilitiesAMD)))
+instance Zero DisplayNativeHdrSurfaceCapabilitiesAMD where
+  zero = DisplayNativeHdrSurfaceCapabilitiesAMD Nothing
+                                                False
 -- No documentation found for TopLevel "SwapchainDisplayNativeHdrCreateInfoAMD"
 data SwapchainDisplayNativeHdrCreateInfoAMD = SwapchainDisplayNativeHdrCreateInfoAMD
   { -- Univalued Member elided
@@ -88,6 +94,9 @@ fromCStructSwapchainDisplayNativeHdrCreateInfoAMD :: VkSwapchainDisplayNativeHdr
 fromCStructSwapchainDisplayNativeHdrCreateInfoAMD c = SwapchainDisplayNativeHdrCreateInfoAMD <$> -- Univalued Member elided
                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSwapchainDisplayNativeHdrCreateInfoAMD)))
                                                                                              <*> pure (bool32ToBool (vkLocalDimmingEnable (c :: VkSwapchainDisplayNativeHdrCreateInfoAMD)))
+instance Zero SwapchainDisplayNativeHdrCreateInfoAMD where
+  zero = SwapchainDisplayNativeHdrCreateInfoAMD Nothing
+                                                False
 
 -- | Wrapper for 'vkSetLocalDimmingAMD'
 setLocalDimmingAMD :: Device ->  SwapchainKHR ->  Bool ->  IO ()

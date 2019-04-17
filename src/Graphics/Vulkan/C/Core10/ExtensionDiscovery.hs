@@ -43,6 +43,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkPhysicalDevice
@@ -73,6 +74,10 @@ instance Storable VkExtensionProperties where
                                    <*> peek (ptr `plusPtr` 256)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkExtensionName (poked :: VkExtensionProperties))
                 *> poke (ptr `plusPtr` 256) (vkSpecVersion (poked :: VkExtensionProperties))
+
+instance Zero VkExtensionProperties where
+  zero = VkExtensionProperties zero
+                               zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkEnumerateDeviceExtensionProperties"
 foreign import ccall

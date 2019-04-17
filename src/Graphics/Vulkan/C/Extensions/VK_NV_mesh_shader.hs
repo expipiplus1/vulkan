@@ -58,6 +58,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDeviceSize
@@ -93,6 +94,10 @@ instance Storable VkDrawMeshTasksIndirectCommandNV where
                                               <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkTaskCount (poked :: VkDrawMeshTasksIndirectCommandNV))
                 *> poke (ptr `plusPtr` 4) (vkFirstTask (poked :: VkDrawMeshTasksIndirectCommandNV))
+
+instance Zero VkDrawMeshTasksIndirectCommandNV where
+  zero = VkDrawMeshTasksIndirectCommandNV zero
+                                          zero
 -- No documentation found for TopLevel "VkPhysicalDeviceMeshShaderFeaturesNV"
 data VkPhysicalDeviceMeshShaderFeaturesNV = VkPhysicalDeviceMeshShaderFeaturesNV
   { -- No documentation found for Nested "VkPhysicalDeviceMeshShaderFeaturesNV" "sType"
@@ -117,6 +122,12 @@ instance Storable VkPhysicalDeviceMeshShaderFeaturesNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMeshShaderFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkTaskShader (poked :: VkPhysicalDeviceMeshShaderFeaturesNV))
                 *> poke (ptr `plusPtr` 20) (vkMeshShader (poked :: VkPhysicalDeviceMeshShaderFeaturesNV))
+
+instance Zero VkPhysicalDeviceMeshShaderFeaturesNV where
+  zero = VkPhysicalDeviceMeshShaderFeaturesNV zero
+                                              zero
+                                              zero
+                                              zero
 -- No documentation found for TopLevel "VkPhysicalDeviceMeshShaderPropertiesNV"
 data VkPhysicalDeviceMeshShaderPropertiesNV = VkPhysicalDeviceMeshShaderPropertiesNV
   { -- No documentation found for Nested "VkPhysicalDeviceMeshShaderPropertiesNV" "sType"
@@ -185,6 +196,23 @@ instance Storable VkPhysicalDeviceMeshShaderPropertiesNV where
                 *> poke (ptr `plusPtr` 72) (vkMaxMeshMultiviewViewCount (poked :: VkPhysicalDeviceMeshShaderPropertiesNV))
                 *> poke (ptr `plusPtr` 76) (vkMeshOutputPerVertexGranularity (poked :: VkPhysicalDeviceMeshShaderPropertiesNV))
                 *> poke (ptr `plusPtr` 80) (vkMeshOutputPerPrimitiveGranularity (poked :: VkPhysicalDeviceMeshShaderPropertiesNV))
+
+instance Zero VkPhysicalDeviceMeshShaderPropertiesNV where
+  zero = VkPhysicalDeviceMeshShaderPropertiesNV zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdDrawMeshTasksIndirectCountNV"
 foreign import ccall

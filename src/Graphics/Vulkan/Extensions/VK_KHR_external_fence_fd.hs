@@ -48,7 +48,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd
   ( VkFenceGetFdInfoKHR(..)
@@ -100,6 +101,10 @@ fromCStructFenceGetFdInfoKHR c = FenceGetFdInfoKHR <$> -- Univalued Member elide
                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkFenceGetFdInfoKHR)))
                                                    <*> pure (vkFence (c :: VkFenceGetFdInfoKHR))
                                                    <*> pure (vkHandleType (c :: VkFenceGetFdInfoKHR))
+instance Zero FenceGetFdInfoKHR where
+  zero = FenceGetFdInfoKHR Nothing
+                           zero
+                           zero
 -- No documentation found for TopLevel "ImportFenceFdInfoKHR"
 data ImportFenceFdInfoKHR = ImportFenceFdInfoKHR
   { -- Univalued Member elided
@@ -124,6 +129,12 @@ fromCStructImportFenceFdInfoKHR c = ImportFenceFdInfoKHR <$> -- Univalued Member
                                                          <*> pure (vkFlags (c :: VkImportFenceFdInfoKHR))
                                                          <*> pure (vkHandleType (c :: VkImportFenceFdInfoKHR))
                                                          <*> pure (vkFd (c :: VkImportFenceFdInfoKHR))
+instance Zero ImportFenceFdInfoKHR where
+  zero = ImportFenceFdInfoKHR Nothing
+                              zero
+                              zero
+                              zero
+                              zero
 
 -- | Wrapper for 'vkGetFenceFdKHR'
 getFenceFdKHR :: Device ->  FenceGetFdInfoKHR ->  IO (CInt)

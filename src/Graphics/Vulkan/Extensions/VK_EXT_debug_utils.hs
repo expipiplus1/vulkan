@@ -49,7 +49,8 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -62,7 +63,8 @@ import Data.ByteString
   , useAsCString
   )
 import qualified Data.ByteString
-  ( length
+  ( empty
+  , length
   )
 import Data.ByteString.Unsafe
   ( unsafeUseAsCString
@@ -74,7 +76,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Vector.Generic.Sized
@@ -121,7 +124,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
   ( VkDebugUtilsLabelEXT(..)
@@ -193,6 +197,10 @@ fromCStructDebugUtilsLabelEXT c = DebugUtilsLabelEXT <$> -- Univalued Member eli
                                                      , Data.Vector.Storable.Sized.unsafeIndex x 1
                                                      , Data.Vector.Storable.Sized.unsafeIndex x 2
                                                      , Data.Vector.Storable.Sized.unsafeIndex x 3 ))
+instance Zero DebugUtilsLabelEXT where
+  zero = DebugUtilsLabelEXT Nothing
+                            Data.ByteString.empty
+                            (zero, zero, zero, zero)
 -- No documentation found for TopLevel "DebugUtilsMessageSeverityFlagBitsEXT"
 type DebugUtilsMessageSeverityFlagBitsEXT = VkDebugUtilsMessageSeverityFlagBitsEXT
 -- No documentation found for TopLevel "DebugUtilsMessageSeverityFlagsEXT"
@@ -240,6 +248,15 @@ fromCStructDebugUtilsMessengerCallbackDataEXT c = DebugUtilsMessengerCallbackDat
                                                                                      <*> (Data.Vector.generateM (fromIntegral (vkCmdBufLabelCount (c :: VkDebugUtilsMessengerCallbackDataEXT))) (((fromCStructDebugUtilsLabelEXT <=<) . peekElemOff) (vkPCmdBufLabels (c :: VkDebugUtilsMessengerCallbackDataEXT))))
                                                                                      -- Length valued member elided
                                                                                      <*> (Data.Vector.generateM (fromIntegral (vkObjectCount (c :: VkDebugUtilsMessengerCallbackDataEXT))) (((fromCStructDebugUtilsObjectNameInfoEXT <=<) . peekElemOff) (vkPObjects (c :: VkDebugUtilsMessengerCallbackDataEXT))))
+instance Zero DebugUtilsMessengerCallbackDataEXT where
+  zero = DebugUtilsMessengerCallbackDataEXT Nothing
+                                            zero
+                                            Nothing
+                                            zero
+                                            Data.ByteString.empty
+                                            Data.Vector.empty
+                                            Data.Vector.empty
+                                            Data.Vector.empty
 -- No documentation found for TopLevel "DebugUtilsMessengerCallbackDataFlagsEXT"
 type DebugUtilsMessengerCallbackDataFlagsEXT = VkDebugUtilsMessengerCallbackDataFlagsEXT
 -- No documentation found for TopLevel "DebugUtilsMessengerCreateFlagsEXT"
@@ -271,6 +288,13 @@ fromCStructDebugUtilsMessengerCreateInfoEXT c = DebugUtilsMessengerCreateInfoEXT
                                                                                  <*> pure (vkMessageType (c :: VkDebugUtilsMessengerCreateInfoEXT))
                                                                                  <*> pure (vkPfnUserCallback (c :: VkDebugUtilsMessengerCreateInfoEXT))
                                                                                  <*> pure (vkPUserData (c :: VkDebugUtilsMessengerCreateInfoEXT))
+instance Zero DebugUtilsMessengerCreateInfoEXT where
+  zero = DebugUtilsMessengerCreateInfoEXT Nothing
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "DebugUtilsMessengerEXT"
 type DebugUtilsMessengerEXT = VkDebugUtilsMessengerEXT
 -- No documentation found for TopLevel "DebugUtilsObjectNameInfoEXT"
@@ -294,6 +318,11 @@ fromCStructDebugUtilsObjectNameInfoEXT c = DebugUtilsObjectNameInfoEXT <$> -- Un
                                                                        <*> pure (vkObjectType (c :: VkDebugUtilsObjectNameInfoEXT))
                                                                        <*> pure (vkObjectHandle (c :: VkDebugUtilsObjectNameInfoEXT))
                                                                        <*> maybePeek packCString (vkPObjectName (c :: VkDebugUtilsObjectNameInfoEXT))
+instance Zero DebugUtilsObjectNameInfoEXT where
+  zero = DebugUtilsObjectNameInfoEXT Nothing
+                                     zero
+                                     zero
+                                     Nothing
 -- No documentation found for TopLevel "DebugUtilsObjectTagInfoEXT"
 data DebugUtilsObjectTagInfoEXT = DebugUtilsObjectTagInfoEXT
   { -- Univalued Member elided
@@ -320,6 +349,12 @@ fromCStructDebugUtilsObjectTagInfoEXT c = DebugUtilsObjectTagInfoEXT <$> -- Univ
                                                                      <*> pure (vkTagName (c :: VkDebugUtilsObjectTagInfoEXT))
                                                                      -- Bytestring length valued member elided
                                                                      <*> packCStringLen (castPtr (vkPTag (c :: VkDebugUtilsObjectTagInfoEXT)), fromIntegral (vkTagSize (c :: VkDebugUtilsObjectTagInfoEXT)))
+instance Zero DebugUtilsObjectTagInfoEXT where
+  zero = DebugUtilsObjectTagInfoEXT Nothing
+                                    zero
+                                    zero
+                                    zero
+                                    Data.ByteString.empty
 
 -- | Wrapper for 'vkCmdBeginDebugUtilsLabelEXT'
 cmdBeginDebugUtilsLabelEXT :: CommandBuffer ->  DebugUtilsLabelEXT ->  IO ()
@@ -334,7 +369,7 @@ cmdInsertDebugUtilsLabelEXT :: CommandBuffer ->  DebugUtilsLabelEXT ->  IO ()
 cmdInsertDebugUtilsLabelEXT = \(CommandBuffer commandBuffer commandTable) -> \labelInfo -> (\a -> withCStructDebugUtilsLabelEXT a . flip with) labelInfo (\pLabelInfo -> Graphics.Vulkan.C.Dynamic.cmdInsertDebugUtilsLabelEXT commandTable commandBuffer pLabelInfo *> (pure ()))
 
 -- | Wrapper for 'vkCreateDebugUtilsMessengerEXT'
-createDebugUtilsMessengerEXT :: Instance ->  DebugUtilsMessengerCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO ( DebugUtilsMessengerEXT )
+createDebugUtilsMessengerEXT :: Instance ->  DebugUtilsMessengerCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO (DebugUtilsMessengerEXT)
 createDebugUtilsMessengerEXT = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pMessenger -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDebugUtilsMessengerCreateInfoEXT a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDebugUtilsMessengerEXT commandTable instance' pCreateInfo pAllocator pMessenger >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pMessenger)))))
 
 -- | Wrapper for 'vkDestroyDebugUtilsMessengerEXT'
@@ -362,10 +397,11 @@ setDebugUtilsObjectTagEXT :: Device ->  DebugUtilsObjectTagInfoEXT ->  IO ()
 setDebugUtilsObjectTagEXT = \(Device device commandTable) -> \tagInfo -> (\a -> withCStructDebugUtilsObjectTagInfoEXT a . flip with) tagInfo (\pTagInfo -> Graphics.Vulkan.C.Dynamic.setDebugUtilsObjectTagEXT commandTable device pTagInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
 -- | Wrapper for 'vkSubmitDebugUtilsMessageEXT'
-submitDebugUtilsMessageEXT :: Instance ->  DebugUtilsMessageSeverityFlagBitsEXT ->  DebugUtilsMessageTypeFlagsEXT ->  DebugUtilsMessengerCallbackDataEXT ->  IO (  )
+submitDebugUtilsMessageEXT :: Instance ->  DebugUtilsMessageSeverityFlagBitsEXT ->  DebugUtilsMessageTypeFlagsEXT ->  DebugUtilsMessengerCallbackDataEXT ->  IO ()
 submitDebugUtilsMessageEXT = \(Instance instance' commandTable) -> \messageSeverity -> \messageTypes -> \callbackData -> (\a -> withCStructDebugUtilsMessengerCallbackDataEXT a . flip with) callbackData (\pCallbackData -> Graphics.Vulkan.C.Dynamic.submitDebugUtilsMessageEXT commandTable instance' messageSeverity messageTypes pCallbackData *> (pure ()))
-withDebugUtilsMessengerEXT :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withDebugUtilsMessengerEXT createInfo allocationCallbacks =
-  bracket
-    (vkCreateDebugUtilsMessengerEXT createInfo allocationCallbacks)
-    (`vkDestroyDebugUtilsMessengerEXT` allocationCallbacks)
+-- | Wrapper for 'createDebugUtilsMessengerEXT' and 'destroyDebugUtilsMessengerEXT' using 'bracket'
+withDebugUtilsMessengerEXT
+  :: Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe (AllocationCallbacks) -> (DebugUtilsMessengerEXT -> IO a) -> IO a
+withDebugUtilsMessengerEXT instance' debugUtilsMessengerCreateInfoEXT allocationCallbacks = bracket
+  (createDebugUtilsMessengerEXT instance' debugUtilsMessengerCreateInfoEXT allocationCallbacks)
+  (\o -> destroyDebugUtilsMessengerEXT instance' o allocationCallbacks)

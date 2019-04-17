@@ -31,6 +31,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.Pipeline
   ( VkExtent2D(..)
@@ -54,6 +55,10 @@ instance Storable VkPresentRegionKHR where
                                 <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkRectangleCount (poked :: VkPresentRegionKHR))
                 *> poke (ptr `plusPtr` 8) (vkPRectangles (poked :: VkPresentRegionKHR))
+
+instance Zero VkPresentRegionKHR where
+  zero = VkPresentRegionKHR zero
+                            zero
 -- No documentation found for TopLevel "VkPresentRegionsKHR"
 data VkPresentRegionsKHR = VkPresentRegionsKHR
   { -- No documentation found for Nested "VkPresentRegionsKHR" "sType"
@@ -78,6 +83,12 @@ instance Storable VkPresentRegionsKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPresentRegionsKHR))
                 *> poke (ptr `plusPtr` 16) (vkSwapchainCount (poked :: VkPresentRegionsKHR))
                 *> poke (ptr `plusPtr` 24) (vkPRegions (poked :: VkPresentRegionsKHR))
+
+instance Zero VkPresentRegionsKHR where
+  zero = VkPresentRegionsKHR zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "VkRectLayerKHR"
 data VkRectLayerKHR = VkRectLayerKHR
   { -- No documentation found for Nested "VkRectLayerKHR" "offset"
@@ -98,6 +109,11 @@ instance Storable VkRectLayerKHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkOffset (poked :: VkRectLayerKHR))
                 *> poke (ptr `plusPtr` 8) (vkExtent (poked :: VkRectLayerKHR))
                 *> poke (ptr `plusPtr` 16) (vkLayer (poked :: VkRectLayerKHR))
+
+instance Zero VkRectLayerKHR where
+  zero = VkRectLayerKHR zero
+                        zero
+                        zero
 -- No documentation found for TopLevel "VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME"
 pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME = "VK_KHR_incremental_present"

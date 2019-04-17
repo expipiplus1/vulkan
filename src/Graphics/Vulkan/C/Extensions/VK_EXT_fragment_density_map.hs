@@ -40,6 +40,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkFormatFeatureFlagBits(..)
@@ -95,6 +96,13 @@ instance Storable VkPhysicalDeviceFragmentDensityMapFeaturesEXT where
                 *> poke (ptr `plusPtr` 16) (vkFragmentDensityMap (poked :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT))
                 *> poke (ptr `plusPtr` 20) (vkFragmentDensityMapDynamic (poked :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT))
                 *> poke (ptr `plusPtr` 24) (vkFragmentDensityMapNonSubsampledImages (poked :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT))
+
+instance Zero VkPhysicalDeviceFragmentDensityMapFeaturesEXT where
+  zero = VkPhysicalDeviceFragmentDensityMapFeaturesEXT zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
 -- No documentation found for TopLevel "VkPhysicalDeviceFragmentDensityMapPropertiesEXT"
 data VkPhysicalDeviceFragmentDensityMapPropertiesEXT = VkPhysicalDeviceFragmentDensityMapPropertiesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapPropertiesEXT" "sType"
@@ -123,6 +131,13 @@ instance Storable VkPhysicalDeviceFragmentDensityMapPropertiesEXT where
                 *> poke (ptr `plusPtr` 16) (vkMinFragmentDensityTexelSize (poked :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT))
                 *> poke (ptr `plusPtr` 24) (vkMaxFragmentDensityTexelSize (poked :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT))
                 *> poke (ptr `plusPtr` 32) (vkFragmentDensityInvocations (poked :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT))
+
+instance Zero VkPhysicalDeviceFragmentDensityMapPropertiesEXT where
+  zero = VkPhysicalDeviceFragmentDensityMapPropertiesEXT zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
 -- No documentation found for TopLevel "VkRenderPassFragmentDensityMapCreateInfoEXT"
 data VkRenderPassFragmentDensityMapCreateInfoEXT = VkRenderPassFragmentDensityMapCreateInfoEXT
   { -- No documentation found for Nested "VkRenderPassFragmentDensityMapCreateInfoEXT" "sType"
@@ -143,6 +158,11 @@ instance Storable VkRenderPassFragmentDensityMapCreateInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkRenderPassFragmentDensityMapCreateInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassFragmentDensityMapCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFragmentDensityMapAttachment (poked :: VkRenderPassFragmentDensityMapCreateInfoEXT))
+
+instance Zero VkRenderPassFragmentDensityMapCreateInfoEXT where
+  zero = VkRenderPassFragmentDensityMapCreateInfoEXT zero
+                                                     zero
+                                                     zero
 -- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT"
 pattern VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT = VkAccessFlagBits 0x01000000

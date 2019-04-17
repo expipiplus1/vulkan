@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -50,6 +51,11 @@ instance Storable VkPhysicalDeviceShaderImageFootprintFeaturesNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceShaderImageFootprintFeaturesNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceShaderImageFootprintFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkImageFootprint (poked :: VkPhysicalDeviceShaderImageFootprintFeaturesNV))
+
+instance Zero VkPhysicalDeviceShaderImageFootprintFeaturesNV where
+  zero = VkPhysicalDeviceShaderImageFootprintFeaturesNV zero
+                                                        zero
+                                                        zero
 -- No documentation found for TopLevel "VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME"
 pattern VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME = "VK_NV_shader_image_footprint"

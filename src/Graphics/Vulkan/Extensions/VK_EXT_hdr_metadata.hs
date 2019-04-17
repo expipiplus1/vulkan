@@ -40,6 +40,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
   ( VkHdrMetadataEXT(..)
   , VkXYColorEXT(..)
@@ -101,6 +104,16 @@ fromCStructHdrMetadataEXT c = HdrMetadataEXT <$> -- Univalued Member elided
                                              <*> pure (vkMinLuminance (c :: VkHdrMetadataEXT))
                                              <*> pure (vkMaxContentLightLevel (c :: VkHdrMetadataEXT))
                                              <*> pure (vkMaxFrameAverageLightLevel (c :: VkHdrMetadataEXT))
+instance Zero HdrMetadataEXT where
+  zero = HdrMetadataEXT Nothing
+                        zero
+                        zero
+                        zero
+                        zero
+                        zero
+                        zero
+                        zero
+                        zero
 -- No documentation found for TopLevel "XYColorEXT"
 data XYColorEXT = XYColorEXT
   { -- No documentation found for Nested "XYColorEXT" "x"
@@ -114,6 +127,9 @@ withCStructXYColorEXT from cont = cont (VkXYColorEXT (vkX (from :: XYColorEXT)) 
 fromCStructXYColorEXT :: VkXYColorEXT -> IO XYColorEXT
 fromCStructXYColorEXT c = XYColorEXT <$> pure (vkX (c :: VkXYColorEXT))
                                      <*> pure (vkY (c :: VkXYColorEXT))
+instance Zero XYColorEXT where
+  zero = XYColorEXT zero
+                    zero
 
 -- | Wrapper for 'vkSetHdrMetadataEXT'
 setHdrMetadataEXT :: Device ->  Vector SwapchainKHR ->  Vector HdrMetadataEXT ->  IO ()

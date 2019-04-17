@@ -66,6 +66,9 @@ import Data.ByteString
   , packCString
   , useAsCString
   )
+import qualified Data.ByteString
+  ( empty
+  )
 import Data.Vector
   ( Vector
   )
@@ -110,6 +113,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_display
@@ -189,6 +193,10 @@ fromCStructDisplayModeCreateInfoKHR c = DisplayModeCreateInfoKHR <$> -- Univalue
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayModeCreateInfoKHR)))
                                                                  <*> pure (vkFlags (c :: VkDisplayModeCreateInfoKHR))
                                                                  <*> (fromCStructDisplayModeParametersKHR (vkParameters (c :: VkDisplayModeCreateInfoKHR)))
+instance Zero DisplayModeCreateInfoKHR where
+  zero = DisplayModeCreateInfoKHR Nothing
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "DisplayModeKHR"
 type DisplayModeKHR = VkDisplayModeKHR
 -- No documentation found for TopLevel "DisplayModeParametersKHR"
@@ -204,6 +212,9 @@ withCStructDisplayModeParametersKHR from cont = withCStructExtent2D (vkVisibleRe
 fromCStructDisplayModeParametersKHR :: VkDisplayModeParametersKHR -> IO DisplayModeParametersKHR
 fromCStructDisplayModeParametersKHR c = DisplayModeParametersKHR <$> (fromCStructExtent2D (vkVisibleRegion (c :: VkDisplayModeParametersKHR)))
                                                                  <*> pure (vkRefreshRate (c :: VkDisplayModeParametersKHR))
+instance Zero DisplayModeParametersKHR where
+  zero = DisplayModeParametersKHR zero
+                                  zero
 -- No documentation found for TopLevel "DisplayModePropertiesKHR"
 data DisplayModePropertiesKHR = DisplayModePropertiesKHR
   { -- No documentation found for Nested "DisplayModePropertiesKHR" "displayMode"
@@ -217,6 +228,9 @@ withCStructDisplayModePropertiesKHR from cont = withCStructDisplayModeParameters
 fromCStructDisplayModePropertiesKHR :: VkDisplayModePropertiesKHR -> IO DisplayModePropertiesKHR
 fromCStructDisplayModePropertiesKHR c = DisplayModePropertiesKHR <$> pure (vkDisplayMode (c :: VkDisplayModePropertiesKHR))
                                                                  <*> (fromCStructDisplayModeParametersKHR (vkParameters (c :: VkDisplayModePropertiesKHR)))
+instance Zero DisplayModePropertiesKHR where
+  zero = DisplayModePropertiesKHR zero
+                                  zero
 -- No documentation found for TopLevel "DisplayPlaneAlphaFlagBitsKHR"
 type DisplayPlaneAlphaFlagBitsKHR = VkDisplayPlaneAlphaFlagBitsKHR
 -- No documentation found for TopLevel "DisplayPlaneAlphaFlagsKHR"
@@ -255,6 +269,16 @@ fromCStructDisplayPlaneCapabilitiesKHR c = DisplayPlaneCapabilitiesKHR <$> pure 
                                                                        <*> (fromCStructOffset2D (vkMaxDstPosition (c :: VkDisplayPlaneCapabilitiesKHR)))
                                                                        <*> (fromCStructExtent2D (vkMinDstExtent (c :: VkDisplayPlaneCapabilitiesKHR)))
                                                                        <*> (fromCStructExtent2D (vkMaxDstExtent (c :: VkDisplayPlaneCapabilitiesKHR)))
+instance Zero DisplayPlaneCapabilitiesKHR where
+  zero = DisplayPlaneCapabilitiesKHR zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "DisplayPlanePropertiesKHR"
 data DisplayPlanePropertiesKHR = DisplayPlanePropertiesKHR
   { -- No documentation found for Nested "DisplayPlanePropertiesKHR" "currentDisplay"
@@ -268,6 +292,9 @@ withCStructDisplayPlanePropertiesKHR from cont = cont (VkDisplayPlanePropertiesK
 fromCStructDisplayPlanePropertiesKHR :: VkDisplayPlanePropertiesKHR -> IO DisplayPlanePropertiesKHR
 fromCStructDisplayPlanePropertiesKHR c = DisplayPlanePropertiesKHR <$> pure (vkCurrentDisplay (c :: VkDisplayPlanePropertiesKHR))
                                                                    <*> pure (vkCurrentStackIndex (c :: VkDisplayPlanePropertiesKHR))
+instance Zero DisplayPlanePropertiesKHR where
+  zero = DisplayPlanePropertiesKHR zero
+                                   zero
 -- No documentation found for TopLevel "DisplayPropertiesKHR"
 data DisplayPropertiesKHR = DisplayPropertiesKHR
   { -- No documentation found for Nested "DisplayPropertiesKHR" "display"
@@ -296,6 +323,14 @@ fromCStructDisplayPropertiesKHR c = DisplayPropertiesKHR <$> pure (vkDisplay (c 
                                                          <*> pure (vkSupportedTransforms (c :: VkDisplayPropertiesKHR))
                                                          <*> pure (bool32ToBool (vkPlaneReorderPossible (c :: VkDisplayPropertiesKHR)))
                                                          <*> pure (bool32ToBool (vkPersistentContent (c :: VkDisplayPropertiesKHR)))
+instance Zero DisplayPropertiesKHR where
+  zero = DisplayPropertiesKHR zero
+                              Data.ByteString.empty
+                              zero
+                              zero
+                              zero
+                              False
+                              False
 -- No documentation found for TopLevel "DisplaySurfaceCreateFlagsKHR"
 type DisplaySurfaceCreateFlagsKHR = VkDisplaySurfaceCreateFlagsKHR
 -- No documentation found for TopLevel "DisplaySurfaceCreateInfoKHR"
@@ -334,13 +369,23 @@ fromCStructDisplaySurfaceCreateInfoKHR c = DisplaySurfaceCreateInfoKHR <$> -- Un
                                                                        <*> pure (vkGlobalAlpha (c :: VkDisplaySurfaceCreateInfoKHR))
                                                                        <*> pure (vkAlphaMode (c :: VkDisplaySurfaceCreateInfoKHR))
                                                                        <*> (fromCStructExtent2D (vkImageExtent (c :: VkDisplaySurfaceCreateInfoKHR)))
+instance Zero DisplaySurfaceCreateInfoKHR where
+  zero = DisplaySurfaceCreateInfoKHR Nothing
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
 
 -- | Wrapper for 'vkCreateDisplayModeKHR'
-createDisplayModeKHR :: PhysicalDevice ->  DisplayKHR ->  DisplayModeCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( DisplayModeKHR )
+createDisplayModeKHR :: PhysicalDevice ->  DisplayKHR ->  DisplayModeCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (DisplayModeKHR)
 createDisplayModeKHR = \(PhysicalDevice physicalDevice commandTable) -> \display -> \createInfo -> \allocator -> alloca (\pMode -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDisplayModeCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDisplayModeKHR commandTable physicalDevice display pCreateInfo pAllocator pMode >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pMode)))))
 
 -- | Wrapper for 'vkCreateDisplayPlaneSurfaceKHR'
-createDisplayPlaneSurfaceKHR :: Instance ->  DisplaySurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createDisplayPlaneSurfaceKHR :: Instance ->  DisplaySurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createDisplayPlaneSurfaceKHR = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDisplaySurfaceCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDisplayPlaneSurfaceKHR commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))
 
 -- | Wrapper for 'vkGetDisplayModePropertiesKHR'
@@ -348,8 +393,7 @@ getNumDisplayModePropertiesKHR :: PhysicalDevice ->  DisplayKHR ->  IO (VkResult
 getNumDisplayModePropertiesKHR = \(PhysicalDevice physicalDevice commandTable) -> \display -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getDisplayModePropertiesKHR commandTable physicalDevice display pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
 -- | Wrapper for 'vkGetDisplayModePropertiesKHR'
-getDisplayModePropertiesKHR :: PhysicalDevice ->  DisplayKHR ->  Word32 ->  IO ( VkResult
-, Vector DisplayModePropertiesKHR )
+getDisplayModePropertiesKHR :: PhysicalDevice ->  DisplayKHR ->  Word32 ->  IO (VkResult, Vector DisplayModePropertiesKHR)
 getDisplayModePropertiesKHR = \(PhysicalDevice physicalDevice commandTable) -> \display -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getDisplayModePropertiesKHR commandTable physicalDevice display pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayModePropertiesKHR <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumDisplayModePropertiesKHR' to get the number of return values, then use that
 -- number to call 'getDisplayModePropertiesKHR' to get all the values.
@@ -360,7 +404,7 @@ getAllDisplayModePropertiesKHR physicalDevice display =
 
 
 -- | Wrapper for 'vkGetDisplayPlaneCapabilitiesKHR'
-getDisplayPlaneCapabilitiesKHR :: PhysicalDevice ->  DisplayModeKHR ->  Word32 ->  IO ( DisplayPlaneCapabilitiesKHR )
+getDisplayPlaneCapabilitiesKHR :: PhysicalDevice ->  DisplayModeKHR ->  Word32 ->  IO (DisplayPlaneCapabilitiesKHR)
 getDisplayPlaneCapabilitiesKHR = \(PhysicalDevice physicalDevice commandTable) -> \mode -> \planeIndex -> alloca (\pCapabilities -> Graphics.Vulkan.C.Dynamic.getDisplayPlaneCapabilitiesKHR commandTable physicalDevice mode planeIndex pCapabilities >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructDisplayPlaneCapabilitiesKHR <=< peek) pCapabilities)))
 
 -- | Wrapper for 'vkGetDisplayPlaneSupportedDisplaysKHR'

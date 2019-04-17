@@ -50,6 +50,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -108,6 +109,14 @@ instance Storable VkD3D12FenceSubmitInfoKHR where
                 *> poke (ptr `plusPtr` 24) (vkPWaitSemaphoreValues (poked :: VkD3D12FenceSubmitInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkSignalSemaphoreValuesCount (poked :: VkD3D12FenceSubmitInfoKHR))
                 *> poke (ptr `plusPtr` 40) (vkPSignalSemaphoreValues (poked :: VkD3D12FenceSubmitInfoKHR))
+
+instance Zero VkD3D12FenceSubmitInfoKHR where
+  zero = VkD3D12FenceSubmitInfoKHR zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "VkExportSemaphoreWin32HandleInfoKHR"
 data VkExportSemaphoreWin32HandleInfoKHR = VkExportSemaphoreWin32HandleInfoKHR
   { -- No documentation found for Nested "VkExportSemaphoreWin32HandleInfoKHR" "sType"
@@ -136,6 +145,13 @@ instance Storable VkExportSemaphoreWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkPAttributes (poked :: VkExportSemaphoreWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDwAccess (poked :: VkExportSemaphoreWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkExportSemaphoreWin32HandleInfoKHR))
+
+instance Zero VkExportSemaphoreWin32HandleInfoKHR where
+  zero = VkExportSemaphoreWin32HandleInfoKHR zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkImportSemaphoreWin32HandleInfoKHR"
 data VkImportSemaphoreWin32HandleInfoKHR = VkImportSemaphoreWin32HandleInfoKHR
   { -- No documentation found for Nested "VkImportSemaphoreWin32HandleInfoKHR" "sType"
@@ -172,6 +188,15 @@ instance Storable VkImportSemaphoreWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 28) (vkHandleType (poked :: VkImportSemaphoreWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkHandle (poked :: VkImportSemaphoreWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 40) (vkName (poked :: VkImportSemaphoreWin32HandleInfoKHR))
+
+instance Zero VkImportSemaphoreWin32HandleInfoKHR where
+  zero = VkImportSemaphoreWin32HandleInfoKHR zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkSemaphoreGetWin32HandleInfoKHR"
 data VkSemaphoreGetWin32HandleInfoKHR = VkSemaphoreGetWin32HandleInfoKHR
   { -- No documentation found for Nested "VkSemaphoreGetWin32HandleInfoKHR" "sType"
@@ -196,6 +221,12 @@ instance Storable VkSemaphoreGetWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSemaphoreGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkSemaphore (poked :: VkSemaphoreGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkSemaphoreGetWin32HandleInfoKHR))
+
+instance Zero VkSemaphoreGetWin32HandleInfoKHR where
+  zero = VkSemaphoreGetWin32HandleInfoKHR zero
+                                          zero
+                                          zero
+                                          zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetSemaphoreWin32HandleKHR"
 foreign import ccall

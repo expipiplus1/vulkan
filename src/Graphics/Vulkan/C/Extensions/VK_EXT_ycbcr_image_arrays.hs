@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -50,6 +51,11 @@ instance Storable VkPhysicalDeviceYcbcrImageArraysFeaturesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceYcbcrImageArraysFeaturesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceYcbcrImageArraysFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkYcbcrImageArrays (poked :: VkPhysicalDeviceYcbcrImageArraysFeaturesEXT))
+
+instance Zero VkPhysicalDeviceYcbcrImageArraysFeaturesEXT where
+  zero = VkPhysicalDeviceYcbcrImageArraysFeaturesEXT zero
+                                                     zero
+                                                     zero
 -- No documentation found for TopLevel "VK_EXT_YCBCR_IMAGE_ARRAYS_EXTENSION_NAME"
 pattern VK_EXT_YCBCR_IMAGE_ARRAYS_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_YCBCR_IMAGE_ARRAYS_EXTENSION_NAME = "VK_EXT_ycbcr_image_arrays"

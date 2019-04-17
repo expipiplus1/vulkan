@@ -24,7 +24,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Foreign.Marshal.Utils
@@ -39,6 +40,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle
   ( VkPipelineViewportSwizzleStateCreateFlagsNV(..)
   , VkPipelineViewportSwizzleStateCreateInfoNV(..)
@@ -82,6 +86,10 @@ fromCStructPipelineViewportSwizzleStateCreateInfoNV c = PipelineViewportSwizzleS
                                                                                                  <*> pure (vkFlags (c :: VkPipelineViewportSwizzleStateCreateInfoNV))
                                                                                                  -- Length valued member elided
                                                                                                  <*> (Data.Vector.generateM (fromIntegral (vkViewportCount (c :: VkPipelineViewportSwizzleStateCreateInfoNV))) (((fromCStructViewportSwizzleNV <=<) . peekElemOff) (vkPViewportSwizzles (c :: VkPipelineViewportSwizzleStateCreateInfoNV))))
+instance Zero PipelineViewportSwizzleStateCreateInfoNV where
+  zero = PipelineViewportSwizzleStateCreateInfoNV Nothing
+                                                  zero
+                                                  Data.Vector.empty
 -- No documentation found for TopLevel "ViewportCoordinateSwizzleNV"
 type ViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV
 -- No documentation found for TopLevel "ViewportSwizzleNV"
@@ -103,3 +111,8 @@ fromCStructViewportSwizzleNV c = ViewportSwizzleNV <$> pure (vkX (c :: VkViewpor
                                                    <*> pure (vkY (c :: VkViewportSwizzleNV))
                                                    <*> pure (vkZ (c :: VkViewportSwizzleNV))
                                                    <*> pure (vkW (c :: VkViewportSwizzleNV))
+instance Zero ViewportSwizzleNV where
+  zero = ViewportSwizzleNV zero
+                           zero
+                           zero
+                           zero

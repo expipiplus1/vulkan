@@ -15,10 +15,12 @@ module Graphics.Vulkan.Core10.Device
   , DeviceQueueCreateInfo(..)
   , createDevice
   , destroyDevice
+  , withDevice
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -35,7 +37,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -66,7 +69,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
   , pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
   , pattern VK_SUCCESS
   )
@@ -137,6 +141,13 @@ fromCStructDeviceCreateInfo c = DeviceCreateInfo <$> -- Univalued Member elided
                                                  -- Length valued member elided
                                                  <*> (Data.Vector.generateM (fromIntegral (vkEnabledExtensionCount (c :: VkDeviceCreateInfo))) (packCStringElemOff (vkPPEnabledExtensionNames (c :: VkDeviceCreateInfo))))
                                                  <*> maybePeek (fromCStructPhysicalDeviceFeatures <=< peek) (vkPEnabledFeatures (c :: VkDeviceCreateInfo))
+instance Zero DeviceCreateInfo where
+  zero = DeviceCreateInfo Nothing
+                          zero
+                          Data.Vector.empty
+                          Data.Vector.empty
+                          Data.Vector.empty
+                          Nothing
 -- No documentation found for TopLevel "DeviceQueueCreateFlagBits"
 type DeviceQueueCreateFlagBits = VkDeviceQueueCreateFlagBits
 -- No documentation found for TopLevel "DeviceQueueCreateFlags"
@@ -164,11 +175,22 @@ fromCStructDeviceQueueCreateInfo c = DeviceQueueCreateInfo <$> -- Univalued Memb
                                                            <*> pure (vkQueueFamilyIndex (c :: VkDeviceQueueCreateInfo))
                                                            -- Length valued member elided
                                                            <*> (Data.Vector.generateM (fromIntegral (vkQueueCount (c :: VkDeviceQueueCreateInfo))) (peekElemOff (vkPQueuePriorities (c :: VkDeviceQueueCreateInfo))))
+instance Zero DeviceQueueCreateInfo where
+  zero = DeviceQueueCreateInfo Nothing
+                               zero
+                               zero
+                               Data.Vector.empty
 
 -- | Wrapper for 'vkCreateDevice'
-createDevice :: PhysicalDevice ->  DeviceCreateInfo ->  Maybe AllocationCallbacks ->  IO ( Device )
+createDevice :: PhysicalDevice ->  DeviceCreateInfo ->  Maybe AllocationCallbacks ->  IO (Device)
 createDevice = \(PhysicalDevice physicalDevice commandTable) -> \createInfo -> \allocator -> alloca (\pDevice -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDeviceCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDevice commandTable physicalDevice pCreateInfo pAllocator pDevice >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pDevice >>= (\deviceH -> Device deviceH <$> initDeviceCmds commandTable deviceH))))))
 
 -- | Wrapper for 'vkDestroyDevice'
 destroyDevice :: Device ->  Maybe AllocationCallbacks ->  IO ()
 destroyDevice = \(Device device commandTable) -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyDevice commandTable device pAllocator *> (pure ()))
+-- | Wrapper for 'createDevice' and 'destroyDevice' using 'bracket'
+withDevice
+  :: PhysicalDevice -> DeviceCreateInfo -> Maybe (AllocationCallbacks) -> (Device -> IO a) -> IO a
+withDevice physicalDevice deviceCreateInfo allocationCallbacks = bracket
+  (createDevice physicalDevice deviceCreateInfo allocationCallbacks)
+  (\o -> destroyDevice o allocationCallbacks)

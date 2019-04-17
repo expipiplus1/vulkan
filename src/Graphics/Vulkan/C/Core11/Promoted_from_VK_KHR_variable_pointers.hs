@@ -26,6 +26,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -63,6 +64,12 @@ instance Storable VkPhysicalDeviceVariablePointersFeatures where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceVariablePointersFeatures))
                 *> poke (ptr `plusPtr` 16) (vkVariablePointersStorageBuffer (poked :: VkPhysicalDeviceVariablePointersFeatures))
                 *> poke (ptr `plusPtr` 20) (vkVariablePointers (poked :: VkPhysicalDeviceVariablePointersFeatures))
+
+instance Zero VkPhysicalDeviceVariablePointersFeatures where
+  zero = VkPhysicalDeviceVariablePointersFeatures zero
+                                                  zero
+                                                  zero
+                                                  zero
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES = VkStructureType 1000120000

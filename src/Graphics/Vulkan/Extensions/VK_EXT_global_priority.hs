@@ -23,6 +23,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
   ( VkDeviceQueueGlobalPriorityCreateInfoEXT(..)
   , VkQueueGlobalPriorityEXT(..)
@@ -55,5 +58,8 @@ fromCStructDeviceQueueGlobalPriorityCreateInfoEXT :: VkDeviceQueueGlobalPriority
 fromCStructDeviceQueueGlobalPriorityCreateInfoEXT c = DeviceQueueGlobalPriorityCreateInfoEXT <$> -- Univalued Member elided
                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDeviceQueueGlobalPriorityCreateInfoEXT)))
                                                                                              <*> pure (vkGlobalPriority (c :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
+instance Zero DeviceQueueGlobalPriorityCreateInfoEXT where
+  zero = DeviceQueueGlobalPriorityCreateInfoEXT Nothing
+                                                zero
 -- No documentation found for TopLevel "QueueGlobalPriorityEXT"
 type QueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT

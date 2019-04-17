@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_vulkan_memory_model
   ( VkPhysicalDeviceVulkanMemoryModelFeaturesKHR(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR
@@ -61,3 +64,8 @@ fromCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR c = PhysicalDeviceVulkanMe
                                                                                                      <*> pure (bool32ToBool (vkVulkanMemoryModel (c :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR)))
                                                                                                      <*> pure (bool32ToBool (vkVulkanMemoryModelDeviceScope (c :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR)))
                                                                                                      <*> pure (bool32ToBool (vkVulkanMemoryModelAvailabilityVisibilityChains (c :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR)))
+instance Zero PhysicalDeviceVulkanMemoryModelFeaturesKHR where
+  zero = PhysicalDeviceVulkanMemoryModelFeaturesKHR Nothing
+                                                    False
+                                                    False
+                                                    False

@@ -51,6 +51,7 @@ import Graphics.Vulkan.C.Core10.CommandPool
   )
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -67,7 +68,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkCommandPoolTrimFlags"
 newtype VkCommandPoolTrimFlags = VkCommandPoolTrimFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkCommandPoolTrimFlags where
   

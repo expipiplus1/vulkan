@@ -30,6 +30,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.Memory
   ( VkDeviceMemory
@@ -80,6 +81,17 @@ instance Storable VkWin32KeyedMutexAcquireReleaseInfoNV where
                 *> poke (ptr `plusPtr` 48) (vkReleaseCount (poked :: VkWin32KeyedMutexAcquireReleaseInfoNV))
                 *> poke (ptr `plusPtr` 56) (vkPReleaseSyncs (poked :: VkWin32KeyedMutexAcquireReleaseInfoNV))
                 *> poke (ptr `plusPtr` 64) (vkPReleaseKeys (poked :: VkWin32KeyedMutexAcquireReleaseInfoNV))
+
+instance Zero VkWin32KeyedMutexAcquireReleaseInfoNV where
+  zero = VkWin32KeyedMutexAcquireReleaseInfoNV zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
 -- No documentation found for TopLevel "VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME"
 pattern VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME = "VK_NV_win32_keyed_mutex"

@@ -45,6 +45,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities
   ( VkExternalFenceFeatureFlagBits(..)
   , VkExternalFenceHandleTypeFlagBits(..)
@@ -100,6 +103,11 @@ fromCStructExternalFenceProperties c = ExternalFenceProperties <$> -- Univalued 
                                                                <*> pure (vkExportFromImportedHandleTypes (c :: VkExternalFenceProperties))
                                                                <*> pure (vkCompatibleHandleTypes (c :: VkExternalFenceProperties))
                                                                <*> pure (vkExternalFenceFeatures (c :: VkExternalFenceProperties))
+instance Zero ExternalFenceProperties where
+  zero = ExternalFenceProperties Nothing
+                                 zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "PhysicalDeviceExternalFenceInfo"
 data PhysicalDeviceExternalFenceInfo = PhysicalDeviceExternalFenceInfo
   { -- Univalued Member elided
@@ -115,7 +123,10 @@ fromCStructPhysicalDeviceExternalFenceInfo :: VkPhysicalDeviceExternalFenceInfo 
 fromCStructPhysicalDeviceExternalFenceInfo c = PhysicalDeviceExternalFenceInfo <$> -- Univalued Member elided
                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceExternalFenceInfo)))
                                                                                <*> pure (vkHandleType (c :: VkPhysicalDeviceExternalFenceInfo))
+instance Zero PhysicalDeviceExternalFenceInfo where
+  zero = PhysicalDeviceExternalFenceInfo Nothing
+                                         zero
 
 -- | Wrapper for 'vkGetPhysicalDeviceExternalFenceProperties'
-getPhysicalDeviceExternalFenceProperties :: PhysicalDevice ->  PhysicalDeviceExternalFenceInfo ->  IO ( ExternalFenceProperties )
+getPhysicalDeviceExternalFenceProperties :: PhysicalDevice ->  PhysicalDeviceExternalFenceInfo ->  IO (ExternalFenceProperties)
 getPhysicalDeviceExternalFenceProperties = \(PhysicalDevice physicalDevice commandTable) -> \externalFenceInfo -> alloca (\pExternalFenceProperties -> (\a -> withCStructPhysicalDeviceExternalFenceInfo a . flip with) externalFenceInfo (\pExternalFenceInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceExternalFenceProperties commandTable physicalDevice pExternalFenceInfo pExternalFenceProperties *> ((fromCStructExternalFenceProperties <=< peek) pExternalFenceProperties)))

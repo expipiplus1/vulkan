@@ -65,6 +65,7 @@ module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
   , unregisterObjectsNVX
   , withIndirectCommandsLayoutNVX
   , withObjectTableNVX
+  , withRegisteredObjectsNVX
   , pattern VK_NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION
   , pattern VK_NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME
   , pattern VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX
@@ -81,7 +82,9 @@ module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , bracket_
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -97,7 +100,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -132,7 +136,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Dynamic
   ( DeviceCmds(..)
@@ -261,6 +266,7 @@ fromCStructCmdProcessCommandsInfoNVX commandTable c = CmdProcessCommandsInfoNVX 
                                                                                 <*> pure (vkSequencesCountOffset (c :: VkCmdProcessCommandsInfoNVX))
                                                                                 <*> pure (vkSequencesIndexBuffer (c :: VkCmdProcessCommandsInfoNVX))
                                                                                 <*> pure (vkSequencesIndexOffset (c :: VkCmdProcessCommandsInfoNVX))
+
 -- No documentation found for TopLevel "CmdReserveSpaceForCommandsInfoNVX"
 data CmdReserveSpaceForCommandsInfoNVX = CmdReserveSpaceForCommandsInfoNVX
   { -- Univalued Member elided
@@ -282,6 +288,11 @@ fromCStructCmdReserveSpaceForCommandsInfoNVX c = CmdReserveSpaceForCommandsInfoN
                                                                                    <*> pure (vkObjectTable (c :: VkCmdReserveSpaceForCommandsInfoNVX))
                                                                                    <*> pure (vkIndirectCommandsLayout (c :: VkCmdReserveSpaceForCommandsInfoNVX))
                                                                                    <*> pure (vkMaxSequencesCount (c :: VkCmdReserveSpaceForCommandsInfoNVX))
+instance Zero CmdReserveSpaceForCommandsInfoNVX where
+  zero = CmdReserveSpaceForCommandsInfoNVX Nothing
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "DeviceGeneratedCommandsFeaturesNVX"
 data DeviceGeneratedCommandsFeaturesNVX = DeviceGeneratedCommandsFeaturesNVX
   { -- Univalued Member elided
@@ -297,6 +308,9 @@ fromCStructDeviceGeneratedCommandsFeaturesNVX :: VkDeviceGeneratedCommandsFeatur
 fromCStructDeviceGeneratedCommandsFeaturesNVX c = DeviceGeneratedCommandsFeaturesNVX <$> -- Univalued Member elided
                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDeviceGeneratedCommandsFeaturesNVX)))
                                                                                      <*> pure (bool32ToBool (vkComputeBindingPointSupport (c :: VkDeviceGeneratedCommandsFeaturesNVX)))
+instance Zero DeviceGeneratedCommandsFeaturesNVX where
+  zero = DeviceGeneratedCommandsFeaturesNVX Nothing
+                                            False
 -- No documentation found for TopLevel "DeviceGeneratedCommandsLimitsNVX"
 data DeviceGeneratedCommandsLimitsNVX = DeviceGeneratedCommandsLimitsNVX
   { -- Univalued Member elided
@@ -324,6 +338,13 @@ fromCStructDeviceGeneratedCommandsLimitsNVX c = DeviceGeneratedCommandsLimitsNVX
                                                                                  <*> pure (vkMinSequenceCountBufferOffsetAlignment (c :: VkDeviceGeneratedCommandsLimitsNVX))
                                                                                  <*> pure (vkMinSequenceIndexBufferOffsetAlignment (c :: VkDeviceGeneratedCommandsLimitsNVX))
                                                                                  <*> pure (vkMinCommandsTokenBufferOffsetAlignment (c :: VkDeviceGeneratedCommandsLimitsNVX))
+instance Zero DeviceGeneratedCommandsLimitsNVX where
+  zero = DeviceGeneratedCommandsLimitsNVX Nothing
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "IndirectCommandsLayoutCreateInfoNVX"
 data IndirectCommandsLayoutCreateInfoNVX = IndirectCommandsLayoutCreateInfoNVX
   { -- Univalued Member elided
@@ -347,6 +368,11 @@ fromCStructIndirectCommandsLayoutCreateInfoNVX c = IndirectCommandsLayoutCreateI
                                                                                        <*> pure (vkFlags (c :: VkIndirectCommandsLayoutCreateInfoNVX))
                                                                                        -- Length valued member elided
                                                                                        <*> (Data.Vector.generateM (fromIntegral (vkTokenCount (c :: VkIndirectCommandsLayoutCreateInfoNVX))) (((fromCStructIndirectCommandsLayoutTokenNVX <=<) . peekElemOff) (vkPTokens (c :: VkIndirectCommandsLayoutCreateInfoNVX))))
+instance Zero IndirectCommandsLayoutCreateInfoNVX where
+  zero = IndirectCommandsLayoutCreateInfoNVX Nothing
+                                             zero
+                                             zero
+                                             Data.Vector.empty
 -- No documentation found for TopLevel "IndirectCommandsLayoutNVX"
 type IndirectCommandsLayoutNVX = VkIndirectCommandsLayoutNVX
 -- No documentation found for TopLevel "IndirectCommandsLayoutTokenNVX"
@@ -368,6 +394,11 @@ fromCStructIndirectCommandsLayoutTokenNVX c = IndirectCommandsLayoutTokenNVX <$>
                                                                              <*> pure (vkBindingUnit (c :: VkIndirectCommandsLayoutTokenNVX))
                                                                              <*> pure (vkDynamicCount (c :: VkIndirectCommandsLayoutTokenNVX))
                                                                              <*> pure (vkDivisor (c :: VkIndirectCommandsLayoutTokenNVX))
+instance Zero IndirectCommandsLayoutTokenNVX where
+  zero = IndirectCommandsLayoutTokenNVX zero
+                                        zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "IndirectCommandsLayoutUsageFlagBitsNVX"
 type IndirectCommandsLayoutUsageFlagBitsNVX = VkIndirectCommandsLayoutUsageFlagBitsNVX
 -- No documentation found for TopLevel "IndirectCommandsLayoutUsageFlagsNVX"
@@ -388,6 +419,10 @@ fromCStructIndirectCommandsTokenNVX :: VkIndirectCommandsTokenNVX -> IO Indirect
 fromCStructIndirectCommandsTokenNVX c = IndirectCommandsTokenNVX <$> pure (vkTokenType (c :: VkIndirectCommandsTokenNVX))
                                                                  <*> pure (vkBuffer (c :: VkIndirectCommandsTokenNVX))
                                                                  <*> pure (vkOffset (c :: VkIndirectCommandsTokenNVX))
+instance Zero IndirectCommandsTokenNVX where
+  zero = IndirectCommandsTokenNVX zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "IndirectCommandsTokenTypeNVX"
 type IndirectCommandsTokenTypeNVX = VkIndirectCommandsTokenTypeNVX
 -- No documentation found for TopLevel "ObjectEntryTypeNVX"
@@ -421,9 +456,7 @@ data ObjectTableCreateInfoNVX = ObjectTableCreateInfoNVX
   }
   deriving (Show, Eq)
 withCStructObjectTableCreateInfoNVX :: ObjectTableCreateInfoNVX -> (VkObjectTableCreateInfoNVX -> IO a) -> IO a
-withCStructObjectTableCreateInfoNVX from cont = withVec (&) (vkPObjectEntryUsageFlags (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryUsageFlags -> withVec (&) (vkPObjectEntryCounts (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryCounts -> withVec (&) (vkPObjectEntryTypes (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryTypes -> maybeWith withSomeVkStruct (vkPNext (from :: ObjectTableCreateInfoNVX)) (\pPNext -> cont (VkObjectTableCreateInfoNVX VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX pPNext (fromIntegral (minimum ([ Data.Vector.length (vkPObjectEntryTypes (from :: ObjectTableCreateInfoNVX))
-, Data.Vector.length (vkPObjectEntryCounts (from :: ObjectTableCreateInfoNVX))
-, Data.Vector.length (vkPObjectEntryUsageFlags (from :: ObjectTableCreateInfoNVX)) ]))) pObjectEntryTypes pObjectEntryCounts pObjectEntryUsageFlags (vkMaxUniformBuffersPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxStorageBuffersPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxStorageImagesPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxSampledImagesPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxPipelineLayouts (from :: ObjectTableCreateInfoNVX)))))))
+withCStructObjectTableCreateInfoNVX from cont = withVec (&) (vkPObjectEntryUsageFlags (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryUsageFlags -> withVec (&) (vkPObjectEntryCounts (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryCounts -> withVec (&) (vkPObjectEntryTypes (from :: ObjectTableCreateInfoNVX)) (\pObjectEntryTypes -> maybeWith withSomeVkStruct (vkPNext (from :: ObjectTableCreateInfoNVX)) (\pPNext -> cont (VkObjectTableCreateInfoNVX VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX pPNext (fromIntegral (minimum ([Data.Vector.length (vkPObjectEntryTypes (from :: ObjectTableCreateInfoNVX)), Data.Vector.length (vkPObjectEntryCounts (from :: ObjectTableCreateInfoNVX)), Data.Vector.length (vkPObjectEntryUsageFlags (from :: ObjectTableCreateInfoNVX))]))) pObjectEntryTypes pObjectEntryCounts pObjectEntryUsageFlags (vkMaxUniformBuffersPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxStorageBuffersPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxStorageImagesPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxSampledImagesPerDescriptor (from :: ObjectTableCreateInfoNVX)) (vkMaxPipelineLayouts (from :: ObjectTableCreateInfoNVX)))))))
 fromCStructObjectTableCreateInfoNVX :: VkObjectTableCreateInfoNVX -> IO ObjectTableCreateInfoNVX
 fromCStructObjectTableCreateInfoNVX c = ObjectTableCreateInfoNVX <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkObjectTableCreateInfoNVX)))
@@ -436,6 +469,16 @@ fromCStructObjectTableCreateInfoNVX c = ObjectTableCreateInfoNVX <$> -- Univalue
                                                                  <*> pure (vkMaxStorageImagesPerDescriptor (c :: VkObjectTableCreateInfoNVX))
                                                                  <*> pure (vkMaxSampledImagesPerDescriptor (c :: VkObjectTableCreateInfoNVX))
                                                                  <*> pure (vkMaxPipelineLayouts (c :: VkObjectTableCreateInfoNVX))
+instance Zero ObjectTableCreateInfoNVX where
+  zero = ObjectTableCreateInfoNVX Nothing
+                                  Data.Vector.empty
+                                  Data.Vector.empty
+                                  Data.Vector.empty
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "ObjectTableDescriptorSetEntryNVX"
 data ObjectTableDescriptorSetEntryNVX = ObjectTableDescriptorSetEntryNVX
   { -- No documentation found for Nested "ObjectTableDescriptorSetEntryNVX" "type"
@@ -455,6 +498,11 @@ fromCStructObjectTableDescriptorSetEntryNVX c = ObjectTableDescriptorSetEntryNVX
                                                                                  <*> pure (vkFlags (c :: VkObjectTableDescriptorSetEntryNVX))
                                                                                  <*> pure (vkPipelineLayout (c :: VkObjectTableDescriptorSetEntryNVX))
                                                                                  <*> pure (vkDescriptorSet (c :: VkObjectTableDescriptorSetEntryNVX))
+instance Zero ObjectTableDescriptorSetEntryNVX where
+  zero = ObjectTableDescriptorSetEntryNVX zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "ObjectTableEntryNVX"
 data ObjectTableEntryNVX = ObjectTableEntryNVX
   { -- No documentation found for Nested "ObjectTableEntryNVX" "type"
@@ -468,6 +516,9 @@ withCStructObjectTableEntryNVX from cont = cont (VkObjectTableEntryNVX (vkType (
 fromCStructObjectTableEntryNVX :: VkObjectTableEntryNVX -> IO ObjectTableEntryNVX
 fromCStructObjectTableEntryNVX c = ObjectTableEntryNVX <$> pure (vkType (c :: VkObjectTableEntryNVX))
                                                        <*> pure (vkFlags (c :: VkObjectTableEntryNVX))
+instance Zero ObjectTableEntryNVX where
+  zero = ObjectTableEntryNVX zero
+                             zero
 -- No documentation found for TopLevel "ObjectTableIndexBufferEntryNVX"
 data ObjectTableIndexBufferEntryNVX = ObjectTableIndexBufferEntryNVX
   { -- No documentation found for Nested "ObjectTableIndexBufferEntryNVX" "type"
@@ -487,6 +538,11 @@ fromCStructObjectTableIndexBufferEntryNVX c = ObjectTableIndexBufferEntryNVX <$>
                                                                              <*> pure (vkFlags (c :: VkObjectTableIndexBufferEntryNVX))
                                                                              <*> pure (vkBuffer (c :: VkObjectTableIndexBufferEntryNVX))
                                                                              <*> pure (vkIndexType (c :: VkObjectTableIndexBufferEntryNVX))
+instance Zero ObjectTableIndexBufferEntryNVX where
+  zero = ObjectTableIndexBufferEntryNVX zero
+                                        zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "ObjectTableNVX"
 type ObjectTableNVX = VkObjectTableNVX
 -- No documentation found for TopLevel "ObjectTablePipelineEntryNVX"
@@ -505,6 +561,10 @@ fromCStructObjectTablePipelineEntryNVX :: VkObjectTablePipelineEntryNVX -> IO Ob
 fromCStructObjectTablePipelineEntryNVX c = ObjectTablePipelineEntryNVX <$> pure (vkType (c :: VkObjectTablePipelineEntryNVX))
                                                                        <*> pure (vkFlags (c :: VkObjectTablePipelineEntryNVX))
                                                                        <*> pure (vkPipeline (c :: VkObjectTablePipelineEntryNVX))
+instance Zero ObjectTablePipelineEntryNVX where
+  zero = ObjectTablePipelineEntryNVX zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "ObjectTablePushConstantEntryNVX"
 data ObjectTablePushConstantEntryNVX = ObjectTablePushConstantEntryNVX
   { -- No documentation found for Nested "ObjectTablePushConstantEntryNVX" "type"
@@ -524,6 +584,11 @@ fromCStructObjectTablePushConstantEntryNVX c = ObjectTablePushConstantEntryNVX <
                                                                                <*> pure (vkFlags (c :: VkObjectTablePushConstantEntryNVX))
                                                                                <*> pure (vkPipelineLayout (c :: VkObjectTablePushConstantEntryNVX))
                                                                                <*> pure (vkStageFlags (c :: VkObjectTablePushConstantEntryNVX))
+instance Zero ObjectTablePushConstantEntryNVX where
+  zero = ObjectTablePushConstantEntryNVX zero
+                                         zero
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "ObjectTableVertexBufferEntryNVX"
 data ObjectTableVertexBufferEntryNVX = ObjectTableVertexBufferEntryNVX
   { -- No documentation found for Nested "ObjectTableVertexBufferEntryNVX" "type"
@@ -540,6 +605,10 @@ fromCStructObjectTableVertexBufferEntryNVX :: VkObjectTableVertexBufferEntryNVX 
 fromCStructObjectTableVertexBufferEntryNVX c = ObjectTableVertexBufferEntryNVX <$> pure (vkType (c :: VkObjectTableVertexBufferEntryNVX))
                                                                                <*> pure (vkFlags (c :: VkObjectTableVertexBufferEntryNVX))
                                                                                <*> pure (vkBuffer (c :: VkObjectTableVertexBufferEntryNVX))
+instance Zero ObjectTableVertexBufferEntryNVX where
+  zero = ObjectTableVertexBufferEntryNVX zero
+                                         zero
+                                         zero
 
 -- | Wrapper for 'vkCmdProcessCommandsNVX'
 cmdProcessCommandsNVX :: CommandBuffer ->  CmdProcessCommandsInfoNVX ->  IO ()
@@ -550,11 +619,11 @@ cmdReserveSpaceForCommandsNVX :: CommandBuffer ->  CmdReserveSpaceForCommandsInf
 cmdReserveSpaceForCommandsNVX = \(CommandBuffer commandBuffer commandTable) -> \reserveSpaceInfo -> (\a -> withCStructCmdReserveSpaceForCommandsInfoNVX a . flip with) reserveSpaceInfo (\pReserveSpaceInfo -> Graphics.Vulkan.C.Dynamic.cmdReserveSpaceForCommandsNVX commandTable commandBuffer pReserveSpaceInfo *> (pure ()))
 
 -- | Wrapper for 'vkCreateIndirectCommandsLayoutNVX'
-createIndirectCommandsLayoutNVX :: Device ->  IndirectCommandsLayoutCreateInfoNVX ->  Maybe AllocationCallbacks ->  IO ( IndirectCommandsLayoutNVX )
+createIndirectCommandsLayoutNVX :: Device ->  IndirectCommandsLayoutCreateInfoNVX ->  Maybe AllocationCallbacks ->  IO (IndirectCommandsLayoutNVX)
 createIndirectCommandsLayoutNVX = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pIndirectCommandsLayout -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructIndirectCommandsLayoutCreateInfoNVX a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createIndirectCommandsLayoutNVX commandTable device pCreateInfo pAllocator pIndirectCommandsLayout >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pIndirectCommandsLayout)))))
 
 -- | Wrapper for 'vkCreateObjectTableNVX'
-createObjectTableNVX :: Device ->  ObjectTableCreateInfoNVX ->  Maybe AllocationCallbacks ->  IO ( ObjectTableNVX )
+createObjectTableNVX :: Device ->  ObjectTableCreateInfoNVX ->  Maybe AllocationCallbacks ->  IO (ObjectTableNVX)
 createObjectTableNVX = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pObjectTable -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructObjectTableCreateInfoNVX a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createObjectTableNVX commandTable device pCreateInfo pAllocator pObjectTable >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pObjectTable)))))
 
 -- | Wrapper for 'vkDestroyIndirectCommandsLayoutNVX'
@@ -566,24 +635,31 @@ destroyObjectTableNVX :: Device ->  ObjectTableNVX ->  Maybe AllocationCallbacks
 destroyObjectTableNVX = \(Device device commandTable) -> \objectTable -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyObjectTableNVX commandTable device objectTable pAllocator *> (pure ()))
 
 -- | Wrapper for 'vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX'
-getPhysicalDeviceGeneratedCommandsPropertiesNVX :: PhysicalDevice ->  IO ( DeviceGeneratedCommandsFeaturesNVX
-, DeviceGeneratedCommandsLimitsNVX )
+getPhysicalDeviceGeneratedCommandsPropertiesNVX :: PhysicalDevice ->  IO (DeviceGeneratedCommandsFeaturesNVX, DeviceGeneratedCommandsLimitsNVX)
 getPhysicalDeviceGeneratedCommandsPropertiesNVX = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pLimits -> alloca (\pFeatures -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceGeneratedCommandsPropertiesNVX commandTable physicalDevice pFeatures pLimits *> ((,) <$> (fromCStructDeviceGeneratedCommandsFeaturesNVX <=< peek) pFeatures<*>(fromCStructDeviceGeneratedCommandsLimitsNVX <=< peek) pLimits)))
 
 -- | Wrapper for 'vkRegisterObjectsNVX'
-registerObjectsNVX :: Device ->  ObjectTableNVX ->  Vector ObjectTableEntryNVX ->  Vector Word32 ->  IO (  )
+registerObjectsNVX :: Device ->  ObjectTableNVX ->  Vector ObjectTableEntryNVX ->  Vector Word32 ->  IO ()
 registerObjectsNVX = \(Device device commandTable) -> \objectTable -> \pObjectTableEntries -> \objectIndices -> withVec (&) objectIndices (\pObjectIndices -> withVec (\a -> withCStructObjectTableEntryNVX a . flip with) pObjectTableEntries (\pPObjectTableEntries -> Graphics.Vulkan.C.Dynamic.registerObjectsNVX commandTable device objectTable (fromIntegral $ Data.Vector.length pObjectTableEntries `min` Data.Vector.length objectIndices) pPObjectTableEntries pObjectIndices >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))))
 
 -- | Wrapper for 'vkUnregisterObjectsNVX'
-unregisterObjectsNVX :: Device ->  ObjectTableNVX ->  Vector ObjectEntryTypeNVX ->  Vector Word32 ->  IO (  )
+unregisterObjectsNVX :: Device ->  ObjectTableNVX ->  Vector ObjectEntryTypeNVX ->  Vector Word32 ->  IO ()
 unregisterObjectsNVX = \(Device device commandTable) -> \objectTable -> \objectEntryTypes -> \objectIndices -> withVec (&) objectIndices (\pObjectIndices -> withVec (&) objectEntryTypes (\pObjectEntryTypes -> Graphics.Vulkan.C.Dynamic.unregisterObjectsNVX commandTable device objectTable (fromIntegral $ Data.Vector.length objectEntryTypes `min` Data.Vector.length objectIndices) pObjectEntryTypes pObjectIndices >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))))
-withIndirectCommandsLayoutNVX :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withIndirectCommandsLayoutNVX createInfo allocationCallbacks =
-  bracket
-    (vkCreateIndirectCommandsLayoutNVX createInfo allocationCallbacks)
-    (`vkDestroyIndirectCommandsLayoutNVX` allocationCallbacks)
-withObjectTableNVX :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withObjectTableNVX createInfo allocationCallbacks =
-  bracket
-    (vkCreateObjectTableNVX createInfo allocationCallbacks)
-    (`vkDestroyObjectTableNVX` allocationCallbacks)
+-- | Wrapper for 'createIndirectCommandsLayoutNVX' and 'destroyIndirectCommandsLayoutNVX' using 'bracket'
+withIndirectCommandsLayoutNVX
+  :: Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe (AllocationCallbacks) -> (IndirectCommandsLayoutNVX -> IO a) -> IO a
+withIndirectCommandsLayoutNVX device indirectCommandsLayoutCreateInfoNVX allocationCallbacks = bracket
+  (createIndirectCommandsLayoutNVX device indirectCommandsLayoutCreateInfoNVX allocationCallbacks)
+  (\o -> destroyIndirectCommandsLayoutNVX device o allocationCallbacks)
+-- | Wrapper for 'createObjectTableNVX' and 'destroyObjectTableNVX' using 'bracket'
+withObjectTableNVX
+  :: Device -> ObjectTableCreateInfoNVX -> Maybe (AllocationCallbacks) -> (ObjectTableNVX -> IO a) -> IO a
+withObjectTableNVX device objectTableCreateInfoNVX allocationCallbacks = bracket
+  (createObjectTableNVX device objectTableCreateInfoNVX allocationCallbacks)
+  (\o -> destroyObjectTableNVX device o allocationCallbacks)
+-- | Wrapper for 'registerObjectsNVX' and 'unregisterObjectsNVX' using 'bracket_'
+withRegisteredObjectsNVX
+  :: Device -> ObjectTableNVX -> Vector (ObjectTableEntryNVX) -> Vector (Word32) -> Vector (ObjectEntryTypeNVX) -> IO a -> IO a
+withRegisteredObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices objectEntryTypeNVX = bracket_
+  (registerObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices)
+  (unregisterObjectsNVX device objectTableNVX objectEntryTypeNVX objectIndices)

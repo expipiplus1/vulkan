@@ -101,6 +101,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageUsageFlagBits(..)
@@ -147,6 +148,11 @@ instance Storable VkCoarseSampleLocationNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkPixelX (poked :: VkCoarseSampleLocationNV))
                 *> poke (ptr `plusPtr` 4) (vkPixelY (poked :: VkCoarseSampleLocationNV))
                 *> poke (ptr `plusPtr` 8) (vkSample (poked :: VkCoarseSampleLocationNV))
+
+instance Zero VkCoarseSampleLocationNV where
+  zero = VkCoarseSampleLocationNV zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkCoarseSampleOrderCustomNV"
 data VkCoarseSampleOrderCustomNV = VkCoarseSampleOrderCustomNV
   { -- No documentation found for Nested "VkCoarseSampleOrderCustomNV" "shadingRate"
@@ -171,11 +177,17 @@ instance Storable VkCoarseSampleOrderCustomNV where
                 *> poke (ptr `plusPtr` 4) (vkSampleCount (poked :: VkCoarseSampleOrderCustomNV))
                 *> poke (ptr `plusPtr` 8) (vkSampleLocationCount (poked :: VkCoarseSampleOrderCustomNV))
                 *> poke (ptr `plusPtr` 16) (vkPSampleLocations (poked :: VkCoarseSampleOrderCustomNV))
+
+instance Zero VkCoarseSampleOrderCustomNV where
+  zero = VkCoarseSampleOrderCustomNV zero
+                                     zero
+                                     zero
+                                     zero
 -- ** VkCoarseSampleOrderTypeNV
 
 -- No documentation found for TopLevel "VkCoarseSampleOrderTypeNV"
 newtype VkCoarseSampleOrderTypeNV = VkCoarseSampleOrderTypeNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkCoarseSampleOrderTypeNV where
   showsPrec _ VK_COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV = showString "VK_COARSE_SAMPLE_ORDER_TYPE_DEFAULT_NV"
@@ -236,6 +248,12 @@ instance Storable VkPhysicalDeviceShadingRateImageFeaturesNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceShadingRateImageFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkShadingRateImage (poked :: VkPhysicalDeviceShadingRateImageFeaturesNV))
                 *> poke (ptr `plusPtr` 20) (vkShadingRateCoarseSampleOrder (poked :: VkPhysicalDeviceShadingRateImageFeaturesNV))
+
+instance Zero VkPhysicalDeviceShadingRateImageFeaturesNV where
+  zero = VkPhysicalDeviceShadingRateImageFeaturesNV zero
+                                                    zero
+                                                    zero
+                                                    zero
 -- No documentation found for TopLevel "VkPhysicalDeviceShadingRateImagePropertiesNV"
 data VkPhysicalDeviceShadingRateImagePropertiesNV = VkPhysicalDeviceShadingRateImagePropertiesNV
   { -- No documentation found for Nested "VkPhysicalDeviceShadingRateImagePropertiesNV" "sType"
@@ -264,6 +282,13 @@ instance Storable VkPhysicalDeviceShadingRateImagePropertiesNV where
                 *> poke (ptr `plusPtr` 16) (vkShadingRateTexelSize (poked :: VkPhysicalDeviceShadingRateImagePropertiesNV))
                 *> poke (ptr `plusPtr` 24) (vkShadingRatePaletteSize (poked :: VkPhysicalDeviceShadingRateImagePropertiesNV))
                 *> poke (ptr `plusPtr` 28) (vkShadingRateMaxCoarseSamples (poked :: VkPhysicalDeviceShadingRateImagePropertiesNV))
+
+instance Zero VkPhysicalDeviceShadingRateImagePropertiesNV where
+  zero = VkPhysicalDeviceShadingRateImagePropertiesNV zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
 -- No documentation found for TopLevel "VkPipelineViewportCoarseSampleOrderStateCreateInfoNV"
 data VkPipelineViewportCoarseSampleOrderStateCreateInfoNV = VkPipelineViewportCoarseSampleOrderStateCreateInfoNV
   { -- No documentation found for Nested "VkPipelineViewportCoarseSampleOrderStateCreateInfoNV" "sType"
@@ -292,6 +317,13 @@ instance Storable VkPipelineViewportCoarseSampleOrderStateCreateInfoNV where
                 *> poke (ptr `plusPtr` 16) (vkSampleOrderType (poked :: VkPipelineViewportCoarseSampleOrderStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 20) (vkCustomSampleOrderCount (poked :: VkPipelineViewportCoarseSampleOrderStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkPCustomSampleOrders (poked :: VkPipelineViewportCoarseSampleOrderStateCreateInfoNV))
+
+instance Zero VkPipelineViewportCoarseSampleOrderStateCreateInfoNV where
+  zero = VkPipelineViewportCoarseSampleOrderStateCreateInfoNV zero
+                                                              zero
+                                                              zero
+                                                              zero
+                                                              zero
 -- No documentation found for TopLevel "VkPipelineViewportShadingRateImageStateCreateInfoNV"
 data VkPipelineViewportShadingRateImageStateCreateInfoNV = VkPipelineViewportShadingRateImageStateCreateInfoNV
   { -- No documentation found for Nested "VkPipelineViewportShadingRateImageStateCreateInfoNV" "sType"
@@ -320,11 +352,18 @@ instance Storable VkPipelineViewportShadingRateImageStateCreateInfoNV where
                 *> poke (ptr `plusPtr` 16) (vkShadingRateImageEnable (poked :: VkPipelineViewportShadingRateImageStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 20) (vkViewportCount (poked :: VkPipelineViewportShadingRateImageStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkPShadingRatePalettes (poked :: VkPipelineViewportShadingRateImageStateCreateInfoNV))
+
+instance Zero VkPipelineViewportShadingRateImageStateCreateInfoNV where
+  zero = VkPipelineViewportShadingRateImageStateCreateInfoNV zero
+                                                             zero
+                                                             zero
+                                                             zero
+                                                             zero
 -- ** VkShadingRatePaletteEntryNV
 
 -- No documentation found for TopLevel "VkShadingRatePaletteEntryNV"
 newtype VkShadingRatePaletteEntryNV = VkShadingRatePaletteEntryNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkShadingRatePaletteEntryNV where
   showsPrec _ VK_SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV = showString "VK_SHADING_RATE_PALETTE_ENTRY_NO_INVOCATIONS_NV"
@@ -425,6 +464,10 @@ instance Storable VkShadingRatePaletteNV where
                                     <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkShadingRatePaletteEntryCount (poked :: VkShadingRatePaletteNV))
                 *> poke (ptr `plusPtr` 8) (vkPShadingRatePaletteEntries (poked :: VkShadingRatePaletteNV))
+
+instance Zero VkShadingRatePaletteNV where
+  zero = VkShadingRatePaletteNV zero
+                                zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdBindShadingRateImageNV"
 foreign import ccall

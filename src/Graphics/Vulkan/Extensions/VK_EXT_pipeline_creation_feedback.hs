@@ -24,7 +24,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -44,6 +45,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback
   ( VkPipelineCreationFeedbackCreateInfoEXT(..)
   , VkPipelineCreationFeedbackEXT(..)
@@ -84,6 +88,10 @@ fromCStructPipelineCreationFeedbackCreateInfoEXT c = PipelineCreationFeedbackCre
                                                                                            <*> (fromCStructPipelineCreationFeedbackEXT <=< peek) (vkPPipelineCreationFeedback (c :: VkPipelineCreationFeedbackCreateInfoEXT))
                                                                                            -- Length valued member elided
                                                                                            <*> (Data.Vector.generateM (fromIntegral (vkPipelineStageCreationFeedbackCount (c :: VkPipelineCreationFeedbackCreateInfoEXT))) (((fromCStructPipelineCreationFeedbackEXT <=<) . peekElemOff) (vkPPipelineStageCreationFeedbacks (c :: VkPipelineCreationFeedbackCreateInfoEXT))))
+instance Zero PipelineCreationFeedbackCreateInfoEXT where
+  zero = PipelineCreationFeedbackCreateInfoEXT Nothing
+                                               zero
+                                               Data.Vector.empty
 -- No documentation found for TopLevel "PipelineCreationFeedbackEXT"
 data PipelineCreationFeedbackEXT = PipelineCreationFeedbackEXT
   { -- No documentation found for Nested "PipelineCreationFeedbackEXT" "flags"
@@ -97,6 +105,9 @@ withCStructPipelineCreationFeedbackEXT from cont = cont (VkPipelineCreationFeedb
 fromCStructPipelineCreationFeedbackEXT :: VkPipelineCreationFeedbackEXT -> IO PipelineCreationFeedbackEXT
 fromCStructPipelineCreationFeedbackEXT c = PipelineCreationFeedbackEXT <$> pure (vkFlags (c :: VkPipelineCreationFeedbackEXT))
                                                                        <*> pure (vkDuration (c :: VkPipelineCreationFeedbackEXT))
+instance Zero PipelineCreationFeedbackEXT where
+  zero = PipelineCreationFeedbackEXT zero
+                                     zero
 -- No documentation found for TopLevel "PipelineCreationFeedbackFlagBitsEXT"
 type PipelineCreationFeedbackFlagBitsEXT = VkPipelineCreationFeedbackFlagBitsEXT
 -- No documentation found for TopLevel "PipelineCreationFeedbackFlagsEXT"

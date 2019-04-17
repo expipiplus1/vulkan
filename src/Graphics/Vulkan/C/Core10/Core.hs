@@ -3,6 +3,7 @@
 {-# language DuplicateRecordFields #-}
 {-# language GeneralizedNewtypeDeriving #-}
 {-# language PatternSynonyms #-}
+{-# language TypeSynonymInstances #-}
 
 module Graphics.Vulkan.C.Core10.Core
   ( VkBaseInStructure(..)
@@ -297,16 +298,34 @@ module Graphics.Vulkan.C.Core10.Core
   , pattern VK_VENDOR_ID_VIV
   , pattern VK_VENDOR_ID_VSI
   , pattern VK_VENDOR_ID_KAZAN
+  , Zero(..)
   ) where
 
 import Data.Int
-  ( Int32
+  ( Int16
+  , Int32
+  , Int64
+  , Int8
+  )
+import qualified Data.Vector.Storable.Sized
+  ( Vector
+  , replicate
   )
 import Data.Word
-  ( Word32
+  ( Word16
+  , Word32
+  , Word64
+  , Word8
+  )
+import Foreign.C.Types
+  ( CChar
+  , CFloat
+  , CInt
+  , CSize
   )
 import Foreign.Ptr
   ( Ptr
+  , nullPtr
   , plusPtr
   )
 import Foreign.Storable
@@ -316,6 +335,9 @@ import Foreign.Storable
 import GHC.Read
   ( choose
   , expectP
+  )
+import GHC.TypeNats
+  ( KnownNat
   )
 import Text.ParserCombinators.ReadPrec
   ( (+++)
@@ -350,6 +372,10 @@ instance Storable VkBaseInStructure where
                                <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBaseInStructure))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBaseInStructure))
+
+instance Zero VkBaseInStructure where
+  zero = VkBaseInStructure zero
+                           zero
 -- No documentation found for TopLevel "VkBaseOutStructure"
 data VkBaseOutStructure = VkBaseOutStructure
   { -- No documentation found for Nested "VkBaseOutStructure" "sType"
@@ -366,11 +392,15 @@ instance Storable VkBaseOutStructure where
                                 <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBaseOutStructure))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBaseOutStructure))
+
+instance Zero VkBaseOutStructure where
+  zero = VkBaseOutStructure zero
+                            zero
 -- ** VkBool32
 
 -- No documentation found for TopLevel "VkBool32"
 newtype VkBool32 = VkBool32 Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkBool32 where
   showsPrec _ VK_FALSE = showString "VK_FALSE"
@@ -401,7 +431,7 @@ type VkFlags = Word32
 
 -- No documentation found for TopLevel "VkFormat"
 newtype VkFormat = VkFormat Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkFormat where
   showsPrec _ VK_FORMAT_UNDEFINED = showString "VK_FORMAT_UNDEFINED"
@@ -1614,7 +1644,7 @@ pattern VK_FORMAT_ASTC_12x12_SRGB_BLOCK = VkFormat 184
 
 -- No documentation found for TopLevel "VkObjectType"
 newtype VkObjectType = VkObjectType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkObjectType where
   showsPrec _ VK_OBJECT_TYPE_UNKNOWN = showString "VK_OBJECT_TYPE_UNKNOWN"
@@ -1813,7 +1843,7 @@ pattern VK_OBJECT_TYPE_COMMAND_POOL = VkObjectType 25
 
 -- No documentation found for TopLevel "VkResult"
 newtype VkResult = VkResult Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkResult where
   showsPrec _ VK_SUCCESS = showString "VK_SUCCESS"
@@ -1968,7 +1998,7 @@ pattern VK_ERROR_FRAGMENTED_POOL = VkResult (-12)
 
 -- No documentation found for TopLevel "VkStructureType"
 newtype VkStructureType = VkStructureType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkStructureType where
   showsPrec _ VK_STRUCTURE_TYPE_APPLICATION_INFO = showString "VK_STRUCTURE_TYPE_APPLICATION_INFO"
@@ -2859,7 +2889,7 @@ pattern VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO = VkStructureType 48
 
 -- No documentation found for TopLevel "VkVendorId"
 newtype VkVendorId = VkVendorId Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkVendorId where
   showsPrec _ VK_VENDOR_ID_VIV = showString "VK_VENDOR_ID_VIV"
@@ -2890,3 +2920,51 @@ pattern VK_VENDOR_ID_VSI = VkVendorId 65538
 -- No documentation found for Nested "VkVendorId" "VK_VENDOR_ID_KAZAN"
 pattern VK_VENDOR_ID_KAZAN :: VkVendorId
 pattern VK_VENDOR_ID_KAZAN = VkVendorId 65539
+-- | A class for initializing things with all zero data
+class Zero a where
+  zero :: a
+
+instance (KnownNat n, Storable a, Zero a) => Zero (Data.Vector.Storable.Sized.Vector n a) where
+  zero = Data.Vector.Storable.Sized.replicate zero
+
+instance Zero (Ptr a) where
+  zero = nullPtr
+
+instance Zero Int8 where
+  zero = 0
+
+instance Zero Int16 where
+  zero = 0
+
+instance Zero Int32 where
+  zero = 0
+
+instance Zero Int64 where
+  zero = 0
+
+instance Zero Word8 where
+  zero = 0
+
+instance Zero Word16 where
+  zero = 0
+
+instance Zero Word32 where
+  zero = 0
+
+instance Zero Word64 where
+  zero = 0
+
+instance Zero Float where
+  zero = 0
+
+instance Zero CFloat where
+  zero = 0
+
+instance Zero CChar where
+  zero = 0
+
+instance Zero CSize where
+  zero = 0
+
+instance Zero CInt where
+  zero = 0

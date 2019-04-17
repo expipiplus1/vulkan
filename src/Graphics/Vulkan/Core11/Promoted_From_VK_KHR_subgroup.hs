@@ -24,6 +24,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup
   ( VkPhysicalDeviceSubgroupProperties(..)
   , VkSubgroupFeatureFlagBits(..)
@@ -67,6 +70,12 @@ fromCStructPhysicalDeviceSubgroupProperties c = PhysicalDeviceSubgroupProperties
                                                                                  <*> pure (vkSupportedStages (c :: VkPhysicalDeviceSubgroupProperties))
                                                                                  <*> pure (vkSupportedOperations (c :: VkPhysicalDeviceSubgroupProperties))
                                                                                  <*> pure (bool32ToBool (vkQuadOperationsInAllStages (c :: VkPhysicalDeviceSubgroupProperties)))
+instance Zero PhysicalDeviceSubgroupProperties where
+  zero = PhysicalDeviceSubgroupProperties Nothing
+                                          zero
+                                          zero
+                                          zero
+                                          False
 -- No documentation found for TopLevel "SubgroupFeatureFlagBits"
 type SubgroupFeatureFlagBits = VkSubgroupFeatureFlagBits
 -- No documentation found for TopLevel "SubgroupFeatureFlags"

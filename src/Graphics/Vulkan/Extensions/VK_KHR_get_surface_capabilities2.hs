@@ -67,6 +67,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
@@ -118,6 +119,9 @@ fromCStructPhysicalDeviceSurfaceInfo2KHR :: VkPhysicalDeviceSurfaceInfo2KHR -> I
 fromCStructPhysicalDeviceSurfaceInfo2KHR c = PhysicalDeviceSurfaceInfo2KHR <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceSurfaceInfo2KHR)))
                                                                            <*> pure (vkSurface (c :: VkPhysicalDeviceSurfaceInfo2KHR))
+instance Zero PhysicalDeviceSurfaceInfo2KHR where
+  zero = PhysicalDeviceSurfaceInfo2KHR Nothing
+                                       zero
 -- No documentation found for TopLevel "SurfaceCapabilities2KHR"
 data SurfaceCapabilities2KHR = SurfaceCapabilities2KHR
   { -- Univalued Member elided
@@ -133,6 +137,9 @@ fromCStructSurfaceCapabilities2KHR :: VkSurfaceCapabilities2KHR -> IO SurfaceCap
 fromCStructSurfaceCapabilities2KHR c = SurfaceCapabilities2KHR <$> -- Univalued Member elided
                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSurfaceCapabilities2KHR)))
                                                                <*> (fromCStructSurfaceCapabilitiesKHR (vkSurfaceCapabilities (c :: VkSurfaceCapabilities2KHR)))
+instance Zero SurfaceCapabilities2KHR where
+  zero = SurfaceCapabilities2KHR Nothing
+                                 zero
 -- No documentation found for TopLevel "SurfaceFormat2KHR"
 data SurfaceFormat2KHR = SurfaceFormat2KHR
   { -- Univalued Member elided
@@ -148,9 +155,12 @@ fromCStructSurfaceFormat2KHR :: VkSurfaceFormat2KHR -> IO SurfaceFormat2KHR
 fromCStructSurfaceFormat2KHR c = SurfaceFormat2KHR <$> -- Univalued Member elided
                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSurfaceFormat2KHR)))
                                                    <*> (fromCStructSurfaceFormatKHR (vkSurfaceFormat (c :: VkSurfaceFormat2KHR)))
+instance Zero SurfaceFormat2KHR where
+  zero = SurfaceFormat2KHR Nothing
+                           zero
 
 -- | Wrapper for 'vkGetPhysicalDeviceSurfaceCapabilities2KHR'
-getPhysicalDeviceSurfaceCapabilities2KHR :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  IO ( SurfaceCapabilities2KHR )
+getPhysicalDeviceSurfaceCapabilities2KHR :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  IO (SurfaceCapabilities2KHR)
 getPhysicalDeviceSurfaceCapabilities2KHR = \(PhysicalDevice physicalDevice commandTable) -> \surfaceInfo -> alloca (\pSurfaceCapabilities -> (\a -> withCStructPhysicalDeviceSurfaceInfo2KHR a . flip with) surfaceInfo (\pSurfaceInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceCapabilities2KHR commandTable physicalDevice pSurfaceInfo pSurfaceCapabilities >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructSurfaceCapabilities2KHR <=< peek) pSurfaceCapabilities))))
 
 -- | Wrapper for 'vkGetPhysicalDeviceSurfaceFormats2KHR'
@@ -158,8 +168,7 @@ getNumPhysicalDeviceSurfaceFormats2KHR :: PhysicalDevice ->  PhysicalDeviceSurfa
 getNumPhysicalDeviceSurfaceFormats2KHR = \(PhysicalDevice physicalDevice commandTable) -> \surfaceInfo -> alloca (\pSurfaceFormatCount -> (\a -> withCStructPhysicalDeviceSurfaceInfo2KHR a . flip with) surfaceInfo (\pSurfaceInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceFormats2KHR commandTable physicalDevice pSurfaceInfo pSurfaceFormatCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pSurfaceFormatCount))))
 
 -- | Wrapper for 'vkGetPhysicalDeviceSurfaceFormats2KHR'
-getPhysicalDeviceSurfaceFormats2KHR :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  Word32 ->  IO ( VkResult
-, Vector SurfaceFormat2KHR )
+getPhysicalDeviceSurfaceFormats2KHR :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  Word32 ->  IO (VkResult, Vector SurfaceFormat2KHR)
 getPhysicalDeviceSurfaceFormats2KHR = \(PhysicalDevice physicalDevice commandTable) -> \surfaceInfo -> \surfaceFormatCount -> allocaArray (fromIntegral surfaceFormatCount) (\pSurfaceFormats -> with surfaceFormatCount (\pSurfaceFormatCount -> (\a -> withCStructPhysicalDeviceSurfaceInfo2KHR a . flip with) surfaceInfo (\pSurfaceInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceFormats2KHR commandTable physicalDevice pSurfaceInfo pSurfaceFormatCount pSurfaceFormats >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructSurfaceFormat2KHR <=< peekElemOff p) pSurfaceFormats) =<< (fromIntegral <$> (peek pSurfaceFormatCount))))))))
 -- | Call 'getNumPhysicalDeviceSurfaceFormats2KHR' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSurfaceFormats2KHR' to get all the values.

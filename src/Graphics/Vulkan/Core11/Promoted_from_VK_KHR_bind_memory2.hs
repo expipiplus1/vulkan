@@ -43,7 +43,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
   ( VkBindBufferMemoryInfo(..)
@@ -99,6 +100,11 @@ fromCStructBindBufferMemoryInfo c = BindBufferMemoryInfo <$> -- Univalued Member
                                                          <*> pure (vkBuffer (c :: VkBindBufferMemoryInfo))
                                                          <*> pure (vkMemory (c :: VkBindBufferMemoryInfo))
                                                          <*> pure (vkMemoryOffset (c :: VkBindBufferMemoryInfo))
+instance Zero BindBufferMemoryInfo where
+  zero = BindBufferMemoryInfo Nothing
+                              zero
+                              zero
+                              zero
 -- No documentation found for TopLevel "BindImageMemoryInfo"
 data BindImageMemoryInfo = BindImageMemoryInfo
   { -- Univalued Member elided
@@ -120,6 +126,11 @@ fromCStructBindImageMemoryInfo c = BindImageMemoryInfo <$> -- Univalued Member e
                                                        <*> pure (vkImage (c :: VkBindImageMemoryInfo))
                                                        <*> pure (vkMemory (c :: VkBindImageMemoryInfo))
                                                        <*> pure (vkMemoryOffset (c :: VkBindImageMemoryInfo))
+instance Zero BindImageMemoryInfo where
+  zero = BindImageMemoryInfo Nothing
+                             zero
+                             zero
+                             zero
 
 -- | Wrapper for 'vkBindBufferMemory2'
 bindBufferMemory2 :: Device ->  Vector BindBufferMemoryInfo ->  IO ()

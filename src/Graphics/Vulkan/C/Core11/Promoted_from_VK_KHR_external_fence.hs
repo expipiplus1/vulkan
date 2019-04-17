@@ -44,6 +44,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities
@@ -71,11 +72,16 @@ instance Storable VkExportFenceCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportFenceCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportFenceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportFenceCreateInfo))
+
+instance Zero VkExportFenceCreateInfo where
+  zero = VkExportFenceCreateInfo zero
+                                 zero
+                                 zero
 -- ** VkFenceImportFlagBits
 
 -- No documentation found for TopLevel "VkFenceImportFlagBits"
 newtype VkFenceImportFlagBits = VkFenceImportFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkFenceImportFlagBits where
   showsPrec _ VK_FENCE_IMPORT_TEMPORARY_BIT = showString "VK_FENCE_IMPORT_TEMPORARY_BIT"

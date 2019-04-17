@@ -129,6 +129,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkObjectType(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
@@ -170,11 +171,16 @@ instance Storable VkBindImagePlaneMemoryInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBindImagePlaneMemoryInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindImagePlaneMemoryInfo))
                 *> poke (ptr `plusPtr` 16) (vkPlaneAspect (poked :: VkBindImagePlaneMemoryInfo))
+
+instance Zero VkBindImagePlaneMemoryInfo where
+  zero = VkBindImagePlaneMemoryInfo zero
+                                    zero
+                                    zero
 -- ** VkChromaLocation
 
 -- No documentation found for TopLevel "VkChromaLocation"
 newtype VkChromaLocation = VkChromaLocation Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkChromaLocation where
   showsPrec _ VK_CHROMA_LOCATION_COSITED_EVEN = showString "VK_CHROMA_LOCATION_COSITED_EVEN"
@@ -219,6 +225,11 @@ instance Storable VkImagePlaneMemoryRequirementsInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImagePlaneMemoryRequirementsInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImagePlaneMemoryRequirementsInfo))
                 *> poke (ptr `plusPtr` 16) (vkPlaneAspect (poked :: VkImagePlaneMemoryRequirementsInfo))
+
+instance Zero VkImagePlaneMemoryRequirementsInfo where
+  zero = VkImagePlaneMemoryRequirementsInfo zero
+                                            zero
+                                            zero
 -- No documentation found for TopLevel "VkPhysicalDeviceSamplerYcbcrConversionFeatures"
 data VkPhysicalDeviceSamplerYcbcrConversionFeatures = VkPhysicalDeviceSamplerYcbcrConversionFeatures
   { -- No documentation found for Nested "VkPhysicalDeviceSamplerYcbcrConversionFeatures" "sType"
@@ -239,6 +250,11 @@ instance Storable VkPhysicalDeviceSamplerYcbcrConversionFeatures where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
                 *> poke (ptr `plusPtr` 16) (vkSamplerYcbcrConversion (poked :: VkPhysicalDeviceSamplerYcbcrConversionFeatures))
+
+instance Zero VkPhysicalDeviceSamplerYcbcrConversionFeatures where
+  zero = VkPhysicalDeviceSamplerYcbcrConversionFeatures zero
+                                                        zero
+                                                        zero
 -- | Dummy data to tag the 'Ptr' with
 data VkSamplerYcbcrConversion_T
 -- No documentation found for TopLevel "VkSamplerYcbcrConversion"
@@ -291,6 +307,18 @@ instance Storable VkSamplerYcbcrConversionCreateInfo where
                 *> poke (ptr `plusPtr` 48) (vkYChromaOffset (poked :: VkSamplerYcbcrConversionCreateInfo))
                 *> poke (ptr `plusPtr` 52) (vkChromaFilter (poked :: VkSamplerYcbcrConversionCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkForceExplicitReconstruction (poked :: VkSamplerYcbcrConversionCreateInfo))
+
+instance Zero VkSamplerYcbcrConversionCreateInfo where
+  zero = VkSamplerYcbcrConversionCreateInfo zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
 -- No documentation found for TopLevel "VkSamplerYcbcrConversionImageFormatProperties"
 data VkSamplerYcbcrConversionImageFormatProperties = VkSamplerYcbcrConversionImageFormatProperties
   { -- No documentation found for Nested "VkSamplerYcbcrConversionImageFormatProperties" "sType"
@@ -311,6 +339,11 @@ instance Storable VkSamplerYcbcrConversionImageFormatProperties where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerYcbcrConversionImageFormatProperties))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerYcbcrConversionImageFormatProperties))
                 *> poke (ptr `plusPtr` 16) (vkCombinedImageSamplerDescriptorCount (poked :: VkSamplerYcbcrConversionImageFormatProperties))
+
+instance Zero VkSamplerYcbcrConversionImageFormatProperties where
+  zero = VkSamplerYcbcrConversionImageFormatProperties zero
+                                                       zero
+                                                       zero
 -- No documentation found for TopLevel "VkSamplerYcbcrConversionInfo"
 data VkSamplerYcbcrConversionInfo = VkSamplerYcbcrConversionInfo
   { -- No documentation found for Nested "VkSamplerYcbcrConversionInfo" "sType"
@@ -331,11 +364,16 @@ instance Storable VkSamplerYcbcrConversionInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSamplerYcbcrConversionInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSamplerYcbcrConversionInfo))
                 *> poke (ptr `plusPtr` 16) (vkConversion (poked :: VkSamplerYcbcrConversionInfo))
+
+instance Zero VkSamplerYcbcrConversionInfo where
+  zero = VkSamplerYcbcrConversionInfo zero
+                                      zero
+                                      zero
 -- ** VkSamplerYcbcrModelConversion
 
 -- No documentation found for TopLevel "VkSamplerYcbcrModelConversion"
 newtype VkSamplerYcbcrModelConversion = VkSamplerYcbcrModelConversion Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkSamplerYcbcrModelConversion where
   showsPrec _ VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY = showString "VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY"
@@ -382,7 +420,7 @@ pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 = VkSamplerYcbcrModelConver
 
 -- No documentation found for TopLevel "VkSamplerYcbcrRange"
 newtype VkSamplerYcbcrRange = VkSamplerYcbcrRange Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkSamplerYcbcrRange where
   showsPrec _ VK_SAMPLER_YCBCR_RANGE_ITU_FULL = showString "VK_SAMPLER_YCBCR_RANGE_ITU_FULL"

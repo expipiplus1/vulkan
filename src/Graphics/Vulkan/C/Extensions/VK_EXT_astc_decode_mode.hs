@@ -30,6 +30,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkFormat(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -53,6 +54,11 @@ instance Storable VkImageViewASTCDecodeModeEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageViewASTCDecodeModeEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageViewASTCDecodeModeEXT))
                 *> poke (ptr `plusPtr` 16) (vkDecodeMode (poked :: VkImageViewASTCDecodeModeEXT))
+
+instance Zero VkImageViewASTCDecodeModeEXT where
+  zero = VkImageViewASTCDecodeModeEXT zero
+                                      zero
+                                      zero
 -- No documentation found for TopLevel "VkPhysicalDeviceASTCDecodeFeaturesEXT"
 data VkPhysicalDeviceASTCDecodeFeaturesEXT = VkPhysicalDeviceASTCDecodeFeaturesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceASTCDecodeFeaturesEXT" "sType"
@@ -73,6 +79,11 @@ instance Storable VkPhysicalDeviceASTCDecodeFeaturesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceASTCDecodeFeaturesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceASTCDecodeFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkDecodeModeSharedExponent (poked :: VkPhysicalDeviceASTCDecodeFeaturesEXT))
+
+instance Zero VkPhysicalDeviceASTCDecodeFeaturesEXT where
+  zero = VkPhysicalDeviceASTCDecodeFeaturesEXT zero
+                                               zero
+                                               zero
 -- No documentation found for TopLevel "VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME"
 pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME = "VK_EXT_astc_decode_mode"

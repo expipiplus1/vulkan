@@ -57,6 +57,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -80,7 +81,7 @@ type VkBufferView = Ptr VkBufferView_T
 
 -- No documentation found for TopLevel "VkBufferViewCreateFlags"
 newtype VkBufferViewCreateFlags = VkBufferViewCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkBufferViewCreateFlags where
   
@@ -133,6 +134,15 @@ instance Storable VkBufferViewCreateInfo where
                 *> poke (ptr `plusPtr` 32) (vkFormat (poked :: VkBufferViewCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkOffset (poked :: VkBufferViewCreateInfo))
                 *> poke (ptr `plusPtr` 48) (vkRange (poked :: VkBufferViewCreateInfo))
+
+instance Zero VkBufferViewCreateInfo where
+  zero = VkBufferViewCreateInfo zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkCreateBufferView"
 foreign import ccall

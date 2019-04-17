@@ -49,6 +49,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -72,11 +73,16 @@ instance Storable VkPipelineRasterizationStateRasterizationOrderAMD where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineRasterizationStateRasterizationOrderAMD))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineRasterizationStateRasterizationOrderAMD))
                 *> poke (ptr `plusPtr` 16) (vkRasterizationOrder (poked :: VkPipelineRasterizationStateRasterizationOrderAMD))
+
+instance Zero VkPipelineRasterizationStateRasterizationOrderAMD where
+  zero = VkPipelineRasterizationStateRasterizationOrderAMD zero
+                                                           zero
+                                                           zero
 -- ** VkRasterizationOrderAMD
 
 -- No documentation found for TopLevel "VkRasterizationOrderAMD"
 newtype VkRasterizationOrderAMD = VkRasterizationOrderAMD Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkRasterizationOrderAMD where
   showsPrec _ VK_RASTERIZATION_ORDER_STRICT_AMD = showString "VK_RASTERIZATION_ORDER_STRICT_AMD"

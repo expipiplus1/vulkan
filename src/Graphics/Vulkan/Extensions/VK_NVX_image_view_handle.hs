@@ -29,6 +29,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle
   ( VkImageViewHandleInfoNVX(..)
   , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
@@ -77,6 +80,11 @@ fromCStructImageViewHandleInfoNVX c = ImageViewHandleInfoNVX <$> -- Univalued Me
                                                              <*> pure (vkImageView (c :: VkImageViewHandleInfoNVX))
                                                              <*> pure (vkDescriptorType (c :: VkImageViewHandleInfoNVX))
                                                              <*> pure (vkSampler (c :: VkImageViewHandleInfoNVX))
+instance Zero ImageViewHandleInfoNVX where
+  zero = ImageViewHandleInfoNVX Nothing
+                                zero
+                                zero
+                                zero
 
 -- | Wrapper for 'vkGetImageViewHandleNVX'
 getImageViewHandleNVX :: Device ->  ImageViewHandleInfoNVX ->  IO (Word32)

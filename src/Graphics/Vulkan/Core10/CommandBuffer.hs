@@ -25,10 +25,14 @@ module Graphics.Vulkan.Core10.CommandBuffer
   , endCommandBuffer
   , freeCommandBuffers
   , resetCommandBuffer
+  , useCommandBuffer
+  , withCommandBuffers
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , bracket_
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -81,7 +85,8 @@ import Graphics.Vulkan.C.Core10.CommandBuffer
   , VkQueryControlFlagBits(..)
   )
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
   , pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
   , pattern VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
   , pattern VK_SUCCESS
@@ -142,6 +147,11 @@ fromCStructCommandBufferAllocateInfo c = CommandBufferAllocateInfo <$> -- Unival
                                                                    <*> pure (vkCommandPool (c :: VkCommandBufferAllocateInfo))
                                                                    <*> pure (vkLevel (c :: VkCommandBufferAllocateInfo))
                                                                    <*> pure (vkCommandBufferCount (c :: VkCommandBufferAllocateInfo))
+instance Zero CommandBufferAllocateInfo where
+  zero = CommandBufferAllocateInfo Nothing
+                                   zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "CommandBufferBeginInfo"
 data CommandBufferBeginInfo = CommandBufferBeginInfo
   { -- Univalued Member elided
@@ -160,6 +170,10 @@ fromCStructCommandBufferBeginInfo c = CommandBufferBeginInfo <$> -- Univalued Me
                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkCommandBufferBeginInfo)))
                                                              <*> pure (vkFlags (c :: VkCommandBufferBeginInfo))
                                                              <*> maybePeek (fromCStructCommandBufferInheritanceInfo <=< peek) (vkPInheritanceInfo (c :: VkCommandBufferBeginInfo))
+instance Zero CommandBufferBeginInfo where
+  zero = CommandBufferBeginInfo Nothing
+                                zero
+                                Nothing
 -- No documentation found for TopLevel "CommandBufferInheritanceInfo"
 data CommandBufferInheritanceInfo = CommandBufferInheritanceInfo
   { -- Univalued Member elided
@@ -190,6 +204,14 @@ fromCStructCommandBufferInheritanceInfo c = CommandBufferInheritanceInfo <$> -- 
                                                                          <*> pure (bool32ToBool (vkOcclusionQueryEnable (c :: VkCommandBufferInheritanceInfo)))
                                                                          <*> pure (vkQueryFlags (c :: VkCommandBufferInheritanceInfo))
                                                                          <*> pure (vkPipelineStatistics (c :: VkCommandBufferInheritanceInfo))
+instance Zero CommandBufferInheritanceInfo where
+  zero = CommandBufferInheritanceInfo Nothing
+                                      zero
+                                      zero
+                                      zero
+                                      False
+                                      zero
+                                      zero
 -- No documentation found for TopLevel "CommandBufferLevel"
 type CommandBufferLevel = VkCommandBufferLevel
 -- No documentation found for TopLevel "CommandBufferResetFlagBits"
@@ -224,3 +246,15 @@ freeCommandBuffers = \(Device device commandTable) -> \commandPool -> \commandBu
 -- | Wrapper for 'vkResetCommandBuffer'
 resetCommandBuffer :: CommandBuffer ->  CommandBufferResetFlags ->  IO ()
 resetCommandBuffer = \(CommandBuffer commandBuffer commandTable) -> \flags -> Graphics.Vulkan.C.Dynamic.resetCommandBuffer commandTable commandBuffer flags >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
+-- | Wrapper for 'beginCommandBuffer' and 'endCommandBuffer' using 'bracket_'
+useCommandBuffer
+  :: CommandBuffer -> CommandBufferBeginInfo -> IO a -> IO a
+useCommandBuffer commandBuffer commandBufferBeginInfo = bracket_
+  (beginCommandBuffer commandBuffer commandBufferBeginInfo)
+  (endCommandBuffer commandBuffer)
+-- | Wrapper for 'allocateCommandBuffers' and 'freeCommandBuffers' using 'bracket'
+withCommandBuffers
+  :: Device -> CommandBufferAllocateInfo -> (Vector (CommandBuffer) -> IO a) -> IO a
+withCommandBuffers device commandBufferAllocateInfo = bracket
+  (allocateCommandBuffers device commandBufferAllocateInfo)
+  (\o -> freeCommandBuffers device (vkCommandPool (commandBufferAllocateInfo :: CommandBufferAllocateInfo))  o)

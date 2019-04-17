@@ -25,6 +25,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_external_memory
   ( VkExportMemoryAllocateInfoNV(..)
   , VkExternalMemoryImageCreateInfoNV(..)
@@ -60,6 +63,9 @@ fromCStructExportMemoryAllocateInfoNV :: VkExportMemoryAllocateInfoNV -> IO Expo
 fromCStructExportMemoryAllocateInfoNV c = ExportMemoryAllocateInfoNV <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExportMemoryAllocateInfoNV)))
                                                                      <*> pure (vkHandleTypes (c :: VkExportMemoryAllocateInfoNV))
+instance Zero ExportMemoryAllocateInfoNV where
+  zero = ExportMemoryAllocateInfoNV Nothing
+                                    zero
 -- No documentation found for TopLevel "ExternalMemoryImageCreateInfoNV"
 data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
   { -- Univalued Member elided
@@ -75,3 +81,6 @@ fromCStructExternalMemoryImageCreateInfoNV :: VkExternalMemoryImageCreateInfoNV 
 fromCStructExternalMemoryImageCreateInfoNV c = ExternalMemoryImageCreateInfoNV <$> -- Univalued Member elided
                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExternalMemoryImageCreateInfoNV)))
                                                                                <*> pure (vkHandleTypes (c :: VkExternalMemoryImageCreateInfoNV))
+instance Zero ExternalMemoryImageCreateInfoNV where
+  zero = ExternalMemoryImageCreateInfoNV Nothing
+                                         zero

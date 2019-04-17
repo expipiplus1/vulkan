@@ -47,7 +47,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
   ( VkDisplayPresentInfoKHR(..)
@@ -111,7 +112,12 @@ fromCStructDisplayPresentInfoKHR c = DisplayPresentInfoKHR <$> -- Univalued Memb
                                                            <*> (fromCStructRect2D (vkSrcRect (c :: VkDisplayPresentInfoKHR)))
                                                            <*> (fromCStructRect2D (vkDstRect (c :: VkDisplayPresentInfoKHR)))
                                                            <*> pure (bool32ToBool (vkPersistent (c :: VkDisplayPresentInfoKHR)))
+instance Zero DisplayPresentInfoKHR where
+  zero = DisplayPresentInfoKHR Nothing
+                               zero
+                               zero
+                               False
 
 -- | Wrapper for 'vkCreateSharedSwapchainsKHR'
-createSharedSwapchainsKHR :: Device ->  Vector SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( Vector SwapchainKHR )
+createSharedSwapchainsKHR :: Device ->  Vector SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (Vector SwapchainKHR)
 createSharedSwapchainsKHR = \(Device device commandTable) -> \createInfos -> \allocator -> allocaArray ((Data.Vector.length createInfos)) (\pSwapchains -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructSwapchainCreateInfoKHR createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createSharedSwapchainsKHR commandTable device (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pSwapchains >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos)) (peekElemOff pSwapchains)))))))

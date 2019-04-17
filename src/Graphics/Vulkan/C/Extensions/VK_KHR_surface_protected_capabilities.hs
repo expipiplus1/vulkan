@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -50,6 +51,11 @@ instance Storable VkSurfaceProtectedCapabilitiesKHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSurfaceProtectedCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSurfaceProtectedCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkSupportsProtected (poked :: VkSurfaceProtectedCapabilitiesKHR))
+
+instance Zero VkSurfaceProtectedCapabilitiesKHR where
+  zero = VkSurfaceProtectedCapabilitiesKHR zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME"
 pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME = "VK_KHR_surface_protected_capabilities"

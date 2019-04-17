@@ -29,6 +29,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -64,6 +65,14 @@ instance Storable VkPhysicalDevicePCIBusInfoPropertiesEXT where
                 *> poke (ptr `plusPtr` 20) (vkPciBus (poked :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
                 *> poke (ptr `plusPtr` 24) (vkPciDevice (poked :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
                 *> poke (ptr `plusPtr` 28) (vkPciFunction (poked :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
+
+instance Zero VkPhysicalDevicePCIBusInfoPropertiesEXT where
+  zero = VkPhysicalDevicePCIBusInfoPropertiesEXT zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
 -- No documentation found for TopLevel "VK_EXT_PCI_BUS_INFO_EXTENSION_NAME"
 pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME = "VK_EXT_pci_bus_info"

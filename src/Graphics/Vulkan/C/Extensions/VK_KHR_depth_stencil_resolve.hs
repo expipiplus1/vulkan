@@ -57,6 +57,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
@@ -96,11 +97,19 @@ instance Storable VkPhysicalDeviceDepthStencilResolvePropertiesKHR where
                 *> poke (ptr `plusPtr` 20) (vkSupportedStencilResolveModes (poked :: VkPhysicalDeviceDepthStencilResolvePropertiesKHR))
                 *> poke (ptr `plusPtr` 24) (vkIndependentResolveNone (poked :: VkPhysicalDeviceDepthStencilResolvePropertiesKHR))
                 *> poke (ptr `plusPtr` 28) (vkIndependentResolve (poked :: VkPhysicalDeviceDepthStencilResolvePropertiesKHR))
+
+instance Zero VkPhysicalDeviceDepthStencilResolvePropertiesKHR where
+  zero = VkPhysicalDeviceDepthStencilResolvePropertiesKHR zero
+                                                          zero
+                                                          zero
+                                                          zero
+                                                          zero
+                                                          zero
 -- ** VkResolveModeFlagBitsKHR
 
 -- No documentation found for TopLevel "VkResolveModeFlagBitsKHR"
 newtype VkResolveModeFlagBitsKHR = VkResolveModeFlagBitsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkResolveModeFlagBitsKHR where
   showsPrec _ VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR = showString "VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR"
@@ -173,6 +182,13 @@ instance Storable VkSubpassDescriptionDepthStencilResolveKHR where
                 *> poke (ptr `plusPtr` 16) (vkDepthResolveMode (poked :: VkSubpassDescriptionDepthStencilResolveKHR))
                 *> poke (ptr `plusPtr` 20) (vkStencilResolveMode (poked :: VkSubpassDescriptionDepthStencilResolveKHR))
                 *> poke (ptr `plusPtr` 24) (vkPDepthStencilResolveAttachment (poked :: VkSubpassDescriptionDepthStencilResolveKHR))
+
+instance Zero VkSubpassDescriptionDepthStencilResolveKHR where
+  zero = VkSubpassDescriptionDepthStencilResolveKHR zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
 -- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME"
 pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME = "VK_KHR_depth_stencil_resolve"

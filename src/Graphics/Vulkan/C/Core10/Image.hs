@@ -76,6 +76,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
@@ -167,11 +168,28 @@ instance Storable VkImageCreateInfo where
                 *> poke (ptr `plusPtr` 64) (vkQueueFamilyIndexCount (poked :: VkImageCreateInfo))
                 *> poke (ptr `plusPtr` 72) (vkPQueueFamilyIndices (poked :: VkImageCreateInfo))
                 *> poke (ptr `plusPtr` 80) (vkInitialLayout (poked :: VkImageCreateInfo))
+
+instance Zero VkImageCreateInfo where
+  zero = VkImageCreateInfo zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
 -- ** VkImageLayout
 
 -- No documentation found for TopLevel "VkImageLayout"
 newtype VkImageLayout = VkImageLayout Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkImageLayout where
   showsPrec _ VK_IMAGE_LAYOUT_UNDEFINED = showString "VK_IMAGE_LAYOUT_UNDEFINED"
@@ -280,6 +298,13 @@ instance Storable VkSubresourceLayout where
                 *> poke (ptr `plusPtr` 16) (vkRowPitch (poked :: VkSubresourceLayout))
                 *> poke (ptr `plusPtr` 24) (vkArrayPitch (poked :: VkSubresourceLayout))
                 *> poke (ptr `plusPtr` 32) (vkDepthPitch (poked :: VkSubresourceLayout))
+
+instance Zero VkSubresourceLayout where
+  zero = VkSubresourceLayout zero
+                             zero
+                             zero
+                             zero
+                             zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkCreateImage"
 foreign import ccall

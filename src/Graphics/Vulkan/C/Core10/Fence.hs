@@ -77,6 +77,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -95,7 +96,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkFenceCreateFlagBits"
 newtype VkFenceCreateFlagBits = VkFenceCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkFenceCreateFlagBits where
   showsPrec _ VK_FENCE_CREATE_SIGNALED_BIT = showString "VK_FENCE_CREATE_SIGNALED_BIT"
@@ -136,6 +137,11 @@ instance Storable VkFenceCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFenceCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFenceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkFenceCreateInfo))
+
+instance Zero VkFenceCreateInfo where
+  zero = VkFenceCreateInfo zero
+                           zero
+                           zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkCreateFence"
 foreign import ccall

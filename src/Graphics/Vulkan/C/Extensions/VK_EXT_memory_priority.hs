@@ -32,6 +32,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -55,6 +56,11 @@ instance Storable VkMemoryPriorityAllocateInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryPriorityAllocateInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryPriorityAllocateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkPriority (poked :: VkMemoryPriorityAllocateInfoEXT))
+
+instance Zero VkMemoryPriorityAllocateInfoEXT where
+  zero = VkMemoryPriorityAllocateInfoEXT zero
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "VkPhysicalDeviceMemoryPriorityFeaturesEXT"
 data VkPhysicalDeviceMemoryPriorityFeaturesEXT = VkPhysicalDeviceMemoryPriorityFeaturesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceMemoryPriorityFeaturesEXT" "sType"
@@ -75,6 +81,11 @@ instance Storable VkPhysicalDeviceMemoryPriorityFeaturesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceMemoryPriorityFeaturesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceMemoryPriorityFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMemoryPriority (poked :: VkPhysicalDeviceMemoryPriorityFeaturesEXT))
+
+instance Zero VkPhysicalDeviceMemoryPriorityFeaturesEXT where
+  zero = VkPhysicalDeviceMemoryPriorityFeaturesEXT zero
+                                                   zero
+                                                   zero
 -- No documentation found for TopLevel "VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME"
 pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME = "VK_EXT_memory_priority"

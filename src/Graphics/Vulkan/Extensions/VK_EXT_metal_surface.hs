@@ -41,7 +41,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
   ( VkMetalSurfaceCreateFlagsEXT(..)
@@ -91,7 +92,11 @@ fromCStructMetalSurfaceCreateInfoEXT c = MetalSurfaceCreateInfoEXT <$> -- Unival
                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMetalSurfaceCreateInfoEXT)))
                                                                    <*> pure (vkFlags (c :: VkMetalSurfaceCreateInfoEXT))
                                                                    <*> pure (vkPLayer (c :: VkMetalSurfaceCreateInfoEXT))
+instance Zero MetalSurfaceCreateInfoEXT where
+  zero = MetalSurfaceCreateInfoEXT Nothing
+                                   zero
+                                   zero
 
 -- | Wrapper for 'vkCreateMetalSurfaceEXT'
-createMetalSurfaceEXT :: Instance ->  MetalSurfaceCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createMetalSurfaceEXT :: Instance ->  MetalSurfaceCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createMetalSurfaceEXT = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructMetalSurfaceCreateInfoEXT a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createMetalSurfaceEXT commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))

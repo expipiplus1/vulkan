@@ -29,6 +29,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory
   ( VkExportMemoryAllocateInfo(..)
   , VkExternalMemoryBufferCreateInfo(..)
@@ -66,6 +69,9 @@ fromCStructExportMemoryAllocateInfo :: VkExportMemoryAllocateInfo -> IO ExportMe
 fromCStructExportMemoryAllocateInfo c = ExportMemoryAllocateInfo <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExportMemoryAllocateInfo)))
                                                                  <*> pure (vkHandleTypes (c :: VkExportMemoryAllocateInfo))
+instance Zero ExportMemoryAllocateInfo where
+  zero = ExportMemoryAllocateInfo Nothing
+                                  zero
 -- No documentation found for TopLevel "ExternalMemoryBufferCreateInfo"
 data ExternalMemoryBufferCreateInfo = ExternalMemoryBufferCreateInfo
   { -- Univalued Member elided
@@ -81,6 +87,9 @@ fromCStructExternalMemoryBufferCreateInfo :: VkExternalMemoryBufferCreateInfo ->
 fromCStructExternalMemoryBufferCreateInfo c = ExternalMemoryBufferCreateInfo <$> -- Univalued Member elided
                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExternalMemoryBufferCreateInfo)))
                                                                              <*> pure (vkHandleTypes (c :: VkExternalMemoryBufferCreateInfo))
+instance Zero ExternalMemoryBufferCreateInfo where
+  zero = ExternalMemoryBufferCreateInfo Nothing
+                                        zero
 -- No documentation found for TopLevel "ExternalMemoryImageCreateInfo"
 data ExternalMemoryImageCreateInfo = ExternalMemoryImageCreateInfo
   { -- Univalued Member elided
@@ -96,3 +105,6 @@ fromCStructExternalMemoryImageCreateInfo :: VkExternalMemoryImageCreateInfo -> I
 fromCStructExternalMemoryImageCreateInfo c = ExternalMemoryImageCreateInfo <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExternalMemoryImageCreateInfo)))
                                                                            <*> pure (vkHandleTypes (c :: VkExternalMemoryImageCreateInfo))
+instance Zero ExternalMemoryImageCreateInfo where
+  zero = ExternalMemoryImageCreateInfo Nothing
+                                       zero

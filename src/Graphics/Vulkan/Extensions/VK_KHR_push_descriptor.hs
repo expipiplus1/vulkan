@@ -39,6 +39,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
   ( VkPhysicalDevicePushDescriptorPropertiesKHR(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
@@ -90,11 +93,14 @@ fromCStructPhysicalDevicePushDescriptorPropertiesKHR :: VkPhysicalDevicePushDesc
 fromCStructPhysicalDevicePushDescriptorPropertiesKHR c = PhysicalDevicePushDescriptorPropertiesKHR <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDevicePushDescriptorPropertiesKHR)))
                                                                                                    <*> pure (vkMaxPushDescriptors (c :: VkPhysicalDevicePushDescriptorPropertiesKHR))
+instance Zero PhysicalDevicePushDescriptorPropertiesKHR where
+  zero = PhysicalDevicePushDescriptorPropertiesKHR Nothing
+                                                   zero
 
 -- | Wrapper for 'vkCmdPushDescriptorSetKHR'
-cmdPushDescriptorSetKHR :: CommandBuffer ->  PipelineBindPoint ->  PipelineLayout ->  Word32 ->  Vector WriteDescriptorSet ->  IO (  )
+cmdPushDescriptorSetKHR :: CommandBuffer ->  PipelineBindPoint ->  PipelineLayout ->  Word32 ->  Vector WriteDescriptorSet ->  IO ()
 cmdPushDescriptorSetKHR = \(CommandBuffer commandBuffer commandTable) -> \pipelineBindPoint -> \layout -> \set -> \descriptorWrites -> withVec withCStructWriteDescriptorSet descriptorWrites (\pDescriptorWrites -> Graphics.Vulkan.C.Dynamic.cmdPushDescriptorSetKHR commandTable commandBuffer pipelineBindPoint layout set (fromIntegral $ Data.Vector.length descriptorWrites) pDescriptorWrites *> (pure ()))
 
 -- | Wrapper for 'vkCmdPushDescriptorSetWithTemplateKHR'
-cmdPushDescriptorSetWithTemplateKHR :: CommandBuffer ->  DescriptorUpdateTemplate ->  PipelineLayout ->  Word32 ->  Ptr () ->  IO (  )
+cmdPushDescriptorSetWithTemplateKHR :: CommandBuffer ->  DescriptorUpdateTemplate ->  PipelineLayout ->  Word32 ->  Ptr () ->  IO ()
 cmdPushDescriptorSetWithTemplateKHR = \(CommandBuffer commandBuffer commandTable) -> \descriptorUpdateTemplate -> \layout -> \set -> \pData -> Graphics.Vulkan.C.Dynamic.cmdPushDescriptorSetWithTemplateKHR commandTable commandBuffer descriptorUpdateTemplate layout set pData *> (pure ())

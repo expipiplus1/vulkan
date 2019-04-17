@@ -60,7 +60,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -90,7 +91,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
   ( VkAttachmentDescription2KHR(..)
@@ -201,6 +203,17 @@ fromCStructAttachmentDescription2KHR c = AttachmentDescription2KHR <$> -- Unival
                                                                    <*> pure (vkStencilStoreOp (c :: VkAttachmentDescription2KHR))
                                                                    <*> pure (vkInitialLayout (c :: VkAttachmentDescription2KHR))
                                                                    <*> pure (vkFinalLayout (c :: VkAttachmentDescription2KHR))
+instance Zero AttachmentDescription2KHR where
+  zero = AttachmentDescription2KHR Nothing
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "AttachmentReference2KHR"
 data AttachmentReference2KHR = AttachmentReference2KHR
   { -- Univalued Member elided
@@ -222,6 +235,11 @@ fromCStructAttachmentReference2KHR c = AttachmentReference2KHR <$> -- Univalued 
                                                                <*> pure (vkAttachment (c :: VkAttachmentReference2KHR))
                                                                <*> pure (vkLayout (c :: VkAttachmentReference2KHR))
                                                                <*> pure (vkAspectMask (c :: VkAttachmentReference2KHR))
+instance Zero AttachmentReference2KHR where
+  zero = AttachmentReference2KHR Nothing
+                                 zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "RenderPassCreateInfo2KHR"
 data RenderPassCreateInfo2KHR = RenderPassCreateInfo2KHR
   { -- Univalued Member elided
@@ -257,6 +275,13 @@ fromCStructRenderPassCreateInfo2KHR c = RenderPassCreateInfo2KHR <$> -- Univalue
                                                                  <*> (Data.Vector.generateM (fromIntegral (vkDependencyCount (c :: VkRenderPassCreateInfo2KHR))) (((fromCStructSubpassDependency2KHR <=<) . peekElemOff) (vkPDependencies (c :: VkRenderPassCreateInfo2KHR))))
                                                                  -- Length valued member elided
                                                                  <*> (Data.Vector.generateM (fromIntegral (vkCorrelatedViewMaskCount (c :: VkRenderPassCreateInfo2KHR))) (peekElemOff (vkPCorrelatedViewMasks (c :: VkRenderPassCreateInfo2KHR))))
+instance Zero RenderPassCreateInfo2KHR where
+  zero = RenderPassCreateInfo2KHR Nothing
+                                  zero
+                                  Data.Vector.empty
+                                  Data.Vector.empty
+                                  Data.Vector.empty
+                                  Data.Vector.empty
 -- No documentation found for TopLevel "SubpassBeginInfoKHR"
 data SubpassBeginInfoKHR = SubpassBeginInfoKHR
   { -- Univalued Member elided
@@ -272,6 +297,9 @@ fromCStructSubpassBeginInfoKHR :: VkSubpassBeginInfoKHR -> IO SubpassBeginInfoKH
 fromCStructSubpassBeginInfoKHR c = SubpassBeginInfoKHR <$> -- Univalued Member elided
                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSubpassBeginInfoKHR)))
                                                        <*> pure (vkContents (c :: VkSubpassBeginInfoKHR))
+instance Zero SubpassBeginInfoKHR where
+  zero = SubpassBeginInfoKHR Nothing
+                             zero
 -- No documentation found for TopLevel "SubpassDependency2KHR"
 data SubpassDependency2KHR = SubpassDependency2KHR
   { -- Univalued Member elided
@@ -308,6 +336,16 @@ fromCStructSubpassDependency2KHR c = SubpassDependency2KHR <$> -- Univalued Memb
                                                            <*> pure (vkDstAccessMask (c :: VkSubpassDependency2KHR))
                                                            <*> pure (vkDependencyFlags (c :: VkSubpassDependency2KHR))
                                                            <*> pure (vkViewOffset (c :: VkSubpassDependency2KHR))
+instance Zero SubpassDependency2KHR where
+  zero = SubpassDependency2KHR Nothing
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "SubpassDescription2KHR"
 data SubpassDescription2KHR = SubpassDescription2KHR
   { -- Univalued Member elided
@@ -335,7 +373,7 @@ data SubpassDescription2KHR = SubpassDescription2KHR
   }
   deriving (Show, Eq)
 withCStructSubpassDescription2KHR :: SubpassDescription2KHR -> (VkSubpassDescription2KHR -> IO a) -> IO a
-withCStructSubpassDescription2KHR from cont = withVec (&) (vkPPreserveAttachments (from :: SubpassDescription2KHR)) (\pPreserveAttachments -> maybeWith (\a -> withCStructAttachmentReference2KHR a . flip with) (vkPDepthStencilAttachment (from :: SubpassDescription2KHR)) (\pDepthStencilAttachment -> maybeWith (withVec withCStructAttachmentReference2KHR) (vkPResolveAttachments (from :: SubpassDescription2KHR)) (\pResolveAttachments -> withVec withCStructAttachmentReference2KHR (vkPColorAttachments (from :: SubpassDescription2KHR)) (\pColorAttachments -> withVec withCStructAttachmentReference2KHR (vkPInputAttachments (from :: SubpassDescription2KHR)) (\pInputAttachments -> maybeWith withSomeVkStruct (vkPNext (from :: SubpassDescription2KHR)) (\pPNext -> cont (VkSubpassDescription2KHR VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR pPNext (vkFlags (from :: SubpassDescription2KHR)) (vkPipelineBindPoint (from :: SubpassDescription2KHR)) (vkViewMask (from :: SubpassDescription2KHR)) (fromIntegral (Data.Vector.length (vkPInputAttachments (from :: SubpassDescription2KHR)))) pInputAttachments (fromIntegral (minimum ([ Data.Vector.length (vkPColorAttachments (from :: SubpassDescription2KHR)) ] ++ [Data.Vector.length v | Just v <- [ (vkPResolveAttachments (from :: SubpassDescription2KHR)) ]]))) pColorAttachments pResolveAttachments pDepthStencilAttachment (fromIntegral (Data.Vector.length (vkPPreserveAttachments (from :: SubpassDescription2KHR)))) pPreserveAttachments)))))))
+withCStructSubpassDescription2KHR from cont = withVec (&) (vkPPreserveAttachments (from :: SubpassDescription2KHR)) (\pPreserveAttachments -> maybeWith (\a -> withCStructAttachmentReference2KHR a . flip with) (vkPDepthStencilAttachment (from :: SubpassDescription2KHR)) (\pDepthStencilAttachment -> maybeWith (withVec withCStructAttachmentReference2KHR) (vkPResolveAttachments (from :: SubpassDescription2KHR)) (\pResolveAttachments -> withVec withCStructAttachmentReference2KHR (vkPColorAttachments (from :: SubpassDescription2KHR)) (\pColorAttachments -> withVec withCStructAttachmentReference2KHR (vkPInputAttachments (from :: SubpassDescription2KHR)) (\pInputAttachments -> maybeWith withSomeVkStruct (vkPNext (from :: SubpassDescription2KHR)) (\pPNext -> cont (VkSubpassDescription2KHR VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR pPNext (vkFlags (from :: SubpassDescription2KHR)) (vkPipelineBindPoint (from :: SubpassDescription2KHR)) (vkViewMask (from :: SubpassDescription2KHR)) (fromIntegral (Data.Vector.length (vkPInputAttachments (from :: SubpassDescription2KHR)))) pInputAttachments (fromIntegral (minimum ([Data.Vector.length (vkPColorAttachments (from :: SubpassDescription2KHR))] ++ [Data.Vector.length v | Just v <- [(vkPResolveAttachments (from :: SubpassDescription2KHR))]]))) pColorAttachments pResolveAttachments pDepthStencilAttachment (fromIntegral (Data.Vector.length (vkPPreserveAttachments (from :: SubpassDescription2KHR)))) pPreserveAttachments)))))))
 fromCStructSubpassDescription2KHR :: VkSubpassDescription2KHR -> IO SubpassDescription2KHR
 fromCStructSubpassDescription2KHR c = SubpassDescription2KHR <$> -- Univalued Member elided
                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSubpassDescription2KHR)))
@@ -350,6 +388,16 @@ fromCStructSubpassDescription2KHR c = SubpassDescription2KHR <$> -- Univalued Me
                                                              <*> maybePeek (fromCStructAttachmentReference2KHR <=< peek) (vkPDepthStencilAttachment (c :: VkSubpassDescription2KHR))
                                                              -- Length valued member elided
                                                              <*> (Data.Vector.generateM (fromIntegral (vkPreserveAttachmentCount (c :: VkSubpassDescription2KHR))) (peekElemOff (vkPPreserveAttachments (c :: VkSubpassDescription2KHR))))
+instance Zero SubpassDescription2KHR where
+  zero = SubpassDescription2KHR Nothing
+                                zero
+                                zero
+                                zero
+                                Data.Vector.empty
+                                Data.Vector.empty
+                                Nothing
+                                Nothing
+                                Data.Vector.empty
 -- No documentation found for TopLevel "SubpassEndInfoKHR"
 data SubpassEndInfoKHR = SubpassEndInfoKHR
   { -- Univalued Member elided
@@ -362,6 +410,8 @@ withCStructSubpassEndInfoKHR from cont = maybeWith withSomeVkStruct (vkPNext (fr
 fromCStructSubpassEndInfoKHR :: VkSubpassEndInfoKHR -> IO SubpassEndInfoKHR
 fromCStructSubpassEndInfoKHR c = SubpassEndInfoKHR <$> -- Univalued Member elided
                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSubpassEndInfoKHR)))
+instance Zero SubpassEndInfoKHR where
+  zero = SubpassEndInfoKHR Nothing
 
 -- | Wrapper for 'vkCmdBeginRenderPass2KHR'
 cmdBeginRenderPass2KHR :: CommandBuffer ->  RenderPassBeginInfo ->  SubpassBeginInfoKHR ->  IO ()
@@ -376,5 +426,5 @@ cmdNextSubpass2KHR :: CommandBuffer ->  SubpassBeginInfoKHR ->  SubpassEndInfoKH
 cmdNextSubpass2KHR = \(CommandBuffer commandBuffer commandTable) -> \subpassBeginInfo -> \subpassEndInfo -> (\a -> withCStructSubpassEndInfoKHR a . flip with) subpassEndInfo (\pSubpassEndInfo -> (\a -> withCStructSubpassBeginInfoKHR a . flip with) subpassBeginInfo (\pSubpassBeginInfo -> Graphics.Vulkan.C.Dynamic.cmdNextSubpass2KHR commandTable commandBuffer pSubpassBeginInfo pSubpassEndInfo *> (pure ())))
 
 -- | Wrapper for 'vkCreateRenderPass2KHR'
-createRenderPass2KHR :: Device ->  RenderPassCreateInfo2KHR ->  Maybe AllocationCallbacks ->  IO ( RenderPass )
+createRenderPass2KHR :: Device ->  RenderPassCreateInfo2KHR ->  Maybe AllocationCallbacks ->  IO (RenderPass)
 createRenderPass2KHR = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pRenderPass -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructRenderPassCreateInfo2KHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createRenderPass2KHR commandTable device pCreateInfo pAllocator pRenderPass >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pRenderPass)))))

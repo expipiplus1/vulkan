@@ -61,6 +61,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkPhysicalDevice
@@ -98,6 +99,11 @@ instance Storable VkDisplayModeProperties2KHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayModeProperties2KHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayModeProperties2KHR))
                 *> poke (ptr `plusPtr` 16) (vkDisplayModeProperties (poked :: VkDisplayModeProperties2KHR))
+
+instance Zero VkDisplayModeProperties2KHR where
+  zero = VkDisplayModeProperties2KHR zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "VkDisplayPlaneCapabilities2KHR"
 data VkDisplayPlaneCapabilities2KHR = VkDisplayPlaneCapabilities2KHR
   { -- No documentation found for Nested "VkDisplayPlaneCapabilities2KHR" "sType"
@@ -118,6 +124,11 @@ instance Storable VkDisplayPlaneCapabilities2KHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayPlaneCapabilities2KHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayPlaneCapabilities2KHR))
                 *> poke (ptr `plusPtr` 16) (vkCapabilities (poked :: VkDisplayPlaneCapabilities2KHR))
+
+instance Zero VkDisplayPlaneCapabilities2KHR where
+  zero = VkDisplayPlaneCapabilities2KHR zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "VkDisplayPlaneInfo2KHR"
 data VkDisplayPlaneInfo2KHR = VkDisplayPlaneInfo2KHR
   { -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "sType"
@@ -142,6 +153,12 @@ instance Storable VkDisplayPlaneInfo2KHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayPlaneInfo2KHR))
                 *> poke (ptr `plusPtr` 16) (vkMode (poked :: VkDisplayPlaneInfo2KHR))
                 *> poke (ptr `plusPtr` 24) (vkPlaneIndex (poked :: VkDisplayPlaneInfo2KHR))
+
+instance Zero VkDisplayPlaneInfo2KHR where
+  zero = VkDisplayPlaneInfo2KHR zero
+                                zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "VkDisplayPlaneProperties2KHR"
 data VkDisplayPlaneProperties2KHR = VkDisplayPlaneProperties2KHR
   { -- No documentation found for Nested "VkDisplayPlaneProperties2KHR" "sType"
@@ -162,6 +179,11 @@ instance Storable VkDisplayPlaneProperties2KHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayPlaneProperties2KHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayPlaneProperties2KHR))
                 *> poke (ptr `plusPtr` 16) (vkDisplayPlaneProperties (poked :: VkDisplayPlaneProperties2KHR))
+
+instance Zero VkDisplayPlaneProperties2KHR where
+  zero = VkDisplayPlaneProperties2KHR zero
+                                      zero
+                                      zero
 -- No documentation found for TopLevel "VkDisplayProperties2KHR"
 data VkDisplayProperties2KHR = VkDisplayProperties2KHR
   { -- No documentation found for Nested "VkDisplayProperties2KHR" "sType"
@@ -182,6 +204,11 @@ instance Storable VkDisplayProperties2KHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayProperties2KHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayProperties2KHR))
                 *> poke (ptr `plusPtr` 16) (vkDisplayProperties (poked :: VkDisplayProperties2KHR))
+
+instance Zero VkDisplayProperties2KHR where
+  zero = VkDisplayProperties2KHR zero
+                                 zero
+                                 zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetDisplayModeProperties2KHR"
 foreign import ccall

@@ -22,6 +22,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order
   ( VkPipelineRasterizationStateRasterizationOrderAMD(..)
   , VkRasterizationOrderAMD(..)
@@ -53,5 +56,8 @@ fromCStructPipelineRasterizationStateRasterizationOrderAMD :: VkPipelineRasteriz
 fromCStructPipelineRasterizationStateRasterizationOrderAMD c = PipelineRasterizationStateRasterizationOrderAMD <$> -- Univalued Member elided
                                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineRasterizationStateRasterizationOrderAMD)))
                                                                                                                <*> pure (vkRasterizationOrder (c :: VkPipelineRasterizationStateRasterizationOrderAMD))
+instance Zero PipelineRasterizationStateRasterizationOrderAMD where
+  zero = PipelineRasterizationStateRasterizationOrderAMD Nothing
+                                                         zero
 -- No documentation found for TopLevel "RasterizationOrderAMD"
 type RasterizationOrderAMD = VkRasterizationOrderAMD

@@ -51,6 +51,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
   ( VkDiscardRectangleModeEXT(..)
   , VkPhysicalDeviceDiscardRectanglePropertiesEXT(..)
@@ -99,6 +102,9 @@ fromCStructPhysicalDeviceDiscardRectanglePropertiesEXT :: VkPhysicalDeviceDiscar
 fromCStructPhysicalDeviceDiscardRectanglePropertiesEXT c = PhysicalDeviceDiscardRectanglePropertiesEXT <$> -- Univalued Member elided
                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceDiscardRectanglePropertiesEXT)))
                                                                                                        <*> pure (vkMaxDiscardRectangles (c :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
+instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
+  zero = PhysicalDeviceDiscardRectanglePropertiesEXT Nothing
+                                                     zero
 -- No documentation found for TopLevel "PipelineDiscardRectangleStateCreateFlagsEXT"
 type PipelineDiscardRectangleStateCreateFlagsEXT = VkPipelineDiscardRectangleStateCreateFlagsEXT
 -- No documentation found for TopLevel "PipelineDiscardRectangleStateCreateInfoEXT"
@@ -124,6 +130,11 @@ fromCStructPipelineDiscardRectangleStateCreateInfoEXT c = PipelineDiscardRectang
                                                                                                      <*> pure (vkDiscardRectangleMode (c :: VkPipelineDiscardRectangleStateCreateInfoEXT))
                                                                                                      -- Optional length valued member elided
                                                                                                      <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkDiscardRectangleCount (c :: VkPipelineDiscardRectangleStateCreateInfoEXT))) (((fromCStructRect2D <=<) . peekElemOff) p)) (vkPDiscardRectangles (c :: VkPipelineDiscardRectangleStateCreateInfoEXT))
+instance Zero PipelineDiscardRectangleStateCreateInfoEXT where
+  zero = PipelineDiscardRectangleStateCreateInfoEXT Nothing
+                                                    zero
+                                                    zero
+                                                    Nothing
 
 -- | Wrapper for 'vkCmdSetDiscardRectangleEXT'
 cmdSetDiscardRectangleEXT :: CommandBuffer ->  Word32 ->  Vector Rect2D ->  IO ()

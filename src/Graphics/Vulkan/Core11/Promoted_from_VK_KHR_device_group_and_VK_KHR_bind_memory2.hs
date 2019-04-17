@@ -25,7 +25,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -43,6 +44,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2
   ( VkBindBufferMemoryDeviceGroupInfo(..)
   , VkBindImageMemoryDeviceGroupInfo(..)
@@ -84,6 +88,9 @@ fromCStructBindBufferMemoryDeviceGroupInfo c = BindBufferMemoryDeviceGroupInfo <
                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBindBufferMemoryDeviceGroupInfo)))
                                                                                -- Length valued member elided
                                                                                <*> (Data.Vector.generateM (fromIntegral (vkDeviceIndexCount (c :: VkBindBufferMemoryDeviceGroupInfo))) (peekElemOff (vkPDeviceIndices (c :: VkBindBufferMemoryDeviceGroupInfo))))
+instance Zero BindBufferMemoryDeviceGroupInfo where
+  zero = BindBufferMemoryDeviceGroupInfo Nothing
+                                         Data.Vector.empty
 -- No documentation found for TopLevel "BindImageMemoryDeviceGroupInfo"
 data BindImageMemoryDeviceGroupInfo = BindImageMemoryDeviceGroupInfo
   { -- Univalued Member elided
@@ -106,3 +113,7 @@ fromCStructBindImageMemoryDeviceGroupInfo c = BindImageMemoryDeviceGroupInfo <$>
                                                                              <*> (Data.Vector.generateM (fromIntegral (vkDeviceIndexCount (c :: VkBindImageMemoryDeviceGroupInfo))) (peekElemOff (vkPDeviceIndices (c :: VkBindImageMemoryDeviceGroupInfo))))
                                                                              -- Length valued member elided
                                                                              <*> (Data.Vector.generateM (fromIntegral (vkSplitInstanceBindRegionCount (c :: VkBindImageMemoryDeviceGroupInfo))) (((fromCStructRect2D <=<) . peekElemOff) (vkPSplitInstanceBindRegions (c :: VkBindImageMemoryDeviceGroupInfo))))
+instance Zero BindImageMemoryDeviceGroupInfo where
+  zero = BindImageMemoryDeviceGroupInfo Nothing
+                                        Data.Vector.empty
+                                        Data.Vector.empty

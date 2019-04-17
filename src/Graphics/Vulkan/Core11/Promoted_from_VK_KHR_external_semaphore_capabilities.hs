@@ -45,6 +45,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
   ( VkExternalSemaphoreFeatureFlagBits(..)
   , VkExternalSemaphoreHandleTypeFlagBits(..)
@@ -100,6 +103,11 @@ fromCStructExternalSemaphoreProperties c = ExternalSemaphoreProperties <$> -- Un
                                                                        <*> pure (vkExportFromImportedHandleTypes (c :: VkExternalSemaphoreProperties))
                                                                        <*> pure (vkCompatibleHandleTypes (c :: VkExternalSemaphoreProperties))
                                                                        <*> pure (vkExternalSemaphoreFeatures (c :: VkExternalSemaphoreProperties))
+instance Zero ExternalSemaphoreProperties where
+  zero = ExternalSemaphoreProperties Nothing
+                                     zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "PhysicalDeviceExternalSemaphoreInfo"
 data PhysicalDeviceExternalSemaphoreInfo = PhysicalDeviceExternalSemaphoreInfo
   { -- Univalued Member elided
@@ -115,7 +123,10 @@ fromCStructPhysicalDeviceExternalSemaphoreInfo :: VkPhysicalDeviceExternalSemaph
 fromCStructPhysicalDeviceExternalSemaphoreInfo c = PhysicalDeviceExternalSemaphoreInfo <$> -- Univalued Member elided
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceExternalSemaphoreInfo)))
                                                                                        <*> pure (vkHandleType (c :: VkPhysicalDeviceExternalSemaphoreInfo))
+instance Zero PhysicalDeviceExternalSemaphoreInfo where
+  zero = PhysicalDeviceExternalSemaphoreInfo Nothing
+                                             zero
 
 -- | Wrapper for 'vkGetPhysicalDeviceExternalSemaphoreProperties'
-getPhysicalDeviceExternalSemaphoreProperties :: PhysicalDevice ->  PhysicalDeviceExternalSemaphoreInfo ->  IO ( ExternalSemaphoreProperties )
+getPhysicalDeviceExternalSemaphoreProperties :: PhysicalDevice ->  PhysicalDeviceExternalSemaphoreInfo ->  IO (ExternalSemaphoreProperties)
 getPhysicalDeviceExternalSemaphoreProperties = \(PhysicalDevice physicalDevice commandTable) -> \externalSemaphoreInfo -> alloca (\pExternalSemaphoreProperties -> (\a -> withCStructPhysicalDeviceExternalSemaphoreInfo a . flip with) externalSemaphoreInfo (\pExternalSemaphoreInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceExternalSemaphoreProperties commandTable physicalDevice pExternalSemaphoreInfo pExternalSemaphoreProperties *> ((fromCStructExternalSemaphoreProperties <=< peek) pExternalSemaphoreProperties)))

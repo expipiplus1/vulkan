@@ -71,6 +71,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -90,7 +91,7 @@ type VkEvent = Ptr VkEvent_T
 
 -- No documentation found for TopLevel "VkEventCreateFlags"
 newtype VkEventCreateFlags = VkEventCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkEventCreateFlags where
   
@@ -127,6 +128,11 @@ instance Storable VkEventCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkEventCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkEventCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkEventCreateInfo))
+
+instance Zero VkEventCreateInfo where
+  zero = VkEventCreateInfo zero
+                           zero
+                           zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkCreateEvent"
 foreign import ccall

@@ -28,6 +28,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority
   ( VkMemoryPriorityAllocateInfoEXT(..)
   , VkPhysicalDeviceMemoryPriorityFeaturesEXT(..)
@@ -64,6 +67,9 @@ fromCStructMemoryPriorityAllocateInfoEXT :: VkMemoryPriorityAllocateInfoEXT -> I
 fromCStructMemoryPriorityAllocateInfoEXT c = MemoryPriorityAllocateInfoEXT <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryPriorityAllocateInfoEXT)))
                                                                            <*> pure (vkPriority (c :: VkMemoryPriorityAllocateInfoEXT))
+instance Zero MemoryPriorityAllocateInfoEXT where
+  zero = MemoryPriorityAllocateInfoEXT Nothing
+                                       zero
 -- No documentation found for TopLevel "PhysicalDeviceMemoryPriorityFeaturesEXT"
 data PhysicalDeviceMemoryPriorityFeaturesEXT = PhysicalDeviceMemoryPriorityFeaturesEXT
   { -- Univalued Member elided
@@ -79,3 +85,6 @@ fromCStructPhysicalDeviceMemoryPriorityFeaturesEXT :: VkPhysicalDeviceMemoryPrio
 fromCStructPhysicalDeviceMemoryPriorityFeaturesEXT c = PhysicalDeviceMemoryPriorityFeaturesEXT <$> -- Univalued Member elided
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceMemoryPriorityFeaturesEXT)))
                                                                                                <*> pure (bool32ToBool (vkMemoryPriority (c :: VkPhysicalDeviceMemoryPriorityFeaturesEXT)))
+instance Zero PhysicalDeviceMemoryPriorityFeaturesEXT where
+  zero = PhysicalDeviceMemoryPriorityFeaturesEXT Nothing
+                                                 False

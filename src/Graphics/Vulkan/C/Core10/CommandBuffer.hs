@@ -95,6 +95,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -145,6 +146,13 @@ instance Storable VkCommandBufferAllocateInfo where
                 *> poke (ptr `plusPtr` 16) (vkCommandPool (poked :: VkCommandBufferAllocateInfo))
                 *> poke (ptr `plusPtr` 24) (vkLevel (poked :: VkCommandBufferAllocateInfo))
                 *> poke (ptr `plusPtr` 28) (vkCommandBufferCount (poked :: VkCommandBufferAllocateInfo))
+
+instance Zero VkCommandBufferAllocateInfo where
+  zero = VkCommandBufferAllocateInfo zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "VkCommandBufferBeginInfo"
 data VkCommandBufferBeginInfo = VkCommandBufferBeginInfo
   { -- No documentation found for Nested "VkCommandBufferBeginInfo" "sType"
@@ -169,6 +177,12 @@ instance Storable VkCommandBufferBeginInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferBeginInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkCommandBufferBeginInfo))
                 *> poke (ptr `plusPtr` 24) (vkPInheritanceInfo (poked :: VkCommandBufferBeginInfo))
+
+instance Zero VkCommandBufferBeginInfo where
+  zero = VkCommandBufferBeginInfo zero
+                                  zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkCommandBufferInheritanceInfo"
 data VkCommandBufferInheritanceInfo = VkCommandBufferInheritanceInfo
   { -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "sType"
@@ -209,11 +223,21 @@ instance Storable VkCommandBufferInheritanceInfo where
                 *> poke (ptr `plusPtr` 40) (vkOcclusionQueryEnable (poked :: VkCommandBufferInheritanceInfo))
                 *> poke (ptr `plusPtr` 44) (vkQueryFlags (poked :: VkCommandBufferInheritanceInfo))
                 *> poke (ptr `plusPtr` 48) (vkPipelineStatistics (poked :: VkCommandBufferInheritanceInfo))
+
+instance Zero VkCommandBufferInheritanceInfo where
+  zero = VkCommandBufferInheritanceInfo zero
+                                        zero
+                                        zero
+                                        zero
+                                        zero
+                                        zero
+                                        zero
+                                        zero
 -- ** VkCommandBufferLevel
 
 -- No documentation found for TopLevel "VkCommandBufferLevel"
 newtype VkCommandBufferLevel = VkCommandBufferLevel Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkCommandBufferLevel where
   showsPrec _ VK_COMMAND_BUFFER_LEVEL_PRIMARY = showString "VK_COMMAND_BUFFER_LEVEL_PRIMARY"
@@ -242,7 +266,7 @@ pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY = VkCommandBufferLevel 1
 
 -- No documentation found for TopLevel "VkCommandBufferResetFlagBits"
 newtype VkCommandBufferResetFlagBits = VkCommandBufferResetFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkCommandBufferResetFlagBits where
   showsPrec _ VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
@@ -267,7 +291,7 @@ type VkCommandBufferResetFlags = VkCommandBufferResetFlagBits
 
 -- No documentation found for TopLevel "VkCommandBufferUsageFlagBits"
 newtype VkCommandBufferUsageFlagBits = VkCommandBufferUsageFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkCommandBufferUsageFlagBits where
   showsPrec _ VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = showString "VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT"
@@ -304,7 +328,7 @@ type VkCommandBufferUsageFlags = VkCommandBufferUsageFlagBits
 
 -- No documentation found for TopLevel "VkQueryControlFlagBits"
 newtype VkQueryControlFlagBits = VkQueryControlFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkQueryControlFlagBits where
   showsPrec _ VK_QUERY_CONTROL_PRECISE_BIT = showString "VK_QUERY_CONTROL_PRECISE_BIT"

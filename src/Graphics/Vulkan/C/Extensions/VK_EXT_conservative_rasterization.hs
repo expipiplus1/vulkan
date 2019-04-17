@@ -61,6 +61,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 
@@ -69,7 +70,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- No documentation found for TopLevel "VkConservativeRasterizationModeEXT"
 newtype VkConservativeRasterizationModeEXT = VkConservativeRasterizationModeEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkConservativeRasterizationModeEXT where
   showsPrec _ VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = showString "VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT"
@@ -152,11 +153,24 @@ instance Storable VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
                 *> poke (ptr `plusPtr` 40) (vkDegenerateLinesRasterized (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
                 *> poke (ptr `plusPtr` 44) (vkFullyCoveredFragmentShaderInputVariable (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
                 *> poke (ptr `plusPtr` 48) (vkConservativeRasterizationPostDepthCoverage (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
+
+instance Zero VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
+  zero = VkPhysicalDeviceConservativeRasterizationPropertiesEXT zero
+                                                                zero
+                                                                zero
+                                                                zero
+                                                                zero
+                                                                zero
+                                                                zero
+                                                                zero
+                                                                zero
+                                                                zero
+                                                                zero
 -- ** VkPipelineRasterizationConservativeStateCreateFlagsEXT
 
 -- No documentation found for TopLevel "VkPipelineRasterizationConservativeStateCreateFlagsEXT"
 newtype VkPipelineRasterizationConservativeStateCreateFlagsEXT = VkPipelineRasterizationConservativeStateCreateFlagsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineRasterizationConservativeStateCreateFlagsEXT where
   
@@ -201,6 +215,13 @@ instance Storable VkPipelineRasterizationConservativeStateCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 20) (vkConservativeRasterizationMode (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkExtraPrimitiveOverestimationSize (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
+
+instance Zero VkPipelineRasterizationConservativeStateCreateInfoEXT where
+  zero = VkPipelineRasterizationConservativeStateCreateInfoEXT zero
+                                                               zero
+                                                               zero
+                                                               zero
+                                                               zero
 -- No documentation found for TopLevel "VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME"
 pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME = "VK_EXT_conservative_rasterization"

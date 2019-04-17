@@ -19,7 +19,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Foreign.Marshal.Utils
@@ -34,6 +35,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list
   ( VkImageFormatListCreateInfoKHR(..)
   , pattern VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR
@@ -72,3 +76,6 @@ fromCStructImageFormatListCreateInfoKHR c = ImageFormatListCreateInfoKHR <$> -- 
                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageFormatListCreateInfoKHR)))
                                                                          -- Length valued member elided
                                                                          <*> (Data.Vector.generateM (fromIntegral (vkViewFormatCount (c :: VkImageFormatListCreateInfoKHR))) (peekElemOff (vkPViewFormats (c :: VkImageFormatListCreateInfoKHR))))
+instance Zero ImageFormatListCreateInfoKHR where
+  zero = ImageFormatListCreateInfoKHR Nothing
+                                      Data.Vector.empty

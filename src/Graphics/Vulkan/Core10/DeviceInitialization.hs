@@ -83,12 +83,12 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , getNumPhysicalDeviceQueueFamilyProperties
   , getPhysicalDeviceQueueFamilyProperties
   , getAllPhysicalDeviceQueueFamilyProperties
-  , withDevice
   , withInstance
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -103,6 +103,9 @@ import Data.ByteString
   , packCStringLen
   , useAsCString
   )
+import qualified Data.ByteString
+  ( empty
+  )
 import Data.Function
   ( on
   )
@@ -113,7 +116,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   , take
   )
@@ -177,6 +181,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_STRUCTURE_TYPE_APPLICATION_INFO
   , pattern VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
   , pattern VK_SUCCESS
@@ -272,6 +277,13 @@ fromCStructAllocationCallbacks c = AllocationCallbacks <$> pure (vkPUserData (c 
                                                        <*> pure (vkPfnFree (c :: VkAllocationCallbacks))
                                                        <*> pure (vkPfnInternalAllocation (c :: VkAllocationCallbacks))
                                                        <*> pure (vkPfnInternalFree (c :: VkAllocationCallbacks))
+instance Zero AllocationCallbacks where
+  zero = AllocationCallbacks zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "ApplicationInfo"
 data ApplicationInfo = ApplicationInfo
   { -- Univalued Member elided
@@ -299,6 +311,13 @@ fromCStructApplicationInfo c = ApplicationInfo <$> -- Univalued Member elided
                                                <*> maybePeek packCString (vkPEngineName (c :: VkApplicationInfo))
                                                <*> pure (vkEngineVersion (c :: VkApplicationInfo))
                                                <*> pure (vkApiVersion (c :: VkApplicationInfo))
+instance Zero ApplicationInfo where
+  zero = ApplicationInfo Nothing
+                         Nothing
+                         zero
+                         Nothing
+                         zero
+                         zero
 data Device = Device
   { deviceHandle :: VkDevice
   , deviceCmds    :: DeviceCmds
@@ -330,6 +349,10 @@ fromCStructExtent3D :: VkExtent3D -> IO Extent3D
 fromCStructExtent3D c = Extent3D <$> pure (vkWidth (c :: VkExtent3D))
                                  <*> pure (vkHeight (c :: VkExtent3D))
                                  <*> pure (vkDepth (c :: VkExtent3D))
+instance Zero Extent3D where
+  zero = Extent3D zero
+                  zero
+                  zero
 -- No documentation found for TopLevel "FormatFeatureFlagBits"
 type FormatFeatureFlagBits = VkFormatFeatureFlagBits
 -- No documentation found for TopLevel "FormatFeatureFlags"
@@ -350,6 +373,10 @@ fromCStructFormatProperties :: VkFormatProperties -> IO FormatProperties
 fromCStructFormatProperties c = FormatProperties <$> pure (vkLinearTilingFeatures (c :: VkFormatProperties))
                                                  <*> pure (vkOptimalTilingFeatures (c :: VkFormatProperties))
                                                  <*> pure (vkBufferFeatures (c :: VkFormatProperties))
+instance Zero FormatProperties where
+  zero = FormatProperties zero
+                          zero
+                          zero
 -- No documentation found for TopLevel "ImageCreateFlagBits"
 type ImageCreateFlagBits = VkImageCreateFlagBits
 -- No documentation found for TopLevel "ImageCreateFlags"
@@ -376,6 +403,12 @@ fromCStructImageFormatProperties c = ImageFormatProperties <$> (fromCStructExten
                                                            <*> pure (vkMaxArrayLayers (c :: VkImageFormatProperties))
                                                            <*> pure (vkSampleCounts (c :: VkImageFormatProperties))
                                                            <*> pure (vkMaxResourceSize (c :: VkImageFormatProperties))
+instance Zero ImageFormatProperties where
+  zero = ImageFormatProperties zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "ImageTiling"
 type ImageTiling = VkImageTiling
 -- No documentation found for TopLevel "ImageType"
@@ -426,6 +459,12 @@ fromCStructInstanceCreateInfo c = InstanceCreateInfo <$> -- Univalued Member eli
                                                      <*> (Data.Vector.generateM (fromIntegral (vkEnabledLayerCount (c :: VkInstanceCreateInfo))) (packCStringElemOff (vkPPEnabledLayerNames (c :: VkInstanceCreateInfo))))
                                                      -- Length valued member elided
                                                      <*> (Data.Vector.generateM (fromIntegral (vkEnabledExtensionCount (c :: VkInstanceCreateInfo))) (packCStringElemOff (vkPPEnabledExtensionNames (c :: VkInstanceCreateInfo))))
+instance Zero InstanceCreateInfo where
+  zero = InstanceCreateInfo Nothing
+                            zero
+                            Nothing
+                            Data.Vector.empty
+                            Data.Vector.empty
 -- No documentation found for TopLevel "MemoryHeap"
 data MemoryHeap = MemoryHeap
   { -- No documentation found for Nested "MemoryHeap" "size"
@@ -439,6 +478,9 @@ withCStructMemoryHeap from cont = cont (VkMemoryHeap (vkSize (from :: MemoryHeap
 fromCStructMemoryHeap :: VkMemoryHeap -> IO MemoryHeap
 fromCStructMemoryHeap c = MemoryHeap <$> pure (vkSize (c :: VkMemoryHeap))
                                      <*> pure (vkFlags (c :: VkMemoryHeap))
+instance Zero MemoryHeap where
+  zero = MemoryHeap zero
+                    zero
 -- No documentation found for TopLevel "MemoryHeapFlagBits"
 type MemoryHeapFlagBits = VkMemoryHeapFlagBits
 -- No documentation found for TopLevel "MemoryHeapFlags"
@@ -460,6 +502,9 @@ withCStructMemoryType from cont = cont (VkMemoryType (vkPropertyFlags (from :: M
 fromCStructMemoryType :: VkMemoryType -> IO MemoryType
 fromCStructMemoryType c = MemoryType <$> pure (vkPropertyFlags (c :: VkMemoryType))
                                      <*> pure (vkHeapIndex (c :: VkMemoryType))
+instance Zero MemoryType where
+  zero = MemoryType zero
+                    zero
 data PhysicalDevice = PhysicalDevice
   { physicalDeviceHandle :: VkPhysicalDevice
   , physicalDeviceCmds    :: InstanceCmds
@@ -644,6 +689,62 @@ fromCStructPhysicalDeviceFeatures c = PhysicalDeviceFeatures <$> pure (bool32ToB
                                                              <*> pure (bool32ToBool (vkSparseResidencyAliased (c :: VkPhysicalDeviceFeatures)))
                                                              <*> pure (bool32ToBool (vkVariableMultisampleRate (c :: VkPhysicalDeviceFeatures)))
                                                              <*> pure (bool32ToBool (vkInheritedQueries (c :: VkPhysicalDeviceFeatures)))
+instance Zero PhysicalDeviceFeatures where
+  zero = PhysicalDeviceFeatures False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
+                                False
 -- No documentation found for TopLevel "PhysicalDeviceLimits"
 data PhysicalDeviceLimits = PhysicalDeviceLimits
   { -- No documentation found for Nested "PhysicalDeviceLimits" "maxImageDimension1D"
@@ -977,6 +1078,113 @@ fromCStructPhysicalDeviceLimits c = PhysicalDeviceLimits <$> pure (vkMaxImageDim
                                                          <*> pure (vkOptimalBufferCopyOffsetAlignment (c :: VkPhysicalDeviceLimits))
                                                          <*> pure (vkOptimalBufferCopyRowPitchAlignment (c :: VkPhysicalDeviceLimits))
                                                          <*> pure (vkNonCoherentAtomSize (c :: VkPhysicalDeviceLimits))
+instance Zero PhysicalDeviceLimits where
+  zero = PhysicalDeviceLimits zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              (zero, zero, zero)
+                              zero
+                              (zero, zero, zero)
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              (zero, zero)
+                              (zero, zero)
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              False
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              (zero, zero)
+                              (zero, zero)
+                              zero
+                              zero
+                              False
+                              False
+                              zero
+                              zero
+                              zero
 -- No documentation found for TopLevel "PhysicalDeviceMemoryProperties"
 data PhysicalDeviceMemoryProperties = PhysicalDeviceMemoryProperties
   { -- Fixed array valid count member elided
@@ -994,6 +1202,9 @@ fromCStructPhysicalDeviceMemoryProperties c = PhysicalDeviceMemoryProperties <$>
                                                                              traverse fromCStructMemoryType (Data.Vector.take (fromIntegral (vkMemoryTypeCount (c :: VkPhysicalDeviceMemoryProperties))) (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized (vkMemoryTypes (c :: VkPhysicalDeviceMemoryProperties)))))
                                                                              -- Fixed array valid count member elided
                                                                              <*> traverse fromCStructMemoryHeap (Data.Vector.take (fromIntegral (vkMemoryHeapCount (c :: VkPhysicalDeviceMemoryProperties))) (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized (vkMemoryHeaps (c :: VkPhysicalDeviceMemoryProperties)))))
+instance Zero PhysicalDeviceMemoryProperties where
+  zero = PhysicalDeviceMemoryProperties Data.Vector.empty
+                                        Data.Vector.empty
 -- No documentation found for TopLevel "PhysicalDeviceProperties"
 data PhysicalDeviceProperties = PhysicalDeviceProperties
   { -- No documentation found for Nested "PhysicalDeviceProperties" "apiVersion"
@@ -1028,6 +1239,16 @@ fromCStructPhysicalDeviceProperties c = PhysicalDeviceProperties <$> pure (vkApi
                                                                  <*> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkPipelineCacheUUID (c :: VkPhysicalDeviceProperties))) (\p -> packCStringLen (castPtr p, VK_UUID_SIZE))
                                                                  <*> (fromCStructPhysicalDeviceLimits (vkLimits (c :: VkPhysicalDeviceProperties)))
                                                                  <*> (fromCStructPhysicalDeviceSparseProperties (vkSparseProperties (c :: VkPhysicalDeviceProperties)))
+instance Zero PhysicalDeviceProperties where
+  zero = PhysicalDeviceProperties zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  Data.ByteString.empty
+                                  Data.ByteString.empty
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "PhysicalDeviceSparseProperties"
 data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
   { -- No documentation found for Nested "PhysicalDeviceSparseProperties" "residencyStandard2DBlockShape"
@@ -1050,6 +1271,12 @@ fromCStructPhysicalDeviceSparseProperties c = PhysicalDeviceSparseProperties <$>
                                                                              <*> pure (bool32ToBool (vkResidencyStandard3DBlockShape (c :: VkPhysicalDeviceSparseProperties)))
                                                                              <*> pure (bool32ToBool (vkResidencyAlignedMipSize (c :: VkPhysicalDeviceSparseProperties)))
                                                                              <*> pure (bool32ToBool (vkResidencyNonResidentStrict (c :: VkPhysicalDeviceSparseProperties)))
+instance Zero PhysicalDeviceSparseProperties where
+  zero = PhysicalDeviceSparseProperties False
+                                        False
+                                        False
+                                        False
+                                        False
 -- No documentation found for TopLevel "PhysicalDeviceType"
 type PhysicalDeviceType = VkPhysicalDeviceType
 -- No documentation found for TopLevel "QueueFamilyProperties"
@@ -1071,6 +1298,11 @@ fromCStructQueueFamilyProperties c = QueueFamilyProperties <$> pure (vkQueueFlag
                                                            <*> pure (vkQueueCount (c :: VkQueueFamilyProperties))
                                                            <*> pure (vkTimestampValidBits (c :: VkQueueFamilyProperties))
                                                            <*> (fromCStructExtent3D (vkMinImageTransferGranularity (c :: VkQueueFamilyProperties)))
+instance Zero QueueFamilyProperties where
+  zero = QueueFamilyProperties zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "QueueFlagBits"
 type QueueFlagBits = VkQueueFlagBits
 -- No documentation found for TopLevel "QueueFlags"
@@ -1120,7 +1352,7 @@ getPhysicalDeviceFormatProperties :: PhysicalDevice ->  Format ->  IO (FormatPro
 getPhysicalDeviceFormatProperties = \(PhysicalDevice physicalDevice commandTable) -> \format -> alloca (\pFormatProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceFormatProperties commandTable physicalDevice format pFormatProperties *> ((fromCStructFormatProperties <=< peek) pFormatProperties))
 
 -- | Wrapper for 'vkGetPhysicalDeviceImageFormatProperties'
-getPhysicalDeviceImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  ImageTiling ->  ImageUsageFlags ->  ImageCreateFlags ->  IO ( ImageFormatProperties )
+getPhysicalDeviceImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  ImageTiling ->  ImageUsageFlags ->  ImageCreateFlags ->  IO (ImageFormatProperties)
 getPhysicalDeviceImageFormatProperties = \(PhysicalDevice physicalDevice commandTable) -> \format -> \type' -> \tiling -> \usage -> \flags -> alloca (\pImageFormatProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceImageFormatProperties commandTable physicalDevice format type' tiling usage flags pImageFormatProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructImageFormatProperties <=< peek) pImageFormatProperties)))
 
 -- | Wrapper for 'vkGetPhysicalDeviceMemoryProperties'
@@ -1145,13 +1377,9 @@ getAllPhysicalDeviceQueueFamilyProperties physicalDevice =
   getNumPhysicalDeviceQueueFamilyProperties physicalDevice
     >>= \num -> getPhysicalDeviceQueueFamilyProperties physicalDevice num
 
-withDevice :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withDevice createInfo allocationCallbacks =
-  bracket
-    (vkCreateDevice createInfo allocationCallbacks)
-    (`vkDestroyDevice` allocationCallbacks)
-withInstance :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withInstance createInfo allocationCallbacks =
-  bracket
-    (vkCreateInstance createInfo allocationCallbacks)
-    (`vkDestroyInstance` allocationCallbacks)
+-- | Wrapper for 'createInstance' and 'destroyInstance' using 'bracket'
+withInstance
+  :: InstanceCreateInfo -> Maybe (AllocationCallbacks) -> (Instance -> IO a) -> IO a
+withInstance instanceCreateInfo allocationCallbacks = bracket
+  (createInstance instanceCreateInfo allocationCallbacks)
+  (\o -> destroyInstance o allocationCallbacks)

@@ -60,6 +60,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -67,7 +68,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- No documentation found for TopLevel "VkValidationFeatureDisableEXT"
 newtype VkValidationFeatureDisableEXT = VkValidationFeatureDisableEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkValidationFeatureDisableEXT where
   showsPrec _ VK_VALIDATION_FEATURE_DISABLE_ALL_EXT = showString "VK_VALIDATION_FEATURE_DISABLE_ALL_EXT"
@@ -126,7 +127,7 @@ pattern VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = VkValidationFeatureDi
 
 -- No documentation found for TopLevel "VkValidationFeatureEnableEXT"
 newtype VkValidationFeatureEnableEXT = VkValidationFeatureEnableEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkValidationFeatureEnableEXT where
   showsPrec _ VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = showString "VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT"
@@ -183,6 +184,14 @@ instance Storable VkValidationFeaturesEXT where
                 *> poke (ptr `plusPtr` 24) (vkPEnabledValidationFeatures (poked :: VkValidationFeaturesEXT))
                 *> poke (ptr `plusPtr` 32) (vkDisabledValidationFeatureCount (poked :: VkValidationFeaturesEXT))
                 *> poke (ptr `plusPtr` 40) (vkPDisabledValidationFeatures (poked :: VkValidationFeaturesEXT))
+
+instance Zero VkValidationFeaturesEXT where
+  zero = VkValidationFeaturesEXT zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME"
 pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME = "VK_EXT_validation_features"

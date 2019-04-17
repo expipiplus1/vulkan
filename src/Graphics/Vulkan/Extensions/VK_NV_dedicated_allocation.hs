@@ -29,6 +29,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation
   ( VkDedicatedAllocationBufferCreateInfoNV(..)
   , VkDedicatedAllocationImageCreateInfoNV(..)
@@ -71,6 +74,9 @@ fromCStructDedicatedAllocationBufferCreateInfoNV :: VkDedicatedAllocationBufferC
 fromCStructDedicatedAllocationBufferCreateInfoNV c = DedicatedAllocationBufferCreateInfoNV <$> -- Univalued Member elided
                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDedicatedAllocationBufferCreateInfoNV)))
                                                                                            <*> pure (bool32ToBool (vkDedicatedAllocation (c :: VkDedicatedAllocationBufferCreateInfoNV)))
+instance Zero DedicatedAllocationBufferCreateInfoNV where
+  zero = DedicatedAllocationBufferCreateInfoNV Nothing
+                                               False
 -- No documentation found for TopLevel "DedicatedAllocationImageCreateInfoNV"
 data DedicatedAllocationImageCreateInfoNV = DedicatedAllocationImageCreateInfoNV
   { -- Univalued Member elided
@@ -86,6 +92,9 @@ fromCStructDedicatedAllocationImageCreateInfoNV :: VkDedicatedAllocationImageCre
 fromCStructDedicatedAllocationImageCreateInfoNV c = DedicatedAllocationImageCreateInfoNV <$> -- Univalued Member elided
                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDedicatedAllocationImageCreateInfoNV)))
                                                                                          <*> pure (bool32ToBool (vkDedicatedAllocation (c :: VkDedicatedAllocationImageCreateInfoNV)))
+instance Zero DedicatedAllocationImageCreateInfoNV where
+  zero = DedicatedAllocationImageCreateInfoNV Nothing
+                                              False
 -- No documentation found for TopLevel "DedicatedAllocationMemoryAllocateInfoNV"
 data DedicatedAllocationMemoryAllocateInfoNV = DedicatedAllocationMemoryAllocateInfoNV
   { -- Univalued Member elided
@@ -104,3 +113,7 @@ fromCStructDedicatedAllocationMemoryAllocateInfoNV c = DedicatedAllocationMemory
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDedicatedAllocationMemoryAllocateInfoNV)))
                                                                                                <*> pure (vkImage (c :: VkDedicatedAllocationMemoryAllocateInfoNV))
                                                                                                <*> pure (vkBuffer (c :: VkDedicatedAllocationMemoryAllocateInfoNV))
+instance Zero DedicatedAllocationMemoryAllocateInfoNV where
+  zero = DedicatedAllocationMemoryAllocateInfoNV Nothing
+                                                 zero
+                                                 zero

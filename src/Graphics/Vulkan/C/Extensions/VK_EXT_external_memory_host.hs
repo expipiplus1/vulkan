@@ -46,6 +46,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -87,6 +88,12 @@ instance Storable VkImportMemoryHostPointerInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportMemoryHostPointerInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkImportMemoryHostPointerInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkPHostPointer (poked :: VkImportMemoryHostPointerInfoEXT))
+
+instance Zero VkImportMemoryHostPointerInfoEXT where
+  zero = VkImportMemoryHostPointerInfoEXT zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkMemoryHostPointerPropertiesEXT"
 data VkMemoryHostPointerPropertiesEXT = VkMemoryHostPointerPropertiesEXT
   { -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "sType"
@@ -107,6 +114,11 @@ instance Storable VkMemoryHostPointerPropertiesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryHostPointerPropertiesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryHostPointerPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryHostPointerPropertiesEXT))
+
+instance Zero VkMemoryHostPointerPropertiesEXT where
+  zero = VkMemoryHostPointerPropertiesEXT zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkPhysicalDeviceExternalMemoryHostPropertiesEXT"
 data VkPhysicalDeviceExternalMemoryHostPropertiesEXT = VkPhysicalDeviceExternalMemoryHostPropertiesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "sType"
@@ -127,6 +139,11 @@ instance Storable VkPhysicalDeviceExternalMemoryHostPropertiesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMinImportedHostPointerAlignment (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
+
+instance Zero VkPhysicalDeviceExternalMemoryHostPropertiesEXT where
+  zero = VkPhysicalDeviceExternalMemoryHostPropertiesEXT zero
+                                                         zero
+                                                         zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetMemoryHostPointerPropertiesEXT"
 foreign import ccall

@@ -29,6 +29,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -104,6 +105,24 @@ instance Storable VkPhysicalDeviceShaderCorePropertiesAMD where
                 *> poke (ptr `plusPtr` 60) (vkMinVgprAllocation (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
                 *> poke (ptr `plusPtr` 64) (vkMaxVgprAllocation (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
                 *> poke (ptr `plusPtr` 68) (vkVgprAllocationGranularity (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
+
+instance Zero VkPhysicalDeviceShaderCorePropertiesAMD where
+  zero = VkPhysicalDeviceShaderCorePropertiesAMD zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
 -- No documentation found for TopLevel "VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME"
 pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME = "VK_AMD_shader_core_properties"

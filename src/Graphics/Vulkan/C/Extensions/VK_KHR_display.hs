@@ -114,6 +114,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkObjectType(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -143,7 +144,7 @@ type VkDisplayKHR = Ptr VkDisplayKHR_T
 
 -- No documentation found for TopLevel "VkDisplayModeCreateFlagsKHR"
 newtype VkDisplayModeCreateFlagsKHR = VkDisplayModeCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDisplayModeCreateFlagsKHR where
   
@@ -184,6 +185,12 @@ instance Storable VkDisplayModeCreateInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayModeCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDisplayModeCreateInfoKHR))
                 *> poke (ptr `plusPtr` 20) (vkParameters (poked :: VkDisplayModeCreateInfoKHR))
+
+instance Zero VkDisplayModeCreateInfoKHR where
+  zero = VkDisplayModeCreateInfoKHR zero
+                                    zero
+                                    zero
+                                    zero
 -- | Dummy data to tag the 'Ptr' with
 data VkDisplayModeKHR_T
 -- No documentation found for TopLevel "VkDisplayModeKHR"
@@ -204,6 +211,10 @@ instance Storable VkDisplayModeParametersKHR where
                                         <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkVisibleRegion (poked :: VkDisplayModeParametersKHR))
                 *> poke (ptr `plusPtr` 8) (vkRefreshRate (poked :: VkDisplayModeParametersKHR))
+
+instance Zero VkDisplayModeParametersKHR where
+  zero = VkDisplayModeParametersKHR zero
+                                    zero
 -- No documentation found for TopLevel "VkDisplayModePropertiesKHR"
 data VkDisplayModePropertiesKHR = VkDisplayModePropertiesKHR
   { -- No documentation found for Nested "VkDisplayModePropertiesKHR" "displayMode"
@@ -220,11 +231,15 @@ instance Storable VkDisplayModePropertiesKHR where
                                         <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkDisplayMode (poked :: VkDisplayModePropertiesKHR))
                 *> poke (ptr `plusPtr` 8) (vkParameters (poked :: VkDisplayModePropertiesKHR))
+
+instance Zero VkDisplayModePropertiesKHR where
+  zero = VkDisplayModePropertiesKHR zero
+                                    zero
 -- ** VkDisplayPlaneAlphaFlagBitsKHR
 
 -- No documentation found for TopLevel "VkDisplayPlaneAlphaFlagBitsKHR"
 newtype VkDisplayPlaneAlphaFlagBitsKHR = VkDisplayPlaneAlphaFlagBitsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDisplayPlaneAlphaFlagBitsKHR where
   showsPrec _ VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR"
@@ -307,6 +322,17 @@ instance Storable VkDisplayPlaneCapabilitiesKHR where
                 *> poke (ptr `plusPtr` 44) (vkMaxDstPosition (poked :: VkDisplayPlaneCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 52) (vkMinDstExtent (poked :: VkDisplayPlaneCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 60) (vkMaxDstExtent (poked :: VkDisplayPlaneCapabilitiesKHR))
+
+instance Zero VkDisplayPlaneCapabilitiesKHR where
+  zero = VkDisplayPlaneCapabilitiesKHR zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkDisplayPlanePropertiesKHR"
 data VkDisplayPlanePropertiesKHR = VkDisplayPlanePropertiesKHR
   { -- No documentation found for Nested "VkDisplayPlanePropertiesKHR" "currentDisplay"
@@ -323,6 +349,10 @@ instance Storable VkDisplayPlanePropertiesKHR where
                                          <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkCurrentDisplay (poked :: VkDisplayPlanePropertiesKHR))
                 *> poke (ptr `plusPtr` 8) (vkCurrentStackIndex (poked :: VkDisplayPlanePropertiesKHR))
+
+instance Zero VkDisplayPlanePropertiesKHR where
+  zero = VkDisplayPlanePropertiesKHR zero
+                                     zero
 -- No documentation found for TopLevel "VkDisplayPropertiesKHR"
 data VkDisplayPropertiesKHR = VkDisplayPropertiesKHR
   { -- No documentation found for Nested "VkDisplayPropertiesKHR" "display"
@@ -359,11 +389,20 @@ instance Storable VkDisplayPropertiesKHR where
                 *> poke (ptr `plusPtr` 32) (vkSupportedTransforms (poked :: VkDisplayPropertiesKHR))
                 *> poke (ptr `plusPtr` 36) (vkPlaneReorderPossible (poked :: VkDisplayPropertiesKHR))
                 *> poke (ptr `plusPtr` 40) (vkPersistentContent (poked :: VkDisplayPropertiesKHR))
+
+instance Zero VkDisplayPropertiesKHR where
+  zero = VkDisplayPropertiesKHR zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
 -- ** VkDisplaySurfaceCreateFlagsKHR
 
 -- No documentation found for TopLevel "VkDisplaySurfaceCreateFlagsKHR"
 newtype VkDisplaySurfaceCreateFlagsKHR = VkDisplaySurfaceCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDisplaySurfaceCreateFlagsKHR where
   
@@ -428,6 +467,18 @@ instance Storable VkDisplaySurfaceCreateInfoKHR where
                 *> poke (ptr `plusPtr` 44) (vkGlobalAlpha (poked :: VkDisplaySurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 48) (vkAlphaMode (poked :: VkDisplaySurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 52) (vkImageExtent (poked :: VkDisplaySurfaceCreateInfoKHR))
+
+instance Zero VkDisplaySurfaceCreateInfoKHR where
+  zero = VkDisplaySurfaceCreateInfoKHR zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCreateDisplayModeKHR"
 foreign import ccall

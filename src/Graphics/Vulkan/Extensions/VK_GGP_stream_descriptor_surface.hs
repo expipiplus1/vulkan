@@ -40,7 +40,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
   ( VkStreamDescriptorSurfaceCreateFlagsGGP(..)
@@ -90,7 +91,11 @@ fromCStructStreamDescriptorSurfaceCreateInfoGGP c = StreamDescriptorSurfaceCreat
                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkStreamDescriptorSurfaceCreateInfoGGP)))
                                                                                          <*> pure (vkFlags (c :: VkStreamDescriptorSurfaceCreateInfoGGP))
                                                                                          <*> pure (vkStreamDescriptor (c :: VkStreamDescriptorSurfaceCreateInfoGGP))
+instance Zero StreamDescriptorSurfaceCreateInfoGGP where
+  zero = StreamDescriptorSurfaceCreateInfoGGP Nothing
+                                              zero
+                                              zero
 
 -- | Wrapper for 'vkCreateStreamDescriptorSurfaceGGP'
-createStreamDescriptorSurfaceGGP :: Instance ->  StreamDescriptorSurfaceCreateInfoGGP ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createStreamDescriptorSurfaceGGP :: Instance ->  StreamDescriptorSurfaceCreateInfoGGP ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createStreamDescriptorSurfaceGGP = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructStreamDescriptorSurfaceCreateInfoGGP a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createStreamDescriptorSurfaceGGP commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))

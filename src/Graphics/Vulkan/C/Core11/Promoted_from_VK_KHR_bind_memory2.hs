@@ -40,6 +40,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageCreateFlagBits(..)
@@ -86,6 +87,13 @@ instance Storable VkBindBufferMemoryInfo where
                 *> poke (ptr `plusPtr` 16) (vkBuffer (poked :: VkBindBufferMemoryInfo))
                 *> poke (ptr `plusPtr` 24) (vkMemory (poked :: VkBindBufferMemoryInfo))
                 *> poke (ptr `plusPtr` 32) (vkMemoryOffset (poked :: VkBindBufferMemoryInfo))
+
+instance Zero VkBindBufferMemoryInfo where
+  zero = VkBindBufferMemoryInfo zero
+                                zero
+                                zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "VkBindImageMemoryInfo"
 data VkBindImageMemoryInfo = VkBindImageMemoryInfo
   { -- No documentation found for Nested "VkBindImageMemoryInfo" "sType"
@@ -114,6 +122,13 @@ instance Storable VkBindImageMemoryInfo where
                 *> poke (ptr `plusPtr` 16) (vkImage (poked :: VkBindImageMemoryInfo))
                 *> poke (ptr `plusPtr` 24) (vkMemory (poked :: VkBindImageMemoryInfo))
                 *> poke (ptr `plusPtr` 32) (vkMemoryOffset (poked :: VkBindImageMemoryInfo))
+
+instance Zero VkBindImageMemoryInfo where
+  zero = VkBindImageMemoryInfo zero
+                               zero
+                               zero
+                               zero
+                               zero
 #if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkBindBufferMemory2"
 foreign import ccall

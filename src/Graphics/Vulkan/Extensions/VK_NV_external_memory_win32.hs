@@ -43,7 +43,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
   ( VkExportMemoryWin32HandleInfoNV(..)
@@ -95,6 +96,10 @@ fromCStructExportMemoryWin32HandleInfoNV c = ExportMemoryWin32HandleInfoNV <$> -
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExportMemoryWin32HandleInfoNV)))
                                                                            <*> pure (vkPAttributes (c :: VkExportMemoryWin32HandleInfoNV))
                                                                            <*> pure (vkDwAccess (c :: VkExportMemoryWin32HandleInfoNV))
+instance Zero ExportMemoryWin32HandleInfoNV where
+  zero = ExportMemoryWin32HandleInfoNV Nothing
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "ImportMemoryWin32HandleInfoNV"
 data ImportMemoryWin32HandleInfoNV = ImportMemoryWin32HandleInfoNV
   { -- Univalued Member elided
@@ -113,6 +118,10 @@ fromCStructImportMemoryWin32HandleInfoNV c = ImportMemoryWin32HandleInfoNV <$> -
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImportMemoryWin32HandleInfoNV)))
                                                                            <*> pure (vkHandleType (c :: VkImportMemoryWin32HandleInfoNV))
                                                                            <*> pure (vkHandle (c :: VkImportMemoryWin32HandleInfoNV))
+instance Zero ImportMemoryWin32HandleInfoNV where
+  zero = ImportMemoryWin32HandleInfoNV Nothing
+                                       zero
+                                       zero
 
 -- | Wrapper for 'vkGetMemoryWin32HandleNV'
 getMemoryWin32HandleNV :: Device ->  DeviceMemory ->  ExternalMemoryHandleTypeFlagsNV ->  IO (HANDLE)

@@ -67,6 +67,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -87,7 +88,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkShaderInfoTypeAMD"
 newtype VkShaderInfoTypeAMD = VkShaderInfoTypeAMD Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkShaderInfoTypeAMD where
   showsPrec _ VK_SHADER_INFO_TYPE_STATISTICS_AMD = showString "VK_SHADER_INFO_TYPE_STATISTICS_AMD"
@@ -146,6 +147,13 @@ instance Storable VkShaderResourceUsageAMD where
                 *> poke (ptr `plusPtr` 8) (vkLdsSizePerLocalWorkGroup (poked :: VkShaderResourceUsageAMD))
                 *> poke (ptr `plusPtr` 16) (vkLdsUsageSizeInBytes (poked :: VkShaderResourceUsageAMD))
                 *> poke (ptr `plusPtr` 24) (vkScratchMemUsageInBytes (poked :: VkShaderResourceUsageAMD))
+
+instance Zero VkShaderResourceUsageAMD where
+  zero = VkShaderResourceUsageAMD zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "VkShaderStatisticsInfoAMD"
 data VkShaderStatisticsInfoAMD = VkShaderStatisticsInfoAMD
   { -- No documentation found for Nested "VkShaderStatisticsInfoAMD" "shaderStageMask"
@@ -182,6 +190,15 @@ instance Storable VkShaderStatisticsInfoAMD where
                 *> poke (ptr `plusPtr` 48) (vkNumAvailableVgprs (poked :: VkShaderStatisticsInfoAMD))
                 *> poke (ptr `plusPtr` 52) (vkNumAvailableSgprs (poked :: VkShaderStatisticsInfoAMD))
                 *> poke (ptr `plusPtr` 56) (vkComputeWorkGroupSize (poked :: VkShaderStatisticsInfoAMD))
+
+instance Zero VkShaderStatisticsInfoAMD where
+  zero = VkShaderStatisticsInfoAMD zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetShaderInfoAMD"
 foreign import ccall

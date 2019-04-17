@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -50,6 +51,11 @@ instance Storable VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV whe
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkDedicatedAllocationImageAliasing (poked :: VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV))
+
+instance Zero VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
+  zero = VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV zero
+                                                                    zero
+                                                                    zero
 -- No documentation found for TopLevel "VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME"
 pattern VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME = "VK_NV_dedicated_allocation_image_aliasing"

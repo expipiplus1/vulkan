@@ -35,9 +35,9 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count
 
 
 -- | Wrapper for 'vkCmdDrawIndexedIndirectCountAMD'
-cmdDrawIndexedIndirectCountAMD :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO (  )
+cmdDrawIndexedIndirectCountAMD :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
 cmdDrawIndexedIndirectCountAMD = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \countBuffer -> \countBufferOffset -> \maxDrawCount -> \stride -> Graphics.Vulkan.C.Dynamic.cmdDrawIndexedIndirectCountAMD commandTable commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride *> (pure ())
 
 -- | Wrapper for 'vkCmdDrawIndirectCountAMD'
-cmdDrawIndirectCountAMD :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO (  )
+cmdDrawIndirectCountAMD :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
 cmdDrawIndirectCountAMD = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \countBuffer -> \countBufferOffset -> \maxDrawCount -> \stride -> Graphics.Vulkan.C.Dynamic.cmdDrawIndirectCountAMD commandTable commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride *> (pure ())

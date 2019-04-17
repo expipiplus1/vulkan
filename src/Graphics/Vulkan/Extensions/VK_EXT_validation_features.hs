@@ -21,7 +21,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Foreign.Marshal.Utils
@@ -36,6 +37,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
   ( VkValidationFeatureDisableEXT(..)
   , VkValidationFeatureEnableEXT(..)
@@ -82,3 +86,7 @@ fromCStructValidationFeaturesEXT c = ValidationFeaturesEXT <$> -- Univalued Memb
                                                            <*> (Data.Vector.generateM (fromIntegral (vkEnabledValidationFeatureCount (c :: VkValidationFeaturesEXT))) (peekElemOff (vkPEnabledValidationFeatures (c :: VkValidationFeaturesEXT))))
                                                            -- Length valued member elided
                                                            <*> (Data.Vector.generateM (fromIntegral (vkDisabledValidationFeatureCount (c :: VkValidationFeaturesEXT))) (peekElemOff (vkPDisabledValidationFeatures (c :: VkValidationFeaturesEXT))))
+instance Zero ValidationFeaturesEXT where
+  zero = ValidationFeaturesEXT Nothing
+                               Data.Vector.empty
+                               Data.Vector.empty

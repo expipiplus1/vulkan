@@ -43,7 +43,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -61,6 +62,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
   ( VkDescriptorBindingFlagBitsEXT(..)
   , VkDescriptorSetLayoutBindingFlagsCreateInfoEXT(..)
@@ -116,6 +120,9 @@ fromCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT c = DescriptorSetLayoutB
                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT)))
                                                                                                          -- Optional length valued member elided
                                                                                                          <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkBindingCount (c :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))) (peekElemOff p)) (vkPBindingFlags (c :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
+instance Zero DescriptorSetLayoutBindingFlagsCreateInfoEXT where
+  zero = DescriptorSetLayoutBindingFlagsCreateInfoEXT Nothing
+                                                      Nothing
 -- No documentation found for TopLevel "DescriptorSetVariableDescriptorCountAllocateInfoEXT"
 data DescriptorSetVariableDescriptorCountAllocateInfoEXT = DescriptorSetVariableDescriptorCountAllocateInfoEXT
   { -- Univalued Member elided
@@ -133,6 +140,9 @@ fromCStructDescriptorSetVariableDescriptorCountAllocateInfoEXT c = DescriptorSet
                                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT)))
                                                                                                                        -- Length valued member elided
                                                                                                                        <*> (Data.Vector.generateM (fromIntegral (vkDescriptorSetCount (c :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))) (peekElemOff (vkPDescriptorCounts (c :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))))
+instance Zero DescriptorSetVariableDescriptorCountAllocateInfoEXT where
+  zero = DescriptorSetVariableDescriptorCountAllocateInfoEXT Nothing
+                                                             Data.Vector.empty
 -- No documentation found for TopLevel "DescriptorSetVariableDescriptorCountLayoutSupportEXT"
 data DescriptorSetVariableDescriptorCountLayoutSupportEXT = DescriptorSetVariableDescriptorCountLayoutSupportEXT
   { -- Univalued Member elided
@@ -148,6 +158,9 @@ fromCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT :: VkDescriptorS
 fromCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT c = DescriptorSetVariableDescriptorCountLayoutSupportEXT <$> -- Univalued Member elided
                                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT)))
                                                                                                                          <*> pure (vkMaxVariableDescriptorCount (c :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
+instance Zero DescriptorSetVariableDescriptorCountLayoutSupportEXT where
+  zero = DescriptorSetVariableDescriptorCountLayoutSupportEXT Nothing
+                                                              zero
 -- No documentation found for TopLevel "PhysicalDeviceDescriptorIndexingFeaturesEXT"
 data PhysicalDeviceDescriptorIndexingFeaturesEXT = PhysicalDeviceDescriptorIndexingFeaturesEXT
   { -- Univalued Member elided
@@ -220,6 +233,28 @@ fromCStructPhysicalDeviceDescriptorIndexingFeaturesEXT c = PhysicalDeviceDescrip
                                                                                                        <*> pure (bool32ToBool (vkDescriptorBindingPartiallyBound (c :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkDescriptorBindingVariableDescriptorCount (c :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkRuntimeDescriptorArray (c :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT)))
+instance Zero PhysicalDeviceDescriptorIndexingFeaturesEXT where
+  zero = PhysicalDeviceDescriptorIndexingFeaturesEXT Nothing
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
+                                                     False
 -- No documentation found for TopLevel "PhysicalDeviceDescriptorIndexingPropertiesEXT"
 data PhysicalDeviceDescriptorIndexingPropertiesEXT = PhysicalDeviceDescriptorIndexingPropertiesEXT
   { -- Univalued Member elided
@@ -301,3 +336,28 @@ fromCStructPhysicalDeviceDescriptorIndexingPropertiesEXT c = PhysicalDeviceDescr
                                                                                                            <*> pure (vkMaxDescriptorSetUpdateAfterBindSampledImages (c :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
                                                                                                            <*> pure (vkMaxDescriptorSetUpdateAfterBindStorageImages (c :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
                                                                                                            <*> pure (vkMaxDescriptorSetUpdateAfterBindInputAttachments (c :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
+instance Zero PhysicalDeviceDescriptorIndexingPropertiesEXT where
+  zero = PhysicalDeviceDescriptorIndexingPropertiesEXT Nothing
+                                                       zero
+                                                       False
+                                                       False
+                                                       False
+                                                       False
+                                                       False
+                                                       False
+                                                       False
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero

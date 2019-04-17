@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -58,6 +59,13 @@ instance Storable VkPhysicalDeviceVulkanMemoryModelFeaturesKHR where
                 *> poke (ptr `plusPtr` 16) (vkVulkanMemoryModel (poked :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR))
                 *> poke (ptr `plusPtr` 20) (vkVulkanMemoryModelDeviceScope (poked :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR))
                 *> poke (ptr `plusPtr` 24) (vkVulkanMemoryModelAvailabilityVisibilityChains (poked :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR))
+
+instance Zero VkPhysicalDeviceVulkanMemoryModelFeaturesKHR where
+  zero = VkPhysicalDeviceVulkanMemoryModelFeaturesKHR zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
 -- No documentation found for TopLevel "VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME"
 pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME = "VK_KHR_vulkan_memory_model"

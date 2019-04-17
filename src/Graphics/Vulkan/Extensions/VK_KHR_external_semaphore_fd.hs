@@ -48,7 +48,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
   ( VkImportSemaphoreFdInfoKHR(..)
@@ -106,6 +107,12 @@ fromCStructImportSemaphoreFdInfoKHR c = ImportSemaphoreFdInfoKHR <$> -- Univalue
                                                                  <*> pure (vkFlags (c :: VkImportSemaphoreFdInfoKHR))
                                                                  <*> pure (vkHandleType (c :: VkImportSemaphoreFdInfoKHR))
                                                                  <*> pure (vkFd (c :: VkImportSemaphoreFdInfoKHR))
+instance Zero ImportSemaphoreFdInfoKHR where
+  zero = ImportSemaphoreFdInfoKHR Nothing
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "SemaphoreGetFdInfoKHR"
 data SemaphoreGetFdInfoKHR = SemaphoreGetFdInfoKHR
   { -- Univalued Member elided
@@ -124,6 +131,10 @@ fromCStructSemaphoreGetFdInfoKHR c = SemaphoreGetFdInfoKHR <$> -- Univalued Memb
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSemaphoreGetFdInfoKHR)))
                                                            <*> pure (vkSemaphore (c :: VkSemaphoreGetFdInfoKHR))
                                                            <*> pure (vkHandleType (c :: VkSemaphoreGetFdInfoKHR))
+instance Zero SemaphoreGetFdInfoKHR where
+  zero = SemaphoreGetFdInfoKHR Nothing
+                               zero
+                               zero
 
 -- | Wrapper for 'vkGetSemaphoreFdKHR'
 getSemaphoreFdKHR :: Device ->  SemaphoreGetFdInfoKHR ->  IO (CInt)

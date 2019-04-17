@@ -10,10 +10,12 @@ module Graphics.Vulkan.Core10.QueueSemaphore
   , SemaphoreCreateInfo(..)
   , createSemaphore
   , destroySemaphore
+  , withSemaphore
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -39,7 +41,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.QueueSemaphore
@@ -81,6 +84,9 @@ fromCStructSemaphoreCreateInfo :: VkSemaphoreCreateInfo -> IO SemaphoreCreateInf
 fromCStructSemaphoreCreateInfo c = SemaphoreCreateInfo <$> -- Univalued Member elided
                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSemaphoreCreateInfo)))
                                                        <*> pure (vkFlags (c :: VkSemaphoreCreateInfo))
+instance Zero SemaphoreCreateInfo where
+  zero = SemaphoreCreateInfo Nothing
+                             zero
 
 -- | Wrapper for 'vkCreateSemaphore'
 createSemaphore :: Device ->  SemaphoreCreateInfo ->  Maybe AllocationCallbacks ->  IO (Semaphore)
@@ -89,3 +95,9 @@ createSemaphore = \(Device device commandTable) -> \createInfo -> \allocator -> 
 -- | Wrapper for 'vkDestroySemaphore'
 destroySemaphore :: Device ->  Semaphore ->  Maybe AllocationCallbacks ->  IO ()
 destroySemaphore = \(Device device commandTable) -> \semaphore -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySemaphore commandTable device semaphore pAllocator *> (pure ()))
+-- | Wrapper for 'createSemaphore' and 'destroySemaphore' using 'bracket'
+withSemaphore
+  :: Device -> SemaphoreCreateInfo -> Maybe (AllocationCallbacks) -> (Semaphore -> IO a) -> IO a
+withSemaphore device semaphoreCreateInfo allocationCallbacks = bracket
+  (createSemaphore device semaphoreCreateInfo allocationCallbacks)
+  (\o -> destroySemaphore device o allocationCallbacks)

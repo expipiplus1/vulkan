@@ -40,7 +40,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -58,6 +59,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2
   ( VkImageViewUsageCreateInfo(..)
   , VkInputAttachmentAspectReference(..)
@@ -108,6 +112,9 @@ fromCStructImageViewUsageCreateInfo :: VkImageViewUsageCreateInfo -> IO ImageVie
 fromCStructImageViewUsageCreateInfo c = ImageViewUsageCreateInfo <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageViewUsageCreateInfo)))
                                                                  <*> pure (vkUsage (c :: VkImageViewUsageCreateInfo))
+instance Zero ImageViewUsageCreateInfo where
+  zero = ImageViewUsageCreateInfo Nothing
+                                  zero
 -- No documentation found for TopLevel "InputAttachmentAspectReference"
 data InputAttachmentAspectReference = InputAttachmentAspectReference
   { -- No documentation found for Nested "InputAttachmentAspectReference" "subpass"
@@ -124,6 +131,10 @@ fromCStructInputAttachmentAspectReference :: VkInputAttachmentAspectReference ->
 fromCStructInputAttachmentAspectReference c = InputAttachmentAspectReference <$> pure (vkSubpass (c :: VkInputAttachmentAspectReference))
                                                                              <*> pure (vkInputAttachmentIndex (c :: VkInputAttachmentAspectReference))
                                                                              <*> pure (vkAspectMask (c :: VkInputAttachmentAspectReference))
+instance Zero InputAttachmentAspectReference where
+  zero = InputAttachmentAspectReference zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "PhysicalDevicePointClippingProperties"
 data PhysicalDevicePointClippingProperties = PhysicalDevicePointClippingProperties
   { -- Univalued Member elided
@@ -139,6 +150,9 @@ fromCStructPhysicalDevicePointClippingProperties :: VkPhysicalDevicePointClippin
 fromCStructPhysicalDevicePointClippingProperties c = PhysicalDevicePointClippingProperties <$> -- Univalued Member elided
                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDevicePointClippingProperties)))
                                                                                            <*> pure (vkPointClippingBehavior (c :: VkPhysicalDevicePointClippingProperties))
+instance Zero PhysicalDevicePointClippingProperties where
+  zero = PhysicalDevicePointClippingProperties Nothing
+                                               zero
 -- No documentation found for TopLevel "PipelineTessellationDomainOriginStateCreateInfo"
 data PipelineTessellationDomainOriginStateCreateInfo = PipelineTessellationDomainOriginStateCreateInfo
   { -- Univalued Member elided
@@ -154,6 +168,9 @@ fromCStructPipelineTessellationDomainOriginStateCreateInfo :: VkPipelineTessella
 fromCStructPipelineTessellationDomainOriginStateCreateInfo c = PipelineTessellationDomainOriginStateCreateInfo <$> -- Univalued Member elided
                                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineTessellationDomainOriginStateCreateInfo)))
                                                                                                                <*> pure (vkDomainOrigin (c :: VkPipelineTessellationDomainOriginStateCreateInfo))
+instance Zero PipelineTessellationDomainOriginStateCreateInfo where
+  zero = PipelineTessellationDomainOriginStateCreateInfo Nothing
+                                                         zero
 -- No documentation found for TopLevel "PointClippingBehavior"
 type PointClippingBehavior = VkPointClippingBehavior
 -- No documentation found for TopLevel "PointClippingBehaviorKHR"
@@ -175,6 +192,9 @@ fromCStructRenderPassInputAttachmentAspectCreateInfo c = RenderPassInputAttachme
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkRenderPassInputAttachmentAspectCreateInfo)))
                                                                                                    -- Length valued member elided
                                                                                                    <*> (Data.Vector.generateM (fromIntegral (vkAspectReferenceCount (c :: VkRenderPassInputAttachmentAspectCreateInfo))) (((fromCStructInputAttachmentAspectReference <=<) . peekElemOff) (vkPAspectReferences (c :: VkRenderPassInputAttachmentAspectCreateInfo))))
+instance Zero RenderPassInputAttachmentAspectCreateInfo where
+  zero = RenderPassInputAttachmentAspectCreateInfo Nothing
+                                                   Data.Vector.empty
 -- No documentation found for TopLevel "TessellationDomainOrigin"
 type TessellationDomainOrigin = VkTessellationDomainOrigin
 -- No documentation found for TopLevel "TessellationDomainOriginKHR"

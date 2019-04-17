@@ -47,6 +47,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
@@ -102,9 +103,14 @@ fromCStructWaylandSurfaceCreateInfoKHR c = WaylandSurfaceCreateInfoKHR <$> -- Un
                                                                        <*> pure (vkFlags (c :: VkWaylandSurfaceCreateInfoKHR))
                                                                        <*> pure (vkDisplay (c :: VkWaylandSurfaceCreateInfoKHR))
                                                                        <*> pure (vkSurface (c :: VkWaylandSurfaceCreateInfoKHR))
+instance Zero WaylandSurfaceCreateInfoKHR where
+  zero = WaylandSurfaceCreateInfoKHR Nothing
+                                     zero
+                                     zero
+                                     zero
 
 -- | Wrapper for 'vkCreateWaylandSurfaceKHR'
-createWaylandSurfaceKHR :: Instance ->  WaylandSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createWaylandSurfaceKHR :: Instance ->  WaylandSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createWaylandSurfaceKHR = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructWaylandSurfaceCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createWaylandSurfaceKHR commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))
 
 -- | Wrapper for 'vkGetPhysicalDeviceWaylandPresentationSupportKHR'

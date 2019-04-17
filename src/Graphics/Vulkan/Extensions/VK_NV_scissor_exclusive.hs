@@ -49,6 +49,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive
   ( VkPhysicalDeviceExclusiveScissorFeaturesNV(..)
   , VkPipelineViewportExclusiveScissorStateCreateInfoNV(..)
@@ -97,6 +100,9 @@ fromCStructPhysicalDeviceExclusiveScissorFeaturesNV :: VkPhysicalDeviceExclusive
 fromCStructPhysicalDeviceExclusiveScissorFeaturesNV c = PhysicalDeviceExclusiveScissorFeaturesNV <$> -- Univalued Member elided
                                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceExclusiveScissorFeaturesNV)))
                                                                                                  <*> pure (bool32ToBool (vkExclusiveScissor (c :: VkPhysicalDeviceExclusiveScissorFeaturesNV)))
+instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
+  zero = PhysicalDeviceExclusiveScissorFeaturesNV Nothing
+                                                  False
 -- No documentation found for TopLevel "PipelineViewportExclusiveScissorStateCreateInfoNV"
 data PipelineViewportExclusiveScissorStateCreateInfoNV = PipelineViewportExclusiveScissorStateCreateInfoNV
   { -- Univalued Member elided
@@ -114,6 +120,9 @@ fromCStructPipelineViewportExclusiveScissorStateCreateInfoNV c = PipelineViewpor
                                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineViewportExclusiveScissorStateCreateInfoNV)))
                                                                                                                    -- Optional length valued member elided
                                                                                                                    <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkExclusiveScissorCount (c :: VkPipelineViewportExclusiveScissorStateCreateInfoNV))) (((fromCStructRect2D <=<) . peekElemOff) p)) (vkPExclusiveScissors (c :: VkPipelineViewportExclusiveScissorStateCreateInfoNV))
+instance Zero PipelineViewportExclusiveScissorStateCreateInfoNV where
+  zero = PipelineViewportExclusiveScissorStateCreateInfoNV Nothing
+                                                           Nothing
 
 -- | Wrapper for 'vkCmdSetExclusiveScissorNV'
 cmdSetExclusiveScissorNV :: CommandBuffer ->  Word32 ->  Vector Rect2D ->  IO ()

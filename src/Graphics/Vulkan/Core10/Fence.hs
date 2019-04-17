@@ -14,10 +14,12 @@ module Graphics.Vulkan.Core10.Fence
   , getFenceStatus
   , resetFences
   , waitForFences
+  , withFence
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -59,6 +61,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_STRUCTURE_TYPE_FENCE_CREATE_INFO
   , pattern VK_SUCCESS
   )
@@ -109,6 +112,9 @@ fromCStructFenceCreateInfo :: VkFenceCreateInfo -> IO FenceCreateInfo
 fromCStructFenceCreateInfo c = FenceCreateInfo <$> -- Univalued Member elided
                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkFenceCreateInfo)))
                                                <*> pure (vkFlags (c :: VkFenceCreateInfo))
+instance Zero FenceCreateInfo where
+  zero = FenceCreateInfo Nothing
+                         zero
 
 -- | Wrapper for 'vkCreateFence'
 createFence :: Device ->  FenceCreateInfo ->  Maybe AllocationCallbacks ->  IO (Fence)
@@ -129,3 +135,9 @@ resetFences = \(Device device commandTable) -> \fences -> withVec (&) fences (\p
 -- | Wrapper for 'vkWaitForFences'
 waitForFences :: Device ->  Vector Fence ->  Bool ->  Word64 ->  IO (VkResult)
 waitForFences = \(Device device commandTable) -> \fences -> \waitAll -> \timeout -> withVec (&) fences (\pFences -> Graphics.Vulkan.C.Dynamic.waitForFences commandTable device (fromIntegral $ Data.Vector.length fences) pFences (boolToBool32 waitAll) timeout >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure r)))
+-- | Wrapper for 'createFence' and 'destroyFence' using 'bracket'
+withFence
+  :: Device -> FenceCreateInfo -> Maybe (AllocationCallbacks) -> (Fence -> IO a) -> IO a
+withFence device fenceCreateInfo allocationCallbacks = bracket
+  (createFence device fenceCreateInfo allocationCallbacks)
+  (\o -> destroyFence device o allocationCallbacks)

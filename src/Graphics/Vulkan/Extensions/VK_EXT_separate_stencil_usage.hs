@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_separate_stencil_usage
   ( VkImageStencilUsageCreateInfoEXT(..)
   , pattern VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT
@@ -54,3 +57,6 @@ fromCStructImageStencilUsageCreateInfoEXT :: VkImageStencilUsageCreateInfoEXT ->
 fromCStructImageStencilUsageCreateInfoEXT c = ImageStencilUsageCreateInfoEXT <$> -- Univalued Member elided
                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageStencilUsageCreateInfoEXT)))
                                                                              <*> pure (vkStencilUsage (c :: VkImageStencilUsageCreateInfoEXT))
+instance Zero ImageStencilUsageCreateInfoEXT where
+  zero = ImageStencilUsageCreateInfoEXT Nothing
+                                        zero

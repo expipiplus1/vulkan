@@ -50,7 +50,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
   ( VkExportFenceWin32HandleInfoKHR(..)
@@ -115,6 +116,11 @@ fromCStructExportFenceWin32HandleInfoKHR c = ExportFenceWin32HandleInfoKHR <$> -
                                                                            <*> pure (vkPAttributes (c :: VkExportFenceWin32HandleInfoKHR))
                                                                            <*> pure (vkDwAccess (c :: VkExportFenceWin32HandleInfoKHR))
                                                                            <*> pure (vkName (c :: VkExportFenceWin32HandleInfoKHR))
+instance Zero ExportFenceWin32HandleInfoKHR where
+  zero = ExportFenceWin32HandleInfoKHR Nothing
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "FenceGetWin32HandleInfoKHR"
 data FenceGetWin32HandleInfoKHR = FenceGetWin32HandleInfoKHR
   { -- Univalued Member elided
@@ -133,6 +139,10 @@ fromCStructFenceGetWin32HandleInfoKHR c = FenceGetWin32HandleInfoKHR <$> -- Univ
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkFenceGetWin32HandleInfoKHR)))
                                                                      <*> pure (vkFence (c :: VkFenceGetWin32HandleInfoKHR))
                                                                      <*> pure (vkHandleType (c :: VkFenceGetWin32HandleInfoKHR))
+instance Zero FenceGetWin32HandleInfoKHR where
+  zero = FenceGetWin32HandleInfoKHR Nothing
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "ImportFenceWin32HandleInfoKHR"
 data ImportFenceWin32HandleInfoKHR = ImportFenceWin32HandleInfoKHR
   { -- Univalued Member elided
@@ -160,6 +170,13 @@ fromCStructImportFenceWin32HandleInfoKHR c = ImportFenceWin32HandleInfoKHR <$> -
                                                                            <*> pure (vkHandleType (c :: VkImportFenceWin32HandleInfoKHR))
                                                                            <*> pure (vkHandle (c :: VkImportFenceWin32HandleInfoKHR))
                                                                            <*> pure (vkName (c :: VkImportFenceWin32HandleInfoKHR))
+instance Zero ImportFenceWin32HandleInfoKHR where
+  zero = ImportFenceWin32HandleInfoKHR Nothing
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 
 -- | Wrapper for 'vkGetFenceWin32HandleKHR'
 getFenceWin32HandleKHR :: Device ->  FenceGetWin32HandleInfoKHR ->  IO (HANDLE)

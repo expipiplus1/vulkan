@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_GGP_frame_token
   ( VkPresentFrameTokenGGP(..)
   , GgpFrameToken
@@ -52,3 +55,6 @@ fromCStructPresentFrameTokenGGP :: VkPresentFrameTokenGGP -> IO PresentFrameToke
 fromCStructPresentFrameTokenGGP c = PresentFrameTokenGGP <$> -- Univalued Member elided
                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPresentFrameTokenGGP)))
                                                          <*> pure (vkFrameToken (c :: VkPresentFrameTokenGGP))
+instance Zero PresentFrameTokenGGP where
+  zero = PresentFrameTokenGGP Nothing
+                              zero

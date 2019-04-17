@@ -57,6 +57,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -75,7 +76,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkViSurfaceCreateFlagsNN"
 newtype VkViSurfaceCreateFlagsNN = VkViSurfaceCreateFlagsNN VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkViSurfaceCreateFlagsNN where
   
@@ -116,6 +117,12 @@ instance Storable VkViSurfaceCreateInfoNN where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkViSurfaceCreateInfoNN))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkViSurfaceCreateInfoNN))
                 *> poke (ptr `plusPtr` 24) (vkWindow (poked :: VkViSurfaceCreateInfoNN))
+
+instance Zero VkViSurfaceCreateInfoNN where
+  zero = VkViSurfaceCreateInfoNN zero
+                                 zero
+                                 zero
+                                 zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCreateViSurfaceNN"
 foreign import ccall

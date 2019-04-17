@@ -24,7 +24,8 @@ module Graphics.Vulkan.Core10.ImageView
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -53,7 +54,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.ImageView
@@ -108,6 +110,11 @@ fromCStructComponentMapping c = ComponentMapping <$> pure (vkR (c :: VkComponent
                                                  <*> pure (vkG (c :: VkComponentMapping))
                                                  <*> pure (vkB (c :: VkComponentMapping))
                                                  <*> pure (vkA (c :: VkComponentMapping))
+instance Zero ComponentMapping where
+  zero = ComponentMapping zero
+                          zero
+                          zero
+                          zero
 -- No documentation found for TopLevel "ComponentSwizzle"
 type ComponentSwizzle = VkComponentSwizzle
 -- No documentation found for TopLevel "ImageSubresourceRange"
@@ -132,6 +139,12 @@ fromCStructImageSubresourceRange c = ImageSubresourceRange <$> pure (vkAspectMas
                                                            <*> pure (vkLevelCount (c :: VkImageSubresourceRange))
                                                            <*> pure (vkBaseArrayLayer (c :: VkImageSubresourceRange))
                                                            <*> pure (vkLayerCount (c :: VkImageSubresourceRange))
+instance Zero ImageSubresourceRange where
+  zero = ImageSubresourceRange zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "ImageView"
 type ImageView = VkImageView
 -- No documentation found for TopLevel "ImageViewCreateFlagBits"
@@ -168,6 +181,14 @@ fromCStructImageViewCreateInfo c = ImageViewCreateInfo <$> -- Univalued Member e
                                                        <*> pure (vkFormat (c :: VkImageViewCreateInfo))
                                                        <*> (fromCStructComponentMapping (vkComponents (c :: VkImageViewCreateInfo)))
                                                        <*> (fromCStructImageSubresourceRange (vkSubresourceRange (c :: VkImageViewCreateInfo)))
+instance Zero ImageViewCreateInfo where
+  zero = ImageViewCreateInfo Nothing
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "ImageViewType"
 type ImageViewType = VkImageViewType
 
@@ -178,8 +199,9 @@ createImageView = \(Device device commandTable) -> \createInfo -> \allocator -> 
 -- | Wrapper for 'vkDestroyImageView'
 destroyImageView :: Device ->  ImageView ->  Maybe AllocationCallbacks ->  IO ()
 destroyImageView = \(Device device commandTable) -> \imageView -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyImageView commandTable device imageView pAllocator *> (pure ()))
-withImageView :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withImageView createInfo allocationCallbacks =
-  bracket
-    (vkCreateImageView createInfo allocationCallbacks)
-    (`vkDestroyImageView` allocationCallbacks)
+-- | Wrapper for 'createImageView' and 'destroyImageView' using 'bracket'
+withImageView
+  :: Device -> ImageViewCreateInfo -> Maybe (AllocationCallbacks) -> (ImageView -> IO a) -> IO a
+withImageView device imageViewCreateInfo allocationCallbacks = bracket
+  (createImageView device imageViewCreateInfo allocationCallbacks)
+  (\o -> destroyImageView device o allocationCallbacks)

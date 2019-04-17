@@ -42,10 +42,12 @@ module Graphics.Vulkan.Core10.Pass
   , destroyRenderPass
   , getRenderAreaGranularity
   , withFramebuffer
+  , withRenderPass
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -61,7 +63,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -92,7 +95,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
   , pattern VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
   , pattern VK_SUCCESS
   )
@@ -188,6 +192,16 @@ fromCStructAttachmentDescription c = AttachmentDescription <$> pure (vkFlags (c 
                                                            <*> pure (vkStencilStoreOp (c :: VkAttachmentDescription))
                                                            <*> pure (vkInitialLayout (c :: VkAttachmentDescription))
                                                            <*> pure (vkFinalLayout (c :: VkAttachmentDescription))
+instance Zero AttachmentDescription where
+  zero = AttachmentDescription zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "AttachmentDescriptionFlagBits"
 type AttachmentDescriptionFlagBits = VkAttachmentDescriptionFlagBits
 -- No documentation found for TopLevel "AttachmentDescriptionFlags"
@@ -207,6 +221,9 @@ withCStructAttachmentReference from cont = cont (VkAttachmentReference (vkAttach
 fromCStructAttachmentReference :: VkAttachmentReference -> IO AttachmentReference
 fromCStructAttachmentReference c = AttachmentReference <$> pure (vkAttachment (c :: VkAttachmentReference))
                                                        <*> pure (vkLayout (c :: VkAttachmentReference))
+instance Zero AttachmentReference where
+  zero = AttachmentReference zero
+                             zero
 -- No documentation found for TopLevel "AttachmentStoreOp"
 type AttachmentStoreOp = VkAttachmentStoreOp
 -- No documentation found for TopLevel "DependencyFlagBits"
@@ -249,6 +266,14 @@ fromCStructFramebufferCreateInfo c = FramebufferCreateInfo <$> -- Univalued Memb
                                                            <*> pure (vkWidth (c :: VkFramebufferCreateInfo))
                                                            <*> pure (vkHeight (c :: VkFramebufferCreateInfo))
                                                            <*> pure (vkLayers (c :: VkFramebufferCreateInfo))
+instance Zero FramebufferCreateInfo where
+  zero = FramebufferCreateInfo Nothing
+                               zero
+                               zero
+                               Data.Vector.empty
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "PipelineBindPoint"
 type PipelineBindPoint = VkPipelineBindPoint
 -- No documentation found for TopLevel "RenderPassCreateFlags"
@@ -283,6 +308,12 @@ fromCStructRenderPassCreateInfo c = RenderPassCreateInfo <$> -- Univalued Member
                                                          <*> (Data.Vector.generateM (fromIntegral (vkSubpassCount (c :: VkRenderPassCreateInfo))) (((fromCStructSubpassDescription <=<) . peekElemOff) (vkPSubpasses (c :: VkRenderPassCreateInfo))))
                                                          -- Length valued member elided
                                                          <*> (Data.Vector.generateM (fromIntegral (vkDependencyCount (c :: VkRenderPassCreateInfo))) (((fromCStructSubpassDependency <=<) . peekElemOff) (vkPDependencies (c :: VkRenderPassCreateInfo))))
+instance Zero RenderPassCreateInfo where
+  zero = RenderPassCreateInfo Nothing
+                              zero
+                              Data.Vector.empty
+                              Data.Vector.empty
+                              Data.Vector.empty
 -- No documentation found for TopLevel "SubpassDependency"
 data SubpassDependency = SubpassDependency
   { -- No documentation found for Nested "SubpassDependency" "srcSubpass"
@@ -311,6 +342,14 @@ fromCStructSubpassDependency c = SubpassDependency <$> pure (vkSrcSubpass (c :: 
                                                    <*> pure (vkSrcAccessMask (c :: VkSubpassDependency))
                                                    <*> pure (vkDstAccessMask (c :: VkSubpassDependency))
                                                    <*> pure (vkDependencyFlags (c :: VkSubpassDependency))
+instance Zero SubpassDependency where
+  zero = SubpassDependency zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
+                           zero
 -- No documentation found for TopLevel "SubpassDescription"
 data SubpassDescription = SubpassDescription
   { -- No documentation found for Nested "SubpassDescription" "flags"
@@ -333,7 +372,7 @@ data SubpassDescription = SubpassDescription
   }
   deriving (Show, Eq)
 withCStructSubpassDescription :: SubpassDescription -> (VkSubpassDescription -> IO a) -> IO a
-withCStructSubpassDescription from cont = withVec (&) (vkPPreserveAttachments (from :: SubpassDescription)) (\pPreserveAttachments -> maybeWith (\a -> withCStructAttachmentReference a . flip with) (vkPDepthStencilAttachment (from :: SubpassDescription)) (\pDepthStencilAttachment -> maybeWith (withVec withCStructAttachmentReference) (vkPResolveAttachments (from :: SubpassDescription)) (\pResolveAttachments -> withVec withCStructAttachmentReference (vkPColorAttachments (from :: SubpassDescription)) (\pColorAttachments -> withVec withCStructAttachmentReference (vkPInputAttachments (from :: SubpassDescription)) (\pInputAttachments -> cont (VkSubpassDescription (vkFlags (from :: SubpassDescription)) (vkPipelineBindPoint (from :: SubpassDescription)) (fromIntegral (Data.Vector.length (vkPInputAttachments (from :: SubpassDescription)))) pInputAttachments (fromIntegral (minimum ([ Data.Vector.length (vkPColorAttachments (from :: SubpassDescription)) ] ++ [Data.Vector.length v | Just v <- [ (vkPResolveAttachments (from :: SubpassDescription)) ]]))) pColorAttachments pResolveAttachments pDepthStencilAttachment (fromIntegral (Data.Vector.length (vkPPreserveAttachments (from :: SubpassDescription)))) pPreserveAttachments))))))
+withCStructSubpassDescription from cont = withVec (&) (vkPPreserveAttachments (from :: SubpassDescription)) (\pPreserveAttachments -> maybeWith (\a -> withCStructAttachmentReference a . flip with) (vkPDepthStencilAttachment (from :: SubpassDescription)) (\pDepthStencilAttachment -> maybeWith (withVec withCStructAttachmentReference) (vkPResolveAttachments (from :: SubpassDescription)) (\pResolveAttachments -> withVec withCStructAttachmentReference (vkPColorAttachments (from :: SubpassDescription)) (\pColorAttachments -> withVec withCStructAttachmentReference (vkPInputAttachments (from :: SubpassDescription)) (\pInputAttachments -> cont (VkSubpassDescription (vkFlags (from :: SubpassDescription)) (vkPipelineBindPoint (from :: SubpassDescription)) (fromIntegral (Data.Vector.length (vkPInputAttachments (from :: SubpassDescription)))) pInputAttachments (fromIntegral (minimum ([Data.Vector.length (vkPColorAttachments (from :: SubpassDescription))] ++ [Data.Vector.length v | Just v <- [(vkPResolveAttachments (from :: SubpassDescription))]]))) pColorAttachments pResolveAttachments pDepthStencilAttachment (fromIntegral (Data.Vector.length (vkPPreserveAttachments (from :: SubpassDescription)))) pPreserveAttachments))))))
 fromCStructSubpassDescription :: VkSubpassDescription -> IO SubpassDescription
 fromCStructSubpassDescription c = SubpassDescription <$> pure (vkFlags (c :: VkSubpassDescription))
                                                      <*> pure (vkPipelineBindPoint (c :: VkSubpassDescription))
@@ -345,17 +384,25 @@ fromCStructSubpassDescription c = SubpassDescription <$> pure (vkFlags (c :: VkS
                                                      <*> maybePeek (fromCStructAttachmentReference <=< peek) (vkPDepthStencilAttachment (c :: VkSubpassDescription))
                                                      -- Length valued member elided
                                                      <*> (Data.Vector.generateM (fromIntegral (vkPreserveAttachmentCount (c :: VkSubpassDescription))) (peekElemOff (vkPPreserveAttachments (c :: VkSubpassDescription))))
+instance Zero SubpassDescription where
+  zero = SubpassDescription zero
+                            zero
+                            Data.Vector.empty
+                            Data.Vector.empty
+                            Nothing
+                            Nothing
+                            Data.Vector.empty
 -- No documentation found for TopLevel "SubpassDescriptionFlagBits"
 type SubpassDescriptionFlagBits = VkSubpassDescriptionFlagBits
 -- No documentation found for TopLevel "SubpassDescriptionFlags"
 type SubpassDescriptionFlags = SubpassDescriptionFlagBits
 
 -- | Wrapper for 'vkCreateFramebuffer'
-createFramebuffer :: Device ->  FramebufferCreateInfo ->  Maybe AllocationCallbacks ->  IO ( Framebuffer )
+createFramebuffer :: Device ->  FramebufferCreateInfo ->  Maybe AllocationCallbacks ->  IO (Framebuffer)
 createFramebuffer = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pFramebuffer -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructFramebufferCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createFramebuffer commandTable device pCreateInfo pAllocator pFramebuffer >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFramebuffer)))))
 
 -- | Wrapper for 'vkCreateRenderPass'
-createRenderPass :: Device ->  RenderPassCreateInfo ->  Maybe AllocationCallbacks ->  IO ( RenderPass )
+createRenderPass :: Device ->  RenderPassCreateInfo ->  Maybe AllocationCallbacks ->  IO (RenderPass)
 createRenderPass = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pRenderPass -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructRenderPassCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createRenderPass commandTable device pCreateInfo pAllocator pRenderPass >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pRenderPass)))))
 
 -- | Wrapper for 'vkDestroyFramebuffer'
@@ -369,8 +416,15 @@ destroyRenderPass = \(Device device commandTable) -> \renderPass -> \allocator -
 -- | Wrapper for 'vkGetRenderAreaGranularity'
 getRenderAreaGranularity :: Device ->  RenderPass ->  IO (Extent2D)
 getRenderAreaGranularity = \(Device device commandTable) -> \renderPass -> alloca (\pGranularity -> Graphics.Vulkan.C.Dynamic.getRenderAreaGranularity commandTable device renderPass pGranularity *> ((fromCStructExtent2D <=< peek) pGranularity))
-withFramebuffer :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withFramebuffer createInfo allocationCallbacks =
-  bracket
-    (vkCreateFramebuffer createInfo allocationCallbacks)
-    (`vkDestroyFramebuffer` allocationCallbacks)
+-- | Wrapper for 'createFramebuffer' and 'destroyFramebuffer' using 'bracket'
+withFramebuffer
+  :: Device -> FramebufferCreateInfo -> Maybe (AllocationCallbacks) -> (Framebuffer -> IO a) -> IO a
+withFramebuffer device framebufferCreateInfo allocationCallbacks = bracket
+  (createFramebuffer device framebufferCreateInfo allocationCallbacks)
+  (\o -> destroyFramebuffer device o allocationCallbacks)
+-- | Wrapper for 'createRenderPass' and 'destroyRenderPass' using 'bracket'
+withRenderPass
+  :: Device -> RenderPassCreateInfo -> Maybe (AllocationCallbacks) -> (RenderPass -> IO a) -> IO a
+withRenderPass device renderPassCreateInfo allocationCallbacks = bracket
+  (createRenderPass device renderPassCreateInfo allocationCallbacks)
+  (\o -> destroyRenderPass device o allocationCallbacks)

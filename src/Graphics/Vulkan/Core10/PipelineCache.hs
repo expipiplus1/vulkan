@@ -19,7 +19,8 @@ module Graphics.Vulkan.Core10.PipelineCache
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -29,7 +30,8 @@ import Data.ByteString
   , packCStringLen
   )
 import qualified Data.ByteString
-  ( length
+  ( empty
+  , length
   )
 import Data.ByteString.Unsafe
   ( unsafeUseAsCString
@@ -74,6 +76,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO
   , pattern VK_SUCCESS
   )
@@ -124,9 +127,13 @@ fromCStructPipelineCacheCreateInfo c = PipelineCacheCreateInfo <$> -- Univalued 
                                                                <*> pure (vkFlags (c :: VkPipelineCacheCreateInfo))
                                                                -- Bytestring length valued member elided
                                                                <*> packCStringLen (castPtr (vkPInitialData (c :: VkPipelineCacheCreateInfo)), fromIntegral (vkInitialDataSize (c :: VkPipelineCacheCreateInfo)))
+instance Zero PipelineCacheCreateInfo where
+  zero = PipelineCacheCreateInfo Nothing
+                                 zero
+                                 Data.ByteString.empty
 
 -- | Wrapper for 'vkCreatePipelineCache'
-createPipelineCache :: Device ->  PipelineCacheCreateInfo ->  Maybe AllocationCallbacks ->  IO ( PipelineCache )
+createPipelineCache :: Device ->  PipelineCacheCreateInfo ->  Maybe AllocationCallbacks ->  IO (PipelineCache)
 createPipelineCache = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pPipelineCache -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructPipelineCacheCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createPipelineCache commandTable device pCreateInfo pAllocator pPipelineCache >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pPipelineCache)))))
 
 -- | Wrapper for 'vkDestroyPipelineCache'
@@ -151,8 +158,9 @@ getAllPipelineCacheData device pipelineCache =
 -- | Wrapper for 'vkMergePipelineCaches'
 mergePipelineCaches :: Device ->  PipelineCache ->  Vector PipelineCache ->  IO ()
 mergePipelineCaches = \(Device device commandTable) -> \dstCache -> \srcCaches -> withVec (&) srcCaches (\pSrcCaches -> Graphics.Vulkan.C.Dynamic.mergePipelineCaches commandTable device dstCache (fromIntegral $ Data.Vector.length srcCaches) pSrcCaches >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
-withPipelineCache :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withPipelineCache createInfo allocationCallbacks =
-  bracket
-    (vkCreatePipelineCache createInfo allocationCallbacks)
-    (`vkDestroyPipelineCache` allocationCallbacks)
+-- | Wrapper for 'createPipelineCache' and 'destroyPipelineCache' using 'bracket'
+withPipelineCache
+  :: Device -> PipelineCacheCreateInfo -> Maybe (AllocationCallbacks) -> (PipelineCache -> IO a) -> IO a
+withPipelineCache device pipelineCacheCreateInfo allocationCallbacks = bracket
+  (createPipelineCache device pipelineCacheCreateInfo allocationCallbacks)
+  (\o -> destroyPipelineCache device o allocationCallbacks)

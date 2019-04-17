@@ -39,7 +39,8 @@ import Data.ByteString
   , useAsCString
   )
 import qualified Data.ByteString
-  ( length
+  ( empty
+  , length
   )
 import Data.ByteString.Unsafe
   ( unsafeUseAsCString
@@ -74,7 +75,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
   ( VkDebugMarkerMarkerInfoEXT(..)
@@ -128,6 +130,10 @@ fromCStructDebugMarkerMarkerInfoEXT c = DebugMarkerMarkerInfoEXT <$> -- Univalue
                                                                  , Data.Vector.Storable.Sized.unsafeIndex x 1
                                                                  , Data.Vector.Storable.Sized.unsafeIndex x 2
                                                                  , Data.Vector.Storable.Sized.unsafeIndex x 3 ))
+instance Zero DebugMarkerMarkerInfoEXT where
+  zero = DebugMarkerMarkerInfoEXT Nothing
+                                  Data.ByteString.empty
+                                  (zero, zero, zero, zero)
 -- No documentation found for TopLevel "DebugMarkerObjectNameInfoEXT"
 data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
   { -- Univalued Member elided
@@ -149,6 +155,11 @@ fromCStructDebugMarkerObjectNameInfoEXT c = DebugMarkerObjectNameInfoEXT <$> -- 
                                                                          <*> pure (vkObjectType (c :: VkDebugMarkerObjectNameInfoEXT))
                                                                          <*> pure (vkObject (c :: VkDebugMarkerObjectNameInfoEXT))
                                                                          <*> packCString (vkPObjectName (c :: VkDebugMarkerObjectNameInfoEXT))
+instance Zero DebugMarkerObjectNameInfoEXT where
+  zero = DebugMarkerObjectNameInfoEXT Nothing
+                                      zero
+                                      zero
+                                      Data.ByteString.empty
 -- No documentation found for TopLevel "DebugMarkerObjectTagInfoEXT"
 data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
   { -- Univalued Member elided
@@ -175,6 +186,12 @@ fromCStructDebugMarkerObjectTagInfoEXT c = DebugMarkerObjectTagInfoEXT <$> -- Un
                                                                        <*> pure (vkTagName (c :: VkDebugMarkerObjectTagInfoEXT))
                                                                        -- Bytestring length valued member elided
                                                                        <*> packCStringLen (castPtr (vkPTag (c :: VkDebugMarkerObjectTagInfoEXT)), fromIntegral (vkTagSize (c :: VkDebugMarkerObjectTagInfoEXT)))
+instance Zero DebugMarkerObjectTagInfoEXT where
+  zero = DebugMarkerObjectTagInfoEXT Nothing
+                                     zero
+                                     zero
+                                     zero
+                                     Data.ByteString.empty
 
 -- | Wrapper for 'vkCmdDebugMarkerBeginEXT'
 cmdDebugMarkerBeginEXT :: CommandBuffer ->  DebugMarkerMarkerInfoEXT ->  IO ()

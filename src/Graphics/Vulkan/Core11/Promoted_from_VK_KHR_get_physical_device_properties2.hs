@@ -100,7 +100,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2
   ( VkFormatProperties2(..)
@@ -181,6 +182,9 @@ fromCStructFormatProperties2 :: VkFormatProperties2 -> IO FormatProperties2
 fromCStructFormatProperties2 c = FormatProperties2 <$> -- Univalued Member elided
                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkFormatProperties2)))
                                                    <*> (fromCStructFormatProperties (vkFormatProperties (c :: VkFormatProperties2)))
+instance Zero FormatProperties2 where
+  zero = FormatProperties2 Nothing
+                           zero
 -- No documentation found for TopLevel "ImageFormatProperties2"
 data ImageFormatProperties2 = ImageFormatProperties2
   { -- Univalued Member elided
@@ -196,6 +200,9 @@ fromCStructImageFormatProperties2 :: VkImageFormatProperties2 -> IO ImageFormatP
 fromCStructImageFormatProperties2 c = ImageFormatProperties2 <$> -- Univalued Member elided
                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageFormatProperties2)))
                                                              <*> (fromCStructImageFormatProperties (vkImageFormatProperties (c :: VkImageFormatProperties2)))
+instance Zero ImageFormatProperties2 where
+  zero = ImageFormatProperties2 Nothing
+                                zero
 -- No documentation found for TopLevel "PhysicalDeviceFeatures2"
 data PhysicalDeviceFeatures2 = PhysicalDeviceFeatures2
   { -- Univalued Member elided
@@ -211,6 +218,9 @@ fromCStructPhysicalDeviceFeatures2 :: VkPhysicalDeviceFeatures2 -> IO PhysicalDe
 fromCStructPhysicalDeviceFeatures2 c = PhysicalDeviceFeatures2 <$> -- Univalued Member elided
                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceFeatures2)))
                                                                <*> (fromCStructPhysicalDeviceFeatures (vkFeatures (c :: VkPhysicalDeviceFeatures2)))
+instance Zero PhysicalDeviceFeatures2 where
+  zero = PhysicalDeviceFeatures2 Nothing
+                                 zero
 -- No documentation found for TopLevel "PhysicalDeviceImageFormatInfo2"
 data PhysicalDeviceImageFormatInfo2 = PhysicalDeviceImageFormatInfo2
   { -- Univalued Member elided
@@ -238,6 +248,13 @@ fromCStructPhysicalDeviceImageFormatInfo2 c = PhysicalDeviceImageFormatInfo2 <$>
                                                                              <*> pure (vkTiling (c :: VkPhysicalDeviceImageFormatInfo2))
                                                                              <*> pure (vkUsage (c :: VkPhysicalDeviceImageFormatInfo2))
                                                                              <*> pure (vkFlags (c :: VkPhysicalDeviceImageFormatInfo2))
+instance Zero PhysicalDeviceImageFormatInfo2 where
+  zero = PhysicalDeviceImageFormatInfo2 Nothing
+                                        zero
+                                        zero
+                                        zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "PhysicalDeviceMemoryProperties2"
 data PhysicalDeviceMemoryProperties2 = PhysicalDeviceMemoryProperties2
   { -- Univalued Member elided
@@ -253,6 +270,9 @@ fromCStructPhysicalDeviceMemoryProperties2 :: VkPhysicalDeviceMemoryProperties2 
 fromCStructPhysicalDeviceMemoryProperties2 c = PhysicalDeviceMemoryProperties2 <$> -- Univalued Member elided
                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceMemoryProperties2)))
                                                                                <*> (fromCStructPhysicalDeviceMemoryProperties (vkMemoryProperties (c :: VkPhysicalDeviceMemoryProperties2)))
+instance Zero PhysicalDeviceMemoryProperties2 where
+  zero = PhysicalDeviceMemoryProperties2 Nothing
+                                         zero
 -- No documentation found for TopLevel "PhysicalDeviceProperties2"
 data PhysicalDeviceProperties2 = PhysicalDeviceProperties2
   { -- Univalued Member elided
@@ -268,6 +288,9 @@ fromCStructPhysicalDeviceProperties2 :: VkPhysicalDeviceProperties2 -> IO Physic
 fromCStructPhysicalDeviceProperties2 c = PhysicalDeviceProperties2 <$> -- Univalued Member elided
                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceProperties2)))
                                                                    <*> (fromCStructPhysicalDeviceProperties (vkProperties (c :: VkPhysicalDeviceProperties2)))
+instance Zero PhysicalDeviceProperties2 where
+  zero = PhysicalDeviceProperties2 Nothing
+                                   zero
 -- No documentation found for TopLevel "PhysicalDeviceSparseImageFormatInfo2"
 data PhysicalDeviceSparseImageFormatInfo2 = PhysicalDeviceSparseImageFormatInfo2
   { -- Univalued Member elided
@@ -295,6 +318,13 @@ fromCStructPhysicalDeviceSparseImageFormatInfo2 c = PhysicalDeviceSparseImageFor
                                                                                          <*> pure (vkSamples (c :: VkPhysicalDeviceSparseImageFormatInfo2))
                                                                                          <*> pure (vkUsage (c :: VkPhysicalDeviceSparseImageFormatInfo2))
                                                                                          <*> pure (vkTiling (c :: VkPhysicalDeviceSparseImageFormatInfo2))
+instance Zero PhysicalDeviceSparseImageFormatInfo2 where
+  zero = PhysicalDeviceSparseImageFormatInfo2 Nothing
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
 -- No documentation found for TopLevel "QueueFamilyProperties2"
 data QueueFamilyProperties2 = QueueFamilyProperties2
   { -- Univalued Member elided
@@ -310,6 +340,9 @@ fromCStructQueueFamilyProperties2 :: VkQueueFamilyProperties2 -> IO QueueFamilyP
 fromCStructQueueFamilyProperties2 c = QueueFamilyProperties2 <$> -- Univalued Member elided
                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkQueueFamilyProperties2)))
                                                              <*> (fromCStructQueueFamilyProperties (vkQueueFamilyProperties (c :: VkQueueFamilyProperties2)))
+instance Zero QueueFamilyProperties2 where
+  zero = QueueFamilyProperties2 Nothing
+                                zero
 -- No documentation found for TopLevel "SparseImageFormatProperties2"
 data SparseImageFormatProperties2 = SparseImageFormatProperties2
   { -- Univalued Member elided
@@ -325,6 +358,9 @@ fromCStructSparseImageFormatProperties2 :: VkSparseImageFormatProperties2 -> IO 
 fromCStructSparseImageFormatProperties2 c = SparseImageFormatProperties2 <$> -- Univalued Member elided
                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSparseImageFormatProperties2)))
                                                                          <*> (fromCStructSparseImageFormatProperties (vkProperties (c :: VkSparseImageFormatProperties2)))
+instance Zero SparseImageFormatProperties2 where
+  zero = SparseImageFormatProperties2 Nothing
+                                      zero
 
 -- | Wrapper for 'vkGetPhysicalDeviceFeatures2'
 getPhysicalDeviceFeatures2 :: PhysicalDevice ->  IO (PhysicalDeviceFeatures2)
@@ -335,7 +371,7 @@ getPhysicalDeviceFormatProperties2 :: PhysicalDevice ->  Format ->  IO (FormatPr
 getPhysicalDeviceFormatProperties2 = \(PhysicalDevice physicalDevice commandTable) -> \format -> alloca (\pFormatProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceFormatProperties2 commandTable physicalDevice format pFormatProperties *> ((fromCStructFormatProperties2 <=< peek) pFormatProperties))
 
 -- | Wrapper for 'vkGetPhysicalDeviceImageFormatProperties2'
-getPhysicalDeviceImageFormatProperties2 :: PhysicalDevice ->  PhysicalDeviceImageFormatInfo2 ->  IO ( ImageFormatProperties2 )
+getPhysicalDeviceImageFormatProperties2 :: PhysicalDevice ->  PhysicalDeviceImageFormatInfo2 ->  IO (ImageFormatProperties2)
 getPhysicalDeviceImageFormatProperties2 = \(PhysicalDevice physicalDevice commandTable) -> \imageFormatInfo -> alloca (\pImageFormatProperties -> (\a -> withCStructPhysicalDeviceImageFormatInfo2 a . flip with) imageFormatInfo (\pImageFormatInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceImageFormatProperties2 commandTable physicalDevice pImageFormatInfo pImageFormatProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructImageFormatProperties2 <=< peek) pImageFormatProperties))))
 
 -- | Wrapper for 'vkGetPhysicalDeviceMemoryProperties2'
@@ -366,7 +402,7 @@ getNumPhysicalDeviceSparseImageFormatProperties2 :: PhysicalDevice ->  PhysicalD
 getNumPhysicalDeviceSparseImageFormatProperties2 = \(PhysicalDevice physicalDevice commandTable) -> \formatInfo -> alloca (\pPropertyCount -> (\a -> withCStructPhysicalDeviceSparseImageFormatInfo2 a . flip with) formatInfo (\pFormatInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSparseImageFormatProperties2 commandTable physicalDevice pFormatInfo pPropertyCount nullPtr *> (peek pPropertyCount)))
 
 -- | Wrapper for 'vkGetPhysicalDeviceSparseImageFormatProperties2'
-getPhysicalDeviceSparseImageFormatProperties2 :: PhysicalDevice ->  PhysicalDeviceSparseImageFormatInfo2 ->  Word32 ->  IO ( Vector SparseImageFormatProperties2 )
+getPhysicalDeviceSparseImageFormatProperties2 :: PhysicalDevice ->  PhysicalDeviceSparseImageFormatInfo2 ->  Word32 ->  IO (Vector SparseImageFormatProperties2)
 getPhysicalDeviceSparseImageFormatProperties2 = \(PhysicalDevice physicalDevice commandTable) -> \formatInfo -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> (\a -> withCStructPhysicalDeviceSparseImageFormatInfo2 a . flip with) formatInfo (\pFormatInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSparseImageFormatProperties2 commandTable physicalDevice pFormatInfo pPropertyCount pProperties *> ((flip Data.Vector.generateM ((\p -> fromCStructSparseImageFormatProperties2 <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumPhysicalDeviceSparseImageFormatProperties2' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSparseImageFormatProperties2' to get all the values.

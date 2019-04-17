@@ -23,6 +23,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NVX_multiview_per_view_attributes
   ( VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX
@@ -59,3 +62,6 @@ fromCStructPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX :: VkPhysicalDe
 fromCStructPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX c = PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX <$> -- Univalued Member elided
                                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)))
                                                                                                                            <*> pure (bool32ToBool (vkPerViewPositionAllComponents (c :: VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)))
+instance Zero PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
+  zero = PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX Nothing
+                                                               False

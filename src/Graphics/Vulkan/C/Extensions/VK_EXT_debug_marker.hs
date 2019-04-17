@@ -71,6 +71,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -110,6 +111,12 @@ instance Storable VkDebugMarkerMarkerInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDebugMarkerMarkerInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkPMarkerName (poked :: VkDebugMarkerMarkerInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkColor (poked :: VkDebugMarkerMarkerInfoEXT))
+
+instance Zero VkDebugMarkerMarkerInfoEXT where
+  zero = VkDebugMarkerMarkerInfoEXT zero
+                                    zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkDebugMarkerObjectNameInfoEXT"
 data VkDebugMarkerObjectNameInfoEXT = VkDebugMarkerObjectNameInfoEXT
   { -- No documentation found for Nested "VkDebugMarkerObjectNameInfoEXT" "sType"
@@ -138,6 +145,13 @@ instance Storable VkDebugMarkerObjectNameInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkObjectType (poked :: VkDebugMarkerObjectNameInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkObject (poked :: VkDebugMarkerObjectNameInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPObjectName (poked :: VkDebugMarkerObjectNameInfoEXT))
+
+instance Zero VkDebugMarkerObjectNameInfoEXT where
+  zero = VkDebugMarkerObjectNameInfoEXT zero
+                                        zero
+                                        zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "VkDebugMarkerObjectTagInfoEXT"
 data VkDebugMarkerObjectTagInfoEXT = VkDebugMarkerObjectTagInfoEXT
   { -- No documentation found for Nested "VkDebugMarkerObjectTagInfoEXT" "sType"
@@ -174,6 +188,15 @@ instance Storable VkDebugMarkerObjectTagInfoEXT where
                 *> poke (ptr `plusPtr` 32) (vkTagName (poked :: VkDebugMarkerObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 40) (vkTagSize (poked :: VkDebugMarkerObjectTagInfoEXT))
                 *> poke (ptr `plusPtr` 48) (vkPTag (poked :: VkDebugMarkerObjectTagInfoEXT))
+
+instance Zero VkDebugMarkerObjectTagInfoEXT where
+  zero = VkDebugMarkerObjectTagInfoEXT zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdDebugMarkerBeginEXT"
 foreign import ccall

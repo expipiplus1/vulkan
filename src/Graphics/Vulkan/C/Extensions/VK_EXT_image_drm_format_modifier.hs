@@ -58,6 +58,7 @@ import Graphics.Vulkan.C.Core10.Buffer
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageTiling(..)
@@ -98,6 +99,11 @@ instance Storable VkDrmFormatModifierPropertiesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkDrmFormatModifier (poked :: VkDrmFormatModifierPropertiesEXT))
                 *> poke (ptr `plusPtr` 8) (vkDrmFormatModifierPlaneCount (poked :: VkDrmFormatModifierPropertiesEXT))
                 *> poke (ptr `plusPtr` 12) (vkDrmFormatModifierTilingFeatures (poked :: VkDrmFormatModifierPropertiesEXT))
+
+instance Zero VkDrmFormatModifierPropertiesEXT where
+  zero = VkDrmFormatModifierPropertiesEXT zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkDrmFormatModifierPropertiesListEXT"
 data VkDrmFormatModifierPropertiesListEXT = VkDrmFormatModifierPropertiesListEXT
   { -- No documentation found for Nested "VkDrmFormatModifierPropertiesListEXT" "sType"
@@ -122,6 +128,12 @@ instance Storable VkDrmFormatModifierPropertiesListEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDrmFormatModifierPropertiesListEXT))
                 *> poke (ptr `plusPtr` 16) (vkDrmFormatModifierCount (poked :: VkDrmFormatModifierPropertiesListEXT))
                 *> poke (ptr `plusPtr` 24) (vkPDrmFormatModifierProperties (poked :: VkDrmFormatModifierPropertiesListEXT))
+
+instance Zero VkDrmFormatModifierPropertiesListEXT where
+  zero = VkDrmFormatModifierPropertiesListEXT zero
+                                              zero
+                                              zero
+                                              zero
 -- No documentation found for TopLevel "VkImageDrmFormatModifierExplicitCreateInfoEXT"
 data VkImageDrmFormatModifierExplicitCreateInfoEXT = VkImageDrmFormatModifierExplicitCreateInfoEXT
   { -- No documentation found for Nested "VkImageDrmFormatModifierExplicitCreateInfoEXT" "sType"
@@ -150,6 +162,13 @@ instance Storable VkImageDrmFormatModifierExplicitCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkDrmFormatModifier (poked :: VkImageDrmFormatModifierExplicitCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkDrmFormatModifierPlaneCount (poked :: VkImageDrmFormatModifierExplicitCreateInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPPlaneLayouts (poked :: VkImageDrmFormatModifierExplicitCreateInfoEXT))
+
+instance Zero VkImageDrmFormatModifierExplicitCreateInfoEXT where
+  zero = VkImageDrmFormatModifierExplicitCreateInfoEXT zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
 -- No documentation found for TopLevel "VkImageDrmFormatModifierListCreateInfoEXT"
 data VkImageDrmFormatModifierListCreateInfoEXT = VkImageDrmFormatModifierListCreateInfoEXT
   { -- No documentation found for Nested "VkImageDrmFormatModifierListCreateInfoEXT" "sType"
@@ -174,6 +193,12 @@ instance Storable VkImageDrmFormatModifierListCreateInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageDrmFormatModifierListCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkDrmFormatModifierCount (poked :: VkImageDrmFormatModifierListCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkPDrmFormatModifiers (poked :: VkImageDrmFormatModifierListCreateInfoEXT))
+
+instance Zero VkImageDrmFormatModifierListCreateInfoEXT where
+  zero = VkImageDrmFormatModifierListCreateInfoEXT zero
+                                                   zero
+                                                   zero
+                                                   zero
 -- No documentation found for TopLevel "VkImageDrmFormatModifierPropertiesEXT"
 data VkImageDrmFormatModifierPropertiesEXT = VkImageDrmFormatModifierPropertiesEXT
   { -- No documentation found for Nested "VkImageDrmFormatModifierPropertiesEXT" "sType"
@@ -194,6 +219,11 @@ instance Storable VkImageDrmFormatModifierPropertiesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageDrmFormatModifierPropertiesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageDrmFormatModifierPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkDrmFormatModifier (poked :: VkImageDrmFormatModifierPropertiesEXT))
+
+instance Zero VkImageDrmFormatModifierPropertiesEXT where
+  zero = VkImageDrmFormatModifierPropertiesEXT zero
+                                               zero
+                                               zero
 -- No documentation found for TopLevel "VkPhysicalDeviceImageDrmFormatModifierInfoEXT"
 data VkPhysicalDeviceImageDrmFormatModifierInfoEXT = VkPhysicalDeviceImageDrmFormatModifierInfoEXT
   { -- No documentation found for Nested "VkPhysicalDeviceImageDrmFormatModifierInfoEXT" "sType"
@@ -226,6 +256,14 @@ instance Storable VkPhysicalDeviceImageDrmFormatModifierInfoEXT where
                 *> poke (ptr `plusPtr` 24) (vkSharingMode (poked :: VkPhysicalDeviceImageDrmFormatModifierInfoEXT))
                 *> poke (ptr `plusPtr` 28) (vkQueueFamilyIndexCount (poked :: VkPhysicalDeviceImageDrmFormatModifierInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPQueueFamilyIndices (poked :: VkPhysicalDeviceImageDrmFormatModifierInfoEXT))
+
+instance Zero VkPhysicalDeviceImageDrmFormatModifierInfoEXT where
+  zero = VkPhysicalDeviceImageDrmFormatModifierInfoEXT zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetImageDrmFormatModifierPropertiesEXT"
 foreign import ccall

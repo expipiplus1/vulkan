@@ -66,7 +66,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -99,7 +100,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_BIND_SPARSE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_BIND_SPARSE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
@@ -194,6 +196,13 @@ fromCStructBindSparseInfo c = BindSparseInfo <$> -- Univalued Member elided
                                              <*> (Data.Vector.generateM (fromIntegral (vkImageBindCount (c :: VkBindSparseInfo))) (((fromCStructSparseImageMemoryBindInfo <=<) . peekElemOff) (vkPImageBinds (c :: VkBindSparseInfo))))
                                              -- Length valued member elided
                                              <*> (Data.Vector.generateM (fromIntegral (vkSignalSemaphoreCount (c :: VkBindSparseInfo))) (peekElemOff (vkPSignalSemaphores (c :: VkBindSparseInfo))))
+instance Zero BindSparseInfo where
+  zero = BindSparseInfo Nothing
+                        Data.Vector.empty
+                        Data.Vector.empty
+                        Data.Vector.empty
+                        Data.Vector.empty
+                        Data.Vector.empty
 -- No documentation found for TopLevel "ImageAspectFlagBits"
 type ImageAspectFlagBits = VkImageAspectFlagBits
 -- No documentation found for TopLevel "ImageAspectFlags"
@@ -214,6 +223,10 @@ fromCStructImageSubresource :: VkImageSubresource -> IO ImageSubresource
 fromCStructImageSubresource c = ImageSubresource <$> pure (vkAspectMask (c :: VkImageSubresource))
                                                  <*> pure (vkMipLevel (c :: VkImageSubresource))
                                                  <*> pure (vkArrayLayer (c :: VkImageSubresource))
+instance Zero ImageSubresource where
+  zero = ImageSubresource zero
+                          zero
+                          zero
 -- No documentation found for TopLevel "Offset3D"
 data Offset3D = Offset3D
   { -- No documentation found for Nested "Offset3D" "x"
@@ -230,6 +243,10 @@ fromCStructOffset3D :: VkOffset3D -> IO Offset3D
 fromCStructOffset3D c = Offset3D <$> pure (vkX (c :: VkOffset3D))
                                  <*> pure (vkY (c :: VkOffset3D))
                                  <*> pure (vkZ (c :: VkOffset3D))
+instance Zero Offset3D where
+  zero = Offset3D zero
+                  zero
+                  zero
 -- No documentation found for TopLevel "SparseBufferMemoryBindInfo"
 data SparseBufferMemoryBindInfo = SparseBufferMemoryBindInfo
   { -- No documentation found for Nested "SparseBufferMemoryBindInfo" "buffer"
@@ -245,6 +262,9 @@ fromCStructSparseBufferMemoryBindInfo :: VkSparseBufferMemoryBindInfo -> IO Spar
 fromCStructSparseBufferMemoryBindInfo c = SparseBufferMemoryBindInfo <$> pure (vkBuffer (c :: VkSparseBufferMemoryBindInfo))
                                                                      -- Length valued member elided
                                                                      <*> (Data.Vector.generateM (fromIntegral (vkBindCount (c :: VkSparseBufferMemoryBindInfo))) (((fromCStructSparseMemoryBind <=<) . peekElemOff) (vkPBinds (c :: VkSparseBufferMemoryBindInfo))))
+instance Zero SparseBufferMemoryBindInfo where
+  zero = SparseBufferMemoryBindInfo zero
+                                    Data.Vector.empty
 -- No documentation found for TopLevel "SparseImageFormatFlagBits"
 type SparseImageFormatFlagBits = VkSparseImageFormatFlagBits
 -- No documentation found for TopLevel "SparseImageFormatFlags"
@@ -265,6 +285,10 @@ fromCStructSparseImageFormatProperties :: VkSparseImageFormatProperties -> IO Sp
 fromCStructSparseImageFormatProperties c = SparseImageFormatProperties <$> pure (vkAspectMask (c :: VkSparseImageFormatProperties))
                                                                        <*> (fromCStructExtent3D (vkImageGranularity (c :: VkSparseImageFormatProperties)))
                                                                        <*> pure (vkFlags (c :: VkSparseImageFormatProperties))
+instance Zero SparseImageFormatProperties where
+  zero = SparseImageFormatProperties zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "SparseImageMemoryBind"
 data SparseImageMemoryBind = SparseImageMemoryBind
   { -- No documentation found for Nested "SparseImageMemoryBind" "subresource"
@@ -290,6 +314,13 @@ fromCStructSparseImageMemoryBind c = SparseImageMemoryBind <$> (fromCStructImage
                                                            <*> pure (vkMemory (c :: VkSparseImageMemoryBind))
                                                            <*> pure (vkMemoryOffset (c :: VkSparseImageMemoryBind))
                                                            <*> pure (vkFlags (c :: VkSparseImageMemoryBind))
+instance Zero SparseImageMemoryBind where
+  zero = SparseImageMemoryBind zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "SparseImageMemoryBindInfo"
 data SparseImageMemoryBindInfo = SparseImageMemoryBindInfo
   { -- No documentation found for Nested "SparseImageMemoryBindInfo" "image"
@@ -305,6 +336,9 @@ fromCStructSparseImageMemoryBindInfo :: VkSparseImageMemoryBindInfo -> IO Sparse
 fromCStructSparseImageMemoryBindInfo c = SparseImageMemoryBindInfo <$> pure (vkImage (c :: VkSparseImageMemoryBindInfo))
                                                                    -- Length valued member elided
                                                                    <*> (Data.Vector.generateM (fromIntegral (vkBindCount (c :: VkSparseImageMemoryBindInfo))) (((fromCStructSparseImageMemoryBind <=<) . peekElemOff) (vkPBinds (c :: VkSparseImageMemoryBindInfo))))
+instance Zero SparseImageMemoryBindInfo where
+  zero = SparseImageMemoryBindInfo zero
+                                   Data.Vector.empty
 -- No documentation found for TopLevel "SparseImageMemoryRequirements"
 data SparseImageMemoryRequirements = SparseImageMemoryRequirements
   { -- No documentation found for Nested "SparseImageMemoryRequirements" "formatProperties"
@@ -327,6 +361,12 @@ fromCStructSparseImageMemoryRequirements c = SparseImageMemoryRequirements <$> (
                                                                            <*> pure (vkImageMipTailSize (c :: VkSparseImageMemoryRequirements))
                                                                            <*> pure (vkImageMipTailOffset (c :: VkSparseImageMemoryRequirements))
                                                                            <*> pure (vkImageMipTailStride (c :: VkSparseImageMemoryRequirements))
+instance Zero SparseImageMemoryRequirements where
+  zero = SparseImageMemoryRequirements zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "SparseImageOpaqueMemoryBindInfo"
 data SparseImageOpaqueMemoryBindInfo = SparseImageOpaqueMemoryBindInfo
   { -- No documentation found for Nested "SparseImageOpaqueMemoryBindInfo" "image"
@@ -342,6 +382,9 @@ fromCStructSparseImageOpaqueMemoryBindInfo :: VkSparseImageOpaqueMemoryBindInfo 
 fromCStructSparseImageOpaqueMemoryBindInfo c = SparseImageOpaqueMemoryBindInfo <$> pure (vkImage (c :: VkSparseImageOpaqueMemoryBindInfo))
                                                                                -- Length valued member elided
                                                                                <*> (Data.Vector.generateM (fromIntegral (vkBindCount (c :: VkSparseImageOpaqueMemoryBindInfo))) (((fromCStructSparseMemoryBind <=<) . peekElemOff) (vkPBinds (c :: VkSparseImageOpaqueMemoryBindInfo))))
+instance Zero SparseImageOpaqueMemoryBindInfo where
+  zero = SparseImageOpaqueMemoryBindInfo zero
+                                         Data.Vector.empty
 -- No documentation found for TopLevel "SparseMemoryBind"
 data SparseMemoryBind = SparseMemoryBind
   { -- No documentation found for Nested "SparseMemoryBind" "resourceOffset"
@@ -364,6 +407,12 @@ fromCStructSparseMemoryBind c = SparseMemoryBind <$> pure (vkResourceOffset (c :
                                                  <*> pure (vkMemory (c :: VkSparseMemoryBind))
                                                  <*> pure (vkMemoryOffset (c :: VkSparseMemoryBind))
                                                  <*> pure (vkFlags (c :: VkSparseMemoryBind))
+instance Zero SparseMemoryBind where
+  zero = SparseMemoryBind zero
+                          zero
+                          zero
+                          zero
+                          zero
 -- No documentation found for TopLevel "SparseMemoryBindFlagBits"
 type SparseMemoryBindFlagBits = VkSparseMemoryBindFlagBits
 -- No documentation found for TopLevel "SparseMemoryBindFlags"
@@ -385,11 +434,11 @@ getAllImageSparseMemoryRequirements device image =
 
 
 -- | Wrapper for 'vkGetPhysicalDeviceSparseImageFormatProperties'
-getNumPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  SampleCountFlagBits ->  ImageUsageFlags ->  ImageTiling ->  IO ( Word32 )
+getNumPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  SampleCountFlagBits ->  ImageUsageFlags ->  ImageTiling ->  IO (Word32)
 getNumPhysicalDeviceSparseImageFormatProperties = \(PhysicalDevice physicalDevice commandTable) -> \format -> \type' -> \samples -> \usage -> \tiling -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSparseImageFormatProperties commandTable physicalDevice format type' samples usage tiling pPropertyCount nullPtr *> (peek pPropertyCount))
 
 -- | Wrapper for 'vkGetPhysicalDeviceSparseImageFormatProperties'
-getPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  SampleCountFlagBits ->  ImageUsageFlags ->  ImageTiling ->  Word32 ->  IO ( Vector SparseImageFormatProperties )
+getPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice ->  Format ->  ImageType ->  SampleCountFlagBits ->  ImageUsageFlags ->  ImageTiling ->  Word32 ->  IO (Vector SparseImageFormatProperties)
 getPhysicalDeviceSparseImageFormatProperties = \(PhysicalDevice physicalDevice commandTable) -> \format -> \type' -> \samples -> \usage -> \tiling -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSparseImageFormatProperties commandTable physicalDevice format type' samples usage tiling pPropertyCount pProperties *> ((flip Data.Vector.generateM ((\p -> fromCStructSparseImageFormatProperties <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount))))))
 -- | Call 'getNumPhysicalDeviceSparseImageFormatProperties' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSparseImageFormatProperties' to get all the values.

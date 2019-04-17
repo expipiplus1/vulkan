@@ -40,6 +40,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
@@ -85,6 +86,13 @@ instance Storable VkDisplayPresentInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkSrcRect (poked :: VkDisplayPresentInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkDstRect (poked :: VkDisplayPresentInfoKHR))
                 *> poke (ptr `plusPtr` 48) (vkPersistent (poked :: VkDisplayPresentInfoKHR))
+
+instance Zero VkDisplayPresentInfoKHR where
+  zero = VkDisplayPresentInfoKHR zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCreateSharedSwapchainsKHR"
 foreign import ccall

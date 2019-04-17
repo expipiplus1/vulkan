@@ -67,6 +67,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
@@ -141,6 +142,16 @@ fromCStructCooperativeMatrixPropertiesNV c = CooperativeMatrixPropertiesNV <$> -
                                                                            <*> pure (vkCType (c :: VkCooperativeMatrixPropertiesNV))
                                                                            <*> pure (vkDType (c :: VkCooperativeMatrixPropertiesNV))
                                                                            <*> pure (vkScope (c :: VkCooperativeMatrixPropertiesNV))
+instance Zero CooperativeMatrixPropertiesNV where
+  zero = CooperativeMatrixPropertiesNV Nothing
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "PhysicalDeviceCooperativeMatrixFeaturesNV"
 data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrixFeaturesNV
   { -- Univalued Member elided
@@ -159,6 +170,10 @@ fromCStructPhysicalDeviceCooperativeMatrixFeaturesNV c = PhysicalDeviceCooperati
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceCooperativeMatrixFeaturesNV)))
                                                                                                    <*> pure (bool32ToBool (vkCooperativeMatrix (c :: VkPhysicalDeviceCooperativeMatrixFeaturesNV)))
                                                                                                    <*> pure (bool32ToBool (vkCooperativeMatrixRobustBufferAccess (c :: VkPhysicalDeviceCooperativeMatrixFeaturesNV)))
+instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
+  zero = PhysicalDeviceCooperativeMatrixFeaturesNV Nothing
+                                                   False
+                                                   False
 -- No documentation found for TopLevel "PhysicalDeviceCooperativeMatrixPropertiesNV"
 data PhysicalDeviceCooperativeMatrixPropertiesNV = PhysicalDeviceCooperativeMatrixPropertiesNV
   { -- Univalued Member elided
@@ -174,6 +189,9 @@ fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV :: VkPhysicalDeviceCooper
 fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV c = PhysicalDeviceCooperativeMatrixPropertiesNV <$> -- Univalued Member elided
                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceCooperativeMatrixPropertiesNV)))
                                                                                                        <*> pure (vkCooperativeMatrixSupportedStages (c :: VkPhysicalDeviceCooperativeMatrixPropertiesNV))
+instance Zero PhysicalDeviceCooperativeMatrixPropertiesNV where
+  zero = PhysicalDeviceCooperativeMatrixPropertiesNV Nothing
+                                                     zero
 -- No documentation found for TopLevel "ScopeNV"
 type ScopeNV = VkScopeNV
 
@@ -182,8 +200,7 @@ getNumPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  IO (VkRe
 getNumPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
 -- | Wrapper for 'vkGetPhysicalDeviceCooperativeMatrixPropertiesNV'
-getPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  Word32 ->  IO ( VkResult
-, Vector CooperativeMatrixPropertiesNV )
+getPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector CooperativeMatrixPropertiesNV)
 getPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice commandTable) -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructCooperativeMatrixPropertiesNV <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumPhysicalDeviceCooperativeMatrixPropertiesNV' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceCooperativeMatrixPropertiesNV' to get all the values.

@@ -37,6 +37,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
   ( VkDescriptorType(..)
@@ -83,6 +84,13 @@ instance Storable VkImageViewHandleInfoNVX where
                 *> poke (ptr `plusPtr` 16) (vkImageView (poked :: VkImageViewHandleInfoNVX))
                 *> poke (ptr `plusPtr` 24) (vkDescriptorType (poked :: VkImageViewHandleInfoNVX))
                 *> poke (ptr `plusPtr` 32) (vkSampler (poked :: VkImageViewHandleInfoNVX))
+
+instance Zero VkImageViewHandleInfoNVX where
+  zero = VkImageViewHandleInfoNVX zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetImageViewHandleNVX"
 foreign import ccall

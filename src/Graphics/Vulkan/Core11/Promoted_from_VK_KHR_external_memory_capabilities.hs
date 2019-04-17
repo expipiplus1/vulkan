@@ -46,6 +46,9 @@ import Data.ByteString
   ( ByteString
   , packCStringLen
   )
+import qualified Data.ByteString
+  ( empty
+  )
 import qualified Data.Vector.Storable
   ( unsafeWith
   )
@@ -74,6 +77,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( pattern VK_UUID_SIZE
   )
@@ -129,6 +135,9 @@ fromCStructExternalBufferProperties :: VkExternalBufferProperties -> IO External
 fromCStructExternalBufferProperties c = ExternalBufferProperties <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExternalBufferProperties)))
                                                                  <*> (fromCStructExternalMemoryProperties (vkExternalMemoryProperties (c :: VkExternalBufferProperties)))
+instance Zero ExternalBufferProperties where
+  zero = ExternalBufferProperties Nothing
+                                  zero
 -- No documentation found for TopLevel "ExternalImageFormatProperties"
 data ExternalImageFormatProperties = ExternalImageFormatProperties
   { -- Univalued Member elided
@@ -144,6 +153,9 @@ fromCStructExternalImageFormatProperties :: VkExternalImageFormatProperties -> I
 fromCStructExternalImageFormatProperties c = ExternalImageFormatProperties <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExternalImageFormatProperties)))
                                                                            <*> (fromCStructExternalMemoryProperties (vkExternalMemoryProperties (c :: VkExternalImageFormatProperties)))
+instance Zero ExternalImageFormatProperties where
+  zero = ExternalImageFormatProperties Nothing
+                                       zero
 -- No documentation found for TopLevel "ExternalMemoryFeatureFlagBits"
 type ExternalMemoryFeatureFlagBits = VkExternalMemoryFeatureFlagBits
 -- No documentation found for TopLevel "ExternalMemoryFeatureFlagBitsKHR"
@@ -176,6 +188,10 @@ fromCStructExternalMemoryProperties :: VkExternalMemoryProperties -> IO External
 fromCStructExternalMemoryProperties c = ExternalMemoryProperties <$> pure (vkExternalMemoryFeatures (c :: VkExternalMemoryProperties))
                                                                  <*> pure (vkExportFromImportedHandleTypes (c :: VkExternalMemoryProperties))
                                                                  <*> pure (vkCompatibleHandleTypes (c :: VkExternalMemoryProperties))
+instance Zero ExternalMemoryProperties where
+  zero = ExternalMemoryProperties zero
+                                  zero
+                                  zero
 -- No documentation found for TopLevel "PhysicalDeviceExternalBufferInfo"
 data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
   { -- Univalued Member elided
@@ -197,6 +213,11 @@ fromCStructPhysicalDeviceExternalBufferInfo c = PhysicalDeviceExternalBufferInfo
                                                                                  <*> pure (vkFlags (c :: VkPhysicalDeviceExternalBufferInfo))
                                                                                  <*> pure (vkUsage (c :: VkPhysicalDeviceExternalBufferInfo))
                                                                                  <*> pure (vkHandleType (c :: VkPhysicalDeviceExternalBufferInfo))
+instance Zero PhysicalDeviceExternalBufferInfo where
+  zero = PhysicalDeviceExternalBufferInfo Nothing
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "PhysicalDeviceExternalImageFormatInfo"
 data PhysicalDeviceExternalImageFormatInfo = PhysicalDeviceExternalImageFormatInfo
   { -- Univalued Member elided
@@ -212,6 +233,9 @@ fromCStructPhysicalDeviceExternalImageFormatInfo :: VkPhysicalDeviceExternalImag
 fromCStructPhysicalDeviceExternalImageFormatInfo c = PhysicalDeviceExternalImageFormatInfo <$> -- Univalued Member elided
                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceExternalImageFormatInfo)))
                                                                                            <*> pure (vkHandleType (c :: VkPhysicalDeviceExternalImageFormatInfo))
+instance Zero PhysicalDeviceExternalImageFormatInfo where
+  zero = PhysicalDeviceExternalImageFormatInfo Nothing
+                                               zero
 -- No documentation found for TopLevel "PhysicalDeviceIDProperties"
 data PhysicalDeviceIDProperties = PhysicalDeviceIDProperties
   { -- Univalued Member elided
@@ -239,7 +263,14 @@ fromCStructPhysicalDeviceIDProperties c = PhysicalDeviceIDProperties <$> -- Univ
                                                                      <*> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkDeviceLUID (c :: VkPhysicalDeviceIDProperties))) (\p -> packCStringLen (castPtr p, VK_LUID_SIZE))
                                                                      <*> pure (vkDeviceNodeMask (c :: VkPhysicalDeviceIDProperties))
                                                                      <*> pure (bool32ToBool (vkDeviceLUIDValid (c :: VkPhysicalDeviceIDProperties)))
+instance Zero PhysicalDeviceIDProperties where
+  zero = PhysicalDeviceIDProperties Nothing
+                                    Data.ByteString.empty
+                                    Data.ByteString.empty
+                                    Data.ByteString.empty
+                                    zero
+                                    False
 
 -- | Wrapper for 'vkGetPhysicalDeviceExternalBufferProperties'
-getPhysicalDeviceExternalBufferProperties :: PhysicalDevice ->  PhysicalDeviceExternalBufferInfo ->  IO ( ExternalBufferProperties )
+getPhysicalDeviceExternalBufferProperties :: PhysicalDevice ->  PhysicalDeviceExternalBufferInfo ->  IO (ExternalBufferProperties)
 getPhysicalDeviceExternalBufferProperties = \(PhysicalDevice physicalDevice commandTable) -> \externalBufferInfo -> alloca (\pExternalBufferProperties -> (\a -> withCStructPhysicalDeviceExternalBufferInfo a . flip with) externalBufferInfo (\pExternalBufferInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceExternalBufferProperties commandTable physicalDevice pExternalBufferInfo pExternalBufferProperties *> ((fromCStructExternalBufferProperties <=< peek) pExternalBufferProperties)))

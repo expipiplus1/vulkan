@@ -46,6 +46,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present
   ( VkPresentRegionKHR(..)
   , VkPresentRegionsKHR(..)
@@ -86,6 +89,8 @@ withCStructPresentRegionKHR from cont = maybeWith (withVec withCStructRectLayerK
 fromCStructPresentRegionKHR :: VkPresentRegionKHR -> IO PresentRegionKHR
 fromCStructPresentRegionKHR c = PresentRegionKHR <$> -- Optional length valued member elided
                                                  maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkRectangleCount (c :: VkPresentRegionKHR))) (((fromCStructRectLayerKHR <=<) . peekElemOff) p)) (vkPRectangles (c :: VkPresentRegionKHR))
+instance Zero PresentRegionKHR where
+  zero = PresentRegionKHR Nothing
 -- No documentation found for TopLevel "PresentRegionsKHR"
 data PresentRegionsKHR = PresentRegionsKHR
   { -- Univalued Member elided
@@ -103,6 +108,9 @@ fromCStructPresentRegionsKHR c = PresentRegionsKHR <$> -- Univalued Member elide
                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPresentRegionsKHR)))
                                                    -- Optional length valued member elided
                                                    <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkSwapchainCount (c :: VkPresentRegionsKHR))) (((fromCStructPresentRegionKHR <=<) . peekElemOff) p)) (vkPRegions (c :: VkPresentRegionsKHR))
+instance Zero PresentRegionsKHR where
+  zero = PresentRegionsKHR Nothing
+                           Nothing
 -- No documentation found for TopLevel "RectLayerKHR"
 data RectLayerKHR = RectLayerKHR
   { -- No documentation found for Nested "RectLayerKHR" "offset"
@@ -119,3 +127,7 @@ fromCStructRectLayerKHR :: VkRectLayerKHR -> IO RectLayerKHR
 fromCStructRectLayerKHR c = RectLayerKHR <$> (fromCStructOffset2D (vkOffset (c :: VkRectLayerKHR)))
                                          <*> (fromCStructExtent2D (vkExtent (c :: VkRectLayerKHR)))
                                          <*> pure (vkLayer (c :: VkRectLayerKHR))
+instance Zero RectLayerKHR where
+  zero = RectLayerKHR zero
+                      zero
+                      zero

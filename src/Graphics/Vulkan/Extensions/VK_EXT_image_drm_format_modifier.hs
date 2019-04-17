@@ -56,7 +56,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -83,7 +84,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
   ( VkDrmFormatModifierPropertiesEXT(..)
@@ -153,6 +155,10 @@ fromCStructDrmFormatModifierPropertiesEXT :: VkDrmFormatModifierPropertiesEXT ->
 fromCStructDrmFormatModifierPropertiesEXT c = DrmFormatModifierPropertiesEXT <$> pure (vkDrmFormatModifier (c :: VkDrmFormatModifierPropertiesEXT))
                                                                              <*> pure (vkDrmFormatModifierPlaneCount (c :: VkDrmFormatModifierPropertiesEXT))
                                                                              <*> pure (vkDrmFormatModifierTilingFeatures (c :: VkDrmFormatModifierPropertiesEXT))
+instance Zero DrmFormatModifierPropertiesEXT where
+  zero = DrmFormatModifierPropertiesEXT zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "DrmFormatModifierPropertiesListEXT"
 data DrmFormatModifierPropertiesListEXT = DrmFormatModifierPropertiesListEXT
   { -- Univalued Member elided
@@ -170,6 +176,9 @@ fromCStructDrmFormatModifierPropertiesListEXT c = DrmFormatModifierPropertiesLis
                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDrmFormatModifierPropertiesListEXT)))
                                                                                      -- Optional length valued member elided
                                                                                      <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkDrmFormatModifierCount (c :: VkDrmFormatModifierPropertiesListEXT))) (((fromCStructDrmFormatModifierPropertiesEXT <=<) . peekElemOff) p)) (vkPDrmFormatModifierProperties (c :: VkDrmFormatModifierPropertiesListEXT))
+instance Zero DrmFormatModifierPropertiesListEXT where
+  zero = DrmFormatModifierPropertiesListEXT Nothing
+                                            Nothing
 -- No documentation found for TopLevel "ImageDrmFormatModifierExplicitCreateInfoEXT"
 data ImageDrmFormatModifierExplicitCreateInfoEXT = ImageDrmFormatModifierExplicitCreateInfoEXT
   { -- Univalued Member elided
@@ -190,6 +199,10 @@ fromCStructImageDrmFormatModifierExplicitCreateInfoEXT c = ImageDrmFormatModifie
                                                                                                        <*> pure (vkDrmFormatModifier (c :: VkImageDrmFormatModifierExplicitCreateInfoEXT))
                                                                                                        -- Length valued member elided
                                                                                                        <*> (Data.Vector.generateM (fromIntegral (vkDrmFormatModifierPlaneCount (c :: VkImageDrmFormatModifierExplicitCreateInfoEXT))) (((fromCStructSubresourceLayout <=<) . peekElemOff) (vkPPlaneLayouts (c :: VkImageDrmFormatModifierExplicitCreateInfoEXT))))
+instance Zero ImageDrmFormatModifierExplicitCreateInfoEXT where
+  zero = ImageDrmFormatModifierExplicitCreateInfoEXT Nothing
+                                                     zero
+                                                     Data.Vector.empty
 -- No documentation found for TopLevel "ImageDrmFormatModifierListCreateInfoEXT"
 data ImageDrmFormatModifierListCreateInfoEXT = ImageDrmFormatModifierListCreateInfoEXT
   { -- Univalued Member elided
@@ -207,6 +220,9 @@ fromCStructImageDrmFormatModifierListCreateInfoEXT c = ImageDrmFormatModifierLis
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageDrmFormatModifierListCreateInfoEXT)))
                                                                                                -- Length valued member elided
                                                                                                <*> (Data.Vector.generateM (fromIntegral (vkDrmFormatModifierCount (c :: VkImageDrmFormatModifierListCreateInfoEXT))) (peekElemOff (vkPDrmFormatModifiers (c :: VkImageDrmFormatModifierListCreateInfoEXT))))
+instance Zero ImageDrmFormatModifierListCreateInfoEXT where
+  zero = ImageDrmFormatModifierListCreateInfoEXT Nothing
+                                                 Data.Vector.empty
 -- No documentation found for TopLevel "ImageDrmFormatModifierPropertiesEXT"
 data ImageDrmFormatModifierPropertiesEXT = ImageDrmFormatModifierPropertiesEXT
   { -- Univalued Member elided
@@ -222,6 +238,9 @@ fromCStructImageDrmFormatModifierPropertiesEXT :: VkImageDrmFormatModifierProper
 fromCStructImageDrmFormatModifierPropertiesEXT c = ImageDrmFormatModifierPropertiesEXT <$> -- Univalued Member elided
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageDrmFormatModifierPropertiesEXT)))
                                                                                        <*> pure (vkDrmFormatModifier (c :: VkImageDrmFormatModifierPropertiesEXT))
+instance Zero ImageDrmFormatModifierPropertiesEXT where
+  zero = ImageDrmFormatModifierPropertiesEXT Nothing
+                                             zero
 -- No documentation found for TopLevel "PhysicalDeviceImageDrmFormatModifierInfoEXT"
 data PhysicalDeviceImageDrmFormatModifierInfoEXT = PhysicalDeviceImageDrmFormatModifierInfoEXT
   { -- Univalued Member elided
@@ -245,6 +264,11 @@ fromCStructPhysicalDeviceImageDrmFormatModifierInfoEXT c = PhysicalDeviceImageDr
                                                                                                        <*> pure (vkSharingMode (c :: VkPhysicalDeviceImageDrmFormatModifierInfoEXT))
                                                                                                        -- Length valued member elided
                                                                                                        <*> (Data.Vector.generateM (fromIntegral (vkQueueFamilyIndexCount (c :: VkPhysicalDeviceImageDrmFormatModifierInfoEXT))) (peekElemOff (vkPQueueFamilyIndices (c :: VkPhysicalDeviceImageDrmFormatModifierInfoEXT))))
+instance Zero PhysicalDeviceImageDrmFormatModifierInfoEXT where
+  zero = PhysicalDeviceImageDrmFormatModifierInfoEXT Nothing
+                                                     zero
+                                                     zero
+                                                     Data.Vector.empty
 
 -- | Wrapper for 'vkGetImageDrmFormatModifierPropertiesEXT'
 getImageDrmFormatModifierPropertiesEXT :: Device ->  Image ->  IO (ImageDrmFormatModifierPropertiesEXT)

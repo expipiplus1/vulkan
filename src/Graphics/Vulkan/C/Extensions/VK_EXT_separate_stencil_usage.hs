@@ -26,6 +26,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageUsageFlags
@@ -52,6 +53,11 @@ instance Storable VkImageStencilUsageCreateInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageStencilUsageCreateInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageStencilUsageCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkStencilUsage (poked :: VkImageStencilUsageCreateInfoEXT))
+
+instance Zero VkImageStencilUsageCreateInfoEXT where
+  zero = VkImageStencilUsageCreateInfoEXT zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME"
 pattern VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME = "VK_EXT_separate_stencil_usage"

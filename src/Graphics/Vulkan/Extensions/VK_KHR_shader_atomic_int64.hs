@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_shader_atomic_int64
   ( VkPhysicalDeviceShaderAtomicInt64FeaturesKHR(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
@@ -58,3 +61,7 @@ fromCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR c = PhysicalDeviceShaderAt
                                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceShaderAtomicInt64FeaturesKHR)))
                                                                                                      <*> pure (bool32ToBool (vkShaderBufferInt64Atomics (c :: VkPhysicalDeviceShaderAtomicInt64FeaturesKHR)))
                                                                                                      <*> pure (bool32ToBool (vkShaderSharedInt64Atomics (c :: VkPhysicalDeviceShaderAtomicInt64FeaturesKHR)))
+instance Zero PhysicalDeviceShaderAtomicInt64FeaturesKHR where
+  zero = PhysicalDeviceShaderAtomicInt64FeaturesKHR Nothing
+                                                    False
+                                                    False

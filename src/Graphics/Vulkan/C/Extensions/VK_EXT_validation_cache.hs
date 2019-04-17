@@ -88,6 +88,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkObjectType(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -119,11 +120,16 @@ instance Storable VkShaderModuleValidationCacheCreateInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkShaderModuleValidationCacheCreateInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkShaderModuleValidationCacheCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkValidationCache (poked :: VkShaderModuleValidationCacheCreateInfoEXT))
+
+instance Zero VkShaderModuleValidationCacheCreateInfoEXT where
+  zero = VkShaderModuleValidationCacheCreateInfoEXT zero
+                                                    zero
+                                                    zero
 -- ** VkValidationCacheCreateFlagsEXT
 
 -- No documentation found for TopLevel "VkValidationCacheCreateFlagsEXT"
 newtype VkValidationCacheCreateFlagsEXT = VkValidationCacheCreateFlagsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkValidationCacheCreateFlagsEXT where
   
@@ -168,6 +174,13 @@ instance Storable VkValidationCacheCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkValidationCacheCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkInitialDataSize (poked :: VkValidationCacheCreateInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPInitialData (poked :: VkValidationCacheCreateInfoEXT))
+
+instance Zero VkValidationCacheCreateInfoEXT where
+  zero = VkValidationCacheCreateInfoEXT zero
+                                        zero
+                                        zero
+                                        zero
+                                        zero
 -- | Dummy data to tag the 'Ptr' with
 data VkValidationCacheEXT_T
 -- No documentation found for TopLevel "VkValidationCacheEXT"
@@ -176,7 +189,7 @@ type VkValidationCacheEXT = Ptr VkValidationCacheEXT_T
 
 -- No documentation found for TopLevel "VkValidationCacheHeaderVersionEXT"
 newtype VkValidationCacheHeaderVersionEXT = VkValidationCacheHeaderVersionEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkValidationCacheHeaderVersionEXT where
   showsPrec _ VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = showString "VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT"

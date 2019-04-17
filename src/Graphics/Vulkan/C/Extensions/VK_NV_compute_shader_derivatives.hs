@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -54,6 +55,12 @@ instance Storable VkPhysicalDeviceComputeShaderDerivativesFeaturesNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceComputeShaderDerivativesFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkComputeDerivativeGroupQuads (poked :: VkPhysicalDeviceComputeShaderDerivativesFeaturesNV))
                 *> poke (ptr `plusPtr` 20) (vkComputeDerivativeGroupLinear (poked :: VkPhysicalDeviceComputeShaderDerivativesFeaturesNV))
+
+instance Zero VkPhysicalDeviceComputeShaderDerivativesFeaturesNV where
+  zero = VkPhysicalDeviceComputeShaderDerivativesFeaturesNV zero
+                                                            zero
+                                                            zero
+                                                            zero
 -- No documentation found for TopLevel "VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME"
 pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME = "VK_NV_compute_shader_derivatives"

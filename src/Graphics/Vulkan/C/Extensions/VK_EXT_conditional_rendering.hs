@@ -74,6 +74,7 @@ import Graphics.Vulkan.C.Core10.Buffer
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -114,6 +115,11 @@ instance Storable VkCommandBufferInheritanceConditionalRenderingInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferInheritanceConditionalRenderingInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferInheritanceConditionalRenderingInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkConditionalRenderingEnable (poked :: VkCommandBufferInheritanceConditionalRenderingInfoEXT))
+
+instance Zero VkCommandBufferInheritanceConditionalRenderingInfoEXT where
+  zero = VkCommandBufferInheritanceConditionalRenderingInfoEXT zero
+                                                               zero
+                                                               zero
 -- No documentation found for TopLevel "VkConditionalRenderingBeginInfoEXT"
 data VkConditionalRenderingBeginInfoEXT = VkConditionalRenderingBeginInfoEXT
   { -- No documentation found for Nested "VkConditionalRenderingBeginInfoEXT" "sType"
@@ -142,11 +148,18 @@ instance Storable VkConditionalRenderingBeginInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkBuffer (poked :: VkConditionalRenderingBeginInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkOffset (poked :: VkConditionalRenderingBeginInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkFlags (poked :: VkConditionalRenderingBeginInfoEXT))
+
+instance Zero VkConditionalRenderingBeginInfoEXT where
+  zero = VkConditionalRenderingBeginInfoEXT zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
 -- ** VkConditionalRenderingFlagBitsEXT
 
 -- No documentation found for TopLevel "VkConditionalRenderingFlagBitsEXT"
 newtype VkConditionalRenderingFlagBitsEXT = VkConditionalRenderingFlagBitsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkConditionalRenderingFlagBitsEXT where
   showsPrec _ VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT = showString "VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT"
@@ -191,6 +204,12 @@ instance Storable VkPhysicalDeviceConditionalRenderingFeaturesEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceConditionalRenderingFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkConditionalRendering (poked :: VkPhysicalDeviceConditionalRenderingFeaturesEXT))
                 *> poke (ptr `plusPtr` 20) (vkInheritedConditionalRendering (poked :: VkPhysicalDeviceConditionalRenderingFeaturesEXT))
+
+instance Zero VkPhysicalDeviceConditionalRenderingFeaturesEXT where
+  zero = VkPhysicalDeviceConditionalRenderingFeaturesEXT zero
+                                                         zero
+                                                         zero
+                                                         zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdBeginConditionalRenderingEXT"
 foreign import ccall

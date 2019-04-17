@@ -57,6 +57,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 
@@ -89,6 +90,13 @@ instance Storable VkPipelineCreationFeedbackCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkPPipelineCreationFeedback (poked :: VkPipelineCreationFeedbackCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkPipelineStageCreationFeedbackCount (poked :: VkPipelineCreationFeedbackCreateInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPPipelineStageCreationFeedbacks (poked :: VkPipelineCreationFeedbackCreateInfoEXT))
+
+instance Zero VkPipelineCreationFeedbackCreateInfoEXT where
+  zero = VkPipelineCreationFeedbackCreateInfoEXT zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
 -- No documentation found for TopLevel "VkPipelineCreationFeedbackEXT"
 data VkPipelineCreationFeedbackEXT = VkPipelineCreationFeedbackEXT
   { -- No documentation found for Nested "VkPipelineCreationFeedbackEXT" "flags"
@@ -105,11 +113,15 @@ instance Storable VkPipelineCreationFeedbackEXT where
                                            <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkFlags (poked :: VkPipelineCreationFeedbackEXT))
                 *> poke (ptr `plusPtr` 8) (vkDuration (poked :: VkPipelineCreationFeedbackEXT))
+
+instance Zero VkPipelineCreationFeedbackEXT where
+  zero = VkPipelineCreationFeedbackEXT zero
+                                       zero
 -- ** VkPipelineCreationFeedbackFlagBitsEXT
 
 -- No documentation found for TopLevel "VkPipelineCreationFeedbackFlagBitsEXT"
 newtype VkPipelineCreationFeedbackFlagBitsEXT = VkPipelineCreationFeedbackFlagBitsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineCreationFeedbackFlagBitsEXT where
   showsPrec _ VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = showString "VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT"

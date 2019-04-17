@@ -30,7 +30,8 @@ import Data.ByteString
   , packCStringLen
   )
 import qualified Data.ByteString
-  ( length
+  ( empty
+  , length
   )
 import Data.ByteString.Unsafe
   ( unsafeUseAsCString
@@ -47,6 +48,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block
   ( VkDescriptorPoolInlineUniformBlockCreateInfoEXT(..)
   , VkPhysicalDeviceInlineUniformBlockFeaturesEXT(..)
@@ -88,6 +92,9 @@ fromCStructDescriptorPoolInlineUniformBlockCreateInfoEXT :: VkDescriptorPoolInli
 fromCStructDescriptorPoolInlineUniformBlockCreateInfoEXT c = DescriptorPoolInlineUniformBlockCreateInfoEXT <$> -- Univalued Member elided
                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDescriptorPoolInlineUniformBlockCreateInfoEXT)))
                                                                                                            <*> pure (vkMaxInlineUniformBlockBindings (c :: VkDescriptorPoolInlineUniformBlockCreateInfoEXT))
+instance Zero DescriptorPoolInlineUniformBlockCreateInfoEXT where
+  zero = DescriptorPoolInlineUniformBlockCreateInfoEXT Nothing
+                                                       zero
 -- No documentation found for TopLevel "PhysicalDeviceInlineUniformBlockFeaturesEXT"
 data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBlockFeaturesEXT
   { -- Univalued Member elided
@@ -106,6 +113,10 @@ fromCStructPhysicalDeviceInlineUniformBlockFeaturesEXT c = PhysicalDeviceInlineU
                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkInlineUniformBlock (c :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkDescriptorBindingInlineUniformBlockUpdateAfterBind (c :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT)))
+instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
+  zero = PhysicalDeviceInlineUniformBlockFeaturesEXT Nothing
+                                                     False
+                                                     False
 -- No documentation found for TopLevel "PhysicalDeviceInlineUniformBlockPropertiesEXT"
 data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniformBlockPropertiesEXT
   { -- Univalued Member elided
@@ -133,6 +144,13 @@ fromCStructPhysicalDeviceInlineUniformBlockPropertiesEXT c = PhysicalDeviceInlin
                                                                                                            <*> pure (vkMaxPerStageDescriptorUpdateAfterBindInlineUniformBlocks (c :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
                                                                                                            <*> pure (vkMaxDescriptorSetInlineUniformBlocks (c :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
                                                                                                            <*> pure (vkMaxDescriptorSetUpdateAfterBindInlineUniformBlocks (c :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
+instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
+  zero = PhysicalDeviceInlineUniformBlockPropertiesEXT Nothing
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
 -- No documentation found for TopLevel "WriteDescriptorSetInlineUniformBlockEXT"
 data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBlockEXT
   { -- Univalued Member elided
@@ -150,3 +168,6 @@ fromCStructWriteDescriptorSetInlineUniformBlockEXT c = WriteDescriptorSetInlineU
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkWriteDescriptorSetInlineUniformBlockEXT)))
                                                                                                -- Bytestring length valued member elided
                                                                                                <*> packCStringLen (castPtr (vkPData (c :: VkWriteDescriptorSetInlineUniformBlockEXT)), fromIntegral (vkDataSize (c :: VkWriteDescriptorSetInlineUniformBlockEXT)))
+instance Zero WriteDescriptorSetInlineUniformBlockEXT where
+  zero = WriteDescriptorSetInlineUniformBlockEXT Nothing
+                                                 Data.ByteString.empty

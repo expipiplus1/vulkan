@@ -30,7 +30,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -48,6 +49,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_vertex_attribute_divisor
   ( VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT(..)
   , VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT(..)
@@ -93,6 +97,10 @@ fromCStructPhysicalDeviceVertexAttributeDivisorFeaturesEXT c = PhysicalDeviceVer
                                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT)))
                                                                                                                <*> pure (bool32ToBool (vkVertexAttributeInstanceRateDivisor (c :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT)))
                                                                                                                <*> pure (bool32ToBool (vkVertexAttributeInstanceRateZeroDivisor (c :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT)))
+instance Zero PhysicalDeviceVertexAttributeDivisorFeaturesEXT where
+  zero = PhysicalDeviceVertexAttributeDivisorFeaturesEXT Nothing
+                                                         False
+                                                         False
 -- No documentation found for TopLevel "PhysicalDeviceVertexAttributeDivisorPropertiesEXT"
 data PhysicalDeviceVertexAttributeDivisorPropertiesEXT = PhysicalDeviceVertexAttributeDivisorPropertiesEXT
   { -- Univalued Member elided
@@ -108,6 +116,9 @@ fromCStructPhysicalDeviceVertexAttributeDivisorPropertiesEXT :: VkPhysicalDevice
 fromCStructPhysicalDeviceVertexAttributeDivisorPropertiesEXT c = PhysicalDeviceVertexAttributeDivisorPropertiesEXT <$> -- Univalued Member elided
                                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT)))
                                                                                                                    <*> pure (vkMaxVertexAttribDivisor (c :: VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT))
+instance Zero PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
+  zero = PhysicalDeviceVertexAttributeDivisorPropertiesEXT Nothing
+                                                           zero
 -- No documentation found for TopLevel "PipelineVertexInputDivisorStateCreateInfoEXT"
 data PipelineVertexInputDivisorStateCreateInfoEXT = PipelineVertexInputDivisorStateCreateInfoEXT
   { -- Univalued Member elided
@@ -125,6 +136,9 @@ fromCStructPipelineVertexInputDivisorStateCreateInfoEXT c = PipelineVertexInputD
                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineVertexInputDivisorStateCreateInfoEXT)))
                                                                                                          -- Length valued member elided
                                                                                                          <*> (Data.Vector.generateM (fromIntegral (vkVertexBindingDivisorCount (c :: VkPipelineVertexInputDivisorStateCreateInfoEXT))) (((fromCStructVertexInputBindingDivisorDescriptionEXT <=<) . peekElemOff) (vkPVertexBindingDivisors (c :: VkPipelineVertexInputDivisorStateCreateInfoEXT))))
+instance Zero PipelineVertexInputDivisorStateCreateInfoEXT where
+  zero = PipelineVertexInputDivisorStateCreateInfoEXT Nothing
+                                                      Data.Vector.empty
 -- No documentation found for TopLevel "VertexInputBindingDivisorDescriptionEXT"
 data VertexInputBindingDivisorDescriptionEXT = VertexInputBindingDivisorDescriptionEXT
   { -- No documentation found for Nested "VertexInputBindingDivisorDescriptionEXT" "binding"
@@ -138,3 +152,6 @@ withCStructVertexInputBindingDivisorDescriptionEXT from cont = cont (VkVertexInp
 fromCStructVertexInputBindingDivisorDescriptionEXT :: VkVertexInputBindingDivisorDescriptionEXT -> IO VertexInputBindingDivisorDescriptionEXT
 fromCStructVertexInputBindingDivisorDescriptionEXT c = VertexInputBindingDivisorDescriptionEXT <$> pure (vkBinding (c :: VkVertexInputBindingDivisorDescriptionEXT))
                                                                                                <*> pure (vkDivisor (c :: VkVertexInputBindingDivisorDescriptionEXT))
+instance Zero VertexInputBindingDivisorDescriptionEXT where
+  zero = VertexInputBindingDivisorDescriptionEXT zero
+                                                 zero

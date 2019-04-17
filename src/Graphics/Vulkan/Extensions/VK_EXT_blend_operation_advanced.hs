@@ -80,6 +80,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced
   ( VkBlendOverlapEXT(..)
   , VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT(..)
@@ -168,6 +171,9 @@ fromCStructPhysicalDeviceBlendOperationAdvancedFeaturesEXT :: VkPhysicalDeviceBl
 fromCStructPhysicalDeviceBlendOperationAdvancedFeaturesEXT c = PhysicalDeviceBlendOperationAdvancedFeaturesEXT <$> -- Univalued Member elided
                                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT)))
                                                                                                                <*> pure (bool32ToBool (vkAdvancedBlendCoherentOperations (c :: VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT)))
+instance Zero PhysicalDeviceBlendOperationAdvancedFeaturesEXT where
+  zero = PhysicalDeviceBlendOperationAdvancedFeaturesEXT Nothing
+                                                         False
 -- No documentation found for TopLevel "PhysicalDeviceBlendOperationAdvancedPropertiesEXT"
 data PhysicalDeviceBlendOperationAdvancedPropertiesEXT = PhysicalDeviceBlendOperationAdvancedPropertiesEXT
   { -- Univalued Member elided
@@ -198,6 +204,14 @@ fromCStructPhysicalDeviceBlendOperationAdvancedPropertiesEXT c = PhysicalDeviceB
                                                                                                                    <*> pure (bool32ToBool (vkAdvancedBlendNonPremultipliedDstColor (c :: VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT)))
                                                                                                                    <*> pure (bool32ToBool (vkAdvancedBlendCorrelatedOverlap (c :: VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT)))
                                                                                                                    <*> pure (bool32ToBool (vkAdvancedBlendAllOperations (c :: VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT)))
+instance Zero PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
+  zero = PhysicalDeviceBlendOperationAdvancedPropertiesEXT Nothing
+                                                           zero
+                                                           False
+                                                           False
+                                                           False
+                                                           False
+                                                           False
 -- No documentation found for TopLevel "PipelineColorBlendAdvancedStateCreateInfoEXT"
 data PipelineColorBlendAdvancedStateCreateInfoEXT = PipelineColorBlendAdvancedStateCreateInfoEXT
   { -- Univalued Member elided
@@ -219,3 +233,8 @@ fromCStructPipelineColorBlendAdvancedStateCreateInfoEXT c = PipelineColorBlendAd
                                                                                                          <*> pure (bool32ToBool (vkSrcPremultiplied (c :: VkPipelineColorBlendAdvancedStateCreateInfoEXT)))
                                                                                                          <*> pure (bool32ToBool (vkDstPremultiplied (c :: VkPipelineColorBlendAdvancedStateCreateInfoEXT)))
                                                                                                          <*> pure (vkBlendOverlap (c :: VkPipelineColorBlendAdvancedStateCreateInfoEXT))
+instance Zero PipelineColorBlendAdvancedStateCreateInfoEXT where
+  zero = PipelineColorBlendAdvancedStateCreateInfoEXT Nothing
+                                                      False
+                                                      False
+                                                      zero

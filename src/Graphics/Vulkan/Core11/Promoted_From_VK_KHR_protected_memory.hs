@@ -51,6 +51,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
   ( VkDeviceQueueInfo2(..)
   , VkPhysicalDeviceProtectedMemoryFeatures(..)
@@ -110,6 +113,11 @@ fromCStructDeviceQueueInfo2 c = DeviceQueueInfo2 <$> -- Univalued Member elided
                                                  <*> pure (vkFlags (c :: VkDeviceQueueInfo2))
                                                  <*> pure (vkQueueFamilyIndex (c :: VkDeviceQueueInfo2))
                                                  <*> pure (vkQueueIndex (c :: VkDeviceQueueInfo2))
+instance Zero DeviceQueueInfo2 where
+  zero = DeviceQueueInfo2 Nothing
+                          zero
+                          zero
+                          zero
 -- No documentation found for TopLevel "PhysicalDeviceProtectedMemoryFeatures"
 data PhysicalDeviceProtectedMemoryFeatures = PhysicalDeviceProtectedMemoryFeatures
   { -- Univalued Member elided
@@ -125,6 +133,9 @@ fromCStructPhysicalDeviceProtectedMemoryFeatures :: VkPhysicalDeviceProtectedMem
 fromCStructPhysicalDeviceProtectedMemoryFeatures c = PhysicalDeviceProtectedMemoryFeatures <$> -- Univalued Member elided
                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceProtectedMemoryFeatures)))
                                                                                            <*> pure (bool32ToBool (vkProtectedMemory (c :: VkPhysicalDeviceProtectedMemoryFeatures)))
+instance Zero PhysicalDeviceProtectedMemoryFeatures where
+  zero = PhysicalDeviceProtectedMemoryFeatures Nothing
+                                               False
 -- No documentation found for TopLevel "PhysicalDeviceProtectedMemoryProperties"
 data PhysicalDeviceProtectedMemoryProperties = PhysicalDeviceProtectedMemoryProperties
   { -- Univalued Member elided
@@ -140,6 +151,9 @@ fromCStructPhysicalDeviceProtectedMemoryProperties :: VkPhysicalDeviceProtectedM
 fromCStructPhysicalDeviceProtectedMemoryProperties c = PhysicalDeviceProtectedMemoryProperties <$> -- Univalued Member elided
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceProtectedMemoryProperties)))
                                                                                                <*> pure (bool32ToBool (vkProtectedNoFault (c :: VkPhysicalDeviceProtectedMemoryProperties)))
+instance Zero PhysicalDeviceProtectedMemoryProperties where
+  zero = PhysicalDeviceProtectedMemoryProperties Nothing
+                                                 False
 -- No documentation found for TopLevel "ProtectedSubmitInfo"
 data ProtectedSubmitInfo = ProtectedSubmitInfo
   { -- Univalued Member elided
@@ -155,6 +169,9 @@ fromCStructProtectedSubmitInfo :: VkProtectedSubmitInfo -> IO ProtectedSubmitInf
 fromCStructProtectedSubmitInfo c = ProtectedSubmitInfo <$> -- Univalued Member elided
                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkProtectedSubmitInfo)))
                                                        <*> pure (bool32ToBool (vkProtectedSubmit (c :: VkProtectedSubmitInfo)))
+instance Zero ProtectedSubmitInfo where
+  zero = ProtectedSubmitInfo Nothing
+                             False
 
 -- | Wrapper for 'vkGetDeviceQueue2'
 getDeviceQueue2 :: Device ->  DeviceQueueInfo2 ->  IO (Queue)

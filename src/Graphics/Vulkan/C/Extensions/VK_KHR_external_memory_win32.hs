@@ -53,6 +53,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -104,6 +105,13 @@ instance Storable VkExportMemoryWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkPAttributes (poked :: VkExportMemoryWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDwAccess (poked :: VkExportMemoryWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkExportMemoryWin32HandleInfoKHR))
+
+instance Zero VkExportMemoryWin32HandleInfoKHR where
+  zero = VkExportMemoryWin32HandleInfoKHR zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkImportMemoryWin32HandleInfoKHR"
 data VkImportMemoryWin32HandleInfoKHR = VkImportMemoryWin32HandleInfoKHR
   { -- No documentation found for Nested "VkImportMemoryWin32HandleInfoKHR" "sType"
@@ -132,6 +140,13 @@ instance Storable VkImportMemoryWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkImportMemoryWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandle (poked :: VkImportMemoryWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkImportMemoryWin32HandleInfoKHR))
+
+instance Zero VkImportMemoryWin32HandleInfoKHR where
+  zero = VkImportMemoryWin32HandleInfoKHR zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkMemoryGetWin32HandleInfoKHR"
 data VkMemoryGetWin32HandleInfoKHR = VkMemoryGetWin32HandleInfoKHR
   { -- No documentation found for Nested "VkMemoryGetWin32HandleInfoKHR" "sType"
@@ -156,6 +171,12 @@ instance Storable VkMemoryGetWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkMemoryGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkMemoryGetWin32HandleInfoKHR))
+
+instance Zero VkMemoryGetWin32HandleInfoKHR where
+  zero = VkMemoryGetWin32HandleInfoKHR zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkMemoryWin32HandlePropertiesKHR"
 data VkMemoryWin32HandlePropertiesKHR = VkMemoryWin32HandlePropertiesKHR
   { -- No documentation found for Nested "VkMemoryWin32HandlePropertiesKHR" "sType"
@@ -176,6 +197,11 @@ instance Storable VkMemoryWin32HandlePropertiesKHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryWin32HandlePropertiesKHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryWin32HandlePropertiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryWin32HandlePropertiesKHR))
+
+instance Zero VkMemoryWin32HandlePropertiesKHR where
+  zero = VkMemoryWin32HandlePropertiesKHR zero
+                                          zero
+                                          zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetMemoryWin32HandleKHR"
 foreign import ccall

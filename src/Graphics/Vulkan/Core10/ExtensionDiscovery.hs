@@ -27,6 +27,9 @@ import Data.ByteString
   , packCString
   , useAsCString
   )
+import qualified Data.ByteString
+  ( empty
+  )
 import Data.Vector
   ( Vector
   )
@@ -67,6 +70,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.ExtensionDiscovery
@@ -96,14 +100,16 @@ withCStructExtensionProperties from cont = cont (VkExtensionProperties (byteStri
 fromCStructExtensionProperties :: VkExtensionProperties -> IO ExtensionProperties
 fromCStructExtensionProperties c = ExtensionProperties <$> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkExtensionName (c :: VkExtensionProperties))) packCString
                                                        <*> pure (vkSpecVersion (c :: VkExtensionProperties))
+instance Zero ExtensionProperties where
+  zero = ExtensionProperties Data.ByteString.empty
+                             zero
 
 -- | Wrapper for 'vkEnumerateDeviceExtensionProperties'
 getNumDeviceExtensionProperties :: PhysicalDevice ->  Maybe ByteString ->  IO (VkResult, Word32)
 getNumDeviceExtensionProperties = \(PhysicalDevice physicalDevice commandTable) -> \layerName -> alloca (\pPropertyCount -> maybeWith useAsCString layerName (\pLayerName -> Graphics.Vulkan.C.Dynamic.enumerateDeviceExtensionProperties commandTable physicalDevice pLayerName pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount))))
 
 -- | Wrapper for 'vkEnumerateDeviceExtensionProperties'
-enumerateDeviceExtensionProperties :: PhysicalDevice ->  Maybe ByteString ->  Word32 ->  IO ( VkResult
-, Vector ExtensionProperties )
+enumerateDeviceExtensionProperties :: PhysicalDevice ->  Maybe ByteString ->  Word32 ->  IO (VkResult, Vector ExtensionProperties)
 enumerateDeviceExtensionProperties = \(PhysicalDevice physicalDevice commandTable) -> \layerName -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> maybeWith useAsCString layerName (\pLayerName -> Graphics.Vulkan.C.Dynamic.enumerateDeviceExtensionProperties commandTable physicalDevice pLayerName pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructExtensionProperties <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount))))))))
 -- | Call 'getNumDeviceExtensionProperties' to get the number of return values, then use that
 -- number to call 'enumerateDeviceExtensionProperties' to get all the values.

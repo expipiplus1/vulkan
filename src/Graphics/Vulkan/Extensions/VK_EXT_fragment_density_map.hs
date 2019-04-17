@@ -38,6 +38,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map
   ( VkPhysicalDeviceFragmentDensityMapFeaturesEXT(..)
   , VkPhysicalDeviceFragmentDensityMapPropertiesEXT(..)
@@ -101,6 +104,11 @@ fromCStructPhysicalDeviceFragmentDensityMapFeaturesEXT c = PhysicalDeviceFragmen
                                                                                                        <*> pure (bool32ToBool (vkFragmentDensityMap (c :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkFragmentDensityMapDynamic (c :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkFragmentDensityMapNonSubsampledImages (c :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT)))
+instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
+  zero = PhysicalDeviceFragmentDensityMapFeaturesEXT Nothing
+                                                     False
+                                                     False
+                                                     False
 -- No documentation found for TopLevel "PhysicalDeviceFragmentDensityMapPropertiesEXT"
 data PhysicalDeviceFragmentDensityMapPropertiesEXT = PhysicalDeviceFragmentDensityMapPropertiesEXT
   { -- Univalued Member elided
@@ -122,6 +130,11 @@ fromCStructPhysicalDeviceFragmentDensityMapPropertiesEXT c = PhysicalDeviceFragm
                                                                                                            <*> (fromCStructExtent2D (vkMinFragmentDensityTexelSize (c :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT)))
                                                                                                            <*> (fromCStructExtent2D (vkMaxFragmentDensityTexelSize (c :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT)))
                                                                                                            <*> pure (bool32ToBool (vkFragmentDensityInvocations (c :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT)))
+instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
+  zero = PhysicalDeviceFragmentDensityMapPropertiesEXT Nothing
+                                                       zero
+                                                       zero
+                                                       False
 -- No documentation found for TopLevel "RenderPassFragmentDensityMapCreateInfoEXT"
 data RenderPassFragmentDensityMapCreateInfoEXT = RenderPassFragmentDensityMapCreateInfoEXT
   { -- Univalued Member elided
@@ -137,3 +150,6 @@ fromCStructRenderPassFragmentDensityMapCreateInfoEXT :: VkRenderPassFragmentDens
 fromCStructRenderPassFragmentDensityMapCreateInfoEXT c = RenderPassFragmentDensityMapCreateInfoEXT <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkRenderPassFragmentDensityMapCreateInfoEXT)))
                                                                                                    <*> (fromCStructAttachmentReference (vkFragmentDensityMapAttachment (c :: VkRenderPassFragmentDensityMapCreateInfoEXT)))
+instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
+  zero = RenderPassFragmentDensityMapCreateInfoEXT Nothing
+                                                   zero

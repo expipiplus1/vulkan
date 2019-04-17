@@ -89,6 +89,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -180,11 +181,25 @@ instance Storable VkBindSparseInfo where
                 *> poke (ptr `plusPtr` 72) (vkPImageBinds (poked :: VkBindSparseInfo))
                 *> poke (ptr `plusPtr` 80) (vkSignalSemaphoreCount (poked :: VkBindSparseInfo))
                 *> poke (ptr `plusPtr` 88) (vkPSignalSemaphores (poked :: VkBindSparseInfo))
+
+instance Zero VkBindSparseInfo where
+  zero = VkBindSparseInfo zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
 -- ** VkImageAspectFlagBits
 
 -- No documentation found for TopLevel "VkImageAspectFlagBits"
 newtype VkImageAspectFlagBits = VkImageAspectFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkImageAspectFlagBits where
   showsPrec _ VK_IMAGE_ASPECT_COLOR_BIT = showString "VK_IMAGE_ASPECT_COLOR_BIT"
@@ -259,6 +274,11 @@ instance Storable VkImageSubresource where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkAspectMask (poked :: VkImageSubresource))
                 *> poke (ptr `plusPtr` 4) (vkMipLevel (poked :: VkImageSubresource))
                 *> poke (ptr `plusPtr` 8) (vkArrayLayer (poked :: VkImageSubresource))
+
+instance Zero VkImageSubresource where
+  zero = VkImageSubresource zero
+                            zero
+                            zero
 -- No documentation found for TopLevel "VkOffset3D"
 data VkOffset3D = VkOffset3D
   { -- No documentation found for Nested "VkOffset3D" "x"
@@ -279,6 +299,11 @@ instance Storable VkOffset3D where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkOffset3D))
                 *> poke (ptr `plusPtr` 4) (vkY (poked :: VkOffset3D))
                 *> poke (ptr `plusPtr` 8) (vkZ (poked :: VkOffset3D))
+
+instance Zero VkOffset3D where
+  zero = VkOffset3D zero
+                    zero
+                    zero
 -- No documentation found for TopLevel "VkSparseBufferMemoryBindInfo"
 data VkSparseBufferMemoryBindInfo = VkSparseBufferMemoryBindInfo
   { -- No documentation found for Nested "VkSparseBufferMemoryBindInfo" "buffer"
@@ -299,11 +324,16 @@ instance Storable VkSparseBufferMemoryBindInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkBuffer (poked :: VkSparseBufferMemoryBindInfo))
                 *> poke (ptr `plusPtr` 8) (vkBindCount (poked :: VkSparseBufferMemoryBindInfo))
                 *> poke (ptr `plusPtr` 16) (vkPBinds (poked :: VkSparseBufferMemoryBindInfo))
+
+instance Zero VkSparseBufferMemoryBindInfo where
+  zero = VkSparseBufferMemoryBindInfo zero
+                                      zero
+                                      zero
 -- ** VkSparseImageFormatFlagBits
 
 -- No documentation found for TopLevel "VkSparseImageFormatFlagBits"
 newtype VkSparseImageFormatFlagBits = VkSparseImageFormatFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSparseImageFormatFlagBits where
   showsPrec _ VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT = showString "VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT"
@@ -356,6 +386,11 @@ instance Storable VkSparseImageFormatProperties where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkAspectMask (poked :: VkSparseImageFormatProperties))
                 *> poke (ptr `plusPtr` 4) (vkImageGranularity (poked :: VkSparseImageFormatProperties))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkSparseImageFormatProperties))
+
+instance Zero VkSparseImageFormatProperties where
+  zero = VkSparseImageFormatProperties zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkSparseImageMemoryBind"
 data VkSparseImageMemoryBind = VkSparseImageMemoryBind
   { -- No documentation found for Nested "VkSparseImageMemoryBind" "subresource"
@@ -388,6 +423,14 @@ instance Storable VkSparseImageMemoryBind where
                 *> poke (ptr `plusPtr` 40) (vkMemory (poked :: VkSparseImageMemoryBind))
                 *> poke (ptr `plusPtr` 48) (vkMemoryOffset (poked :: VkSparseImageMemoryBind))
                 *> poke (ptr `plusPtr` 56) (vkFlags (poked :: VkSparseImageMemoryBind))
+
+instance Zero VkSparseImageMemoryBind where
+  zero = VkSparseImageMemoryBind zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "VkSparseImageMemoryBindInfo"
 data VkSparseImageMemoryBindInfo = VkSparseImageMemoryBindInfo
   { -- No documentation found for Nested "VkSparseImageMemoryBindInfo" "image"
@@ -408,6 +451,11 @@ instance Storable VkSparseImageMemoryBindInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkImage (poked :: VkSparseImageMemoryBindInfo))
                 *> poke (ptr `plusPtr` 8) (vkBindCount (poked :: VkSparseImageMemoryBindInfo))
                 *> poke (ptr `plusPtr` 16) (vkPBinds (poked :: VkSparseImageMemoryBindInfo))
+
+instance Zero VkSparseImageMemoryBindInfo where
+  zero = VkSparseImageMemoryBindInfo zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "VkSparseImageMemoryRequirements"
 data VkSparseImageMemoryRequirements = VkSparseImageMemoryRequirements
   { -- No documentation found for Nested "VkSparseImageMemoryRequirements" "formatProperties"
@@ -436,6 +484,13 @@ instance Storable VkSparseImageMemoryRequirements where
                 *> poke (ptr `plusPtr` 24) (vkImageMipTailSize (poked :: VkSparseImageMemoryRequirements))
                 *> poke (ptr `plusPtr` 32) (vkImageMipTailOffset (poked :: VkSparseImageMemoryRequirements))
                 *> poke (ptr `plusPtr` 40) (vkImageMipTailStride (poked :: VkSparseImageMemoryRequirements))
+
+instance Zero VkSparseImageMemoryRequirements where
+  zero = VkSparseImageMemoryRequirements zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "VkSparseImageOpaqueMemoryBindInfo"
 data VkSparseImageOpaqueMemoryBindInfo = VkSparseImageOpaqueMemoryBindInfo
   { -- No documentation found for Nested "VkSparseImageOpaqueMemoryBindInfo" "image"
@@ -456,6 +511,11 @@ instance Storable VkSparseImageOpaqueMemoryBindInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkImage (poked :: VkSparseImageOpaqueMemoryBindInfo))
                 *> poke (ptr `plusPtr` 8) (vkBindCount (poked :: VkSparseImageOpaqueMemoryBindInfo))
                 *> poke (ptr `plusPtr` 16) (vkPBinds (poked :: VkSparseImageOpaqueMemoryBindInfo))
+
+instance Zero VkSparseImageOpaqueMemoryBindInfo where
+  zero = VkSparseImageOpaqueMemoryBindInfo zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "VkSparseMemoryBind"
 data VkSparseMemoryBind = VkSparseMemoryBind
   { -- No documentation found for Nested "VkSparseMemoryBind" "resourceOffset"
@@ -484,11 +544,18 @@ instance Storable VkSparseMemoryBind where
                 *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkSparseMemoryBind))
                 *> poke (ptr `plusPtr` 24) (vkMemoryOffset (poked :: VkSparseMemoryBind))
                 *> poke (ptr `plusPtr` 32) (vkFlags (poked :: VkSparseMemoryBind))
+
+instance Zero VkSparseMemoryBind where
+  zero = VkSparseMemoryBind zero
+                            zero
+                            zero
+                            zero
+                            zero
 -- ** VkSparseMemoryBindFlagBits
 
 -- No documentation found for TopLevel "VkSparseMemoryBindFlagBits"
 newtype VkSparseMemoryBindFlagBits = VkSparseMemoryBindFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSparseMemoryBindFlagBits where
   showsPrec _ VK_SPARSE_MEMORY_BIND_METADATA_BIT = showString "VK_SPARSE_MEMORY_BIND_METADATA_BIT"

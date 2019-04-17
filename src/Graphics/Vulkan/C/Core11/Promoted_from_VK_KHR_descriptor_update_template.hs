@@ -76,6 +76,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkObjectType(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
@@ -108,7 +109,7 @@ type VkDescriptorUpdateTemplate = Ptr VkDescriptorUpdateTemplate_T
 
 -- No documentation found for TopLevel "VkDescriptorUpdateTemplateCreateFlags"
 newtype VkDescriptorUpdateTemplateCreateFlags = VkDescriptorUpdateTemplateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDescriptorUpdateTemplateCreateFlags where
   
@@ -173,6 +174,18 @@ instance Storable VkDescriptorUpdateTemplateCreateInfo where
                 *> poke (ptr `plusPtr` 48) (vkPipelineBindPoint (poked :: VkDescriptorUpdateTemplateCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkPipelineLayout (poked :: VkDescriptorUpdateTemplateCreateInfo))
                 *> poke (ptr `plusPtr` 64) (vkSet (poked :: VkDescriptorUpdateTemplateCreateInfo))
+
+instance Zero VkDescriptorUpdateTemplateCreateInfo where
+  zero = VkDescriptorUpdateTemplateCreateInfo zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
 -- No documentation found for TopLevel "VkDescriptorUpdateTemplateEntry"
 data VkDescriptorUpdateTemplateEntry = VkDescriptorUpdateTemplateEntry
   { -- No documentation found for Nested "VkDescriptorUpdateTemplateEntry" "dstBinding"
@@ -205,11 +218,19 @@ instance Storable VkDescriptorUpdateTemplateEntry where
                 *> poke (ptr `plusPtr` 12) (vkDescriptorType (poked :: VkDescriptorUpdateTemplateEntry))
                 *> poke (ptr `plusPtr` 16) (vkOffset (poked :: VkDescriptorUpdateTemplateEntry))
                 *> poke (ptr `plusPtr` 24) (vkStride (poked :: VkDescriptorUpdateTemplateEntry))
+
+instance Zero VkDescriptorUpdateTemplateEntry where
+  zero = VkDescriptorUpdateTemplateEntry zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
 -- ** VkDescriptorUpdateTemplateType
 
 -- No documentation found for TopLevel "VkDescriptorUpdateTemplateType"
 newtype VkDescriptorUpdateTemplateType = VkDescriptorUpdateTemplateType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkDescriptorUpdateTemplateType where
   showsPrec _ VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = showString "VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET"

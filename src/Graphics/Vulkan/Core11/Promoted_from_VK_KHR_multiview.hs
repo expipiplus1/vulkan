@@ -29,7 +29,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -47,6 +48,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview
   ( VkPhysicalDeviceMultiviewFeatures(..)
   , VkPhysicalDeviceMultiviewProperties(..)
@@ -93,6 +97,11 @@ fromCStructPhysicalDeviceMultiviewFeatures c = PhysicalDeviceMultiviewFeatures <
                                                                                <*> pure (bool32ToBool (vkMultiview (c :: VkPhysicalDeviceMultiviewFeatures)))
                                                                                <*> pure (bool32ToBool (vkMultiviewGeometryShader (c :: VkPhysicalDeviceMultiviewFeatures)))
                                                                                <*> pure (bool32ToBool (vkMultiviewTessellationShader (c :: VkPhysicalDeviceMultiviewFeatures)))
+instance Zero PhysicalDeviceMultiviewFeatures where
+  zero = PhysicalDeviceMultiviewFeatures Nothing
+                                         False
+                                         False
+                                         False
 -- No documentation found for TopLevel "PhysicalDeviceMultiviewProperties"
 data PhysicalDeviceMultiviewProperties = PhysicalDeviceMultiviewProperties
   { -- Univalued Member elided
@@ -111,6 +120,10 @@ fromCStructPhysicalDeviceMultiviewProperties c = PhysicalDeviceMultiviewProperti
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceMultiviewProperties)))
                                                                                    <*> pure (vkMaxMultiviewViewCount (c :: VkPhysicalDeviceMultiviewProperties))
                                                                                    <*> pure (vkMaxMultiviewInstanceIndex (c :: VkPhysicalDeviceMultiviewProperties))
+instance Zero PhysicalDeviceMultiviewProperties where
+  zero = PhysicalDeviceMultiviewProperties Nothing
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "RenderPassMultiviewCreateInfo"
 data RenderPassMultiviewCreateInfo = RenderPassMultiviewCreateInfo
   { -- Univalued Member elided
@@ -138,3 +151,8 @@ fromCStructRenderPassMultiviewCreateInfo c = RenderPassMultiviewCreateInfo <$> -
                                                                            <*> (Data.Vector.generateM (fromIntegral (vkDependencyCount (c :: VkRenderPassMultiviewCreateInfo))) (peekElemOff (vkPViewOffsets (c :: VkRenderPassMultiviewCreateInfo))))
                                                                            -- Length valued member elided
                                                                            <*> (Data.Vector.generateM (fromIntegral (vkCorrelationMaskCount (c :: VkRenderPassMultiviewCreateInfo))) (peekElemOff (vkPCorrelationMasks (c :: VkRenderPassMultiviewCreateInfo))))
+instance Zero RenderPassMultiviewCreateInfo where
+  zero = RenderPassMultiviewCreateInfo Nothing
+                                       Data.Vector.empty
+                                       Data.Vector.empty
+                                       Data.Vector.empty

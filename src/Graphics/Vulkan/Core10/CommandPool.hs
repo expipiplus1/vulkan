@@ -19,7 +19,8 @@ module Graphics.Vulkan.Core10.CommandPool
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -55,7 +56,8 @@ import Graphics.Vulkan.C.Core10.CommandPool
   , VkCommandPool
   )
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -97,13 +99,17 @@ fromCStructCommandPoolCreateInfo c = CommandPoolCreateInfo <$> -- Univalued Memb
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkCommandPoolCreateInfo)))
                                                            <*> pure (vkFlags (c :: VkCommandPoolCreateInfo))
                                                            <*> pure (vkQueueFamilyIndex (c :: VkCommandPoolCreateInfo))
+instance Zero CommandPoolCreateInfo where
+  zero = CommandPoolCreateInfo Nothing
+                               zero
+                               zero
 -- No documentation found for TopLevel "CommandPoolResetFlagBits"
 type CommandPoolResetFlagBits = VkCommandPoolResetFlagBits
 -- No documentation found for TopLevel "CommandPoolResetFlags"
 type CommandPoolResetFlags = CommandPoolResetFlagBits
 
 -- | Wrapper for 'vkCreateCommandPool'
-createCommandPool :: Device ->  CommandPoolCreateInfo ->  Maybe AllocationCallbacks ->  IO ( CommandPool )
+createCommandPool :: Device ->  CommandPoolCreateInfo ->  Maybe AllocationCallbacks ->  IO (CommandPool)
 createCommandPool = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pCommandPool -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructCommandPoolCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createCommandPool commandTable device pCreateInfo pAllocator pCommandPool >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pCommandPool)))))
 
 -- | Wrapper for 'vkDestroyCommandPool'
@@ -113,8 +119,9 @@ destroyCommandPool = \(Device device commandTable) -> \commandPool -> \allocator
 -- | Wrapper for 'vkResetCommandPool'
 resetCommandPool :: Device ->  CommandPool ->  CommandPoolResetFlags ->  IO ()
 resetCommandPool = \(Device device commandTable) -> \commandPool -> \flags -> Graphics.Vulkan.C.Dynamic.resetCommandPool commandTable device commandPool flags >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
-withCommandPool :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withCommandPool createInfo allocationCallbacks =
-  bracket
-    (vkCreateCommandPool createInfo allocationCallbacks)
-    (`vkDestroyCommandPool` allocationCallbacks)
+-- | Wrapper for 'createCommandPool' and 'destroyCommandPool' using 'bracket'
+withCommandPool
+  :: Device -> CommandPoolCreateInfo -> Maybe (AllocationCallbacks) -> (CommandPool -> IO a) -> IO a
+withCommandPool device commandPoolCreateInfo allocationCallbacks = bracket
+  (createCommandPool device commandPoolCreateInfo allocationCallbacks)
+  (\o -> destroyCommandPool device o allocationCallbacks)

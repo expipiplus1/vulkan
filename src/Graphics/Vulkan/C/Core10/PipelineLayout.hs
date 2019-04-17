@@ -61,6 +61,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -84,7 +85,7 @@ type VkDescriptorSetLayout = Ptr VkDescriptorSetLayout_T
 
 -- No documentation found for TopLevel "VkPipelineLayoutCreateFlags"
 newtype VkPipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineLayoutCreateFlags where
   
@@ -137,6 +138,15 @@ instance Storable VkPipelineLayoutCreateInfo where
                 *> poke (ptr `plusPtr` 24) (vkPSetLayouts (poked :: VkPipelineLayoutCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkPushConstantRangeCount (poked :: VkPipelineLayoutCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkPPushConstantRanges (poked :: VkPipelineLayoutCreateInfo))
+
+instance Zero VkPipelineLayoutCreateInfo where
+  zero = VkPipelineLayoutCreateInfo zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkPushConstantRange"
 data VkPushConstantRange = VkPushConstantRange
   { -- No documentation found for Nested "VkPushConstantRange" "stageFlags"
@@ -157,6 +167,11 @@ instance Storable VkPushConstantRange where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkStageFlags (poked :: VkPushConstantRange))
                 *> poke (ptr `plusPtr` 4) (vkOffset (poked :: VkPushConstantRange))
                 *> poke (ptr `plusPtr` 8) (vkSize (poked :: VkPushConstantRange))
+
+instance Zero VkPushConstantRange where
+  zero = VkPushConstantRange zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "VkShaderStageFlags"
 type VkShaderStageFlags = VkShaderStageFlagBits
 #if defined(EXPOSE_CORE10_COMMANDS)

@@ -45,6 +45,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -87,6 +88,12 @@ instance Storable VkFenceGetFdInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFenceGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFence (poked :: VkFenceGetFdInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkFenceGetFdInfoKHR))
+
+instance Zero VkFenceGetFdInfoKHR where
+  zero = VkFenceGetFdInfoKHR zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "VkImportFenceFdInfoKHR"
 data VkImportFenceFdInfoKHR = VkImportFenceFdInfoKHR
   { -- No documentation found for Nested "VkImportFenceFdInfoKHR" "sType"
@@ -119,6 +126,14 @@ instance Storable VkImportFenceFdInfoKHR where
                 *> poke (ptr `plusPtr` 24) (vkFlags (poked :: VkImportFenceFdInfoKHR))
                 *> poke (ptr `plusPtr` 28) (vkHandleType (poked :: VkImportFenceFdInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkFd (poked :: VkImportFenceFdInfoKHR))
+
+instance Zero VkImportFenceFdInfoKHR where
+  zero = VkImportFenceFdInfoKHR zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetFenceFdKHR"
 foreign import ccall

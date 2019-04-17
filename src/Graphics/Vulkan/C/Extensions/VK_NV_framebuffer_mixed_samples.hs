@@ -63,6 +63,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 
@@ -71,7 +72,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- No documentation found for TopLevel "VkCoverageModulationModeNV"
 newtype VkCoverageModulationModeNV = VkCoverageModulationModeNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkCoverageModulationModeNV where
   showsPrec _ VK_COVERAGE_MODULATION_MODE_NONE_NV = showString "VK_COVERAGE_MODULATION_MODE_NONE_NV"
@@ -112,7 +113,7 @@ pattern VK_COVERAGE_MODULATION_MODE_RGBA_NV = VkCoverageModulationModeNV 3
 
 -- No documentation found for TopLevel "VkPipelineCoverageModulationStateCreateFlagsNV"
 newtype VkPipelineCoverageModulationStateCreateFlagsNV = VkPipelineCoverageModulationStateCreateFlagsNV VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineCoverageModulationStateCreateFlagsNV where
   
@@ -165,6 +166,15 @@ instance Storable VkPipelineCoverageModulationStateCreateInfoNV where
                 *> poke (ptr `plusPtr` 24) (vkCoverageModulationTableEnable (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 28) (vkCoverageModulationTableCount (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 32) (vkPCoverageModulationTable (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
+
+instance Zero VkPipelineCoverageModulationStateCreateInfoNV where
+  zero = VkPipelineCoverageModulationStateCreateInfoNV zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
+                                                       zero
 -- No documentation found for TopLevel "VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME"
 pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME = "VK_NV_framebuffer_mixed_samples"

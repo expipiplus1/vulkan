@@ -30,6 +30,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities
   ( VkExternalMemoryHandleTypeFlags
@@ -56,6 +57,11 @@ instance Storable VkExportMemoryAllocateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExportMemoryAllocateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExportMemoryAllocateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportMemoryAllocateInfo))
+
+instance Zero VkExportMemoryAllocateInfo where
+  zero = VkExportMemoryAllocateInfo zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkExternalMemoryBufferCreateInfo"
 data VkExternalMemoryBufferCreateInfo = VkExternalMemoryBufferCreateInfo
   { -- No documentation found for Nested "VkExternalMemoryBufferCreateInfo" "sType"
@@ -76,6 +82,11 @@ instance Storable VkExternalMemoryBufferCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalMemoryBufferCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalMemoryBufferCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryBufferCreateInfo))
+
+instance Zero VkExternalMemoryBufferCreateInfo where
+  zero = VkExternalMemoryBufferCreateInfo zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkExternalMemoryImageCreateInfo"
 data VkExternalMemoryImageCreateInfo = VkExternalMemoryImageCreateInfo
   { -- No documentation found for Nested "VkExternalMemoryImageCreateInfo" "sType"
@@ -96,6 +107,11 @@ instance Storable VkExternalMemoryImageCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalMemoryImageCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalMemoryImageCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryImageCreateInfo))
+
+instance Zero VkExternalMemoryImageCreateInfo where
+  zero = VkExternalMemoryImageCreateInfo zero
+                                         zero
+                                         zero
 -- No documentation found for Nested "VkResult" "VK_ERROR_INVALID_EXTERNAL_HANDLE"
 pattern VK_ERROR_INVALID_EXTERNAL_HANDLE :: VkResult
 pattern VK_ERROR_INVALID_EXTERNAL_HANDLE = VkResult (-1000072003)

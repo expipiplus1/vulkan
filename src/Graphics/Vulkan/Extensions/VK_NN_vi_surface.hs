@@ -41,7 +41,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_NN_vi_surface
   ( VkViSurfaceCreateFlagsNN(..)
@@ -90,7 +91,11 @@ fromCStructViSurfaceCreateInfoNN c = ViSurfaceCreateInfoNN <$> -- Univalued Memb
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkViSurfaceCreateInfoNN)))
                                                            <*> pure (vkFlags (c :: VkViSurfaceCreateInfoNN))
                                                            <*> pure (vkWindow (c :: VkViSurfaceCreateInfoNN))
+instance Zero ViSurfaceCreateInfoNN where
+  zero = ViSurfaceCreateInfoNN Nothing
+                               zero
+                               zero
 
 -- | Wrapper for 'vkCreateViSurfaceNN'
-createViSurfaceNN :: Instance ->  ViSurfaceCreateInfoNN ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createViSurfaceNN :: Instance ->  ViSurfaceCreateInfoNN ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createViSurfaceNN = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructViSurfaceCreateInfoNN a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createViSurfaceNN commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))

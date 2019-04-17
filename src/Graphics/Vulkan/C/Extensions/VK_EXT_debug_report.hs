@@ -127,6 +127,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkObjectType(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -168,6 +169,13 @@ instance Storable VkDebugReportCallbackCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDebugReportCallbackCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkPfnCallback (poked :: VkDebugReportCallbackCreateInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPUserData (poked :: VkDebugReportCallbackCreateInfoEXT))
+
+instance Zero VkDebugReportCallbackCreateInfoEXT where
+  zero = VkDebugReportCallbackCreateInfoEXT zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
 -- | Dummy data to tag the 'Ptr' with
 data VkDebugReportCallbackEXT_T
 -- No documentation found for TopLevel "VkDebugReportCallbackEXT"
@@ -176,7 +184,7 @@ type VkDebugReportCallbackEXT = Ptr VkDebugReportCallbackEXT_T
 
 -- No documentation found for TopLevel "VkDebugReportFlagBitsEXT"
 newtype VkDebugReportFlagBitsEXT = VkDebugReportFlagBitsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDebugReportFlagBitsEXT where
   showsPrec _ VK_DEBUG_REPORT_INFORMATION_BIT_EXT = showString "VK_DEBUG_REPORT_INFORMATION_BIT_EXT"
@@ -225,7 +233,7 @@ type VkDebugReportFlagsEXT = VkDebugReportFlagBitsEXT
 
 -- No documentation found for TopLevel "VkDebugReportObjectTypeEXT"
 newtype VkDebugReportObjectTypeEXT = VkDebugReportObjectTypeEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkDebugReportObjectTypeEXT where
   showsPrec _ VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT = showString "VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT"

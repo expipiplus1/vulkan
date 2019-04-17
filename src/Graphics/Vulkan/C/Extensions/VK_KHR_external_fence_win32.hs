@@ -44,6 +44,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -98,6 +99,13 @@ instance Storable VkExportFenceWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkPAttributes (poked :: VkExportFenceWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDwAccess (poked :: VkExportFenceWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkExportFenceWin32HandleInfoKHR))
+
+instance Zero VkExportFenceWin32HandleInfoKHR where
+  zero = VkExportFenceWin32HandleInfoKHR zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "VkFenceGetWin32HandleInfoKHR"
 data VkFenceGetWin32HandleInfoKHR = VkFenceGetWin32HandleInfoKHR
   { -- No documentation found for Nested "VkFenceGetWin32HandleInfoKHR" "sType"
@@ -122,6 +130,12 @@ instance Storable VkFenceGetWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFenceGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkFence (poked :: VkFenceGetWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkFenceGetWin32HandleInfoKHR))
+
+instance Zero VkFenceGetWin32HandleInfoKHR where
+  zero = VkFenceGetWin32HandleInfoKHR zero
+                                      zero
+                                      zero
+                                      zero
 -- No documentation found for TopLevel "VkImportFenceWin32HandleInfoKHR"
 data VkImportFenceWin32HandleInfoKHR = VkImportFenceWin32HandleInfoKHR
   { -- No documentation found for Nested "VkImportFenceWin32HandleInfoKHR" "sType"
@@ -158,6 +172,15 @@ instance Storable VkImportFenceWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 28) (vkHandleType (poked :: VkImportFenceWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkHandle (poked :: VkImportFenceWin32HandleInfoKHR))
                 *> poke (ptr `plusPtr` 40) (vkName (poked :: VkImportFenceWin32HandleInfoKHR))
+
+instance Zero VkImportFenceWin32HandleInfoKHR where
+  zero = VkImportFenceWin32HandleInfoKHR zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetFenceWin32HandleKHR"
 foreign import ccall

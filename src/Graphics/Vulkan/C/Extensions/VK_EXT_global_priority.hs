@@ -53,6 +53,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -76,11 +77,16 @@ instance Storable VkDeviceQueueGlobalPriorityCreateInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkGlobalPriority (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
+
+instance Zero VkDeviceQueueGlobalPriorityCreateInfoEXT where
+  zero = VkDeviceQueueGlobalPriorityCreateInfoEXT zero
+                                                  zero
+                                                  zero
 -- ** VkQueueGlobalPriorityEXT
 
 -- No documentation found for TopLevel "VkQueueGlobalPriorityEXT"
 newtype VkQueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkQueueGlobalPriorityEXT where
   showsPrec _ VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT = showString "VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT"

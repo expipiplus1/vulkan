@@ -26,6 +26,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable
   ( VkPhysicalDeviceDepthClipEnableFeaturesEXT(..)
   , VkPipelineRasterizationDepthClipStateCreateFlagsEXT(..)
@@ -63,6 +66,9 @@ fromCStructPhysicalDeviceDepthClipEnableFeaturesEXT :: VkPhysicalDeviceDepthClip
 fromCStructPhysicalDeviceDepthClipEnableFeaturesEXT c = PhysicalDeviceDepthClipEnableFeaturesEXT <$> -- Univalued Member elided
                                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceDepthClipEnableFeaturesEXT)))
                                                                                                  <*> pure (bool32ToBool (vkDepthClipEnable (c :: VkPhysicalDeviceDepthClipEnableFeaturesEXT)))
+instance Zero PhysicalDeviceDepthClipEnableFeaturesEXT where
+  zero = PhysicalDeviceDepthClipEnableFeaturesEXT Nothing
+                                                  False
 -- No documentation found for TopLevel "PipelineRasterizationDepthClipStateCreateFlagsEXT"
 type PipelineRasterizationDepthClipStateCreateFlagsEXT = VkPipelineRasterizationDepthClipStateCreateFlagsEXT
 -- No documentation found for TopLevel "PipelineRasterizationDepthClipStateCreateInfoEXT"
@@ -83,3 +89,7 @@ fromCStructPipelineRasterizationDepthClipStateCreateInfoEXT c = PipelineRasteriz
                                                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineRasterizationDepthClipStateCreateInfoEXT)))
                                                                                                                  <*> pure (vkFlags (c :: VkPipelineRasterizationDepthClipStateCreateInfoEXT))
                                                                                                                  <*> pure (bool32ToBool (vkDepthClipEnable (c :: VkPipelineRasterizationDepthClipStateCreateInfoEXT)))
+instance Zero PipelineRasterizationDepthClipStateCreateInfoEXT where
+  zero = PipelineRasterizationDepthClipStateCreateInfoEXT Nothing
+                                                          zero
+                                                          False

@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -114,6 +115,27 @@ instance Storable VkPhysicalDeviceFloatControlsPropertiesKHR where
                 *> poke (ptr `plusPtr` 72) (vkShaderRoundingModeRTZFloat16 (poked :: VkPhysicalDeviceFloatControlsPropertiesKHR))
                 *> poke (ptr `plusPtr` 76) (vkShaderRoundingModeRTZFloat32 (poked :: VkPhysicalDeviceFloatControlsPropertiesKHR))
                 *> poke (ptr `plusPtr` 80) (vkShaderRoundingModeRTZFloat64 (poked :: VkPhysicalDeviceFloatControlsPropertiesKHR))
+
+instance Zero VkPhysicalDeviceFloatControlsPropertiesKHR where
+  zero = VkPhysicalDeviceFloatControlsPropertiesKHR zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME"
 pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME = "VK_KHR_shader_float_controls"

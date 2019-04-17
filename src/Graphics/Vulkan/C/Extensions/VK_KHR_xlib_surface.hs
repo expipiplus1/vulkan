@@ -70,6 +70,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -95,7 +96,7 @@ type VisualID = Word64
 
 -- No documentation found for TopLevel "VkXlibSurfaceCreateFlagsKHR"
 newtype VkXlibSurfaceCreateFlagsKHR = VkXlibSurfaceCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkXlibSurfaceCreateFlagsKHR where
   
@@ -140,6 +141,13 @@ instance Storable VkXlibSurfaceCreateInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkXlibSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDpy (poked :: VkXlibSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkWindow (poked :: VkXlibSurfaceCreateInfoKHR))
+
+instance Zero VkXlibSurfaceCreateInfoKHR where
+  zero = VkXlibSurfaceCreateInfoKHR zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "Window"
 type Window = Word64
   

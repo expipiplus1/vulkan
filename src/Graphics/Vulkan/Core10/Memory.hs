@@ -19,10 +19,13 @@ module Graphics.Vulkan.Core10.Memory
   , invalidateMappedMemoryRanges
   , mapMemory
   , unmapMemory
+  , withMappedMemory
+  , withMemory
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -63,7 +66,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
   , pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO
   , pattern VK_SUCCESS
   )
@@ -115,6 +119,11 @@ fromCStructMappedMemoryRange c = MappedMemoryRange <$> -- Univalued Member elide
                                                    <*> pure (vkMemory (c :: VkMappedMemoryRange))
                                                    <*> pure (vkOffset (c :: VkMappedMemoryRange))
                                                    <*> pure (vkSize (c :: VkMappedMemoryRange))
+instance Zero MappedMemoryRange where
+  zero = MappedMemoryRange Nothing
+                           zero
+                           zero
+                           zero
 -- No documentation found for TopLevel "MemoryAllocateInfo"
 data MemoryAllocateInfo = MemoryAllocateInfo
   { -- Univalued Member elided
@@ -133,11 +142,15 @@ fromCStructMemoryAllocateInfo c = MemoryAllocateInfo <$> -- Univalued Member eli
                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryAllocateInfo)))
                                                      <*> pure (vkAllocationSize (c :: VkMemoryAllocateInfo))
                                                      <*> pure (vkMemoryTypeIndex (c :: VkMemoryAllocateInfo))
+instance Zero MemoryAllocateInfo where
+  zero = MemoryAllocateInfo Nothing
+                            zero
+                            zero
 -- No documentation found for TopLevel "MemoryMapFlags"
 type MemoryMapFlags = VkMemoryMapFlags
 
 -- | Wrapper for 'vkAllocateMemory'
-allocateMemory :: Device ->  MemoryAllocateInfo ->  Maybe AllocationCallbacks ->  IO ( DeviceMemory )
+allocateMemory :: Device ->  MemoryAllocateInfo ->  Maybe AllocationCallbacks ->  IO (DeviceMemory)
 allocateMemory = \(Device device commandTable) -> \allocateInfo -> \allocator -> alloca (\pMemory -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructMemoryAllocateInfo a . flip with) allocateInfo (\pAllocateInfo -> Graphics.Vulkan.C.Dynamic.allocateMemory commandTable device pAllocateInfo pAllocator pMemory >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pMemory)))))
 
 -- | Wrapper for 'vkFlushMappedMemoryRanges'
@@ -157,9 +170,21 @@ invalidateMappedMemoryRanges :: Device ->  Vector MappedMemoryRange ->  IO ()
 invalidateMappedMemoryRanges = \(Device device commandTable) -> \memoryRanges -> withVec withCStructMappedMemoryRange memoryRanges (\pMemoryRanges -> Graphics.Vulkan.C.Dynamic.invalidateMappedMemoryRanges commandTable device (fromIntegral $ Data.Vector.length memoryRanges) pMemoryRanges >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
 
 -- | Wrapper for 'vkMapMemory'
-mapMemory :: Device ->  DeviceMemory ->  DeviceSize ->  DeviceSize ->  MemoryMapFlags ->  IO ( Ptr () )
+mapMemory :: Device ->  DeviceMemory ->  DeviceSize ->  DeviceSize ->  MemoryMapFlags ->  IO (Ptr ())
 mapMemory = \(Device device commandTable) -> \memory -> \offset -> \size -> \flags -> alloca (\pPData -> Graphics.Vulkan.C.Dynamic.mapMemory commandTable device memory offset size flags pPData >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pPData)))
 
 -- | Wrapper for 'vkUnmapMemory'
 unmapMemory :: Device ->  DeviceMemory ->  IO ()
 unmapMemory = \(Device device commandTable) -> \memory -> Graphics.Vulkan.C.Dynamic.unmapMemory commandTable device memory *> (pure ())
+-- | Wrapper for 'mapMemory' and 'unmapMemory' using 'bracket'
+withMappedMemory
+  :: Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> (Ptr () -> IO a) -> IO a
+withMappedMemory device deviceMemory offset size flags = bracket
+  (mapMemory device deviceMemory offset size flags)
+  (\o -> unmapMemory device deviceMemory)
+-- | Wrapper for 'allocateMemory' and 'freeMemory' using 'bracket'
+withMemory
+  :: Device -> MemoryAllocateInfo -> Maybe (AllocationCallbacks) -> (DeviceMemory -> IO a) -> IO a
+withMemory device memoryAllocateInfo allocationCallbacks = bracket
+  (allocateMemory device memoryAllocateInfo allocationCallbacks)
+  (\o -> freeMemory device o allocationCallbacks)

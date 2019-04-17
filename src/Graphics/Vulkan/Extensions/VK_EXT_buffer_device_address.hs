@@ -40,6 +40,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
   ( VkBufferDeviceAddressCreateInfoEXT(..)
   , VkBufferDeviceAddressInfoEXT(..)
@@ -89,6 +92,9 @@ fromCStructBufferDeviceAddressCreateInfoEXT :: VkBufferDeviceAddressCreateInfoEX
 fromCStructBufferDeviceAddressCreateInfoEXT c = BufferDeviceAddressCreateInfoEXT <$> -- Univalued Member elided
                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBufferDeviceAddressCreateInfoEXT)))
                                                                                  <*> pure (vkDeviceAddress (c :: VkBufferDeviceAddressCreateInfoEXT))
+instance Zero BufferDeviceAddressCreateInfoEXT where
+  zero = BufferDeviceAddressCreateInfoEXT Nothing
+                                          zero
 -- No documentation found for TopLevel "BufferDeviceAddressInfoEXT"
 data BufferDeviceAddressInfoEXT = BufferDeviceAddressInfoEXT
   { -- Univalued Member elided
@@ -104,6 +110,9 @@ fromCStructBufferDeviceAddressInfoEXT :: VkBufferDeviceAddressInfoEXT -> IO Buff
 fromCStructBufferDeviceAddressInfoEXT c = BufferDeviceAddressInfoEXT <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBufferDeviceAddressInfoEXT)))
                                                                      <*> pure (vkBuffer (c :: VkBufferDeviceAddressInfoEXT))
+instance Zero BufferDeviceAddressInfoEXT where
+  zero = BufferDeviceAddressInfoEXT Nothing
+                                    zero
 -- No documentation found for TopLevel "DeviceAddress"
 type DeviceAddress = VkDeviceAddress
   
@@ -130,6 +139,11 @@ fromCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT c = PhysicalDeviceBuffer
                                                                                                          <*> pure (bool32ToBool (vkBufferDeviceAddress (c :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkBufferDeviceAddressCaptureReplay (c :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkBufferDeviceAddressMultiDevice (c :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT)))
+instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
+  zero = PhysicalDeviceBufferDeviceAddressFeaturesEXT Nothing
+                                                      False
+                                                      False
+                                                      False
 
 -- | Wrapper for 'vkGetBufferDeviceAddressEXT'
 getBufferDeviceAddressEXT :: Device ->  BufferDeviceAddressInfoEXT ->  IO (VkDeviceAddress)

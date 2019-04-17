@@ -20,7 +20,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Foreign.Marshal.Utils
@@ -35,6 +36,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags
   ( VkValidationCheckEXT(..)
   , VkValidationFlagsEXT(..)
@@ -73,3 +77,6 @@ fromCStructValidationFlagsEXT c = ValidationFlagsEXT <$> -- Univalued Member eli
                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkValidationFlagsEXT)))
                                                      -- Length valued member elided
                                                      <*> (Data.Vector.generateM (fromIntegral (vkDisabledValidationCheckCount (c :: VkValidationFlagsEXT))) (peekElemOff (vkPDisabledValidationChecks (c :: VkValidationFlagsEXT))))
+instance Zero ValidationFlagsEXT where
+  zero = ValidationFlagsEXT Nothing
+                            Data.Vector.empty

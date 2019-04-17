@@ -15,7 +15,8 @@ module Graphics.Vulkan.Core10.BufferView
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -46,7 +47,8 @@ import Graphics.Vulkan.C.Core10.BufferView
   , VkBufferView
   )
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.Core10.Core
@@ -102,16 +104,24 @@ fromCStructBufferViewCreateInfo c = BufferViewCreateInfo <$> -- Univalued Member
                                                          <*> pure (vkFormat (c :: VkBufferViewCreateInfo))
                                                          <*> pure (vkOffset (c :: VkBufferViewCreateInfo))
                                                          <*> pure (vkRange (c :: VkBufferViewCreateInfo))
+instance Zero BufferViewCreateInfo where
+  zero = BufferViewCreateInfo Nothing
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
 
 -- | Wrapper for 'vkCreateBufferView'
-createBufferView :: Device ->  BufferViewCreateInfo ->  Maybe AllocationCallbacks ->  IO ( BufferView )
+createBufferView :: Device ->  BufferViewCreateInfo ->  Maybe AllocationCallbacks ->  IO (BufferView)
 createBufferView = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pView -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructBufferViewCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createBufferView commandTable device pCreateInfo pAllocator pView >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pView)))))
 
 -- | Wrapper for 'vkDestroyBufferView'
 destroyBufferView :: Device ->  BufferView ->  Maybe AllocationCallbacks ->  IO ()
 destroyBufferView = \(Device device commandTable) -> \bufferView -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyBufferView commandTable device bufferView pAllocator *> (pure ()))
-withBufferView :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withBufferView createInfo allocationCallbacks =
-  bracket
-    (vkCreateBufferView createInfo allocationCallbacks)
-    (`vkDestroyBufferView` allocationCallbacks)
+-- | Wrapper for 'createBufferView' and 'destroyBufferView' using 'bracket'
+withBufferView
+  :: Device -> BufferViewCreateInfo -> Maybe (AllocationCallbacks) -> (BufferView -> IO a) -> IO a
+withBufferView device bufferViewCreateInfo allocationCallbacks = bracket
+  (createBufferView device bufferViewCreateInfo allocationCallbacks)
+  (\o -> destroyBufferView device o allocationCallbacks)

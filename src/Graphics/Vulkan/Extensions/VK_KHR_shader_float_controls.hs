@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls
   ( VkPhysicalDeviceFloatControlsPropertiesKHR(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
@@ -103,3 +106,22 @@ fromCStructPhysicalDeviceFloatControlsPropertiesKHR c = PhysicalDeviceFloatContr
                                                                                                  <*> pure (bool32ToBool (vkShaderRoundingModeRTZFloat16 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
                                                                                                  <*> pure (bool32ToBool (vkShaderRoundingModeRTZFloat32 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
                                                                                                  <*> pure (bool32ToBool (vkShaderRoundingModeRTZFloat64 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
+instance Zero PhysicalDeviceFloatControlsPropertiesKHR where
+  zero = PhysicalDeviceFloatControlsPropertiesKHR Nothing
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False
+                                                  False

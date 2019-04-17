@@ -38,6 +38,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -70,6 +71,11 @@ instance Storable VkPhysicalDeviceHostQueryResetFeaturesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceHostQueryResetFeaturesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceHostQueryResetFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkHostQueryReset (poked :: VkPhysicalDeviceHostQueryResetFeaturesEXT))
+
+instance Zero VkPhysicalDeviceHostQueryResetFeaturesEXT where
+  zero = VkPhysicalDeviceHostQueryResetFeaturesEXT zero
+                                                   zero
+                                                   zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkResetQueryPoolEXT"
 foreign import ccall

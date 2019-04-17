@@ -206,6 +206,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkObjectType(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
@@ -280,6 +281,12 @@ instance Storable VkAccelerationStructureCreateInfoNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkAccelerationStructureCreateInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkCompactedSize (poked :: VkAccelerationStructureCreateInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkInfo (poked :: VkAccelerationStructureCreateInfoNV))
+
+instance Zero VkAccelerationStructureCreateInfoNV where
+  zero = VkAccelerationStructureCreateInfoNV zero
+                                             zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkAccelerationStructureInfoNV"
 data VkAccelerationStructureInfoNV = VkAccelerationStructureInfoNV
   { -- No documentation found for Nested "VkAccelerationStructureInfoNV" "sType"
@@ -316,6 +323,15 @@ instance Storable VkAccelerationStructureInfoNV where
                 *> poke (ptr `plusPtr` 24) (vkInstanceCount (poked :: VkAccelerationStructureInfoNV))
                 *> poke (ptr `plusPtr` 28) (vkGeometryCount (poked :: VkAccelerationStructureInfoNV))
                 *> poke (ptr `plusPtr` 32) (vkPGeometries (poked :: VkAccelerationStructureInfoNV))
+
+instance Zero VkAccelerationStructureInfoNV where
+  zero = VkAccelerationStructureInfoNV zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkAccelerationStructureMemoryRequirementsInfoNV"
 data VkAccelerationStructureMemoryRequirementsInfoNV = VkAccelerationStructureMemoryRequirementsInfoNV
   { -- No documentation found for Nested "VkAccelerationStructureMemoryRequirementsInfoNV" "sType"
@@ -340,11 +356,17 @@ instance Storable VkAccelerationStructureMemoryRequirementsInfoNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkAccelerationStructureMemoryRequirementsInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkType (poked :: VkAccelerationStructureMemoryRequirementsInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkAccelerationStructure (poked :: VkAccelerationStructureMemoryRequirementsInfoNV))
+
+instance Zero VkAccelerationStructureMemoryRequirementsInfoNV where
+  zero = VkAccelerationStructureMemoryRequirementsInfoNV zero
+                                                         zero
+                                                         zero
+                                                         zero
 -- ** VkAccelerationStructureMemoryRequirementsTypeNV
 
 -- No documentation found for TopLevel "VkAccelerationStructureMemoryRequirementsTypeNV"
 newtype VkAccelerationStructureMemoryRequirementsTypeNV = VkAccelerationStructureMemoryRequirementsTypeNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkAccelerationStructureMemoryRequirementsTypeNV where
   showsPrec _ VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV = showString "VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV"
@@ -383,7 +405,7 @@ type VkAccelerationStructureNV = Ptr VkAccelerationStructureNV_T
 
 -- No documentation found for TopLevel "VkAccelerationStructureTypeNV"
 newtype VkAccelerationStructureTypeNV = VkAccelerationStructureTypeNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkAccelerationStructureTypeNV where
   showsPrec _ VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV = showString "VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_NV"
@@ -444,11 +466,20 @@ instance Storable VkBindAccelerationStructureMemoryInfoNV where
                 *> poke (ptr `plusPtr` 32) (vkMemoryOffset (poked :: VkBindAccelerationStructureMemoryInfoNV))
                 *> poke (ptr `plusPtr` 40) (vkDeviceIndexCount (poked :: VkBindAccelerationStructureMemoryInfoNV))
                 *> poke (ptr `plusPtr` 48) (vkPDeviceIndices (poked :: VkBindAccelerationStructureMemoryInfoNV))
+
+instance Zero VkBindAccelerationStructureMemoryInfoNV where
+  zero = VkBindAccelerationStructureMemoryInfoNV zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
+                                                 zero
 -- ** VkBuildAccelerationStructureFlagBitsNV
 
 -- No documentation found for TopLevel "VkBuildAccelerationStructureFlagBitsNV"
 newtype VkBuildAccelerationStructureFlagBitsNV = VkBuildAccelerationStructureFlagBitsNV VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkBuildAccelerationStructureFlagBitsNV where
   showsPrec _ VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV = showString "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV"
@@ -497,7 +528,7 @@ type VkBuildAccelerationStructureFlagsNV = VkBuildAccelerationStructureFlagBitsN
 
 -- No documentation found for TopLevel "VkCopyAccelerationStructureModeNV"
 newtype VkCopyAccelerationStructureModeNV = VkCopyAccelerationStructureModeNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkCopyAccelerationStructureModeNV where
   showsPrec _ VK_COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV = showString "VK_COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV"
@@ -554,6 +585,14 @@ instance Storable VkGeometryAABBNV where
                 *> poke (ptr `plusPtr` 24) (vkNumAABBs (poked :: VkGeometryAABBNV))
                 *> poke (ptr `plusPtr` 28) (vkStride (poked :: VkGeometryAABBNV))
                 *> poke (ptr `plusPtr` 32) (vkOffset (poked :: VkGeometryAABBNV))
+
+instance Zero VkGeometryAABBNV where
+  zero = VkGeometryAABBNV zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
 -- No documentation found for TopLevel "VkGeometryDataNV"
 data VkGeometryDataNV = VkGeometryDataNV
   { -- No documentation found for Nested "VkGeometryDataNV" "triangles"
@@ -570,11 +609,15 @@ instance Storable VkGeometryDataNV where
                               <*> peek (ptr `plusPtr` 96)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkTriangles (poked :: VkGeometryDataNV))
                 *> poke (ptr `plusPtr` 96) (vkAabbs (poked :: VkGeometryDataNV))
+
+instance Zero VkGeometryDataNV where
+  zero = VkGeometryDataNV zero
+                          zero
 -- ** VkGeometryFlagBitsNV
 
 -- No documentation found for TopLevel "VkGeometryFlagBitsNV"
 newtype VkGeometryFlagBitsNV = VkGeometryFlagBitsNV VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkGeometryFlagBitsNV where
   showsPrec _ VK_GEOMETRY_OPAQUE_BIT_NV = showString "VK_GEOMETRY_OPAQUE_BIT_NV"
@@ -605,7 +648,7 @@ type VkGeometryFlagsNV = VkGeometryFlagBitsNV
 
 -- No documentation found for TopLevel "VkGeometryInstanceFlagBitsNV"
 newtype VkGeometryInstanceFlagBitsNV = VkGeometryInstanceFlagBitsNV VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkGeometryInstanceFlagBitsNV where
   showsPrec _ VK_GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV = showString "VK_GEOMETRY_INSTANCE_TRIANGLE_CULL_DISABLE_BIT_NV"
@@ -672,6 +715,13 @@ instance Storable VkGeometryNV where
                 *> poke (ptr `plusPtr` 16) (vkGeometryType (poked :: VkGeometryNV))
                 *> poke (ptr `plusPtr` 24) (vkGeometry (poked :: VkGeometryNV))
                 *> poke (ptr `plusPtr` 160) (vkFlags (poked :: VkGeometryNV))
+
+instance Zero VkGeometryNV where
+  zero = VkGeometryNV zero
+                      zero
+                      zero
+                      zero
+                      zero
 -- No documentation found for TopLevel "VkGeometryTrianglesNV"
 data VkGeometryTrianglesNV = VkGeometryTrianglesNV
   { -- No documentation found for Nested "VkGeometryTrianglesNV" "sType"
@@ -732,11 +782,26 @@ instance Storable VkGeometryTrianglesNV where
                 *> poke (ptr `plusPtr` 76) (vkIndexType (poked :: VkGeometryTrianglesNV))
                 *> poke (ptr `plusPtr` 80) (vkTransformData (poked :: VkGeometryTrianglesNV))
                 *> poke (ptr `plusPtr` 88) (vkTransformOffset (poked :: VkGeometryTrianglesNV))
+
+instance Zero VkGeometryTrianglesNV where
+  zero = VkGeometryTrianglesNV zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- ** VkGeometryTypeNV
 
 -- No documentation found for TopLevel "VkGeometryTypeNV"
 newtype VkGeometryTypeNV = VkGeometryTypeNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkGeometryTypeNV where
   showsPrec _ VK_GEOMETRY_TYPE_TRIANGLES_NV = showString "VK_GEOMETRY_TYPE_TRIANGLES_NV"
@@ -809,6 +874,18 @@ instance Storable VkPhysicalDeviceRayTracingPropertiesNV where
                 *> poke (ptr `plusPtr` 40) (vkMaxInstanceCount (poked :: VkPhysicalDeviceRayTracingPropertiesNV))
                 *> poke (ptr `plusPtr` 48) (vkMaxTriangleCount (poked :: VkPhysicalDeviceRayTracingPropertiesNV))
                 *> poke (ptr `plusPtr` 56) (vkMaxDescriptorSetAccelerationStructures (poked :: VkPhysicalDeviceRayTracingPropertiesNV))
+
+instance Zero VkPhysicalDeviceRayTracingPropertiesNV where
+  zero = VkPhysicalDeviceRayTracingPropertiesNV zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
 -- No documentation found for TopLevel "VkRayTracingPipelineCreateInfoNV"
 data VkRayTracingPipelineCreateInfoNV = VkRayTracingPipelineCreateInfoNV
   { -- No documentation found for Nested "VkRayTracingPipelineCreateInfoNV" "sType"
@@ -861,6 +938,19 @@ instance Storable VkRayTracingPipelineCreateInfoNV where
                 *> poke (ptr `plusPtr` 56) (vkLayout (poked :: VkRayTracingPipelineCreateInfoNV))
                 *> poke (ptr `plusPtr` 64) (vkBasePipelineHandle (poked :: VkRayTracingPipelineCreateInfoNV))
                 *> poke (ptr `plusPtr` 72) (vkBasePipelineIndex (poked :: VkRayTracingPipelineCreateInfoNV))
+
+instance Zero VkRayTracingPipelineCreateInfoNV where
+  zero = VkRayTracingPipelineCreateInfoNV zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkRayTracingShaderGroupCreateInfoNV"
 data VkRayTracingShaderGroupCreateInfoNV = VkRayTracingShaderGroupCreateInfoNV
   { -- No documentation found for Nested "VkRayTracingShaderGroupCreateInfoNV" "sType"
@@ -897,11 +987,20 @@ instance Storable VkRayTracingShaderGroupCreateInfoNV where
                 *> poke (ptr `plusPtr` 24) (vkClosestHitShader (poked :: VkRayTracingShaderGroupCreateInfoNV))
                 *> poke (ptr `plusPtr` 28) (vkAnyHitShader (poked :: VkRayTracingShaderGroupCreateInfoNV))
                 *> poke (ptr `plusPtr` 32) (vkIntersectionShader (poked :: VkRayTracingShaderGroupCreateInfoNV))
+
+instance Zero VkRayTracingShaderGroupCreateInfoNV where
+  zero = VkRayTracingShaderGroupCreateInfoNV zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
 -- ** VkRayTracingShaderGroupTypeNV
 
 -- No documentation found for TopLevel "VkRayTracingShaderGroupTypeNV"
 newtype VkRayTracingShaderGroupTypeNV = VkRayTracingShaderGroupTypeNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkRayTracingShaderGroupTypeNV where
   showsPrec _ VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV = showString "VK_RAY_TRACING_SHADER_GROUP_TYPE_GENERAL_NV"
@@ -956,6 +1055,12 @@ instance Storable VkWriteDescriptorSetAccelerationStructureNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkWriteDescriptorSetAccelerationStructureNV))
                 *> poke (ptr `plusPtr` 16) (vkAccelerationStructureCount (poked :: VkWriteDescriptorSetAccelerationStructureNV))
                 *> poke (ptr `plusPtr` 24) (vkPAccelerationStructures (poked :: VkWriteDescriptorSetAccelerationStructureNV))
+
+instance Zero VkWriteDescriptorSetAccelerationStructureNV where
+  zero = VkWriteDescriptorSetAccelerationStructureNV zero
+                                                     zero
+                                                     zero
+                                                     zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkBindAccelerationStructureMemoryNV"
 foreign import ccall

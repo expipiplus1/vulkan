@@ -18,7 +18,8 @@ module Graphics.Vulkan.Core10.Event
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( when
@@ -48,6 +49,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_STRUCTURE_TYPE_EVENT_CREATE_INFO
   , pattern VK_SUCCESS
   )
@@ -90,6 +92,9 @@ fromCStructEventCreateInfo :: VkEventCreateInfo -> IO EventCreateInfo
 fromCStructEventCreateInfo c = EventCreateInfo <$> -- Univalued Member elided
                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkEventCreateInfo)))
                                                <*> pure (vkFlags (c :: VkEventCreateInfo))
+instance Zero EventCreateInfo where
+  zero = EventCreateInfo Nothing
+                         zero
 
 -- | Wrapper for 'vkCreateEvent'
 createEvent :: Device ->  EventCreateInfo ->  Maybe AllocationCallbacks ->  IO (Event)
@@ -110,8 +115,9 @@ resetEvent = \(Device device commandTable) -> \event -> Graphics.Vulkan.C.Dynami
 -- | Wrapper for 'vkSetEvent'
 setEvent :: Device ->  Event ->  IO ()
 setEvent = \(Device device commandTable) -> \event -> Graphics.Vulkan.C.Dynamic.setEvent commandTable device event >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
-withEvent :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withEvent createInfo allocationCallbacks =
-  bracket
-    (vkCreateEvent createInfo allocationCallbacks)
-    (`vkDestroyEvent` allocationCallbacks)
+-- | Wrapper for 'createEvent' and 'destroyEvent' using 'bracket'
+withEvent
+  :: Device -> EventCreateInfo -> Maybe (AllocationCallbacks) -> (Event -> IO a) -> IO a
+withEvent device eventCreateInfo allocationCallbacks = bracket
+  (createEvent device eventCreateInfo allocationCallbacks)
+  (\o -> destroyEvent device o allocationCallbacks)

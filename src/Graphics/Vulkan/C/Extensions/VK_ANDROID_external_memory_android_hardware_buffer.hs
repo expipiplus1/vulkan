@@ -57,6 +57,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -132,6 +133,18 @@ instance Storable VkAndroidHardwareBufferFormatPropertiesANDROID where
                 *> poke (ptr `plusPtr` 56) (vkSuggestedYcbcrRange (poked :: VkAndroidHardwareBufferFormatPropertiesANDROID))
                 *> poke (ptr `plusPtr` 60) (vkSuggestedXChromaOffset (poked :: VkAndroidHardwareBufferFormatPropertiesANDROID))
                 *> poke (ptr `plusPtr` 64) (vkSuggestedYChromaOffset (poked :: VkAndroidHardwareBufferFormatPropertiesANDROID))
+
+instance Zero VkAndroidHardwareBufferFormatPropertiesANDROID where
+  zero = VkAndroidHardwareBufferFormatPropertiesANDROID zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
 -- No documentation found for TopLevel "VkAndroidHardwareBufferPropertiesANDROID"
 data VkAndroidHardwareBufferPropertiesANDROID = VkAndroidHardwareBufferPropertiesANDROID
   { -- No documentation found for Nested "VkAndroidHardwareBufferPropertiesANDROID" "sType"
@@ -156,6 +169,12 @@ instance Storable VkAndroidHardwareBufferPropertiesANDROID where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkAndroidHardwareBufferPropertiesANDROID))
                 *> poke (ptr `plusPtr` 16) (vkAllocationSize (poked :: VkAndroidHardwareBufferPropertiesANDROID))
                 *> poke (ptr `plusPtr` 24) (vkMemoryTypeBits (poked :: VkAndroidHardwareBufferPropertiesANDROID))
+
+instance Zero VkAndroidHardwareBufferPropertiesANDROID where
+  zero = VkAndroidHardwareBufferPropertiesANDROID zero
+                                                  zero
+                                                  zero
+                                                  zero
 -- No documentation found for TopLevel "VkAndroidHardwareBufferUsageANDROID"
 data VkAndroidHardwareBufferUsageANDROID = VkAndroidHardwareBufferUsageANDROID
   { -- No documentation found for Nested "VkAndroidHardwareBufferUsageANDROID" "sType"
@@ -176,6 +195,11 @@ instance Storable VkAndroidHardwareBufferUsageANDROID where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkAndroidHardwareBufferUsageANDROID))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkAndroidHardwareBufferUsageANDROID))
                 *> poke (ptr `plusPtr` 16) (vkAndroidHardwareBufferUsage (poked :: VkAndroidHardwareBufferUsageANDROID))
+
+instance Zero VkAndroidHardwareBufferUsageANDROID where
+  zero = VkAndroidHardwareBufferUsageANDROID zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkExternalFormatANDROID"
 data VkExternalFormatANDROID = VkExternalFormatANDROID
   { -- No documentation found for Nested "VkExternalFormatANDROID" "sType"
@@ -196,6 +220,11 @@ instance Storable VkExternalFormatANDROID where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkExternalFormatANDROID))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkExternalFormatANDROID))
                 *> poke (ptr `plusPtr` 16) (vkExternalFormat (poked :: VkExternalFormatANDROID))
+
+instance Zero VkExternalFormatANDROID where
+  zero = VkExternalFormatANDROID zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "VkImportAndroidHardwareBufferInfoANDROID"
 data VkImportAndroidHardwareBufferInfoANDROID = VkImportAndroidHardwareBufferInfoANDROID
   { -- No documentation found for Nested "VkImportAndroidHardwareBufferInfoANDROID" "sType"
@@ -216,6 +245,11 @@ instance Storable VkImportAndroidHardwareBufferInfoANDROID where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportAndroidHardwareBufferInfoANDROID))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportAndroidHardwareBufferInfoANDROID))
                 *> poke (ptr `plusPtr` 16) (vkBuffer (poked :: VkImportAndroidHardwareBufferInfoANDROID))
+
+instance Zero VkImportAndroidHardwareBufferInfoANDROID where
+  zero = VkImportAndroidHardwareBufferInfoANDROID zero
+                                                  zero
+                                                  zero
 -- No documentation found for TopLevel "VkMemoryGetAndroidHardwareBufferInfoANDROID"
 data VkMemoryGetAndroidHardwareBufferInfoANDROID = VkMemoryGetAndroidHardwareBufferInfoANDROID
   { -- No documentation found for Nested "VkMemoryGetAndroidHardwareBufferInfoANDROID" "sType"
@@ -236,6 +270,11 @@ instance Storable VkMemoryGetAndroidHardwareBufferInfoANDROID where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryGetAndroidHardwareBufferInfoANDROID))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryGetAndroidHardwareBufferInfoANDROID))
                 *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkMemoryGetAndroidHardwareBufferInfoANDROID))
+
+instance Zero VkMemoryGetAndroidHardwareBufferInfoANDROID where
+  zero = VkMemoryGetAndroidHardwareBufferInfoANDROID zero
+                                                     zero
+                                                     zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetAndroidHardwareBufferPropertiesANDROID"
 foreign import ccall

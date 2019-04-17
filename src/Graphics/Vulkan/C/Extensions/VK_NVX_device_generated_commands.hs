@@ -157,6 +157,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkObjectType(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
@@ -247,6 +248,20 @@ instance Storable VkCmdProcessCommandsInfoNVX where
                 *> poke (ptr `plusPtr` 72) (vkSequencesCountOffset (poked :: VkCmdProcessCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 80) (vkSequencesIndexBuffer (poked :: VkCmdProcessCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 88) (vkSequencesIndexOffset (poked :: VkCmdProcessCommandsInfoNVX))
+
+instance Zero VkCmdProcessCommandsInfoNVX where
+  zero = VkCmdProcessCommandsInfoNVX zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "VkCmdReserveSpaceForCommandsInfoNVX"
 data VkCmdReserveSpaceForCommandsInfoNVX = VkCmdReserveSpaceForCommandsInfoNVX
   { -- No documentation found for Nested "VkCmdReserveSpaceForCommandsInfoNVX" "sType"
@@ -275,6 +290,13 @@ instance Storable VkCmdReserveSpaceForCommandsInfoNVX where
                 *> poke (ptr `plusPtr` 16) (vkObjectTable (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 24) (vkIndirectCommandsLayout (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
                 *> poke (ptr `plusPtr` 32) (vkMaxSequencesCount (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
+
+instance Zero VkCmdReserveSpaceForCommandsInfoNVX where
+  zero = VkCmdReserveSpaceForCommandsInfoNVX zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkDeviceGeneratedCommandsFeaturesNVX"
 data VkDeviceGeneratedCommandsFeaturesNVX = VkDeviceGeneratedCommandsFeaturesNVX
   { -- No documentation found for Nested "VkDeviceGeneratedCommandsFeaturesNVX" "sType"
@@ -295,6 +317,11 @@ instance Storable VkDeviceGeneratedCommandsFeaturesNVX where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
                 *> poke (ptr `plusPtr` 16) (vkComputeBindingPointSupport (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
+
+instance Zero VkDeviceGeneratedCommandsFeaturesNVX where
+  zero = VkDeviceGeneratedCommandsFeaturesNVX zero
+                                              zero
+                                              zero
 -- No documentation found for TopLevel "VkDeviceGeneratedCommandsLimitsNVX"
 data VkDeviceGeneratedCommandsLimitsNVX = VkDeviceGeneratedCommandsLimitsNVX
   { -- No documentation found for Nested "VkDeviceGeneratedCommandsLimitsNVX" "sType"
@@ -331,6 +358,15 @@ instance Storable VkDeviceGeneratedCommandsLimitsNVX where
                 *> poke (ptr `plusPtr` 24) (vkMinSequenceCountBufferOffsetAlignment (poked :: VkDeviceGeneratedCommandsLimitsNVX))
                 *> poke (ptr `plusPtr` 28) (vkMinSequenceIndexBufferOffsetAlignment (poked :: VkDeviceGeneratedCommandsLimitsNVX))
                 *> poke (ptr `plusPtr` 32) (vkMinCommandsTokenBufferOffsetAlignment (poked :: VkDeviceGeneratedCommandsLimitsNVX))
+
+instance Zero VkDeviceGeneratedCommandsLimitsNVX where
+  zero = VkDeviceGeneratedCommandsLimitsNVX zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
 -- No documentation found for TopLevel "VkIndirectCommandsLayoutCreateInfoNVX"
 data VkIndirectCommandsLayoutCreateInfoNVX = VkIndirectCommandsLayoutCreateInfoNVX
   { -- No documentation found for Nested "VkIndirectCommandsLayoutCreateInfoNVX" "sType"
@@ -363,6 +399,14 @@ instance Storable VkIndirectCommandsLayoutCreateInfoNVX where
                 *> poke (ptr `plusPtr` 20) (vkFlags (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
                 *> poke (ptr `plusPtr` 24) (vkTokenCount (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
                 *> poke (ptr `plusPtr` 32) (vkPTokens (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
+
+instance Zero VkIndirectCommandsLayoutCreateInfoNVX where
+  zero = VkIndirectCommandsLayoutCreateInfoNVX zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
 -- | Dummy data to tag the 'Ptr' with
 data VkIndirectCommandsLayoutNVX_T
 -- No documentation found for TopLevel "VkIndirectCommandsLayoutNVX"
@@ -391,11 +435,17 @@ instance Storable VkIndirectCommandsLayoutTokenNVX where
                 *> poke (ptr `plusPtr` 4) (vkBindingUnit (poked :: VkIndirectCommandsLayoutTokenNVX))
                 *> poke (ptr `plusPtr` 8) (vkDynamicCount (poked :: VkIndirectCommandsLayoutTokenNVX))
                 *> poke (ptr `plusPtr` 12) (vkDivisor (poked :: VkIndirectCommandsLayoutTokenNVX))
+
+instance Zero VkIndirectCommandsLayoutTokenNVX where
+  zero = VkIndirectCommandsLayoutTokenNVX zero
+                                          zero
+                                          zero
+                                          zero
 -- ** VkIndirectCommandsLayoutUsageFlagBitsNVX
 
 -- No documentation found for TopLevel "VkIndirectCommandsLayoutUsageFlagBitsNVX"
 newtype VkIndirectCommandsLayoutUsageFlagBitsNVX = VkIndirectCommandsLayoutUsageFlagBitsNVX VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkIndirectCommandsLayoutUsageFlagBitsNVX where
   showsPrec _ VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX = showString "VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX"
@@ -454,11 +504,16 @@ instance Storable VkIndirectCommandsTokenNVX where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkTokenType (poked :: VkIndirectCommandsTokenNVX))
                 *> poke (ptr `plusPtr` 8) (vkBuffer (poked :: VkIndirectCommandsTokenNVX))
                 *> poke (ptr `plusPtr` 16) (vkOffset (poked :: VkIndirectCommandsTokenNVX))
+
+instance Zero VkIndirectCommandsTokenNVX where
+  zero = VkIndirectCommandsTokenNVX zero
+                                    zero
+                                    zero
 -- ** VkIndirectCommandsTokenTypeNVX
 
 -- No documentation found for TopLevel "VkIndirectCommandsTokenTypeNVX"
 newtype VkIndirectCommandsTokenTypeNVX = VkIndirectCommandsTokenTypeNVX Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkIndirectCommandsTokenTypeNVX where
   showsPrec _ VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX = showString "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX"
@@ -523,7 +578,7 @@ pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX = VkIndirectCommandsTokenTy
 
 -- No documentation found for TopLevel "VkObjectEntryTypeNVX"
 newtype VkObjectEntryTypeNVX = VkObjectEntryTypeNVX Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkObjectEntryTypeNVX where
   showsPrec _ VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX = showString "VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX"
@@ -570,7 +625,7 @@ pattern VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX = VkObjectEntryTypeNVX 4
 
 -- No documentation found for TopLevel "VkObjectEntryUsageFlagBitsNVX"
 newtype VkObjectEntryUsageFlagBitsNVX = VkObjectEntryUsageFlagBitsNVX VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkObjectEntryUsageFlagBitsNVX where
   showsPrec _ VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX = showString "VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX"
@@ -649,6 +704,19 @@ instance Storable VkObjectTableCreateInfoNVX where
                 *> poke (ptr `plusPtr` 56) (vkMaxStorageImagesPerDescriptor (poked :: VkObjectTableCreateInfoNVX))
                 *> poke (ptr `plusPtr` 60) (vkMaxSampledImagesPerDescriptor (poked :: VkObjectTableCreateInfoNVX))
                 *> poke (ptr `plusPtr` 64) (vkMaxPipelineLayouts (poked :: VkObjectTableCreateInfoNVX))
+
+instance Zero VkObjectTableCreateInfoNVX where
+  zero = VkObjectTableCreateInfoNVX zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkObjectTableDescriptorSetEntryNVX"
 data VkObjectTableDescriptorSetEntryNVX = VkObjectTableDescriptorSetEntryNVX
   { -- No documentation found for Nested "VkObjectTableDescriptorSetEntryNVX" "type"
@@ -673,6 +741,12 @@ instance Storable VkObjectTableDescriptorSetEntryNVX where
                 *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTableDescriptorSetEntryNVX))
                 *> poke (ptr `plusPtr` 8) (vkPipelineLayout (poked :: VkObjectTableDescriptorSetEntryNVX))
                 *> poke (ptr `plusPtr` 16) (vkDescriptorSet (poked :: VkObjectTableDescriptorSetEntryNVX))
+
+instance Zero VkObjectTableDescriptorSetEntryNVX where
+  zero = VkObjectTableDescriptorSetEntryNVX zero
+                                            zero
+                                            zero
+                                            zero
 -- No documentation found for TopLevel "VkObjectTableEntryNVX"
 data VkObjectTableEntryNVX = VkObjectTableEntryNVX
   { -- No documentation found for Nested "VkObjectTableEntryNVX" "type"
@@ -689,6 +763,10 @@ instance Storable VkObjectTableEntryNVX where
                                    <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkObjectTableEntryNVX))
                 *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTableEntryNVX))
+
+instance Zero VkObjectTableEntryNVX where
+  zero = VkObjectTableEntryNVX zero
+                               zero
 -- No documentation found for TopLevel "VkObjectTableIndexBufferEntryNVX"
 data VkObjectTableIndexBufferEntryNVX = VkObjectTableIndexBufferEntryNVX
   { -- No documentation found for Nested "VkObjectTableIndexBufferEntryNVX" "type"
@@ -713,6 +791,12 @@ instance Storable VkObjectTableIndexBufferEntryNVX where
                 *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTableIndexBufferEntryNVX))
                 *> poke (ptr `plusPtr` 8) (vkBuffer (poked :: VkObjectTableIndexBufferEntryNVX))
                 *> poke (ptr `plusPtr` 16) (vkIndexType (poked :: VkObjectTableIndexBufferEntryNVX))
+
+instance Zero VkObjectTableIndexBufferEntryNVX where
+  zero = VkObjectTableIndexBufferEntryNVX zero
+                                          zero
+                                          zero
+                                          zero
 -- | Dummy data to tag the 'Ptr' with
 data VkObjectTableNVX_T
 -- No documentation found for TopLevel "VkObjectTableNVX"
@@ -737,6 +821,11 @@ instance Storable VkObjectTablePipelineEntryNVX where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkObjectTablePipelineEntryNVX))
                 *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTablePipelineEntryNVX))
                 *> poke (ptr `plusPtr` 8) (vkPipeline (poked :: VkObjectTablePipelineEntryNVX))
+
+instance Zero VkObjectTablePipelineEntryNVX where
+  zero = VkObjectTablePipelineEntryNVX zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkObjectTablePushConstantEntryNVX"
 data VkObjectTablePushConstantEntryNVX = VkObjectTablePushConstantEntryNVX
   { -- No documentation found for Nested "VkObjectTablePushConstantEntryNVX" "type"
@@ -761,6 +850,12 @@ instance Storable VkObjectTablePushConstantEntryNVX where
                 *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTablePushConstantEntryNVX))
                 *> poke (ptr `plusPtr` 8) (vkPipelineLayout (poked :: VkObjectTablePushConstantEntryNVX))
                 *> poke (ptr `plusPtr` 16) (vkStageFlags (poked :: VkObjectTablePushConstantEntryNVX))
+
+instance Zero VkObjectTablePushConstantEntryNVX where
+  zero = VkObjectTablePushConstantEntryNVX zero
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "VkObjectTableVertexBufferEntryNVX"
 data VkObjectTableVertexBufferEntryNVX = VkObjectTableVertexBufferEntryNVX
   { -- No documentation found for Nested "VkObjectTableVertexBufferEntryNVX" "type"
@@ -781,6 +876,11 @@ instance Storable VkObjectTableVertexBufferEntryNVX where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkObjectTableVertexBufferEntryNVX))
                 *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTableVertexBufferEntryNVX))
                 *> poke (ptr `plusPtr` 8) (vkBuffer (poked :: VkObjectTableVertexBufferEntryNVX))
+
+instance Zero VkObjectTableVertexBufferEntryNVX where
+  zero = VkObjectTableVertexBufferEntryNVX zero
+                                           zero
+                                           zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdProcessCommandsNVX"
 foreign import ccall

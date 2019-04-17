@@ -57,7 +57,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -80,6 +81,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image
   ( VkCoarseSampleLocationNV(..)
   , VkCoarseSampleOrderCustomNV(..)
@@ -149,6 +153,10 @@ fromCStructCoarseSampleLocationNV :: VkCoarseSampleLocationNV -> IO CoarseSample
 fromCStructCoarseSampleLocationNV c = CoarseSampleLocationNV <$> pure (vkPixelX (c :: VkCoarseSampleLocationNV))
                                                              <*> pure (vkPixelY (c :: VkCoarseSampleLocationNV))
                                                              <*> pure (vkSample (c :: VkCoarseSampleLocationNV))
+instance Zero CoarseSampleLocationNV where
+  zero = CoarseSampleLocationNV zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "CoarseSampleOrderCustomNV"
 data CoarseSampleOrderCustomNV = CoarseSampleOrderCustomNV
   { -- No documentation found for Nested "CoarseSampleOrderCustomNV" "shadingRate"
@@ -167,6 +175,10 @@ fromCStructCoarseSampleOrderCustomNV c = CoarseSampleOrderCustomNV <$> pure (vkS
                                                                    <*> pure (vkSampleCount (c :: VkCoarseSampleOrderCustomNV))
                                                                    -- Length valued member elided
                                                                    <*> (Data.Vector.generateM (fromIntegral (vkSampleLocationCount (c :: VkCoarseSampleOrderCustomNV))) (((fromCStructCoarseSampleLocationNV <=<) . peekElemOff) (vkPSampleLocations (c :: VkCoarseSampleOrderCustomNV))))
+instance Zero CoarseSampleOrderCustomNV where
+  zero = CoarseSampleOrderCustomNV zero
+                                   zero
+                                   Data.Vector.empty
 -- No documentation found for TopLevel "CoarseSampleOrderTypeNV"
 type CoarseSampleOrderTypeNV = VkCoarseSampleOrderTypeNV
 -- No documentation found for TopLevel "PhysicalDeviceShadingRateImageFeaturesNV"
@@ -187,6 +199,10 @@ fromCStructPhysicalDeviceShadingRateImageFeaturesNV c = PhysicalDeviceShadingRat
                                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceShadingRateImageFeaturesNV)))
                                                                                                  <*> pure (bool32ToBool (vkShadingRateImage (c :: VkPhysicalDeviceShadingRateImageFeaturesNV)))
                                                                                                  <*> pure (bool32ToBool (vkShadingRateCoarseSampleOrder (c :: VkPhysicalDeviceShadingRateImageFeaturesNV)))
+instance Zero PhysicalDeviceShadingRateImageFeaturesNV where
+  zero = PhysicalDeviceShadingRateImageFeaturesNV Nothing
+                                                  False
+                                                  False
 -- No documentation found for TopLevel "PhysicalDeviceShadingRateImagePropertiesNV"
 data PhysicalDeviceShadingRateImagePropertiesNV = PhysicalDeviceShadingRateImagePropertiesNV
   { -- Univalued Member elided
@@ -208,6 +224,11 @@ fromCStructPhysicalDeviceShadingRateImagePropertiesNV c = PhysicalDeviceShadingR
                                                                                                      <*> (fromCStructExtent2D (vkShadingRateTexelSize (c :: VkPhysicalDeviceShadingRateImagePropertiesNV)))
                                                                                                      <*> pure (vkShadingRatePaletteSize (c :: VkPhysicalDeviceShadingRateImagePropertiesNV))
                                                                                                      <*> pure (vkShadingRateMaxCoarseSamples (c :: VkPhysicalDeviceShadingRateImagePropertiesNV))
+instance Zero PhysicalDeviceShadingRateImagePropertiesNV where
+  zero = PhysicalDeviceShadingRateImagePropertiesNV Nothing
+                                                    zero
+                                                    zero
+                                                    zero
 -- No documentation found for TopLevel "PipelineViewportCoarseSampleOrderStateCreateInfoNV"
 data PipelineViewportCoarseSampleOrderStateCreateInfoNV = PipelineViewportCoarseSampleOrderStateCreateInfoNV
   { -- Univalued Member elided
@@ -228,6 +249,10 @@ fromCStructPipelineViewportCoarseSampleOrderStateCreateInfoNV c = PipelineViewpo
                                                                                                                      <*> pure (vkSampleOrderType (c :: VkPipelineViewportCoarseSampleOrderStateCreateInfoNV))
                                                                                                                      -- Length valued member elided
                                                                                                                      <*> (Data.Vector.generateM (fromIntegral (vkCustomSampleOrderCount (c :: VkPipelineViewportCoarseSampleOrderStateCreateInfoNV))) (((fromCStructCoarseSampleOrderCustomNV <=<) . peekElemOff) (vkPCustomSampleOrders (c :: VkPipelineViewportCoarseSampleOrderStateCreateInfoNV))))
+instance Zero PipelineViewportCoarseSampleOrderStateCreateInfoNV where
+  zero = PipelineViewportCoarseSampleOrderStateCreateInfoNV Nothing
+                                                            zero
+                                                            Data.Vector.empty
 -- No documentation found for TopLevel "PipelineViewportShadingRateImageStateCreateInfoNV"
 data PipelineViewportShadingRateImageStateCreateInfoNV = PipelineViewportShadingRateImageStateCreateInfoNV
   { -- Univalued Member elided
@@ -248,6 +273,10 @@ fromCStructPipelineViewportShadingRateImageStateCreateInfoNV c = PipelineViewpor
                                                                                                                    <*> pure (bool32ToBool (vkShadingRateImageEnable (c :: VkPipelineViewportShadingRateImageStateCreateInfoNV)))
                                                                                                                    -- Optional length valued member elided
                                                                                                                    <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkViewportCount (c :: VkPipelineViewportShadingRateImageStateCreateInfoNV))) (((fromCStructShadingRatePaletteNV <=<) . peekElemOff) p)) (vkPShadingRatePalettes (c :: VkPipelineViewportShadingRateImageStateCreateInfoNV))
+instance Zero PipelineViewportShadingRateImageStateCreateInfoNV where
+  zero = PipelineViewportShadingRateImageStateCreateInfoNV Nothing
+                                                           False
+                                                           Nothing
 -- No documentation found for TopLevel "ShadingRatePaletteEntryNV"
 type ShadingRatePaletteEntryNV = VkShadingRatePaletteEntryNV
 -- No documentation found for TopLevel "ShadingRatePaletteNV"
@@ -262,13 +291,15 @@ withCStructShadingRatePaletteNV from cont = withVec (&) (vkPShadingRatePaletteEn
 fromCStructShadingRatePaletteNV :: VkShadingRatePaletteNV -> IO ShadingRatePaletteNV
 fromCStructShadingRatePaletteNV c = ShadingRatePaletteNV <$> -- Length valued member elided
                                                          (Data.Vector.generateM (fromIntegral (vkShadingRatePaletteEntryCount (c :: VkShadingRatePaletteNV))) (peekElemOff (vkPShadingRatePaletteEntries (c :: VkShadingRatePaletteNV))))
+instance Zero ShadingRatePaletteNV where
+  zero = ShadingRatePaletteNV Data.Vector.empty
 
 -- | Wrapper for 'vkCmdBindShadingRateImageNV'
 cmdBindShadingRateImageNV :: CommandBuffer ->  ImageView ->  ImageLayout ->  IO ()
 cmdBindShadingRateImageNV = \(CommandBuffer commandBuffer commandTable) -> \imageView -> \imageLayout -> Graphics.Vulkan.C.Dynamic.cmdBindShadingRateImageNV commandTable commandBuffer imageView imageLayout *> (pure ())
 
 -- | Wrapper for 'vkCmdSetCoarseSampleOrderNV'
-cmdSetCoarseSampleOrderNV :: CommandBuffer ->  CoarseSampleOrderTypeNV ->  Vector CoarseSampleOrderCustomNV ->  IO (  )
+cmdSetCoarseSampleOrderNV :: CommandBuffer ->  CoarseSampleOrderTypeNV ->  Vector CoarseSampleOrderCustomNV ->  IO ()
 cmdSetCoarseSampleOrderNV = \(CommandBuffer commandBuffer commandTable) -> \sampleOrderType -> \customSampleOrders -> withVec withCStructCoarseSampleOrderCustomNV customSampleOrders (\pCustomSampleOrders -> Graphics.Vulkan.C.Dynamic.cmdSetCoarseSampleOrderNV commandTable commandBuffer sampleOrderType (fromIntegral $ Data.Vector.length customSampleOrders) pCustomSampleOrders *> (pure ()))
 
 -- | Wrapper for 'vkCmdSetViewportShadingRatePaletteNV'

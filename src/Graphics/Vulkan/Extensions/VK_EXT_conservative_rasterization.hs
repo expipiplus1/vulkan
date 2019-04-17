@@ -30,6 +30,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization
   ( VkConservativeRasterizationModeEXT(..)
   , VkPhysicalDeviceConservativeRasterizationPropertiesEXT(..)
@@ -94,6 +97,17 @@ fromCStructPhysicalDeviceConservativeRasterizationPropertiesEXT c = PhysicalDevi
                                                                                                                          <*> pure (bool32ToBool (vkDegenerateLinesRasterized (c :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT)))
                                                                                                                          <*> pure (bool32ToBool (vkFullyCoveredFragmentShaderInputVariable (c :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT)))
                                                                                                                          <*> pure (bool32ToBool (vkConservativeRasterizationPostDepthCoverage (c :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT)))
+instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
+  zero = PhysicalDeviceConservativeRasterizationPropertiesEXT Nothing
+                                                              zero
+                                                              zero
+                                                              zero
+                                                              False
+                                                              False
+                                                              False
+                                                              False
+                                                              False
+                                                              False
 -- No documentation found for TopLevel "PipelineRasterizationConservativeStateCreateFlagsEXT"
 type PipelineRasterizationConservativeStateCreateFlagsEXT = VkPipelineRasterizationConservativeStateCreateFlagsEXT
 -- No documentation found for TopLevel "PipelineRasterizationConservativeStateCreateInfoEXT"
@@ -117,3 +131,8 @@ fromCStructPipelineRasterizationConservativeStateCreateInfoEXT c = PipelineRaste
                                                                                                                        <*> pure (vkFlags (c :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
                                                                                                                        <*> pure (vkConservativeRasterizationMode (c :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
                                                                                                                        <*> pure (vkExtraPrimitiveOverestimationSize (c :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
+instance Zero PipelineRasterizationConservativeStateCreateInfoEXT where
+  zero = PipelineRasterizationConservativeStateCreateInfoEXT Nothing
+                                                             zero
+                                                             zero
+                                                             zero

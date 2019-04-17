@@ -71,7 +71,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
   ( LPCWSTR
@@ -142,6 +143,10 @@ fromCStructD3D12FenceSubmitInfoKHR c = D3D12FenceSubmitInfoKHR <$> -- Univalued 
                                                                <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkWaitSemaphoreValuesCount (c :: VkD3D12FenceSubmitInfoKHR))) (peekElemOff p)) (vkPWaitSemaphoreValues (c :: VkD3D12FenceSubmitInfoKHR))
                                                                -- Optional length valued member elided
                                                                <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkSignalSemaphoreValuesCount (c :: VkD3D12FenceSubmitInfoKHR))) (peekElemOff p)) (vkPSignalSemaphoreValues (c :: VkD3D12FenceSubmitInfoKHR))
+instance Zero D3D12FenceSubmitInfoKHR where
+  zero = D3D12FenceSubmitInfoKHR Nothing
+                                 Nothing
+                                 Nothing
 -- No documentation found for TopLevel "ExportSemaphoreWin32HandleInfoKHR"
 data ExportSemaphoreWin32HandleInfoKHR = ExportSemaphoreWin32HandleInfoKHR
   { -- Univalued Member elided
@@ -163,6 +168,11 @@ fromCStructExportSemaphoreWin32HandleInfoKHR c = ExportSemaphoreWin32HandleInfoK
                                                                                    <*> pure (vkPAttributes (c :: VkExportSemaphoreWin32HandleInfoKHR))
                                                                                    <*> pure (vkDwAccess (c :: VkExportSemaphoreWin32HandleInfoKHR))
                                                                                    <*> pure (vkName (c :: VkExportSemaphoreWin32HandleInfoKHR))
+instance Zero ExportSemaphoreWin32HandleInfoKHR where
+  zero = ExportSemaphoreWin32HandleInfoKHR Nothing
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "ImportSemaphoreWin32HandleInfoKHR"
 data ImportSemaphoreWin32HandleInfoKHR = ImportSemaphoreWin32HandleInfoKHR
   { -- Univalued Member elided
@@ -190,6 +200,13 @@ fromCStructImportSemaphoreWin32HandleInfoKHR c = ImportSemaphoreWin32HandleInfoK
                                                                                    <*> pure (vkHandleType (c :: VkImportSemaphoreWin32HandleInfoKHR))
                                                                                    <*> pure (vkHandle (c :: VkImportSemaphoreWin32HandleInfoKHR))
                                                                                    <*> pure (vkName (c :: VkImportSemaphoreWin32HandleInfoKHR))
+instance Zero ImportSemaphoreWin32HandleInfoKHR where
+  zero = ImportSemaphoreWin32HandleInfoKHR Nothing
+                                           zero
+                                           zero
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "SemaphoreGetWin32HandleInfoKHR"
 data SemaphoreGetWin32HandleInfoKHR = SemaphoreGetWin32HandleInfoKHR
   { -- Univalued Member elided
@@ -208,6 +225,10 @@ fromCStructSemaphoreGetWin32HandleInfoKHR c = SemaphoreGetWin32HandleInfoKHR <$>
                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSemaphoreGetWin32HandleInfoKHR)))
                                                                              <*> pure (vkSemaphore (c :: VkSemaphoreGetWin32HandleInfoKHR))
                                                                              <*> pure (vkHandleType (c :: VkSemaphoreGetWin32HandleInfoKHR))
+instance Zero SemaphoreGetWin32HandleInfoKHR where
+  zero = SemaphoreGetWin32HandleInfoKHR Nothing
+                                        zero
+                                        zero
 
 -- | Wrapper for 'vkGetSemaphoreWin32HandleKHR'
 getSemaphoreWin32HandleKHR :: Device ->  SemaphoreGetWin32HandleInfoKHR ->  IO (HANDLE)

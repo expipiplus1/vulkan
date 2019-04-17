@@ -108,6 +108,7 @@ import Graphics.Vulkan.C.Core10.CommandBuffer
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -156,6 +157,12 @@ instance Storable VkPhysicalDeviceTransformFeedbackFeaturesEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceTransformFeedbackFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkTransformFeedback (poked :: VkPhysicalDeviceTransformFeedbackFeaturesEXT))
                 *> poke (ptr `plusPtr` 20) (vkGeometryStreams (poked :: VkPhysicalDeviceTransformFeedbackFeaturesEXT))
+
+instance Zero VkPhysicalDeviceTransformFeedbackFeaturesEXT where
+  zero = VkPhysicalDeviceTransformFeedbackFeaturesEXT zero
+                                                      zero
+                                                      zero
+                                                      zero
 -- No documentation found for TopLevel "VkPhysicalDeviceTransformFeedbackPropertiesEXT"
 data VkPhysicalDeviceTransformFeedbackPropertiesEXT = VkPhysicalDeviceTransformFeedbackPropertiesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceTransformFeedbackPropertiesEXT" "sType"
@@ -212,11 +219,25 @@ instance Storable VkPhysicalDeviceTransformFeedbackPropertiesEXT where
                 *> poke (ptr `plusPtr` 48) (vkTransformFeedbackStreamsLinesTriangles (poked :: VkPhysicalDeviceTransformFeedbackPropertiesEXT))
                 *> poke (ptr `plusPtr` 52) (vkTransformFeedbackRasterizationStreamSelect (poked :: VkPhysicalDeviceTransformFeedbackPropertiesEXT))
                 *> poke (ptr `plusPtr` 56) (vkTransformFeedbackDraw (poked :: VkPhysicalDeviceTransformFeedbackPropertiesEXT))
+
+instance Zero VkPhysicalDeviceTransformFeedbackPropertiesEXT where
+  zero = VkPhysicalDeviceTransformFeedbackPropertiesEXT zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
 -- ** VkPipelineRasterizationStateStreamCreateFlagsEXT
 
 -- No documentation found for TopLevel "VkPipelineRasterizationStateStreamCreateFlagsEXT"
 newtype VkPipelineRasterizationStateStreamCreateFlagsEXT = VkPipelineRasterizationStateStreamCreateFlagsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineRasterizationStateStreamCreateFlagsEXT where
   
@@ -257,6 +278,12 @@ instance Storable VkPipelineRasterizationStateStreamCreateInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineRasterizationStateStreamCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineRasterizationStateStreamCreateInfoEXT))
                 *> poke (ptr `plusPtr` 20) (vkRasterizationStream (poked :: VkPipelineRasterizationStateStreamCreateInfoEXT))
+
+instance Zero VkPipelineRasterizationStateStreamCreateInfoEXT where
+  zero = VkPipelineRasterizationStateStreamCreateInfoEXT zero
+                                                         zero
+                                                         zero
+                                                         zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdBeginQueryIndexedEXT"
 foreign import ccall

@@ -23,6 +23,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation
   ( VkMemoryDedicatedAllocateInfo(..)
   , VkMemoryDedicatedRequirements(..)
@@ -62,6 +65,10 @@ fromCStructMemoryDedicatedAllocateInfo c = MemoryDedicatedAllocateInfo <$> -- Un
                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryDedicatedAllocateInfo)))
                                                                        <*> pure (vkImage (c :: VkMemoryDedicatedAllocateInfo))
                                                                        <*> pure (vkBuffer (c :: VkMemoryDedicatedAllocateInfo))
+instance Zero MemoryDedicatedAllocateInfo where
+  zero = MemoryDedicatedAllocateInfo Nothing
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "MemoryDedicatedRequirements"
 data MemoryDedicatedRequirements = MemoryDedicatedRequirements
   { -- Univalued Member elided
@@ -80,3 +87,7 @@ fromCStructMemoryDedicatedRequirements c = MemoryDedicatedRequirements <$> -- Un
                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryDedicatedRequirements)))
                                                                        <*> pure (bool32ToBool (vkPrefersDedicatedAllocation (c :: VkMemoryDedicatedRequirements)))
                                                                        <*> pure (bool32ToBool (vkRequiresDedicatedAllocation (c :: VkMemoryDedicatedRequirements)))
+instance Zero MemoryDedicatedRequirements where
+  zero = MemoryDedicatedRequirements Nothing
+                                     False
+                                     False

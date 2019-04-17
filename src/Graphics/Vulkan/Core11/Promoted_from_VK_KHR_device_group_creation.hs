@@ -33,7 +33,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   , take
   )
@@ -75,6 +76,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation
@@ -130,6 +132,9 @@ fromCStructDeviceGroupDeviceCreateInfo commandTable c = DeviceGroupDeviceCreateI
                                                                                     maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDeviceGroupDeviceCreateInfo)))
                                                                                     -- Length valued member elided
                                                                                     <*> (Data.Vector.generateM (fromIntegral (vkPhysicalDeviceCount (c :: VkDeviceGroupDeviceCreateInfo))) ((\p i -> flip PhysicalDevice commandTable <$> peekElemOff p i) (vkPPhysicalDevices (c :: VkDeviceGroupDeviceCreateInfo))))
+instance Zero DeviceGroupDeviceCreateInfo where
+  zero = DeviceGroupDeviceCreateInfo Nothing
+                                     Data.Vector.empty
 -- No documentation found for TopLevel "PhysicalDeviceGroupProperties"
 data PhysicalDeviceGroupProperties = PhysicalDeviceGroupProperties
   { -- Univalued Member elided
@@ -150,6 +155,10 @@ fromCStructPhysicalDeviceGroupProperties commandTable c = PhysicalDeviceGroupPro
                                                                                         -- Fixed array valid count member elided
                                                                                         <*> traverse (\p -> pure $ PhysicalDevice p commandTable) (Data.Vector.take (fromIntegral (vkPhysicalDeviceCount (c :: VkPhysicalDeviceGroupProperties))) (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized (vkPhysicalDevices (c :: VkPhysicalDeviceGroupProperties)))))
                                                                                         <*> pure (bool32ToBool (vkSubsetAllocation (c :: VkPhysicalDeviceGroupProperties)))
+instance Zero PhysicalDeviceGroupProperties where
+  zero = PhysicalDeviceGroupProperties Nothing
+                                       Data.Vector.empty
+                                       False
 
 -- | Wrapper for 'vkEnumeratePhysicalDeviceGroups'
 getNumPhysicalDeviceGroups :: Instance ->  IO (VkResult, Word32)

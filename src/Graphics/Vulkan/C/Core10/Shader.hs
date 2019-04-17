@@ -62,6 +62,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -81,7 +82,7 @@ type VkShaderModule = Ptr VkShaderModule_T
 
 -- No documentation found for TopLevel "VkShaderModuleCreateFlags"
 newtype VkShaderModuleCreateFlags = VkShaderModuleCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkShaderModuleCreateFlags where
   
@@ -126,6 +127,13 @@ instance Storable VkShaderModuleCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkShaderModuleCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkCodeSize (poked :: VkShaderModuleCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkPCode (poked :: VkShaderModuleCreateInfo))
+
+instance Zero VkShaderModuleCreateInfo where
+  zero = VkShaderModuleCreateInfo zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkCreateShaderModule"
 foreign import ccall

@@ -121,5 +121,5 @@ type PhysicalDeviceExternalImageFormatInfoKHR = PhysicalDeviceExternalImageForma
 -- TODO: Pattern constructor alias)
 type PhysicalDeviceIDPropertiesKHR = PhysicalDeviceIDProperties
 -- TODO: Pattern constructor alias)
-getPhysicalDeviceExternalBufferPropertiesKHR :: PhysicalDevice ->  PhysicalDeviceExternalBufferInfo ->  IO ( ExternalBufferProperties )
+getPhysicalDeviceExternalBufferPropertiesKHR :: PhysicalDevice ->  PhysicalDeviceExternalBufferInfo ->  IO (ExternalBufferProperties)
 getPhysicalDeviceExternalBufferPropertiesKHR = getPhysicalDeviceExternalBufferProperties

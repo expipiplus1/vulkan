@@ -13,8 +13,6 @@ module Graphics.Vulkan.Core10.MemoryManagement
   , bindImageMemory
   , getBufferMemoryRequirements
   , getImageMemoryRequirements
-  , withBuffer
-  , withImage
   ) where
 
 import Control.Exception
@@ -42,7 +40,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.MemoryManagement
   ( VkMemoryRequirements(..)
@@ -81,6 +80,10 @@ fromCStructMemoryRequirements :: VkMemoryRequirements -> IO MemoryRequirements
 fromCStructMemoryRequirements c = MemoryRequirements <$> pure (vkSize (c :: VkMemoryRequirements))
                                                      <*> pure (vkAlignment (c :: VkMemoryRequirements))
                                                      <*> pure (vkMemoryTypeBits (c :: VkMemoryRequirements))
+instance Zero MemoryRequirements where
+  zero = MemoryRequirements zero
+                            zero
+                            zero
 
 -- | Wrapper for 'vkBindBufferMemory'
 bindBufferMemory :: Device ->  Buffer ->  DeviceMemory ->  DeviceSize ->  IO ()
@@ -97,13 +100,3 @@ getBufferMemoryRequirements = \(Device device commandTable) -> \buffer -> alloca
 -- | Wrapper for 'vkGetImageMemoryRequirements'
 getImageMemoryRequirements :: Device ->  Image ->  IO (MemoryRequirements)
 getImageMemoryRequirements = \(Device device commandTable) -> \image -> alloca (\pMemoryRequirements -> Graphics.Vulkan.C.Dynamic.getImageMemoryRequirements commandTable device image pMemoryRequirements *> ((fromCStructMemoryRequirements <=< peek) pMemoryRequirements))
-withBuffer :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withBuffer createInfo allocationCallbacks =
-  bracket
-    (vkCreateBuffer createInfo allocationCallbacks)
-    (`vkDestroyBuffer` allocationCallbacks)
-withImage :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withImage createInfo allocationCallbacks =
-  bracket
-    (vkCreateImage createInfo allocationCallbacks)
-    (`vkDestroyImage` allocationCallbacks)

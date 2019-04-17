@@ -47,6 +47,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface
@@ -103,11 +104,16 @@ fromCStructXcbSurfaceCreateInfoKHR c = XcbSurfaceCreateInfoKHR <$> -- Univalued 
                                                                <*> pure (vkFlags (c :: VkXcbSurfaceCreateInfoKHR))
                                                                <*> pure (vkConnection (c :: VkXcbSurfaceCreateInfoKHR))
                                                                <*> pure (vkWindow (c :: VkXcbSurfaceCreateInfoKHR))
+instance Zero XcbSurfaceCreateInfoKHR where
+  zero = XcbSurfaceCreateInfoKHR Nothing
+                                 zero
+                                 zero
+                                 zero
 
 -- | Wrapper for 'vkCreateXcbSurfaceKHR'
-createXcbSurfaceKHR :: Instance ->  XcbSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createXcbSurfaceKHR :: Instance ->  XcbSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createXcbSurfaceKHR = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructXcbSurfaceCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createXcbSurfaceKHR commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))
 
 -- | Wrapper for 'vkGetPhysicalDeviceXcbPresentationSupportKHR'
-getPhysicalDeviceXcbPresentationSupportKHR :: PhysicalDevice ->  Word32 ->  Ptr Xcb_connection_t ->  Xcb_visualid_t ->  IO ( VkBool32 )
+getPhysicalDeviceXcbPresentationSupportKHR :: PhysicalDevice ->  Word32 ->  Ptr Xcb_connection_t ->  Xcb_visualid_t ->  IO (VkBool32)
 getPhysicalDeviceXcbPresentationSupportKHR = \(PhysicalDevice physicalDevice commandTable) -> \queueFamilyIndex -> \connection -> \visual_id -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceXcbPresentationSupportKHR commandTable physicalDevice queueFamilyIndex connection visual_id >>= (\r -> pure r)

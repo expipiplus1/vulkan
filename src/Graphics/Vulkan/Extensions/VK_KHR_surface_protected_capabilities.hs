@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities
   ( VkSurfaceProtectedCapabilitiesKHR(..)
   , pattern VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR
@@ -55,3 +58,6 @@ fromCStructSurfaceProtectedCapabilitiesKHR :: VkSurfaceProtectedCapabilitiesKHR 
 fromCStructSurfaceProtectedCapabilitiesKHR c = SurfaceProtectedCapabilitiesKHR <$> -- Univalued Member elided
                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSurfaceProtectedCapabilitiesKHR)))
                                                                                <*> pure (bool32ToBool (vkSupportsProtected (c :: VkSurfaceProtectedCapabilitiesKHR)))
+instance Zero SurfaceProtectedCapabilitiesKHR where
+  zero = SurfaceProtectedCapabilitiesKHR Nothing
+                                         False

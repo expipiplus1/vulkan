@@ -77,6 +77,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface
@@ -161,6 +162,17 @@ fromCStructSurfaceCapabilitiesKHR c = SurfaceCapabilitiesKHR <$> pure (vkMinImag
                                                              <*> pure (vkCurrentTransform (c :: VkSurfaceCapabilitiesKHR))
                                                              <*> pure (vkSupportedCompositeAlpha (c :: VkSurfaceCapabilitiesKHR))
                                                              <*> pure (vkSupportedUsageFlags (c :: VkSurfaceCapabilitiesKHR))
+instance Zero SurfaceCapabilitiesKHR where
+  zero = SurfaceCapabilitiesKHR zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "SurfaceFormatKHR"
 data SurfaceFormatKHR = SurfaceFormatKHR
   { -- No documentation found for Nested "SurfaceFormatKHR" "format"
@@ -174,6 +186,9 @@ withCStructSurfaceFormatKHR from cont = cont (VkSurfaceFormatKHR (vkFormat (from
 fromCStructSurfaceFormatKHR :: VkSurfaceFormatKHR -> IO SurfaceFormatKHR
 fromCStructSurfaceFormatKHR c = SurfaceFormatKHR <$> pure (vkFormat (c :: VkSurfaceFormatKHR))
                                                  <*> pure (vkColorSpace (c :: VkSurfaceFormatKHR))
+instance Zero SurfaceFormatKHR where
+  zero = SurfaceFormatKHR zero
+                          zero
 -- No documentation found for TopLevel "SurfaceKHR"
 type SurfaceKHR = VkSurfaceKHR
 -- No documentation found for TopLevel "SurfaceTransformFlagBitsKHR"
@@ -194,8 +209,7 @@ getNumPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice ->  SurfaceKHR ->  IO (V
 getNumPhysicalDeviceSurfaceFormatsKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> alloca (\pSurfaceFormatCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceFormatsKHR commandTable physicalDevice surface pSurfaceFormatCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pSurfaceFormatCount)))
 
 -- | Wrapper for 'vkGetPhysicalDeviceSurfaceFormatsKHR'
-getPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO ( VkResult
-, Vector SurfaceFormatKHR )
+getPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO (VkResult, Vector SurfaceFormatKHR)
 getPhysicalDeviceSurfaceFormatsKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> \surfaceFormatCount -> allocaArray (fromIntegral surfaceFormatCount) (\pSurfaceFormats -> with surfaceFormatCount (\pSurfaceFormatCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfaceFormatsKHR commandTable physicalDevice surface pSurfaceFormatCount pSurfaceFormats >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructSurfaceFormatKHR <=< peekElemOff p) pSurfaceFormats) =<< (fromIntegral <$> (peek pSurfaceFormatCount)))))))
 -- | Call 'getNumPhysicalDeviceSurfaceFormatsKHR' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSurfaceFormatsKHR' to get all the values.
@@ -210,8 +224,7 @@ getNumPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice ->  SurfaceKHR ->  
 getNumPhysicalDeviceSurfacePresentModesKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> alloca (\pPresentModeCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfacePresentModesKHR commandTable physicalDevice surface pPresentModeCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPresentModeCount)))
 
 -- | Wrapper for 'vkGetPhysicalDeviceSurfacePresentModesKHR'
-getPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO ( VkResult
-, Vector PresentModeKHR )
+getPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO (VkResult, Vector PresentModeKHR)
 getPhysicalDeviceSurfacePresentModesKHR = \(PhysicalDevice physicalDevice commandTable) -> \surface -> \presentModeCount -> allocaArray (fromIntegral presentModeCount) (\pPresentModes -> with presentModeCount (\pPresentModeCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfacePresentModesKHR commandTable physicalDevice surface pPresentModeCount pPresentModes >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM (peekElemOff pPresentModes) =<< (fromIntegral <$> (peek pPresentModeCount)))))))
 -- | Call 'getNumPhysicalDeviceSurfacePresentModesKHR' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSurfacePresentModesKHR' to get all the values.

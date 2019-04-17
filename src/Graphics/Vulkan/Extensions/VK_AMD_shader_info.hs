@@ -63,6 +63,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_AMD_shader_info
@@ -113,6 +114,12 @@ fromCStructShaderResourceUsageAMD c = ShaderResourceUsageAMD <$> pure (vkNumUsed
                                                              <*> pure (vkLdsSizePerLocalWorkGroup (c :: VkShaderResourceUsageAMD))
                                                              <*> pure (vkLdsUsageSizeInBytes (c :: VkShaderResourceUsageAMD))
                                                              <*> pure (vkScratchMemUsageInBytes (c :: VkShaderResourceUsageAMD))
+instance Zero ShaderResourceUsageAMD where
+  zero = ShaderResourceUsageAMD zero
+                                zero
+                                zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "ShaderStatisticsInfoAMD"
 data ShaderStatisticsInfoAMD = ShaderStatisticsInfoAMD
   { -- No documentation found for Nested "ShaderStatisticsInfoAMD" "shaderStageMask"
@@ -143,15 +150,21 @@ fromCStructShaderStatisticsInfoAMD c = ShaderStatisticsInfoAMD <$> pure (vkShade
                                                                <*> pure (let x = (vkComputeWorkGroupSize (c :: VkShaderStatisticsInfoAMD)) in ( Data.Vector.Storable.Sized.unsafeIndex x 0
                                                                , Data.Vector.Storable.Sized.unsafeIndex x 1
                                                                , Data.Vector.Storable.Sized.unsafeIndex x 2 ))
+instance Zero ShaderStatisticsInfoAMD where
+  zero = ShaderStatisticsInfoAMD zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 (zero, zero, zero)
 
 -- | Wrapper for 'vkGetShaderInfoAMD'
-getNumShaderInfoAMD :: Device ->  Pipeline ->  ShaderStageFlagBits ->  ShaderInfoTypeAMD ->  IO ( VkResult
-, CSize )
+getNumShaderInfoAMD :: Device ->  Pipeline ->  ShaderStageFlagBits ->  ShaderInfoTypeAMD ->  IO (VkResult, CSize)
 getNumShaderInfoAMD = \(Device device commandTable) -> \pipeline -> \shaderStage -> \infoType -> alloca (\pInfoSize -> Graphics.Vulkan.C.Dynamic.getShaderInfoAMD commandTable device pipeline shaderStage infoType pInfoSize nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pInfoSize)))
 
 -- | Wrapper for 'vkGetShaderInfoAMD'
-getShaderInfoAMD :: Device ->  Pipeline ->  ShaderStageFlagBits ->  ShaderInfoTypeAMD ->  CSize ->  IO ( VkResult
-, ByteString )
+getShaderInfoAMD :: Device ->  Pipeline ->  ShaderStageFlagBits ->  ShaderInfoTypeAMD ->  CSize ->  IO (VkResult, ByteString)
 getShaderInfoAMD = \(Device device commandTable) -> \pipeline -> \shaderStage -> \infoType -> \infoSize -> allocaArray (fromIntegral infoSize) (\pInfo -> with infoSize (\pInfoSize -> Graphics.Vulkan.C.Dynamic.getShaderInfoAMD commandTable device pipeline shaderStage infoType pInfoSize (castPtr pInfo) >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(curry packCStringLen pInfo =<< (fromIntegral <$> (peek pInfoSize)))))))
 -- | Call 'getNumShaderInfoAMD' to get the number of return values, then use that
 -- number to call 'getShaderInfoAMD' to get all the values.

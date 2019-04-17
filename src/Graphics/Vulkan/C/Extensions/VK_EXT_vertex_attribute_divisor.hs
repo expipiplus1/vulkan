@@ -35,6 +35,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -62,6 +63,12 @@ instance Storable VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkVertexAttributeInstanceRateDivisor (poked :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT))
                 *> poke (ptr `plusPtr` 20) (vkVertexAttributeInstanceRateZeroDivisor (poked :: VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT))
+
+instance Zero VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT where
+  zero = VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT zero
+                                                           zero
+                                                           zero
+                                                           zero
 -- No documentation found for TopLevel "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT"
 data VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT = VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "sType"
@@ -82,6 +89,11 @@ instance Storable VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxVertexAttribDivisor (poked :: VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT))
+
+instance Zero VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT where
+  zero = VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT zero
+                                                             zero
+                                                             zero
 -- No documentation found for TopLevel "VkPipelineVertexInputDivisorStateCreateInfoEXT"
 data VkPipelineVertexInputDivisorStateCreateInfoEXT = VkPipelineVertexInputDivisorStateCreateInfoEXT
   { -- No documentation found for Nested "VkPipelineVertexInputDivisorStateCreateInfoEXT" "sType"
@@ -106,6 +118,12 @@ instance Storable VkPipelineVertexInputDivisorStateCreateInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineVertexInputDivisorStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkVertexBindingDivisorCount (poked :: VkPipelineVertexInputDivisorStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkPVertexBindingDivisors (poked :: VkPipelineVertexInputDivisorStateCreateInfoEXT))
+
+instance Zero VkPipelineVertexInputDivisorStateCreateInfoEXT where
+  zero = VkPipelineVertexInputDivisorStateCreateInfoEXT zero
+                                                        zero
+                                                        zero
+                                                        zero
 -- No documentation found for TopLevel "VkVertexInputBindingDivisorDescriptionEXT"
 data VkVertexInputBindingDivisorDescriptionEXT = VkVertexInputBindingDivisorDescriptionEXT
   { -- No documentation found for Nested "VkVertexInputBindingDivisorDescriptionEXT" "binding"
@@ -122,6 +140,10 @@ instance Storable VkVertexInputBindingDivisorDescriptionEXT where
                                                        <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkBinding (poked :: VkVertexInputBindingDivisorDescriptionEXT))
                 *> poke (ptr `plusPtr` 4) (vkDivisor (poked :: VkVertexInputBindingDivisorDescriptionEXT))
+
+instance Zero VkVertexInputBindingDivisorDescriptionEXT where
+  zero = VkVertexInputBindingDivisorDescriptionEXT zero
+                                                   zero
 -- No documentation found for TopLevel "VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME"
 pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME = "VK_EXT_vertex_attribute_divisor"

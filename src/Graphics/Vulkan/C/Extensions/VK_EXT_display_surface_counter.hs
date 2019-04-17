@@ -63,6 +63,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -143,11 +144,26 @@ instance Storable VkSurfaceCapabilities2EXT where
                 *> poke (ptr `plusPtr` 60) (vkSupportedCompositeAlpha (poked :: VkSurfaceCapabilities2EXT))
                 *> poke (ptr `plusPtr` 64) (vkSupportedUsageFlags (poked :: VkSurfaceCapabilities2EXT))
                 *> poke (ptr `plusPtr` 68) (vkSupportedSurfaceCounters (poked :: VkSurfaceCapabilities2EXT))
+
+instance Zero VkSurfaceCapabilities2EXT where
+  zero = VkSurfaceCapabilities2EXT zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 -- ** VkSurfaceCounterFlagBitsEXT
 
 -- No documentation found for TopLevel "VkSurfaceCounterFlagBitsEXT"
 newtype VkSurfaceCounterFlagBitsEXT = VkSurfaceCounterFlagBitsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSurfaceCounterFlagBitsEXT where
   showsPrec _ VK_SURFACE_COUNTER_VBLANK_EXT = showString "VK_SURFACE_COUNTER_VBLANK_EXT"

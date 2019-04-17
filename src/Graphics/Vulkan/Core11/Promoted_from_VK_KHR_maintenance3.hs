@@ -40,6 +40,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3
   ( VkDescriptorSetLayoutSupport(..)
   , VkPhysicalDeviceMaintenance3Properties(..)
@@ -80,6 +83,9 @@ fromCStructDescriptorSetLayoutSupport :: VkDescriptorSetLayoutSupport -> IO Desc
 fromCStructDescriptorSetLayoutSupport c = DescriptorSetLayoutSupport <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDescriptorSetLayoutSupport)))
                                                                      <*> pure (bool32ToBool (vkSupported (c :: VkDescriptorSetLayoutSupport)))
+instance Zero DescriptorSetLayoutSupport where
+  zero = DescriptorSetLayoutSupport Nothing
+                                    False
 -- No documentation found for TopLevel "PhysicalDeviceMaintenance3Properties"
 data PhysicalDeviceMaintenance3Properties = PhysicalDeviceMaintenance3Properties
   { -- Univalued Member elided
@@ -98,6 +104,10 @@ fromCStructPhysicalDeviceMaintenance3Properties c = PhysicalDeviceMaintenance3Pr
                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceMaintenance3Properties)))
                                                                                          <*> pure (vkMaxPerSetDescriptors (c :: VkPhysicalDeviceMaintenance3Properties))
                                                                                          <*> pure (vkMaxMemoryAllocationSize (c :: VkPhysicalDeviceMaintenance3Properties))
+instance Zero PhysicalDeviceMaintenance3Properties where
+  zero = PhysicalDeviceMaintenance3Properties Nothing
+                                              zero
+                                              zero
 
 -- | Wrapper for 'vkGetDescriptorSetLayoutSupport'
 getDescriptorSetLayoutSupport :: Device ->  DescriptorSetLayoutCreateInfo ->  IO (DescriptorSetLayoutSupport)

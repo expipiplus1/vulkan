@@ -83,6 +83,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2
@@ -145,6 +146,9 @@ fromCStructDisplayModeProperties2KHR :: VkDisplayModeProperties2KHR -> IO Displa
 fromCStructDisplayModeProperties2KHR c = DisplayModeProperties2KHR <$> -- Univalued Member elided
                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayModeProperties2KHR)))
                                                                    <*> (fromCStructDisplayModePropertiesKHR (vkDisplayModeProperties (c :: VkDisplayModeProperties2KHR)))
+instance Zero DisplayModeProperties2KHR where
+  zero = DisplayModeProperties2KHR Nothing
+                                   zero
 -- No documentation found for TopLevel "DisplayPlaneCapabilities2KHR"
 data DisplayPlaneCapabilities2KHR = DisplayPlaneCapabilities2KHR
   { -- Univalued Member elided
@@ -160,6 +164,9 @@ fromCStructDisplayPlaneCapabilities2KHR :: VkDisplayPlaneCapabilities2KHR -> IO 
 fromCStructDisplayPlaneCapabilities2KHR c = DisplayPlaneCapabilities2KHR <$> -- Univalued Member elided
                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayPlaneCapabilities2KHR)))
                                                                          <*> (fromCStructDisplayPlaneCapabilitiesKHR (vkCapabilities (c :: VkDisplayPlaneCapabilities2KHR)))
+instance Zero DisplayPlaneCapabilities2KHR where
+  zero = DisplayPlaneCapabilities2KHR Nothing
+                                      zero
 -- No documentation found for TopLevel "DisplayPlaneInfo2KHR"
 data DisplayPlaneInfo2KHR = DisplayPlaneInfo2KHR
   { -- Univalued Member elided
@@ -178,6 +185,10 @@ fromCStructDisplayPlaneInfo2KHR c = DisplayPlaneInfo2KHR <$> -- Univalued Member
                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayPlaneInfo2KHR)))
                                                          <*> pure (vkMode (c :: VkDisplayPlaneInfo2KHR))
                                                          <*> pure (vkPlaneIndex (c :: VkDisplayPlaneInfo2KHR))
+instance Zero DisplayPlaneInfo2KHR where
+  zero = DisplayPlaneInfo2KHR Nothing
+                              zero
+                              zero
 -- No documentation found for TopLevel "DisplayPlaneProperties2KHR"
 data DisplayPlaneProperties2KHR = DisplayPlaneProperties2KHR
   { -- Univalued Member elided
@@ -193,6 +204,9 @@ fromCStructDisplayPlaneProperties2KHR :: VkDisplayPlaneProperties2KHR -> IO Disp
 fromCStructDisplayPlaneProperties2KHR c = DisplayPlaneProperties2KHR <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayPlaneProperties2KHR)))
                                                                      <*> (fromCStructDisplayPlanePropertiesKHR (vkDisplayPlaneProperties (c :: VkDisplayPlaneProperties2KHR)))
+instance Zero DisplayPlaneProperties2KHR where
+  zero = DisplayPlaneProperties2KHR Nothing
+                                    zero
 -- No documentation found for TopLevel "DisplayProperties2KHR"
 data DisplayProperties2KHR = DisplayProperties2KHR
   { -- Univalued Member elided
@@ -208,14 +222,16 @@ fromCStructDisplayProperties2KHR :: VkDisplayProperties2KHR -> IO DisplayPropert
 fromCStructDisplayProperties2KHR c = DisplayProperties2KHR <$> -- Univalued Member elided
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayProperties2KHR)))
                                                            <*> (fromCStructDisplayPropertiesKHR (vkDisplayProperties (c :: VkDisplayProperties2KHR)))
+instance Zero DisplayProperties2KHR where
+  zero = DisplayProperties2KHR Nothing
+                               zero
 
 -- | Wrapper for 'vkGetDisplayModeProperties2KHR'
 getNumDisplayModeProperties2KHR :: PhysicalDevice ->  DisplayKHR ->  IO (VkResult, Word32)
 getNumDisplayModeProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \display -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getDisplayModeProperties2KHR commandTable physicalDevice display pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
 -- | Wrapper for 'vkGetDisplayModeProperties2KHR'
-getDisplayModeProperties2KHR :: PhysicalDevice ->  DisplayKHR ->  Word32 ->  IO ( VkResult
-, Vector DisplayModeProperties2KHR )
+getDisplayModeProperties2KHR :: PhysicalDevice ->  DisplayKHR ->  Word32 ->  IO (VkResult, Vector DisplayModeProperties2KHR)
 getDisplayModeProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \display -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getDisplayModeProperties2KHR commandTable physicalDevice display pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayModeProperties2KHR <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
 -- | Call 'getNumDisplayModeProperties2KHR' to get the number of return values, then use that
 -- number to call 'getDisplayModeProperties2KHR' to get all the values.

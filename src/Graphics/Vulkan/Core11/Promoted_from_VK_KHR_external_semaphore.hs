@@ -23,6 +23,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore
   ( VkExportSemaphoreCreateInfo(..)
   , VkSemaphoreImportFlagBits(..)
@@ -53,6 +56,9 @@ fromCStructExportSemaphoreCreateInfo :: VkExportSemaphoreCreateInfo -> IO Export
 fromCStructExportSemaphoreCreateInfo c = ExportSemaphoreCreateInfo <$> -- Univalued Member elided
                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExportSemaphoreCreateInfo)))
                                                                    <*> pure (vkHandleTypes (c :: VkExportSemaphoreCreateInfo))
+instance Zero ExportSemaphoreCreateInfo where
+  zero = ExportSemaphoreCreateInfo Nothing
+                                   zero
 -- No documentation found for TopLevel "SemaphoreImportFlagBits"
 type SemaphoreImportFlagBits = VkSemaphoreImportFlagBits
 -- No documentation found for TopLevel "SemaphoreImportFlagBitsKHR"

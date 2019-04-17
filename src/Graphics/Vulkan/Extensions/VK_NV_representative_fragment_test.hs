@@ -25,6 +25,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_representative_fragment_test
   ( VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(..)
   , VkPipelineRepresentativeFragmentTestStateCreateInfoNV(..)
@@ -61,6 +64,9 @@ fromCStructPhysicalDeviceRepresentativeFragmentTestFeaturesNV :: VkPhysicalDevic
 fromCStructPhysicalDeviceRepresentativeFragmentTestFeaturesNV c = PhysicalDeviceRepresentativeFragmentTestFeaturesNV <$> -- Univalued Member elided
                                                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV)))
                                                                                                                      <*> pure (bool32ToBool (vkRepresentativeFragmentTest (c :: VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV)))
+instance Zero PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
+  zero = PhysicalDeviceRepresentativeFragmentTestFeaturesNV Nothing
+                                                            False
 -- No documentation found for TopLevel "PipelineRepresentativeFragmentTestStateCreateInfoNV"
 data PipelineRepresentativeFragmentTestStateCreateInfoNV = PipelineRepresentativeFragmentTestStateCreateInfoNV
   { -- Univalued Member elided
@@ -76,3 +82,6 @@ fromCStructPipelineRepresentativeFragmentTestStateCreateInfoNV :: VkPipelineRepr
 fromCStructPipelineRepresentativeFragmentTestStateCreateInfoNV c = PipelineRepresentativeFragmentTestStateCreateInfoNV <$> -- Univalued Member elided
                                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineRepresentativeFragmentTestStateCreateInfoNV)))
                                                                                                                        <*> pure (bool32ToBool (vkRepresentativeFragmentTestEnable (c :: VkPipelineRepresentativeFragmentTestStateCreateInfoNV)))
+instance Zero PipelineRepresentativeFragmentTestStateCreateInfoNV where
+  zero = PipelineRepresentativeFragmentTestStateCreateInfoNV Nothing
+                                                             False

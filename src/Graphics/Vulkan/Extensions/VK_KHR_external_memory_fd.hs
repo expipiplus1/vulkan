@@ -56,7 +56,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
   ( VkImportMemoryFdInfoKHR(..)
@@ -107,6 +108,10 @@ fromCStructImportMemoryFdInfoKHR c = ImportMemoryFdInfoKHR <$> -- Univalued Memb
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImportMemoryFdInfoKHR)))
                                                            <*> pure (vkHandleType (c :: VkImportMemoryFdInfoKHR))
                                                            <*> pure (vkFd (c :: VkImportMemoryFdInfoKHR))
+instance Zero ImportMemoryFdInfoKHR where
+  zero = ImportMemoryFdInfoKHR Nothing
+                               zero
+                               zero
 -- No documentation found for TopLevel "MemoryFdPropertiesKHR"
 data MemoryFdPropertiesKHR = MemoryFdPropertiesKHR
   { -- Univalued Member elided
@@ -122,6 +127,9 @@ fromCStructMemoryFdPropertiesKHR :: VkMemoryFdPropertiesKHR -> IO MemoryFdProper
 fromCStructMemoryFdPropertiesKHR c = MemoryFdPropertiesKHR <$> -- Univalued Member elided
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryFdPropertiesKHR)))
                                                            <*> pure (vkMemoryTypeBits (c :: VkMemoryFdPropertiesKHR))
+instance Zero MemoryFdPropertiesKHR where
+  zero = MemoryFdPropertiesKHR Nothing
+                               zero
 -- No documentation found for TopLevel "MemoryGetFdInfoKHR"
 data MemoryGetFdInfoKHR = MemoryGetFdInfoKHR
   { -- Univalued Member elided
@@ -140,11 +148,15 @@ fromCStructMemoryGetFdInfoKHR c = MemoryGetFdInfoKHR <$> -- Univalued Member eli
                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryGetFdInfoKHR)))
                                                      <*> pure (vkMemory (c :: VkMemoryGetFdInfoKHR))
                                                      <*> pure (vkHandleType (c :: VkMemoryGetFdInfoKHR))
+instance Zero MemoryGetFdInfoKHR where
+  zero = MemoryGetFdInfoKHR Nothing
+                            zero
+                            zero
 
 -- | Wrapper for 'vkGetMemoryFdKHR'
 getMemoryFdKHR :: Device ->  MemoryGetFdInfoKHR ->  IO (CInt)
 getMemoryFdKHR = \(Device device commandTable) -> \getFdInfo -> alloca (\pFd -> (\a -> withCStructMemoryGetFdInfoKHR a . flip with) getFdInfo (\pGetFdInfo -> Graphics.Vulkan.C.Dynamic.getMemoryFdKHR commandTable device pGetFdInfo pFd >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pFd))))
 
 -- | Wrapper for 'vkGetMemoryFdPropertiesKHR'
-getMemoryFdPropertiesKHR :: Device ->  ExternalMemoryHandleTypeFlagBits ->  CInt ->  IO ( MemoryFdPropertiesKHR )
+getMemoryFdPropertiesKHR :: Device ->  ExternalMemoryHandleTypeFlagBits ->  CInt ->  IO (MemoryFdPropertiesKHR)
 getMemoryFdPropertiesKHR = \(Device device commandTable) -> \handleType -> \fd -> alloca (\pMemoryFdProperties -> Graphics.Vulkan.C.Dynamic.getMemoryFdPropertiesKHR commandTable device handleType fd pMemoryFdProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructMemoryFdPropertiesKHR <=< peek) pMemoryFdProperties)))

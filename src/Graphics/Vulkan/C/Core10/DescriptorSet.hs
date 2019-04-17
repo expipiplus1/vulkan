@@ -121,6 +121,7 @@ import Graphics.Vulkan.C.Core10.BufferView
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -193,6 +194,17 @@ instance Storable VkCopyDescriptorSet where
                 *> poke (ptr `plusPtr` 40) (vkDstBinding (poked :: VkCopyDescriptorSet))
                 *> poke (ptr `plusPtr` 44) (vkDstArrayElement (poked :: VkCopyDescriptorSet))
                 *> poke (ptr `plusPtr` 48) (vkDescriptorCount (poked :: VkCopyDescriptorSet))
+
+instance Zero VkCopyDescriptorSet where
+  zero = VkCopyDescriptorSet zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "VkDescriptorBufferInfo"
 data VkDescriptorBufferInfo = VkDescriptorBufferInfo
   { -- No documentation found for Nested "VkDescriptorBufferInfo" "buffer"
@@ -213,6 +225,11 @@ instance Storable VkDescriptorBufferInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkBuffer (poked :: VkDescriptorBufferInfo))
                 *> poke (ptr `plusPtr` 8) (vkOffset (poked :: VkDescriptorBufferInfo))
                 *> poke (ptr `plusPtr` 16) (vkRange (poked :: VkDescriptorBufferInfo))
+
+instance Zero VkDescriptorBufferInfo where
+  zero = VkDescriptorBufferInfo zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "VkDescriptorImageInfo"
 data VkDescriptorImageInfo = VkDescriptorImageInfo
   { -- No documentation found for Nested "VkDescriptorImageInfo" "sampler"
@@ -233,6 +250,11 @@ instance Storable VkDescriptorImageInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSampler (poked :: VkDescriptorImageInfo))
                 *> poke (ptr `plusPtr` 8) (vkImageView (poked :: VkDescriptorImageInfo))
                 *> poke (ptr `plusPtr` 16) (vkImageLayout (poked :: VkDescriptorImageInfo))
+
+instance Zero VkDescriptorImageInfo where
+  zero = VkDescriptorImageInfo zero
+                               zero
+                               zero
 -- | Dummy data to tag the 'Ptr' with
 data VkDescriptorPool_T
 -- No documentation found for TopLevel "VkDescriptorPool"
@@ -241,7 +263,7 @@ type VkDescriptorPool = Ptr VkDescriptorPool_T
 
 -- No documentation found for TopLevel "VkDescriptorPoolCreateFlagBits"
 newtype VkDescriptorPoolCreateFlagBits = VkDescriptorPoolCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDescriptorPoolCreateFlagBits where
   showsPrec _ VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = showString "VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT"
@@ -298,11 +320,19 @@ instance Storable VkDescriptorPoolCreateInfo where
                 *> poke (ptr `plusPtr` 20) (vkMaxSets (poked :: VkDescriptorPoolCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkPoolSizeCount (poked :: VkDescriptorPoolCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkPPoolSizes (poked :: VkDescriptorPoolCreateInfo))
+
+instance Zero VkDescriptorPoolCreateInfo where
+  zero = VkDescriptorPoolCreateInfo zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
 -- ** VkDescriptorPoolResetFlags
 
 -- No documentation found for TopLevel "VkDescriptorPoolResetFlags"
 newtype VkDescriptorPoolResetFlags = VkDescriptorPoolResetFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDescriptorPoolResetFlags where
   
@@ -335,6 +365,10 @@ instance Storable VkDescriptorPoolSize where
                                   <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkDescriptorPoolSize))
                 *> poke (ptr `plusPtr` 4) (vkDescriptorCount (poked :: VkDescriptorPoolSize))
+
+instance Zero VkDescriptorPoolSize where
+  zero = VkDescriptorPoolSize zero
+                              zero
 -- | Dummy data to tag the 'Ptr' with
 data VkDescriptorSet_T
 -- No documentation found for TopLevel "VkDescriptorSet"
@@ -367,6 +401,13 @@ instance Storable VkDescriptorSetAllocateInfo where
                 *> poke (ptr `plusPtr` 16) (vkDescriptorPool (poked :: VkDescriptorSetAllocateInfo))
                 *> poke (ptr `plusPtr` 24) (vkDescriptorSetCount (poked :: VkDescriptorSetAllocateInfo))
                 *> poke (ptr `plusPtr` 32) (vkPSetLayouts (poked :: VkDescriptorSetAllocateInfo))
+
+instance Zero VkDescriptorSetAllocateInfo where
+  zero = VkDescriptorSetAllocateInfo zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
 -- No documentation found for TopLevel "VkDescriptorSetLayoutBinding"
 data VkDescriptorSetLayoutBinding = VkDescriptorSetLayoutBinding
   { -- No documentation found for Nested "VkDescriptorSetLayoutBinding" "binding"
@@ -395,11 +436,18 @@ instance Storable VkDescriptorSetLayoutBinding where
                 *> poke (ptr `plusPtr` 8) (vkDescriptorCount (poked :: VkDescriptorSetLayoutBinding))
                 *> poke (ptr `plusPtr` 12) (vkStageFlags (poked :: VkDescriptorSetLayoutBinding))
                 *> poke (ptr `plusPtr` 16) (vkPImmutableSamplers (poked :: VkDescriptorSetLayoutBinding))
+
+instance Zero VkDescriptorSetLayoutBinding where
+  zero = VkDescriptorSetLayoutBinding zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
 -- ** VkDescriptorSetLayoutCreateFlagBits
 
 -- No documentation found for TopLevel "VkDescriptorSetLayoutCreateFlagBits"
 newtype VkDescriptorSetLayoutCreateFlagBits = VkDescriptorSetLayoutCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDescriptorSetLayoutCreateFlagBits where
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
@@ -450,11 +498,18 @@ instance Storable VkDescriptorSetLayoutCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDescriptorSetLayoutCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkBindingCount (poked :: VkDescriptorSetLayoutCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkPBindings (poked :: VkDescriptorSetLayoutCreateInfo))
+
+instance Zero VkDescriptorSetLayoutCreateInfo where
+  zero = VkDescriptorSetLayoutCreateInfo zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
 -- ** VkDescriptorType
 
 -- No documentation found for TopLevel "VkDescriptorType"
 newtype VkDescriptorType = VkDescriptorType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkDescriptorType where
   showsPrec _ VK_DESCRIPTOR_TYPE_SAMPLER = showString "VK_DESCRIPTOR_TYPE_SAMPLER"
@@ -587,6 +642,18 @@ instance Storable VkWriteDescriptorSet where
                 *> poke (ptr `plusPtr` 40) (vkPImageInfo (poked :: VkWriteDescriptorSet))
                 *> poke (ptr `plusPtr` 48) (vkPBufferInfo (poked :: VkWriteDescriptorSet))
                 *> poke (ptr `plusPtr` 56) (vkPTexelBufferView (poked :: VkWriteDescriptorSet))
+
+instance Zero VkWriteDescriptorSet where
+  zero = VkWriteDescriptorSet zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
+                              zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkAllocateDescriptorSets"
 foreign import ccall

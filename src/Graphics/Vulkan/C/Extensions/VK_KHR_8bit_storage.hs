@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -58,6 +59,13 @@ instance Storable VkPhysicalDevice8BitStorageFeaturesKHR where
                 *> poke (ptr `plusPtr` 16) (vkStorageBuffer8BitAccess (poked :: VkPhysicalDevice8BitStorageFeaturesKHR))
                 *> poke (ptr `plusPtr` 20) (vkUniformAndStorageBuffer8BitAccess (poked :: VkPhysicalDevice8BitStorageFeaturesKHR))
                 *> poke (ptr `plusPtr` 24) (vkStoragePushConstant8 (poked :: VkPhysicalDevice8BitStorageFeaturesKHR))
+
+instance Zero VkPhysicalDevice8BitStorageFeaturesKHR where
+  zero = VkPhysicalDevice8BitStorageFeaturesKHR zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
 -- No documentation found for TopLevel "VK_KHR_8BIT_STORAGE_EXTENSION_NAME"
 pattern VK_KHR_8BIT_STORAGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_8BIT_STORAGE_EXTENSION_NAME = "VK_KHR_8bit_storage"

@@ -57,6 +57,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -75,7 +76,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkIOSSurfaceCreateFlagsMVK"
 newtype VkIOSSurfaceCreateFlagsMVK = VkIOSSurfaceCreateFlagsMVK VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkIOSSurfaceCreateFlagsMVK where
   
@@ -116,6 +117,12 @@ instance Storable VkIOSSurfaceCreateInfoMVK where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkIOSSurfaceCreateInfoMVK))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkIOSSurfaceCreateInfoMVK))
                 *> poke (ptr `plusPtr` 24) (vkPView (poked :: VkIOSSurfaceCreateInfoMVK))
+
+instance Zero VkIOSSurfaceCreateInfoMVK where
+  zero = VkIOSSurfaceCreateInfoMVK zero
+                                   zero
+                                   zero
+                                   zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCreateIOSSurfaceMVK"
 foreign import ccall

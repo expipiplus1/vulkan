@@ -51,6 +51,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 
@@ -75,11 +76,16 @@ instance Storable VkPhysicalDeviceDepthClipEnableFeaturesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceDepthClipEnableFeaturesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceDepthClipEnableFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkDepthClipEnable (poked :: VkPhysicalDeviceDepthClipEnableFeaturesEXT))
+
+instance Zero VkPhysicalDeviceDepthClipEnableFeaturesEXT where
+  zero = VkPhysicalDeviceDepthClipEnableFeaturesEXT zero
+                                                    zero
+                                                    zero
 -- ** VkPipelineRasterizationDepthClipStateCreateFlagsEXT
 
 -- No documentation found for TopLevel "VkPipelineRasterizationDepthClipStateCreateFlagsEXT"
 newtype VkPipelineRasterizationDepthClipStateCreateFlagsEXT = VkPipelineRasterizationDepthClipStateCreateFlagsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineRasterizationDepthClipStateCreateFlagsEXT where
   
@@ -120,6 +126,12 @@ instance Storable VkPipelineRasterizationDepthClipStateCreateInfoEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineRasterizationDepthClipStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineRasterizationDepthClipStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 20) (vkDepthClipEnable (poked :: VkPipelineRasterizationDepthClipStateCreateInfoEXT))
+
+instance Zero VkPipelineRasterizationDepthClipStateCreateInfoEXT where
+  zero = VkPipelineRasterizationDepthClipStateCreateInfoEXT zero
+                                                            zero
+                                                            zero
+                                                            zero
 -- No documentation found for TopLevel "VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME"
 pattern VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME = "VK_EXT_depth_clip_enable"

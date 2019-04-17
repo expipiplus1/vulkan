@@ -43,6 +43,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkPhysicalDevice
@@ -84,6 +85,12 @@ instance Storable VkLayerProperties where
                 *> poke (ptr `plusPtr` 256) (vkSpecVersion (poked :: VkLayerProperties))
                 *> poke (ptr `plusPtr` 260) (vkImplementationVersion (poked :: VkLayerProperties))
                 *> poke (ptr `plusPtr` 264) (vkDescription (poked :: VkLayerProperties))
+
+instance Zero VkLayerProperties where
+  zero = VkLayerProperties zero
+                           zero
+                           zero
+                           zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkEnumerateDeviceLayerProperties"
 foreign import ccall

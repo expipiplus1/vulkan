@@ -61,6 +61,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -82,7 +83,7 @@ type GgpStreamDescriptor = Word32
 
 -- No documentation found for TopLevel "VkStreamDescriptorSurfaceCreateFlagsGGP"
 newtype VkStreamDescriptorSurfaceCreateFlagsGGP = VkStreamDescriptorSurfaceCreateFlagsGGP VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkStreamDescriptorSurfaceCreateFlagsGGP where
   
@@ -123,6 +124,12 @@ instance Storable VkStreamDescriptorSurfaceCreateInfoGGP where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkStreamDescriptorSurfaceCreateInfoGGP))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkStreamDescriptorSurfaceCreateInfoGGP))
                 *> poke (ptr `plusPtr` 20) (vkStreamDescriptor (poked :: VkStreamDescriptorSurfaceCreateInfoGGP))
+
+instance Zero VkStreamDescriptorSurfaceCreateInfoGGP where
+  zero = VkStreamDescriptorSurfaceCreateInfoGGP zero
+                                                zero
+                                                zero
+                                                zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCreateStreamDescriptorSurfaceGGP"
 foreign import ccall

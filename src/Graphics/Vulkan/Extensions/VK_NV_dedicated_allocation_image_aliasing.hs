@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation_image_aliasing
   ( VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV
@@ -55,3 +58,6 @@ fromCStructPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV :: VkPhysica
 fromCStructPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV c = PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV <$> -- Univalued Member elided
                                                                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)))
                                                                                                                                  <*> pure (bool32ToBool (vkDedicatedAllocationImageAliasing (c :: VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)))
+instance Zero PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
+  zero = PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV Nothing
+                                                                  False

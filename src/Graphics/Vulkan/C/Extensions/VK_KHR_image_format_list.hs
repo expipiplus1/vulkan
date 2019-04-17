@@ -30,6 +30,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -57,6 +58,12 @@ instance Storable VkImageFormatListCreateInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageFormatListCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkViewFormatCount (poked :: VkImageFormatListCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkPViewFormats (poked :: VkImageFormatListCreateInfoKHR))
+
+instance Zero VkImageFormatListCreateInfoKHR where
+  zero = VkImageFormatListCreateInfoKHR zero
+                                        zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME"
 pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME = "VK_KHR_image_format_list"

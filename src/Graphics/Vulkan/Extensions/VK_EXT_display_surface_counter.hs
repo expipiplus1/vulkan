@@ -45,7 +45,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter
   ( VkSurfaceCapabilities2EXT(..)
@@ -127,6 +128,19 @@ fromCStructSurfaceCapabilities2EXT c = SurfaceCapabilities2EXT <$> -- Univalued 
                                                                <*> pure (vkSupportedCompositeAlpha (c :: VkSurfaceCapabilities2EXT))
                                                                <*> pure (vkSupportedUsageFlags (c :: VkSurfaceCapabilities2EXT))
                                                                <*> pure (vkSupportedSurfaceCounters (c :: VkSurfaceCapabilities2EXT))
+instance Zero SurfaceCapabilities2EXT where
+  zero = SurfaceCapabilities2EXT Nothing
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "SurfaceCounterFlagBitsEXT"
 type SurfaceCounterFlagBitsEXT = VkSurfaceCounterFlagBitsEXT
 -- No documentation found for TopLevel "SurfaceCounterFlagsEXT"

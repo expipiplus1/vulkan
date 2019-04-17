@@ -63,6 +63,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
   ( VkPhysicalDeviceTransformFeedbackFeaturesEXT(..)
   , VkPhysicalDeviceTransformFeedbackPropertiesEXT(..)
@@ -130,6 +133,10 @@ fromCStructPhysicalDeviceTransformFeedbackFeaturesEXT c = PhysicalDeviceTransfor
                                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceTransformFeedbackFeaturesEXT)))
                                                                                                      <*> pure (bool32ToBool (vkTransformFeedback (c :: VkPhysicalDeviceTransformFeedbackFeaturesEXT)))
                                                                                                      <*> pure (bool32ToBool (vkGeometryStreams (c :: VkPhysicalDeviceTransformFeedbackFeaturesEXT)))
+instance Zero PhysicalDeviceTransformFeedbackFeaturesEXT where
+  zero = PhysicalDeviceTransformFeedbackFeaturesEXT Nothing
+                                                    False
+                                                    False
 -- No documentation found for TopLevel "PhysicalDeviceTransformFeedbackPropertiesEXT"
 data PhysicalDeviceTransformFeedbackPropertiesEXT = PhysicalDeviceTransformFeedbackPropertiesEXT
   { -- Univalued Member elided
@@ -172,6 +179,18 @@ fromCStructPhysicalDeviceTransformFeedbackPropertiesEXT c = PhysicalDeviceTransf
                                                                                                          <*> pure (bool32ToBool (vkTransformFeedbackStreamsLinesTriangles (c :: VkPhysicalDeviceTransformFeedbackPropertiesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkTransformFeedbackRasterizationStreamSelect (c :: VkPhysicalDeviceTransformFeedbackPropertiesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkTransformFeedbackDraw (c :: VkPhysicalDeviceTransformFeedbackPropertiesEXT)))
+instance Zero PhysicalDeviceTransformFeedbackPropertiesEXT where
+  zero = PhysicalDeviceTransformFeedbackPropertiesEXT Nothing
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      False
+                                                      False
+                                                      False
+                                                      False
 -- No documentation found for TopLevel "PipelineRasterizationStateStreamCreateFlagsEXT"
 type PipelineRasterizationStateStreamCreateFlagsEXT = VkPipelineRasterizationStateStreamCreateFlagsEXT
 -- No documentation found for TopLevel "PipelineRasterizationStateStreamCreateInfoEXT"
@@ -192,21 +211,25 @@ fromCStructPipelineRasterizationStateStreamCreateInfoEXT c = PipelineRasterizati
                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineRasterizationStateStreamCreateInfoEXT)))
                                                                                                            <*> pure (vkFlags (c :: VkPipelineRasterizationStateStreamCreateInfoEXT))
                                                                                                            <*> pure (vkRasterizationStream (c :: VkPipelineRasterizationStateStreamCreateInfoEXT))
+instance Zero PipelineRasterizationStateStreamCreateInfoEXT where
+  zero = PipelineRasterizationStateStreamCreateInfoEXT Nothing
+                                                       zero
+                                                       zero
 
 -- | Wrapper for 'vkCmdBeginQueryIndexedEXT'
-cmdBeginQueryIndexedEXT :: CommandBuffer ->  QueryPool ->  Word32 ->  QueryControlFlags ->  Word32 ->  IO (  )
+cmdBeginQueryIndexedEXT :: CommandBuffer ->  QueryPool ->  Word32 ->  QueryControlFlags ->  Word32 ->  IO ()
 cmdBeginQueryIndexedEXT = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \query -> \flags -> \index -> Graphics.Vulkan.C.Dynamic.cmdBeginQueryIndexedEXT commandTable commandBuffer queryPool query flags index *> (pure ())
 
 -- | Wrapper for 'vkCmdBeginTransformFeedbackEXT'
-cmdBeginTransformFeedbackEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Maybe (Vector DeviceSize) ->  IO (  )
+cmdBeginTransformFeedbackEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Maybe (Vector DeviceSize) ->  IO ()
 cmdBeginTransformFeedbackEXT = \(CommandBuffer commandBuffer commandTable) -> \firstCounterBuffer -> \counterBuffers -> \counterBufferOffsets -> maybeWith (withVec (&)) counterBufferOffsets (\pCounterBufferOffsets -> withVec (&) counterBuffers (\pCounterBuffers -> Graphics.Vulkan.C.Dynamic.cmdBeginTransformFeedbackEXT commandTable commandBuffer firstCounterBuffer (fromIntegral $ Data.Vector.length counterBuffers `min` maybe maxBound Data.Vector.length counterBufferOffsets) pCounterBuffers pCounterBufferOffsets *> (pure ())))
 
 -- | Wrapper for 'vkCmdBindTransformFeedbackBuffersEXT'
-cmdBindTransformFeedbackBuffersEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Vector DeviceSize ->  Maybe (Vector DeviceSize) ->  IO (  )
+cmdBindTransformFeedbackBuffersEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Vector DeviceSize ->  Maybe (Vector DeviceSize) ->  IO ()
 cmdBindTransformFeedbackBuffersEXT = \(CommandBuffer commandBuffer commandTable) -> \firstBinding -> \buffers -> \offsets -> \sizes -> maybeWith (withVec (&)) sizes (\pSizes -> withVec (&) offsets (\pOffsets -> withVec (&) buffers (\pBuffers -> Graphics.Vulkan.C.Dynamic.cmdBindTransformFeedbackBuffersEXT commandTable commandBuffer firstBinding (fromIntegral $ Data.Vector.length buffers `min` Data.Vector.length offsets `min` maybe maxBound Data.Vector.length sizes) pBuffers pOffsets pSizes *> (pure ()))))
 
 -- | Wrapper for 'vkCmdDrawIndirectByteCountEXT'
-cmdDrawIndirectByteCountEXT :: CommandBuffer ->  Word32 ->  Word32 ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO (  )
+cmdDrawIndirectByteCountEXT :: CommandBuffer ->  Word32 ->  Word32 ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
 cmdDrawIndirectByteCountEXT = \(CommandBuffer commandBuffer commandTable) -> \instanceCount -> \firstInstance -> \counterBuffer -> \counterBufferOffset -> \counterOffset -> \vertexStride -> Graphics.Vulkan.C.Dynamic.cmdDrawIndirectByteCountEXT commandTable commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride *> (pure ())
 
 -- | Wrapper for 'vkCmdEndQueryIndexedEXT'
@@ -214,5 +237,5 @@ cmdEndQueryIndexedEXT :: CommandBuffer ->  QueryPool ->  Word32 ->  Word32 ->  I
 cmdEndQueryIndexedEXT = \(CommandBuffer commandBuffer commandTable) -> \queryPool -> \query -> \index -> Graphics.Vulkan.C.Dynamic.cmdEndQueryIndexedEXT commandTable commandBuffer queryPool query index *> (pure ())
 
 -- | Wrapper for 'vkCmdEndTransformFeedbackEXT'
-cmdEndTransformFeedbackEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Maybe (Vector DeviceSize) ->  IO (  )
+cmdEndTransformFeedbackEXT :: CommandBuffer ->  Word32 ->  Vector Buffer ->  Maybe (Vector DeviceSize) ->  IO ()
 cmdEndTransformFeedbackEXT = \(CommandBuffer commandBuffer commandTable) -> \firstCounterBuffer -> \counterBuffers -> \counterBufferOffsets -> maybeWith (withVec (&)) counterBufferOffsets (\pCounterBufferOffsets -> withVec (&) counterBuffers (\pCounterBuffers -> Graphics.Vulkan.C.Dynamic.cmdEndTransformFeedbackEXT commandTable commandBuffer firstCounterBuffer (fromIntegral $ Data.Vector.length counterBuffers `min` maybe maxBound Data.Vector.length counterBufferOffsets) pCounterBuffers pCounterBufferOffsets *> (pure ())))

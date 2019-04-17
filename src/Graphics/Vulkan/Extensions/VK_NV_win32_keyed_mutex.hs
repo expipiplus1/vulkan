@@ -22,7 +22,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -41,6 +42,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_win32_keyed_mutex
   ( VkWin32KeyedMutexAcquireReleaseInfoNV(..)
   , pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV
@@ -82,10 +86,7 @@ data Win32KeyedMutexAcquireReleaseInfoNV = Win32KeyedMutexAcquireReleaseInfoNV
   }
   deriving (Show, Eq)
 withCStructWin32KeyedMutexAcquireReleaseInfoNV :: Win32KeyedMutexAcquireReleaseInfoNV -> (VkWin32KeyedMutexAcquireReleaseInfoNV -> IO a) -> IO a
-withCStructWin32KeyedMutexAcquireReleaseInfoNV from cont = withVec (&) (vkPReleaseKeys (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pReleaseKeys -> withVec (&) (vkPReleaseSyncs (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pReleaseSyncs -> withVec (&) (vkPAcquireTimeoutMilliseconds (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pAcquireTimeoutMilliseconds -> withVec (&) (vkPAcquireKeys (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pAcquireKeys -> withVec (&) (vkPAcquireSyncs (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pAcquireSyncs -> maybeWith withSomeVkStruct (vkPNext (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pPNext -> cont (VkWin32KeyedMutexAcquireReleaseInfoNV VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV pPNext (fromIntegral (minimum ([ Data.Vector.length (vkPAcquireSyncs (from :: Win32KeyedMutexAcquireReleaseInfoNV))
-, Data.Vector.length (vkPAcquireKeys (from :: Win32KeyedMutexAcquireReleaseInfoNV))
-, Data.Vector.length (vkPAcquireTimeoutMilliseconds (from :: Win32KeyedMutexAcquireReleaseInfoNV)) ]))) pAcquireSyncs pAcquireKeys pAcquireTimeoutMilliseconds (fromIntegral (minimum ([ Data.Vector.length (vkPReleaseSyncs (from :: Win32KeyedMutexAcquireReleaseInfoNV))
-, Data.Vector.length (vkPReleaseKeys (from :: Win32KeyedMutexAcquireReleaseInfoNV)) ]))) pReleaseSyncs pReleaseKeys)))))))
+withCStructWin32KeyedMutexAcquireReleaseInfoNV from cont = withVec (&) (vkPReleaseKeys (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pReleaseKeys -> withVec (&) (vkPReleaseSyncs (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pReleaseSyncs -> withVec (&) (vkPAcquireTimeoutMilliseconds (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pAcquireTimeoutMilliseconds -> withVec (&) (vkPAcquireKeys (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pAcquireKeys -> withVec (&) (vkPAcquireSyncs (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pAcquireSyncs -> maybeWith withSomeVkStruct (vkPNext (from :: Win32KeyedMutexAcquireReleaseInfoNV)) (\pPNext -> cont (VkWin32KeyedMutexAcquireReleaseInfoNV VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV pPNext (fromIntegral (minimum ([Data.Vector.length (vkPAcquireSyncs (from :: Win32KeyedMutexAcquireReleaseInfoNV)), Data.Vector.length (vkPAcquireKeys (from :: Win32KeyedMutexAcquireReleaseInfoNV)), Data.Vector.length (vkPAcquireTimeoutMilliseconds (from :: Win32KeyedMutexAcquireReleaseInfoNV))]))) pAcquireSyncs pAcquireKeys pAcquireTimeoutMilliseconds (fromIntegral (minimum ([Data.Vector.length (vkPReleaseSyncs (from :: Win32KeyedMutexAcquireReleaseInfoNV)), Data.Vector.length (vkPReleaseKeys (from :: Win32KeyedMutexAcquireReleaseInfoNV))]))) pReleaseSyncs pReleaseKeys)))))))
 fromCStructWin32KeyedMutexAcquireReleaseInfoNV :: VkWin32KeyedMutexAcquireReleaseInfoNV -> IO Win32KeyedMutexAcquireReleaseInfoNV
 fromCStructWin32KeyedMutexAcquireReleaseInfoNV c = Win32KeyedMutexAcquireReleaseInfoNV <$> -- Univalued Member elided
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkWin32KeyedMutexAcquireReleaseInfoNV)))
@@ -96,3 +97,10 @@ fromCStructWin32KeyedMutexAcquireReleaseInfoNV c = Win32KeyedMutexAcquireRelease
                                                                                        -- Length valued member elided
                                                                                        <*> (Data.Vector.generateM (fromIntegral (vkReleaseCount (c :: VkWin32KeyedMutexAcquireReleaseInfoNV))) (peekElemOff (vkPReleaseSyncs (c :: VkWin32KeyedMutexAcquireReleaseInfoNV))))
                                                                                        <*> (Data.Vector.generateM (fromIntegral (vkReleaseCount (c :: VkWin32KeyedMutexAcquireReleaseInfoNV))) (peekElemOff (vkPReleaseKeys (c :: VkWin32KeyedMutexAcquireReleaseInfoNV))))
+instance Zero Win32KeyedMutexAcquireReleaseInfoNV where
+  zero = Win32KeyedMutexAcquireReleaseInfoNV Nothing
+                                             Data.Vector.empty
+                                             Data.Vector.empty
+                                             Data.Vector.empty
+                                             Data.Vector.empty
+                                             Data.Vector.empty

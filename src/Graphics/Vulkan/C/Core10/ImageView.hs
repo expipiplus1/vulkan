@@ -82,6 +82,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -123,11 +124,17 @@ instance Storable VkComponentMapping where
                 *> poke (ptr `plusPtr` 4) (vkG (poked :: VkComponentMapping))
                 *> poke (ptr `plusPtr` 8) (vkB (poked :: VkComponentMapping))
                 *> poke (ptr `plusPtr` 12) (vkA (poked :: VkComponentMapping))
+
+instance Zero VkComponentMapping where
+  zero = VkComponentMapping zero
+                            zero
+                            zero
+                            zero
 -- ** VkComponentSwizzle
 
 -- No documentation found for TopLevel "VkComponentSwizzle"
 newtype VkComponentSwizzle = VkComponentSwizzle Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkComponentSwizzle where
   showsPrec _ VK_COMPONENT_SWIZZLE_IDENTITY = showString "VK_COMPONENT_SWIZZLE_IDENTITY"
@@ -210,6 +217,13 @@ instance Storable VkImageSubresourceRange where
                 *> poke (ptr `plusPtr` 8) (vkLevelCount (poked :: VkImageSubresourceRange))
                 *> poke (ptr `plusPtr` 12) (vkBaseArrayLayer (poked :: VkImageSubresourceRange))
                 *> poke (ptr `plusPtr` 16) (vkLayerCount (poked :: VkImageSubresourceRange))
+
+instance Zero VkImageSubresourceRange where
+  zero = VkImageSubresourceRange zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- | Dummy data to tag the 'Ptr' with
 data VkImageView_T
 -- No documentation found for TopLevel "VkImageView"
@@ -218,7 +232,7 @@ type VkImageView = Ptr VkImageView_T
 
 -- No documentation found for TopLevel "VkImageViewCreateFlagBits"
 newtype VkImageViewCreateFlagBits = VkImageViewCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkImageViewCreateFlagBits where
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
@@ -279,11 +293,21 @@ instance Storable VkImageViewCreateInfo where
                 *> poke (ptr `plusPtr` 36) (vkFormat (poked :: VkImageViewCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkComponents (poked :: VkImageViewCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkSubresourceRange (poked :: VkImageViewCreateInfo))
+
+instance Zero VkImageViewCreateInfo where
+  zero = VkImageViewCreateInfo zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
+                               zero
 -- ** VkImageViewType
 
 -- No documentation found for TopLevel "VkImageViewType"
 newtype VkImageViewType = VkImageViewType Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkImageViewType where
   showsPrec _ VK_IMAGE_VIEW_TYPE_1D = showString "VK_IMAGE_VIEW_TYPE_1D"

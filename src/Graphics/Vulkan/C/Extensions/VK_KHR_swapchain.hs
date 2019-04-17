@@ -138,6 +138,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkObjectType(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -212,6 +213,15 @@ instance Storable VkAcquireNextImageInfoKHR where
                 *> poke (ptr `plusPtr` 32) (vkSemaphore (poked :: VkAcquireNextImageInfoKHR))
                 *> poke (ptr `plusPtr` 40) (vkFence (poked :: VkAcquireNextImageInfoKHR))
                 *> poke (ptr `plusPtr` 48) (vkDeviceMask (poked :: VkAcquireNextImageInfoKHR))
+
+instance Zero VkAcquireNextImageInfoKHR where
+  zero = VkAcquireNextImageInfoKHR zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "VkBindImageMemorySwapchainInfoKHR"
 data VkBindImageMemorySwapchainInfoKHR = VkBindImageMemorySwapchainInfoKHR
   { -- No documentation found for Nested "VkBindImageMemorySwapchainInfoKHR" "sType"
@@ -236,6 +246,12 @@ instance Storable VkBindImageMemorySwapchainInfoKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBindImageMemorySwapchainInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkSwapchain (poked :: VkBindImageMemorySwapchainInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkImageIndex (poked :: VkBindImageMemorySwapchainInfoKHR))
+
+instance Zero VkBindImageMemorySwapchainInfoKHR where
+  zero = VkBindImageMemorySwapchainInfoKHR zero
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "VkDeviceGroupPresentCapabilitiesKHR"
 data VkDeviceGroupPresentCapabilitiesKHR = VkDeviceGroupPresentCapabilitiesKHR
   { -- No documentation found for Nested "VkDeviceGroupPresentCapabilitiesKHR" "sType"
@@ -260,6 +276,12 @@ instance Storable VkDeviceGroupPresentCapabilitiesKHR where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupPresentCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkPresentMask (poked :: VkDeviceGroupPresentCapabilitiesKHR))
                 *> poke (ptr `plusPtr` 144) (vkModes (poked :: VkDeviceGroupPresentCapabilitiesKHR))
+
+instance Zero VkDeviceGroupPresentCapabilitiesKHR where
+  zero = VkDeviceGroupPresentCapabilitiesKHR zero
+                                             zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkDeviceGroupPresentInfoKHR"
 data VkDeviceGroupPresentInfoKHR = VkDeviceGroupPresentInfoKHR
   { -- No documentation found for Nested "VkDeviceGroupPresentInfoKHR" "sType"
@@ -288,11 +310,18 @@ instance Storable VkDeviceGroupPresentInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkSwapchainCount (poked :: VkDeviceGroupPresentInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkPDeviceMasks (poked :: VkDeviceGroupPresentInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkMode (poked :: VkDeviceGroupPresentInfoKHR))
+
+instance Zero VkDeviceGroupPresentInfoKHR where
+  zero = VkDeviceGroupPresentInfoKHR zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
 -- ** VkDeviceGroupPresentModeFlagBitsKHR
 
 -- No documentation found for TopLevel "VkDeviceGroupPresentModeFlagBitsKHR"
 newtype VkDeviceGroupPresentModeFlagBitsKHR = VkDeviceGroupPresentModeFlagBitsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkDeviceGroupPresentModeFlagBitsKHR where
   showsPrec _ VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR = showString "VK_DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR"
@@ -351,6 +380,11 @@ instance Storable VkDeviceGroupSwapchainCreateInfoKHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGroupSwapchainCreateInfoKHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupSwapchainCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkModes (poked :: VkDeviceGroupSwapchainCreateInfoKHR))
+
+instance Zero VkDeviceGroupSwapchainCreateInfoKHR where
+  zero = VkDeviceGroupSwapchainCreateInfoKHR zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "VkImageSwapchainCreateInfoKHR"
 data VkImageSwapchainCreateInfoKHR = VkImageSwapchainCreateInfoKHR
   { -- No documentation found for Nested "VkImageSwapchainCreateInfoKHR" "sType"
@@ -371,6 +405,11 @@ instance Storable VkImageSwapchainCreateInfoKHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageSwapchainCreateInfoKHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageSwapchainCreateInfoKHR))
                 *> poke (ptr `plusPtr` 16) (vkSwapchain (poked :: VkImageSwapchainCreateInfoKHR))
+
+instance Zero VkImageSwapchainCreateInfoKHR where
+  zero = VkImageSwapchainCreateInfoKHR zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkPresentInfoKHR"
 data VkPresentInfoKHR = VkPresentInfoKHR
   { -- No documentation found for Nested "VkPresentInfoKHR" "sType"
@@ -411,11 +450,21 @@ instance Storable VkPresentInfoKHR where
                 *> poke (ptr `plusPtr` 40) (vkPSwapchains (poked :: VkPresentInfoKHR))
                 *> poke (ptr `plusPtr` 48) (vkPImageIndices (poked :: VkPresentInfoKHR))
                 *> poke (ptr `plusPtr` 56) (vkPResults (poked :: VkPresentInfoKHR))
+
+instance Zero VkPresentInfoKHR where
+  zero = VkPresentInfoKHR zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
 -- ** VkSwapchainCreateFlagBitsKHR
 
 -- No documentation found for TopLevel "VkSwapchainCreateFlagBitsKHR"
 newtype VkSwapchainCreateFlagBitsKHR = VkSwapchainCreateFlagBitsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSwapchainCreateFlagBitsKHR where
   -- The following values are from extensions, the patterns themselves are exported from the extension modules
@@ -521,6 +570,26 @@ instance Storable VkSwapchainCreateInfoKHR where
                 *> poke (ptr `plusPtr` 88) (vkPresentMode (poked :: VkSwapchainCreateInfoKHR))
                 *> poke (ptr `plusPtr` 92) (vkClipped (poked :: VkSwapchainCreateInfoKHR))
                 *> poke (ptr `plusPtr` 96) (vkOldSwapchain (poked :: VkSwapchainCreateInfoKHR))
+
+instance Zero VkSwapchainCreateInfoKHR where
+  zero = VkSwapchainCreateInfoKHR zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
+                                  zero
 -- | Dummy data to tag the 'Ptr' with
 data VkSwapchainKHR_T
 -- No documentation found for TopLevel "VkSwapchainKHR"

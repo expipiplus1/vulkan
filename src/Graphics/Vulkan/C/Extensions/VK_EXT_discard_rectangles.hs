@@ -68,6 +68,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.Pipeline
@@ -86,7 +87,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkDiscardRectangleModeEXT"
 newtype VkDiscardRectangleModeEXT = VkDiscardRectangleModeEXT Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkDiscardRectangleModeEXT where
   showsPrec _ VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT = showString "VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT"
@@ -131,11 +132,16 @@ instance Storable VkPhysicalDeviceDiscardRectanglePropertiesEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxDiscardRectangles (poked :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
+
+instance Zero VkPhysicalDeviceDiscardRectanglePropertiesEXT where
+  zero = VkPhysicalDeviceDiscardRectanglePropertiesEXT zero
+                                                       zero
+                                                       zero
 -- ** VkPipelineDiscardRectangleStateCreateFlagsEXT
 
 -- No documentation found for TopLevel "VkPipelineDiscardRectangleStateCreateFlagsEXT"
 newtype VkPipelineDiscardRectangleStateCreateFlagsEXT = VkPipelineDiscardRectangleStateCreateFlagsEXT VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineDiscardRectangleStateCreateFlagsEXT where
   
@@ -184,6 +190,14 @@ instance Storable VkPipelineDiscardRectangleStateCreateInfoEXT where
                 *> poke (ptr `plusPtr` 20) (vkDiscardRectangleMode (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 24) (vkDiscardRectangleCount (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
                 *> poke (ptr `plusPtr` 32) (vkPDiscardRectangles (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
+
+instance Zero VkPipelineDiscardRectangleStateCreateInfoEXT where
+  zero = VkPipelineDiscardRectangleStateCreateInfoEXT zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
+                                                      zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdSetDiscardRectangleEXT"
 foreign import ccall

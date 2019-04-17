@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_AMD_texture_gather_bias_lod
   ( VkTextureLODGatherFormatPropertiesAMD(..)
   , pattern VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD
@@ -55,3 +58,6 @@ fromCStructTextureLODGatherFormatPropertiesAMD :: VkTextureLODGatherFormatProper
 fromCStructTextureLODGatherFormatPropertiesAMD c = TextureLODGatherFormatPropertiesAMD <$> -- Univalued Member elided
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkTextureLODGatherFormatPropertiesAMD)))
                                                                                        <*> pure (bool32ToBool (vkSupportsTextureGatherLODBiasAMD (c :: VkTextureLODGatherFormatPropertiesAMD)))
+instance Zero TextureLODGatherFormatPropertiesAMD where
+  zero = TextureLODGatherFormatPropertiesAMD Nothing
+                                             False

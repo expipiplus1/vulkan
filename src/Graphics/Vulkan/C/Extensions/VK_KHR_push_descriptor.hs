@@ -44,6 +44,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
   ( VkDescriptorSetLayoutCreateFlagBits(..)
@@ -87,6 +88,11 @@ instance Storable VkPhysicalDevicePushDescriptorPropertiesKHR where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
                 *> poke (ptr `plusPtr` 16) (vkMaxPushDescriptors (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
+
+instance Zero VkPhysicalDevicePushDescriptorPropertiesKHR where
+  zero = VkPhysicalDevicePushDescriptorPropertiesKHR zero
+                                                     zero
+                                                     zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdPushDescriptorSetKHR"
 foreign import ccall

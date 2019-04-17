@@ -51,6 +51,7 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -88,6 +89,11 @@ instance Storable VkBufferMemoryRequirementsInfo2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferMemoryRequirementsInfo2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferMemoryRequirementsInfo2))
                 *> poke (ptr `plusPtr` 16) (vkBuffer (poked :: VkBufferMemoryRequirementsInfo2))
+
+instance Zero VkBufferMemoryRequirementsInfo2 where
+  zero = VkBufferMemoryRequirementsInfo2 zero
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "VkImageMemoryRequirementsInfo2"
 data VkImageMemoryRequirementsInfo2 = VkImageMemoryRequirementsInfo2
   { -- No documentation found for Nested "VkImageMemoryRequirementsInfo2" "sType"
@@ -108,6 +114,11 @@ instance Storable VkImageMemoryRequirementsInfo2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageMemoryRequirementsInfo2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageMemoryRequirementsInfo2))
                 *> poke (ptr `plusPtr` 16) (vkImage (poked :: VkImageMemoryRequirementsInfo2))
+
+instance Zero VkImageMemoryRequirementsInfo2 where
+  zero = VkImageMemoryRequirementsInfo2 zero
+                                        zero
+                                        zero
 -- No documentation found for TopLevel "VkImageSparseMemoryRequirementsInfo2"
 data VkImageSparseMemoryRequirementsInfo2 = VkImageSparseMemoryRequirementsInfo2
   { -- No documentation found for Nested "VkImageSparseMemoryRequirementsInfo2" "sType"
@@ -128,6 +139,11 @@ instance Storable VkImageSparseMemoryRequirementsInfo2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageSparseMemoryRequirementsInfo2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageSparseMemoryRequirementsInfo2))
                 *> poke (ptr `plusPtr` 16) (vkImage (poked :: VkImageSparseMemoryRequirementsInfo2))
+
+instance Zero VkImageSparseMemoryRequirementsInfo2 where
+  zero = VkImageSparseMemoryRequirementsInfo2 zero
+                                              zero
+                                              zero
 -- No documentation found for TopLevel "VkMemoryRequirements2"
 data VkMemoryRequirements2 = VkMemoryRequirements2
   { -- No documentation found for Nested "VkMemoryRequirements2" "sType"
@@ -148,6 +164,11 @@ instance Storable VkMemoryRequirements2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryRequirements2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryRequirements2))
                 *> poke (ptr `plusPtr` 16) (vkMemoryRequirements (poked :: VkMemoryRequirements2))
+
+instance Zero VkMemoryRequirements2 where
+  zero = VkMemoryRequirements2 zero
+                               zero
+                               zero
 -- No documentation found for TopLevel "VkMemoryRequirements2KHR"
 type VkMemoryRequirements2KHR = VkMemoryRequirements2
 
@@ -175,6 +196,11 @@ instance Storable VkSparseImageMemoryRequirements2 where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSparseImageMemoryRequirements2))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSparseImageMemoryRequirements2))
                 *> poke (ptr `plusPtr` 16) (vkMemoryRequirements (poked :: VkSparseImageMemoryRequirements2))
+
+instance Zero VkSparseImageMemoryRequirements2 where
+  zero = VkSparseImageMemoryRequirements2 zero
+                                          zero
+                                          zero
 #if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkGetBufferMemoryRequirements2"
 foreign import ccall

@@ -24,7 +24,8 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -34,7 +35,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -67,7 +69,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
   ( VkDescriptorUpdateTemplateCreateFlags(..)
@@ -152,6 +155,15 @@ fromCStructDescriptorUpdateTemplateCreateInfo c = DescriptorUpdateTemplateCreate
                                                                                      <*> pure (vkPipelineBindPoint (c :: VkDescriptorUpdateTemplateCreateInfo))
                                                                                      <*> pure (vkPipelineLayout (c :: VkDescriptorUpdateTemplateCreateInfo))
                                                                                      <*> pure (vkSet (c :: VkDescriptorUpdateTemplateCreateInfo))
+instance Zero DescriptorUpdateTemplateCreateInfo where
+  zero = DescriptorUpdateTemplateCreateInfo Nothing
+                                            zero
+                                            Data.Vector.empty
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
 -- No documentation found for TopLevel "DescriptorUpdateTemplateEntry"
 data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
   { -- No documentation found for Nested "DescriptorUpdateTemplateEntry" "dstBinding"
@@ -177,13 +189,20 @@ fromCStructDescriptorUpdateTemplateEntry c = DescriptorUpdateTemplateEntry <$> p
                                                                            <*> pure (vkDescriptorType (c :: VkDescriptorUpdateTemplateEntry))
                                                                            <*> pure (vkOffset (c :: VkDescriptorUpdateTemplateEntry))
                                                                            <*> pure (vkStride (c :: VkDescriptorUpdateTemplateEntry))
+instance Zero DescriptorUpdateTemplateEntry where
+  zero = DescriptorUpdateTemplateEntry zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "DescriptorUpdateTemplateType"
 type DescriptorUpdateTemplateType = VkDescriptorUpdateTemplateType
 -- No documentation found for TopLevel "DescriptorUpdateTemplateTypeKHR"
 type DescriptorUpdateTemplateTypeKHR = DescriptorUpdateTemplateType
 
 -- | Wrapper for 'vkCreateDescriptorUpdateTemplate'
-createDescriptorUpdateTemplate :: Device ->  DescriptorUpdateTemplateCreateInfo ->  Maybe AllocationCallbacks ->  IO ( DescriptorUpdateTemplate )
+createDescriptorUpdateTemplate :: Device ->  DescriptorUpdateTemplateCreateInfo ->  Maybe AllocationCallbacks ->  IO (DescriptorUpdateTemplate)
 createDescriptorUpdateTemplate = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pDescriptorUpdateTemplate -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructDescriptorUpdateTemplateCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createDescriptorUpdateTemplate commandTable device pCreateInfo pAllocator pDescriptorUpdateTemplate >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pDescriptorUpdateTemplate)))))
 
 -- | Wrapper for 'vkDestroyDescriptorUpdateTemplate'
@@ -193,8 +212,9 @@ destroyDescriptorUpdateTemplate = \(Device device commandTable) -> \descriptorUp
 -- | Wrapper for 'vkUpdateDescriptorSetWithTemplate'
 updateDescriptorSetWithTemplate :: Device ->  DescriptorSet ->  DescriptorUpdateTemplate ->  Ptr () ->  IO ()
 updateDescriptorSetWithTemplate = \(Device device commandTable) -> \descriptorSet -> \descriptorUpdateTemplate -> \pData -> Graphics.Vulkan.C.Dynamic.updateDescriptorSetWithTemplate commandTable device descriptorSet descriptorUpdateTemplate pData *> (pure ())
-withDescriptorUpdateTemplate :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withDescriptorUpdateTemplate createInfo allocationCallbacks =
-  bracket
-    (vkCreateDescriptorUpdateTemplate createInfo allocationCallbacks)
-    (`vkDestroyDescriptorUpdateTemplate` allocationCallbacks)
+-- | Wrapper for 'createDescriptorUpdateTemplate' and 'destroyDescriptorUpdateTemplate' using 'bracket'
+withDescriptorUpdateTemplate
+  :: Device -> DescriptorUpdateTemplateCreateInfo -> Maybe (AllocationCallbacks) -> (DescriptorUpdateTemplate -> IO a) -> IO a
+withDescriptorUpdateTemplate device descriptorUpdateTemplateCreateInfo allocationCallbacks = bracket
+  (createDescriptorUpdateTemplate device descriptorUpdateTemplateCreateInfo allocationCallbacks)
+  (\o -> destroyDescriptorUpdateTemplate device o allocationCallbacks)

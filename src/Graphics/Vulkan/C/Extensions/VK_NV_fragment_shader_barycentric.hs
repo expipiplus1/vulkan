@@ -27,6 +27,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -50,6 +51,11 @@ instance Storable VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkFragmentShaderBarycentric (poked :: VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV))
+
+instance Zero VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV where
+  zero = VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV zero
+                                                             zero
+                                                             zero
 -- No documentation found for TopLevel "VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME"
 pattern VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME = "VK_NV_fragment_shader_barycentric"

@@ -15,11 +15,12 @@ module Graphics.Vulkan.Core10.PipelineLayout
   , ShaderStageFlags
   , createPipelineLayout
   , destroyPipelineLayout
-  , withDescriptorSetLayout
+  , withPipelineLayout
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -32,7 +33,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Word
@@ -60,7 +62,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO
+  ( Zero(..)
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.PipelineLayout
@@ -120,6 +123,11 @@ fromCStructPipelineLayoutCreateInfo c = PipelineLayoutCreateInfo <$> -- Univalue
                                                                  <*> (Data.Vector.generateM (fromIntegral (vkSetLayoutCount (c :: VkPipelineLayoutCreateInfo))) (peekElemOff (vkPSetLayouts (c :: VkPipelineLayoutCreateInfo))))
                                                                  -- Length valued member elided
                                                                  <*> (Data.Vector.generateM (fromIntegral (vkPushConstantRangeCount (c :: VkPipelineLayoutCreateInfo))) (((fromCStructPushConstantRange <=<) . peekElemOff) (vkPPushConstantRanges (c :: VkPipelineLayoutCreateInfo))))
+instance Zero PipelineLayoutCreateInfo where
+  zero = PipelineLayoutCreateInfo Nothing
+                                  zero
+                                  Data.Vector.empty
+                                  Data.Vector.empty
 -- No documentation found for TopLevel "PushConstantRange"
 data PushConstantRange = PushConstantRange
   { -- No documentation found for Nested "PushConstantRange" "stageFlags"
@@ -136,18 +144,23 @@ fromCStructPushConstantRange :: VkPushConstantRange -> IO PushConstantRange
 fromCStructPushConstantRange c = PushConstantRange <$> pure (vkStageFlags (c :: VkPushConstantRange))
                                                    <*> pure (vkOffset (c :: VkPushConstantRange))
                                                    <*> pure (vkSize (c :: VkPushConstantRange))
+instance Zero PushConstantRange where
+  zero = PushConstantRange zero
+                           zero
+                           zero
 -- No documentation found for TopLevel "ShaderStageFlags"
 type ShaderStageFlags = ShaderStageFlagBits
 
 -- | Wrapper for 'vkCreatePipelineLayout'
-createPipelineLayout :: Device ->  PipelineLayoutCreateInfo ->  Maybe AllocationCallbacks ->  IO ( PipelineLayout )
+createPipelineLayout :: Device ->  PipelineLayoutCreateInfo ->  Maybe AllocationCallbacks ->  IO (PipelineLayout)
 createPipelineLayout = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pPipelineLayout -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructPipelineLayoutCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createPipelineLayout commandTable device pCreateInfo pAllocator pPipelineLayout >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pPipelineLayout)))))
 
 -- | Wrapper for 'vkDestroyPipelineLayout'
 destroyPipelineLayout :: Device ->  PipelineLayout ->  Maybe AllocationCallbacks ->  IO ()
 destroyPipelineLayout = \(Device device commandTable) -> \pipelineLayout -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyPipelineLayout commandTable device pipelineLayout pAllocator *> (pure ()))
-withDescriptorSetLayout :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withDescriptorSetLayout createInfo allocationCallbacks =
-  bracket
-    (vkCreateDescriptorSetLayout createInfo allocationCallbacks)
-    (`vkDestroyDescriptorSetLayout` allocationCallbacks)
+-- | Wrapper for 'createPipelineLayout' and 'destroyPipelineLayout' using 'bracket'
+withPipelineLayout
+  :: Device -> PipelineLayoutCreateInfo -> Maybe (AllocationCallbacks) -> (PipelineLayout -> IO a) -> IO a
+withPipelineLayout device pipelineLayoutCreateInfo allocationCallbacks = bracket
+  (createPipelineLayout device pipelineLayoutCreateInfo allocationCallbacks)
+  (\o -> destroyPipelineLayout device o allocationCallbacks)

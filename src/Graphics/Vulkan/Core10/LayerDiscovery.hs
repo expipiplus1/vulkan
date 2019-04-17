@@ -26,6 +26,9 @@ import Data.ByteString
   ( ByteString
   , packCString
   )
+import qualified Data.ByteString
+  ( empty
+  )
 import Data.Vector
   ( Vector
   )
@@ -65,6 +68,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Core10.LayerDiscovery
@@ -100,6 +104,11 @@ fromCStructLayerProperties c = LayerProperties <$> Data.Vector.Storable.unsafeWi
                                                <*> pure (vkSpecVersion (c :: VkLayerProperties))
                                                <*> pure (vkImplementationVersion (c :: VkLayerProperties))
                                                <*> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkDescription (c :: VkLayerProperties))) packCString
+instance Zero LayerProperties where
+  zero = LayerProperties Data.ByteString.empty
+                         zero
+                         zero
+                         Data.ByteString.empty
 
 -- | Wrapper for 'vkEnumerateDeviceLayerProperties'
 getNumDeviceLayerProperties :: PhysicalDevice ->  IO (VkResult, Word32)

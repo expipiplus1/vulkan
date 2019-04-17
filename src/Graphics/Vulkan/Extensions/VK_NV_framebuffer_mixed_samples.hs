@@ -42,6 +42,9 @@ import Foreign.Storable
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples
   ( VkCoverageModulationModeNV(..)
   , VkPipelineCoverageModulationStateCreateFlagsNV(..)
@@ -96,3 +99,9 @@ fromCStructPipelineCoverageModulationStateCreateInfoNV c = PipelineCoverageModul
                                                                                                        <*> pure (bool32ToBool (vkCoverageModulationTableEnable (c :: VkPipelineCoverageModulationStateCreateInfoNV)))
                                                                                                        -- Optional length valued member elided
                                                                                                        <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkCoverageModulationTableCount (c :: VkPipelineCoverageModulationStateCreateInfoNV))) (peekElemOff p)) (vkPCoverageModulationTable (c :: VkPipelineCoverageModulationStateCreateInfoNV))
+instance Zero PipelineCoverageModulationStateCreateInfoNV where
+  zero = PipelineCoverageModulationStateCreateInfoNV Nothing
+                                                     zero
+                                                     zero
+                                                     False
+                                                     Nothing

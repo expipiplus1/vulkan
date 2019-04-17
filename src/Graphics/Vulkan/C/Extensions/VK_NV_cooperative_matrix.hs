@@ -80,6 +80,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkPhysicalDevice
@@ -96,7 +97,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkComponentTypeNV"
 newtype VkComponentTypeNV = VkComponentTypeNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkComponentTypeNV where
   showsPrec _ VK_COMPONENT_TYPE_FLOAT16_NV = showString "VK_COMPONENT_TYPE_FLOAT16_NV"
@@ -223,6 +224,18 @@ instance Storable VkCooperativeMatrixPropertiesNV where
                 *> poke (ptr `plusPtr` 36) (vkCType (poked :: VkCooperativeMatrixPropertiesNV))
                 *> poke (ptr `plusPtr` 40) (vkDType (poked :: VkCooperativeMatrixPropertiesNV))
                 *> poke (ptr `plusPtr` 44) (vkScope (poked :: VkCooperativeMatrixPropertiesNV))
+
+instance Zero VkCooperativeMatrixPropertiesNV where
+  zero = VkCooperativeMatrixPropertiesNV zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "VkPhysicalDeviceCooperativeMatrixFeaturesNV"
 data VkPhysicalDeviceCooperativeMatrixFeaturesNV = VkPhysicalDeviceCooperativeMatrixFeaturesNV
   { -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixFeaturesNV" "sType"
@@ -247,6 +260,12 @@ instance Storable VkPhysicalDeviceCooperativeMatrixFeaturesNV where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceCooperativeMatrixFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkCooperativeMatrix (poked :: VkPhysicalDeviceCooperativeMatrixFeaturesNV))
                 *> poke (ptr `plusPtr` 20) (vkCooperativeMatrixRobustBufferAccess (poked :: VkPhysicalDeviceCooperativeMatrixFeaturesNV))
+
+instance Zero VkPhysicalDeviceCooperativeMatrixFeaturesNV where
+  zero = VkPhysicalDeviceCooperativeMatrixFeaturesNV zero
+                                                     zero
+                                                     zero
+                                                     zero
 -- No documentation found for TopLevel "VkPhysicalDeviceCooperativeMatrixPropertiesNV"
 data VkPhysicalDeviceCooperativeMatrixPropertiesNV = VkPhysicalDeviceCooperativeMatrixPropertiesNV
   { -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixPropertiesNV" "sType"
@@ -267,11 +286,16 @@ instance Storable VkPhysicalDeviceCooperativeMatrixPropertiesNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceCooperativeMatrixPropertiesNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceCooperativeMatrixPropertiesNV))
                 *> poke (ptr `plusPtr` 16) (vkCooperativeMatrixSupportedStages (poked :: VkPhysicalDeviceCooperativeMatrixPropertiesNV))
+
+instance Zero VkPhysicalDeviceCooperativeMatrixPropertiesNV where
+  zero = VkPhysicalDeviceCooperativeMatrixPropertiesNV zero
+                                                       zero
+                                                       zero
 -- ** VkScopeNV
 
 -- No documentation found for TopLevel "VkScopeNV"
 newtype VkScopeNV = VkScopeNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkScopeNV where
   showsPrec _ VK_SCOPE_DEVICE_NV = showString "VK_SCOPE_DEVICE_NV"

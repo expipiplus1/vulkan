@@ -55,6 +55,9 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
+import Graphics.Vulkan.C.Core10.Core
   ( pattern VK_FALSE
   , pattern VK_TRUE
   )
@@ -64,7 +67,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- No documentation found for TopLevel "VkPipelineCacheHeaderVersion"
 newtype VkPipelineCacheHeaderVersion = VkPipelineCacheHeaderVersion Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkPipelineCacheHeaderVersion where
   showsPrec _ VK_PIPELINE_CACHE_HEADER_VERSION_ONE = showString "VK_PIPELINE_CACHE_HEADER_VERSION_ONE"

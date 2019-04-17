@@ -49,6 +49,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader
   ( VkDrawMeshTasksIndirectCommandNV(..)
   , VkPhysicalDeviceMeshShaderFeaturesNV(..)
@@ -97,6 +100,9 @@ withCStructDrawMeshTasksIndirectCommandNV from cont = cont (VkDrawMeshTasksIndir
 fromCStructDrawMeshTasksIndirectCommandNV :: VkDrawMeshTasksIndirectCommandNV -> IO DrawMeshTasksIndirectCommandNV
 fromCStructDrawMeshTasksIndirectCommandNV c = DrawMeshTasksIndirectCommandNV <$> pure (vkTaskCount (c :: VkDrawMeshTasksIndirectCommandNV))
                                                                              <*> pure (vkFirstTask (c :: VkDrawMeshTasksIndirectCommandNV))
+instance Zero DrawMeshTasksIndirectCommandNV where
+  zero = DrawMeshTasksIndirectCommandNV zero
+                                        zero
 -- No documentation found for TopLevel "PhysicalDeviceMeshShaderFeaturesNV"
 data PhysicalDeviceMeshShaderFeaturesNV = PhysicalDeviceMeshShaderFeaturesNV
   { -- Univalued Member elided
@@ -115,6 +121,10 @@ fromCStructPhysicalDeviceMeshShaderFeaturesNV c = PhysicalDeviceMeshShaderFeatur
                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceMeshShaderFeaturesNV)))
                                                                                      <*> pure (bool32ToBool (vkTaskShader (c :: VkPhysicalDeviceMeshShaderFeaturesNV)))
                                                                                      <*> pure (bool32ToBool (vkMeshShader (c :: VkPhysicalDeviceMeshShaderFeaturesNV)))
+instance Zero PhysicalDeviceMeshShaderFeaturesNV where
+  zero = PhysicalDeviceMeshShaderFeaturesNV Nothing
+                                            False
+                                            False
 -- No documentation found for TopLevel "PhysicalDeviceMeshShaderPropertiesNV"
 data PhysicalDeviceMeshShaderPropertiesNV = PhysicalDeviceMeshShaderPropertiesNV
   { -- Univalued Member elided
@@ -170,9 +180,24 @@ fromCStructPhysicalDeviceMeshShaderPropertiesNV c = PhysicalDeviceMeshShaderProp
                                                                                          <*> pure (vkMaxMeshMultiviewViewCount (c :: VkPhysicalDeviceMeshShaderPropertiesNV))
                                                                                          <*> pure (vkMeshOutputPerVertexGranularity (c :: VkPhysicalDeviceMeshShaderPropertiesNV))
                                                                                          <*> pure (vkMeshOutputPerPrimitiveGranularity (c :: VkPhysicalDeviceMeshShaderPropertiesNV))
+instance Zero PhysicalDeviceMeshShaderPropertiesNV where
+  zero = PhysicalDeviceMeshShaderPropertiesNV Nothing
+                                              zero
+                                              zero
+                                              (zero, zero, zero)
+                                              zero
+                                              zero
+                                              zero
+                                              (zero, zero, zero)
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
 
 -- | Wrapper for 'vkCmdDrawMeshTasksIndirectCountNV'
-cmdDrawMeshTasksIndirectCountNV :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO (  )
+cmdDrawMeshTasksIndirectCountNV :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
 cmdDrawMeshTasksIndirectCountNV = \(CommandBuffer commandBuffer commandTable) -> \buffer -> \offset -> \countBuffer -> \countBufferOffset -> \maxDrawCount -> \stride -> Graphics.Vulkan.C.Dynamic.cmdDrawMeshTasksIndirectCountNV commandTable commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride *> (pure ())
 
 -- | Wrapper for 'vkCmdDrawMeshTasksIndirectNV'

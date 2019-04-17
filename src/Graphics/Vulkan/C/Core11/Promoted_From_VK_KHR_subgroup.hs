@@ -55,6 +55,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.PipelineLayout
@@ -94,11 +95,19 @@ instance Storable VkPhysicalDeviceSubgroupProperties where
                 *> poke (ptr `plusPtr` 20) (vkSupportedStages (poked :: VkPhysicalDeviceSubgroupProperties))
                 *> poke (ptr `plusPtr` 24) (vkSupportedOperations (poked :: VkPhysicalDeviceSubgroupProperties))
                 *> poke (ptr `plusPtr` 28) (vkQuadOperationsInAllStages (poked :: VkPhysicalDeviceSubgroupProperties))
+
+instance Zero VkPhysicalDeviceSubgroupProperties where
+  zero = VkPhysicalDeviceSubgroupProperties zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
+                                            zero
 -- ** VkSubgroupFeatureFlagBits
 
 -- No documentation found for TopLevel "VkSubgroupFeatureFlagBits"
 newtype VkSubgroupFeatureFlagBits = VkSubgroupFeatureFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkSubgroupFeatureFlagBits where
   showsPrec _ VK_SUBGROUP_FEATURE_BASIC_BIT = showString "VK_SUBGROUP_FEATURE_BASIC_BIT"

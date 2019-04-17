@@ -66,7 +66,8 @@ module Graphics.Vulkan.Extensions.VK_KHR_swapchain
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -82,7 +83,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import qualified Data.Vector.Generic
@@ -132,6 +134,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
@@ -244,6 +247,13 @@ fromCStructAcquireNextImageInfoKHR c = AcquireNextImageInfoKHR <$> -- Univalued 
                                                                <*> pure (vkSemaphore (c :: VkAcquireNextImageInfoKHR))
                                                                <*> pure (vkFence (c :: VkAcquireNextImageInfoKHR))
                                                                <*> pure (vkDeviceMask (c :: VkAcquireNextImageInfoKHR))
+instance Zero AcquireNextImageInfoKHR where
+  zero = AcquireNextImageInfoKHR Nothing
+                                 zero
+                                 zero
+                                 zero
+                                 zero
+                                 zero
 -- No documentation found for TopLevel "BindImageMemorySwapchainInfoKHR"
 data BindImageMemorySwapchainInfoKHR = BindImageMemorySwapchainInfoKHR
   { -- Univalued Member elided
@@ -262,6 +272,10 @@ fromCStructBindImageMemorySwapchainInfoKHR c = BindImageMemorySwapchainInfoKHR <
                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBindImageMemorySwapchainInfoKHR)))
                                                                                <*> pure (vkSwapchain (c :: VkBindImageMemorySwapchainInfoKHR))
                                                                                <*> pure (vkImageIndex (c :: VkBindImageMemorySwapchainInfoKHR))
+instance Zero BindImageMemorySwapchainInfoKHR where
+  zero = BindImageMemorySwapchainInfoKHR Nothing
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "DeviceGroupPresentCapabilitiesKHR"
 data DeviceGroupPresentCapabilitiesKHR = DeviceGroupPresentCapabilitiesKHR
   { -- Univalued Member elided
@@ -280,6 +294,10 @@ fromCStructDeviceGroupPresentCapabilitiesKHR c = DeviceGroupPresentCapabilitiesK
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDeviceGroupPresentCapabilitiesKHR)))
                                                                                    <*> pure (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized (vkPresentMask (c :: VkDeviceGroupPresentCapabilitiesKHR))))
                                                                                    <*> pure (vkModes (c :: VkDeviceGroupPresentCapabilitiesKHR))
+instance Zero DeviceGroupPresentCapabilitiesKHR where
+  zero = DeviceGroupPresentCapabilitiesKHR Nothing
+                                           Data.Vector.empty
+                                           zero
 -- No documentation found for TopLevel "DeviceGroupPresentInfoKHR"
 data DeviceGroupPresentInfoKHR = DeviceGroupPresentInfoKHR
   { -- Univalued Member elided
@@ -300,6 +318,10 @@ fromCStructDeviceGroupPresentInfoKHR c = DeviceGroupPresentInfoKHR <$> -- Unival
                                                                    -- Length valued member elided
                                                                    <*> (Data.Vector.generateM (fromIntegral (vkSwapchainCount (c :: VkDeviceGroupPresentInfoKHR))) (peekElemOff (vkPDeviceMasks (c :: VkDeviceGroupPresentInfoKHR))))
                                                                    <*> pure (vkMode (c :: VkDeviceGroupPresentInfoKHR))
+instance Zero DeviceGroupPresentInfoKHR where
+  zero = DeviceGroupPresentInfoKHR Nothing
+                                   Data.Vector.empty
+                                   zero
 -- No documentation found for TopLevel "DeviceGroupPresentModeFlagBitsKHR"
 type DeviceGroupPresentModeFlagBitsKHR = VkDeviceGroupPresentModeFlagBitsKHR
 -- No documentation found for TopLevel "DeviceGroupPresentModeFlagsKHR"
@@ -319,6 +341,9 @@ fromCStructDeviceGroupSwapchainCreateInfoKHR :: VkDeviceGroupSwapchainCreateInfo
 fromCStructDeviceGroupSwapchainCreateInfoKHR c = DeviceGroupSwapchainCreateInfoKHR <$> -- Univalued Member elided
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDeviceGroupSwapchainCreateInfoKHR)))
                                                                                    <*> pure (vkModes (c :: VkDeviceGroupSwapchainCreateInfoKHR))
+instance Zero DeviceGroupSwapchainCreateInfoKHR where
+  zero = DeviceGroupSwapchainCreateInfoKHR Nothing
+                                           zero
 -- No documentation found for TopLevel "ImageSwapchainCreateInfoKHR"
 data ImageSwapchainCreateInfoKHR = ImageSwapchainCreateInfoKHR
   { -- Univalued Member elided
@@ -334,6 +359,9 @@ fromCStructImageSwapchainCreateInfoKHR :: VkImageSwapchainCreateInfoKHR -> IO Im
 fromCStructImageSwapchainCreateInfoKHR c = ImageSwapchainCreateInfoKHR <$> -- Univalued Member elided
                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageSwapchainCreateInfoKHR)))
                                                                        <*> pure (vkSwapchain (c :: VkImageSwapchainCreateInfoKHR))
+instance Zero ImageSwapchainCreateInfoKHR where
+  zero = ImageSwapchainCreateInfoKHR Nothing
+                                     zero
 -- No documentation found for TopLevel "PresentInfoKHR"
 data PresentInfoKHR = PresentInfoKHR
   { -- Univalued Member elided
@@ -352,8 +380,7 @@ data PresentInfoKHR = PresentInfoKHR
   }
   deriving (Show, Eq)
 withCStructPresentInfoKHR :: PresentInfoKHR -> (VkPresentInfoKHR -> IO a) -> IO a
-withCStructPresentInfoKHR from cont = maybeWith (withVec (&)) (vkPResults (from :: PresentInfoKHR)) (\pResults -> withVec (&) (vkPImageIndices (from :: PresentInfoKHR)) (\pImageIndices -> withVec (&) (vkPSwapchains (from :: PresentInfoKHR)) (\pSwapchains -> withVec (&) (vkPWaitSemaphores (from :: PresentInfoKHR)) (\pWaitSemaphores -> maybeWith withSomeVkStruct (vkPNext (from :: PresentInfoKHR)) (\pPNext -> cont (VkPresentInfoKHR VK_STRUCTURE_TYPE_PRESENT_INFO_KHR pPNext (fromIntegral (Data.Vector.length (vkPWaitSemaphores (from :: PresentInfoKHR)))) pWaitSemaphores (fromIntegral (minimum ([ Data.Vector.length (vkPSwapchains (from :: PresentInfoKHR))
-, Data.Vector.length (vkPImageIndices (from :: PresentInfoKHR)) ] ++ [Data.Vector.length v | Just v <- [ (vkPResults (from :: PresentInfoKHR)) ]]))) pSwapchains pImageIndices pResults))))))
+withCStructPresentInfoKHR from cont = maybeWith (withVec (&)) (vkPResults (from :: PresentInfoKHR)) (\pResults -> withVec (&) (vkPImageIndices (from :: PresentInfoKHR)) (\pImageIndices -> withVec (&) (vkPSwapchains (from :: PresentInfoKHR)) (\pSwapchains -> withVec (&) (vkPWaitSemaphores (from :: PresentInfoKHR)) (\pWaitSemaphores -> maybeWith withSomeVkStruct (vkPNext (from :: PresentInfoKHR)) (\pPNext -> cont (VkPresentInfoKHR VK_STRUCTURE_TYPE_PRESENT_INFO_KHR pPNext (fromIntegral (Data.Vector.length (vkPWaitSemaphores (from :: PresentInfoKHR)))) pWaitSemaphores (fromIntegral (minimum ([Data.Vector.length (vkPSwapchains (from :: PresentInfoKHR)), Data.Vector.length (vkPImageIndices (from :: PresentInfoKHR))] ++ [Data.Vector.length v | Just v <- [(vkPResults (from :: PresentInfoKHR))]]))) pSwapchains pImageIndices pResults))))))
 fromCStructPresentInfoKHR :: VkPresentInfoKHR -> IO PresentInfoKHR
 fromCStructPresentInfoKHR c = PresentInfoKHR <$> -- Univalued Member elided
                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPresentInfoKHR)))
@@ -363,6 +390,12 @@ fromCStructPresentInfoKHR c = PresentInfoKHR <$> -- Univalued Member elided
                                              <*> (Data.Vector.generateM (fromIntegral (vkSwapchainCount (c :: VkPresentInfoKHR))) (peekElemOff (vkPSwapchains (c :: VkPresentInfoKHR))))
                                              <*> (Data.Vector.generateM (fromIntegral (vkSwapchainCount (c :: VkPresentInfoKHR))) (peekElemOff (vkPImageIndices (c :: VkPresentInfoKHR))))
                                              <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkSwapchainCount (c :: VkPresentInfoKHR))) (peekElemOff p)) (vkPResults (c :: VkPresentInfoKHR))
+instance Zero PresentInfoKHR where
+  zero = PresentInfoKHR Nothing
+                        Data.Vector.empty
+                        Data.Vector.empty
+                        Data.Vector.empty
+                        Nothing
 -- No documentation found for TopLevel "SwapchainCreateFlagBitsKHR"
 type SwapchainCreateFlagBitsKHR = VkSwapchainCreateFlagBitsKHR
 -- No documentation found for TopLevel "SwapchainCreateFlagsKHR"
@@ -426,6 +459,23 @@ fromCStructSwapchainCreateInfoKHR c = SwapchainCreateInfoKHR <$> -- Univalued Me
                                                              <*> pure (vkPresentMode (c :: VkSwapchainCreateInfoKHR))
                                                              <*> pure (bool32ToBool (vkClipped (c :: VkSwapchainCreateInfoKHR)))
                                                              <*> pure (vkOldSwapchain (c :: VkSwapchainCreateInfoKHR))
+instance Zero SwapchainCreateInfoKHR where
+  zero = SwapchainCreateInfoKHR Nothing
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                zero
+                                Data.Vector.empty
+                                zero
+                                zero
+                                zero
+                                False
+                                zero
 -- No documentation found for TopLevel "SwapchainKHR"
 type SwapchainKHR = VkSwapchainKHR
 
@@ -434,12 +484,11 @@ acquireNextImage2KHR :: Device ->  AcquireNextImageInfoKHR ->  IO (VkResult, Wor
 acquireNextImage2KHR = \(Device device commandTable) -> \acquireInfo -> alloca (\pImageIndex -> (\a -> withCStructAcquireNextImageInfoKHR a . flip with) acquireInfo (\pAcquireInfo -> Graphics.Vulkan.C.Dynamic.acquireNextImage2KHR commandTable device pAcquireInfo pImageIndex >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pImageIndex))))
 
 -- | Wrapper for 'vkAcquireNextImageKHR'
-acquireNextImageKHR :: Device ->  SwapchainKHR ->  Word64 ->  Semaphore ->  Fence ->  IO ( VkResult
-, Word32 )
+acquireNextImageKHR :: Device ->  SwapchainKHR ->  Word64 ->  Semaphore ->  Fence ->  IO (VkResult, Word32)
 acquireNextImageKHR = \(Device device commandTable) -> \swapchain -> \timeout -> \semaphore -> \fence -> alloca (\pImageIndex -> Graphics.Vulkan.C.Dynamic.acquireNextImageKHR commandTable device swapchain timeout semaphore fence pImageIndex >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pImageIndex)))
 
 -- | Wrapper for 'vkCreateSwapchainKHR'
-createSwapchainKHR :: Device ->  SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO ( SwapchainKHR )
+createSwapchainKHR :: Device ->  SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SwapchainKHR)
 createSwapchainKHR = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pSwapchain -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructSwapchainCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createSwapchainKHR commandTable device pCreateInfo pAllocator pSwapchain >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSwapchain)))))
 
 -- | Wrapper for 'vkDestroySwapchainKHR'
@@ -487,8 +536,9 @@ getAllSwapchainImagesKHR device swapchain =
 -- | Wrapper for 'vkQueuePresentKHR'
 queuePresentKHR :: Queue ->  PresentInfoKHR ->  IO (VkResult)
 queuePresentKHR = \(Queue queue commandTable) -> \presentInfo -> (\a -> withCStructPresentInfoKHR a . flip with) presentInfo (\pPresentInfo -> Graphics.Vulkan.C.Dynamic.queuePresentKHR commandTable queue pPresentInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure r)))
-withSwapchainKHR :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withSwapchainKHR createInfo allocationCallbacks =
-  bracket
-    (vkCreateSwapchainKHR createInfo allocationCallbacks)
-    (`vkDestroySwapchainKHR` allocationCallbacks)
+-- | Wrapper for 'createSwapchainKHR' and 'destroySwapchainKHR' using 'bracket'
+withSwapchainKHR
+  :: Device -> SwapchainCreateInfoKHR -> Maybe (AllocationCallbacks) -> (SwapchainKHR -> IO a) -> IO a
+withSwapchainKHR device swapchainCreateInfoKHR allocationCallbacks = bracket
+  (createSwapchainKHR device swapchainCreateInfoKHR allocationCallbacks)
+  (\o -> destroySwapchainKHR device o allocationCallbacks)

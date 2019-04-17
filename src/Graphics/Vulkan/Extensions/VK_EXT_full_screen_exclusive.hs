@@ -73,6 +73,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
@@ -141,6 +142,9 @@ fromCStructSurfaceCapabilitiesFullScreenExclusiveEXT :: VkSurfaceCapabilitiesFul
 fromCStructSurfaceCapabilitiesFullScreenExclusiveEXT c = SurfaceCapabilitiesFullScreenExclusiveEXT <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSurfaceCapabilitiesFullScreenExclusiveEXT)))
                                                                                                    <*> pure (bool32ToBool (vkFullScreenExclusiveSupported (c :: VkSurfaceCapabilitiesFullScreenExclusiveEXT)))
+instance Zero SurfaceCapabilitiesFullScreenExclusiveEXT where
+  zero = SurfaceCapabilitiesFullScreenExclusiveEXT Nothing
+                                                   False
 -- No documentation found for TopLevel "SurfaceFullScreenExclusiveInfoEXT"
 data SurfaceFullScreenExclusiveInfoEXT = SurfaceFullScreenExclusiveInfoEXT
   { -- Univalued Member elided
@@ -156,6 +160,9 @@ fromCStructSurfaceFullScreenExclusiveInfoEXT :: VkSurfaceFullScreenExclusiveInfo
 fromCStructSurfaceFullScreenExclusiveInfoEXT c = SurfaceFullScreenExclusiveInfoEXT <$> -- Univalued Member elided
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSurfaceFullScreenExclusiveInfoEXT)))
                                                                                    <*> pure (vkFullScreenExclusive (c :: VkSurfaceFullScreenExclusiveInfoEXT))
+instance Zero SurfaceFullScreenExclusiveInfoEXT where
+  zero = SurfaceFullScreenExclusiveInfoEXT Nothing
+                                           zero
 -- No documentation found for TopLevel "SurfaceFullScreenExclusiveWin32InfoEXT"
 data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32InfoEXT
   { -- Univalued Member elided
@@ -171,6 +178,9 @@ fromCStructSurfaceFullScreenExclusiveWin32InfoEXT :: VkSurfaceFullScreenExclusiv
 fromCStructSurfaceFullScreenExclusiveWin32InfoEXT c = SurfaceFullScreenExclusiveWin32InfoEXT <$> -- Univalued Member elided
                                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSurfaceFullScreenExclusiveWin32InfoEXT)))
                                                                                              <*> pure (vkHmonitor (c :: VkSurfaceFullScreenExclusiveWin32InfoEXT))
+instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
+  zero = SurfaceFullScreenExclusiveWin32InfoEXT Nothing
+                                                zero
 
 -- | Wrapper for 'vkAcquireFullScreenExclusiveModeEXT'
 acquireFullScreenExclusiveModeEXT :: Device ->  SwapchainKHR ->  IO ()
@@ -181,8 +191,7 @@ getNumPhysicalDeviceSurfacePresentModes2EXT :: PhysicalDevice ->  PhysicalDevice
 getNumPhysicalDeviceSurfacePresentModes2EXT = \(PhysicalDevice physicalDevice commandTable) -> \surfaceInfo -> alloca (\pPresentModeCount -> (\a -> withCStructPhysicalDeviceSurfaceInfo2KHR a . flip with) surfaceInfo (\pSurfaceInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfacePresentModes2EXT commandTable physicalDevice pSurfaceInfo pPresentModeCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPresentModeCount))))
 
 -- | Wrapper for 'vkGetPhysicalDeviceSurfacePresentModes2EXT'
-getPhysicalDeviceSurfacePresentModes2EXT :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  Word32 ->  IO ( VkResult
-, Vector PresentModeKHR )
+getPhysicalDeviceSurfacePresentModes2EXT :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  Word32 ->  IO (VkResult, Vector PresentModeKHR)
 getPhysicalDeviceSurfacePresentModes2EXT = \(PhysicalDevice physicalDevice commandTable) -> \surfaceInfo -> \presentModeCount -> allocaArray (fromIntegral presentModeCount) (\pPresentModes -> with presentModeCount (\pPresentModeCount -> (\a -> withCStructPhysicalDeviceSurfaceInfo2KHR a . flip with) surfaceInfo (\pSurfaceInfo -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceSurfacePresentModes2EXT commandTable physicalDevice pSurfaceInfo pPresentModeCount pPresentModes >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM (peekElemOff pPresentModes) =<< (fromIntegral <$> (peek pPresentModeCount))))))))
 -- | Call 'getNumPhysicalDeviceSurfacePresentModes2EXT' to get the number of return values, then use that
 -- number to call 'getPhysicalDeviceSurfacePresentModes2EXT' to get all the values.

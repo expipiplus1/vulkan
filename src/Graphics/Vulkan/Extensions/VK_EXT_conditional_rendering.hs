@@ -41,6 +41,9 @@ import qualified Graphics.Vulkan.C.Dynamic
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering
   ( VkCommandBufferInheritanceConditionalRenderingInfoEXT(..)
   , VkConditionalRenderingBeginInfoEXT(..)
@@ -92,6 +95,9 @@ fromCStructCommandBufferInheritanceConditionalRenderingInfoEXT :: VkCommandBuffe
 fromCStructCommandBufferInheritanceConditionalRenderingInfoEXT c = CommandBufferInheritanceConditionalRenderingInfoEXT <$> -- Univalued Member elided
                                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkCommandBufferInheritanceConditionalRenderingInfoEXT)))
                                                                                                                        <*> pure (bool32ToBool (vkConditionalRenderingEnable (c :: VkCommandBufferInheritanceConditionalRenderingInfoEXT)))
+instance Zero CommandBufferInheritanceConditionalRenderingInfoEXT where
+  zero = CommandBufferInheritanceConditionalRenderingInfoEXT Nothing
+                                                             False
 -- No documentation found for TopLevel "ConditionalRenderingBeginInfoEXT"
 data ConditionalRenderingBeginInfoEXT = ConditionalRenderingBeginInfoEXT
   { -- Univalued Member elided
@@ -113,6 +119,11 @@ fromCStructConditionalRenderingBeginInfoEXT c = ConditionalRenderingBeginInfoEXT
                                                                                  <*> pure (vkBuffer (c :: VkConditionalRenderingBeginInfoEXT))
                                                                                  <*> pure (vkOffset (c :: VkConditionalRenderingBeginInfoEXT))
                                                                                  <*> pure (vkFlags (c :: VkConditionalRenderingBeginInfoEXT))
+instance Zero ConditionalRenderingBeginInfoEXT where
+  zero = ConditionalRenderingBeginInfoEXT Nothing
+                                          zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "ConditionalRenderingFlagBitsEXT"
 type ConditionalRenderingFlagBitsEXT = VkConditionalRenderingFlagBitsEXT
 -- No documentation found for TopLevel "ConditionalRenderingFlagsEXT"
@@ -135,6 +146,10 @@ fromCStructPhysicalDeviceConditionalRenderingFeaturesEXT c = PhysicalDeviceCondi
                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceConditionalRenderingFeaturesEXT)))
                                                                                                            <*> pure (bool32ToBool (vkConditionalRendering (c :: VkPhysicalDeviceConditionalRenderingFeaturesEXT)))
                                                                                                            <*> pure (bool32ToBool (vkInheritedConditionalRendering (c :: VkPhysicalDeviceConditionalRenderingFeaturesEXT)))
+instance Zero PhysicalDeviceConditionalRenderingFeaturesEXT where
+  zero = PhysicalDeviceConditionalRenderingFeaturesEXT Nothing
+                                                       False
+                                                       False
 
 -- | Wrapper for 'vkCmdBeginConditionalRenderingEXT'
 cmdBeginConditionalRenderingEXT :: CommandBuffer ->  ConditionalRenderingBeginInfoEXT ->  IO ()

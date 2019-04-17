@@ -60,6 +60,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageCreateFlagBits(..)
@@ -93,6 +94,11 @@ instance Storable VkImageViewUsageCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImageViewUsageCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImageViewUsageCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkUsage (poked :: VkImageViewUsageCreateInfo))
+
+instance Zero VkImageViewUsageCreateInfo where
+  zero = VkImageViewUsageCreateInfo zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "VkInputAttachmentAspectReference"
 data VkInputAttachmentAspectReference = VkInputAttachmentAspectReference
   { -- No documentation found for Nested "VkInputAttachmentAspectReference" "subpass"
@@ -113,6 +119,11 @@ instance Storable VkInputAttachmentAspectReference where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSubpass (poked :: VkInputAttachmentAspectReference))
                 *> poke (ptr `plusPtr` 4) (vkInputAttachmentIndex (poked :: VkInputAttachmentAspectReference))
                 *> poke (ptr `plusPtr` 8) (vkAspectMask (poked :: VkInputAttachmentAspectReference))
+
+instance Zero VkInputAttachmentAspectReference where
+  zero = VkInputAttachmentAspectReference zero
+                                          zero
+                                          zero
 -- No documentation found for TopLevel "VkPhysicalDevicePointClippingProperties"
 data VkPhysicalDevicePointClippingProperties = VkPhysicalDevicePointClippingProperties
   { -- No documentation found for Nested "VkPhysicalDevicePointClippingProperties" "sType"
@@ -133,6 +144,11 @@ instance Storable VkPhysicalDevicePointClippingProperties where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDevicePointClippingProperties))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDevicePointClippingProperties))
                 *> poke (ptr `plusPtr` 16) (vkPointClippingBehavior (poked :: VkPhysicalDevicePointClippingProperties))
+
+instance Zero VkPhysicalDevicePointClippingProperties where
+  zero = VkPhysicalDevicePointClippingProperties zero
+                                                 zero
+                                                 zero
 -- No documentation found for TopLevel "VkPipelineTessellationDomainOriginStateCreateInfo"
 data VkPipelineTessellationDomainOriginStateCreateInfo = VkPipelineTessellationDomainOriginStateCreateInfo
   { -- No documentation found for Nested "VkPipelineTessellationDomainOriginStateCreateInfo" "sType"
@@ -153,11 +169,16 @@ instance Storable VkPipelineTessellationDomainOriginStateCreateInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineTessellationDomainOriginStateCreateInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineTessellationDomainOriginStateCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkDomainOrigin (poked :: VkPipelineTessellationDomainOriginStateCreateInfo))
+
+instance Zero VkPipelineTessellationDomainOriginStateCreateInfo where
+  zero = VkPipelineTessellationDomainOriginStateCreateInfo zero
+                                                           zero
+                                                           zero
 -- ** VkPointClippingBehavior
 
 -- No documentation found for TopLevel "VkPointClippingBehavior"
 newtype VkPointClippingBehavior = VkPointClippingBehavior Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkPointClippingBehavior where
   showsPrec _ VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = showString "VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES"
@@ -206,11 +227,17 @@ instance Storable VkRenderPassInputAttachmentAspectCreateInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkAspectReferenceCount (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkPAspectReferences (poked :: VkRenderPassInputAttachmentAspectCreateInfo))
+
+instance Zero VkRenderPassInputAttachmentAspectCreateInfo where
+  zero = VkRenderPassInputAttachmentAspectCreateInfo zero
+                                                     zero
+                                                     zero
+                                                     zero
 -- ** VkTessellationDomainOrigin
 
 -- No documentation found for TopLevel "VkTessellationDomainOrigin"
 newtype VkTessellationDomainOrigin = VkTessellationDomainOrigin Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkTessellationDomainOrigin where
   showsPrec _ VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = showString "VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT"

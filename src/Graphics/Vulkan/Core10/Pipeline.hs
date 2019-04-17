@@ -104,12 +104,13 @@ module Graphics.Vulkan.Core10.Pipeline
   , createComputePipelines
   , createGraphicsPipelines
   , destroyPipeline
-  , withPipelineLayout
-  , withRenderPass
+  , withComputePipelines
+  , withGraphicsPipelines
   ) where
 
 import Control.Exception
-  ( throwIO
+  ( bracket
+  , throwIO
   )
 import Control.Monad
   ( (<=<)
@@ -125,7 +126,8 @@ import Data.ByteString
   , useAsCString
   )
 import qualified Data.ByteString
-  ( length
+  ( empty
+  , length
   )
 import Data.ByteString.Unsafe
   ( unsafeUseAsCString
@@ -146,7 +148,8 @@ import Data.Vector
   ( Vector
   )
 import qualified Data.Vector
-  ( generateM
+  ( empty
+  , generateM
   , length
   )
 import Data.Vector.Generic.Sized
@@ -185,7 +188,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( VkFlags
+  ( Zero(..)
+  , VkFlags
   , pattern VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO
   , pattern VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
   , pattern VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
@@ -323,6 +327,13 @@ fromCStructComputePipelineCreateInfo c = ComputePipelineCreateInfo <$> -- Unival
                                                                    <*> pure (vkLayout (c :: VkComputePipelineCreateInfo))
                                                                    <*> pure (vkBasePipelineHandle (c :: VkComputePipelineCreateInfo))
                                                                    <*> pure (vkBasePipelineIndex (c :: VkComputePipelineCreateInfo))
+instance Zero ComputePipelineCreateInfo where
+  zero = ComputePipelineCreateInfo Nothing
+                                   zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 -- No documentation found for TopLevel "CullModeFlagBits"
 type CullModeFlagBits = VkCullModeFlagBits
 -- No documentation found for TopLevel "CullModeFlags"
@@ -342,6 +353,9 @@ withCStructExtent2D from cont = cont (VkExtent2D (vkWidth (from :: Extent2D)) (v
 fromCStructExtent2D :: VkExtent2D -> IO Extent2D
 fromCStructExtent2D c = Extent2D <$> pure (vkWidth (c :: VkExtent2D))
                                  <*> pure (vkHeight (c :: VkExtent2D))
+instance Zero Extent2D where
+  zero = Extent2D zero
+                  zero
 -- No documentation found for TopLevel "FrontFace"
 type FrontFace = VkFrontFace
 -- No documentation found for TopLevel "GraphicsPipelineCreateInfo"
@@ -406,6 +420,24 @@ fromCStructGraphicsPipelineCreateInfo c = GraphicsPipelineCreateInfo <$> -- Univ
                                                                      <*> pure (vkSubpass (c :: VkGraphicsPipelineCreateInfo))
                                                                      <*> pure (vkBasePipelineHandle (c :: VkGraphicsPipelineCreateInfo))
                                                                      <*> pure (vkBasePipelineIndex (c :: VkGraphicsPipelineCreateInfo))
+instance Zero GraphicsPipelineCreateInfo where
+  zero = GraphicsPipelineCreateInfo Nothing
+                                    zero
+                                    Data.Vector.empty
+                                    Nothing
+                                    Nothing
+                                    Nothing
+                                    Nothing
+                                    zero
+                                    Nothing
+                                    Nothing
+                                    Nothing
+                                    Nothing
+                                    zero
+                                    zero
+                                    zero
+                                    zero
+                                    zero
 -- No documentation found for TopLevel "LogicOp"
 type LogicOp = VkLogicOp
 -- No documentation found for TopLevel "Offset2D"
@@ -421,6 +453,9 @@ withCStructOffset2D from cont = cont (VkOffset2D (vkX (from :: Offset2D)) (vkY (
 fromCStructOffset2D :: VkOffset2D -> IO Offset2D
 fromCStructOffset2D c = Offset2D <$> pure (vkX (c :: VkOffset2D))
                                  <*> pure (vkY (c :: VkOffset2D))
+instance Zero Offset2D where
+  zero = Offset2D zero
+                  zero
 -- No documentation found for TopLevel "Pipeline"
 type Pipeline = VkPipeline
 -- No documentation found for TopLevel "PipelineColorBlendAttachmentState"
@@ -454,6 +489,15 @@ fromCStructPipelineColorBlendAttachmentState c = PipelineColorBlendAttachmentSta
                                                                                    <*> pure (vkDstAlphaBlendFactor (c :: VkPipelineColorBlendAttachmentState))
                                                                                    <*> pure (vkAlphaBlendOp (c :: VkPipelineColorBlendAttachmentState))
                                                                                    <*> pure (vkColorWriteMask (c :: VkPipelineColorBlendAttachmentState))
+instance Zero PipelineColorBlendAttachmentState where
+  zero = PipelineColorBlendAttachmentState False
+                                           zero
+                                           zero
+                                           zero
+                                           zero
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "PipelineColorBlendStateCreateFlags"
 type PipelineColorBlendStateCreateFlags = VkPipelineColorBlendStateCreateFlags
 -- No documentation found for TopLevel "PipelineColorBlendStateCreateInfo"
@@ -488,6 +532,13 @@ fromCStructPipelineColorBlendStateCreateInfo c = PipelineColorBlendStateCreateIn
                                                                                    , Data.Vector.Storable.Sized.unsafeIndex x 1
                                                                                    , Data.Vector.Storable.Sized.unsafeIndex x 2
                                                                                    , Data.Vector.Storable.Sized.unsafeIndex x 3 ))
+instance Zero PipelineColorBlendStateCreateInfo where
+  zero = PipelineColorBlendStateCreateInfo Nothing
+                                           zero
+                                           False
+                                           zero
+                                           Data.Vector.empty
+                                           (zero, zero, zero, zero)
 -- No documentation found for TopLevel "PipelineCreateFlagBits"
 type PipelineCreateFlagBits = VkPipelineCreateFlagBits
 -- No documentation found for TopLevel "PipelineCreateFlags"
@@ -536,6 +587,18 @@ fromCStructPipelineDepthStencilStateCreateInfo c = PipelineDepthStencilStateCrea
                                                                                        <*> (fromCStructStencilOpState (vkBack (c :: VkPipelineDepthStencilStateCreateInfo)))
                                                                                        <*> pure (vkMinDepthBounds (c :: VkPipelineDepthStencilStateCreateInfo))
                                                                                        <*> pure (vkMaxDepthBounds (c :: VkPipelineDepthStencilStateCreateInfo))
+instance Zero PipelineDepthStencilStateCreateInfo where
+  zero = PipelineDepthStencilStateCreateInfo Nothing
+                                             zero
+                                             False
+                                             False
+                                             zero
+                                             False
+                                             False
+                                             zero
+                                             zero
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "PipelineDynamicStateCreateFlags"
 type PipelineDynamicStateCreateFlags = VkPipelineDynamicStateCreateFlags
 -- No documentation found for TopLevel "PipelineDynamicStateCreateInfo"
@@ -558,6 +621,10 @@ fromCStructPipelineDynamicStateCreateInfo c = PipelineDynamicStateCreateInfo <$>
                                                                              <*> pure (vkFlags (c :: VkPipelineDynamicStateCreateInfo))
                                                                              -- Length valued member elided
                                                                              <*> (Data.Vector.generateM (fromIntegral (vkDynamicStateCount (c :: VkPipelineDynamicStateCreateInfo))) (peekElemOff (vkPDynamicStates (c :: VkPipelineDynamicStateCreateInfo))))
+instance Zero PipelineDynamicStateCreateInfo where
+  zero = PipelineDynamicStateCreateInfo Nothing
+                                        zero
+                                        Data.Vector.empty
 -- No documentation found for TopLevel "PipelineInputAssemblyStateCreateFlags"
 type PipelineInputAssemblyStateCreateFlags = VkPipelineInputAssemblyStateCreateFlags
 -- No documentation found for TopLevel "PipelineInputAssemblyStateCreateInfo"
@@ -581,6 +648,11 @@ fromCStructPipelineInputAssemblyStateCreateInfo c = PipelineInputAssemblyStateCr
                                                                                          <*> pure (vkFlags (c :: VkPipelineInputAssemblyStateCreateInfo))
                                                                                          <*> pure (vkTopology (c :: VkPipelineInputAssemblyStateCreateInfo))
                                                                                          <*> pure (bool32ToBool (vkPrimitiveRestartEnable (c :: VkPipelineInputAssemblyStateCreateInfo)))
+instance Zero PipelineInputAssemblyStateCreateInfo where
+  zero = PipelineInputAssemblyStateCreateInfo Nothing
+                                              zero
+                                              zero
+                                              False
 -- No documentation found for TopLevel "PipelineLayout"
 type PipelineLayout = VkPipelineLayout
 -- No documentation found for TopLevel "PipelineMultisampleStateCreateFlags"
@@ -618,6 +690,15 @@ fromCStructPipelineMultisampleStateCreateInfo c = PipelineMultisampleStateCreate
                                                                                      <*> (Data.Vector.generateM (fromIntegral (((coerce (vkRasterizationSamples (c :: VkPipelineMultisampleStateCreateInfo)) :: VkFlags) + 31) `quot` 32)) (peekElemOff (vkPSampleMask (c :: VkPipelineMultisampleStateCreateInfo))))
                                                                                      <*> pure (bool32ToBool (vkAlphaToCoverageEnable (c :: VkPipelineMultisampleStateCreateInfo)))
                                                                                      <*> pure (bool32ToBool (vkAlphaToOneEnable (c :: VkPipelineMultisampleStateCreateInfo)))
+instance Zero PipelineMultisampleStateCreateInfo where
+  zero = PipelineMultisampleStateCreateInfo Nothing
+                                            zero
+                                            zero
+                                            False
+                                            zero
+                                            Data.Vector.empty
+                                            False
+                                            False
 -- No documentation found for TopLevel "PipelineRasterizationStateCreateFlags"
 type PipelineRasterizationStateCreateFlags = VkPipelineRasterizationStateCreateFlags
 -- No documentation found for TopLevel "PipelineRasterizationStateCreateInfo"
@@ -665,6 +746,19 @@ fromCStructPipelineRasterizationStateCreateInfo c = PipelineRasterizationStateCr
                                                                                          <*> pure (vkDepthBiasClamp (c :: VkPipelineRasterizationStateCreateInfo))
                                                                                          <*> pure (vkDepthBiasSlopeFactor (c :: VkPipelineRasterizationStateCreateInfo))
                                                                                          <*> pure (vkLineWidth (c :: VkPipelineRasterizationStateCreateInfo))
+instance Zero PipelineRasterizationStateCreateInfo where
+  zero = PipelineRasterizationStateCreateInfo Nothing
+                                              zero
+                                              False
+                                              False
+                                              zero
+                                              zero
+                                              zero
+                                              False
+                                              zero
+                                              zero
+                                              zero
+                                              zero
 -- No documentation found for TopLevel "PipelineShaderStageCreateFlags"
 type PipelineShaderStageCreateFlags = VkPipelineShaderStageCreateFlags
 -- No documentation found for TopLevel "PipelineShaderStageCreateInfo"
@@ -694,6 +788,13 @@ fromCStructPipelineShaderStageCreateInfo c = PipelineShaderStageCreateInfo <$> -
                                                                            <*> pure (vkModule (c :: VkPipelineShaderStageCreateInfo))
                                                                            <*> packCString (vkPName (c :: VkPipelineShaderStageCreateInfo))
                                                                            <*> maybePeek (fromCStructSpecializationInfo <=< peek) (vkPSpecializationInfo (c :: VkPipelineShaderStageCreateInfo))
+instance Zero PipelineShaderStageCreateInfo where
+  zero = PipelineShaderStageCreateInfo Nothing
+                                       zero
+                                       zero
+                                       zero
+                                       Data.ByteString.empty
+                                       Nothing
 -- No documentation found for TopLevel "PipelineTessellationStateCreateFlags"
 type PipelineTessellationStateCreateFlags = VkPipelineTessellationStateCreateFlags
 -- No documentation found for TopLevel "PipelineTessellationStateCreateInfo"
@@ -714,6 +815,10 @@ fromCStructPipelineTessellationStateCreateInfo c = PipelineTessellationStateCrea
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineTessellationStateCreateInfo)))
                                                                                        <*> pure (vkFlags (c :: VkPipelineTessellationStateCreateInfo))
                                                                                        <*> pure (vkPatchControlPoints (c :: VkPipelineTessellationStateCreateInfo))
+instance Zero PipelineTessellationStateCreateInfo where
+  zero = PipelineTessellationStateCreateInfo Nothing
+                                             zero
+                                             zero
 -- No documentation found for TopLevel "PipelineVertexInputStateCreateFlags"
 type PipelineVertexInputStateCreateFlags = VkPipelineVertexInputStateCreateFlags
 -- No documentation found for TopLevel "PipelineVertexInputStateCreateInfo"
@@ -741,6 +846,11 @@ fromCStructPipelineVertexInputStateCreateInfo c = PipelineVertexInputStateCreate
                                                                                      <*> (Data.Vector.generateM (fromIntegral (vkVertexBindingDescriptionCount (c :: VkPipelineVertexInputStateCreateInfo))) (((fromCStructVertexInputBindingDescription <=<) . peekElemOff) (vkPVertexBindingDescriptions (c :: VkPipelineVertexInputStateCreateInfo))))
                                                                                      -- Length valued member elided
                                                                                      <*> (Data.Vector.generateM (fromIntegral (vkVertexAttributeDescriptionCount (c :: VkPipelineVertexInputStateCreateInfo))) (((fromCStructVertexInputAttributeDescription <=<) . peekElemOff) (vkPVertexAttributeDescriptions (c :: VkPipelineVertexInputStateCreateInfo))))
+instance Zero PipelineVertexInputStateCreateInfo where
+  zero = PipelineVertexInputStateCreateInfo Nothing
+                                            zero
+                                            Data.Vector.empty
+                                            Data.Vector.empty
 -- No documentation found for TopLevel "PipelineViewportStateCreateFlags"
 type PipelineViewportStateCreateFlags = VkPipelineViewportStateCreateFlags
 -- No documentation found for TopLevel "PipelineViewportStateCreateInfo"
@@ -768,6 +878,11 @@ fromCStructPipelineViewportStateCreateInfo c = PipelineViewportStateCreateInfo <
                                                                                <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkViewportCount (c :: VkPipelineViewportStateCreateInfo))) (((fromCStructViewport <=<) . peekElemOff) p)) (vkPViewports (c :: VkPipelineViewportStateCreateInfo))
                                                                                -- Optional length valued member elided
                                                                                <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkScissorCount (c :: VkPipelineViewportStateCreateInfo))) (((fromCStructRect2D <=<) . peekElemOff) p)) (vkPScissors (c :: VkPipelineViewportStateCreateInfo))
+instance Zero PipelineViewportStateCreateInfo where
+  zero = PipelineViewportStateCreateInfo Nothing
+                                         zero
+                                         Nothing
+                                         Nothing
 -- No documentation found for TopLevel "PolygonMode"
 type PolygonMode = VkPolygonMode
 -- No documentation found for TopLevel "PrimitiveTopology"
@@ -785,6 +900,9 @@ withCStructRect2D from cont = withCStructExtent2D (vkExtent (from :: Rect2D)) (\
 fromCStructRect2D :: VkRect2D -> IO Rect2D
 fromCStructRect2D c = Rect2D <$> (fromCStructOffset2D (vkOffset (c :: VkRect2D)))
                              <*> (fromCStructExtent2D (vkExtent (c :: VkRect2D)))
+instance Zero Rect2D where
+  zero = Rect2D zero
+                zero
 -- No documentation found for TopLevel "RenderPass"
 type RenderPass = VkRenderPass
 -- No documentation found for TopLevel "SampleMask"
@@ -809,6 +927,9 @@ fromCStructSpecializationInfo c = SpecializationInfo <$> -- Length valued member
                                                      (Data.Vector.generateM (fromIntegral (vkMapEntryCount (c :: VkSpecializationInfo))) (((fromCStructSpecializationMapEntry <=<) . peekElemOff) (vkPMapEntries (c :: VkSpecializationInfo))))
                                                      -- Bytestring length valued member elided
                                                      <*> packCStringLen (castPtr (vkPData (c :: VkSpecializationInfo)), fromIntegral (vkDataSize (c :: VkSpecializationInfo)))
+instance Zero SpecializationInfo where
+  zero = SpecializationInfo Data.Vector.empty
+                            Data.ByteString.empty
 -- No documentation found for TopLevel "SpecializationMapEntry"
 data SpecializationMapEntry = SpecializationMapEntry
   { -- No documentation found for Nested "SpecializationMapEntry" "constantID"
@@ -825,6 +946,10 @@ fromCStructSpecializationMapEntry :: VkSpecializationMapEntry -> IO Specializati
 fromCStructSpecializationMapEntry c = SpecializationMapEntry <$> pure (vkConstantID (c :: VkSpecializationMapEntry))
                                                              <*> pure (vkOffset (c :: VkSpecializationMapEntry))
                                                              <*> pure (vkSize (c :: VkSpecializationMapEntry))
+instance Zero SpecializationMapEntry where
+  zero = SpecializationMapEntry zero
+                                zero
+                                zero
 -- No documentation found for TopLevel "StencilOp"
 type StencilOp = VkStencilOp
 -- No documentation found for TopLevel "StencilOpState"
@@ -855,6 +980,14 @@ fromCStructStencilOpState c = StencilOpState <$> pure (vkFailOp (c :: VkStencilO
                                              <*> pure (vkCompareMask (c :: VkStencilOpState))
                                              <*> pure (vkWriteMask (c :: VkStencilOpState))
                                              <*> pure (vkReference (c :: VkStencilOpState))
+instance Zero StencilOpState where
+  zero = StencilOpState zero
+                        zero
+                        zero
+                        zero
+                        zero
+                        zero
+                        zero
 -- No documentation found for TopLevel "VertexInputAttributeDescription"
 data VertexInputAttributeDescription = VertexInputAttributeDescription
   { -- No documentation found for Nested "VertexInputAttributeDescription" "location"
@@ -874,6 +1007,11 @@ fromCStructVertexInputAttributeDescription c = VertexInputAttributeDescription <
                                                                                <*> pure (vkBinding (c :: VkVertexInputAttributeDescription))
                                                                                <*> pure (vkFormat (c :: VkVertexInputAttributeDescription))
                                                                                <*> pure (vkOffset (c :: VkVertexInputAttributeDescription))
+instance Zero VertexInputAttributeDescription where
+  zero = VertexInputAttributeDescription zero
+                                         zero
+                                         zero
+                                         zero
 -- No documentation found for TopLevel "VertexInputBindingDescription"
 data VertexInputBindingDescription = VertexInputBindingDescription
   { -- No documentation found for Nested "VertexInputBindingDescription" "binding"
@@ -890,6 +1028,10 @@ fromCStructVertexInputBindingDescription :: VkVertexInputBindingDescription -> I
 fromCStructVertexInputBindingDescription c = VertexInputBindingDescription <$> pure (vkBinding (c :: VkVertexInputBindingDescription))
                                                                            <*> pure (vkStride (c :: VkVertexInputBindingDescription))
                                                                            <*> pure (vkInputRate (c :: VkVertexInputBindingDescription))
+instance Zero VertexInputBindingDescription where
+  zero = VertexInputBindingDescription zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VertexInputRate"
 type VertexInputRate = VkVertexInputRate
 -- No documentation found for TopLevel "Viewport"
@@ -917,25 +1059,34 @@ fromCStructViewport c = Viewport <$> pure (vkX (c :: VkViewport))
                                  <*> pure (vkHeight (c :: VkViewport))
                                  <*> pure (vkMinDepth (c :: VkViewport))
                                  <*> pure (vkMaxDepth (c :: VkViewport))
+instance Zero Viewport where
+  zero = Viewport zero
+                  zero
+                  zero
+                  zero
+                  zero
+                  zero
 
 -- | Wrapper for 'vkCreateComputePipelines'
-createComputePipelines :: Device ->  PipelineCache ->  Vector ComputePipelineCreateInfo ->  Maybe AllocationCallbacks ->  IO ( Vector Pipeline )
+createComputePipelines :: Device ->  PipelineCache ->  Vector ComputePipelineCreateInfo ->  Maybe AllocationCallbacks ->  IO (Vector Pipeline)
 createComputePipelines = \(Device device commandTable) -> \pipelineCache -> \createInfos -> \allocator -> allocaArray ((Data.Vector.length createInfos)) (\pPipelines -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructComputePipelineCreateInfo createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createComputePipelines commandTable device pipelineCache (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos)) (peekElemOff pPipelines)))))))
 
 -- | Wrapper for 'vkCreateGraphicsPipelines'
-createGraphicsPipelines :: Device ->  PipelineCache ->  Vector GraphicsPipelineCreateInfo ->  Maybe AllocationCallbacks ->  IO ( Vector Pipeline )
+createGraphicsPipelines :: Device ->  PipelineCache ->  Vector GraphicsPipelineCreateInfo ->  Maybe AllocationCallbacks ->  IO (Vector Pipeline)
 createGraphicsPipelines = \(Device device commandTable) -> \pipelineCache -> \createInfos -> \allocator -> allocaArray ((Data.Vector.length createInfos)) (\pPipelines -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructGraphicsPipelineCreateInfo createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createGraphicsPipelines commandTable device pipelineCache (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pPipelines >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos)) (peekElemOff pPipelines)))))))
 
 -- | Wrapper for 'vkDestroyPipeline'
 destroyPipeline :: Device ->  Pipeline ->  Maybe AllocationCallbacks ->  IO ()
 destroyPipeline = \(Device device commandTable) -> \pipeline -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroyPipeline commandTable device pipeline pAllocator *> (pure ()))
-withPipelineLayout :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withPipelineLayout createInfo allocationCallbacks =
-  bracket
-    (vkCreatePipelineLayout createInfo allocationCallbacks)
-    (`vkDestroyPipelineLayout` allocationCallbacks)
-withRenderPass :: CreateInfo -> Maybe AllocationCallbacks -> (t -> IO a) -> IO a
-withRenderPass createInfo allocationCallbacks =
-  bracket
-    (vkCreateRenderPass createInfo allocationCallbacks)
-    (`vkDestroyRenderPass` allocationCallbacks)
+-- | Wrapper for 'createComputePipelines' and 'destroyPipeline' using 'bracket'
+withComputePipelines
+  :: Device -> PipelineCache -> Vector (ComputePipelineCreateInfo) -> Maybe (AllocationCallbacks) -> (Vector (Pipeline) -> IO a) -> IO a
+withComputePipelines device pipelineCache computePipelineCreateInfo allocationCallbacks = bracket
+  (createComputePipelines device pipelineCache computePipelineCreateInfo allocationCallbacks)
+  (traverse (\o -> destroyPipeline device o allocationCallbacks))
+-- | Wrapper for 'createGraphicsPipelines' and 'destroyPipeline' using 'bracket'
+withGraphicsPipelines
+  :: Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo) -> Maybe (AllocationCallbacks) -> (Vector (Pipeline) -> IO a) -> IO a
+withGraphicsPipelines device pipelineCache graphicsPipelineCreateInfo allocationCallbacks = bracket
+  (createGraphicsPipelines device pipelineCache graphicsPipelineCreateInfo allocationCallbacks)
+  (traverse (\o -> destroyPipeline device o allocationCallbacks))

@@ -64,6 +64,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 
@@ -72,7 +73,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- No documentation found for TopLevel "VkPipelineViewportSwizzleStateCreateFlagsNV"
 newtype VkPipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateCreateFlagsNV VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineViewportSwizzleStateCreateFlagsNV where
   
@@ -117,11 +118,18 @@ instance Storable VkPipelineViewportSwizzleStateCreateInfoNV where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 20) (vkViewportCount (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkPViewportSwizzles (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
+
+instance Zero VkPipelineViewportSwizzleStateCreateInfoNV where
+  zero = VkPipelineViewportSwizzleStateCreateInfoNV zero
+                                                    zero
+                                                    zero
+                                                    zero
+                                                    zero
 -- ** VkViewportCoordinateSwizzleNV
 
 -- No documentation found for TopLevel "VkViewportCoordinateSwizzleNV"
 newtype VkViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkViewportCoordinateSwizzleNV where
   showsPrec _ VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV = showString "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV"
@@ -206,6 +214,12 @@ instance Storable VkViewportSwizzleNV where
                 *> poke (ptr `plusPtr` 4) (vkY (poked :: VkViewportSwizzleNV))
                 *> poke (ptr `plusPtr` 8) (vkZ (poked :: VkViewportSwizzleNV))
                 *> poke (ptr `plusPtr` 12) (vkW (poked :: VkViewportSwizzleNV))
+
+instance Zero VkViewportSwizzleNV where
+  zero = VkViewportSwizzleNV zero
+                             zero
+                             zero
+                             zero
 -- No documentation found for TopLevel "VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME"
 pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME = "VK_NV_viewport_swizzle"

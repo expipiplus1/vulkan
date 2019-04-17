@@ -69,6 +69,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -88,7 +89,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkXcbSurfaceCreateFlagsKHR"
 newtype VkXcbSurfaceCreateFlagsKHR = VkXcbSurfaceCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkXcbSurfaceCreateFlagsKHR where
   
@@ -133,6 +134,13 @@ instance Storable VkXcbSurfaceCreateInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkXcbSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkConnection (poked :: VkXcbSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkWindow (poked :: VkXcbSurfaceCreateInfoKHR))
+
+instance Zero VkXcbSurfaceCreateInfoKHR where
+  zero = VkXcbSurfaceCreateInfoKHR zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 -- | Opaque data
 data Xcb_connection_t
 -- No documentation found for TopLevel "Xcb_visualid_t"

@@ -29,6 +29,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic
   ( VkFilterCubicImageViewImageFormatPropertiesEXT(..)
   , VkPhysicalDeviceImageViewImageFormatInfoEXT(..)
@@ -77,6 +80,10 @@ fromCStructFilterCubicImageViewImageFormatPropertiesEXT c = FilterCubicImageView
                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkFilterCubicImageViewImageFormatPropertiesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkFilterCubic (c :: VkFilterCubicImageViewImageFormatPropertiesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkFilterCubicMinmax (c :: VkFilterCubicImageViewImageFormatPropertiesEXT)))
+instance Zero FilterCubicImageViewImageFormatPropertiesEXT where
+  zero = FilterCubicImageViewImageFormatPropertiesEXT Nothing
+                                                      False
+                                                      False
 -- No documentation found for TopLevel "PhysicalDeviceImageViewImageFormatInfoEXT"
 data PhysicalDeviceImageViewImageFormatInfoEXT = PhysicalDeviceImageViewImageFormatInfoEXT
   { -- Univalued Member elided
@@ -92,3 +99,6 @@ fromCStructPhysicalDeviceImageViewImageFormatInfoEXT :: VkPhysicalDeviceImageVie
 fromCStructPhysicalDeviceImageViewImageFormatInfoEXT c = PhysicalDeviceImageViewImageFormatInfoEXT <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceImageViewImageFormatInfoEXT)))
                                                                                                    <*> pure (vkImageViewType (c :: VkPhysicalDeviceImageViewImageFormatInfoEXT))
+instance Zero PhysicalDeviceImageViewImageFormatInfoEXT where
+  zero = PhysicalDeviceImageViewImageFormatInfoEXT Nothing
+                                                   zero

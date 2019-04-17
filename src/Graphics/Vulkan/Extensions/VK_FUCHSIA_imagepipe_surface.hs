@@ -40,7 +40,8 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
+  ( Zero(..)
+  , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
   ( VkImagePipeSurfaceCreateFlagsFUCHSIA(..)
@@ -90,7 +91,11 @@ fromCStructImagePipeSurfaceCreateInfoFUCHSIA c = ImagePipeSurfaceCreateInfoFUCHS
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImagePipeSurfaceCreateInfoFUCHSIA)))
                                                                                    <*> pure (vkFlags (c :: VkImagePipeSurfaceCreateInfoFUCHSIA))
                                                                                    <*> pure (vkImagePipeHandle (c :: VkImagePipeSurfaceCreateInfoFUCHSIA))
+instance Zero ImagePipeSurfaceCreateInfoFUCHSIA where
+  zero = ImagePipeSurfaceCreateInfoFUCHSIA Nothing
+                                           zero
+                                           zero
 
 -- | Wrapper for 'vkCreateImagePipeSurfaceFUCHSIA'
-createImagePipeSurfaceFUCHSIA :: Instance ->  ImagePipeSurfaceCreateInfoFUCHSIA ->  Maybe AllocationCallbacks ->  IO ( SurfaceKHR )
+createImagePipeSurfaceFUCHSIA :: Instance ->  ImagePipeSurfaceCreateInfoFUCHSIA ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createImagePipeSurfaceFUCHSIA = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructImagePipeSurfaceCreateInfoFUCHSIA a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createImagePipeSurfaceFUCHSIA commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))

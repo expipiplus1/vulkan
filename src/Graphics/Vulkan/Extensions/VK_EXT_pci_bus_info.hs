@@ -24,6 +24,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_pci_bus_info
   ( VkPhysicalDevicePCIBusInfoPropertiesEXT(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT
@@ -63,3 +66,9 @@ fromCStructPhysicalDevicePCIBusInfoPropertiesEXT c = PhysicalDevicePCIBusInfoPro
                                                                                            <*> pure (vkPciBus (c :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
                                                                                            <*> pure (vkPciDevice (c :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
                                                                                            <*> pure (vkPciFunction (c :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
+instance Zero PhysicalDevicePCIBusInfoPropertiesEXT where
+  zero = PhysicalDevicePCIBusInfoPropertiesEXT Nothing
+                                               zero
+                                               zero
+                                               zero
+                                               zero

@@ -62,6 +62,7 @@ import Text.Read.Lex
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -76,7 +77,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkExternalSemaphoreFeatureFlagBits"
 newtype VkExternalSemaphoreFeatureFlagBits = VkExternalSemaphoreFeatureFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkExternalSemaphoreFeatureFlagBits where
   showsPrec _ VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT = showString "VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT"
@@ -107,7 +108,7 @@ type VkExternalSemaphoreFeatureFlags = VkExternalSemaphoreFeatureFlagBits
 
 -- No documentation found for TopLevel "VkExternalSemaphoreHandleTypeFlagBits"
 newtype VkExternalSemaphoreHandleTypeFlagBits = VkExternalSemaphoreHandleTypeFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkExternalSemaphoreHandleTypeFlagBits where
   showsPrec _ VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT = showString "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT"
@@ -180,6 +181,13 @@ instance Storable VkExternalSemaphoreProperties where
                 *> poke (ptr `plusPtr` 16) (vkExportFromImportedHandleTypes (poked :: VkExternalSemaphoreProperties))
                 *> poke (ptr `plusPtr` 20) (vkCompatibleHandleTypes (poked :: VkExternalSemaphoreProperties))
                 *> poke (ptr `plusPtr` 24) (vkExternalSemaphoreFeatures (poked :: VkExternalSemaphoreProperties))
+
+instance Zero VkExternalSemaphoreProperties where
+  zero = VkExternalSemaphoreProperties zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkPhysicalDeviceExternalSemaphoreInfo"
 data VkPhysicalDeviceExternalSemaphoreInfo = VkPhysicalDeviceExternalSemaphoreInfo
   { -- No documentation found for Nested "VkPhysicalDeviceExternalSemaphoreInfo" "sType"
@@ -200,6 +208,11 @@ instance Storable VkPhysicalDeviceExternalSemaphoreInfo where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalSemaphoreInfo))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalSemaphoreInfo))
                 *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkPhysicalDeviceExternalSemaphoreInfo))
+
+instance Zero VkPhysicalDeviceExternalSemaphoreInfo where
+  zero = VkPhysicalDeviceExternalSemaphoreInfo zero
+                                               zero
+                                               zero
 #if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkGetPhysicalDeviceExternalSemaphoreProperties"
 foreign import ccall

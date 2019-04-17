@@ -21,6 +21,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_shader_draw_parameters
   ( VkPhysicalDeviceShaderDrawParametersFeatures(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
@@ -56,3 +59,6 @@ fromCStructPhysicalDeviceShaderDrawParametersFeatures :: VkPhysicalDeviceShaderD
 fromCStructPhysicalDeviceShaderDrawParametersFeatures c = PhysicalDeviceShaderDrawParametersFeatures <$> -- Univalued Member elided
                                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceShaderDrawParametersFeatures)))
                                                                                                      <*> pure (bool32ToBool (vkShaderDrawParameters (c :: VkPhysicalDeviceShaderDrawParametersFeatures)))
+instance Zero PhysicalDeviceShaderDrawParametersFeatures where
+  zero = PhysicalDeviceShaderDrawParametersFeatures Nothing
+                                                    False

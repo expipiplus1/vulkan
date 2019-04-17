@@ -43,6 +43,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.Pipeline
   ( VkDynamicState(..)
@@ -83,6 +84,13 @@ instance Storable VkPipelineViewportWScalingStateCreateInfoNV where
                 *> poke (ptr `plusPtr` 16) (vkViewportWScalingEnable (poked :: VkPipelineViewportWScalingStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 20) (vkViewportCount (poked :: VkPipelineViewportWScalingStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 24) (vkPViewportWScalings (poked :: VkPipelineViewportWScalingStateCreateInfoNV))
+
+instance Zero VkPipelineViewportWScalingStateCreateInfoNV where
+  zero = VkPipelineViewportWScalingStateCreateInfoNV zero
+                                                     zero
+                                                     zero
+                                                     zero
+                                                     zero
 -- No documentation found for TopLevel "VkViewportWScalingNV"
 data VkViewportWScalingNV = VkViewportWScalingNV
   { -- No documentation found for Nested "VkViewportWScalingNV" "xcoeff"
@@ -99,6 +107,10 @@ instance Storable VkViewportWScalingNV where
                                   <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkXcoeff (poked :: VkViewportWScalingNV))
                 *> poke (ptr `plusPtr` 4) (vkYcoeff (poked :: VkViewportWScalingNV))
+
+instance Zero VkViewportWScalingNV where
+  zero = VkViewportWScalingNV zero
+                              zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkCmdSetViewportWScalingNV"
 foreign import ccall

@@ -29,6 +29,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 
 
@@ -52,6 +53,11 @@ instance Storable VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV))
                 *> poke (ptr `plusPtr` 16) (vkRepresentativeFragmentTest (poked :: VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV))
+
+instance Zero VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV where
+  zero = VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV zero
+                                                              zero
+                                                              zero
 -- No documentation found for TopLevel "VkPipelineRepresentativeFragmentTestStateCreateInfoNV"
 data VkPipelineRepresentativeFragmentTestStateCreateInfoNV = VkPipelineRepresentativeFragmentTestStateCreateInfoNV
   { -- No documentation found for Nested "VkPipelineRepresentativeFragmentTestStateCreateInfoNV" "sType"
@@ -72,6 +78,11 @@ instance Storable VkPipelineRepresentativeFragmentTestStateCreateInfoNV where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineRepresentativeFragmentTestStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineRepresentativeFragmentTestStateCreateInfoNV))
                 *> poke (ptr `plusPtr` 16) (vkRepresentativeFragmentTestEnable (poked :: VkPipelineRepresentativeFragmentTestStateCreateInfoNV))
+
+instance Zero VkPipelineRepresentativeFragmentTestStateCreateInfoNV where
+  zero = VkPipelineRepresentativeFragmentTestStateCreateInfoNV zero
+                                                               zero
+                                                               zero
 -- No documentation found for TopLevel "VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME"
 pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME = "VK_NV_representative_fragment_test"

@@ -68,6 +68,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -87,7 +88,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkWaylandSurfaceCreateFlagsKHR"
 newtype VkWaylandSurfaceCreateFlagsKHR = VkWaylandSurfaceCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkWaylandSurfaceCreateFlagsKHR where
   
@@ -132,6 +133,13 @@ instance Storable VkWaylandSurfaceCreateInfoKHR where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkWaylandSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 24) (vkDisplay (poked :: VkWaylandSurfaceCreateInfoKHR))
                 *> poke (ptr `plusPtr` 32) (vkSurface (poked :: VkWaylandSurfaceCreateInfoKHR))
+
+instance Zero VkWaylandSurfaceCreateInfoKHR where
+  zero = VkWaylandSurfaceCreateInfoKHR zero
+                                       zero
+                                       zero
+                                       zero
+                                       zero
 -- | Opaque data
 data Wl_display
 -- | Opaque data

@@ -24,6 +24,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_AMD_shader_core_properties
   ( VkPhysicalDeviceShaderCorePropertiesAMD(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD
@@ -93,3 +96,19 @@ fromCStructPhysicalDeviceShaderCorePropertiesAMD c = PhysicalDeviceShaderCorePro
                                                                                            <*> pure (vkMinVgprAllocation (c :: VkPhysicalDeviceShaderCorePropertiesAMD))
                                                                                            <*> pure (vkMaxVgprAllocation (c :: VkPhysicalDeviceShaderCorePropertiesAMD))
                                                                                            <*> pure (vkVgprAllocationGranularity (c :: VkPhysicalDeviceShaderCorePropertiesAMD))
+instance Zero PhysicalDeviceShaderCorePropertiesAMD where
+  zero = PhysicalDeviceShaderCorePropertiesAMD Nothing
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero

@@ -25,6 +25,9 @@ import Foreign.Ptr
   )
 
 
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode
   ( VkImageViewASTCDecodeModeEXT(..)
   , VkPhysicalDeviceASTCDecodeFeaturesEXT(..)
@@ -62,6 +65,9 @@ fromCStructImageViewASTCDecodeModeEXT :: VkImageViewASTCDecodeModeEXT -> IO Imag
 fromCStructImageViewASTCDecodeModeEXT c = ImageViewASTCDecodeModeEXT <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageViewASTCDecodeModeEXT)))
                                                                      <*> pure (vkDecodeMode (c :: VkImageViewASTCDecodeModeEXT))
+instance Zero ImageViewASTCDecodeModeEXT where
+  zero = ImageViewASTCDecodeModeEXT Nothing
+                                    zero
 -- No documentation found for TopLevel "PhysicalDeviceASTCDecodeFeaturesEXT"
 data PhysicalDeviceASTCDecodeFeaturesEXT = PhysicalDeviceASTCDecodeFeaturesEXT
   { -- Univalued Member elided
@@ -77,3 +83,6 @@ fromCStructPhysicalDeviceASTCDecodeFeaturesEXT :: VkPhysicalDeviceASTCDecodeFeat
 fromCStructPhysicalDeviceASTCDecodeFeaturesEXT c = PhysicalDeviceASTCDecodeFeaturesEXT <$> -- Univalued Member elided
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceASTCDecodeFeaturesEXT)))
                                                                                        <*> pure (bool32ToBool (vkDecodeModeSharedExponent (c :: VkPhysicalDeviceASTCDecodeFeaturesEXT)))
+instance Zero PhysicalDeviceASTCDecodeFeaturesEXT where
+  zero = PhysicalDeviceASTCDecodeFeaturesEXT Nothing
+                                             False

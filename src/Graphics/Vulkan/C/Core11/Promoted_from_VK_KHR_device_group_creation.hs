@@ -41,6 +41,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkMemoryHeapFlagBits(..)
@@ -76,6 +77,12 @@ instance Storable VkDeviceGroupDeviceCreateInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGroupDeviceCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkPhysicalDeviceCount (poked :: VkDeviceGroupDeviceCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkPPhysicalDevices (poked :: VkDeviceGroupDeviceCreateInfo))
+
+instance Zero VkDeviceGroupDeviceCreateInfo where
+  zero = VkDeviceGroupDeviceCreateInfo zero
+                                       zero
+                                       zero
+                                       zero
 -- No documentation found for TopLevel "VkPhysicalDeviceGroupProperties"
 data VkPhysicalDeviceGroupProperties = VkPhysicalDeviceGroupProperties
   { -- No documentation found for Nested "VkPhysicalDeviceGroupProperties" "sType"
@@ -104,6 +111,13 @@ instance Storable VkPhysicalDeviceGroupProperties where
                 *> poke (ptr `plusPtr` 16) (vkPhysicalDeviceCount (poked :: VkPhysicalDeviceGroupProperties))
                 *> poke (ptr `plusPtr` 24) (vkPhysicalDevices (poked :: VkPhysicalDeviceGroupProperties))
                 *> poke (ptr `plusPtr` 280) (vkSubsetAllocation (poked :: VkPhysicalDeviceGroupProperties))
+
+instance Zero VkPhysicalDeviceGroupProperties where
+  zero = VkPhysicalDeviceGroupProperties zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
 #if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkEnumeratePhysicalDeviceGroups"
 foreign import ccall

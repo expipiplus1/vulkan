@@ -37,6 +37,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
   ( VkDescriptorType(..)
@@ -63,6 +64,11 @@ instance Storable VkDescriptorPoolInlineUniformBlockCreateInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDescriptorPoolInlineUniformBlockCreateInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDescriptorPoolInlineUniformBlockCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkMaxInlineUniformBlockBindings (poked :: VkDescriptorPoolInlineUniformBlockCreateInfoEXT))
+
+instance Zero VkDescriptorPoolInlineUniformBlockCreateInfoEXT where
+  zero = VkDescriptorPoolInlineUniformBlockCreateInfoEXT zero
+                                                         zero
+                                                         zero
 -- No documentation found for TopLevel "VkPhysicalDeviceInlineUniformBlockFeaturesEXT"
 data VkPhysicalDeviceInlineUniformBlockFeaturesEXT = VkPhysicalDeviceInlineUniformBlockFeaturesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockFeaturesEXT" "sType"
@@ -87,6 +93,12 @@ instance Storable VkPhysicalDeviceInlineUniformBlockFeaturesEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT))
                 *> poke (ptr `plusPtr` 16) (vkInlineUniformBlock (poked :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT))
                 *> poke (ptr `plusPtr` 20) (vkDescriptorBindingInlineUniformBlockUpdateAfterBind (poked :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT))
+
+instance Zero VkPhysicalDeviceInlineUniformBlockFeaturesEXT where
+  zero = VkPhysicalDeviceInlineUniformBlockFeaturesEXT zero
+                                                       zero
+                                                       zero
+                                                       zero
 -- No documentation found for TopLevel "VkPhysicalDeviceInlineUniformBlockPropertiesEXT"
 data VkPhysicalDeviceInlineUniformBlockPropertiesEXT = VkPhysicalDeviceInlineUniformBlockPropertiesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "sType"
@@ -123,6 +135,15 @@ instance Storable VkPhysicalDeviceInlineUniformBlockPropertiesEXT where
                 *> poke (ptr `plusPtr` 24) (vkMaxPerStageDescriptorUpdateAfterBindInlineUniformBlocks (poked :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
                 *> poke (ptr `plusPtr` 28) (vkMaxDescriptorSetInlineUniformBlocks (poked :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
                 *> poke (ptr `plusPtr` 32) (vkMaxDescriptorSetUpdateAfterBindInlineUniformBlocks (poked :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
+
+instance Zero VkPhysicalDeviceInlineUniformBlockPropertiesEXT where
+  zero = VkPhysicalDeviceInlineUniformBlockPropertiesEXT zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
+                                                         zero
 -- No documentation found for TopLevel "VkWriteDescriptorSetInlineUniformBlockEXT"
 data VkWriteDescriptorSetInlineUniformBlockEXT = VkWriteDescriptorSetInlineUniformBlockEXT
   { -- No documentation found for Nested "VkWriteDescriptorSetInlineUniformBlockEXT" "sType"
@@ -147,6 +168,12 @@ instance Storable VkWriteDescriptorSetInlineUniformBlockEXT where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkWriteDescriptorSetInlineUniformBlockEXT))
                 *> poke (ptr `plusPtr` 16) (vkDataSize (poked :: VkWriteDescriptorSetInlineUniformBlockEXT))
                 *> poke (ptr `plusPtr` 24) (vkPData (poked :: VkWriteDescriptorSetInlineUniformBlockEXT))
+
+instance Zero VkWriteDescriptorSetInlineUniformBlockEXT where
+  zero = VkWriteDescriptorSetInlineUniformBlockEXT zero
+                                                   zero
+                                                   zero
+                                                   zero
 -- No documentation found for Nested "VkDescriptorType" "VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT"
 pattern VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT :: VkDescriptorType
 pattern VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT = VkDescriptorType 1000138000

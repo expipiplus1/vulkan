@@ -72,6 +72,7 @@ import Text.Read.Lex
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -91,7 +92,7 @@ type VkPipelineCache = Ptr VkPipelineCache_T
 
 -- No documentation found for TopLevel "VkPipelineCacheCreateFlags"
 newtype VkPipelineCacheCreateFlags = VkPipelineCacheCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineCacheCreateFlags where
   
@@ -136,6 +137,13 @@ instance Storable VkPipelineCacheCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineCacheCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkInitialDataSize (poked :: VkPipelineCacheCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkPInitialData (poked :: VkPipelineCacheCreateInfo))
+
+instance Zero VkPipelineCacheCreateInfo where
+  zero = VkPipelineCacheCreateInfo zero
+                                   zero
+                                   zero
+                                   zero
+                                   zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkCreatePipelineCache"
 foreign import ccall

@@ -229,6 +229,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkFormat(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
@@ -251,7 +252,7 @@ import Graphics.Vulkan.NamedType
 
 -- No documentation found for TopLevel "VkBlendFactor"
 newtype VkBlendFactor = VkBlendFactor Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkBlendFactor where
   showsPrec _ VK_BLEND_FACTOR_ZERO = showString "VK_BLEND_FACTOR_ZERO"
@@ -382,7 +383,7 @@ pattern VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA = VkBlendFactor 18
 
 -- No documentation found for TopLevel "VkBlendOp"
 newtype VkBlendOp = VkBlendOp Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkBlendOp where
   showsPrec _ VK_BLEND_OP_ADD = showString "VK_BLEND_OP_ADD"
@@ -523,7 +524,7 @@ pattern VK_BLEND_OP_MAX = VkBlendOp 4
 
 -- No documentation found for TopLevel "VkColorComponentFlagBits"
 newtype VkColorComponentFlagBits = VkColorComponentFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkColorComponentFlagBits where
   showsPrec _ VK_COLOR_COMPONENT_R_BIT = showString "VK_COLOR_COMPONENT_R_BIT"
@@ -566,7 +567,7 @@ type VkColorComponentFlags = VkColorComponentFlagBits
 
 -- No documentation found for TopLevel "VkCompareOp"
 newtype VkCompareOp = VkCompareOp Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkCompareOp where
   showsPrec _ VK_COMPARE_OP_NEVER = showString "VK_COMPARE_OP_NEVER"
@@ -663,11 +664,20 @@ instance Storable VkComputePipelineCreateInfo where
                 *> poke (ptr `plusPtr` 72) (vkLayout (poked :: VkComputePipelineCreateInfo))
                 *> poke (ptr `plusPtr` 80) (vkBasePipelineHandle (poked :: VkComputePipelineCreateInfo))
                 *> poke (ptr `plusPtr` 88) (vkBasePipelineIndex (poked :: VkComputePipelineCreateInfo))
+
+instance Zero VkComputePipelineCreateInfo where
+  zero = VkComputePipelineCreateInfo zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
+                                     zero
 -- ** VkCullModeFlagBits
 
 -- No documentation found for TopLevel "VkCullModeFlagBits"
 newtype VkCullModeFlagBits = VkCullModeFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkCullModeFlagBits where
   showsPrec _ VK_CULL_MODE_FRONT_BIT = showString "VK_CULL_MODE_FRONT_BIT"
@@ -710,7 +720,7 @@ type VkCullModeFlags = VkCullModeFlagBits
 
 -- No documentation found for TopLevel "VkDynamicState"
 newtype VkDynamicState = VkDynamicState Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkDynamicState where
   showsPrec _ VK_DYNAMIC_STATE_VIEWPORT = showString "VK_DYNAMIC_STATE_VIEWPORT"
@@ -807,11 +817,15 @@ instance Storable VkExtent2D where
                         <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkWidth (poked :: VkExtent2D))
                 *> poke (ptr `plusPtr` 4) (vkHeight (poked :: VkExtent2D))
+
+instance Zero VkExtent2D where
+  zero = VkExtent2D zero
+                    zero
 -- ** VkFrontFace
 
 -- No documentation found for TopLevel "VkFrontFace"
 newtype VkFrontFace = VkFrontFace Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkFrontFace where
   showsPrec _ VK_FRONT_FACE_COUNTER_CLOCKWISE = showString "VK_FRONT_FACE_COUNTER_CLOCKWISE"
@@ -920,11 +934,32 @@ instance Storable VkGraphicsPipelineCreateInfo where
                 *> poke (ptr `plusPtr` 120) (vkSubpass (poked :: VkGraphicsPipelineCreateInfo))
                 *> poke (ptr `plusPtr` 128) (vkBasePipelineHandle (poked :: VkGraphicsPipelineCreateInfo))
                 *> poke (ptr `plusPtr` 136) (vkBasePipelineIndex (poked :: VkGraphicsPipelineCreateInfo))
+
+instance Zero VkGraphicsPipelineCreateInfo where
+  zero = VkGraphicsPipelineCreateInfo zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
+                                      zero
 -- ** VkLogicOp
 
 -- No documentation found for TopLevel "VkLogicOp"
 newtype VkLogicOp = VkLogicOp Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkLogicOp where
   showsPrec _ VK_LOGIC_OP_CLEAR = showString "VK_LOGIC_OP_CLEAR"
@@ -1049,6 +1084,10 @@ instance Storable VkOffset2D where
                         <*> peek (ptr `plusPtr` 4)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkOffset2D))
                 *> poke (ptr `plusPtr` 4) (vkY (poked :: VkOffset2D))
+
+instance Zero VkOffset2D where
+  zero = VkOffset2D zero
+                    zero
 -- | Dummy data to tag the 'Ptr' with
 data VkPipeline_T
 -- No documentation found for TopLevel "VkPipeline"
@@ -1093,11 +1132,21 @@ instance Storable VkPipelineColorBlendAttachmentState where
                 *> poke (ptr `plusPtr` 20) (vkDstAlphaBlendFactor (poked :: VkPipelineColorBlendAttachmentState))
                 *> poke (ptr `plusPtr` 24) (vkAlphaBlendOp (poked :: VkPipelineColorBlendAttachmentState))
                 *> poke (ptr `plusPtr` 28) (vkColorWriteMask (poked :: VkPipelineColorBlendAttachmentState))
+
+instance Zero VkPipelineColorBlendAttachmentState where
+  zero = VkPipelineColorBlendAttachmentState zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
 -- ** VkPipelineColorBlendStateCreateFlags
 
 -- No documentation found for TopLevel "VkPipelineColorBlendStateCreateFlags"
 newtype VkPipelineColorBlendStateCreateFlags = VkPipelineColorBlendStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineColorBlendStateCreateFlags where
   
@@ -1154,11 +1203,21 @@ instance Storable VkPipelineColorBlendStateCreateInfo where
                 *> poke (ptr `plusPtr` 28) (vkAttachmentCount (poked :: VkPipelineColorBlendStateCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkPAttachments (poked :: VkPipelineColorBlendStateCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkBlendConstants (poked :: VkPipelineColorBlendStateCreateInfo))
+
+instance Zero VkPipelineColorBlendStateCreateInfo where
+  zero = VkPipelineColorBlendStateCreateInfo zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
+                                             zero
 -- ** VkPipelineCreateFlagBits
 
 -- No documentation found for TopLevel "VkPipelineCreateFlagBits"
 newtype VkPipelineCreateFlagBits = VkPipelineCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineCreateFlagBits where
   showsPrec _ VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT = showString "VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT"
@@ -1203,7 +1262,7 @@ type VkPipelineCreateFlags = VkPipelineCreateFlagBits
 
 -- No documentation found for TopLevel "VkPipelineDepthStencilStateCreateFlags"
 newtype VkPipelineDepthStencilStateCreateFlags = VkPipelineDepthStencilStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineDepthStencilStateCreateFlags where
   
@@ -1276,11 +1335,25 @@ instance Storable VkPipelineDepthStencilStateCreateInfo where
                 *> poke (ptr `plusPtr` 68) (vkBack (poked :: VkPipelineDepthStencilStateCreateInfo))
                 *> poke (ptr `plusPtr` 96) (vkMinDepthBounds (poked :: VkPipelineDepthStencilStateCreateInfo))
                 *> poke (ptr `plusPtr` 100) (vkMaxDepthBounds (poked :: VkPipelineDepthStencilStateCreateInfo))
+
+instance Zero VkPipelineDepthStencilStateCreateInfo where
+  zero = VkPipelineDepthStencilStateCreateInfo zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
+                                               zero
 -- ** VkPipelineDynamicStateCreateFlags
 
 -- No documentation found for TopLevel "VkPipelineDynamicStateCreateFlags"
 newtype VkPipelineDynamicStateCreateFlags = VkPipelineDynamicStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineDynamicStateCreateFlags where
   
@@ -1325,11 +1398,18 @@ instance Storable VkPipelineDynamicStateCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineDynamicStateCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkDynamicStateCount (poked :: VkPipelineDynamicStateCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkPDynamicStates (poked :: VkPipelineDynamicStateCreateInfo))
+
+instance Zero VkPipelineDynamicStateCreateInfo where
+  zero = VkPipelineDynamicStateCreateInfo zero
+                                          zero
+                                          zero
+                                          zero
+                                          zero
 -- ** VkPipelineInputAssemblyStateCreateFlags
 
 -- No documentation found for TopLevel "VkPipelineInputAssemblyStateCreateFlags"
 newtype VkPipelineInputAssemblyStateCreateFlags = VkPipelineInputAssemblyStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineInputAssemblyStateCreateFlags where
   
@@ -1374,6 +1454,13 @@ instance Storable VkPipelineInputAssemblyStateCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineInputAssemblyStateCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkTopology (poked :: VkPipelineInputAssemblyStateCreateInfo))
                 *> poke (ptr `plusPtr` 24) (vkPrimitiveRestartEnable (poked :: VkPipelineInputAssemblyStateCreateInfo))
+
+instance Zero VkPipelineInputAssemblyStateCreateInfo where
+  zero = VkPipelineInputAssemblyStateCreateInfo zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
 -- | Dummy data to tag the 'Ptr' with
 data VkPipelineLayout_T
 -- No documentation found for TopLevel "VkPipelineLayout"
@@ -1382,7 +1469,7 @@ type VkPipelineLayout = Ptr VkPipelineLayout_T
 
 -- No documentation found for TopLevel "VkPipelineMultisampleStateCreateFlags"
 newtype VkPipelineMultisampleStateCreateFlags = VkPipelineMultisampleStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineMultisampleStateCreateFlags where
   
@@ -1443,11 +1530,22 @@ instance Storable VkPipelineMultisampleStateCreateInfo where
                 *> poke (ptr `plusPtr` 32) (vkPSampleMask (poked :: VkPipelineMultisampleStateCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkAlphaToCoverageEnable (poked :: VkPipelineMultisampleStateCreateInfo))
                 *> poke (ptr `plusPtr` 44) (vkAlphaToOneEnable (poked :: VkPipelineMultisampleStateCreateInfo))
+
+instance Zero VkPipelineMultisampleStateCreateInfo where
+  zero = VkPipelineMultisampleStateCreateInfo zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
 -- ** VkPipelineRasterizationStateCreateFlags
 
 -- No documentation found for TopLevel "VkPipelineRasterizationStateCreateFlags"
 newtype VkPipelineRasterizationStateCreateFlags = VkPipelineRasterizationStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineRasterizationStateCreateFlags where
   
@@ -1524,11 +1622,26 @@ instance Storable VkPipelineRasterizationStateCreateInfo where
                 *> poke (ptr `plusPtr` 48) (vkDepthBiasClamp (poked :: VkPipelineRasterizationStateCreateInfo))
                 *> poke (ptr `plusPtr` 52) (vkDepthBiasSlopeFactor (poked :: VkPipelineRasterizationStateCreateInfo))
                 *> poke (ptr `plusPtr` 56) (vkLineWidth (poked :: VkPipelineRasterizationStateCreateInfo))
+
+instance Zero VkPipelineRasterizationStateCreateInfo where
+  zero = VkPipelineRasterizationStateCreateInfo zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
+                                                zero
 -- ** VkPipelineShaderStageCreateFlags
 
 -- No documentation found for TopLevel "VkPipelineShaderStageCreateFlags"
 newtype VkPipelineShaderStageCreateFlags = VkPipelineShaderStageCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineShaderStageCreateFlags where
   
@@ -1581,11 +1694,20 @@ instance Storable VkPipelineShaderStageCreateInfo where
                 *> poke (ptr `plusPtr` 24) (vkModule (poked :: VkPipelineShaderStageCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkPName (poked :: VkPipelineShaderStageCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkPSpecializationInfo (poked :: VkPipelineShaderStageCreateInfo))
+
+instance Zero VkPipelineShaderStageCreateInfo where
+  zero = VkPipelineShaderStageCreateInfo zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
+                                         zero
 -- ** VkPipelineTessellationStateCreateFlags
 
 -- No documentation found for TopLevel "VkPipelineTessellationStateCreateFlags"
 newtype VkPipelineTessellationStateCreateFlags = VkPipelineTessellationStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineTessellationStateCreateFlags where
   
@@ -1626,11 +1748,17 @@ instance Storable VkPipelineTessellationStateCreateInfo where
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineTessellationStateCreateInfo))
                 *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineTessellationStateCreateInfo))
                 *> poke (ptr `plusPtr` 20) (vkPatchControlPoints (poked :: VkPipelineTessellationStateCreateInfo))
+
+instance Zero VkPipelineTessellationStateCreateInfo where
+  zero = VkPipelineTessellationStateCreateInfo zero
+                                               zero
+                                               zero
+                                               zero
 -- ** VkPipelineVertexInputStateCreateFlags
 
 -- No documentation found for TopLevel "VkPipelineVertexInputStateCreateFlags"
 newtype VkPipelineVertexInputStateCreateFlags = VkPipelineVertexInputStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineVertexInputStateCreateFlags where
   
@@ -1683,11 +1811,20 @@ instance Storable VkPipelineVertexInputStateCreateInfo where
                 *> poke (ptr `plusPtr` 24) (vkPVertexBindingDescriptions (poked :: VkPipelineVertexInputStateCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkVertexAttributeDescriptionCount (poked :: VkPipelineVertexInputStateCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkPVertexAttributeDescriptions (poked :: VkPipelineVertexInputStateCreateInfo))
+
+instance Zero VkPipelineVertexInputStateCreateInfo where
+  zero = VkPipelineVertexInputStateCreateInfo zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
+                                              zero
 -- ** VkPipelineViewportStateCreateFlags
 
 -- No documentation found for TopLevel "VkPipelineViewportStateCreateFlags"
 newtype VkPipelineViewportStateCreateFlags = VkPipelineViewportStateCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkPipelineViewportStateCreateFlags where
   
@@ -1740,11 +1877,20 @@ instance Storable VkPipelineViewportStateCreateInfo where
                 *> poke (ptr `plusPtr` 24) (vkPViewports (poked :: VkPipelineViewportStateCreateInfo))
                 *> poke (ptr `plusPtr` 32) (vkScissorCount (poked :: VkPipelineViewportStateCreateInfo))
                 *> poke (ptr `plusPtr` 40) (vkPScissors (poked :: VkPipelineViewportStateCreateInfo))
+
+instance Zero VkPipelineViewportStateCreateInfo where
+  zero = VkPipelineViewportStateCreateInfo zero
+                                           zero
+                                           zero
+                                           zero
+                                           zero
+                                           zero
+                                           zero
 -- ** VkPolygonMode
 
 -- No documentation found for TopLevel "VkPolygonMode"
 newtype VkPolygonMode = VkPolygonMode Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkPolygonMode where
   showsPrec _ VK_POLYGON_MODE_FILL = showString "VK_POLYGON_MODE_FILL"
@@ -1783,7 +1929,7 @@ pattern VK_POLYGON_MODE_POINT = VkPolygonMode 2
 
 -- No documentation found for TopLevel "VkPrimitiveTopology"
 newtype VkPrimitiveTopology = VkPrimitiveTopology Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkPrimitiveTopology where
   showsPrec _ VK_PRIMITIVE_TOPOLOGY_POINT_LIST = showString "VK_PRIMITIVE_TOPOLOGY_POINT_LIST"
@@ -1878,6 +2024,10 @@ instance Storable VkRect2D where
                       <*> peek (ptr `plusPtr` 8)
   poke ptr poked = poke (ptr `plusPtr` 0) (vkOffset (poked :: VkRect2D))
                 *> poke (ptr `plusPtr` 8) (vkExtent (poked :: VkRect2D))
+
+instance Zero VkRect2D where
+  zero = VkRect2D zero
+                  zero
 -- | Dummy data to tag the 'Ptr' with
 data VkRenderPass_T
 -- No documentation found for TopLevel "VkRenderPass"
@@ -1888,7 +2038,7 @@ type VkSampleMask = Word32
 
 -- No documentation found for TopLevel "VkShaderStageFlagBits"
 newtype VkShaderStageFlagBits = VkShaderStageFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+  deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
 instance Show VkShaderStageFlagBits where
   showsPrec _ VK_SHADER_STAGE_VERTEX_BIT = showString "VK_SHADER_STAGE_VERTEX_BIT"
@@ -1991,6 +2141,12 @@ instance Storable VkSpecializationInfo where
                 *> poke (ptr `plusPtr` 8) (vkPMapEntries (poked :: VkSpecializationInfo))
                 *> poke (ptr `plusPtr` 16) (vkDataSize (poked :: VkSpecializationInfo))
                 *> poke (ptr `plusPtr` 24) (vkPData (poked :: VkSpecializationInfo))
+
+instance Zero VkSpecializationInfo where
+  zero = VkSpecializationInfo zero
+                              zero
+                              zero
+                              zero
 -- No documentation found for TopLevel "VkSpecializationMapEntry"
 data VkSpecializationMapEntry = VkSpecializationMapEntry
   { -- No documentation found for Nested "VkSpecializationMapEntry" "constantID"
@@ -2011,11 +2167,16 @@ instance Storable VkSpecializationMapEntry where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkConstantID (poked :: VkSpecializationMapEntry))
                 *> poke (ptr `plusPtr` 4) (vkOffset (poked :: VkSpecializationMapEntry))
                 *> poke (ptr `plusPtr` 8) (vkSize (poked :: VkSpecializationMapEntry))
+
+instance Zero VkSpecializationMapEntry where
+  zero = VkSpecializationMapEntry zero
+                                  zero
+                                  zero
 -- ** VkStencilOp
 
 -- No documentation found for TopLevel "VkStencilOp"
 newtype VkStencilOp = VkStencilOp Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkStencilOp where
   showsPrec _ VK_STENCIL_OP_KEEP = showString "VK_STENCIL_OP_KEEP"
@@ -2112,6 +2273,15 @@ instance Storable VkStencilOpState where
                 *> poke (ptr `plusPtr` 16) (vkCompareMask (poked :: VkStencilOpState))
                 *> poke (ptr `plusPtr` 20) (vkWriteMask (poked :: VkStencilOpState))
                 *> poke (ptr `plusPtr` 24) (vkReference (poked :: VkStencilOpState))
+
+instance Zero VkStencilOpState where
+  zero = VkStencilOpState zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
+                          zero
 -- No documentation found for TopLevel "VkVertexInputAttributeDescription"
 data VkVertexInputAttributeDescription = VkVertexInputAttributeDescription
   { -- No documentation found for Nested "VkVertexInputAttributeDescription" "location"
@@ -2136,6 +2306,12 @@ instance Storable VkVertexInputAttributeDescription where
                 *> poke (ptr `plusPtr` 4) (vkBinding (poked :: VkVertexInputAttributeDescription))
                 *> poke (ptr `plusPtr` 8) (vkFormat (poked :: VkVertexInputAttributeDescription))
                 *> poke (ptr `plusPtr` 12) (vkOffset (poked :: VkVertexInputAttributeDescription))
+
+instance Zero VkVertexInputAttributeDescription where
+  zero = VkVertexInputAttributeDescription zero
+                                           zero
+                                           zero
+                                           zero
 -- No documentation found for TopLevel "VkVertexInputBindingDescription"
 data VkVertexInputBindingDescription = VkVertexInputBindingDescription
   { -- No documentation found for Nested "VkVertexInputBindingDescription" "binding"
@@ -2156,11 +2332,16 @@ instance Storable VkVertexInputBindingDescription where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkBinding (poked :: VkVertexInputBindingDescription))
                 *> poke (ptr `plusPtr` 4) (vkStride (poked :: VkVertexInputBindingDescription))
                 *> poke (ptr `plusPtr` 8) (vkInputRate (poked :: VkVertexInputBindingDescription))
+
+instance Zero VkVertexInputBindingDescription where
+  zero = VkVertexInputBindingDescription zero
+                                         zero
+                                         zero
 -- ** VkVertexInputRate
 
 -- No documentation found for TopLevel "VkVertexInputRate"
 newtype VkVertexInputRate = VkVertexInputRate Int32
-  deriving (Eq, Ord, Storable)
+  deriving (Eq, Ord, Storable, Zero)
 
 instance Show VkVertexInputRate where
   showsPrec _ VK_VERTEX_INPUT_RATE_VERTEX = showString "VK_VERTEX_INPUT_RATE_VERTEX"
@@ -2217,6 +2398,14 @@ instance Storable VkViewport where
                 *> poke (ptr `plusPtr` 12) (vkHeight (poked :: VkViewport))
                 *> poke (ptr `plusPtr` 16) (vkMinDepth (poked :: VkViewport))
                 *> poke (ptr `plusPtr` 20) (vkMaxDepth (poked :: VkViewport))
+
+instance Zero VkViewport where
+  zero = VkViewport zero
+                    zero
+                    zero
+                    zero
+                    zero
+                    zero
 #if defined(EXPOSE_CORE10_COMMANDS)
 -- No documentation found for TopLevel "vkCreateComputePipelines"
 foreign import ccall

@@ -38,6 +38,7 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -73,6 +74,11 @@ instance Storable VkDisplayNativeHdrSurfaceCapabilitiesAMD where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayNativeHdrSurfaceCapabilitiesAMD))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayNativeHdrSurfaceCapabilitiesAMD))
                 *> poke (ptr `plusPtr` 16) (vkLocalDimmingSupport (poked :: VkDisplayNativeHdrSurfaceCapabilitiesAMD))
+
+instance Zero VkDisplayNativeHdrSurfaceCapabilitiesAMD where
+  zero = VkDisplayNativeHdrSurfaceCapabilitiesAMD zero
+                                                  zero
+                                                  zero
 -- No documentation found for TopLevel "VkSwapchainDisplayNativeHdrCreateInfoAMD"
 data VkSwapchainDisplayNativeHdrCreateInfoAMD = VkSwapchainDisplayNativeHdrCreateInfoAMD
   { -- No documentation found for Nested "VkSwapchainDisplayNativeHdrCreateInfoAMD" "sType"
@@ -93,6 +99,11 @@ instance Storable VkSwapchainDisplayNativeHdrCreateInfoAMD where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkSwapchainDisplayNativeHdrCreateInfoAMD))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkSwapchainDisplayNativeHdrCreateInfoAMD))
                 *> poke (ptr `plusPtr` 16) (vkLocalDimmingEnable (poked :: VkSwapchainDisplayNativeHdrCreateInfoAMD))
+
+instance Zero VkSwapchainDisplayNativeHdrCreateInfoAMD where
+  zero = VkSwapchainDisplayNativeHdrCreateInfoAMD zero
+                                                  zero
+                                                  zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkSetLocalDimmingAMD"
 foreign import ccall

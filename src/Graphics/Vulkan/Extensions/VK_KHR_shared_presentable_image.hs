@@ -36,6 +36,7 @@ import qualified Graphics.Vulkan.C.Dynamic
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
@@ -81,6 +82,9 @@ fromCStructSharedPresentSurfaceCapabilitiesKHR :: VkSharedPresentSurfaceCapabili
 fromCStructSharedPresentSurfaceCapabilitiesKHR c = SharedPresentSurfaceCapabilitiesKHR <$> -- Univalued Member elided
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSharedPresentSurfaceCapabilitiesKHR)))
                                                                                        <*> pure (vkSharedPresentSupportedUsageFlags (c :: VkSharedPresentSurfaceCapabilitiesKHR))
+instance Zero SharedPresentSurfaceCapabilitiesKHR where
+  zero = SharedPresentSurfaceCapabilitiesKHR Nothing
+                                             zero
 
 -- | Wrapper for 'vkGetSwapchainStatusKHR'
 getSwapchainStatusKHR :: Device ->  SwapchainKHR ->  IO (VkResult)

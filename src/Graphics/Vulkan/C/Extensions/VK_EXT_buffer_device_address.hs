@@ -54,6 +54,7 @@ import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkResult(..)
   , VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
@@ -86,6 +87,11 @@ instance Storable VkBufferDeviceAddressCreateInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferDeviceAddressCreateInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferDeviceAddressCreateInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkDeviceAddress (poked :: VkBufferDeviceAddressCreateInfoEXT))
+
+instance Zero VkBufferDeviceAddressCreateInfoEXT where
+  zero = VkBufferDeviceAddressCreateInfoEXT zero
+                                            zero
+                                            zero
 -- No documentation found for TopLevel "VkBufferDeviceAddressInfoEXT"
 data VkBufferDeviceAddressInfoEXT = VkBufferDeviceAddressInfoEXT
   { -- No documentation found for Nested "VkBufferDeviceAddressInfoEXT" "sType"
@@ -106,6 +112,11 @@ instance Storable VkBufferDeviceAddressInfoEXT where
   poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferDeviceAddressInfoEXT))
                 *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferDeviceAddressInfoEXT))
                 *> poke (ptr `plusPtr` 16) (vkBuffer (poked :: VkBufferDeviceAddressInfoEXT))
+
+instance Zero VkBufferDeviceAddressInfoEXT where
+  zero = VkBufferDeviceAddressInfoEXT zero
+                                      zero
+                                      zero
 -- No documentation found for TopLevel "VkDeviceAddress"
 type VkDeviceAddress = Word64
 -- No documentation found for TopLevel "VkPhysicalDeviceBufferAddressFeaturesEXT"
@@ -143,6 +154,13 @@ instance Storable VkPhysicalDeviceBufferDeviceAddressFeaturesEXT where
                 *> poke (ptr `plusPtr` 16) (vkBufferDeviceAddress (poked :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT))
                 *> poke (ptr `plusPtr` 20) (vkBufferDeviceAddressCaptureReplay (poked :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT))
                 *> poke (ptr `plusPtr` 24) (vkBufferDeviceAddressMultiDevice (poked :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT))
+
+instance Zero VkPhysicalDeviceBufferDeviceAddressFeaturesEXT where
+  zero = VkPhysicalDeviceBufferDeviceAddressFeaturesEXT zero
+                                                        zero
+                                                        zero
+                                                        zero
+                                                        zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- No documentation found for TopLevel "vkGetBufferDeviceAddressEXT"
 foreign import ccall
