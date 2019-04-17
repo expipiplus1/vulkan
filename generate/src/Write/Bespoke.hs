@@ -26,6 +26,7 @@ bespokeWriteElements =
     , apiVersionWriteElement 1 0
     , apiVersionWriteElement 1 1
     , nullHandle
+    , zero
     , bools
     ]
     ++ concat [win32, x11, xcb, wayland, zircon, ggp, metal, android]
@@ -116,6 +117,75 @@ nullHandle =
       weExtensions = ["PatternSynonyms", "ViewPatterns"]
       weName = "Null handle"
       weProvides = [Unguarded $ Pattern "VK_NULL_HANDLE"]
+      weUndependableProvides = []
+      weSourceDepends        = []
+      weBootElement          = Nothing
+      weDepends = []
+  in WriteElement{..}
+
+zero :: WriteElement
+zero =
+  let weDoc _ = [qci|
+        -- | A class for initializing things with all zero data
+        class Zero a where
+          zero :: a
+
+        instance (KnownNat n, Storable a, Zero a) => Zero (Data.Vector.Storable.Sized.Vector n a) where
+          zero = Data.Vector.Storable.Sized.replicate zero
+
+        instance Zero (Ptr a) where
+          zero = nullPtr
+
+        instance Zero Int8 where
+          zero = 0
+
+        instance Zero Int16 where
+          zero = 0
+
+        instance Zero Int32 where
+          zero = 0
+
+        instance Zero Int64 where
+          zero = 0
+
+        instance Zero Word8 where
+          zero = 0
+
+        instance Zero Word16 where
+          zero = 0
+
+        instance Zero Word32 where
+          zero = 0
+
+        instance Zero Word64 where
+          zero = 0
+
+        instance Zero Float where
+          zero = 0
+
+        instance Zero CFloat where
+          zero = 0
+
+        instance Zero CChar where
+          zero = 0
+
+        instance Zero CSize where
+          zero = 0
+
+        instance Zero CInt where
+          zero = 0
+      |]
+      weImports = [ Unguarded (Import "Foreign.Ptr" ["nullPtr"])
+                  , Unguarded (Import "Foreign.C.Types" ["CFloat", "CChar", "CSize", "CInt"])
+                  , Unguarded (Import "Data.Int" ["Int8", "Int16", "Int32", "Int64"])
+                  , Unguarded (Import "Data.Word" ["Word8", "Word16", "Word32", "Word64"])
+                  , Unguarded (QualifiedImport "Data.Vector.Storable.Sized" ["Vector", "replicate"])
+                  , Unguarded (Import "GHC.TypeNats" ["KnownNat"])
+                  , Unguarded (Import "Foreign.Storable" ["Storable"])
+                  ]
+      weExtensions = ["TypeSynonymInstances"]
+      weName = "Zero struct"
+      weProvides = [Unguarded $ WithConstructors (TypeName "Zero")]
       weUndependableProvides = []
       weSourceDepends        = []
       weBootElement          = Nothing

@@ -24,7 +24,8 @@ import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
 
-import           Write.Element
+import           Write.Element                     hiding ( TypeName )
+import qualified Write.Element                 as WE
 import           Write.Util
 
 writeStruct :: Struct -> Either [SpecError] WriteElement
@@ -43,7 +44,7 @@ writeStruct s@Struct {..} = case sStructOrUnion of
              )
       weProvides = Unguarded <$> [TypeConstructor sName, Term sName]
       weDepends =
-        Unguarded <$> nubOrd (concatMap (typeDepends . smType) sMembers)
+        Unguarded <$> (WE.TypeName "Zero" : nubOrd (concatMap (typeDepends . smType) sMembers))
       weUndependableProvides = []
       weSourceDepends        = []
       weBootElement          = Nothing
@@ -96,6 +97,10 @@ structDoc s@Struct {..} = do
     poke ptr poked = {indent (-3) . vsep $
                       (intercalatePrepend "*>" $
                        memberPokeDoc s <$> membersFixedNames)}
+
+  instance Zero {sName} where
+    zero = {sName} {indent 0 . vsep $
+                    ("zero" :: Doc ()) <$ membersFixedNames}
 |], concat imports ++ [Unguarded $ Import "Foreign.Storable" ["Storable"]], concat extensions)
 
 memberDoc
@@ -143,6 +148,9 @@ unionDoc Struct{..} = do
     peek _   = error "peek @{sName}"
     poke ptr = \case
       {indent 0 . vcat $ unionMemberPokeDoc <$> membersFixedNames}
+
+  instance Zero {sName} where
+    zero = {smName . head $ membersFixedNames} zero
 |], concat imports ++ [Unguarded $ Import "Foreign.Storable" ["Storable"]], concat extensions ++ ["LambdaCase"])
 
 unionMemberDoc

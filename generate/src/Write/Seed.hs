@@ -62,6 +62,7 @@ bespokeSeedsHighPriority =
     , TypeName "VkVendorId"
     , TypeName "VkBaseOutStructure"
     , TypeName "VkBaseInStructure"
+    , TypeName "Zero"
     ]
     Nothing
   , ModuleSeed
@@ -72,6 +73,7 @@ bespokeSeedsHighPriority =
     , TypeName "ObjectType"
     , TermName "bool32ToBool"
     , TermName "boolToBool32"
+    , TypeName "Zero"
     ]
     Nothing
   , ModuleSeed (toCModuleName "Core11" "Version")

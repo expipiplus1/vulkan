@@ -120,12 +120,13 @@ wrapStruct isDefaultable isStruct getHandle containsUnion containsDispatchableHa
   marshalled     <- marshallStruct isStruct isDefaultable getHandle s
   toCStructDoc   <- writeToCStructInstance marshalled
   fromCStructDoc <- writeFromCStructInstance containsUnion containsDispatchableHandle marshalled
+  zeroDoc        <- writeZeroInstance marshalled
   marshalledDoc  <- writeMarshalled marshalled
   tellExtension "DuplicateRecordFields"
   tellExport (Unguarded (WithConstructors (WE.TypeName (dropVkType (sName s)))))
   tellExport (Unguarded (Term (dropVkType (sName s))))
   let weDoc docMap =
-        vsep [marshalledDoc docMap, toCStructDoc, fromCStructDoc]
+        vsep [marshalledDoc docMap, toCStructDoc, fromCStructDoc, zeroDoc]
   aliases <- traverse (writeAlias (msMembers marshalled) s) (sAliases s)
   pure (weDoc, aliases)
 
@@ -1505,3 +1506,108 @@ writeAlias _members Struct{..} name = do
     pure
     (runWrap aliasDoc)
   pure WriteElement {..}
+
+----------------------------------------------------------------
+-- Zero instance
+----------------------------------------------------------------
+
+writeZeroInstance :: MarshalledStruct -> WrapM (Doc ())
+writeZeroInstance MarshalledStruct{..} =
+  if hasNoZeroInstance msName
+    then pure ""
+    else do
+      tellDepend (Unguarded (WE.TypeName "Zero"))
+      case msStructOrUnion of
+        AStruct -> do
+          zeros <- catMaybes <$> traverse writeMarshalledMemberZero msMembers
+          pure [qci|
+            instance Zero {msName} where
+              zero = {msName} {indent 0 $ vsep zeros}
+          |]
+        AUnion -> do
+          zero <- writeMarshalledMemberZero (head msMembers) >>= \case
+            Nothing -> throwError [Other ("Unhandled union member for Zero instance:" T.<+> T.tShow (head msMembers))]
+            Just z -> pure z
+          n <- case head msMembers of
+            FixedArrayTuple n _ _ Nothing _ ->
+              pure n
+            PreservedMarshalled n _ ->
+              pure n
+            m -> throwError [Other ("Unhandled union member for Zero instance:" T.<+> T.tShow m)]
+          pure [qci|
+            instance Zero {msName} where
+              zero = {T.upperCaseFirst n} {zero}
+          |]
+
+
+writeMarshalledMemberZero
+  :: MemberUsage MarshalledMember
+  -> WrapM (Maybe (Doc ()))
+writeMarshalledMemberZero = \case
+  Univalued            _ -> pure Nothing
+  Length               _ -> pure Nothing
+  LengthMultiple     _ _ -> pure Nothing
+  MinLength          _ _ -> pure Nothing
+  OptionalLength       _ -> pure Nothing
+  ByteStringLength     _ -> pure Nothing
+  FixedArrayValidCount _ -> pure Nothing
+  EnabledFlag          _ -> pure Nothing
+  NextPointer _ -> do
+    pure $ Just "Nothing"
+  ByteString _ -> do
+    tellQualifiedImport "Data.ByteString" "empty"
+    pure $ Just "Data.ByteString.empty"
+  ByteStringData _ _ -> do
+    tellQualifiedImport "Data.ByteString" "empty"
+    pure $ Just "Data.ByteString.empty"
+  FixedArrayNullTerminated _ _ -> do
+    tellQualifiedImport "Data.ByteString" "empty"
+    pure $ Just "Data.ByteString.empty"
+  FixedArrayZeroPadByteString memberName _ -> do
+    tellQualifiedImport "Data.ByteString" "empty"
+    pure $ Just "Data.ByteString.empty"
+  FixedArrayZeroPad memberName _ t -> do
+    tellQualifiedImport "Data.Vector" "empty"
+    pure $ Just "Data.Vector.empty"
+  MaybeByteString memberName ->
+    pure $ Just "Nothing"
+  Vector _ _ _ _ _ _ -> do
+    tellQualifiedImport "Data.Vector" "empty"
+    pure $ Just "Data.Vector.empty"
+  BitMaskVector _ _ _ _ _ _ -> do
+    tellQualifiedImport "Data.Vector" "empty"
+    pure $ Just "Data.Vector.empty"
+  FixedArray _ _ _ _ _ _ _ -> do
+    tellQualifiedImport "Data.Vector" "empty"
+    pure $ Just "Data.Vector.empty"
+  FixedArrayTuple _ len t _ _->
+    pure . Just $ tupled (replicate (fromIntegral len) "zero")
+  OptionalVector _ memberName t _ _ -> do
+    pure $ Just "Nothing"
+  Preserved MarshalledMember{..} ->
+    pure $ Just "zero"
+    -- | show mmType `elem` ([ t <> show w | t <- ["Int", "Word"], w <- [8,16,32,64] ] ++ ["CFloat"]) ->
+    --   pure $ Just "0"
+    -- | otherwise
+    -- -> error (show (3,mmName, mmType))
+  DispatchableHandle memberName h ->
+    pure $ Just "zero"
+  PreservedMarshalled memberName memberType ->
+    pure $ Just "zero"
+  Bool memberName ->
+    pure $ Just "False"
+  OptionalPtr memberName t _ _ -> do
+    pure $ Just "Nothing"
+  NonOptionalPtr memberName t _ _ -> do
+    pure $ Just "zero"
+  OptionalZero memberName t -> do
+    pure $ Just "Nothing"
+  SiblingVectorMaster {} -> error "Sibling vectors unimplemented"
+  SiblingVectorSlave  {} -> error "Sibling vectors unimplemented"
+
+----------------------------------------------------------------
+-- Bespoke stuff
+----------------------------------------------------------------
+
+hasNoZeroInstance :: Text -> Bool
+hasNoZeroInstance = (`elem` ["CmdProcessCommandsInfoNVX"])

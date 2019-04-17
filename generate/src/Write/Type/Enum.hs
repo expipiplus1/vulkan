@@ -50,8 +50,8 @@ writeEnum e@Enum {..} =
       weSourceDepends        = []
       weBootElement          = Nothing
       weDepends              = Unguarded <$> case eType of
-        EnumTypeEnum    -> []
-        EnumTypeBitmask -> [TypeName "VkFlags"]
+        EnumTypeEnum    -> [TypeName "Zero"]
+        EnumTypeBitmask -> [TypeName "VkFlags", TypeName "Zero"]
   in  WriteElement {..}
 
 enumDoc :: Enum -> DocMap -> Doc ()
@@ -132,5 +132,5 @@ enumBackingType Enum {..} = case eType of
 
 enumDerivedClasses :: Enum -> [Doc ()]
 enumDerivedClasses Enum{..} = case eType of
-  EnumTypeEnum    ->["Eq", "Ord", "Storable"]
-  EnumTypeBitmask -> ["Eq","Ord","Storable", "Bits", "FiniteBits"]
+  EnumTypeEnum    ->["Eq", "Ord", "Storable", "Zero"]
+  EnumTypeBitmask -> ["Eq","Ord","Storable", "Bits", "FiniteBits", "Zero"]
