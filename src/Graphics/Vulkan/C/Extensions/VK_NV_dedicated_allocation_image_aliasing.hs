@@ -31,13 +31,40 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV"
+-- | VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV - Structure
+-- describing dedicated allocation image aliasing features that can be
+-- supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- @VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV@ structure
+-- describe the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV@
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether each feature is supported.
+-- @VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV@ /can/ also
+-- be used in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
   { -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "dedicatedAllocationImageAliasing"
+  , -- | @dedicatedAllocationImageAliasing@ indicates that the implementation
+  -- supports aliasing of compatible image objects on a dedicated allocation.
   vkDedicatedAllocationImageAliasing :: VkBool32
   }
   deriving (Eq, Show)

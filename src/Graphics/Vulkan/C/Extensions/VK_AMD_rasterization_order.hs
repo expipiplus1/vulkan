@@ -53,13 +53,28 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPipelineRasterizationStateRasterizationOrderAMD"
+-- | VkPipelineRasterizationStateRasterizationOrderAMD - Structure defining
+-- rasterization order for a graphics pipeline
+--
+-- == Valid Usage (Implicit)
+--
+-- If the @{html_spec_relative}#VK_AMD_rasterization_order@ device
+-- extension is not enabled or the application does not request a
+-- particular rasterization order through specifying a
+-- @VkPipelineRasterizationStateRasterizationOrderAMD@ structure then the
+-- rasterization order used by the graphics pipeline defaults to
+-- @VK_RASTERIZATION_ORDER_STRICT_AMD@.
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPipelineRasterizationStateRasterizationOrderAMD = VkPipelineRasterizationStateRasterizationOrderAMD
-  { -- No documentation found for Nested "VkPipelineRasterizationStateRasterizationOrderAMD" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineRasterizationStateRasterizationOrderAMD" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineRasterizationStateRasterizationOrderAMD" "rasterizationOrder"
+  , -- | @rasterizationOrder@ /must/ be a valid 'VkRasterizationOrderAMD' value
   vkRasterizationOrder :: VkRasterizationOrderAMD
   }
   deriving (Eq, Show)
@@ -80,7 +95,12 @@ instance Zero VkPipelineRasterizationStateRasterizationOrderAMD where
                                                            zero
 -- ** VkRasterizationOrderAMD
 
--- No documentation found for TopLevel "VkRasterizationOrderAMD"
+-- | VkRasterizationOrderAMD - Specify rasterization order for a graphics
+-- pipeline
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkRasterizationOrderAMD = VkRasterizationOrderAMD Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -100,11 +120,15 @@ instance Read VkRasterizationOrderAMD where
                         )
                     )
 
--- No documentation found for Nested "VkRasterizationOrderAMD" "VK_RASTERIZATION_ORDER_STRICT_AMD"
+-- | @VK_RASTERIZATION_ORDER_STRICT_AMD@ specifies that operations for each
+-- primitive in a subpass /must/ occur in
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
 pattern VK_RASTERIZATION_ORDER_STRICT_AMD :: VkRasterizationOrderAMD
 pattern VK_RASTERIZATION_ORDER_STRICT_AMD = VkRasterizationOrderAMD 0
 
--- No documentation found for Nested "VkRasterizationOrderAMD" "VK_RASTERIZATION_ORDER_RELAXED_AMD"
+-- | @VK_RASTERIZATION_ORDER_RELAXED_AMD@ specifies that operations for each
+-- primitive in a subpass /may/ not occur in
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
 pattern VK_RASTERIZATION_ORDER_RELAXED_AMD :: VkRasterizationOrderAMD
 pattern VK_RASTERIZATION_ORDER_RELAXED_AMD = VkRasterizationOrderAMD 1
 -- No documentation found for TopLevel "VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME"

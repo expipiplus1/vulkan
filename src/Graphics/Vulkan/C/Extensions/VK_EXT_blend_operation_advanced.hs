@@ -117,7 +117,63 @@ import Graphics.Vulkan.C.Core10.Pipeline
 
 -- ** VkBlendOverlapEXT
 
--- No documentation found for TopLevel "VkBlendOverlapEXT"
+-- | VkBlendOverlapEXT - Enumerant specifying the blend overlap parameter
+--
+-- = Description
+--
+-- \'
+--
+-- > +-----------------------------------+-----------------------------------+
+-- > | Overlap Mode                      | Weighting Equations               |
+-- > +===================================+===================================+
+-- > | @VK_BLEND_OVERLAP_UNCORRELATED_EX | \[                                |
+-- > | T@                                |                \begin{aligned}    |
+-- > |                                   |                                   |
+-- > |                                   |                p_0(A_s,A_d) & = A |
+-- > |                                   | _sA_d \\                          |
+-- > |                                   |                                   |
+-- > |                                   |                p_1(A_s,A_d) & = A |
+-- > |                                   | _s(1-A_d) \\                      |
+-- > |                                   |                                   |
+-- > |                                   |                p_2(A_s,A_d) & = A |
+-- > |                                   | _d(1-A_s) \\                      |
+-- > |                                   |                                   |
+-- > |                                   |              \end{aligned}\]      |
+-- > +-----------------------------------+-----------------------------------+
+-- > | @VK_BLEND_OVERLAP_CONJOINT_EXT@   | \[                                |
+-- > |                                   |                \begin{aligned}    |
+-- > |                                   |                                   |
+-- > |                                   |                p_0(A_s,A_d) & = m |
+-- > |                                   | in(A_s,A_d) \\                    |
+-- > |                                   |                                   |
+-- > |                                   |                p_1(A_s,A_d) & = m |
+-- > |                                   | ax(A_s-A_d,0) \\                  |
+-- > |                                   |                                   |
+-- > |                                   |                p_2(A_s,A_d) & = m |
+-- > |                                   | ax(A_d-A_s,0) \\                  |
+-- > |                                   |                                   |
+-- > |                                   |              \end{aligned}\]      |
+-- > +-----------------------------------+-----------------------------------+
+-- > | @VK_BLEND_OVERLAP_DISJOINT_EXT@   | \[                                |
+-- > |                                   |                \begin{aligned}    |
+-- > |                                   |                                   |
+-- > |                                   |                p_0(A_s,A_d) & = m |
+-- > |                                   | ax(A_s+A_d-1,0) \\                |
+-- > |                                   |                                   |
+-- > |                                   |                p_1(A_s,A_d) & = m |
+-- > |                                   | in(A_s,1-A_d) \\                  |
+-- > |                                   |                                   |
+-- > |                                   |                p_2(A_s,A_d) & = m |
+-- > |                                   | in(A_d,1-A_s) \\                  |
+-- > |                                   |                                   |
+-- > |                                   |              \end{aligned}\]      |
+-- > +-----------------------------------+-----------------------------------+
+-- >
+-- > Advanced Blend Overlap Modes
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkBlendOverlapEXT = VkBlendOverlapEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -139,24 +195,59 @@ instance Read VkBlendOverlapEXT where
                         )
                     )
 
--- No documentation found for Nested "VkBlendOverlapEXT" "VK_BLEND_OVERLAP_UNCORRELATED_EXT"
+-- | @VK_BLEND_OVERLAP_UNCORRELATED_EXT@ specifies that there is no
+-- correlation between the source and destination coverage.
 pattern VK_BLEND_OVERLAP_UNCORRELATED_EXT :: VkBlendOverlapEXT
 pattern VK_BLEND_OVERLAP_UNCORRELATED_EXT = VkBlendOverlapEXT 0
 
--- No documentation found for Nested "VkBlendOverlapEXT" "VK_BLEND_OVERLAP_DISJOINT_EXT"
+-- | @VK_BLEND_OVERLAP_DISJOINT_EXT@ specifies that the source and
+-- destination coverage are considered to have minimal overlap.
 pattern VK_BLEND_OVERLAP_DISJOINT_EXT :: VkBlendOverlapEXT
 pattern VK_BLEND_OVERLAP_DISJOINT_EXT = VkBlendOverlapEXT 1
 
--- No documentation found for Nested "VkBlendOverlapEXT" "VK_BLEND_OVERLAP_CONJOINT_EXT"
+-- | @VK_BLEND_OVERLAP_CONJOINT_EXT@ specifies that the source and
+-- destination coverage are considered to have maximal overlap.
 pattern VK_BLEND_OVERLAP_CONJOINT_EXT :: VkBlendOverlapEXT
 pattern VK_BLEND_OVERLAP_CONJOINT_EXT = VkBlendOverlapEXT 2
--- No documentation found for TopLevel "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT"
+-- | VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT - Structure describing
+-- advanced blending features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT@
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+-- it is filled with values indicating whether each feature is supported.
+-- @VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT@ /can/ also be used
+-- in @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo'
+-- to enable the features.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT = VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT@
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT" "advancedBlendCoherentOperations"
+  , -- | @advancedBlendCoherentOperations@ specifies whether blending using
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>
+  -- is guaranteed to execute atomically and in
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
+  -- If this is @VK_TRUE@,
+  -- @VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT@ is treated the
+  -- same as @VK_ACCESS_COLOR_ATTACHMENT_READ_BIT@, and advanced blending
+  -- needs no additional synchronization over basic blending. If this is
+  -- @VK_FALSE@, then memory dependencies are required to guarantee order
+  -- between two advanced blending operations that occur on the same sample.
   vkAdvancedBlendCoherentOperations :: VkBool32
   }
   deriving (Eq, Show)
@@ -175,23 +266,60 @@ instance Zero VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT where
   zero = VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT zero
                                                            zero
                                                            zero
--- No documentation found for TopLevel "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT"
+-- | VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT - Structure
+-- describing advanced blending limits that can be supported by an
+-- implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT@
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT@ structure
+-- is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT = VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "advancedBlendMaxColorAttachments"
+  , -- | @advancedBlendMaxColorAttachments@ is one greater than the highest color
+  -- attachment index that /can/ be used in a subpass, for a pipeline that
+  -- uses an
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operation>.
   vkAdvancedBlendMaxColorAttachments :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "advancedBlendIndependentBlend"
+  , -- | @advancedBlendIndependentBlend@ specifies whether advanced blend
+  -- operations /can/ vary per-attachment.
   vkAdvancedBlendIndependentBlend :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "advancedBlendNonPremultipliedSrcColor"
+  , -- | @advancedBlendNonPremultipliedSrcColor@ specifies whether the source
+  -- color /can/ be treated as non-premultiplied. If this is @VK_FALSE@, then
+  -- 'VkPipelineColorBlendAdvancedStateCreateInfoEXT'::@srcPremultiplied@
+  -- /must/ be @VK_TRUE@.
   vkAdvancedBlendNonPremultipliedSrcColor :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "advancedBlendNonPremultipliedDstColor"
+  , -- | @advancedBlendNonPremultipliedDstColor@ specifies whether the
+  -- destination color /can/ be treated as non-premultiplied. If this is
+  -- @VK_FALSE@, then
+  -- 'VkPipelineColorBlendAdvancedStateCreateInfoEXT'::@dstPremultiplied@
+  -- /must/ be @VK_TRUE@.
   vkAdvancedBlendNonPremultipliedDstColor :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "advancedBlendCorrelatedOverlap"
+  , -- | @advancedBlendCorrelatedOverlap@ specifies whether the overlap mode
+  -- /can/ be treated as correlated. If this is @VK_FALSE@, then
+  -- 'VkPipelineColorBlendAdvancedStateCreateInfoEXT'::@blendOverlap@ /must/
+  -- be @VK_BLEND_OVERLAP_UNCORRELATED_EXT@.
   vkAdvancedBlendCorrelatedOverlap :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT" "advancedBlendAllOperations"
+  , -- | @advancedBlendAllOperations@ specifies whether all advanced blend
+  -- operation enums are supported. See the valid usage of
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineColorBlendAttachmentState'.
   vkAdvancedBlendAllOperations :: VkBool32
   }
   deriving (Eq, Show)
@@ -225,17 +353,53 @@ instance Zero VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT where
                                                              zero
                                                              zero
                                                              zero
--- No documentation found for TopLevel "VkPipelineColorBlendAdvancedStateCreateInfoEXT"
+-- | VkPipelineColorBlendAdvancedStateCreateInfoEXT - Structure specifying
+-- parameters that affect advanced blend operations
+--
+-- = Description
+--
+-- If this structure is not present, @srcPremultiplied@ and
+-- @dstPremultiplied@ are both considered to be @VK_TRUE@, and
+-- @blendOverlap@ is considered to be @VK_BLEND_OVERLAP_UNCORRELATED_EXT@.
+--
+-- == Valid Usage
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedSrcColor non-premultiplied source color>
+--     property is not supported, @srcPremultiplied@ /must/ be @VK_TRUE@
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#limits-advancedBlendNonPremultipliedDstColor non-premultiplied destination color>
+--     property is not supported, @dstPremultiplied@ /must/ be @VK_TRUE@
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#limits-advancedBlendCorrelatedOverlap correlated overlap>
+--     property is not supported, @blendOverlap@ /must/ be
+--     @VK_BLEND_OVERLAP_UNCORRELATED_EXT@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT@
+--
+-- -   @blendOverlap@ /must/ be a valid 'VkBlendOverlapEXT' value
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPipelineColorBlendAdvancedStateCreateInfoEXT = VkPipelineColorBlendAdvancedStateCreateInfoEXT
-  { -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "srcPremultiplied"
+  , -- | @srcPremultiplied@ specifies whether the source color of the blend
+  -- operation is treated as premultiplied.
   vkSrcPremultiplied :: VkBool32
-  , -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "dstPremultiplied"
+  , -- | @dstPremultiplied@ specifies whether the destination color of the blend
+  -- operation is treated as premultiplied.
   vkDstPremultiplied :: VkBool32
-  , -- No documentation found for Nested "VkPipelineColorBlendAdvancedStateCreateInfoEXT" "blendOverlap"
+  , -- | @blendOverlap@ is a 'VkBlendOverlapEXT' value specifying how the source
+  -- and destination sample’s coverage is correlated.
   vkBlendOverlap :: VkBlendOverlapEXT
   }
   deriving (Eq, Show)
@@ -260,7 +424,9 @@ instance Zero VkPipelineColorBlendAdvancedStateCreateInfoEXT where
                                                         zero
                                                         zero
                                                         zero
--- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"
+-- | @VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT@ is similar to
+-- @VK_ACCESS_COLOR_ATTACHMENT_READ_BIT@, but also includes
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>.
 pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = VkAccessFlagBits 0x00080000
 -- No documentation found for Nested "VkBlendOp" "VK_BLEND_OP_BLUE_EXT"

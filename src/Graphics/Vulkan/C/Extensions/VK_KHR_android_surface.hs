@@ -96,15 +96,22 @@ instance Read VkAndroidSurfaceCreateFlagsKHR where
                     )
 
 
--- No documentation found for TopLevel "VkAndroidSurfaceCreateInfoKHR"
+-- | VkAndroidSurfaceCreateInfoKHR - Structure specifying parameters of a
+-- newly created Android surface object
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkAndroidSurfaceCreateInfoKHR = VkAndroidSurfaceCreateInfoKHR
-  { -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "flags"
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkAndroidSurfaceCreateFlagsKHR
-  , -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "window"
+  , -- | @window@ /must/ point to a valid Android 'ANativeWindow'.
   vkWindow :: Ptr ANativeWindow
   }
   deriving (Eq, Show)
@@ -127,7 +134,78 @@ instance Zero VkAndroidSurfaceCreateInfoKHR where
                                        zero
                                        zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCreateAndroidSurfaceKHR"
+-- | vkCreateAndroidSurfaceKHR - Create a
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for an
+-- Android native window
+--
+-- = Parameters
+--
+-- -   @instance@ is the instance to associate the surface with.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     @VkAndroidSurfaceCreateInfoKHR@ structure containing parameters
+--     affecting the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
+--     which the created surface object is returned.
+--
+-- = Description
+--
+-- During the lifetime of a surface created using a particular
+-- 'ANativeWindow' handle any attempts to create another surface for the
+-- same 'ANativeWindow' and any attempts to connect to the same
+-- 'ANativeWindow' through other platform mechanisms will fail.
+--
+-- __Note__
+--
+-- In particular, only one @VkSurfaceKHR@ /can/ exist at a time for a given
+-- window. Similarly, a native window /cannot/ be used by both a
+-- @VkSurfaceKHR@ and @EGLSurface@ simultaneously.
+--
+-- If successful, @vkCreateAndroidSurfaceKHR@ increments the
+-- 'ANativeWindow'’s reference count, and @vkDestroySurfaceKHR@ will
+-- decrement it.
+--
+-- On Android, when a swapchain’s @imageExtent@ does not match the
+-- surface’s @currentExtent@, the presentable images will be scaled to the
+-- surface’s dimensions during presentation. @minImageExtent@ is (1,1), and
+-- @maxImageExtent@ is the maximum image size supported by the consumer.
+-- For the system compositor, @currentExtent@ is the window size (i.e. the
+-- consumer’s preferred size).
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid @VkInstance@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkAndroidSurfaceCreateInfoKHR@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+--     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

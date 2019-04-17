@@ -71,7 +71,16 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- ** VkPipelineViewportSwizzleStateCreateFlagsNV
 
--- No documentation found for TopLevel "VkPipelineViewportSwizzleStateCreateFlagsNV"
+-- | VkPipelineViewportSwizzleStateCreateFlagsNV - Reserved for future use
+--
+-- = Description
+--
+-- @VkPipelineViewportSwizzleStateCreateFlagsNV@ is a bitmask type for
+-- setting a mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkPipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateCreateFlagsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -90,17 +99,26 @@ instance Read VkPipelineViewportSwizzleStateCreateFlagsNV where
                     )
 
 
--- No documentation found for TopLevel "VkPipelineViewportSwizzleStateCreateInfoNV"
+-- | VkPipelineViewportSwizzleStateCreateInfoNV - Structure specifying
+-- swizzle applied to primitive clip coordinates
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPipelineViewportSwizzleStateCreateInfoNV = VkPipelineViewportSwizzleStateCreateInfoNV
-  { -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "flags"
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkPipelineViewportSwizzleStateCreateFlagsNV
-  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "viewportCount"
+  , -- | @viewportCount@ /must/ be greater than @0@
   vkViewportCount :: Word32
-  , -- No documentation found for Nested "VkPipelineViewportSwizzleStateCreateInfoNV" "pViewportSwizzles"
+  , -- | @pViewportSwizzles@ is a pointer to an array of 'VkViewportSwizzleNV'
+  -- structures, defining the viewport swizzles.
   vkPViewportSwizzles :: Ptr VkViewportSwizzleNV
   }
   deriving (Eq, Show)
@@ -127,7 +145,17 @@ instance Zero VkPipelineViewportSwizzleStateCreateInfoNV where
                                                     zero
 -- ** VkViewportCoordinateSwizzleNV
 
--- No documentation found for TopLevel "VkViewportCoordinateSwizzleNV"
+-- | VkViewportCoordinateSwizzleNV - Specify how a viewport coordinate is
+-- swizzled
+--
+-- = Description
+--
+-- These values are described in detail in
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-viewport-swizzle Viewport Swizzle>.
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -190,15 +218,21 @@ pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV = VkViewportCoordinateSwizz
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV"
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV :: VkViewportCoordinateSwizzleNV
 pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = VkViewportCoordinateSwizzleNV 7
--- No documentation found for TopLevel "VkViewportSwizzleNV"
+-- | VkViewportSwizzleNV - Structure specifying a viewport swizzle
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkViewportSwizzleNV = VkViewportSwizzleNV
-  { -- No documentation found for Nested "VkViewportSwizzleNV" "x"
+  { -- | @x@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
   vkX :: VkViewportCoordinateSwizzleNV
-  , -- No documentation found for Nested "VkViewportSwizzleNV" "y"
+  , -- | @y@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
   vkY :: VkViewportCoordinateSwizzleNV
-  , -- No documentation found for Nested "VkViewportSwizzleNV" "z"
+  , -- | @z@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
   vkZ :: VkViewportCoordinateSwizzleNV
-  , -- No documentation found for Nested "VkViewportSwizzleNV" "w"
+  , -- | @w@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
   vkW :: VkViewportCoordinateSwizzleNV
   }
   deriving (Eq, Show)

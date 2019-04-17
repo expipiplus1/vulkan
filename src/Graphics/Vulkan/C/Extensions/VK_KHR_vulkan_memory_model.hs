@@ -31,17 +31,38 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceVulkanMemoryModelFeaturesKHR"
+-- | VkPhysicalDeviceVulkanMemoryModelFeaturesKHR - Structure describing
+-- features supported by VK_KHR_vulkan_memory_model
+--
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt
+-- -
+-- include::..\/validity\/structs\/VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceVulkanMemoryModelFeaturesKHR = VkPhysicalDeviceVulkanMemoryModelFeaturesKHR
-  { -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeaturesKHR" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeaturesKHR" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeaturesKHR" "vulkanMemoryModel"
+  , -- | @vulkanMemoryModel@ indicates whether the Vulkan Memory Model is
+  -- supported, as defined in
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
+  -- This also indicates whether shader modules /can/ declare the
+  -- @VulkanMemoryModelKHR@ capability.
   vkVulkanMemoryModel :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeaturesKHR" "vulkanMemoryModelDeviceScope"
+  , -- | @vulkanMemoryModelDeviceScope@ indicates whether the Vulkan Memory Model
+  -- can use @Device@ scope synchronization. This also indicates whether
+  -- shader modules /can/ declare the @VulkanMemoryModelDeviceScopeKHR@
+  -- capability.
   vkVulkanMemoryModelDeviceScope :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceVulkanMemoryModelFeaturesKHR" "vulkanMemoryModelAvailabilityVisibilityChains"
+  , -- | @vulkanMemoryModelAvailabilityVisibilityChains@ indicates whether the
+  -- Vulkan Memory Model can use
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
+  -- with more than one element.
   vkVulkanMemoryModelAvailabilityVisibilityChains :: VkBool32
   }
   deriving (Eq, Show)

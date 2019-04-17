@@ -16,6 +16,11 @@ import Graphics.Vulkan.C.Core10.Version
   )
 
 
--- No documentation found for TopLevel "VK_API_VERSION_1_1"
+-- | VK_API_VERSION_1_1 - Return API version number for Vulkan 1.1
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkCreateInstance',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceProperties'
 pattern VK_API_VERSION_1_1 :: Word32
 pattern VK_API_VERSION_1_1 = VK_MAKE_VERSION 1 1 0

@@ -95,7 +95,11 @@ import Graphics.Vulkan.NamedType
 
 -- ** VkComponentTypeNV
 
--- No documentation found for TopLevel "VkComponentTypeNV"
+-- | VkComponentTypeNV - Specify SPIR-V cooperative matrix component type
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkComponentTypeNV = VkComponentTypeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -133,70 +137,87 @@ instance Read VkComponentTypeNV where
                         )
                     )
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_FLOAT16_NV"
+-- | @VK_COMPONENT_TYPE_FLOAT16_NV@ corresponds to SPIR-V @OpTypeFloat@ 16.
 pattern VK_COMPONENT_TYPE_FLOAT16_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_FLOAT16_NV = VkComponentTypeNV 0
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_FLOAT32_NV"
+-- | @VK_COMPONENT_TYPE_FLOAT32_NV@ corresponds to SPIR-V @OpTypeFloat@ 32.
 pattern VK_COMPONENT_TYPE_FLOAT32_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_FLOAT32_NV = VkComponentTypeNV 1
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_FLOAT64_NV"
+-- | @VK_COMPONENT_TYPE_FLOAT64_NV@ corresponds to SPIR-V @OpTypeFloat@ 64.
 pattern VK_COMPONENT_TYPE_FLOAT64_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_FLOAT64_NV = VkComponentTypeNV 2
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_SINT8_NV"
+-- | @VK_COMPONENT_TYPE_SINT8_NV@ corresponds to SPIR-V @OpTypeInt@ 8 1.
 pattern VK_COMPONENT_TYPE_SINT8_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_SINT8_NV = VkComponentTypeNV 3
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_SINT16_NV"
+-- | @VK_COMPONENT_TYPE_SINT16_NV@ corresponds to SPIR-V @OpTypeInt@ 16 1.
 pattern VK_COMPONENT_TYPE_SINT16_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_SINT16_NV = VkComponentTypeNV 4
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_SINT32_NV"
+-- | @VK_COMPONENT_TYPE_SINT32_NV@ corresponds to SPIR-V @OpTypeInt@ 32 1.
 pattern VK_COMPONENT_TYPE_SINT32_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_SINT32_NV = VkComponentTypeNV 5
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_SINT64_NV"
+-- | @VK_COMPONENT_TYPE_SINT64_NV@ corresponds to SPIR-V @OpTypeInt@ 64 1.
 pattern VK_COMPONENT_TYPE_SINT64_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_SINT64_NV = VkComponentTypeNV 6
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_UINT8_NV"
+-- | @VK_COMPONENT_TYPE_UINT8_NV@ corresponds to SPIR-V @OpTypeInt@ 8 0.
 pattern VK_COMPONENT_TYPE_UINT8_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_UINT8_NV = VkComponentTypeNV 7
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_UINT16_NV"
+-- | @VK_COMPONENT_TYPE_UINT16_NV@ corresponds to SPIR-V @OpTypeInt@ 16 0.
 pattern VK_COMPONENT_TYPE_UINT16_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_UINT16_NV = VkComponentTypeNV 8
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_UINT32_NV"
+-- | @VK_COMPONENT_TYPE_UINT32_NV@ corresponds to SPIR-V @OpTypeInt@ 32 0.
 pattern VK_COMPONENT_TYPE_UINT32_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_UINT32_NV = VkComponentTypeNV 9
 
--- No documentation found for Nested "VkComponentTypeNV" "VK_COMPONENT_TYPE_UINT64_NV"
+-- | @VK_COMPONENT_TYPE_UINT64_NV@ corresponds to SPIR-V @OpTypeInt@ 64 0.
 pattern VK_COMPONENT_TYPE_UINT64_NV :: VkComponentTypeNV
 pattern VK_COMPONENT_TYPE_UINT64_NV = VkComponentTypeNV 10
--- No documentation found for TopLevel "VkCooperativeMatrixPropertiesNV"
+-- | VkCooperativeMatrixPropertiesNV - Structure specifying cooperative
+-- matrix properties
+--
+-- = Description
+--
+-- If some types are preferred over other types (e.g. for performance),
+-- they /should/ appear earlier in the list enumerated by
+-- 'vkGetPhysicalDeviceCooperativeMatrixPropertiesNV'.
+--
+-- At least one entry in the list /must/ have power of two values for all
+-- of @MSize@, @KSize@, and @NSize@.
+--
+-- Unresolved directive in VkCooperativeMatrixPropertiesNV.txt -
+-- include::..\/validity\/structs\/VkCooperativeMatrixPropertiesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkCooperativeMatrixPropertiesNV = VkCooperativeMatrixPropertiesNV
-  { -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "MSize"
+  , -- | @MSize@ is the number of rows in matrices A, C, and D.
   vkMSize :: Word32
-  , -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "NSize"
+  , -- | @NSize@ is the number of columns in matrices B, C, D.
   vkNSize :: Word32
-  , -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "KSize"
+  , -- | @KSize@ is the number of columns in matrix A and rows in matrix B.
   vkKSize :: Word32
-  , -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "AType"
+  , -- | @AType@ is the component type of matrix A, of type 'VkComponentTypeNV'.
   vkAType :: VkComponentTypeNV
-  , -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "BType"
+  , -- | @BType@ is the component type of matrix B, of type 'VkComponentTypeNV'.
   vkBType :: VkComponentTypeNV
-  , -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "CType"
+  , -- | @CType@ is the component type of matrix C, of type 'VkComponentTypeNV'.
   vkCType :: VkComponentTypeNV
-  , -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "DType"
+  , -- | @DType@ is the component type of matrix D, of type 'VkComponentTypeNV'.
   vkDType :: VkComponentTypeNV
-  , -- No documentation found for Nested "VkCooperativeMatrixPropertiesNV" "scope"
+  , -- | @scope@ is the scope of all the matrix types, of type 'VkScopeNV'.
   vkScope :: VkScopeNV
   }
   deriving (Eq, Show)
@@ -236,15 +257,42 @@ instance Zero VkCooperativeMatrixPropertiesNV where
                                          zero
                                          zero
                                          zero
--- No documentation found for TopLevel "VkPhysicalDeviceCooperativeMatrixFeaturesNV"
+-- | VkPhysicalDeviceCooperativeMatrixFeaturesNV - Structure describing
+-- cooperative matrix features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceCooperativeMatrixFeaturesNV@
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceCooperativeMatrixFeaturesNV@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether the feature is supported.
+-- @VkPhysicalDeviceCooperativeMatrixFeaturesNV@ /can/ also be used in the
+-- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
+-- enable features.
+--
+-- Unresolved directive in VkPhysicalDeviceCooperativeMatrixFeaturesNV.txt
+-- -
+-- include::..\/validity\/structs\/VkPhysicalDeviceCooperativeMatrixFeaturesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceCooperativeMatrixFeaturesNV = VkPhysicalDeviceCooperativeMatrixFeaturesNV
   { -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixFeaturesNV" "cooperativeMatrix"
+  , -- | @cooperativeMatrix@ indicates that the implementation supports the
+  -- @CooperativeMatrixNV@ SPIR-V capability.
   vkCooperativeMatrix :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixFeaturesNV" "cooperativeMatrixRobustBufferAccess"
+  , -- | @cooperativeMatrixRobustBufferAccess@ indicates that the implementation
+  -- supports robust buffer access for SPIR-V @OpCooperativeMatrixLoadNV@ and
+  -- @OpCooperativeMatrixStoreNV@ instructions.
   vkCooperativeMatrixRobustBufferAccess :: VkBool32
   }
   deriving (Eq, Show)
@@ -266,13 +314,39 @@ instance Zero VkPhysicalDeviceCooperativeMatrixFeaturesNV where
                                                      zero
                                                      zero
                                                      zero
--- No documentation found for TopLevel "VkPhysicalDeviceCooperativeMatrixPropertiesNV"
+-- | VkPhysicalDeviceCooperativeMatrixPropertiesNV - Structure describing
+-- cooperative matrix properties supported by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceCooperativeMatrixPropertiesNV@
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceCooperativeMatrixPropertiesNV@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceCooperativeMatrixPropertiesNV = VkPhysicalDeviceCooperativeMatrixPropertiesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixPropertiesNV" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixPropertiesNV" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixPropertiesNV" "cooperativeMatrixSupportedStages"
+  , -- | @cooperativeMatrixSupportedStages@ is a bitfield of
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits' describing the
+  -- shader stages that cooperative matrix instructions are supported in.
+  -- @cooperativeMatrixSupportedStages@ will have the
+  -- @VK_SHADER_STAGE_COMPUTE_BIT@ bit set if any of the physical device’s
+  -- queues support @VK_QUEUE_COMPUTE_BIT@.
   vkCooperativeMatrixSupportedStages :: VkShaderStageFlags
   }
   deriving (Eq, Show)
@@ -293,7 +367,15 @@ instance Zero VkPhysicalDeviceCooperativeMatrixPropertiesNV where
                                                        zero
 -- ** VkScopeNV
 
--- No documentation found for TopLevel "VkScopeNV"
+-- | VkScopeNV - Specify SPIR-V scope
+--
+-- = Description
+--
+-- All enum values match the corresponding SPIR-V value.
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkScopeNV = VkScopeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -317,23 +399,56 @@ instance Read VkScopeNV where
                         )
                     )
 
--- No documentation found for Nested "VkScopeNV" "VK_SCOPE_DEVICE_NV"
+-- | @VK_SCOPE_DEVICE_NV@ corresponds to SPIR-V @Device@ scope.
 pattern VK_SCOPE_DEVICE_NV :: VkScopeNV
 pattern VK_SCOPE_DEVICE_NV = VkScopeNV 1
 
--- No documentation found for Nested "VkScopeNV" "VK_SCOPE_WORKGROUP_NV"
+-- | @VK_SCOPE_WORKGROUP_NV@ corresponds to SPIR-V @Workgroup@ scope.
 pattern VK_SCOPE_WORKGROUP_NV :: VkScopeNV
 pattern VK_SCOPE_WORKGROUP_NV = VkScopeNV 2
 
--- No documentation found for Nested "VkScopeNV" "VK_SCOPE_SUBGROUP_NV"
+-- | @VK_SCOPE_SUBGROUP_NV@ corresponds to SPIR-V @Subgroup@ scope.
 pattern VK_SCOPE_SUBGROUP_NV :: VkScopeNV
 pattern VK_SCOPE_SUBGROUP_NV = VkScopeNV 3
 
--- No documentation found for Nested "VkScopeNV" "VK_SCOPE_QUEUE_FAMILY_NV"
+-- | @VK_SCOPE_QUEUE_FAMILY_NV@ corresponds to SPIR-V @QueueFamilyKHR@ scope.
 pattern VK_SCOPE_QUEUE_FAMILY_NV :: VkScopeNV
 pattern VK_SCOPE_QUEUE_FAMILY_NV = VkScopeNV 5
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetPhysicalDeviceCooperativeMatrixPropertiesNV"
+-- | vkGetPhysicalDeviceCooperativeMatrixPropertiesNV - Returns properties
+-- describing what cooperative matrix types are supported
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     cooperative matrix properties available or queried.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'VkCooperativeMatrixPropertiesNV' structures.
+--
+-- = Description
+--
+-- If @pProperties@ is @NULL@, then the number of cooperative matrix
+-- properties available is returned in @pPropertyCount@. Otherwise,
+-- @pPropertyCount@ /must/ point to a variable set by the user to the
+-- number of elements in the @pProperties@ array, and on return the
+-- variable is overwritten with the number of structures actually written
+-- to @pProperties@. If @pPropertyCount@ is less than the number of
+-- cooperative matrix properties available, at most @pPropertyCount@
+-- structures will be written. If @pPropertyCount@ is smaller than the
+-- number of cooperative matrix properties available, @VK_INCOMPLETE@ will
+-- be returned instead of @VK_SUCCESS@, to indicate that not all the
+-- available cooperative matrix properties were returned.
+--
+-- Unresolved directive in
+-- vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
+-- include::..\/validity\/protos\/vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

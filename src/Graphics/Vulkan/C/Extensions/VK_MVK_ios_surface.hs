@@ -93,15 +93,24 @@ instance Read VkIOSSurfaceCreateFlagsMVK where
                     )
 
 
--- No documentation found for TopLevel "VkIOSSurfaceCreateInfoMVK"
+-- | VkIOSSurfaceCreateInfoMVK - Structure specifying parameters of a newly
+-- created iOS surface object
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkIOSSurfaceCreateInfoMVK = VkIOSSurfaceCreateInfoMVK
-  { -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "flags"
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkIOSSurfaceCreateFlagsMVK
-  , -- No documentation found for Nested "VkIOSSurfaceCreateInfoMVK" "pView"
+  , -- | @pView@ /must/ be a valid @UIView@ and /must/ be backed by a @CALayer@
+  -- instance of type
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
   vkPView :: Ptr ()
   }
   deriving (Eq, Show)
@@ -124,7 +133,52 @@ instance Zero VkIOSSurfaceCreateInfoMVK where
                                    zero
                                    zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCreateIOSSurfaceMVK"
+-- | vkCreateIOSSurfaceMVK - Create a VkSurfaceKHR object for an iOS UIView
+--
+-- = Parameters
+--
+-- -   @instance@ is the instance with which to associate the surface.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'VkIOSSurfaceCreateInfoMVK' structure containing parameters
+--     affecting the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
+--     which the created surface object is returned.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid @VkInstance@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkIOSSurfaceCreateInfoMVK@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+--     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

@@ -57,15 +57,30 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkCheckpointDataNV"
+-- | VkCheckpointDataNV - return structure for command buffer checkpoint data
+--
+-- = Description
+--
+-- Unresolved directive in VkCheckpointDataNV.txt -
+-- include::..\/validity\/structs\/VkCheckpointDataNV.txt[]
+--
+-- Note that the stages at which a checkpoint marker /can/ be executed are
+-- implementation-defined and /can/ be queried by calling
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'.
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkCheckpointDataNV = VkCheckpointDataNV
-  { -- No documentation found for Nested "VkCheckpointDataNV" "sType"
+  { -- | @sType@ is the type of this structure
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCheckpointDataNV" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCheckpointDataNV" "stage"
+  , -- | @stage@ indicates which pipeline stage the checkpoint marker data refers
+  -- to.
   vkStage :: VkPipelineStageFlagBits
-  , -- No documentation found for Nested "VkCheckpointDataNV" "pCheckpointMarker"
+  , -- | @pCheckpointMarker@ contains the value of the last checkpoint marker
+  -- executed in the stage that @stage@ refers to.
   vkPCheckpointMarker :: Ptr ()
   }
   deriving (Eq, Show)
@@ -87,13 +102,24 @@ instance Zero VkCheckpointDataNV where
                             zero
                             zero
                             zero
--- No documentation found for TopLevel "VkQueueFamilyCheckpointPropertiesNV"
+-- | VkQueueFamilyCheckpointPropertiesNV - return structure for queue family
+-- checkpoint info query
+--
+-- = Description
+--
+-- Unresolved directive in VkQueueFamilyCheckpointPropertiesNV.txt -
+-- include::..\/validity\/structs\/VkQueueFamilyCheckpointPropertiesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkQueueFamilyCheckpointPropertiesNV = VkQueueFamilyCheckpointPropertiesNV
-  { -- No documentation found for Nested "VkQueueFamilyCheckpointPropertiesNV" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkQueueFamilyCheckpointPropertiesNV" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkQueueFamilyCheckpointPropertiesNV" "checkpointExecutionStageMask"
+  , -- | @checkpointExecutionStageMask@ is a mask indicating which pipeline
+  -- stages the implementation can execute checkpoint markers in.
   vkCheckpointExecutionStageMask :: VkPipelineStageFlags
   }
   deriving (Eq, Show)
@@ -113,7 +139,23 @@ instance Zero VkQueueFamilyCheckpointPropertiesNV where
                                              zero
                                              zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCmdSetCheckpointNV"
+-- | vkCmdSetCheckpointNV - insert diagnostic checkpoint in command stream
+--
+-- = Parameters
+--
+-- -   @commandBuffer@ is the command buffer that will receive the marker
+--
+-- -   @pCheckpointMarker@ is an opaque application-provided value that
+--     will be associated with the checkpoint.
+--
+-- = Description
+--
+-- Unresolved directive in vkCmdSetCheckpointNV.txt -
+-- include::..\/validity\/protos\/vkCmdSetCheckpointNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -124,7 +166,43 @@ foreign import ccall
 type FN_vkCmdSetCheckpointNV = ("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ()
 type PFN_vkCmdSetCheckpointNV = FunPtr FN_vkCmdSetCheckpointNV
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetQueueCheckpointDataNV"
+-- | vkGetQueueCheckpointDataNV - retrieve diagnostic checkpoint data
+--
+-- = Parameters
+--
+-- -   @queue@ is the 'Graphics.Vulkan.C.Core10.Queue.VkQueue' object the
+--     caller would like to retrieve checkpoint data for
+--
+-- -   @pCheckpointDataCount@ is a pointer to an integer related to the
+--     number of checkpoint markers available or queried, as described
+--     below.
+--
+-- -   @pCheckpointData@ is either @NULL@ or a pointer to an array of
+--     @VkCheckpointDataNV@ structures.
+--
+-- = Description
+--
+-- If @pCheckpointData@ is @NULL@, then the number of checkpoint markers
+-- available is returned in @pCheckpointDataCount@.
+--
+-- Otherwise, @pCheckpointDataCount@ /must/ point to a variable set by the
+-- user to the number of elements in the @pCheckpointData@ array, and on
+-- return the variable is overwritten with the number of structures
+-- actually written to @pCheckpointData@.
+--
+-- If @pCheckpointDataCount@ is less than the number of checkpoint markers
+-- available, at most @pCheckpointDataCount@ structures will be written.
+--
+-- == Valid Usage
+--
+-- -   The device that @queue@ belongs to /must/ be in the lost state
+--
+-- Unresolved directive in vkGetQueueCheckpointDataNV.txt -
+-- include::..\/validity\/protos\/vkGetQueueCheckpointDataNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

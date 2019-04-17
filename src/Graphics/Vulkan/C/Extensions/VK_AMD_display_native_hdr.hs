@@ -54,13 +54,28 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkDisplayNativeHdrSurfaceCapabilitiesAMD"
+-- | VkDisplayNativeHdrSurfaceCapabilitiesAMD - Structure describing display
+-- native HDR specific capabilities of a surface
+--
+-- = Description
+--
+-- Unresolved directive in VkDisplayNativeHdrSurfaceCapabilitiesAMD.txt -
+-- include::..\/validity\/structs\/VkDisplayNativeHdrSurfaceCapabilitiesAMD.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkDisplayNativeHdrSurfaceCapabilitiesAMD = VkDisplayNativeHdrSurfaceCapabilitiesAMD
-  { -- No documentation found for Nested "VkDisplayNativeHdrSurfaceCapabilitiesAMD" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDisplayNativeHdrSurfaceCapabilitiesAMD" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDisplayNativeHdrSurfaceCapabilitiesAMD" "localDimmingSupport"
+  , -- | @localDimmingSupport@ specifies whether the surface supports local
+  -- dimming. If this is @VK_TRUE@,
+  -- 'VkSwapchainDisplayNativeHdrCreateInfoAMD' /can/ be used to explicitly
+  -- enable or disable local dimming for the surface. Local dimming may also
+  -- be overriden by 'vkSetLocalDimmingAMD' during the lifetime of the
+  -- swapchain.
   vkLocalDimmingSupport :: VkBool32
   }
   deriving (Eq, Show)
@@ -79,13 +94,36 @@ instance Zero VkDisplayNativeHdrSurfaceCapabilitiesAMD where
   zero = VkDisplayNativeHdrSurfaceCapabilitiesAMD zero
                                                   zero
                                                   zero
--- No documentation found for TopLevel "VkSwapchainDisplayNativeHdrCreateInfoAMD"
+-- | VkSwapchainDisplayNativeHdrCreateInfoAMD - Structure specifying display
+-- native HDR parameters of a newly created swapchain object
+--
+-- = Description
+--
+-- If the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
+-- does not contain this structure, the default value for
+-- @localDimmingEnable@ is @VK_TRUE@, meaning local dimming is initially
+-- enabled for the swapchain.
+--
+-- Unresolved directive in VkSwapchainDisplayNativeHdrCreateInfoAMD.txt -
+-- include::..\/validity\/structs\/VkSwapchainDisplayNativeHdrCreateInfoAMD.txt[]
+--
+-- == Valid Usage
+--
+-- -   It is only valid to set @localDimmingEnable@ to @VK_TRUE@ if
+--     'VkDisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
+--     supported.
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkSwapchainDisplayNativeHdrCreateInfoAMD = VkSwapchainDisplayNativeHdrCreateInfoAMD
-  { -- No documentation found for Nested "VkSwapchainDisplayNativeHdrCreateInfoAMD" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSwapchainDisplayNativeHdrCreateInfoAMD" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSwapchainDisplayNativeHdrCreateInfoAMD" "localDimmingEnable"
+  , -- | @localDimmingEnable@ specifies whether local dimming is enabled for the
+  -- swapchain.
   vkLocalDimmingEnable :: VkBool32
   }
   deriving (Eq, Show)
@@ -105,7 +143,31 @@ instance Zero VkSwapchainDisplayNativeHdrCreateInfoAMD where
                                                   zero
                                                   zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkSetLocalDimmingAMD"
+-- | vkSetLocalDimmingAMD - Set Local Dimming
+--
+-- = Parameters
+--
+-- -   @device@ is the device associated with @swapChain@.
+--
+-- -   @swapChain@ handle to enable local dimming.
+--
+-- -   @localDimmingEnable@ specifies whether local dimming is enabled for
+--     the swapchain.
+--
+-- = Description
+--
+-- Unresolved directive in vkSetLocalDimmingAMD.txt -
+-- include::..\/validity\/protos\/vkSetLocalDimmingAMD.txt[] .Valid Usage
+--
+-- == 
+--
+-- -   It is only valid to call 'vkSetLocalDimmingAMD' if
+--     'VkDisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
+--     supported.
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -121,7 +183,9 @@ pattern VK_AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME = "VK_AMD_display_native_hdr"
 -- No documentation found for TopLevel "VK_AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"
 pattern VK_AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION :: Integral a => a
 pattern VK_AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION = 1
--- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_DISPLAY_NATIVE_AMD"
+-- | @VK_COLOR_SPACE_DISPLAY_NATIVE_AMD@ specifies support for the display’s
+-- native color space. This matches the color space expectations of AMD’s
+-- FreeSync2 standard, for displays supporting it.
 pattern VK_COLOR_SPACE_DISPLAY_NATIVE_AMD :: VkColorSpaceKHR
 pattern VK_COLOR_SPACE_DISPLAY_NATIVE_AMD = VkColorSpaceKHR 1000213000
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD"

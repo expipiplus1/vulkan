@@ -39,15 +39,37 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT"
+-- | VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT - Structure describing
+-- if fetching of vertex attribute may be repeated for instanced rendering
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+-- it is filled with values indicating the implementation-dependent
+-- behavior. @VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT@ /can/ also
+-- be used in @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
+-- feature.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT = VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "vertexAttributeInstanceRateDivisor"
+  , -- | @vertexAttributeInstanceRateDivisor@ specifies whether vertex attribute
+  -- fetching may be repeated in case of instanced rendering.
   vkVertexAttributeInstanceRateDivisor :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT" "vertexAttributeInstanceRateZeroDivisor"
+  , -- | @vertexAttributeInstanceRateZeroDivisor@ specifies whether a zero value
+  -- for @VkVertexInputBindingDivisorDescriptionEXT@::@divisor@ is supported.
   vkVertexAttributeInstanceRateZeroDivisor :: VkBool32
   }
   deriving (Eq, Show)
@@ -69,13 +91,36 @@ instance Zero VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT where
                                                            zero
                                                            zero
                                                            zero
--- No documentation found for TopLevel "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT"
+-- | VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT - Structure
+-- describing max value of vertex attribute divisor that can be supported
+-- by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT@
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT@ structure
+-- is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT = VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT" "maxVertexAttribDivisor"
+  , -- | @maxVertexAttribDivisor@ is the maximum value of the number of instances
+  -- that will repeat the value of vertex attribute data when instanced
+  -- rendering is enabled.
   vkMaxVertexAttribDivisor :: Word32
   }
   deriving (Eq, Show)
@@ -94,15 +139,25 @@ instance Zero VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT where
   zero = VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT zero
                                                              zero
                                                              zero
--- No documentation found for TopLevel "VkPipelineVertexInputDivisorStateCreateInfoEXT"
+-- | VkPipelineVertexInputDivisorStateCreateInfoEXT - Structure specifying
+-- vertex attributes assignment during instanced rendering
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPipelineVertexInputDivisorStateCreateInfoEXT = VkPipelineVertexInputDivisorStateCreateInfoEXT
-  { -- No documentation found for Nested "VkPipelineVertexInputDivisorStateCreateInfoEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineVertexInputDivisorStateCreateInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineVertexInputDivisorStateCreateInfoEXT" "vertexBindingDivisorCount"
+  , -- | @vertexBindingDivisorCount@ /must/ be greater than @0@
   vkVertexBindingDivisorCount :: Word32
-  , -- No documentation found for Nested "VkPipelineVertexInputDivisorStateCreateInfoEXT" "pVertexBindingDivisors"
+  , -- | @pVertexBindingDivisors@ /must/ be a valid pointer to an array of
+  -- @vertexBindingDivisorCount@ @VkVertexInputBindingDivisorDescriptionEXT@
+  -- structures
   vkPVertexBindingDivisors :: Ptr VkVertexInputBindingDivisorDescriptionEXT
   }
   deriving (Eq, Show)
@@ -124,11 +179,50 @@ instance Zero VkPipelineVertexInputDivisorStateCreateInfoEXT where
                                                         zero
                                                         zero
                                                         zero
--- No documentation found for TopLevel "VkVertexInputBindingDivisorDescriptionEXT"
+-- | VkVertexInputBindingDivisorDescriptionEXT - Structure specifying a
+-- divisor used in instanced rendering
+--
+-- = Description
+--
+-- If this structure is not used to define a divisor value for an attribute
+-- then the divisor has a logical default value of 1.
+--
+-- == Valid Usage
+--
+-- -   @binding@ /must/ be less than
+--     @VkPhysicalDeviceLimits@::@maxVertexInputBindings@
+--
+-- -   If the @vertexAttributeInstanceRateZeroDivisor@ feature is not
+--     enabled, @divisor@ /must/ not be @0@
+--
+-- -   If the @vertexAttributeInstanceRateDivisor@ feature is not enabled,
+--     @divisor@ /must/ be @1@
+--
+-- -   @divisor@ /must/ be a value between @0@ and
+--     @VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT@::@maxVertexAttribDivisor@,
+--     inclusive.
+--
+-- -   'Graphics.Vulkan.C.Core10.Pipeline.VkVertexInputBindingDescription'::@inputRate@
+--     /must/ be of type @VK_VERTEX_INPUT_RATE_INSTANCE@ for this
+--     @binding@.
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkVertexInputBindingDivisorDescriptionEXT = VkVertexInputBindingDivisorDescriptionEXT
-  { -- No documentation found for Nested "VkVertexInputBindingDivisorDescriptionEXT" "binding"
+  { -- | @binding@ is the binding number for which the divisor is specified.
   vkBinding :: Word32
-  , -- No documentation found for Nested "VkVertexInputBindingDivisorDescriptionEXT" "divisor"
+  , -- | @divisor@ is the number of successive instances that will use the same
+  -- value of the vertex attribute when instanced rendering is enabled. For
+  -- example, if the divisor is N, the same vertex attribute will applied to
+  -- N successive instances before moving on to the next vertex attribute.
+  -- The maximum value of divisor is implementation dependent and can be
+  -- queried using
+  -- @VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT@::@maxVertexAttribDivisor@.
+  -- A value of @0@ /can/ be used for the divisor if the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-vertexAttributeInstanceRateZeroDivisor vertexAttributeInstanceRateZeroDivisor>
+  -- feature is enabled. In this case, the same vertex attribute will be
+  -- applied to all instances.
   vkDivisor :: Word32
   }
   deriving (Eq, Show)

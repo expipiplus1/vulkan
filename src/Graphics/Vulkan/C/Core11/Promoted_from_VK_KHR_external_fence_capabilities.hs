@@ -74,7 +74,12 @@ import Graphics.Vulkan.NamedType
 
 -- ** VkExternalFenceFeatureFlagBits
 
--- No documentation found for TopLevel "VkExternalFenceFeatureFlagBits"
+-- | VkExternalFenceFeatureFlagBits - Bitfield describing features of an
+-- external fence handle type
+--
+-- = See Also
+--
+-- 'VkExternalFenceFeatureFlags'
 newtype VkExternalFenceFeatureFlagBits = VkExternalFenceFeatureFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -94,18 +99,64 @@ instance Read VkExternalFenceFeatureFlagBits where
                         )
                     )
 
--- No documentation found for Nested "VkExternalFenceFeatureFlagBits" "VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"
+-- | @VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT@ specifies handles of this
+-- type /can/ be exported from Vulkan fence objects.
 pattern VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT :: VkExternalFenceFeatureFlagBits
 pattern VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = VkExternalFenceFeatureFlagBits 0x00000001
 
--- No documentation found for Nested "VkExternalFenceFeatureFlagBits" "VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"
+-- | @VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT@ specifies handles of this
+-- type /can/ be imported to Vulkan fence objects.
 pattern VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT :: VkExternalFenceFeatureFlagBits
 pattern VK_EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = VkExternalFenceFeatureFlagBits 0x00000002
--- No documentation found for TopLevel "VkExternalFenceFeatureFlags"
+-- | VkExternalFenceFeatureFlags - Bitmask of VkExternalFenceFeatureFlagBits
+--
+-- = Description
+--
+-- @VkExternalFenceFeatureFlags@ is a bitmask type for setting a mask of
+-- zero or more 'VkExternalFenceFeatureFlagBits'.
+--
+-- = See Also
+--
+-- 'VkExternalFenceFeatureFlagBits', 'VkExternalFenceProperties'
 type VkExternalFenceFeatureFlags = VkExternalFenceFeatureFlagBits
 -- ** VkExternalFenceHandleTypeFlagBits
 
--- No documentation found for TopLevel "VkExternalFenceHandleTypeFlagBits"
+-- | VkExternalFenceHandleTypeFlagBits - Bitmask of valid external fence
+-- handle types
+--
+-- = Description
+--
+-- Some external fence handle types can only be shared within the same
+-- underlying physical device and\/or the same driver version, as defined
+-- in the following table:
+--
+-- > +----------------------+----------------------+-----------------------+
+-- > | Handle type          | @VkPhysicalDeviceIDP | @VkPhysicalDeviceIDPr |
+-- > |                      | roperties@::@driverU | operties@::@deviceUUI |
+-- > |                      | UID@                 | D@                    |
+-- > +----------------------+----------------------+-----------------------+
+-- > | @VK_EXTERNAL_FENCE_H | Must match           | Must match            |
+-- > | ANDLE_TYPE_OPAQUE_FD |                      |                       |
+-- > | _BIT@                |                      |                       |
+-- > +----------------------+----------------------+-----------------------+
+-- > | @VK_EXTERNAL_FENCE_H | Must match           | Must match            |
+-- > | ANDLE_TYPE_OPAQUE_WI |                      |                       |
+-- > | N32_BIT@             |                      |                       |
+-- > +----------------------+----------------------+-----------------------+
+-- > | @VK_EXTERNAL_FENCE_H | Must match           | Must match            |
+-- > | ANDLE_TYPE_OPAQUE_WI |                      |                       |
+-- > | N32_KMT_BIT@         |                      |                       |
+-- > +----------------------+----------------------+-----------------------+
+-- > | @VK_EXTERNAL_FENCE_H | No restriction       | No restriction        |
+-- > | ANDLE_TYPE_SYNC_FD_B |                      |                       |
+-- > | IT@                  |                      |                       |
+-- > +----------------------+----------------------+-----------------------+
+-- >
+-- > External fence handle types compatibility
+--
+-- = See Also
+--
+-- 'VkExternalFenceHandleTypeFlags', 'VkPhysicalDeviceExternalFenceInfo'
 newtype VkExternalFenceHandleTypeFlagBits = VkExternalFenceHandleTypeFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -129,34 +180,87 @@ instance Read VkExternalFenceHandleTypeFlagBits where
                         )
                     )
 
--- No documentation found for Nested "VkExternalFenceHandleTypeFlagBits" "VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT"
+-- | @VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT@ specifies a POSIX file
+-- descriptor handle that has only limited valid usage outside of Vulkan
+-- and other compatible APIs. It /must/ be compatible with the POSIX system
+-- calls @dup@, @dup2@, @close@, and the non-standard system call @dup3@.
+-- Additionally, it /must/ be transportable over a socket using an
+-- @SCM_RIGHTS@ control message. It owns a reference to the underlying
+-- synchronization primitive represented by its Vulkan fence object.
 pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT :: VkExternalFenceHandleTypeFlagBits
 pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT = VkExternalFenceHandleTypeFlagBits 0x00000001
 
--- No documentation found for Nested "VkExternalFenceHandleTypeFlagBits" "VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT"
+-- | @VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT@ specifies an NT handle
+-- that has only limited valid usage outside of Vulkan and other compatible
+-- APIs. It /must/ be compatible with the functions @DuplicateHandle@,
+-- @CloseHandle@, @CompareObjectHandles@, @GetHandleInformation@, and
+-- @SetHandleInformation@. It owns a reference to the underlying
+-- synchronization primitive represented by its Vulkan fence object.
 pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT :: VkExternalFenceHandleTypeFlagBits
 pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT = VkExternalFenceHandleTypeFlagBits 0x00000002
 
--- No documentation found for Nested "VkExternalFenceHandleTypeFlagBits" "VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT"
+-- | @VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT@ specifies a global
+-- share handle that has only limited valid usage outside of Vulkan and
+-- other compatible APIs. It is not compatible with any native APIs. It
+-- does not own a reference to the underlying synchronization primitive
+-- represented by its Vulkan fence object, and will therefore become
+-- invalid when all Vulkan fence objects associated with it are destroyed.
 pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT :: VkExternalFenceHandleTypeFlagBits
 pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT = VkExternalFenceHandleTypeFlagBits 0x00000004
 
--- No documentation found for Nested "VkExternalFenceHandleTypeFlagBits" "VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT"
+-- | @VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT@ specifies a POSIX file
+-- descriptor handle to a Linux Sync File or Android Fence. It can be used
+-- with any native API accepting a valid sync file or fence as input. It
+-- owns a reference to the underlying synchronization primitive associated
+-- with the file descriptor. Implementations which support importing this
+-- handle type /must/ accept any type of sync or fence FD supported by the
+-- native system they are running on.
 pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT :: VkExternalFenceHandleTypeFlagBits
 pattern VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT = VkExternalFenceHandleTypeFlagBits 0x00000008
--- No documentation found for TopLevel "VkExternalFenceHandleTypeFlags"
+-- | VkExternalFenceHandleTypeFlags - Bitmask of
+-- VkExternalFenceHandleTypeFlagBits
+--
+-- = Description
+--
+-- @VkExternalFenceHandleTypeFlags@ is a bitmask type for setting a mask of
+-- zero or more 'VkExternalFenceHandleTypeFlagBits'.
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkExportFenceCreateInfo',
+-- 'VkExternalFenceHandleTypeFlagBits', 'VkExternalFenceProperties'
 type VkExternalFenceHandleTypeFlags = VkExternalFenceHandleTypeFlagBits
--- No documentation found for TopLevel "VkExternalFenceProperties"
+-- | VkExternalFenceProperties - Structure describing supported external
+-- fence handle features
+--
+-- = Description
+--
+-- If @handleType@ is not supported by the implementation, then
+-- 'VkExternalFenceProperties'::@externalFenceFeatures@ will be set to
+-- zero.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'VkExternalFenceFeatureFlags', 'VkExternalFenceHandleTypeFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetPhysicalDeviceExternalFenceProperties'
 data VkExternalFenceProperties = VkExternalFenceProperties
-  { -- No documentation found for Nested "VkExternalFenceProperties" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExternalFenceProperties" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExternalFenceProperties" "exportFromImportedHandleTypes"
+  , -- | @exportFromImportedHandleTypes@ is a bitmask of
+  -- 'VkExternalFenceHandleTypeFlagBits' indicating which types of imported
+  -- handle @handleType@ /can/ be exported from.
   vkExportFromImportedHandleTypes :: VkExternalFenceHandleTypeFlags
-  , -- No documentation found for Nested "VkExternalFenceProperties" "compatibleHandleTypes"
+  , -- | @compatibleHandleTypes@ is a bitmask of
+  -- 'VkExternalFenceHandleTypeFlagBits' specifying handle types which /can/
+  -- be specified at the same time as @handleType@ when creating a fence.
   vkCompatibleHandleTypes :: VkExternalFenceHandleTypeFlags
-  , -- No documentation found for Nested "VkExternalFenceProperties" "externalFenceFeatures"
+  , -- | @externalFenceFeatures@ is a bitmask of 'VkExternalFenceFeatureFlagBits'
+  -- indicating the features of @handleType@.
   vkExternalFenceFeatures :: VkExternalFenceFeatureFlags
   }
   deriving (Eq, Show)
@@ -181,13 +285,35 @@ instance Zero VkExternalFenceProperties where
                                    zero
                                    zero
                                    zero
--- No documentation found for TopLevel "VkPhysicalDeviceExternalFenceInfo"
+-- | VkPhysicalDeviceExternalFenceInfo - Structure specifying fence creation
+-- parameters.
+--
+-- = Description
+--
+-- __Note__
+--
+-- Handles of type @VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT@ generated by
+-- the implementation may represent either Linux Sync Files or Android
+-- Fences at the implementation’s discretion. Applications /should/ only
+-- use operations defined for both types of file descriptors, unless they
+-- know via means external to Vulkan the type of the file descriptor, or
+-- are prepared to deal with the system-defined operation failures
+-- resulting from using the wrong type.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'VkExternalFenceHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetPhysicalDeviceExternalFenceProperties'
 data VkPhysicalDeviceExternalFenceInfo = VkPhysicalDeviceExternalFenceInfo
-  { -- No documentation found for Nested "VkPhysicalDeviceExternalFenceInfo" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceExternalFenceInfo" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceExternalFenceInfo" "handleType"
+  , -- | @handleType@ /must/ be a valid 'VkExternalFenceHandleTypeFlagBits' value
   vkHandleType :: VkExternalFenceHandleTypeFlagBits
   }
   deriving (Eq, Show)
@@ -207,7 +333,30 @@ instance Zero VkPhysicalDeviceExternalFenceInfo where
                                            zero
                                            zero
 #if defined(EXPOSE_CORE11_COMMANDS)
--- No documentation found for TopLevel "vkGetPhysicalDeviceExternalFenceProperties"
+-- | vkGetPhysicalDeviceExternalFenceProperties - Function for querying
+-- external fence handle capabilities.
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device from which to query the
+--     fence capabilities.
+--
+-- -   @pExternalFenceInfo@ points to an instance of the
+--     'VkPhysicalDeviceExternalFenceInfo' structure, describing the
+--     parameters that would be consumed by
+--     'Graphics.Vulkan.C.Core10.Fence.vkCreateFence'.
+--
+-- -   @pExternalFenceProperties@ points to an instance of the
+--     'VkExternalFenceProperties' structure in which capabilities are
+--     returned.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'VkExternalFenceProperties',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'VkPhysicalDeviceExternalFenceInfo'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

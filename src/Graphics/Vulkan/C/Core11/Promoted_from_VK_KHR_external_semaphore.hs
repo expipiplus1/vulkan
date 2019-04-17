@@ -52,13 +52,37 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabili
   )
 
 
--- No documentation found for TopLevel "VkExportSemaphoreCreateInfo"
+-- | VkExportSemaphoreCreateInfo - Structure specifying handle types that can
+-- be exported from a semaphore
+--
+-- == Valid Usage
+--
+-- -   The bits in @handleTypes@ /must/ be supported and compatible, as
+--     reported by
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreProperties'.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO@
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits'
+--     values
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkExportSemaphoreCreateInfo = VkExportSemaphoreCreateInfo
-  { -- No documentation found for Nested "VkExportSemaphoreCreateInfo" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExportSemaphoreCreateInfo" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExportSemaphoreCreateInfo" "handleTypes"
+  , -- | @handleTypes@ is a bitmask of
+  -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits'
+  -- specifying one or more semaphore handle types the application /can/
+  -- export from the resulting semaphore. The application /can/ request
+  -- multiple handle types for the same semaphore.
   vkHandleTypes :: VkExternalSemaphoreHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -79,7 +103,16 @@ instance Zero VkExportSemaphoreCreateInfo where
                                      zero
 -- ** VkSemaphoreImportFlagBits
 
--- No documentation found for TopLevel "VkSemaphoreImportFlagBits"
+-- | VkSemaphoreImportFlagBits - Bitmask specifying additional parameters of
+-- semaphore payload import
+--
+-- = Description
+--
+-- These bits have the following meanings:
+--
+-- = See Also
+--
+-- 'VkSemaphoreImportFlags'
 newtype VkSemaphoreImportFlagBits = VkSemaphoreImportFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -97,10 +130,22 @@ instance Read VkSemaphoreImportFlagBits where
                         )
                     )
 
--- No documentation found for Nested "VkSemaphoreImportFlagBits" "VK_SEMAPHORE_IMPORT_TEMPORARY_BIT"
+-- | @VK_SEMAPHORE_IMPORT_TEMPORARY_BIT@ specifies that the semaphore payload
+-- will be imported only temporarily, as described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
+-- regardless of the permanence of @handleType@.
 pattern VK_SEMAPHORE_IMPORT_TEMPORARY_BIT :: VkSemaphoreImportFlagBits
 pattern VK_SEMAPHORE_IMPORT_TEMPORARY_BIT = VkSemaphoreImportFlagBits 0x00000001
--- No documentation found for TopLevel "VkSemaphoreImportFlags"
+-- | VkSemaphoreImportFlags - Bitmask of VkSemaphoreImportFlagBits
+--
+-- = Description
+--
+-- @VkSemaphoreImportFlags@ is a bitmask type for setting a mask of zero or
+-- more 'VkSemaphoreImportFlagBits'.
+--
+-- = See Also
+--
+-- 'VkSemaphoreImportFlagBits'
 type VkSemaphoreImportFlags = VkSemaphoreImportFlagBits
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO :: VkStructureType

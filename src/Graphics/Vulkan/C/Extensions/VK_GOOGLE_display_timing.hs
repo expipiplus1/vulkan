@@ -60,17 +60,61 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkPastPresentationTimingGOOGLE"
+-- | VkPastPresentationTimingGOOGLE - Structure containing timing information
+-- about a previously-presented image
+--
+-- = Description
+--
+-- The results for a given @swapchain@ and @presentID@ are only returned
+-- once from @vkGetPastPresentationTimingGOOGLE@.
+--
+-- The application /can/ use the @VkPastPresentationTimingGOOGLE@ values to
+-- occasionally adjust its timing. For example, if @actualPresentTime@ is
+-- later than expected (e.g. one @refreshDuration@ late), the application
+-- may increase its target IPD to a higher multiple of @refreshDuration@
+-- (e.g. decrease its frame rate from 60Hz to 30Hz). If @actualPresentTime@
+-- and @earliestPresentTime@ are consistently different, and if
+-- @presentMargin@ is consistently large enough, the application may
+-- decrease its target IPD to a smaller multiple of @refreshDuration@ (e.g.
+-- increase its frame rate from 30Hz to 60Hz). If @actualPresentTime@ and
+-- @earliestPresentTime@ are same, and if @presentMargin@ is consistently
+-- high, the application may delay the start of its input-render-present
+-- loop in order to decrease the latency between user input and the
+-- corresponding present (always leaving some margin in case a new image
+-- takes longer to render than the previous image). An application that
+-- desires its target IPD to always be the same as @refreshDuration@, can
+-- also adjust features until @actualPresentTime@ is never late and
+-- @presentMargin@ is satisfactory.
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPastPresentationTimingGOOGLE = VkPastPresentationTimingGOOGLE
-  { -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "presentID"
+  { -- | @presentID@ is an application-provided value that was given to a
+  -- previous @vkQueuePresentKHR@ command via
+  -- 'VkPresentTimeGOOGLE'::@presentID@ (see below). It /can/ be used to
+  -- uniquely identify a previous present with the
+  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkQueuePresentKHR'
+  -- command.
   vkPresentID :: Word32
-  , -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "desiredPresentTime"
+  , -- | @desiredPresentTime@ is an application-provided value that was given to
+  -- a previous
+  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkQueuePresentKHR'
+  -- command via 'VkPresentTimeGOOGLE'::@desiredPresentTime@. If non-zero, it
+  -- was used by the application to indicate that an image not be presented
+  -- any sooner than @desiredPresentTime@.
   vkDesiredPresentTime :: Word64
-  , -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "actualPresentTime"
+  , -- | @actualPresentTime@ is the time when the image of the @swapchain@ was
+  -- actually displayed.
   vkActualPresentTime :: Word64
-  , -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "earliestPresentTime"
+  , -- | @earliestPresentTime@ is the time when the image of the @swapchain@
+  -- could have been displayed. This /may/ differ from @actualPresentTime@ if
+  -- the application requested that the image be presented no sooner than
+  -- 'VkPresentTimeGOOGLE'::@desiredPresentTime@.
   vkEarliestPresentTime :: Word64
-  , -- No documentation found for Nested "VkPastPresentationTimingGOOGLE" "presentMargin"
+  , -- | @presentMargin@ is an indication of how early the @vkQueuePresentKHR@
+  -- command was processed compared to how soon it needed to be processed,
+  -- and still be presented at @earliestPresentTime@.
   vkPresentMargin :: Word64
   }
   deriving (Eq, Show)
@@ -95,11 +139,25 @@ instance Zero VkPastPresentationTimingGOOGLE where
                                         zero
                                         zero
                                         zero
--- No documentation found for TopLevel "VkPresentTimeGOOGLE"
+-- | VkPresentTimeGOOGLE - The earliest time image should be presented
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPresentTimeGOOGLE = VkPresentTimeGOOGLE
-  { -- No documentation found for Nested "VkPresentTimeGOOGLE" "presentID"
+  { -- | @presentID@ is an application-provided identification value, that /can/
+  -- be used with the results of 'vkGetPastPresentationTimingGOOGLE', in
+  -- order to uniquely identify this present. In order to be useful to the
+  -- application, it /should/ be unique within some period of time that is
+  -- meaningful to the application.
   vkPresentID :: Word32
-  , -- No documentation found for Nested "VkPresentTimeGOOGLE" "desiredPresentTime"
+  , -- | @desiredPresentTime@ specifies that the image given /should/ not be
+  -- displayed to the user any earlier than this time. @desiredPresentTime@
+  -- is a time in nanoseconds, relative to a monotonically-increasing clock
+  -- (e.g. @CLOCK_MONOTONIC@ (see clock_gettime(2)) on Android and Linux). A
+  -- value of zero specifies that the presentation engine /may/ display the
+  -- image at any time. This is useful when the application desires to
+  -- provide @presentID@, but does not need a specific @desiredPresentTime@.
   vkDesiredPresentTime :: Word64
   }
   deriving (Eq, Show)
@@ -115,15 +173,39 @@ instance Storable VkPresentTimeGOOGLE where
 instance Zero VkPresentTimeGOOGLE where
   zero = VkPresentTimeGOOGLE zero
                              zero
--- No documentation found for TopLevel "VkPresentTimesInfoGOOGLE"
+-- | VkPresentTimesInfoGOOGLE - The earliest time each image should be
+-- presented
+--
+-- == Valid Usage
+--
+-- -   @swapchainCount@ /must/ be the same value as
+--     @VkPresentInfoKHR@::@swapchainCount@, where @VkPresentInfoKHR@ is in
+--     the @pNext@ chain of this @VkPresentTimesInfoGOOGLE@ structure.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE@
+--
+-- -   If @pTimes@ is not @NULL@, @pTimes@ /must/ be a valid pointer to an
+--     array of @swapchainCount@ @VkPresentTimeGOOGLE@ structures
+--
+-- -   @swapchainCount@ /must/ be greater than @0@
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPresentTimesInfoGOOGLE = VkPresentTimesInfoGOOGLE
-  { -- No documentation found for Nested "VkPresentTimesInfoGOOGLE" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPresentTimesInfoGOOGLE" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPresentTimesInfoGOOGLE" "swapchainCount"
+  , -- | @swapchainCount@ is the number of swapchains being presented to by this
+  -- command.
   vkSwapchainCount :: Word32
-  , -- No documentation found for Nested "VkPresentTimesInfoGOOGLE" "pTimes"
+  , -- | @pTimes@ is @NULL@ or a pointer to an array of @VkPresentTimeGOOGLE@
+  -- elements with @swapchainCount@ entries. If not @NULL@, each element of
+  -- @pTimes@ contains the earliest time to present the image corresponding
+  -- to the entry in the @VkPresentInfoKHR@::@pImageIndices@ array.
   vkPTimes :: Ptr VkPresentTimeGOOGLE
   }
   deriving (Eq, Show)
@@ -145,9 +227,15 @@ instance Zero VkPresentTimesInfoGOOGLE where
                                   zero
                                   zero
                                   zero
--- No documentation found for TopLevel "VkRefreshCycleDurationGOOGLE"
+-- | VkRefreshCycleDurationGOOGLE - Structure containing the RC duration of a
+-- display
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkRefreshCycleDurationGOOGLE = VkRefreshCycleDurationGOOGLE
-  { -- No documentation found for Nested "VkRefreshCycleDurationGOOGLE" "refreshDuration"
+  { -- | @refreshDuration@ is the number of nanoseconds from the start of one
+  -- refresh cycle to the next.
   vkRefreshDuration :: Word64
   }
   deriving (Eq, Show)
@@ -161,7 +249,77 @@ instance Storable VkRefreshCycleDurationGOOGLE where
 instance Zero VkRefreshCycleDurationGOOGLE where
   zero = VkRefreshCycleDurationGOOGLE zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetPastPresentationTimingGOOGLE"
+-- | vkGetPastPresentationTimingGOOGLE - Obtain timing of a
+-- previously-presented image
+--
+-- = Parameters
+--
+-- -   @device@ is the device associated with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to obtain presentation timing
+--     information duration for.
+--
+-- -   @pPresentationTimingCount@ is a pointer to an integer related to the
+--     number of @VkPastPresentationTimingGOOGLE@ structures to query, as
+--     described below.
+--
+-- -   @pPresentationTimings@ is either @NULL@ or a pointer to an array of
+--     @VkPastPresentationTimingGOOGLE@ structures.
+--
+-- = Description
+--
+-- If @pPresentationTimings@ is @NULL@, then the number of newly-available
+-- timing records for the given @swapchain@ is returned in
+-- @pPresentationTimingCount@. Otherwise, @pPresentationTimingCount@ /must/
+-- point to a variable set by the user to the number of elements in the
+-- @pPresentationTimings@ array, and on return the variable is overwritten
+-- with the number of structures actually written to
+-- @pPresentationTimings@. If the value of @pPresentationTimingCount@ is
+-- less than the number of newly-available timing records, at most
+-- @pPresentationTimingCount@ structures will be written. If
+-- @pPresentationTimingCount@ is smaller than the number of newly-available
+-- timing records for the given @swapchain@, @VK_INCOMPLETE@ will be
+-- returned instead of @VK_SUCCESS@ to indicate that not all the available
+-- values were returned.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @swapchain@ /must/ be a valid @VkSwapchainKHR@ handle
+--
+-- -   @pPresentationTimingCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pPresentationTimingCount@ is not @0@,
+--     and @pPresentationTimings@ is not @NULL@, @pPresentationTimings@
+--     /must/ be a valid pointer to an array of @pPresentationTimingCount@
+--     @VkPastPresentationTimingGOOGLE@ structures
+--
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same @VkInstance@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @swapchain@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+--     -   @VK_INCOMPLETE@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_DEVICE_LOST@
+--
+--     -   @VK_ERROR_OUT_OF_DATE_KHR@
+--
+--     -   @VK_ERROR_SURFACE_LOST_KHR@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -172,7 +330,47 @@ foreign import ccall
 type FN_vkGetPastPresentationTimingGOOGLE = ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pPresentationTimingCount" ::: Ptr Word32) -> ("pPresentationTimings" ::: Ptr VkPastPresentationTimingGOOGLE) -> IO VkResult
 type PFN_vkGetPastPresentationTimingGOOGLE = FunPtr FN_vkGetPastPresentationTimingGOOGLE
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetRefreshCycleDurationGOOGLE"
+-- | vkGetRefreshCycleDurationGOOGLE - Obtain the RC duration of the PE’s
+-- display
+--
+-- = Parameters
+--
+-- -   @device@ is the device associated with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to obtain the refresh duration for.
+--
+-- -   @pDisplayTimingProperties@ is a pointer to an instance of the
+--     @VkRefreshCycleDurationGOOGLE@ structure.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @swapchain@ /must/ be a valid @VkSwapchainKHR@ handle
+--
+-- -   @pDisplayTimingProperties@ /must/ be a valid pointer to a
+--     @VkRefreshCycleDurationGOOGLE@ structure
+--
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same @VkInstance@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @swapchain@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_DEVICE_LOST@
+--
+--     -   @VK_ERROR_SURFACE_LOST_KHR@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

@@ -54,13 +54,23 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkDeviceMemoryOverallocationCreateInfoAMD"
+-- | VkDeviceMemoryOverallocationCreateInfoAMD - Specify memory
+-- overallocation behavior for a Vulkan device
+--
+-- = Description
+--
+-- Unresolved directive in VkDeviceMemoryOverallocationCreateInfoAMD.txt -
+-- include::..\/validity\/structs\/VkDeviceMemoryOverallocationCreateInfoAMD.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkDeviceMemoryOverallocationCreateInfoAMD = VkDeviceMemoryOverallocationCreateInfoAMD
-  { -- No documentation found for Nested "VkDeviceMemoryOverallocationCreateInfoAMD" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDeviceMemoryOverallocationCreateInfoAMD" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDeviceMemoryOverallocationCreateInfoAMD" "overallocationBehavior"
+  , -- | @overallocationBehavior@ is the desired overallocation behavior.
   vkOverallocationBehavior :: VkMemoryOverallocationBehaviorAMD
   }
   deriving (Eq, Show)
@@ -81,7 +91,12 @@ instance Zero VkDeviceMemoryOverallocationCreateInfoAMD where
                                                    zero
 -- ** VkMemoryOverallocationBehaviorAMD
 
--- No documentation found for TopLevel "VkMemoryOverallocationBehaviorAMD"
+-- | VkMemoryOverallocationBehaviorAMD - Specify memory overallocation
+-- behavior
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkMemoryOverallocationBehaviorAMD = VkMemoryOverallocationBehaviorAMD Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -103,15 +118,22 @@ instance Read VkMemoryOverallocationBehaviorAMD where
                         )
                     )
 
--- No documentation found for Nested "VkMemoryOverallocationBehaviorAMD" "VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD"
+-- | @VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD@ lets the implementation
+-- decide if overallocation should be allowed.
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD :: VkMemoryOverallocationBehaviorAMD
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD = VkMemoryOverallocationBehaviorAMD 0
 
--- No documentation found for Nested "VkMemoryOverallocationBehaviorAMD" "VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD"
+-- | @VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD@ specifies overallocation
+-- is allowed if platform permits.
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD :: VkMemoryOverallocationBehaviorAMD
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD = VkMemoryOverallocationBehaviorAMD 1
 
--- No documentation found for Nested "VkMemoryOverallocationBehaviorAMD" "VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD"
+-- | @VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD@ specifies the
+-- application is not allowed to allocate device memory beyond the heap
+-- sizes reported by
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'.
+-- Allocations that are not explicitly made by the application within the
+-- scope of the Vulkan instance are not accounted for.
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD :: VkMemoryOverallocationBehaviorAMD
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = VkMemoryOverallocationBehaviorAMD 2
 -- No documentation found for TopLevel "VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME"

@@ -283,7 +283,36 @@ vkGetDeviceGroupPeerMemoryFeaturesKHR :: ("device" ::: VkDevice) -> ("heapIndex"
 vkGetDeviceGroupPeerMemoryFeaturesKHR = vkGetDeviceGroupPeerMemoryFeatures
 #endif
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetDeviceGroupSurfacePresentModes2EXT"
+-- | vkGetDeviceGroupSurfacePresentModes2EXT - Query device group present
+-- capabilities for a surface
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device.
+--
+-- -   @pSurfaceInfo@ points to an instance of the
+--     VkPhysicalDeviceSurfaceInfo2KHR structure, describing the surface
+--     and other fixed parameters that would be consumed by
+--     vkCreateSwapchainKHR.
+--
+-- -   @pModes@ is a pointer to a value of type
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentModeFlagsKHR'
+--     that is filled with the supported device group present modes for the
+--     surface.
+--
+-- = Description
+--
+-- @vkGetDeviceGroupSurfacePresentModes2EXT@ behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetDeviceGroupSurfacePresentModesKHR',
+-- with the ability to specify extended inputs via chained input
+-- structures.
+--
+-- Unresolved directive in vkGetDeviceGroupSurfacePresentModes2EXT.txt -
+-- include::..\/validity\/protos\/vkGetDeviceGroupSurfacePresentModes2EXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

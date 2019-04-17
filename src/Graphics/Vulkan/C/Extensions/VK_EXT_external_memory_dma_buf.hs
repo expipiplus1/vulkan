@@ -19,7 +19,9 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilitie
   )
 
 
--- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"
+-- | @VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT@ is a file descriptor
+-- for a Linux dma_buf. It owns a reference to the underlying memory
+-- resource represented by its Vulkan memory object.
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT :: VkExternalMemoryHandleTypeFlagBits
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT = VkExternalMemoryHandleTypeFlagBits 0x00000200
 -- No documentation found for TopLevel "VK_EXT_EXTERNAL_MEMORY_DMA_BUF_EXTENSION_NAME"

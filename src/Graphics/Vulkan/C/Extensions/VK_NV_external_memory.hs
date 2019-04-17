@@ -35,13 +35,22 @@ import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
   )
 
 
--- No documentation found for TopLevel "VkExportMemoryAllocateInfoNV"
+-- | VkExportMemoryAllocateInfoNV - Specify memory handle types that may be
+-- exported
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkExportMemoryAllocateInfoNV = VkExportMemoryAllocateInfoNV
-  { -- No documentation found for Nested "VkExportMemoryAllocateInfoNV" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExportMemoryAllocateInfoNV" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExportMemoryAllocateInfoNV" "handleTypes"
+  , -- | @handleTypes@ /must/ be a valid combination of
+  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
+  -- values
   vkHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
   }
   deriving (Eq, Show)
@@ -60,13 +69,23 @@ instance Zero VkExportMemoryAllocateInfoNV where
   zero = VkExportMemoryAllocateInfoNV zero
                                       zero
                                       zero
--- No documentation found for TopLevel "VkExternalMemoryImageCreateInfoNV"
+-- | VkExternalMemoryImageCreateInfoNV - Specify that an image may be backed
+-- by external memory
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkExternalMemoryImageCreateInfoNV = VkExternalMemoryImageCreateInfoNV
-  { -- No documentation found for Nested "VkExternalMemoryImageCreateInfoNV" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExternalMemoryImageCreateInfoNV" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkExternalMemoryImageCreateInfoNV" "handleTypes"
+  , -- | @handleTypes@ /must/ be a valid combination of
+  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
+  -- values
   vkHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
   }
   deriving (Eq, Show)

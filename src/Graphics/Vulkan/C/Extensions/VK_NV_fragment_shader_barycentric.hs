@@ -31,13 +31,45 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV"
+-- | VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV - Structure
+-- describing barycentric support in fragment shaders that can be supported
+-- by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV@
+-- structure describe the following features:
+--
+-- = Description
+--
+-- See
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-barycentric Barycentric Interpolation>
+-- for more information.
+--
+-- If the @VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV@ structure
+-- is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether the feature is supported.
+-- @VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV@ /can/ also be used
+-- in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV = VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV
   { -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV" "fragmentShaderBarycentric"
+  , -- | @fragmentShaderBarycentric@ indicates that the implementation supports
+  -- the @BaryCoordNV@ and @BaryCoordNoPerspNV@ SPIR-V fragment shader
+  -- built-ins and supports the @PerVertexNV@ SPIR-V decoration on fragment
+  -- shader input variables.
   vkFragmentShaderBarycentric :: VkBool32
   }
   deriving (Eq, Show)

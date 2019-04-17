@@ -35,13 +35,40 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceCornerSampledImageFeaturesNV"
+-- | VkPhysicalDeviceCornerSampledImageFeaturesNV - Structure describing
+-- corner sampled image features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceCornerSampledImageFeaturesNV@
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceCornerSampledImageFeaturesNV@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether each feature is supported.
+-- @VkPhysicalDeviceCornerSampledImageFeaturesNV@ /can/ also be used in the
+-- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
+-- enable features.
+--
+-- Unresolved directive in VkPhysicalDeviceCornerSampledImageFeaturesNV.txt
+-- -
+-- include::..\/validity\/structs\/VkPhysicalDeviceCornerSampledImageFeaturesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceCornerSampledImageFeaturesNV = VkPhysicalDeviceCornerSampledImageFeaturesNV
   { -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "cornerSampledImage"
+  , -- | @cornerSampledImage@ specifies whether images can be created with a
+  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@ containing
+  -- @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-images-corner-sampled Corner-Sampled Images>.
   vkCornerSampledImage :: VkBool32
   }
   deriving (Eq, Show)

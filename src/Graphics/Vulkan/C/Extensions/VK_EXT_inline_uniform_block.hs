@@ -44,13 +44,26 @@ import Graphics.Vulkan.C.Core10.DescriptorSet
   )
 
 
--- No documentation found for TopLevel "VkDescriptorPoolInlineUniformBlockCreateInfoEXT"
+-- | VkDescriptorPoolInlineUniformBlockCreateInfoEXT - Structure specifying
+-- the maximum number of inline uniform block bindings of a newly created
+-- descriptor pool
+--
+-- = Description
+--
+-- Unresolved directive in
+-- VkDescriptorPoolInlineUniformBlockCreateInfoEXT.txt -
+-- include::..\/validity\/structs\/VkDescriptorPoolInlineUniformBlockCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkDescriptorPoolInlineUniformBlockCreateInfoEXT = VkDescriptorPoolInlineUniformBlockCreateInfoEXT
-  { -- No documentation found for Nested "VkDescriptorPoolInlineUniformBlockCreateInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDescriptorPoolInlineUniformBlockCreateInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDescriptorPoolInlineUniformBlockCreateInfoEXT" "maxInlineUniformBlockBindings"
+  , -- | @maxInlineUniformBlockBindings@ is the number of inline uniform block
+  -- bindings to allocate.
   vkMaxInlineUniformBlockBindings :: Word32
   }
   deriving (Eq, Show)
@@ -69,15 +82,45 @@ instance Zero VkDescriptorPoolInlineUniformBlockCreateInfoEXT where
   zero = VkDescriptorPoolInlineUniformBlockCreateInfoEXT zero
                                                          zero
                                                          zero
--- No documentation found for TopLevel "VkPhysicalDeviceInlineUniformBlockFeaturesEXT"
+-- | VkPhysicalDeviceInlineUniformBlockFeaturesEXT - Structure describing
+-- inline uniform block features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceInlineUniformBlockFeaturesEXT@
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceInlineUniformBlockFeaturesEXT@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+-- it is filled with values indicating whether each feature is supported.
+-- @VkPhysicalDeviceInlineUniformBlockFeaturesEXT@ /can/ also be used in
+-- the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceInlineUniformBlockFeaturesEXT.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceInlineUniformBlockFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceInlineUniformBlockFeaturesEXT = VkPhysicalDeviceInlineUniformBlockFeaturesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockFeaturesEXT" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockFeaturesEXT" "inlineUniformBlock"
+  , -- | @inlineUniformBlock@ indicates whether the implementation supports
+  -- inline uniform block descriptors. If this feature is not enabled,
+  -- @VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT@ /must/ not be used.
   vkInlineUniformBlock :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockFeaturesEXT" "descriptorBindingInlineUniformBlockUpdateAfterBind"
+  , -- | @descriptorBindingInlineUniformBlockUpdateAfterBind@ indicates whether
+  -- the implementation supports updating inline uniform block descriptors
+  -- after a set is bound. If this feature is not enabled,
+  -- @VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT@ /must/ not be used
+  -- with @VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT@.
   vkDescriptorBindingInlineUniformBlockUpdateAfterBind :: VkBool32
   }
   deriving (Eq, Show)
@@ -99,21 +142,60 @@ instance Zero VkPhysicalDeviceInlineUniformBlockFeaturesEXT where
                                                        zero
                                                        zero
                                                        zero
--- No documentation found for TopLevel "VkPhysicalDeviceInlineUniformBlockPropertiesEXT"
+-- | VkPhysicalDeviceInlineUniformBlockPropertiesEXT - Structure describing
+-- inline uniform block properties that can be supported by an
+-- implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceInlineUniformBlockPropertiesEXT@
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceInlineUniformBlockPropertiesEXT@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceInlineUniformBlockPropertiesEXT.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceInlineUniformBlockPropertiesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceInlineUniformBlockPropertiesEXT = VkPhysicalDeviceInlineUniformBlockPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxInlineUniformBlockSize"
+  , -- | @maxInlineUniformBlockSize@ is the maximum size in bytes of an
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>
+  -- binding.
   vkMaxInlineUniformBlockSize :: Word32
   , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxPerStageDescriptorInlineUniformBlocks"
   vkMaxPerStageDescriptorInlineUniformBlocks :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks"
+  , -- | @maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@ is similar to
+  -- @maxPerStageDescriptorInlineUniformBlocks@ but counts descriptor
+  -- bindings from descriptor sets created with or without the
+  -- @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+  -- set.
   vkMaxPerStageDescriptorUpdateAfterBindInlineUniformBlocks :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxDescriptorSetInlineUniformBlocks"
+  , -- | @maxDescriptorSetInlineUniformBlocks@ is the maximum number of inline
+  -- uniform block bindings that /can/ be included in descriptor bindings in
+  -- a pipeline layout across all pipeline shader stages and descriptor set
+  -- numbers. Descriptor bindings with a descriptor type of
+  -- @VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT@ count against this limit.
+  -- Only descriptor bindings in descriptor set layouts created without the
+  -- @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit set
+  -- count against this limit.
   vkMaxDescriptorSetInlineUniformBlocks :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceInlineUniformBlockPropertiesEXT" "maxDescriptorSetUpdateAfterBindInlineUniformBlocks"
+  , -- | @maxDescriptorSetUpdateAfterBindInlineUniformBlocks@ is similar to
+  -- @maxDescriptorSetInlineUniformBlocks@ but counts descriptor bindings
+  -- from descriptor sets created with or without the
+  -- @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
+  -- set.
   vkMaxDescriptorSetUpdateAfterBindInlineUniformBlocks :: Word32
   }
   deriving (Eq, Show)
@@ -144,15 +226,26 @@ instance Zero VkPhysicalDeviceInlineUniformBlockPropertiesEXT where
                                                          zero
                                                          zero
                                                          zero
--- No documentation found for TopLevel "VkWriteDescriptorSetInlineUniformBlockEXT"
+-- | VkWriteDescriptorSetInlineUniformBlockEXT - Structure specifying inline
+-- uniform block data
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkWriteDescriptorSetInlineUniformBlockEXT.txt -
+-- include::..\/validity\/structs\/VkWriteDescriptorSetInlineUniformBlockEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkWriteDescriptorSetInlineUniformBlockEXT = VkWriteDescriptorSetInlineUniformBlockEXT
-  { -- No documentation found for Nested "VkWriteDescriptorSetInlineUniformBlockEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkWriteDescriptorSetInlineUniformBlockEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkWriteDescriptorSetInlineUniformBlockEXT" "dataSize"
+  , -- | @dataSize@ /must/ be an integer multiple of @4@
   vkDataSize :: Word32
-  , -- No documentation found for Nested "VkWriteDescriptorSetInlineUniformBlockEXT" "pData"
+  , -- | @pData@ is a pointer to @dataSize@ number of bytes of data to write to
+  -- the inline uniform block.
   vkPData :: Ptr ()
   }
   deriving (Eq, Show)

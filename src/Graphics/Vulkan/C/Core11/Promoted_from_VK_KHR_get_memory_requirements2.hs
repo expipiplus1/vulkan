@@ -69,13 +69,21 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkBufferMemoryRequirementsInfo2"
+-- | VkBufferMemoryRequirementsInfo2 - (None)
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetBufferMemoryRequirements2'
 data VkBufferMemoryRequirementsInfo2 = VkBufferMemoryRequirementsInfo2
-  { -- No documentation found for Nested "VkBufferMemoryRequirementsInfo2" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkBufferMemoryRequirementsInfo2" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkBufferMemoryRequirementsInfo2" "buffer"
+  , -- | @buffer@ /must/ be a valid @VkBuffer@ handle
   vkBuffer :: VkBuffer
   }
   deriving (Eq, Show)
@@ -94,13 +102,60 @@ instance Zero VkBufferMemoryRequirementsInfo2 where
   zero = VkBufferMemoryRequirementsInfo2 zero
                                          zero
                                          zero
--- No documentation found for TopLevel "VkImageMemoryRequirementsInfo2"
+-- | VkImageMemoryRequirementsInfo2 - (None)
+--
+-- == Valid Usage
+--
+-- -   If @image@ was created with a /multi-planar/ format and the
+--     @VK_IMAGE_CREATE_DISJOINT_BIT@ flag, there /must/ be a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+--     in the @pNext@ chain of the 'VkImageMemoryRequirementsInfo2'
+--     structure
+--
+-- -   If @image@ was created with @VK_IMAGE_CREATE_DISJOINT_BIT@ and with
+--     @VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT@, then there /must/ be a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+--     in the @pNext@ chain of the 'VkImageMemoryRequirementsInfo2'
+--     structure
+--
+-- -   If @image@ was not created with the @VK_IMAGE_CREATE_DISJOINT_BIT@
+--     flag, there /must/ not be a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+--     in the @pNext@ chain of the 'VkImageMemoryRequirementsInfo2'
+--     structure
+--
+-- -   If @image@ was created with a single-plane format and with any
+--     @tiling@ other than @VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT@, then
+--     there /must/ not be a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+--     in the @pNext@ chain of the 'VkImageMemoryRequirementsInfo2'
+--     structure
+--
+-- -   If @image@ was created with the
+--     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID@
+--     external memory handle type, then @image@ /must/ be bound to memory.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2@
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+--
+-- -   @image@ /must/ be a valid @VkImage@ handle
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetImageMemoryRequirements2'
 data VkImageMemoryRequirementsInfo2 = VkImageMemoryRequirementsInfo2
-  { -- No documentation found for Nested "VkImageMemoryRequirementsInfo2" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImageMemoryRequirementsInfo2" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImageMemoryRequirementsInfo2" "image"
+  , -- | @image@ is the image to query.
   vkImage :: VkImage
   }
   deriving (Eq, Show)
@@ -119,13 +174,22 @@ instance Zero VkImageMemoryRequirementsInfo2 where
   zero = VkImageMemoryRequirementsInfo2 zero
                                         zero
                                         zero
--- No documentation found for TopLevel "VkImageSparseMemoryRequirementsInfo2"
+-- | VkImageSparseMemoryRequirementsInfo2 - (None)
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetImageSparseMemoryRequirements2'
 data VkImageSparseMemoryRequirementsInfo2 = VkImageSparseMemoryRequirementsInfo2
-  { -- No documentation found for Nested "VkImageSparseMemoryRequirementsInfo2" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImageSparseMemoryRequirementsInfo2" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImageSparseMemoryRequirementsInfo2" "image"
+  , -- | @image@ /must/ be a valid @VkImage@ handle
   vkImage :: VkImage
   }
   deriving (Eq, Show)
@@ -144,13 +208,24 @@ instance Zero VkImageSparseMemoryRequirementsInfo2 where
   zero = VkImageSparseMemoryRequirementsInfo2 zero
                                               zero
                                               zero
--- No documentation found for TopLevel "VkMemoryRequirements2"
+-- | VkMemoryRequirements2 - Structure specifying memory requirements
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetBufferMemoryRequirements2', 'vkGetImageMemoryRequirements2'
 data VkMemoryRequirements2 = VkMemoryRequirements2
-  { -- No documentation found for Nested "VkMemoryRequirements2" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkMemoryRequirements2" "pNext"
+  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+  -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedRequirements'
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkMemoryRequirements2" "memoryRequirements"
+  , -- | @memoryRequirements@ is a structure of type
+  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
+  -- describing the memory requirements of the resource.
   vkMemoryRequirements :: VkMemoryRequirements
   }
   deriving (Eq, Show)
@@ -176,13 +251,23 @@ type VkMemoryRequirements2KHR = VkMemoryRequirements2
 -- No documentation found for TopLevel "VkMemoryRequirements2KHR"
 pattern VkMemoryRequirements2KHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("memoryRequirements" ::: VkMemoryRequirements) -> VkMemoryRequirements2KHR
 pattern VkMemoryRequirements2KHR vkSType vkPNext vkMemoryRequirements = VkMemoryRequirements2 vkSType vkPNext vkMemoryRequirements
--- No documentation found for TopLevel "VkSparseImageMemoryRequirements2"
+-- | VkSparseImageMemoryRequirements2 - (None)
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryRequirements',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetImageSparseMemoryRequirements2'
 data VkSparseImageMemoryRequirements2 = VkSparseImageMemoryRequirements2
-  { -- No documentation found for Nested "VkSparseImageMemoryRequirements2" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSparseImageMemoryRequirements2" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSparseImageMemoryRequirements2" "memoryRequirements"
+  , -- | @memoryRequirements@ is a structure of type
+  -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryRequirements'
+  -- describing the memory requirements of the sparse image.
   vkMemoryRequirements :: VkSparseImageMemoryRequirements
   }
   deriving (Eq, Show)
@@ -202,7 +287,28 @@ instance Zero VkSparseImageMemoryRequirements2 where
                                           zero
                                           zero
 #if defined(EXPOSE_CORE11_COMMANDS)
--- No documentation found for TopLevel "vkGetBufferMemoryRequirements2"
+-- | vkGetBufferMemoryRequirements2 - Returns the memory requirements for
+-- specified Vulkan object
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the buffer.
+--
+-- -   @pInfo@ is a pointer to an instance of the
+--     @VkBufferMemoryRequirementsInfo2@ structure containing parameters
+--     required for the memory requirements query.
+--
+-- -   @pMemoryRequirements@ points to an instance of the
+--     'VkMemoryRequirements2' structure in which the memory requirements
+--     of the buffer object are returned.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'VkBufferMemoryRequirementsInfo2',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkMemoryRequirements2'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -213,7 +319,27 @@ foreign import ccall
 type FN_vkGetBufferMemoryRequirements2 = ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkBufferMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2) -> IO ()
 type PFN_vkGetBufferMemoryRequirements2 = FunPtr FN_vkGetBufferMemoryRequirements2
 #if defined(EXPOSE_CORE11_COMMANDS)
--- No documentation found for TopLevel "vkGetImageMemoryRequirements2"
+-- | vkGetImageMemoryRequirements2 - Returns the memory requirements for
+-- specified Vulkan object
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the image.
+--
+-- -   @pInfo@ is a pointer to an instance of the
+--     @VkImageMemoryRequirementsInfo2@ structure containing parameters
+--     required for the memory requirements query.
+--
+-- -   @pMemoryRequirements@ points to an instance of the
+--     'VkMemoryRequirements2' structure in which the memory requirements
+--     of the image object are returned.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkImageMemoryRequirementsInfo2', 'VkMemoryRequirements2'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -224,7 +350,45 @@ foreign import ccall
 type FN_vkGetImageMemoryRequirements2 = ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageMemoryRequirementsInfo2) -> ("pMemoryRequirements" ::: Ptr VkMemoryRequirements2) -> IO ()
 type PFN_vkGetImageMemoryRequirements2 = FunPtr FN_vkGetImageMemoryRequirements2
 #if defined(EXPOSE_CORE11_COMMANDS)
--- No documentation found for TopLevel "vkGetImageSparseMemoryRequirements2"
+-- | vkGetImageSparseMemoryRequirements2 - Query the memory requirements for
+-- a sparse image
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the image.
+--
+-- -   @pInfo@ is a pointer to an instance of the
+--     @VkImageSparseMemoryRequirementsInfo2@ structure containing
+--     parameters required for the memory requirements query.
+--
+-- -   @pSparseMemoryRequirementCount@ is a pointer to an integer related
+--     to the number of sparse memory requirements available or queried, as
+--     described below.
+--
+-- -   @pSparseMemoryRequirements@ is either @NULL@ or a pointer to an
+--     array of @VkSparseImageMemoryRequirements2@ structures.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @pInfo@ /must/ be a valid pointer to a valid
+--     @VkImageSparseMemoryRequirementsInfo2@ structure
+--
+-- -   @pSparseMemoryRequirementCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pSparseMemoryRequirementCount@ is not
+--     @0@, and @pSparseMemoryRequirements@ is not @NULL@,
+--     @pSparseMemoryRequirements@ /must/ be a valid pointer to an array of
+--     @pSparseMemoryRequirementCount@ @VkSparseImageMemoryRequirements2@
+--     structures
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkImageSparseMemoryRequirementsInfo2',
+-- 'VkSparseImageMemoryRequirements2'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

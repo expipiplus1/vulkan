@@ -31,15 +31,28 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR"
+-- | VkPhysicalDeviceShaderAtomicInt64FeaturesKHR - Structure describing
+-- features supported by VK_KHR_shader_atomic_int64
+--
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDeviceShaderAtomicInt64FeaturesKHR.txt
+-- -
+-- include::..\/validity\/structs\/VkPhysicalDeviceShaderAtomicInt64FeaturesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceShaderAtomicInt64FeaturesKHR = VkPhysicalDeviceShaderAtomicInt64FeaturesKHR
-  { -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR" "shaderBufferInt64Atomics"
+  , -- | @shaderBufferInt64Atomics@ indicates whether shaders /can/ support
+  -- 64-bit unsigned and signed integer atomic operations on buffers.
   vkShaderBufferInt64Atomics :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR" "shaderSharedInt64Atomics"
+  , -- | @shaderSharedInt64Atomics@ indicates whether shaders /can/ support
+  -- 64-bit unsigned and signed integer atomic operations on shared memory.
   vkShaderSharedInt64Atomics :: VkBool32
   }
   deriving (Eq, Show)

@@ -34,13 +34,56 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkImageViewASTCDecodeModeEXT"
+-- | VkImageViewASTCDecodeModeEXT - Structure describing the ASTC decode mode
+-- for an image view
+--
+-- == Valid Usage
+--
+-- -   @decodeMode@ /must/ be one of @VK_FORMAT_R16G16B16A16_SFLOAT@,
+--     @VK_FORMAT_R8G8B8A8_UNORM@, or @VK_FORMAT_E5B9G9R9_UFLOAT_PACK32@
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-astc-decodeModeSharedExponent decodeModeSharedExponent>
+--     feature is not enabled, @decodeMode@ /must/ not be
+--     @VK_FORMAT_E5B9G9R9_UFLOAT_PACK32@
+--
+-- -   If @decodeMode@ is @VK_FORMAT_R8G8B8A8_UNORM@ the image view /must/
+--     not include blocks using any of the ASTC HDR modes
+--
+-- -   @format@ of the image view /must/ be one of
+--     @VK_FORMAT_ASTC_4x4_UNORM_BLOCK@, @VK_FORMAT_ASTC_4x4_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_5x4_UNORM_BLOCK@, @VK_FORMAT_ASTC_5x4_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_5x5_UNORM_BLOCK@, @VK_FORMAT_ASTC_5x5_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_6x5_UNORM_BLOCK@, @VK_FORMAT_ASTC_6x5_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_6x6_UNORM_BLOCK@, @VK_FORMAT_ASTC_6x6_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_8x5_UNORM_BLOCK@, @VK_FORMAT_ASTC_8x5_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_8x6_UNORM_BLOCK@, @VK_FORMAT_ASTC_8x6_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_8x8_UNORM_BLOCK@, @VK_FORMAT_ASTC_8x8_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_10x5_UNORM_BLOCK@, @VK_FORMAT_ASTC_10x5_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_10x6_UNORM_BLOCK@, @VK_FORMAT_ASTC_10x6_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_10x8_UNORM_BLOCK@, @VK_FORMAT_ASTC_10x8_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_10x10_UNORM_BLOCK@,
+--     @VK_FORMAT_ASTC_10x10_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_12x10_UNORM_BLOCK@,
+--     @VK_FORMAT_ASTC_12x10_SRGB_BLOCK@,
+--     @VK_FORMAT_ASTC_12x12_UNORM_BLOCK@, or
+--     @VK_FORMAT_ASTC_12x12_SRGB_BLOCK@
+--
+-- If @format@ uses sRGB encoding then the @decodeMode@ has no effect.
+--
+-- Unresolved directive in VkImageViewASTCDecodeModeEXT.txt -
+-- include::..\/validity\/structs\/VkImageViewASTCDecodeModeEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkImageViewASTCDecodeModeEXT = VkImageViewASTCDecodeModeEXT
-  { -- No documentation found for Nested "VkImageViewASTCDecodeModeEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImageViewASTCDecodeModeEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImageViewASTCDecodeModeEXT" "decodeMode"
+  , -- | @decodeMode@ is the intermediate format used to decode ASTC compressed
+  -- formats.
   vkDecodeMode :: VkFormat
   }
   deriving (Eq, Show)
@@ -59,13 +102,38 @@ instance Zero VkImageViewASTCDecodeModeEXT where
   zero = VkImageViewASTCDecodeModeEXT zero
                                       zero
                                       zero
--- No documentation found for TopLevel "VkPhysicalDeviceASTCDecodeFeaturesEXT"
+-- | VkPhysicalDeviceASTCDecodeFeaturesEXT - Structure describing ASTC decode
+-- mode features
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceASTCDecodeFeaturesEXT@ structure
+-- describe the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceASTCDecodeFeaturesEXT@ structure is included in
+-- the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether each feature is supported.
+-- @VkPhysicalDeviceASTCDecodeFeaturesEXT@ /can/ also be used in the
+-- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice' to
+-- enable features.
+--
+-- Unresolved directive in VkPhysicalDeviceASTCDecodeFeaturesEXT.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceASTCDecodeFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceASTCDecodeFeaturesEXT = VkPhysicalDeviceASTCDecodeFeaturesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceASTCDecodeFeaturesEXT" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceASTCDecodeFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceASTCDecodeFeaturesEXT" "decodeModeSharedExponent"
+  , -- | @decodeModeSharedExponent@ indicates whether the implementation supports
+  -- decoding ASTC compressed formats to @VK_FORMAT_E5B9G9R9_UFLOAT_PACK32@
+  -- internal precision.
   vkDecodeModeSharedExponent :: VkBool32
   }
   deriving (Eq, Show)

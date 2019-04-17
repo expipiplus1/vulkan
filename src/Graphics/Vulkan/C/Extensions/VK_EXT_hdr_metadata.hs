@@ -54,27 +54,42 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkHdrMetadataEXT"
+-- | VkHdrMetadataEXT - structure to specify Hdr metadata
+--
+-- == Valid Usage (Implicit)
+--
+-- __Note__
+--
+-- The validity and use of this data is outside the scope of Vulkan.
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkHdrMetadataEXT = VkHdrMetadataEXT
-  { -- No documentation found for Nested "VkHdrMetadataEXT" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_HDR_METADATA_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "displayPrimaryRed"
+  , -- | @displayPrimaryRed@ is the mastering display’s red primary in
+  -- chromaticity coordinates
   vkDisplayPrimaryRed :: VkXYColorEXT
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "displayPrimaryGreen"
+  , -- | @displayPrimaryGreen@ is the mastering display’s green primary in
+  -- chromaticity coordinates
   vkDisplayPrimaryGreen :: VkXYColorEXT
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "displayPrimaryBlue"
+  , -- | @displayPrimaryBlue@ is the mastering display’s blue primary in
+  -- chromaticity coordinates
   vkDisplayPrimaryBlue :: VkXYColorEXT
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "whitePoint"
+  , -- | @whitePoint@ is the mastering display’s white-point in chromaticity
+  -- coordinates
   vkWhitePoint :: VkXYColorEXT
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "maxLuminance"
+  , -- | @maxLuminance@ is the maximum luminance of the mastering display in nits
   vkMaxLuminance :: CFloat
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "minLuminance"
+  , -- | @minLuminance@ is the minimum luminance of the mastering display in nits
   vkMinLuminance :: CFloat
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "maxContentLightLevel"
+  , -- | @maxContentLightLevel@ is content’s maximum luminance in nits
   vkMaxContentLightLevel :: CFloat
-  , -- No documentation found for Nested "VkHdrMetadataEXT" "maxFrameAverageLightLevel"
+  , -- | @maxFrameAverageLightLevel@ is the maximum frame average light level in
+  -- nits
   vkMaxFrameAverageLightLevel :: CFloat
   }
   deriving (Eq, Show)
@@ -114,7 +129,11 @@ instance Zero VkHdrMetadataEXT where
                           zero
                           zero
                           zero
--- No documentation found for TopLevel "VkXYColorEXT"
+-- | VkXYColorEXT - structure to specify X,Y chromaticity coordinates
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkXYColorEXT = VkXYColorEXT
   { -- No documentation found for Nested "VkXYColorEXT" "x"
   vkX :: CFloat
@@ -135,7 +154,39 @@ instance Zero VkXYColorEXT where
   zero = VkXYColorEXT zero
                       zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkSetHdrMetadataEXT"
+-- | vkSetHdrMetadataEXT - function to set Hdr metadata
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device where the swapchain(s) were created.
+--
+-- -   @swapchainCount@ is the number of swapchains included in
+--     @pSwapchains@.
+--
+-- -   @pSwapchains@ is a pointer to the array of @swapchainCount@
+--     @VkSwapchainKHR@ handles.
+--
+-- -   @pMetadata@ is a pointer to the array of @swapchainCount@
+--     @VkHdrMetadataEXT@ structures.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @pSwapchains@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid @VkSwapchainKHR@ handles
+--
+-- -   @pMetadata@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid @VkHdrMetadataEXT@ structures
+--
+-- -   @swapchainCount@ /must/ be greater than @0@
+--
+-- -   Both of @device@, and the elements of @pSwapchains@ /must/ have been
+--     created, allocated, or retrieved from the same @VkInstance@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

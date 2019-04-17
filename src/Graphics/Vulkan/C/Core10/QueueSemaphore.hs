@@ -72,7 +72,16 @@ import Graphics.Vulkan.NamedType
 
 -- ** VkSemaphoreCreateFlags
 
--- No documentation found for TopLevel "VkSemaphoreCreateFlags"
+-- | VkSemaphoreCreateFlags - Reserved for future use
+--
+-- = Description
+--
+-- @VkSemaphoreCreateFlags@ is a bitmask type for setting a mask, but is
+-- currently reserved for future use.
+--
+-- = See Also
+--
+-- 'VkSemaphoreCreateInfo'
 newtype VkSemaphoreCreateFlags = VkSemaphoreCreateFlags VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -91,13 +100,22 @@ instance Read VkSemaphoreCreateFlags where
                     )
 
 
--- No documentation found for TopLevel "VkSemaphoreCreateInfo"
+-- | VkSemaphoreCreateInfo - Structure specifying parameters of a newly
+-- created semaphore
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'VkSemaphoreCreateFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkCreateSemaphore'
 data VkSemaphoreCreateInfo = VkSemaphoreCreateInfo
-  { -- No documentation found for Nested "VkSemaphoreCreateInfo" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSemaphoreCreateInfo" "pNext"
+  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+  -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkExportSemaphoreCreateInfo'
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSemaphoreCreateInfo" "flags"
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkSemaphoreCreateFlags
   }
   deriving (Eq, Show)
@@ -117,7 +135,54 @@ instance Zero VkSemaphoreCreateInfo where
                                zero
                                zero
 #if defined(EXPOSE_CORE10_COMMANDS)
--- No documentation found for TopLevel "vkCreateSemaphore"
+-- | vkCreateSemaphore - Create a new queue semaphore object
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that creates the semaphore.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     @VkSemaphoreCreateInfo@ structure which contains information about
+--     how the semaphore is to be created.
+--
+-- -   @pAllocator@ controls host memory allocation as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     chapter.
+--
+-- -   @pSemaphore@ points to a handle in which the resulting semaphore
+--     object is returned.
+--
+-- = Description
+--
+-- When created, the semaphore is in the unsignaled state.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkSemaphoreCreateInfo@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSemaphore@ /must/ be a valid pointer to a @VkSemaphore@ handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkSemaphore', 'VkSemaphoreCreateInfo'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -128,7 +193,52 @@ foreign import ccall
 type FN_vkCreateSemaphore = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSemaphoreCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSemaphore" ::: Ptr VkSemaphore) -> IO VkResult
 type PFN_vkCreateSemaphore = FunPtr FN_vkCreateSemaphore
 #if defined(EXPOSE_CORE10_COMMANDS)
--- No documentation found for TopLevel "vkDestroySemaphore"
+-- | vkDestroySemaphore - Destroy a semaphore object
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that destroys the semaphore.
+--
+-- -   @semaphore@ is the handle of the semaphore to destroy.
+--
+-- -   @pAllocator@ controls host memory allocation as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     chapter.
+--
+-- == Valid Usage
+--
+-- -   All submitted batches that refer to @semaphore@ /must/ have
+--     completed execution
+--
+-- -   If @VkAllocationCallbacks@ were provided when @semaphore@ was
+--     created, a compatible set of callbacks /must/ be provided here
+--
+-- -   If no @VkAllocationCallbacks@ were provided when @semaphore@ was
+--     created, @pAllocator@ /must/ be @NULL@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   If @semaphore@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @semaphore@
+--     /must/ be a valid @VkSemaphore@ handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   If @semaphore@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @semaphore@ /must/ be externally synchronized
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkSemaphore'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

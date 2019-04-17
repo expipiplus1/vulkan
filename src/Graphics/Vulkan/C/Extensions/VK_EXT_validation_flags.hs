@@ -58,7 +58,11 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- ** VkValidationCheckEXT
 
--- No documentation found for TopLevel "VkValidationCheckEXT"
+-- | VkValidationCheckEXT - Specify validation checks to disable
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkValidationCheckEXT = VkValidationCheckEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -78,22 +82,32 @@ instance Read VkValidationCheckEXT where
                         )
                     )
 
--- No documentation found for Nested "VkValidationCheckEXT" "VK_VALIDATION_CHECK_ALL_EXT"
+-- | @VK_VALIDATION_CHECK_ALL_EXT@ specifies that all validation checks are
+-- disabled.
 pattern VK_VALIDATION_CHECK_ALL_EXT :: VkValidationCheckEXT
 pattern VK_VALIDATION_CHECK_ALL_EXT = VkValidationCheckEXT 0
 
--- No documentation found for Nested "VkValidationCheckEXT" "VK_VALIDATION_CHECK_SHADERS_EXT"
+-- | @VK_VALIDATION_CHECK_SHADERS_EXT@ specifies that shader validation is
+-- disabled.
 pattern VK_VALIDATION_CHECK_SHADERS_EXT :: VkValidationCheckEXT
 pattern VK_VALIDATION_CHECK_SHADERS_EXT = VkValidationCheckEXT 1
--- No documentation found for TopLevel "VkValidationFlagsEXT"
+-- | VkValidationFlagsEXT - Specify validation checks to disable for a Vulkan
+-- instance
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkValidationFlagsEXT = VkValidationFlagsEXT
-  { -- No documentation found for Nested "VkValidationFlagsEXT" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkValidationFlagsEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkValidationFlagsEXT" "disabledValidationCheckCount"
+  , -- | @disabledValidationCheckCount@ /must/ be greater than @0@
   vkDisabledValidationCheckCount :: Word32
-  , -- No documentation found for Nested "VkValidationFlagsEXT" "pDisabledValidationChecks"
+  , -- | @pDisabledValidationChecks@ /must/ be a valid pointer to an array of
+  -- @disabledValidationCheckCount@ 'VkValidationCheckEXT' values
   vkPDisabledValidationChecks :: Ptr VkValidationCheckEXT
   }
   deriving (Eq, Show)

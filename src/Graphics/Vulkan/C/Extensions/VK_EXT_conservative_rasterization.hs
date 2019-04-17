@@ -68,7 +68,12 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- ** VkConservativeRasterizationModeEXT
 
--- No documentation found for TopLevel "VkConservativeRasterizationModeEXT"
+-- | VkConservativeRasterizationModeEXT - Specify the conservative
+-- rasterization mode
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkConservativeRasterizationModeEXT = VkConservativeRasterizationModeEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -90,40 +95,116 @@ instance Read VkConservativeRasterizationModeEXT where
                         )
                     )
 
--- No documentation found for Nested "VkConservativeRasterizationModeEXT" "VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT"
+-- | @VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT@ specifies that
+-- conservative rasterization is disabled and rasterization proceeds as
+-- normal.
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT :: VkConservativeRasterizationModeEXT
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = VkConservativeRasterizationModeEXT 0
 
--- No documentation found for Nested "VkConservativeRasterizationModeEXT" "VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT"
+-- | @VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT@ specifies that
+-- conservative rasterization is enabled in overestimation mode.
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT :: VkConservativeRasterizationModeEXT
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT = VkConservativeRasterizationModeEXT 1
 
--- No documentation found for Nested "VkConservativeRasterizationModeEXT" "VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT"
+-- | @VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT@ specifies that
+-- conservative rasterization is enabled in underestimation mode.
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT :: VkConservativeRasterizationModeEXT
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = VkConservativeRasterizationModeEXT 2
--- No documentation found for TopLevel "VkPhysicalDeviceConservativeRasterizationPropertiesEXT"
+-- | VkPhysicalDeviceConservativeRasterizationPropertiesEXT - Structure
+-- describing conservative raster properties that can be supported by an
+-- implementation
+--
+-- = Members
+--
+-- The members of the
+-- @VkPhysicalDeviceConservativeRasterizationPropertiesEXT@ structure
+-- describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceConservativeRasterizationPropertiesEXT@
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits and properties.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceConservativeRasterizationPropertiesEXT = VkPhysicalDeviceConservativeRasterizationPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "primitiveOverestimationSize"
+  , -- | @primitiveOverestimationSize@ is the size in pixels the generating
+  -- primitive is increased at each of its edges during conservative
+  -- rasterization overestimation mode. Even with a size of 0.0, conservative
+  -- rasterization overestimation rules still apply and if any part of the
+  -- pixel rectangle is covered by the generating primitive, fragments are
+  -- generated for the entire pixel. However implementations /may/ make the
+  -- pixel coverage area even more conservative by increasing the size of the
+  -- generating primitive.
   vkPrimitiveOverestimationSize :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "maxExtraPrimitiveOverestimationSize"
+  , -- | @maxExtraPrimitiveOverestimationSize@ is the maximum size in pixels of
+  -- extra overestimation the implementation supports in the pipeline state.
+  -- A value of 0.0 means the implementation does not support any additional
+  -- overestimation of the generating primitive during conservative
+  -- rasterization. A value above 0.0 allows the application to further
+  -- increase the size of the generating primitive during conservative
+  -- rasterization overestimation.
   vkMaxExtraPrimitiveOverestimationSize :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "extraPrimitiveOverestimationSizeGranularity"
+  , -- | @extraPrimitiveOverestimationSizeGranularity@ is the granularity of
+  -- extra overestimation that can be specified in the pipeline state between
+  -- 0.0 and @maxExtraPrimitiveOverestimationSize@ inclusive. A value of 0.0
+  -- means the implementation can use the smallest representable non-zero
+  -- value in the screen space pixel fixed-point grid.
   vkExtraPrimitiveOverestimationSizeGranularity :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "primitiveUnderestimation"
+  , -- | @primitiveUnderestimation@ is true if the implementation supports the
+  -- @VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT@ conservative
+  -- rasterization mode in addition to
+  -- @VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT@. Otherwise the
+  -- implementation only supports
+  -- @VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT@.
   vkPrimitiveUnderestimation :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "conservativePointAndLineRasterization"
+  , -- | @conservativePointAndLineRasterization@ is true if the implementation
+  -- supports conservative rasterization of point and line primitives as well
+  -- as triangle primitives. Otherwise the implementation only supports
+  -- triangle primitives.
   vkConservativePointAndLineRasterization :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "degenerateTrianglesRasterized"
+  , -- | @degenerateTrianglesRasterized@ is false if the implementation culls
+  -- primitives generated from triangles that become zero area after they are
+  -- quantized to the fixed-point rasterization pixel grid.
+  -- @degenerateTrianglesRasterized@ is true if these primitives are not
+  -- culled and the provoking vertex attributes and depth value are used for
+  -- the fragments. The primitive area calculation is done on the primitive
+  -- generated from the clipped triangle if applicable. Zero area primitives
+  -- are backfacing and the application /can/ enable backface culling if
+  -- desired.
   vkDegenerateTrianglesRasterized :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "degenerateLinesRasterized"
+  , -- | @degenerateLinesRasterized@ is false if the implementation culls lines
+  -- that become zero length after they are quantized to the fixed-point
+  -- rasterization pixel grid. @degenerateLinesRasterized@ is true if zero
+  -- length lines are not culled and the provoking vertex attributes and
+  -- depth value are used for the fragments.
   vkDegenerateLinesRasterized :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "fullyCoveredFragmentShaderInputVariable"
+  , -- | @fullyCoveredFragmentShaderInputVariable@ is true if the implementation
+  -- supports the SPIR-V builtin fragment shader input variable
+  -- FullyCoveredEXT which specifies that conservative rasterization is
+  -- enabled and the fragment area is fully covered by the generating
+  -- primitive.
   vkFullyCoveredFragmentShaderInputVariable :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceConservativeRasterizationPropertiesEXT" "conservativeRasterizationPostDepthCoverage"
+  , -- | @conservativeRasterizationPostDepthCoverage@ is true if the
+  -- implementation supports conservative rasterization with the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
+  -- execution mode enabled. When supported the @SampleMask@ built-in input
+  -- variable will reflect the coverage after the early per-fragment depth
+  -- and stencil tests are applied even when conservative rasterization is
+  -- enabled. Otherwise
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
+  -- execution mode /must/ not be used when conservative rasterization is
+  -- enabled.
   vkConservativeRasterizationPostDepthCoverage :: VkBool32
   }
   deriving (Eq, Show)
@@ -168,7 +249,17 @@ instance Zero VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
                                                                 zero
 -- ** VkPipelineRasterizationConservativeStateCreateFlagsEXT
 
--- No documentation found for TopLevel "VkPipelineRasterizationConservativeStateCreateFlagsEXT"
+-- | VkPipelineRasterizationConservativeStateCreateFlagsEXT - Reserved for
+-- future use
+--
+-- = Description
+--
+-- @VkPipelineRasterizationConservativeStateCreateFlagsEXT@ is a bitmask
+-- type for setting a mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkPipelineRasterizationConservativeStateCreateFlagsEXT = VkPipelineRasterizationConservativeStateCreateFlagsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -187,17 +278,28 @@ instance Read VkPipelineRasterizationConservativeStateCreateFlagsEXT where
                     )
 
 
--- No documentation found for TopLevel "VkPipelineRasterizationConservativeStateCreateInfoEXT"
+-- | VkPipelineRasterizationConservativeStateCreateInfoEXT - Structure
+-- specifying conservative raster state
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPipelineRasterizationConservativeStateCreateInfoEXT = VkPipelineRasterizationConservativeStateCreateInfoEXT
-  { -- No documentation found for Nested "VkPipelineRasterizationConservativeStateCreateInfoEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineRasterizationConservativeStateCreateInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineRasterizationConservativeStateCreateInfoEXT" "flags"
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkPipelineRasterizationConservativeStateCreateFlagsEXT
-  , -- No documentation found for Nested "VkPipelineRasterizationConservativeStateCreateInfoEXT" "conservativeRasterizationMode"
+  , -- | @conservativeRasterizationMode@ /must/ be a valid
+  -- 'VkConservativeRasterizationModeEXT' value
   vkConservativeRasterizationMode :: VkConservativeRasterizationModeEXT
-  , -- No documentation found for Nested "VkPipelineRasterizationConservativeStateCreateInfoEXT" "extraPrimitiveOverestimationSize"
+  , -- | @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@ to
+  -- @VkPhysicalDeviceConservativeRasterizationPropertiesEXT@::@maxExtraPrimitiveOverestimationSize@
+  -- inclusive
   vkExtraPrimitiveOverestimationSize :: CFloat
   }
   deriving (Eq, Show)

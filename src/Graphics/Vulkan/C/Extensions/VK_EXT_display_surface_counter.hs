@@ -84,11 +84,25 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkSurfaceCapabilities2EXT"
+-- | VkSurfaceCapabilities2EXT - Structure describing capabilities of a
+-- surface
+--
+-- = Members
+--
+-- All members of @VkSurfaceCapabilities2EXT@ are identical to the
+-- corresponding members of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR'
+-- where one exists. The remaining members are:
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkSurfaceCapabilities2EXT = VkSurfaceCapabilities2EXT
-  { -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageCount"
   vkMinImageCount :: Word32
@@ -110,7 +124,9 @@ data VkSurfaceCapabilities2EXT = VkSurfaceCapabilities2EXT
   vkSupportedCompositeAlpha :: VkCompositeAlphaFlagsKHR
   , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedUsageFlags"
   vkSupportedUsageFlags :: VkImageUsageFlags
-  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedSurfaceCounters"
+  , -- | @supportedSurfaceCounters@ /must/ not include
+  -- @VK_SURFACE_COUNTER_VBLANK_EXT@ unless the surface queried is a
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#wsi-display-surfaces display surface>.
   vkSupportedSurfaceCounters :: VkSurfaceCounterFlagsEXT
   }
   deriving (Eq, Show)
@@ -161,7 +177,11 @@ instance Zero VkSurfaceCapabilities2EXT where
                                    zero
 -- ** VkSurfaceCounterFlagBitsEXT
 
--- No documentation found for TopLevel "VkSurfaceCounterFlagBitsEXT"
+-- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkSurfaceCounterFlagBitsEXT = VkSurfaceCounterFlagBitsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -179,13 +199,71 @@ instance Read VkSurfaceCounterFlagBitsEXT where
                         )
                     )
 
--- No documentation found for Nested "VkSurfaceCounterFlagBitsEXT" "VK_SURFACE_COUNTER_VBLANK_EXT"
+-- | @VK_SURFACE_COUNTER_VBLANK_EXT@ specifies a counter incrementing once
+-- every time a vertical blanking period occurs on the display associated
+-- with the surface.
 pattern VK_SURFACE_COUNTER_VBLANK_EXT :: VkSurfaceCounterFlagBitsEXT
 pattern VK_SURFACE_COUNTER_VBLANK_EXT = VkSurfaceCounterFlagBitsEXT 0x00000001
--- No documentation found for TopLevel "VkSurfaceCounterFlagsEXT"
+-- | VkSurfaceCounterFlagsEXT - Bitmask of VkSurfaceCounterFlagBitsEXT
+--
+-- = Description
+--
+-- @VkSurfaceCounterFlagsEXT@ is a bitmask type for setting a mask of zero
+-- or more 'VkSurfaceCounterFlagBitsEXT'.
+--
+-- = See Also
+--
+-- No cross-references are available
 type VkSurfaceCounterFlagsEXT = VkSurfaceCounterFlagBitsEXT
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetPhysicalDeviceSurfaceCapabilities2EXT"
+-- | vkGetPhysicalDeviceSurfaceCapabilities2EXT - Query surface capabilities
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
+--
+-- -   @surface@ is the surface that will be associated with the swapchain.
+--
+-- -   @pSurfaceCapabilities@ is a pointer to an instance of the
+--     'VkSurfaceCapabilities2EXT' structure in which the capabilities are
+--     returned.
+--
+-- = Description
+--
+-- @vkGetPhysicalDeviceSurfaceCapabilities2EXT@ behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
+-- with the ability to return extended information by adding extension
+-- structures to the @pNext@ chain of its @pSurfaceCapabilities@ parameter.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+--
+-- -   @surface@ /must/ be a valid @VkSurfaceKHR@ handle
+--
+-- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
+--     @VkSurfaceCapabilities2EXT@ structure
+--
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same @VkInstance@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+--     -   @VK_ERROR_SURFACE_LOST_KHR@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

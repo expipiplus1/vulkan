@@ -100,15 +100,25 @@ instance Read VkStreamDescriptorSurfaceCreateFlagsGGP where
                     )
 
 
--- No documentation found for TopLevel "VkStreamDescriptorSurfaceCreateInfoGGP"
+-- | VkStreamDescriptorSurfaceCreateInfoGGP - Structure specifying parameters
+-- of a newly created Google Games Platform stream surface object
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkStreamDescriptorSurfaceCreateInfoGGP.txt -
+-- include::..\/validity\/structs\/VkStreamDescriptorSurfaceCreateInfoGGP.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkStreamDescriptorSurfaceCreateInfoGGP = VkStreamDescriptorSurfaceCreateInfoGGP
-  { -- No documentation found for Nested "VkStreamDescriptorSurfaceCreateInfoGGP" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkStreamDescriptorSurfaceCreateInfoGGP" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkStreamDescriptorSurfaceCreateInfoGGP" "flags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkStreamDescriptorSurfaceCreateFlagsGGP
-  , -- No documentation found for Nested "VkStreamDescriptorSurfaceCreateInfoGGP" "streamDescriptor"
+  , -- | @streamDescriptor@ /must/ be a valid @GgpStreamDescriptor@
   vkStreamDescriptor :: GgpStreamDescriptor
   }
   deriving (Eq, Show)
@@ -131,7 +141,35 @@ instance Zero VkStreamDescriptorSurfaceCreateInfoGGP where
                                                 zero
                                                 zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCreateStreamDescriptorSurfaceGGP"
+-- | vkCreateStreamDescriptorSurfaceGGP - Create a
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
+-- Google Games Platform stream
+--
+-- = Parameters
+--
+-- -   @instance@ is the instance to associate with the surface.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     @VkStreamDescriptorSurfaceCreateInfoGGP@ structure containing
+--     parameters that affect the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
+--     which the created surface object is returned.
+--
+-- = Description
+--
+-- Unresolved directive in vkCreateStreamDescriptorSurfaceGGP.txt -
+-- include::..\/validity\/protos\/vkCreateStreamDescriptorSurfaceGGP.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

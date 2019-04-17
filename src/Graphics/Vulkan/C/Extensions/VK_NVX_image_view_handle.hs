@@ -56,17 +56,45 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkImageViewHandleInfoNVX"
+-- | VkImageViewHandleInfoNVX - Structure specifying the image view for
+-- handle queries
+--
+-- == Valid Usage
+--
+-- -   @descriptorType@ /must/ be @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@,
+--     @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@, or
+--     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@
+--
+-- -   @sampler@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' if @descriptorType@ is
+--     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@
+--
+-- -   If descriptorType is @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@ or
+--     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@, the image that
+--     @imageView@ was created from /must/ have been created with the
+--     @VK_IMAGE_USAGE_SAMPLED_BIT@ usage bit set
+--
+-- -   If descriptorType is @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@, the image
+--     that @imageView@ was created from /must/ have been created with the
+--     @VK_IMAGE_USAGE_STORAGE_BIT@ usage bit set
+--
+-- Unresolved directive in VkImageViewHandleInfoNVX.txt -
+-- include::..\/validity\/structs\/VkImageViewHandleInfoNVX.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkImageViewHandleInfoNVX = VkImageViewHandleInfoNVX
-  { -- No documentation found for Nested "VkImageViewHandleInfoNVX" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "imageView"
+  , -- | @imageView@ is the image view to query.
   vkImageView :: VkImageView
-  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "descriptorType"
+  , -- | @descriptorType@ is the type of descriptor for which to query a handle.
   vkDescriptorType :: VkDescriptorType
-  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "sampler"
+  , -- | @sampler@ is the sampler to combine with the image view when generating
+  -- the handle.
   vkSampler :: VkSampler
   }
   deriving (Eq, Show)
@@ -92,7 +120,23 @@ instance Zero VkImageViewHandleInfoNVX where
                                   zero
                                   zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetImageViewHandleNVX"
+-- | vkGetImageViewHandleNVX - Get the handle for an image view for a
+-- specific descriptor type
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the image view.
+--
+-- -   @pInfo@ describes the image view to query and type of handle.
+--
+-- = Description
+--
+-- Unresolved directive in vkGetImageViewHandleNVX.txt -
+-- include::..\/validity\/protos\/vkGetImageViewHandleNVX.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

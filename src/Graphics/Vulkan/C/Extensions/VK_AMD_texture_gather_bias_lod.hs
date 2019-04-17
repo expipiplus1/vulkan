@@ -31,13 +31,25 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkTextureLODGatherFormatPropertiesAMD"
+-- | VkTextureLODGatherFormatPropertiesAMD - Structure informing whether or
+-- not texture gather bias\/LOD functionality is supported for a given
+-- image format and a given physical device.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkTextureLODGatherFormatPropertiesAMD = VkTextureLODGatherFormatPropertiesAMD
-  { -- No documentation found for Nested "VkTextureLODGatherFormatPropertiesAMD" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkTextureLODGatherFormatPropertiesAMD" "pNext"
+  , -- | @pNext@ is @NULL@.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkTextureLODGatherFormatPropertiesAMD" "supportsTextureGatherLODBiasAMD"
+  , -- | @supportsTextureGatherLODBiasAMD@ tells if the image format can be used
+  -- with texture gather bias\/LOD functions, as introduced by the
+  -- @{html_spec_relative}#VK_AMD_texture_gather_bias_lod@ extension. This
+  -- field is set by the implementation. User-specified value is ignored.
   vkSupportsTextureGatherLODBiasAMD :: VkBool32
   }
   deriving (Eq, Show)

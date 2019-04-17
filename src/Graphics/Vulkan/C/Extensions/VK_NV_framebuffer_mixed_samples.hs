@@ -70,7 +70,11 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- ** VkCoverageModulationModeNV
 
--- No documentation found for TopLevel "VkCoverageModulationModeNV"
+-- | VkCoverageModulationModeNV - Specify the discard rectangle mode
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkCoverageModulationModeNV = VkCoverageModulationModeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -94,24 +98,37 @@ instance Read VkCoverageModulationModeNV where
                         )
                     )
 
--- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_NONE_NV"
+-- | @VK_COVERAGE_MODULATION_MODE_NONE_NV@ specifies that no components are
+-- multiplied by the modulation factor.
 pattern VK_COVERAGE_MODULATION_MODE_NONE_NV :: VkCoverageModulationModeNV
 pattern VK_COVERAGE_MODULATION_MODE_NONE_NV = VkCoverageModulationModeNV 0
 
--- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_RGB_NV"
+-- | @VK_COVERAGE_MODULATION_MODE_RGB_NV@ specifies that the red, green, and
+-- blue components are multiplied by the modulation factor.
 pattern VK_COVERAGE_MODULATION_MODE_RGB_NV :: VkCoverageModulationModeNV
 pattern VK_COVERAGE_MODULATION_MODE_RGB_NV = VkCoverageModulationModeNV 1
 
--- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_ALPHA_NV"
+-- | @VK_COVERAGE_MODULATION_MODE_ALPHA_NV@ specifies that the alpha
+-- component is multiplied by the modulation factor.
 pattern VK_COVERAGE_MODULATION_MODE_ALPHA_NV :: VkCoverageModulationModeNV
 pattern VK_COVERAGE_MODULATION_MODE_ALPHA_NV = VkCoverageModulationModeNV 2
 
--- No documentation found for Nested "VkCoverageModulationModeNV" "VK_COVERAGE_MODULATION_MODE_RGBA_NV"
+-- | @VK_COVERAGE_MODULATION_MODE_RGBA_NV@ specifies that all components are
+-- multiplied by the modulation factor.
 pattern VK_COVERAGE_MODULATION_MODE_RGBA_NV :: VkCoverageModulationModeNV
 pattern VK_COVERAGE_MODULATION_MODE_RGBA_NV = VkCoverageModulationModeNV 3
 -- ** VkPipelineCoverageModulationStateCreateFlagsNV
 
--- No documentation found for TopLevel "VkPipelineCoverageModulationStateCreateFlagsNV"
+-- | VkPipelineCoverageModulationStateCreateFlagsNV - Reserved for future use
+--
+-- = Description
+--
+-- @VkPipelineCoverageModulationStateCreateFlagsNV@ is a bitmask type for
+-- setting a mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkPipelineCoverageModulationStateCreateFlagsNV = VkPipelineCoverageModulationStateCreateFlagsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -130,21 +147,87 @@ instance Read VkPipelineCoverageModulationStateCreateFlagsNV where
                     )
 
 
--- No documentation found for TopLevel "VkPipelineCoverageModulationStateCreateInfoNV"
+-- | VkPipelineCoverageModulationStateCreateInfoNV - Structure specifying
+-- parameters controlling coverage modulation
+--
+-- = Description
+--
+-- If @coverageModulationTableEnable@ is @VK_FALSE@, then for each color
+-- sample the associated bits of the fragment’s coverage are counted and
+-- divided by the number of associated bits to produce a modulation factor
+-- R in the range (0,1] (a value of zero would have been killed due to a
+-- color coverage of 0). Specifically:
+--
+-- -   N = value of @rasterizationSamples@
+--
+-- -   M = value of
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription'::@samples@
+--     for any color attachments
+--
+-- -   R = popcount(associated coverage bits) \/ (N \/ M)
+--
+-- If @coverageModulationTableEnable@ is @VK_TRUE@, the value R is computed
+-- using a programmable lookup table. The lookup table has N \/ M elements,
+-- and the element of the table is selected by:
+--
+-- -   R = @pCoverageModulationTable@[popcount(associated coverage bits)-1]
+--
+-- Note that the table does not have an entry for popcount(associated
+-- coverage bits) = 0, because such samples would have been killed.
+--
+-- The values of @pCoverageModulationTable@ /may/ be rounded to an
+-- implementation-dependent precision, which is at least as fine as 1 \/ N,
+-- and clamped to [0,1].
+--
+-- For each color attachment with a floating point or normalized color
+-- format, each fragment output color value is replicated to M values which
+-- /can/ each be modulated (multiplied) by that color sample’s associated
+-- value of R. Which components are modulated is controlled by
+-- @coverageModulationMode@.
+--
+-- If this structure is not present, it is as if @coverageModulationMode@
+-- is @VK_COVERAGE_MODULATION_MODE_NONE_NV@.
+--
+-- == Valid Usage
+--
+-- -   If @coverageModulationTableEnable@ is @VK_TRUE@,
+--     @coverageModulationTableCount@ /must/ be equal to the number of
+--     rasterization samples divided by the number of color samples in the
+--     subpass.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @coverageModulationMode@ /must/ be a valid
+--     'VkCoverageModulationModeNV' value
+--
+-- -   @coverageModulationTableCount@ /must/ be greater than @0@
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPipelineCoverageModulationStateCreateInfoNV = VkPipelineCoverageModulationStateCreateInfoNV
-  { -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "flags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineCoverageModulationStateCreateFlagsNV
-  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "coverageModulationMode"
+  , -- | @coverageModulationMode@ controls which color components are modulated
+  -- and is of type 'VkCoverageModulationModeNV'.
   vkCoverageModulationMode :: VkCoverageModulationModeNV
-  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "coverageModulationTableEnable"
+  , -- | @coverageModulationTableEnable@ controls whether the modulation factor
+  -- is looked up from a table in @pCoverageModulationTable@.
   vkCoverageModulationTableEnable :: VkBool32
-  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "coverageModulationTableCount"
+  , -- | @coverageModulationTableCount@ is the number of elements in
+  -- @pCoverageModulationTable@.
   vkCoverageModulationTableCount :: Word32
-  , -- No documentation found for Nested "VkPipelineCoverageModulationStateCreateInfoNV" "pCoverageModulationTable"
+  , -- | @pCoverageModulationTable@ is a table of modulation factors containing a
+  -- value for each number of covered samples.
   vkPCoverageModulationTable :: Ptr CFloat
   }
   deriving (Eq, Show)

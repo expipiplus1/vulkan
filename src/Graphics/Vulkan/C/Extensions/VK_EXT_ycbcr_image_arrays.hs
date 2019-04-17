@@ -31,13 +31,40 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceYcbcrImageArraysFeaturesEXT"
+-- | VkPhysicalDeviceYcbcrImageArraysFeaturesEXT - Structure describing
+-- extended Y
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceYcbcrImageArraysFeaturesEXT@
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceYcbcrImageArraysFeaturesEXT@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether the feature is supported.
+-- @VkPhysicalDeviceYcbcrImageArraysFeaturesEXT@ /can/ also be used in the
+-- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
+-- enable features.
+--
+-- Unresolved directive in VkPhysicalDeviceYcbcrImageArraysFeaturesEXT.txt
+-- -
+-- include::..\/validity\/structs\/VkPhysicalDeviceYcbcrImageArraysFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceYcbcrImageArraysFeaturesEXT = VkPhysicalDeviceYcbcrImageArraysFeaturesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceYcbcrImageArraysFeaturesEXT" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceYcbcrImageArraysFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceYcbcrImageArraysFeaturesEXT" "ycbcrImageArrays"
+  , -- | @ycbcrImageArrays@ indicates that the implementation supports creating
+  -- images with a format that requires
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion Y’CBCR conversion>
+  -- and has multiple array layers.
   vkYcbcrImageArrays :: VkBool32
   }
   deriving (Eq, Show)

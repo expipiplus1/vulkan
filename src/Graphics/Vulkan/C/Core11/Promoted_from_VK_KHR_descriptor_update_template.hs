@@ -103,11 +103,26 @@ import Graphics.Vulkan.NamedType
 
 -- | Dummy data to tag the 'Ptr' with
 data VkDescriptorUpdateTemplate_T
--- No documentation found for TopLevel "VkDescriptorUpdateTemplate"
+-- | VkDescriptorUpdateTemplate - Opaque handle to a descriptor update
+-- template
+--
+-- = See Also
+--
+-- 'vkCreateDescriptorUpdateTemplate', 'vkDestroyDescriptorUpdateTemplate',
+-- 'vkUpdateDescriptorSetWithTemplate'
 type VkDescriptorUpdateTemplate = Ptr VkDescriptorUpdateTemplate_T
 -- ** VkDescriptorUpdateTemplateCreateFlags
 
--- No documentation found for TopLevel "VkDescriptorUpdateTemplateCreateFlags"
+-- | VkDescriptorUpdateTemplateCreateFlags - Reserved for future use
+--
+-- = Description
+--
+-- @VkDescriptorUpdateTemplateCreateFlags@ is a bitmask type for setting a
+-- mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'VkDescriptorUpdateTemplateCreateInfo'
 newtype VkDescriptorUpdateTemplateCreateFlags = VkDescriptorUpdateTemplateCreateFlags VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -126,27 +141,113 @@ instance Read VkDescriptorUpdateTemplateCreateFlags where
                     )
 
 
--- No documentation found for TopLevel "VkDescriptorUpdateTemplateCreateInfo"
+-- | VkDescriptorUpdateTemplateCreateInfo - Structure specifying parameters
+-- of a newly created descriptor update template
+--
+-- == Valid Usage
+--
+-- -   If @templateType@ is
+--     @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET@,
+--     @descriptorSetLayout@ /must/ be a valid @VkDescriptorSetLayout@
+--     handle
+--
+-- -   If @templateType@ is
+--     @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@,
+--     @pipelineBindPoint@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint' value
+--
+-- -   If @templateType@ is
+--     @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@,
+--     @pipelineLayout@ /must/ be a valid @VkPipelineLayout@ handle
+--
+-- -   If @templateType@ is
+--     @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@, @set@
+--     /must/ be the unique set number in the pipeline layout that uses a
+--     descriptor set layout that was created with
+--     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO@
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @pDescriptorUpdateEntries@ /must/ be a valid pointer to an array of
+--     @descriptorUpdateEntryCount@ valid @VkDescriptorUpdateTemplateEntry@
+--     structures
+--
+-- -   @templateType@ /must/ be a valid 'VkDescriptorUpdateTemplateType'
+--     value
+--
+-- -   If @descriptorSetLayout@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @descriptorSetLayout@ /must/ be a valid @VkDescriptorSetLayout@
+--     handle
+--
+-- -   @descriptorUpdateEntryCount@ /must/ be greater than @0@
+--
+-- -   Both of @descriptorSetLayout@, and @pipelineLayout@ that are valid
+--     handles /must/ have been created, allocated, or retrieved from the
+--     same @VkDevice@
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkDescriptorSetLayout',
+-- 'VkDescriptorUpdateTemplateCreateFlags',
+-- 'VkDescriptorUpdateTemplateEntry', 'VkDescriptorUpdateTemplateType',
+-- 'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateDescriptorUpdateTemplate'
 data VkDescriptorUpdateTemplateCreateInfo = VkDescriptorUpdateTemplateCreateInfo
-  { -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "flags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkDescriptorUpdateTemplateCreateFlags
-  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "descriptorUpdateEntryCount"
+  , -- | @descriptorUpdateEntryCount@ is the number of elements in the
+  -- @pDescriptorUpdateEntries@ array.
   vkDescriptorUpdateEntryCount :: Word32
-  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "pDescriptorUpdateEntries"
+  , -- | @pDescriptorUpdateEntries@ is a pointer to an array of
+  -- 'VkDescriptorUpdateTemplateEntry' structures describing the descriptors
+  -- to be updated by the descriptor update template.
   vkPDescriptorUpdateEntries :: Ptr VkDescriptorUpdateTemplateEntry
-  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "templateType"
+  , -- | @templateType@ Specifies the type of the descriptor update template. If
+  -- set to @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET@ it /can/ only
+  -- be used to update descriptor sets with a fixed @descriptorSetLayout@. If
+  -- set to @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@ it
+  -- /can/ only be used to push descriptor sets using the provided
+  -- @pipelineBindPoint@, @pipelineLayout@, and @set@ number.
   vkTemplateType :: VkDescriptorUpdateTemplateType
-  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "descriptorSetLayout"
+  , -- | @descriptorSetLayout@ is the descriptor set layout the parameter update
+  -- template will be used with. All descriptor sets which are going to be
+  -- updated through the newly created descriptor update template /must/ be
+  -- created with this layout. @descriptorSetLayout@ is the descriptor set
+  -- layout used to build the descriptor update template. All descriptor sets
+  -- which are going to be updated through the newly created descriptor
+  -- update template /must/ be created with a layout that matches (is the
+  -- same as, or defined identically to) this layout. This parameter is
+  -- ignored if @templateType@ is not
+  -- @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET@.
   vkDescriptorSetLayout :: VkDescriptorSetLayout
-  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "pipelineBindPoint"
+  , -- | @pipelineBindPoint@ is a
+  -- 'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint' indicating whether
+  -- the descriptors will be used by graphics pipelines or compute pipelines.
+  -- This parameter is ignored if @templateType@ is not
+  -- @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@
   vkPipelineBindPoint :: VkPipelineBindPoint
-  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "pipelineLayout"
+  , -- | @pipelineLayout@ is a
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' object used to
+  -- program the bindings. This parameter is ignored if @templateType@ is not
+  -- @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@
   vkPipelineLayout :: VkPipelineLayout
-  , -- No documentation found for Nested "VkDescriptorUpdateTemplateCreateInfo" "set"
+  , -- | @set@ is the set number of the descriptor set in the pipeline layout
+  -- that will be updated. This parameter is ignored if @templateType@ is not
+  -- @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@
   vkSet :: Word32
   }
   deriving (Eq, Show)
@@ -186,7 +287,82 @@ instance Zero VkDescriptorUpdateTemplateCreateInfo where
                                               zero
                                               zero
                                               zero
--- No documentation found for TopLevel "VkDescriptorUpdateTemplateEntry"
+-- | VkDescriptorUpdateTemplateEntry - Describes a single descriptor update
+-- of the descriptor update template
+--
+-- = Members
+--
+-- -   @dstBinding@ is the descriptor binding to update when using this
+--     descriptor update template.
+--
+-- -   @dstArrayElement@ is the starting element in the array belonging to
+--     @dstBinding@. If the descriptor binding identified by @srcBinding@
+--     has a descriptor type of
+--     @VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT@ then @dstArrayElement@
+--     specifies the starting byte offset to update.
+--
+-- -   @descriptorCount@ is the number of descriptors to update. If
+--     @descriptorCount@ is greater than the number of remaining array
+--     elements in the destination binding, those affect consecutive
+--     bindings in a manner similar to
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet' above.
+--     If the descriptor binding identified by @dstBinding@ has a
+--     descriptor type of @VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT@
+--     then @descriptorCount@ specifies the number of bytes to update and
+--     the remaining array elements in the destination binding refer to the
+--     remaining number of bytes in it.
+--
+-- -   @descriptorType@ is a
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType' specifying
+--     the type of the descriptor.
+--
+-- -   @offset@ is the offset in bytes of the first binding in the raw data
+--     structure.
+--
+-- -   @stride@ is the stride in bytes between two consecutive array
+--     elements of the descriptor update informations in the raw data
+--     structure. The actual pointer ptr for each array element j of update
+--     entry i is computed using the following formula:
+--
+--     >     const char *ptr = (const char *)pData + pDescriptorUpdateEntries[i].offset + j * pDescriptorUpdateEntries[i].stride
+--
+--     The stride is useful in case the bindings are stored in structs
+--     along with other data. If @descriptorType@ is
+--     @VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT@ then the value of
+--     @stride@ is ignored and the stride is assumed to be @1@, i.e. the
+--     descriptor update information for them is always specified as a
+--     contiguous range.
+--
+-- == Valid Usage
+--
+-- -   @dstBinding@ /must/ be a valid binding in the descriptor set layout
+--     implicitly specified when using a descriptor update template to
+--     update descriptors.
+--
+-- -   @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
+--     to the number of array elements in the descriptor set binding
+--     implicitly specified when using a descriptor update template to
+--     update descriptors, and all applicable consecutive bindings, as
+--     described by
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive {html_spec_relative}#descriptorsets-updates-consecutive>
+--
+-- -   If @descriptor@ type is
+--     @VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT@, @dstArrayElement@
+--     /must/ be an integer multiple of @4@
+--
+-- -   If @descriptor@ type is
+--     @VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT@, @descriptorCount@
+--     /must/ be an integer multiple of @4@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @descriptorType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType' value
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType',
+-- 'VkDescriptorUpdateTemplateCreateInfo'
 data VkDescriptorUpdateTemplateEntry = VkDescriptorUpdateTemplateEntry
   { -- No documentation found for Nested "VkDescriptorUpdateTemplateEntry" "dstBinding"
   vkDstBinding :: Word32
@@ -228,7 +404,12 @@ instance Zero VkDescriptorUpdateTemplateEntry where
                                          zero
 -- ** VkDescriptorUpdateTemplateType
 
--- No documentation found for TopLevel "VkDescriptorUpdateTemplateType"
+-- | VkDescriptorUpdateTemplateType - Indicates the valid usage of the
+-- descriptor update template
+--
+-- = See Also
+--
+-- 'VkDescriptorUpdateTemplateCreateInfo'
 newtype VkDescriptorUpdateTemplateType = VkDescriptorUpdateTemplateType Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -251,11 +432,61 @@ instance Read VkDescriptorUpdateTemplateType where
                         )
                     )
 
--- No documentation found for Nested "VkDescriptorUpdateTemplateType" "VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET"
+-- | @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET@ specifies that the
+-- descriptor update template will be used for descriptor set updates only.
 pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET :: VkDescriptorUpdateTemplateType
 pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = VkDescriptorUpdateTemplateType 0
 #if defined(EXPOSE_CORE11_COMMANDS)
--- No documentation found for TopLevel "vkCreateDescriptorUpdateTemplate"
+-- | vkCreateDescriptorUpdateTemplate - Create a new descriptor update
+-- template
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that creates the descriptor update
+--     template.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'VkDescriptorUpdateTemplateCreateInfo' structure specifying the set
+--     of descriptors to update with a single call to
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetWithTemplateKHR'
+--     or 'vkUpdateDescriptorSetWithTemplate'.
+--
+-- -   @pAllocator@ controls host memory allocation as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     chapter.
+--
+-- -   @pDescriptorUpdateTemplate@ points to a @VkDescriptorUpdateTemplate@
+--     handle in which the resulting descriptor update template object is
+--     returned.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkDescriptorUpdateTemplateCreateInfo@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pDescriptorUpdateTemplate@ /must/ be a valid pointer to a
+--     @VkDescriptorUpdateTemplate@ handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'VkDescriptorUpdateTemplate', 'VkDescriptorUpdateTemplateCreateInfo',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -266,7 +497,54 @@ foreign import ccall
 type FN_vkCreateDescriptorUpdateTemplate = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorUpdateTemplateCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pDescriptorUpdateTemplate" ::: Ptr VkDescriptorUpdateTemplate) -> IO VkResult
 type PFN_vkCreateDescriptorUpdateTemplate = FunPtr FN_vkCreateDescriptorUpdateTemplate
 #if defined(EXPOSE_CORE11_COMMANDS)
--- No documentation found for TopLevel "vkDestroyDescriptorUpdateTemplate"
+-- | vkDestroyDescriptorUpdateTemplate - Destroy a descriptor update template
+-- object
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that has been used to create the
+--     descriptor update template
+--
+-- -   @descriptorUpdateTemplate@ is the descriptor update template to
+--     destroy.
+--
+-- -   @pAllocator@ controls host memory allocation as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     chapter.
+--
+-- == Valid Usage
+--
+-- -   If @VkAllocationCallbacks@ were provided when @descriptorSetLayout@
+--     was created, a compatible set of callbacks /must/ be provided here
+--
+-- -   If no @VkAllocationCallbacks@ were provided when
+--     @descriptorSetLayout@ was created, @pAllocator@ /must/ be @NULL@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   If @descriptorUpdateTemplate@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @descriptorUpdateTemplate@ /must/ be a valid
+--     @VkDescriptorUpdateTemplate@ handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   If @descriptorUpdateTemplate@ is a valid handle, it /must/ have been
+--     created, allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @descriptorUpdateTemplate@ /must/ be externally
+--     synchronized
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'VkDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -277,7 +555,134 @@ foreign import ccall
 type FN_vkDestroyDescriptorUpdateTemplate = ("device" ::: VkDevice) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroyDescriptorUpdateTemplate = FunPtr FN_vkDestroyDescriptorUpdateTemplate
 #if defined(EXPOSE_CORE11_COMMANDS)
--- No documentation found for TopLevel "vkUpdateDescriptorSetWithTemplate"
+-- | vkUpdateDescriptorSetWithTemplate - Update the contents of a descriptor
+-- set object using an update template
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that updates the descriptor sets.
+--
+-- -   @descriptorSet@ is the descriptor set to update
+--
+-- -   @descriptorUpdateTemplate@ is the 'VkDescriptorUpdateTemplate' which
+--     specifies the update mapping between @pData@ and the descriptor set
+--     to update.
+--
+-- -   @pData@ is a pointer to memory which contains one or more structures
+--     of 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo', or
+--     'Graphics.Vulkan.C.Core10.BufferView.VkBufferView' used to write the
+--     descriptors.
+--
+-- == Valid Usage
+--
+-- -   @pData@ /must/ be a valid pointer to a memory that contains one or
+--     more valid instances of
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo', or
+--     'Graphics.Vulkan.C.Core10.BufferView.VkBufferView' in a layout
+--     defined by @descriptorUpdateTemplate@ when it was created with
+--     'vkCreateDescriptorUpdateTemplate'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @descriptorSet@ /must/ be a valid @VkDescriptorSet@ handle
+--
+-- -   @descriptorUpdateTemplate@ /must/ be a valid
+--     @VkDescriptorUpdateTemplate@ handle
+--
+-- -   @descriptorUpdateTemplate@ /must/ have been created, allocated, or
+--     retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @descriptorSet@ /must/ be externally synchronized
+--
+-- __API example.__
+--
+-- > struct AppBufferView {
+-- >     VkBufferView bufferView;
+-- >     uint32_t     applicationRelatedInformation;
+-- > };
+-- >
+-- > struct AppDataStructure
+-- > {
+-- >     VkDescriptorImageInfo  imageInfo;          // a single image info
+-- >     VkDescriptorBufferInfo bufferInfoArray[3]; // 3 buffer infos in an array
+-- >     AppBufferView          bufferView[2];      // An application defined structure containing a bufferView
+-- >     // ... some more application related data
+-- > };
+-- >
+-- > const VkDescriptorUpdateTemplateEntry descriptorUpdateTemplateEntries[] =
+-- > {
+-- >     // binding to a single image descriptor
+-- >     {
+-- >         0,                                           // binding
+-- >         0,                                           // dstArrayElement
+-- >         1,                                           // descriptorCount
+-- >         VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,   // descriptorType
+-- >         offsetof(AppDataStructure, imageInfo),       // offset
+-- >         0                                            // stride is not required if descriptorCount is 1
+-- >     },
+-- >
+-- >     // binding to an array of buffer descriptors
+-- >     {
+-- >         1,                                           // binding
+-- >         0,                                           // dstArrayElement
+-- >         3,                                           // descriptorCount
+-- >         VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,           // descriptorType
+-- >         offsetof(AppDataStructure, bufferInfoArray), // offset
+-- >         sizeof(VkDescriptorBufferInfo)               // stride, descriptor buffer infos are compact
+-- >     },
+-- >
+-- >     // binding to an array of buffer views
+-- >     {
+-- >         2,                                           // binding
+-- >         0,                                           // dstArrayElement
+-- >         2,                                           // descriptorCount
+-- >         VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER,     // descriptorType
+-- >         offsetof(AppDataStructure, bufferView) +
+-- >           offsetof(AppBufferView, bufferView),       // offset
+-- >         sizeof(AppBufferView)                        // stride, bufferViews do not have to be compact
+-- >     },
+-- > };
+-- >
+-- > // create a descriptor update template for descriptor set updates
+-- > const VkDescriptorUpdateTemplateCreateInfo createInfo =
+-- > {
+-- >     VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,  // sType
+-- >     NULL,                                                      // pNext
+-- >     0,                                                         // flags
+-- >     3,                                                         // descriptorUpdateEntryCount
+-- >     descriptorUpdateTemplateEntries,                           // pDescriptorUpdateEntries
+-- >     VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET,         // templateType
+-- >     myLayout,                                                  // descriptorSetLayout
+-- >     0,                                                         // pipelineBindPoint, ignored by given templateType
+-- >     0,                                                         // pipelineLayout, ignored by given templateType
+-- >     0,                                                         // set, ignored by given templateType
+-- > };
+-- >
+-- > VkDescriptorUpdateTemplate myDescriptorUpdateTemplate;
+-- > myResult = vkCreateDescriptorUpdateTemplate(
+-- >     myDevice,
+-- >     &createInfo,
+-- >     NULL,
+-- >     &myDescriptorUpdateTemplate);
+-- > }
+-- >
+-- >
+-- > AppDataStructure appData;
+-- >
+-- > // fill appData here or cache it in your engine
+-- > vkUpdateDescriptorSetWithTemplate(myDevice, myDescriptorSet, myDescriptorUpdateTemplate, &appData);
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet',
+-- 'VkDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

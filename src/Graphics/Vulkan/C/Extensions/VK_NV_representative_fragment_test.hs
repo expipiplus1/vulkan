@@ -33,13 +33,42 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV"
+-- | VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV - Structure
+-- describing the representative fragment test features that can be
+-- supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- @VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV@ structure
+-- describe the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV@ structure
+-- is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether the feature is supported.
+-- @VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV@ /can/ also be
+-- used in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
+-- feature.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV = VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV
   { -- No documentation found for Nested "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV" "representativeFragmentTest"
+  , -- | @representativeFragmentTest@ indicates whether the implementation
+  -- supports the representative fragment test. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-rep-frag-test Representative Fragment Test>.
   vkRepresentativeFragmentTest :: VkBool32
   }
   deriving (Eq, Show)
@@ -58,13 +87,34 @@ instance Zero VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV where
   zero = VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV zero
                                                               zero
                                                               zero
--- No documentation found for TopLevel "VkPipelineRepresentativeFragmentTestStateCreateInfoNV"
+-- | VkPipelineRepresentativeFragmentTestStateCreateInfoNV - Structure
+-- specifying representative fragment test
+--
+-- = Description
+--
+-- If this structure is not present, @representativeFragmentTestEnable@ is
+-- considered to be @VK_FALSE@, and the representative fragment test is
+-- disabled.
+--
+-- If
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-early-mode early fragment tests>
+-- are not enabled in the active fragment shader, the representative
+-- fragment shader test has no effect, even if enabled.
+--
+-- Unresolved directive in
+-- VkPipelineRepresentativeFragmentTestStateCreateInfoNV.txt -
+-- include::..\/validity\/structs\/VkPipelineRepresentativeFragmentTestStateCreateInfoNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPipelineRepresentativeFragmentTestStateCreateInfoNV = VkPipelineRepresentativeFragmentTestStateCreateInfoNV
-  { -- No documentation found for Nested "VkPipelineRepresentativeFragmentTestStateCreateInfoNV" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineRepresentativeFragmentTestStateCreateInfoNV" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineRepresentativeFragmentTestStateCreateInfoNV" "representativeFragmentTestEnable"
+  , -- | @representativeFragmentTestEnable@ controls whether the representative
+  -- fragment test is enabled.
   vkRepresentativeFragmentTestEnable :: VkBool32
   }
   deriving (Eq, Show)

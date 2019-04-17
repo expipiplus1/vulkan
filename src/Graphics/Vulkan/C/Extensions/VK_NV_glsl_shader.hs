@@ -19,7 +19,9 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for Nested "VkResult" "VK_ERROR_INVALID_SHADER_NV"
+-- | @VK_ERROR_INVALID_SHADER_NV@ One or more shaders failed to compile or
+-- link. More details are reported back to the application via
+-- @{html_spec_relative}#VK_EXT_debug_report@ if enabled.
 pattern VK_ERROR_INVALID_SHADER_NV :: VkResult
 pattern VK_ERROR_INVALID_SHADER_NV = VkResult (-1000012000)
 -- No documentation found for TopLevel "VK_NV_GLSL_SHADER_EXTENSION_NAME"

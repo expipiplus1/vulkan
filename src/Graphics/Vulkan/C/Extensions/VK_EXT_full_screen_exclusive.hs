@@ -114,7 +114,12 @@ type HMONITOR = Ptr ()
   
 -- ** VkFullScreenExclusiveEXT
 
--- No documentation found for TopLevel "VkFullScreenExclusiveEXT"
+-- | VkFullScreenExclusiveEXT - Hint values an application can specify
+-- affecting full-screen transition behavior
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkFullScreenExclusiveEXT = VkFullScreenExclusiveEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -138,26 +143,59 @@ instance Read VkFullScreenExclusiveEXT where
                         )
                     )
 
--- No documentation found for Nested "VkFullScreenExclusiveEXT" "VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT"
+-- | @VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT@ indicates the implementation
+-- /should/ determine the appropriate full-screen method by whatever means
+-- it deems appropriate.
 pattern VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT :: VkFullScreenExclusiveEXT
 pattern VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = VkFullScreenExclusiveEXT 0
 
--- No documentation found for Nested "VkFullScreenExclusiveEXT" "VK_FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT"
+-- | @VK_FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT@ indicates the implementation
+-- /may/ use full-screen exclusive mechanisms when available. Such
+-- mechanisms /may/ result in better performance and\/or the availability
+-- of different presentation capabilities, but /may/ require a more
+-- disruptive transition during swapchain initialization, first
+-- presentation and\/or destruction.
 pattern VK_FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT :: VkFullScreenExclusiveEXT
 pattern VK_FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT = VkFullScreenExclusiveEXT 1
 
--- No documentation found for Nested "VkFullScreenExclusiveEXT" "VK_FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT"
+-- | @VK_FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT@ indicates the implementation
+-- /should/ avoid using full-screen mechanisms which rely on disruptive
+-- transitions.
 pattern VK_FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT :: VkFullScreenExclusiveEXT
 pattern VK_FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT = VkFullScreenExclusiveEXT 2
 
--- No documentation found for Nested "VkFullScreenExclusiveEXT" "VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT"
+-- | @VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT@ indicates the
+-- application will manage full-screen exclusive mode by using the
+-- 'vkAcquireFullScreenExclusiveModeEXT' and
+-- 'vkReleaseFullScreenExclusiveModeEXT' commands.
 pattern VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT :: VkFullScreenExclusiveEXT
 pattern VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT = VkFullScreenExclusiveEXT 3
--- No documentation found for TopLevel "VkSurfaceCapabilitiesFullScreenExclusiveEXT"
+-- | VkSurfaceCapabilitiesFullScreenExclusiveEXT - Structure describing full
+-- screen exclusive capabilities of a surface
+--
+-- = Description
+--
+-- This structure /can/ be included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceCapabilities2KHR'
+-- to determine support for exclusive full-screen access. If
+-- @fullScreenExclusiveSupported@ is @VK_FALSE@, it indicates that
+-- exclusive full-screen access is not obtainable for this surface.
+--
+-- Applications /must/ not attempt to create swapchains with
+-- @VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT@ set if
+-- @fullScreenExclusiveSupported@ is @VK_FALSE@.
+--
+-- Unresolved directive in VkSurfaceCapabilitiesFullScreenExclusiveEXT.txt
+-- -
+-- include::..\/validity\/structs\/VkSurfaceCapabilitiesFullScreenExclusiveEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkSurfaceCapabilitiesFullScreenExclusiveEXT = VkSurfaceCapabilitiesFullScreenExclusiveEXT
-  { -- No documentation found for Nested "VkSurfaceCapabilitiesFullScreenExclusiveEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSurfaceCapabilitiesFullScreenExclusiveEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- No documentation found for Nested "VkSurfaceCapabilitiesFullScreenExclusiveEXT" "fullScreenExclusiveSupported"
   vkFullScreenExclusiveSupported :: VkBool32
@@ -178,13 +216,27 @@ instance Zero VkSurfaceCapabilitiesFullScreenExclusiveEXT where
   zero = VkSurfaceCapabilitiesFullScreenExclusiveEXT zero
                                                      zero
                                                      zero
--- No documentation found for TopLevel "VkSurfaceFullScreenExclusiveInfoEXT"
+-- | VkSurfaceFullScreenExclusiveInfoEXT - Structure specifying the preferred
+-- full-screen transition behavior
+--
+-- = Description
+--
+-- If this structure is not present, @fullScreenExclusive@ is considered to
+-- be @VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT@.
+--
+-- Unresolved directive in VkSurfaceFullScreenExclusiveInfoEXT.txt -
+-- include::..\/validity\/structs\/VkSurfaceFullScreenExclusiveInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkSurfaceFullScreenExclusiveInfoEXT = VkSurfaceFullScreenExclusiveInfoEXT
-  { -- No documentation found for Nested "VkSurfaceFullScreenExclusiveInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSurfaceFullScreenExclusiveInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSurfaceFullScreenExclusiveInfoEXT" "fullScreenExclusive"
+  , -- | @fullScreenExclusive@ is a 'VkFullScreenExclusiveEXT' value specifying
+  -- the preferred full-screen transition behavior.
   vkFullScreenExclusive :: VkFullScreenExclusiveEXT
   }
   deriving (Eq, Show)
@@ -203,13 +255,39 @@ instance Zero VkSurfaceFullScreenExclusiveInfoEXT where
   zero = VkSurfaceFullScreenExclusiveInfoEXT zero
                                              zero
                                              zero
--- No documentation found for TopLevel "VkSurfaceFullScreenExclusiveWin32InfoEXT"
+-- | VkSurfaceFullScreenExclusiveWin32InfoEXT - Structure specifying
+-- additional creation parameters specific to Win32 fullscreen exclusive
+-- mode
+--
+-- = Description
+--
+-- __Note__
+--
+-- If @hmonitor@ is invalidated (e.g. the monitor is unplugged) during the
+-- lifetime of a swapchain created with this structure, operations on that
+-- swapchain will return @VK_ERROR_OUT_OF_DATE_KHR@.
+--
+-- __Note__
+--
+-- It’s the responsibility of the application to change the display
+-- settings of the targeted Win32 display using the appropriate platform
+-- APIs. Such changes /may/ alter the surface capabilities reported for the
+-- created surface.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkSurfaceFullScreenExclusiveWin32InfoEXT.txt -
+-- include::..\/validity\/structs\/VkSurfaceFullScreenExclusiveWin32InfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkSurfaceFullScreenExclusiveWin32InfoEXT = VkSurfaceFullScreenExclusiveWin32InfoEXT
-  { -- No documentation found for Nested "VkSurfaceFullScreenExclusiveWin32InfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSurfaceFullScreenExclusiveWin32InfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSurfaceFullScreenExclusiveWin32InfoEXT" "hmonitor"
+  , -- | @hmonitor@ /must/ be a valid @HMONITOR@
   vkHmonitor :: HMONITOR
   }
   deriving (Eq, Show)
@@ -229,7 +307,39 @@ instance Zero VkSurfaceFullScreenExclusiveWin32InfoEXT where
                                                   zero
                                                   zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkAcquireFullScreenExclusiveModeEXT"
+-- | vkAcquireFullScreenExclusiveModeEXT - Acquire full-screen exclusive mode
+-- for a swapchain
+--
+-- = Parameters
+--
+-- -   @device@ is the device associated with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to acquire exclusive full-screen access
+--     for.
+--
+-- == Valid Usage
+--
+-- A return value of @VK_SUCCESS@ indicates that the @swapchain@
+-- successfully acquired exclusive full-screen access. The swapchain will
+-- retain this exclusivity until either the application releases exclusive
+-- full-screen access with 'vkReleaseFullScreenExclusiveModeEXT', destroys
+-- the swapchain, or if any of the swapchain commands return
+-- @VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT@ indicating that the mode
+-- was lost because of platform-specific changes.
+--
+-- If the swapchain was unable to acquire exclusive full-screen access to
+-- the display then @VK_ERROR_INITIALIZATION_FAILED@ is returned. An
+-- application /can/ attempt to acquire exclusive full-screen access again
+-- for the same swapchain even if this command fails, or if
+-- @VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT@ has been returned by a
+-- swapchain command.
+--
+-- Unresolved directive in vkAcquireFullScreenExclusiveModeEXT.txt -
+-- include::..\/validity\/protos\/vkAcquireFullScreenExclusiveModeEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -240,7 +350,41 @@ foreign import ccall
 type FN_vkAcquireFullScreenExclusiveModeEXT = ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult
 type PFN_vkAcquireFullScreenExclusiveModeEXT = FunPtr FN_vkAcquireFullScreenExclusiveModeEXT
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetPhysicalDeviceSurfacePresentModes2EXT"
+-- | vkGetPhysicalDeviceSurfacePresentModes2EXT - Query supported
+-- presentation modes
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
+--
+-- -   @pSurfaceInfo@ points to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR'
+--     structure, describing the surface and other fixed parameters that
+--     would be consumed by
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
+--
+-- -   @pPresentModeCount@ is a pointer to an integer related to the number
+--     of presentation modes available or queried, as described below.
+--
+-- -   @pPresentModes@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkPresentModeKHR'
+--     values, indicating the supported presentation modes.
+--
+-- = Description
+--
+-- @vkGetPhysicalDeviceSurfacePresentModes2EXT@ behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfacePresentModesKHR',
+-- with the ability to specify extended inputs via chained input
+-- structures.
+--
+-- Unresolved directive in vkGetPhysicalDeviceSurfacePresentModes2EXT.txt -
+-- include::..\/validity\/protos\/vkGetPhysicalDeviceSurfacePresentModes2EXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -251,7 +395,30 @@ foreign import ccall
 type FN_vkGetPhysicalDeviceSurfacePresentModes2EXT = ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfacePresentModes2EXT = FunPtr FN_vkGetPhysicalDeviceSurfacePresentModes2EXT
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkReleaseFullScreenExclusiveModeEXT"
+-- | vkReleaseFullScreenExclusiveModeEXT - Release full-screen exclusive mode
+-- from a swapchain
+--
+-- = Parameters
+--
+-- -   @device@ is the device associated with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to release exclusive full-screen access
+--     from.
+--
+-- = Description
+--
+-- __Note__
+--
+-- Applications will not be able to present to @swapchain@ after this call
+-- until exclusive full-screen access is reacquired. This is usually useful
+-- to handle when an application is minimised or otherwise intends to stop
+-- presenting for a time.
+--
+-- == Valid Usage
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -261,7 +428,11 @@ foreign import ccall
 #endif
 type FN_vkReleaseFullScreenExclusiveModeEXT = ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult
 type PFN_vkReleaseFullScreenExclusiveModeEXT = FunPtr FN_vkReleaseFullScreenExclusiveModeEXT
--- No documentation found for Nested "VkResult" "VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"
+-- | @VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT@ An operation on a
+-- swapchain created with
+-- @VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT@ failed as it did
+-- not have exlusive full-screen access. This /may/ occur due to
+-- implementation-dependent reasons, outside of the application’s control.
 pattern VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT :: VkResult
 pattern VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = VkResult (-1000255000)
 -- No documentation found for TopLevel "VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME"

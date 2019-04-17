@@ -85,7 +85,11 @@ import Graphics.Vulkan.NamedType
 
 -- ** VkDiscardRectangleModeEXT
 
--- No documentation found for TopLevel "VkDiscardRectangleModeEXT"
+-- | VkDiscardRectangleModeEXT - Specify the discard rectangle mode
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkDiscardRectangleModeEXT = VkDiscardRectangleModeEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -105,20 +109,43 @@ instance Read VkDiscardRectangleModeEXT where
                         )
                     )
 
--- No documentation found for Nested "VkDiscardRectangleModeEXT" "VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT"
+-- | @VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT@ specifies that a fragment
+-- within any discard rectangle satisfies the test.
 pattern VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT :: VkDiscardRectangleModeEXT
 pattern VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT = VkDiscardRectangleModeEXT 0
 
--- No documentation found for Nested "VkDiscardRectangleModeEXT" "VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT"
+-- | @VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT@ specifies that a fragment not
+-- within any of the discard rectangles satisfies the test.
 pattern VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT :: VkDiscardRectangleModeEXT
 pattern VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = VkDiscardRectangleModeEXT 1
--- No documentation found for TopLevel "VkPhysicalDeviceDiscardRectanglePropertiesEXT"
+-- | VkPhysicalDeviceDiscardRectanglePropertiesEXT - Structure describing
+-- discard rectangle limits that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceDiscardRectanglePropertiesEXT@
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceDiscardRectanglePropertiesEXT@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceDiscardRectanglePropertiesEXT = VkPhysicalDeviceDiscardRectanglePropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceDiscardRectanglePropertiesEXT" "maxDiscardRectangles"
+  , -- | @maxDiscardRectangles@ is the maximum number of active discard
+  -- rectangles that /can/ be specified.
   vkMaxDiscardRectangles :: Word32
   }
   deriving (Eq, Show)
@@ -139,7 +166,16 @@ instance Zero VkPhysicalDeviceDiscardRectanglePropertiesEXT where
                                                        zero
 -- ** VkPipelineDiscardRectangleStateCreateFlagsEXT
 
--- No documentation found for TopLevel "VkPipelineDiscardRectangleStateCreateFlagsEXT"
+-- | VkPipelineDiscardRectangleStateCreateFlagsEXT - Reserved for future use
+--
+-- = Description
+--
+-- @VkPipelineDiscardRectangleStateCreateFlagsEXT@ is a bitmask type for
+-- setting a mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkPipelineDiscardRectangleStateCreateFlagsEXT = VkPipelineDiscardRectangleStateCreateFlagsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -158,19 +194,33 @@ instance Read VkPipelineDiscardRectangleStateCreateFlagsEXT where
                     )
 
 
--- No documentation found for TopLevel "VkPipelineDiscardRectangleStateCreateInfoEXT"
+-- | VkPipelineDiscardRectangleStateCreateInfoEXT - Structure specifying
+-- discard rectangle
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPipelineDiscardRectangleStateCreateInfoEXT = VkPipelineDiscardRectangleStateCreateInfoEXT
-  { -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "flags"
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkPipelineDiscardRectangleStateCreateFlagsEXT
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "discardRectangleMode"
+  , -- | @discardRectangleMode@ /must/ be a valid 'VkDiscardRectangleModeEXT'
+  -- value
   vkDiscardRectangleMode :: VkDiscardRectangleModeEXT
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "discardRectangleCount"
+  , -- | @discardRectangleCount@ /must/ be between @0@ and
+  -- @VkPhysicalDeviceDiscardRectanglePropertiesEXT@::@maxDiscardRectangles@,
+  -- inclusive
   vkDiscardRectangleCount :: Word32
-  , -- No documentation found for Nested "VkPipelineDiscardRectangleStateCreateInfoEXT" "pDiscardRectangles"
+  , -- | @pDiscardRectangles@ is a pointer to an array of
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures, defining the
+  -- discard rectangles. If the discard rectangle state is dynamic, this
+  -- member is ignored.
   vkPDiscardRectangles :: Ptr VkRect2D
   }
   deriving (Eq, Show)
@@ -199,7 +249,96 @@ instance Zero VkPipelineDiscardRectangleStateCreateInfoEXT where
                                                       zero
                                                       zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCmdSetDiscardRectangleEXT"
+-- | vkCmdSetDiscardRectangleEXT - Set discard rectangles dynamically
+--
+-- = Parameters
+--
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
+--
+-- -   @firstDiscardRectangle@ is the index of the first discard rectangle
+--     whose state is updated by the command.
+--
+-- -   @discardRectangleCount@ is the number of discard rectangles whose
+--     state are updated by the command.
+--
+-- -   @pDiscardRectangles@ is a pointer to an array of
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures specifying
+--     discard rectangles.
+--
+-- = Description
+--
+-- The discard rectangle taken from element i of @pDiscardRectangles@
+-- replace the current state for the discard rectangle index
+-- @firstDiscardRectangle@ + i, for i in [0, @discardRectangleCount@).
+--
+-- == Valid Usage
+--
+-- -   The bound graphics pipeline /must/ have been created with the
+--     @VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT@ dynamic state enabled
+--
+-- -   The sum of @firstDiscardRectangle@ and @discardRectangleCount@
+--     /must/ be less than or equal to
+--     'VkPhysicalDeviceDiscardRectanglePropertiesEXT'::@maxDiscardRectangles@
+--
+-- -   The @x@ and @y@ member of @offset@ in each
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' element of
+--     @pDiscardRectangles@ /must/ be greater than or equal to @0@
+--
+-- -   Evaluation of (@offset.x@ + @extent.width@) in each
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' element of
+--     @pDiscardRectangles@ /must/ not cause a signed integer addition
+--     overflow
+--
+-- -   Evaluation of (@offset.y@ + @extent.height@) in each
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' element of
+--     @pDiscardRectangles@ /must/ not cause a signed integer addition
+--     overflow
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
+--
+-- -   @pDiscardRectangles@ /must/ be a valid pointer to an array of
+--     @discardRectangleCount@ @VkRect2D@ structures
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
+--     support graphics operations
+--
+-- -   @discardRectangleCount@ /must/ be greater than @0@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
+--     allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -209,7 +348,14 @@ foreign import ccall
 #endif
 type FN_vkCmdSetDiscardRectangleEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr VkRect2D) -> IO ()
 type PFN_vkCmdSetDiscardRectangleEXT = FunPtr FN_vkCmdSetDiscardRectangleEXT
--- No documentation found for Nested "VkDynamicState" "VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT"
+-- | @VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT@ specifies that the
+-- @pDiscardRectangles@ state in
+-- 'VkPipelineDiscardRectangleStateCreateInfoEXT' will be ignored and
+-- /must/ be set dynamically with 'vkCmdSetDiscardRectangleEXT' before any
+-- draw or clear commands. The 'VkDiscardRectangleModeEXT' and the number
+-- of active discard rectangles is still specified by the
+-- @discardRectangleMode@ and @discardRectangleCount@ members of
+-- @VkPipelineDiscardRectangleStateCreateInfoEXT@.
 pattern VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT :: VkDynamicState
 pattern VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT = VkDynamicState 1000099000
 -- No documentation found for TopLevel "VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME"

@@ -79,13 +79,25 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkDisplayModeProperties2KHR"
+-- | VkDisplayModeProperties2KHR - Structure describing an available display
+-- mode
+--
+-- = Description
+--
+-- Unresolved directive in VkDisplayModeProperties2KHR.txt -
+-- include::..\/validity\/structs\/VkDisplayModeProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkDisplayModeProperties2KHR = VkDisplayModeProperties2KHR
-  { -- No documentation found for Nested "VkDisplayModeProperties2KHR" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDisplayModeProperties2KHR" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDisplayModeProperties2KHR" "displayModeProperties"
+  , -- | @displayModeProperties@ is an instance of the
+  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayModePropertiesKHR'
+  -- structure.
   vkDisplayModeProperties :: VkDisplayModePropertiesKHR
   }
   deriving (Eq, Show)
@@ -104,13 +116,25 @@ instance Zero VkDisplayModeProperties2KHR where
   zero = VkDisplayModeProperties2KHR zero
                                      zero
                                      zero
--- No documentation found for TopLevel "VkDisplayPlaneCapabilities2KHR"
+-- | VkDisplayPlaneCapabilities2KHR - Structure describing the capabilities
+-- of a mode and plane combination
+--
+-- = Description
+--
+-- Unresolved directive in VkDisplayPlaneCapabilities2KHR.txt -
+-- include::..\/validity\/structs\/VkDisplayPlaneCapabilities2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkDisplayPlaneCapabilities2KHR = VkDisplayPlaneCapabilities2KHR
-  { -- No documentation found for Nested "VkDisplayPlaneCapabilities2KHR" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDisplayPlaneCapabilities2KHR" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDisplayPlaneCapabilities2KHR" "capabilities"
+  , -- | @capabilities@ is an instance of the
+  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPlaneCapabilitiesKHR'
+  -- structure.
   vkCapabilities :: VkDisplayPlaneCapabilitiesKHR
   }
   deriving (Eq, Show)
@@ -129,15 +153,35 @@ instance Zero VkDisplayPlaneCapabilities2KHR where
   zero = VkDisplayPlaneCapabilities2KHR zero
                                         zero
                                         zero
--- No documentation found for TopLevel "VkDisplayPlaneInfo2KHR"
+-- | VkDisplayPlaneInfo2KHR - Structure defining the intended configuration
+-- of a display plane
+--
+-- = Description
+--
+-- __Note__
+--
+-- This parameter also implicitly specifies a display.
+--
+-- The members of @VkDisplayPlaneInfo2KHR@ correspond to the arguments to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneCapabilitiesKHR',
+-- with @sType@ and @pNext@ added for extensibility.
+--
+-- Unresolved directive in VkDisplayPlaneInfo2KHR.txt -
+-- include::..\/validity\/structs\/VkDisplayPlaneInfo2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkDisplayPlaneInfo2KHR = VkDisplayPlaneInfo2KHR
-  { -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "mode"
+  , -- | @mode@ is the display mode the application intends to program when using
+  -- the specified plane.
   vkMode :: VkDisplayModeKHR
-  , -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "planeIndex"
+  , -- | @planeIndex@ is the plane which the application intends to use with the
+  -- display.
   vkPlaneIndex :: Word32
   }
   deriving (Eq, Show)
@@ -159,13 +203,25 @@ instance Zero VkDisplayPlaneInfo2KHR where
                                 zero
                                 zero
                                 zero
--- No documentation found for TopLevel "VkDisplayPlaneProperties2KHR"
+-- | VkDisplayPlaneProperties2KHR - Structure describing an available display
+-- plane
+--
+-- = Description
+--
+-- Unresolved directive in VkDisplayPlaneProperties2KHR.txt -
+-- include::..\/validity\/structs\/VkDisplayPlaneProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkDisplayPlaneProperties2KHR = VkDisplayPlaneProperties2KHR
-  { -- No documentation found for Nested "VkDisplayPlaneProperties2KHR" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDisplayPlaneProperties2KHR" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDisplayPlaneProperties2KHR" "displayPlaneProperties"
+  , -- | @displayPlaneProperties@ is an instance of the
+  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPlanePropertiesKHR'
+  -- structure.
   vkDisplayPlaneProperties :: VkDisplayPlanePropertiesKHR
   }
   deriving (Eq, Show)
@@ -184,13 +240,25 @@ instance Zero VkDisplayPlaneProperties2KHR where
   zero = VkDisplayPlaneProperties2KHR zero
                                       zero
                                       zero
--- No documentation found for TopLevel "VkDisplayProperties2KHR"
+-- | VkDisplayProperties2KHR - Structure describing an available display
+-- device
+--
+-- = Description
+--
+-- Unresolved directive in VkDisplayProperties2KHR.txt -
+-- include::..\/validity\/structs\/VkDisplayProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkDisplayProperties2KHR = VkDisplayProperties2KHR
-  { -- No documentation found for Nested "VkDisplayProperties2KHR" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkDisplayProperties2KHR" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkDisplayProperties2KHR" "displayProperties"
+  , -- | @displayProperties@ is an instance of the
+  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPropertiesKHR'
+  -- structure.
   vkDisplayProperties :: VkDisplayPropertiesKHR
   }
   deriving (Eq, Show)
@@ -210,7 +278,34 @@ instance Zero VkDisplayProperties2KHR where
                                  zero
                                  zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetDisplayModeProperties2KHR"
+-- | vkGetDisplayModeProperties2KHR - Query information about the available
+-- display modes.
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device associated with @display@.
+--
+-- -   @display@ is the display to query.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     display modes available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     @VkDisplayModeProperties2KHR@ structures.
+--
+-- = Description
+--
+-- @vkGetDisplayModeProperties2KHR@ behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayModePropertiesKHR',
+-- with the ability to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in vkGetDisplayModeProperties2KHR.txt -
+-- include::..\/validity\/protos\/vkGetDisplayModeProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -221,7 +316,34 @@ foreign import ccall
 type FN_vkGetDisplayModeProperties2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult
 type PFN_vkGetDisplayModeProperties2KHR = FunPtr FN_vkGetDisplayModeProperties2KHR
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetDisplayPlaneCapabilities2KHR"
+-- | vkGetDisplayPlaneCapabilities2KHR - Query capabilities of a mode and
+-- plane combination
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device associated with
+--     @pDisplayPlaneInfo@.
+--
+-- -   @pDisplayPlaneInfo@ is a pointer to an instance of the
+--     'VkDisplayPlaneInfo2KHR' structure describing the plane and mode.
+--
+-- -   @pCapabilities@ is a pointer to a 'VkDisplayPlaneCapabilities2KHR'
+--     structure in which the capabilities are returned.
+--
+-- = Description
+--
+-- @vkGetDisplayPlaneCapabilities2KHR@ behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneCapabilitiesKHR',
+-- with the ability to specify extended inputs via chained input
+-- structures, and to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in vkGetDisplayPlaneCapabilities2KHR.txt -
+-- include::..\/validity\/protos\/vkGetDisplayPlaneCapabilities2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -232,7 +354,33 @@ foreign import ccall
 type FN_vkGetDisplayPlaneCapabilities2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult
 type PFN_vkGetDisplayPlaneCapabilities2KHR = FunPtr FN_vkGetDisplayPlaneCapabilities2KHR
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetPhysicalDeviceDisplayPlaneProperties2KHR"
+-- | vkGetPhysicalDeviceDisplayPlaneProperties2KHR - Query information about
+-- the available display planes.
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is a physical device.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     display planes available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     @VkDisplayPlaneProperties2KHR@ structures.
+--
+-- = Description
+--
+-- @vkGetPhysicalDeviceDisplayPlaneProperties2KHR@ behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPlanePropertiesKHR',
+-- with the ability to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in
+-- vkGetPhysicalDeviceDisplayPlaneProperties2KHR.txt -
+-- include::..\/validity\/protos\/vkGetPhysicalDeviceDisplayPlaneProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -243,7 +391,32 @@ foreign import ccall
 type FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR = FunPtr FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetPhysicalDeviceDisplayProperties2KHR"
+-- | vkGetPhysicalDeviceDisplayProperties2KHR - Query information about the
+-- available displays
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is a physical device.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     display devices available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     @VkDisplayProperties2KHR@ structures.
+--
+-- = Description
+--
+-- @vkGetPhysicalDeviceDisplayProperties2KHR@ behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPropertiesKHR',
+-- with the ability to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in vkGetPhysicalDeviceDisplayProperties2KHR.txt -
+-- include::..\/validity\/protos\/vkGetPhysicalDeviceDisplayProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

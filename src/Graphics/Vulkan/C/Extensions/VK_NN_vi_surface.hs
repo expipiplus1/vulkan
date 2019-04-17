@@ -93,15 +93,22 @@ instance Read VkViSurfaceCreateFlagsNN where
                     )
 
 
--- No documentation found for TopLevel "VkViSurfaceCreateInfoNN"
+-- | VkViSurfaceCreateInfoNN - Structure specifying parameters of a newly
+-- created VI surface object
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkViSurfaceCreateInfoNN = VkViSurfaceCreateInfoNN
-  { -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "flags"
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkViSurfaceCreateFlagsNN
-  , -- No documentation found for Nested "VkViSurfaceCreateInfoNN" "window"
+  , -- | @window@ /must/ be a valid @nn@::@vi@::@NativeWindowHandle@
   vkWindow :: Ptr ()
   }
   deriving (Eq, Show)
@@ -124,7 +131,70 @@ instance Zero VkViSurfaceCreateInfoNN where
                                  zero
                                  zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCreateViSurfaceNN"
+-- | vkCreateViSurfaceNN - Create a
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
+-- VI layer
+--
+-- = Parameters
+--
+-- -   @instance@ is the instance with which to associate the surface.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     @VkViSurfaceCreateInfoNN@ structure containing parameters affecting
+--     the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
+--     which the created surface object is returned.
+--
+-- = Description
+--
+-- During the lifetime of a surface created using a particular
+-- @nn@::@vi@::@NativeWindowHandle@, applications /must/ not attempt to
+-- create another surface for the same @nn@::@vi@::@Layer@ or attempt to
+-- connect to the same @nn@::@vi@::@Layer@ through other platform
+-- mechanisms.
+--
+-- If the native window is created with a specified size, @currentExtent@
+-- will reflect that size. In this case, applications should use the same
+-- size for the swapchain’s @imageExtent@. Otherwise, the @currentExtent@
+-- will have the special value (0xFFFFFFFF, 0xFFFFFFFF), indicating that
+-- applications are expected to choose an appropriate size for the
+-- swapchain’s @imageExtent@ (e.g., by matching the result of a call to
+-- @nn@::@vi@::@GetDisplayResolution@).
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid @VkInstance@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkViSurfaceCreateInfoNN@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+--     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

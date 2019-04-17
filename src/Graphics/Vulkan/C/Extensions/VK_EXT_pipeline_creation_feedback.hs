@@ -62,17 +62,80 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPipelineCreationFeedbackCreateInfoEXT"
+-- | VkPipelineCreationFeedbackCreateInfoEXT - Request for feedback about the
+-- creation of a pipeline
+--
+-- = Description
+--
+-- An implementation /should/ write pipeline creation feedback to
+-- @pPipelineCreationFeedback@ and /may/ write pipeline stage creation
+-- feedback to @pPipelineStageCreationFeedbacks@. An implementation /must/
+-- set or clear the @VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT@ in
+-- 'VkPipelineCreationFeedbackEXT'::@flags@ for @pPipelineCreationFeedback@
+-- and every element of @pPipelineStageCreationFeedbacks@.
+--
+-- __Note__
+--
+-- One common scenario for an implementation to skip per-stage feedback is
+-- when
+-- @VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT@
+-- is set in @pPipelineCreationFeedback@.
+--
+-- When chained to
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'
+-- or 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo', the
+-- @i@ element of @pPipelineStageCreationFeedbacks@ corresponds to the @i@
+-- element of
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'::@pStages@
+-- or
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'::@pStages@.
+-- When chained to
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkComputePipelineCreateInfo', the
+-- first element of @pPipelineStageCreationFeedbacks@ corresponds to
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkComputePipelineCreateInfo'::@stage@.
+--
+-- == Valid Usage
+--
+-- -   When chained to
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo',
+--     'VkPipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
+--     /must/ equal
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'::@stageCount@
+--
+-- -   When chained to
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkComputePipelineCreateInfo',
+--     'VkPipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
+--     /must/ equal 1
+--
+-- -   When chained to
+--     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
+--     'VkPipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
+--     /must/ equal
+--     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'::@stageCount@
+--
+-- Unresolved directive in VkPipelineCreationFeedbackCreateInfoEXT.txt -
+-- include::..\/validity\/structs\/VkPipelineCreationFeedbackCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkComputePipelineCreateInfo',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo',
+-- UNKNOWN:VkPipelineCreationFeedbackEXT,
+-- UNKNOWN:VkRayTracingPipelineCreateInfoNV
 data VkPipelineCreationFeedbackCreateInfoEXT = VkPipelineCreationFeedbackCreateInfoEXT
-  { -- No documentation found for Nested "VkPipelineCreationFeedbackCreateInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPipelineCreationFeedbackCreateInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPipelineCreationFeedbackCreateInfoEXT" "pPipelineCreationFeedback"
+  , -- | @pPipelineCreationFeedback@ is a pointer to a
+  -- 'VkPipelineCreationFeedbackEXT' structure.
   vkPPipelineCreationFeedback :: Ptr VkPipelineCreationFeedbackEXT
-  , -- No documentation found for Nested "VkPipelineCreationFeedbackCreateInfoEXT" "pipelineStageCreationFeedbackCount"
+  , -- | @pipelineStageCreationFeedbackCount@ is the number of elements in
+  -- @pPipelineStageCreationFeedbacks@.
   vkPipelineStageCreationFeedbackCount :: Word32
-  , -- No documentation found for Nested "VkPipelineCreationFeedbackCreateInfoEXT" "pPipelineStageCreationFeedbacks"
+  , -- | @pPipelineStageCreationFeedbacks@ is an array of size
+  -- @pipelineStageCreationFeedbackCount@ of 'VkPipelineCreationFeedbackEXT'
+  -- structures.
   vkPPipelineStageCreationFeedbacks :: Ptr VkPipelineCreationFeedbackEXT
   }
   deriving (Eq, Show)
@@ -97,11 +160,29 @@ instance Zero VkPipelineCreationFeedbackCreateInfoEXT where
                                                  zero
                                                  zero
                                                  zero
--- No documentation found for TopLevel "VkPipelineCreationFeedbackEXT"
+-- | VkPipelineCreationFeedbackEXT - Feedback about the creation of a
+-- pipeline or pipeline stage
+--
+-- = Description
+--
+-- If the @VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT@ is not set in
+-- @flags@, an implementation /must/ not set any other bits in @flags@, and
+-- all other @VkPipelineCreationFeedbackEXT@ data members are undefined.
+--
+-- Unresolved directive in VkPipelineCreationFeedbackEXT.txt -
+-- include::..\/validity\/structs\/VkPipelineCreationFeedbackEXT.txt[]
+--
+-- = See Also
+--
+-- UNKNOWN:VkPipelineCreationFeedbackCreateInfoEXT,
+-- UNKNOWN:VkPipelineCreationFeedbackFlagBitsEXT
 data VkPipelineCreationFeedbackEXT = VkPipelineCreationFeedbackEXT
-  { -- No documentation found for Nested "VkPipelineCreationFeedbackEXT" "flags"
+  { -- | @flags@ is a bitmask of 'VkPipelineCreationFeedbackFlagBitsEXT'
+  -- providing feedback about the creation of a pipeline or of a pipeline
+  -- stage.
   vkFlags :: VkPipelineCreationFeedbackFlagsEXT
-  , -- No documentation found for Nested "VkPipelineCreationFeedbackEXT" "duration"
+  , -- | @duration@ is the duration spent creating a pipeline or pipeline stage
+  -- in nanoseconds.
   vkDuration :: Word64
   }
   deriving (Eq, Show)
@@ -119,7 +200,61 @@ instance Zero VkPipelineCreationFeedbackEXT where
                                        zero
 -- ** VkPipelineCreationFeedbackFlagBitsEXT
 
--- No documentation found for TopLevel "VkPipelineCreationFeedbackFlagBitsEXT"
+-- | VkPipelineCreationFeedbackFlagBitsEXT - Bitmask specifying pipeline or
+-- pipeline stage creation feedback
+--
+-- = Description
+--
+-- -   @VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT@ indicates that the
+--     feedback information is valid.
+--
+-- -   @VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT@
+--     indicates that a readily usable pipeline or pipeline stage was found
+--     in the @pipelineCache@ specified by the application in the pipeline
+--     creation command.
+--
+--     An implementation /should/ set the
+--     @VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT@
+--     bit if it was able to avoid the large majority of pipeline or
+--     pipeline stage creation work by using the @pipelineCache@ parameter
+--     of 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
+--     or 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines'.
+--     When an implementation sets this bit for the entire pipeline, it
+--     /may/ leave it unset for any stage.
+--
+--     __Note__
+--
+--     Implementations are encouraged to provide a meaningful signal to
+--     applications using this bit. The intention is to communicate to the
+--     application that the pipeline or pipeline stage was created \"as
+--     fast as it gets\" using the pipeline cache provided by the
+--     application. If an implementation uses an internal cache, it is
+--     discouraged from setting this bit as the feedback would be
+--     unactionable.
+--
+-- -   @VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT@
+--     indicates that the base pipeline specified by the
+--     @basePipelineHandle@ or @basePipelineIndex@ member of the
+--     @Vk*PipelineCreateInfo@ structure was used to accelerate the
+--     creation of the pipeline.
+--
+--     An implementation /should/ set the
+--     @VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT@
+--     bit if it was able to avoid a significant amount of work by using
+--     the base pipeline.
+--
+--     __Note__
+--
+--     While \"significant amount of work\" is subjective, implementations
+--     are encouraged to provide a meaningful signal to applications using
+--     this bit. For example, a 1% reduction in duration may not warrant
+--     setting this bit, while a 50% reduction would.
+--
+-- = See Also
+--
+-- UNKNOWN:VkPipelineCreationFeedbackCreateInfoEXT,
+-- UNKNOWN:VkPipelineCreationFeedbackEXT
 newtype VkPipelineCreationFeedbackFlagBitsEXT = VkPipelineCreationFeedbackFlagBitsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -152,7 +287,18 @@ pattern VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT = V
 -- No documentation found for Nested "VkPipelineCreationFeedbackFlagBitsEXT" "VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT"
 pattern VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT :: VkPipelineCreationFeedbackFlagBitsEXT
 pattern VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT = VkPipelineCreationFeedbackFlagBitsEXT 0x00000004
--- No documentation found for TopLevel "VkPipelineCreationFeedbackFlagsEXT"
+-- | VkPipelineCreationFeedbackFlagsEXT - Bitmask of
+-- VkPipelineCreationFeedbackFlagBitsEXT
+--
+-- = Description
+--
+-- @VkPipelineCreationFeedbackFlagsEXT@ is a bitmask type for providing
+-- zero or more 'VkPipelineCreationFeedbackFlagBitsEXT'.
+--
+-- = See Also
+--
+-- UNKNOWN:VkPipelineCreationFeedbackEXT,
+-- UNKNOWN:VkPipelineCreationFeedbackFlagBitsEXT
 type VkPipelineCreationFeedbackFlagsEXT = VkPipelineCreationFeedbackFlagBitsEXT
 -- No documentation found for TopLevel "VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME"
 pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME :: (Eq a ,IsString a) => a

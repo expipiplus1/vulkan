@@ -61,15 +61,26 @@ type VK_MAX_DESCRIPTION_SIZE = 256
 -- No documentation found for Nested "Integral a => a" "VK_MAX_DESCRIPTION_SIZE"
 pattern VK_MAX_DESCRIPTION_SIZE :: Integral a => a
 pattern VK_MAX_DESCRIPTION_SIZE = 256
--- No documentation found for TopLevel "VkLayerProperties"
+-- | VkLayerProperties - Structure specifying layer properties
+--
+-- = See Also
+--
+-- 'vkEnumerateDeviceLayerProperties', 'vkEnumerateInstanceLayerProperties'
 data VkLayerProperties = VkLayerProperties
-  { -- No documentation found for Nested "VkLayerProperties" "layerName"
+  { -- | @layerName@ is a null-terminated UTF-8 string specifying the name of the
+  -- layer. Use this name in the @ppEnabledLayerNames@ array passed in the
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstanceCreateInfo'
+  -- structure to enable this layer for an instance.
   vkLayerName :: Vector VK_MAX_EXTENSION_NAME_SIZE CChar
-  , -- No documentation found for Nested "VkLayerProperties" "specVersion"
+  , -- | @specVersion@ is the Vulkan version the layer was written to, encoded as
+  -- described in
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers {html_spec_relative}#extendingvulkan-coreversions-versionnumbers>.
   vkSpecVersion :: Word32
-  , -- No documentation found for Nested "VkLayerProperties" "implementationVersion"
+  , -- | @implementationVersion@ is the version of this layer. It is an integer,
+  -- increasing with backward compatible changes.
   vkImplementationVersion :: Word32
-  , -- No documentation found for Nested "VkLayerProperties" "description"
+  , -- | @description@ is a null-terminated UTF-8 string providing additional
+  -- details that /can/ be used by the application to identify the layer.
   vkDescription :: Vector VK_MAX_DESCRIPTION_SIZE CChar
   }
   deriving (Eq, Show)
@@ -92,7 +103,62 @@ instance Zero VkLayerProperties where
                            zero
                            zero
 #if defined(EXPOSE_CORE10_COMMANDS)
--- No documentation found for TopLevel "vkEnumerateDeviceLayerProperties"
+-- | vkEnumerateDeviceLayerProperties - Returns properties of available
+-- physical device layers
+--
+-- = Parameters
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     layer properties available or queried.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'VkLayerProperties' structures.
+--
+-- = Description
+--
+-- If @pProperties@ is @NULL@, then the number of layer properties
+-- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
+-- /must/ point to a variable set by the user to the number of elements in
+-- the @pProperties@ array, and on return the variable is overwritten with
+-- the number of structures actually written to @pProperties@. If
+-- @pPropertyCount@ is less than the number of layer properties available,
+-- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
+-- is smaller than the number of layers available, @VK_INCOMPLETE@ will be
+-- returned instead of @VK_SUCCESS@, to indicate that not all the available
+-- layer properties were returned.
+--
+-- The list of layers enumerated by @vkEnumerateDeviceLayerProperties@
+-- /must/ be exactly the sequence of layers enabled for the instance. The
+-- members of @VkLayerProperties@ for each enumerated layer /must/ be the
+-- same as the properties when the layer was enumerated by
+-- @vkEnumerateInstanceLayerProperties@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ @VkLayerProperties@ structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+--     -   @VK_INCOMPLETE@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+-- = See Also
+--
+-- 'VkLayerProperties',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -103,7 +169,62 @@ foreign import ccall
 type FN_vkEnumerateDeviceLayerProperties = ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkLayerProperties) -> IO VkResult
 type PFN_vkEnumerateDeviceLayerProperties = FunPtr FN_vkEnumerateDeviceLayerProperties
 #if defined(EXPOSE_CORE10_COMMANDS)
--- No documentation found for TopLevel "vkEnumerateInstanceLayerProperties"
+-- | vkEnumerateInstanceLayerProperties - Returns up to requested number of
+-- global layer properties
+--
+-- = Parameters
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     layer properties available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'VkLayerProperties' structures.
+--
+-- = Description
+--
+-- If @pProperties@ is @NULL@, then the number of layer properties
+-- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
+-- /must/ point to a variable set by the user to the number of elements in
+-- the @pProperties@ array, and on return the variable is overwritten with
+-- the number of structures actually written to @pProperties@. If
+-- @pPropertyCount@ is less than the number of layer properties available,
+-- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
+-- is smaller than the number of layers available, @VK_INCOMPLETE@ will be
+-- returned instead of @VK_SUCCESS@, to indicate that not all the available
+-- layer properties were returned.
+--
+-- The list of available layers may change at any time due to actions
+-- outside of the Vulkan implementation, so two calls to
+-- @vkEnumerateInstanceLayerProperties@ with the same parameters /may/
+-- return different results, or retrieve different @pPropertyCount@ values
+-- or @pProperties@ contents. Once an instance has been created, the layers
+-- enabled for that instance will continue to be enabled and valid for the
+-- lifetime of that instance, even if some of them become unavailable for
+-- future instances.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ @VkLayerProperties@ structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+--     -   @VK_INCOMPLETE@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+-- = See Also
+--
+-- 'VkLayerProperties'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

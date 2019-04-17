@@ -95,13 +95,39 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkCommandBufferInheritanceConditionalRenderingInfoEXT"
+-- | VkCommandBufferInheritanceConditionalRenderingInfoEXT - Structure
+-- specifying command buffer inheritance info
+--
+-- = Description
+--
+-- If this structure is not present, the behavior is as if
+-- @conditionalRenderingEnable@ is @VK_FALSE@.
+--
+-- == Valid Usage
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-inheritedConditionalRendering inherited conditional rendering>
+--     feature is not enabled, @conditionalRenderingEnable@ /must/ be
+--     @VK_FALSE@
+--
+-- Unresolved directive in
+-- VkCommandBufferInheritanceConditionalRenderingInfoEXT.txt -
+-- include::..\/validity\/structs\/VkCommandBufferInheritanceConditionalRenderingInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkCommandBufferInheritanceConditionalRenderingInfoEXT = VkCommandBufferInheritanceConditionalRenderingInfoEXT
-  { -- No documentation found for Nested "VkCommandBufferInheritanceConditionalRenderingInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCommandBufferInheritanceConditionalRenderingInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCommandBufferInheritanceConditionalRenderingInfoEXT" "conditionalRenderingEnable"
+  , -- | @conditionalRenderingEnable@ specifies whether the command buffer /can/
+  -- be executed while conditional rendering is active in the primary command
+  -- buffer. If this is @VK_TRUE@, then this command buffer /can/ be executed
+  -- whether the primary command buffer has active conditional rendering or
+  -- not. If this is @VK_FALSE@, then the primary command buffer /must/ not
+  -- have conditional rendering active.
   vkConditionalRenderingEnable :: VkBool32
   }
   deriving (Eq, Show)
@@ -120,17 +146,50 @@ instance Zero VkCommandBufferInheritanceConditionalRenderingInfoEXT where
   zero = VkCommandBufferInheritanceConditionalRenderingInfoEXT zero
                                                                zero
                                                                zero
--- No documentation found for TopLevel "VkConditionalRenderingBeginInfoEXT"
+-- | VkConditionalRenderingBeginInfoEXT - Structure specifying conditional
+-- rendering begin info
+--
+-- = Description
+--
+-- If the 32-bit value at @offset@ in @buffer@ memory is zero, then the
+-- rendering commands are discarded, otherwise they are executed as normal.
+-- If the value of the predicate in buffer memory changes while conditional
+-- rendering is active, the rendering commands /may/ be discarded in an
+-- implementation-dependent way. Some implementations may latch the value
+-- of the predicate upon beginning conditional rendering while others may
+-- read it before every rendering command.
+--
+-- == Valid Usage
+--
+-- -   If @buffer@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single @VkDeviceMemory@ object
+--
+-- -   @buffer@ /must/ have been created with the
+--     @VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT@ bit set
+--
+-- -   @offset@ /must/ be less than the size of @buffer@ by at least 32
+--     bits.
+--
+-- -   @offset@ /must/ be a multiple of 4
+--
+-- Unresolved directive in VkConditionalRenderingBeginInfoEXT.txt -
+-- include::..\/validity\/structs\/VkConditionalRenderingBeginInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkConditionalRenderingBeginInfoEXT = VkConditionalRenderingBeginInfoEXT
-  { -- No documentation found for Nested "VkConditionalRenderingBeginInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkConditionalRenderingBeginInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkConditionalRenderingBeginInfoEXT" "buffer"
+  , -- | @buffer@ is a buffer containing the predicate for conditional rendering.
   vkBuffer :: VkBuffer
-  , -- No documentation found for Nested "VkConditionalRenderingBeginInfoEXT" "offset"
+  , -- | @offset@ is the byte offset into @buffer@ where the predicate is
+  -- located.
   vkOffset :: VkDeviceSize
-  , -- No documentation found for Nested "VkConditionalRenderingBeginInfoEXT" "flags"
+  , -- | @flags@ is a bitmask of 'VkConditionalRenderingFlagsEXT' specifying the
+  -- behavior of conditional rendering.
   vkFlags :: VkConditionalRenderingFlagsEXT
   }
   deriving (Eq, Show)
@@ -157,7 +216,12 @@ instance Zero VkConditionalRenderingBeginInfoEXT where
                                             zero
 -- ** VkConditionalRenderingFlagBitsEXT
 
--- No documentation found for TopLevel "VkConditionalRenderingFlagBitsEXT"
+-- | VkConditionalRenderingFlagBitsEXT - Specify the behavior of conditional
+-- rendering
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkConditionalRenderingFlagBitsEXT = VkConditionalRenderingFlagBitsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -175,20 +239,58 @@ instance Read VkConditionalRenderingFlagBitsEXT where
                         )
                     )
 
--- No documentation found for Nested "VkConditionalRenderingFlagBitsEXT" "VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT"
+-- | @VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT@ specifies the condition used
+-- to determine whether to discard rendering commands or not. That is, if
+-- the 32-bit predicate read from @buffer@ memory at @offset@ is zero, the
+-- rendering commands are not discarded, and if non zero, then they are
+-- discarded.
 pattern VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT :: VkConditionalRenderingFlagBitsEXT
 pattern VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT = VkConditionalRenderingFlagBitsEXT 0x00000001
--- No documentation found for TopLevel "VkConditionalRenderingFlagsEXT"
+-- | VkConditionalRenderingFlagsEXT - Bitmask of
+-- VkConditionalRenderingFlagBitsEXT
+--
+-- = Description
+--
+-- @VkConditionalRenderingFlagsEXT@ is a bitmask type for setting a mask of
+-- zero or more 'VkConditionalRenderingFlagBitsEXT'.
+--
+-- = See Also
+--
+-- No cross-references are available
 type VkConditionalRenderingFlagsEXT = VkConditionalRenderingFlagBitsEXT
--- No documentation found for TopLevel "VkPhysicalDeviceConditionalRenderingFeaturesEXT"
+-- | VkPhysicalDeviceConditionalRenderingFeaturesEXT - Structure describing
+-- if a secondary command buffer can be executed if conditional rendering
+-- is active in the primary command buffer
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceConditionalRenderingFeaturesEXT@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+-- it is filled with values indicating the implementation-dependent
+-- behavior. @VkPhysicalDeviceConditionalRenderingFeaturesEXT@ /can/ also
+-- be used in @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
+-- features.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceConditionalRenderingFeaturesEXT.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceConditionalRenderingFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceConditionalRenderingFeaturesEXT = VkPhysicalDeviceConditionalRenderingFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceConditionalRenderingFeaturesEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceConditionalRenderingFeaturesEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceConditionalRenderingFeaturesEXT" "conditionalRendering"
+  , -- | @conditionalRendering@ specifies whether conditional rendering is
+  -- supported.
   vkConditionalRendering :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceConditionalRenderingFeaturesEXT" "inheritedConditionalRendering"
+  , -- | @inheritedConditionalRendering@ specifies whether a secondary command
+  -- buffer /can/ be executed while conditional rendering is active in the
+  -- primary command buffer.
   vkInheritedConditionalRendering :: VkBool32
   }
   deriving (Eq, Show)
@@ -211,7 +313,29 @@ instance Zero VkPhysicalDeviceConditionalRenderingFeaturesEXT where
                                                          zero
                                                          zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCmdBeginConditionalRenderingEXT"
+-- | vkCmdBeginConditionalRenderingEXT - Define the beginning of a
+-- conditional rendering block
+--
+-- = Parameters
+--
+-- -   @commandBuffer@ is the command buffer into which this command will
+--     be recorded.
+--
+-- -   @pConditionalRenderingBegin@ is a pointer to an instance of the
+--     'VkConditionalRenderingBeginInfoEXT' structure specifying the
+--     parameters of conditional rendering.
+--
+-- == Valid Usage
+--
+-- -   Conditional rendering /must/ not already be
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#active-conditional-rendering active>
+--
+-- Unresolved directive in vkCmdBeginConditionalRenderingEXT.txt -
+-- include::..\/validity\/protos\/vkCmdBeginConditionalRenderingEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -222,7 +346,38 @@ foreign import ccall
 type FN_vkCmdBeginConditionalRenderingEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("pConditionalRenderingBegin" ::: Ptr VkConditionalRenderingBeginInfoEXT) -> IO ()
 type PFN_vkCmdBeginConditionalRenderingEXT = FunPtr FN_vkCmdBeginConditionalRenderingEXT
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCmdEndConditionalRenderingEXT"
+-- | vkCmdEndConditionalRenderingEXT - Define the end of a conditional
+-- rendering block
+--
+-- = Parameters
+--
+-- -   @commandBuffer@ is the command buffer into which this command will
+--     be recorded.
+--
+-- = Description
+--
+-- Once ended, conditional rendering becomes inactive.
+--
+-- == Valid Usage
+--
+-- -   Conditional rendering /must/ be
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#active-conditional-rendering active>
+--
+-- -   If conditional rendering was made
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#active-conditional-rendering active>
+--     outside of a render pass instance, it must not be ended inside a
+--     render pass instance
+--
+-- -   If conditional rendering was made
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#active-conditional-rendering active>
+--     within a subpass it must be ended in the same subpass
+--
+-- Unresolved directive in vkCmdEndConditionalRenderingEXT.txt -
+-- include::..\/validity\/protos\/vkCmdEndConditionalRenderingEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -232,10 +387,13 @@ foreign import ccall
 #endif
 type FN_vkCmdEndConditionalRenderingEXT = ("commandBuffer" ::: VkCommandBuffer) -> IO ()
 type PFN_vkCmdEndConditionalRenderingEXT = FunPtr FN_vkCmdEndConditionalRenderingEXT
--- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT"
+-- | @VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT@ specifies read access to
+-- a predicate as part of conditional rendering.
 pattern VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT = VkAccessFlagBits 0x00100000
--- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT"
+-- | @VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT@ specifies that the
+-- buffer is suitable for passing as the @buffer@ parameter to
+-- 'vkCmdBeginConditionalRenderingEXT'.
 pattern VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT :: VkBufferUsageFlagBits
 pattern VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT = VkBufferUsageFlagBits 0x00000200
 -- No documentation found for TopLevel "VK_EXT_CONDITIONAL_RENDERING_EXTENSION_NAME"

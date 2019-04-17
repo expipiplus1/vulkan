@@ -113,17 +113,24 @@ instance Read VkXlibSurfaceCreateFlagsKHR where
                     )
 
 
--- No documentation found for TopLevel "VkXlibSurfaceCreateInfoKHR"
+-- | VkXlibSurfaceCreateInfoKHR - Structure specifying parameters of a newly
+-- created Xlib surface object
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkXlibSurfaceCreateInfoKHR = VkXlibSurfaceCreateInfoKHR
-  { -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "flags"
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkXlibSurfaceCreateFlagsKHR
-  , -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "dpy"
+  , -- | @dpy@ /must/ point to a valid Xlib @Display@.
   vkDpy :: Ptr Display
-  , -- No documentation found for Nested "VkXlibSurfaceCreateInfoKHR" "window"
+  , -- | @window@ /must/ be a valid Xlib @Window@.
   vkWindow :: Window
   }
   deriving (Eq, Show)
@@ -152,7 +159,52 @@ instance Zero VkXlibSurfaceCreateInfoKHR where
 type Window = Word64
   
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCreateXlibSurfaceKHR"
+-- | vkCreateXlibSurfaceKHR - Create a
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for an
+-- X11 window, using the Xlib client-side library
+--
+-- = Parameters
+--
+-- -   @instance@ is the instance to associate the surface with.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     @VkXlibSurfaceCreateInfoKHR@ structure containing the parameters
+--     affecting the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
+--     which the created surface object is returned.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid @VkInstance@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkXlibSurfaceCreateInfoKHR@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -163,7 +215,29 @@ foreign import ccall
 type FN_vkCreateXlibSurfaceKHR = ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkXlibSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 type PFN_vkCreateXlibSurfaceKHR = FunPtr FN_vkCreateXlibSurfaceKHR
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetPhysicalDeviceXlibPresentationSupportKHR"
+-- | vkGetPhysicalDeviceXlibPresentationSupportKHR - Query physical device
+-- for presentation to X11 server using Xlib
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device.
+--
+-- -   @queueFamilyIndex@ is the queue family index.
+--
+-- -   @dpy@ is a pointer to an Xlib @Display@ connection to the server.
+--
+-- -   @visualId@ is an X11 visual (@VisualID@).
+--
+-- = Description
+--
+-- This platform-specific function /can/ be called prior to creating a
+-- surface.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

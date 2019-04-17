@@ -25,6 +25,8 @@ pattern VK_NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME = "VK_NV_shader_subgrou
 -- No documentation found for TopLevel "VK_NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION"
 pattern VK_NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION :: Integral a => a
 pattern VK_NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION = 1
--- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV"
+-- | @VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV@ specifies the device will
+-- accept SPIR-V shader modules that contain the
+-- @GroupNonUniformPartitionedNV@ capability.
 pattern VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV = VkSubgroupFeatureFlagBits 0x00000100

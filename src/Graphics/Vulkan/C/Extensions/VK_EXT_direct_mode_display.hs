@@ -40,7 +40,22 @@ import Graphics.Vulkan.NamedType
 
 
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkReleaseDisplayEXT"
+-- | vkReleaseDisplayEXT - Release access to an acquired VkDisplayKHR
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ The physical device the display is on.
+--
+-- -   @display@ The display to release control of.
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

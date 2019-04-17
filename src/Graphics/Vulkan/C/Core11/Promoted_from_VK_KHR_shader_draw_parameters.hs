@@ -40,13 +40,30 @@ type VkPhysicalDeviceShaderDrawParameterFeatures = VkPhysicalDeviceShaderDrawPar
 -- No documentation found for TopLevel "VkPhysicalDeviceShaderDrawParameterFeatures"
 pattern VkPhysicalDeviceShaderDrawParameterFeatures :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("shaderDrawParameters" ::: VkBool32) -> VkPhysicalDeviceShaderDrawParameterFeatures
 pattern VkPhysicalDeviceShaderDrawParameterFeatures vkSType vkPNext vkShaderDrawParameters = VkPhysicalDeviceShaderDrawParametersFeatures vkSType vkPNext vkShaderDrawParameters
--- No documentation found for TopLevel "VkPhysicalDeviceShaderDrawParametersFeatures"
+-- | VkPhysicalDeviceShaderDrawParametersFeatures - Structure describing
+-- shader draw parameter features that can be supported by an
+-- implementation
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceShaderDrawParametersFeatures@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+-- it is filled with a value indicating whether the feature is supported.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- @VkBool32@, 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceShaderDrawParametersFeatures = VkPhysicalDeviceShaderDrawParametersFeatures
-  { -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParametersFeatures" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES@
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParametersFeatures" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParametersFeatures" "shaderDrawParameters"
+  , -- | @shaderDrawParameters@ specifies whether shader draw parameters are
+  -- supported.
   vkShaderDrawParameters :: VkBool32
   }
   deriving (Eq, Show)

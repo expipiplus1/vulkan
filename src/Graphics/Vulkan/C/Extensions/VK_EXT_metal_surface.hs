@@ -96,15 +96,26 @@ instance Read VkMetalSurfaceCreateFlagsEXT where
                     )
 
 
--- No documentation found for TopLevel "VkMetalSurfaceCreateInfoEXT"
+-- | VkMetalSurfaceCreateInfoEXT - Structure specifying parameters of a newly
+-- created Metal surface object
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkMetalSurfaceCreateInfoEXT.txt -
+-- include::..\/validity\/structs\/VkMetalSurfaceCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkMetalSurfaceCreateInfoEXT = VkMetalSurfaceCreateInfoEXT
-  { -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "flags"
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkMetalSurfaceCreateFlagsEXT
-  , -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "pLayer"
+  , -- | @pLayer@ is a reference to a 'CAMetalLayer' object that represents a
+  -- renderable surface.
   vkPLayer :: Ptr CAMetalLayer
   }
   deriving (Eq, Show)
@@ -127,7 +138,32 @@ instance Zero VkMetalSurfaceCreateInfoEXT where
                                      zero
                                      zero
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkCreateMetalSurfaceEXT"
+-- | vkCreateMetalSurfaceEXT - Create a VkSurfaceKHR object for CAMetalLayer
+--
+-- = Parameters
+--
+-- -   @instance@ is the instance with which to associate the surface.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'VkMetalSurfaceCreateInfoEXT' structure containing the parameters
+--     affecting the creation of the surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
+--     surface object is returned.
+--
+-- = Description
+--
+-- Unresolved directive in vkCreateMetalSurfaceEXT.txt -
+-- include::..\/validity\/protos\/vkCreateMetalSurfaceEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

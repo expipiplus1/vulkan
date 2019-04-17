@@ -31,13 +31,38 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceShaderImageFootprintFeaturesNV"
+-- | VkPhysicalDeviceShaderImageFootprintFeaturesNV - Structure describing
+-- shader image footprint features that can be supported by an
+-- implementation
+--
+-- = Description
+--
+-- See
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-footprint Texel Footprint Evaluation>
+-- for more information.
+--
+-- If the @VkPhysicalDeviceShaderImageFootprintFeaturesNV@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether each feature is supported.
+-- @VkPhysicalDeviceShaderImageFootprintFeaturesNV@ /can/ also be used in
+-- the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceShaderImageFootprintFeaturesNV.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceShaderImageFootprintFeaturesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceShaderImageFootprintFeaturesNV = VkPhysicalDeviceShaderImageFootprintFeaturesNV
   { -- No documentation found for Nested "VkPhysicalDeviceShaderImageFootprintFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceShaderImageFootprintFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderImageFootprintFeaturesNV" "imageFootprint"
+  , -- | @imageFootprint@ specifies whether the implementation supports the
+  -- @ImageFootprintNV@ SPIR-V capability.
   vkImageFootprint :: VkBool32
   }
   deriving (Eq, Show)

@@ -151,13 +151,54 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkBindImagePlaneMemoryInfo"
+-- | VkBindImagePlaneMemoryInfo - Structure specifying how to bind an image
+-- plane to memory
+--
+-- == Valid Usage
+--
+-- -   If the image’s tiling is @VK_IMAGE_TILING_LINEAR@ or
+--     @VK_IMAGE_TILING_OPTIMAL@, then @planeAspect@ /must/ be a single
+--     valid /format plane/ for the image. (That is, @planeAspect@ /must/
+--     be @VK_IMAGE_ASPECT_PLANE_0_BIT@ or @VK_IMAGE_ASPECT_PLANE_1_BIT@
+--     for “@_2PLANE@” formats and @planeAspect@ /must/ be
+--     @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
+--     @VK_IMAGE_ASPECT_PLANE_2_BIT@ for “@_3PLANE@” formats.)
+--
+-- -   If the image’s tiling is @VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT@,
+--     then @planeAspect@ /must/ be a single valid /memory plane/ for the
+--     image. (That is, @aspectMask@ /must/ specify a plane index that is
+--     less than the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
+--     associated with the image’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkImageCreateInfo format>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
+--
+-- -   A single call to
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'
+--     /must/ bind all or none of the planes of an image (i.e. bindings to
+--     all planes of an image /must/ be made in a single
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'
+--     call), as separate bindings
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO@
+--
+-- -   @planeAspect@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits'
+--     value
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkBindImagePlaneMemoryInfo = VkBindImagePlaneMemoryInfo
-  { -- No documentation found for Nested "VkBindImagePlaneMemoryInfo" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkBindImagePlaneMemoryInfo" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkBindImagePlaneMemoryInfo" "planeAspect"
+  , -- | @planeAspect@ is the aspect of the disjoint image plane to bind.
   vkPlaneAspect :: VkImageAspectFlagBits
   }
   deriving (Eq, Show)
@@ -178,7 +219,11 @@ instance Zero VkBindImagePlaneMemoryInfo where
                                     zero
 -- ** VkChromaLocation
 
--- No documentation found for TopLevel "VkChromaLocation"
+-- | VkChromaLocation - Position of downsampled chroma samples
+--
+-- = See Also
+--
+-- 'VkSamplerYcbcrConversionCreateInfo'
 newtype VkChromaLocation = VkChromaLocation Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -198,20 +243,58 @@ instance Read VkChromaLocation where
                         )
                     )
 
--- No documentation found for Nested "VkChromaLocation" "VK_CHROMA_LOCATION_COSITED_EVEN"
+-- | @VK_CHROMA_LOCATION_COSITED_EVEN@ specifies that downsampled chroma
+-- samples are aligned with luma samples with even coordinates.
 pattern VK_CHROMA_LOCATION_COSITED_EVEN :: VkChromaLocation
 pattern VK_CHROMA_LOCATION_COSITED_EVEN = VkChromaLocation 0
 
--- No documentation found for Nested "VkChromaLocation" "VK_CHROMA_LOCATION_MIDPOINT"
+-- | @VK_CHROMA_LOCATION_MIDPOINT@ specifies that downsampled chroma samples
+-- are located half way between each even luma sample and the nearest
+-- higher odd luma sample.
 pattern VK_CHROMA_LOCATION_MIDPOINT :: VkChromaLocation
 pattern VK_CHROMA_LOCATION_MIDPOINT = VkChromaLocation 1
--- No documentation found for TopLevel "VkImagePlaneMemoryRequirementsInfo"
+-- | VkImagePlaneMemoryRequirementsInfo - Structure specifying image plane
+-- for memory requirements
+--
+-- == Valid Usage
+--
+-- -   If the image’s tiling is @VK_IMAGE_TILING_LINEAR@ or
+--     @VK_IMAGE_TILING_OPTIMAL@, then @planeAspect@ /must/ be a single
+--     valid /format plane/ for the image. (That is, for a two-plane image
+--     @planeAspect@ /must/ be @VK_IMAGE_ASPECT_PLANE_0_BIT@ or
+--     @VK_IMAGE_ASPECT_PLANE_1_BIT@, and for a three-plane image
+--     @planeAspect@ /must/ be @VK_IMAGE_ASPECT_PLANE_0_BIT@,
+--     @VK_IMAGE_ASPECT_PLANE_1_BIT@ or @VK_IMAGE_ASPECT_PLANE_2_BIT@).
+--
+-- -   If the image’s tiling is @VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT@,
+--     then @planeAspect@ /must/ be a single valid /memory plane/ for the
+--     image. (That is, @aspectMask@ /must/ specify a plane index that is
+--     less than the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
+--     associated with the image’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkImageCreateInfo format>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO@
+--
+-- -   @planeAspect@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits'
+--     value
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkImagePlaneMemoryRequirementsInfo = VkImagePlaneMemoryRequirementsInfo
-  { -- No documentation found for Nested "VkImagePlaneMemoryRequirementsInfo" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImagePlaneMemoryRequirementsInfo" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImagePlaneMemoryRequirementsInfo" "planeAspect"
+  , -- | @planeAspect@ is the aspect corresponding to the image plane to query.
   vkPlaneAspect :: VkImageAspectFlagBits
   }
   deriving (Eq, Show)
@@ -230,13 +313,30 @@ instance Zero VkImagePlaneMemoryRequirementsInfo where
   zero = VkImagePlaneMemoryRequirementsInfo zero
                                             zero
                                             zero
--- No documentation found for TopLevel "VkPhysicalDeviceSamplerYcbcrConversionFeatures"
+-- | VkPhysicalDeviceSamplerYcbcrConversionFeatures - Structure describing
+-- Y’CbCr conversion features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceSamplerYcbcrConversionFeatures@
+-- structure describe the following feature:
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- @VkBool32@, 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceSamplerYcbcrConversionFeatures = VkPhysicalDeviceSamplerYcbcrConversionFeatures
-  { -- No documentation found for Nested "VkPhysicalDeviceSamplerYcbcrConversionFeatures" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES@
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceSamplerYcbcrConversionFeatures" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceSamplerYcbcrConversionFeatures" "samplerYcbcrConversion"
+  , -- | @samplerYcbcrConversion@ specifies whether the implementation supports
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>.
+  -- If @samplerYcbcrConversion@ is @VK_FALSE@, sampler Y’CBCR conversion is
+  -- not supported, and samplers using sampler Y’CBCR conversion /must/ not
+  -- be used.
   vkSamplerYcbcrConversion :: VkBool32
   }
   deriving (Eq, Show)
@@ -257,29 +357,168 @@ instance Zero VkPhysicalDeviceSamplerYcbcrConversionFeatures where
                                                         zero
 -- | Dummy data to tag the 'Ptr' with
 data VkSamplerYcbcrConversion_T
--- No documentation found for TopLevel "VkSamplerYcbcrConversion"
+-- | VkSamplerYcbcrConversion - Opaque handle to a device-specific sampler
+-- Y’CBCR conversion description
+--
+-- = See Also
+--
+-- 'VkSamplerYcbcrConversionInfo', 'vkCreateSamplerYcbcrConversion',
+-- 'vkDestroySamplerYcbcrConversion'
 type VkSamplerYcbcrConversion = Ptr VkSamplerYcbcrConversion_T
--- No documentation found for TopLevel "VkSamplerYcbcrConversionCreateInfo"
+-- | VkSamplerYcbcrConversionCreateInfo - Structure specifying the parameters
+-- of the newly created conversion
+--
+-- = Description
+--
+-- __Note__
+--
+-- Setting @forceExplicitReconstruction@ to @VK_TRUE@ /may/ have a
+-- performance penalty on implementations where explicit reconstruction is
+-- not the default mode of operation.
+--
+-- If the @pNext@ chain has an instance of
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkExternalFormatANDROID'
+-- with non-zero @externalFormat@ member, the sampler Y’CBCR conversion
+-- object represents an /external format conversion/, and @format@ /must/
+-- be @VK_FORMAT_UNDEFINED@. Such conversions /must/ only be used to sample
+-- image views with a matching
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>.
+-- When creating an external format conversion, the value of @components@
+-- is ignored.
+--
+-- == Valid Usage
+--
+-- -   If an external format conversion is being created, @format@ /must/
+--     be @VK_FORMAT_UNDEFINED@, otherwise it /must/ not be
+--     @VK_FORMAT_UNDEFINED@.
+--
+-- -   @format@ /must/ support
+--     @VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT@ or
+--     @VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT@
+--
+-- -   If the format does not support
+--     @VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT@, @xChromaOffset@ and
+--     @yChromaOffset@ /must/ not be @VK_CHROMA_LOCATION_COSITED_EVEN@
+--
+-- -   If the format does not support
+--     @VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT@, @xChromaOffset@ and
+--     @yChromaOffset@ /must/ not be @VK_CHROMA_LOCATION_MIDPOINT@
+--
+-- -   @format@ /must/ represent unsigned normalized values (i.e. the
+--     format must be a @UNORM@ format)
+--
+-- -   If the format has a @_422@ or @_420@ suffix, then @components.g@
+--     /must/ be @VK_COMPONENT_SWIZZLE_IDENTITY@
+--
+-- -   If the format has a @_422@ or @_420@ suffix, then @components.a@
+--     /must/ be @VK_COMPONENT_SWIZZLE_IDENTITY@,
+--     @VK_COMPONENT_SWIZZLE_ONE@, or @VK_COMPONENT_SWIZZLE_ZERO@
+--
+-- -   If the format has a @_422@ or @_420@ suffix, then @components.r@
+--     /must/ be @VK_COMPONENT_SWIZZLE_IDENTITY@ or
+--     @VK_COMPONENT_SWIZZLE_B@
+--
+-- -   If the format has a @_422@ or @_420@ suffix, then @components.b@
+--     /must/ be @VK_COMPONENT_SWIZZLE_IDENTITY@ or
+--     @VK_COMPONENT_SWIZZLE_R@
+--
+-- -   If the format has a @_422@ or @_420@ suffix, and if either
+--     @components.r@ or @components.b@ is @VK_COMPONENT_SWIZZLE_IDENTITY@,
+--     both values /must/ be @VK_COMPONENT_SWIZZLE_IDENTITY@
+--
+-- -   If @ycbcrModel@ is not
+--     @VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY@, then
+--     @components.r@, @components.g@, and @components.b@ /must/ correspond
+--     to channels of the @format@; that is, @components.r@,
+--     @components.g@, and @components.b@ /must/ not be
+--     @VK_COMPONENT_SWIZZLE_ZERO@ or @VK_COMPONENT_SWIZZLE_ONE@, and
+--     /must/ not correspond to a channel which contains zero or one as a
+--     consequence of
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-conversion-to-rgba conversion to RGBA>
+--
+-- -   If the format does not support
+--     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT@,
+--     @forceExplicitReconstruction@ /must/ be FALSE
+--
+-- -   If the format does not support
+--     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT@,
+--     @chromaFilter@ /must/ be @VK_FILTER_NEAREST@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     @VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO@
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @format@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Core.VkFormat'
+--     value
+--
+-- -   @ycbcrModel@ /must/ be a valid 'VkSamplerYcbcrModelConversion' value
+--
+-- -   @ycbcrRange@ /must/ be a valid 'VkSamplerYcbcrRange' value
+--
+-- -   @components@ /must/ be a valid @VkComponentMapping@ structure
+--
+-- -   @xChromaOffset@ /must/ be a valid 'VkChromaLocation' value
+--
+-- -   @yChromaOffset@ /must/ be a valid 'VkChromaLocation' value
+--
+-- -   @chromaFilter@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkFilter' value
+--
+-- If @chromaFilter@ is @VK_FILTER_NEAREST@, chroma samples are
+-- reconstructed to luma channel resolution using nearest-neighbour
+-- sampling. Otherwise, chroma samples are reconstructed using
+-- interpolation. More details can be found in
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion the description of sampler Y’CBCR conversion>
+-- in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures Image Operations>
+-- chapter.
+--
+-- = See Also
+--
+-- @VkBool32@, 'VkChromaLocation',
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkComponentMapping',
+-- 'Graphics.Vulkan.C.Core10.Sampler.VkFilter',
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'VkSamplerYcbcrModelConversion', 'VkSamplerYcbcrRange',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateSamplerYcbcrConversion'
 data VkSamplerYcbcrConversionCreateInfo = VkSamplerYcbcrConversionCreateInfo
-  { -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "format"
+  , -- | @format@ is the format of the image from which color information will be
+  -- retrieved.
   vkFormat :: VkFormat
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "ycbcrModel"
+  , -- | @ycbcrModel@ describes the color matrix for conversion between color
+  -- models.
   vkYcbcrModel :: VkSamplerYcbcrModelConversion
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "ycbcrRange"
+  , -- | @ycbcrRange@ describes whether the encoded values have headroom and foot
+  -- room, or whether the encoding uses the full numerical range.
   vkYcbcrRange :: VkSamplerYcbcrRange
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "components"
+  , -- | @components@ applies a /swizzle/ based on
+  -- 'Graphics.Vulkan.C.Core10.ImageView.VkComponentSwizzle' enums prior to
+  -- range expansion and color model conversion.
   vkComponents :: VkComponentMapping
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "xChromaOffset"
+  , -- | @xChromaOffset@ describes the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-chroma-reconstruction sample location>
+  -- associated with downsampled chroma channels in the x dimension.
+  -- @xChromaOffset@ has no effect for formats in which chroma channels are
+  -- the same resolution as the luma channel.
   vkXChromaOffset :: VkChromaLocation
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "yChromaOffset"
+  , -- | @yChromaOffset@ describes the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-chroma-reconstruction sample location>
+  -- associated with downsampled chroma channels in the y dimension.
+  -- @yChromaOffset@ has no effect for formats in which the chroma channels
+  -- are not downsampled vertically.
   vkYChromaOffset :: VkChromaLocation
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "chromaFilter"
+  , -- | @chromaFilter@ is the filter for chroma reconstruction.
   vkChromaFilter :: VkFilter
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionCreateInfo" "forceExplicitReconstruction"
+  , -- | @forceExplicitReconstruction@ /can/ be used to ensure that
+  -- reconstruction is done explicitly, if supported.
   vkForceExplicitReconstruction :: VkBool32
   }
   deriving (Eq, Show)
@@ -319,13 +558,22 @@ instance Zero VkSamplerYcbcrConversionCreateInfo where
                                             zero
                                             zero
                                             zero
--- No documentation found for TopLevel "VkSamplerYcbcrConversionImageFormatProperties"
+-- | VkSamplerYcbcrConversionImageFormatProperties - Structure specifying
+-- combined image sampler descriptor count for multi-planar images
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSamplerYcbcrConversionImageFormatProperties = VkSamplerYcbcrConversionImageFormatProperties
-  { -- No documentation found for Nested "VkSamplerYcbcrConversionImageFormatProperties" "sType"
+  { -- | @sType@ /must/ be
+  -- @VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionImageFormatProperties" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionImageFormatProperties" "combinedImageSamplerDescriptorCount"
+  , -- | @combinedImageSamplerDescriptorCount@ is the number of combined image
+  -- sampler descriptors that the implementation uses to access the format.
   vkCombinedImageSamplerDescriptorCount :: Word32
   }
   deriving (Eq, Show)
@@ -344,13 +592,21 @@ instance Zero VkSamplerYcbcrConversionImageFormatProperties where
   zero = VkSamplerYcbcrConversionImageFormatProperties zero
                                                        zero
                                                        zero
--- No documentation found for TopLevel "VkSamplerYcbcrConversionInfo"
+-- | VkSamplerYcbcrConversionInfo - Structure specifying Y’CbCr conversion to
+-- a sampler or image view
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'VkSamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSamplerYcbcrConversionInfo = VkSamplerYcbcrConversionInfo
-  { -- No documentation found for Nested "VkSamplerYcbcrConversionInfo" "sType"
+  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO@
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionInfo" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkSamplerYcbcrConversionInfo" "conversion"
+  , -- | @conversion@ /must/ be a valid @VkSamplerYcbcrConversion@ handle
   vkConversion :: VkSamplerYcbcrConversion
   }
   deriving (Eq, Show)
@@ -371,7 +627,66 @@ instance Zero VkSamplerYcbcrConversionInfo where
                                       zero
 -- ** VkSamplerYcbcrModelConversion
 
--- No documentation found for TopLevel "VkSamplerYcbcrModelConversion"
+-- | VkSamplerYcbcrModelConversion - Color model component of a color space
+--
+-- = Description
+--
+-- -   @VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY@ specifies that the
+--     input values to the conversion are unmodified.
+--
+-- -   @VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY@ specifies no
+--     model conversion but the inputs are range expanded as for Y’CBCR.
+--
+-- -   @VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709@ specifies the color
+--     model conversion from Y’CBCR to R’G’B\' defined in BT.709 and
+--     described in the “BT.709 Y’CBCR conversion” section of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--
+-- -   @VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601@ specifies the color
+--     model conversion from Y’CBCR to R’G’B\' defined in BT.601 and
+--     described in the “BT.601 Y’CBCR conversion” section of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--
+-- -   @VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020@ specifies the color
+--     model conversion from Y’CBCR to R’G’B\' defined in BT.2020 and
+--     described in the “BT.2020 Y’CBCR conversion” section of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--
+-- In the @VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_*@ color models, for the
+-- input to the sampler Y’CBCR range expansion and model conversion:
+--
+-- -   the Y (Y\' luma) channel corresponds to the G channel of an RGB
+--     image.
+--
+-- -   the CB (CB or “U” blue color difference) channel corresponds to the
+--     B channel of an RGB image.
+--
+-- -   the CR (CR or “V” red color difference) channel corresponds to the R
+--     channel of an RGB image.
+--
+-- -   the alpha channel, if present, is not modified by color model
+--     conversion.
+--
+-- These rules reflect the mapping of channels after the channel swizzle
+-- operation (controlled by
+-- 'VkSamplerYcbcrConversionCreateInfo'::@components@).
+--
+-- __Note__
+--
+-- For example, an “YUVA” 32-bit format comprising four 8-bit channels can
+-- be implemented as @VK_FORMAT_R8G8B8A8_UNORM@ with a component mapping:
+--
+-- -   @components.a@ = @VK_COMPONENT_SWIZZLE_IDENTITY@
+--
+-- -   @components.r@ = @VK_COMPONENT_SWIZZLE_B@
+--
+-- -   @components.g@ = @VK_COMPONENT_SWIZZLE_R@
+--
+-- -   @components.b@ = @VK_COMPONENT_SWIZZLE_G@
+--
+-- = See Also
+--
+-- 'VkSamplerYcbcrConversionCreateInfo'
 newtype VkSamplerYcbcrModelConversion = VkSamplerYcbcrModelConversion Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -418,7 +733,23 @@ pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 :: VkSamplerYcbcrModelConve
 pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 = VkSamplerYcbcrModelConversion 4
 -- ** VkSamplerYcbcrRange
 
--- No documentation found for TopLevel "VkSamplerYcbcrRange"
+-- | VkSamplerYcbcrRange - Range of encoded values in a color space
+--
+-- = Description
+--
+-- The formulae for these conversions is described in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion-rangeexpand Sampler Y’CBCR Range Expansion>
+-- section of the
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures Image Operations>
+-- chapter.
+--
+-- No range modification takes place if @ycbcrModel@ is
+-- @VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY@; the @ycbcrRange@ field
+-- of @VkSamplerYcbcrConversionCreateInfo@ is ignored in this case.
+--
+-- = See Also
+--
+-- 'VkSamplerYcbcrConversionCreateInfo'
 newtype VkSamplerYcbcrRange = VkSamplerYcbcrRange Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -438,15 +769,80 @@ instance Read VkSamplerYcbcrRange where
                         )
                     )
 
--- No documentation found for Nested "VkSamplerYcbcrRange" "VK_SAMPLER_YCBCR_RANGE_ITU_FULL"
+-- | @VK_SAMPLER_YCBCR_RANGE_ITU_FULL@ specifies that the full range of the
+-- encoded values are valid and interpreted according to the ITU “full
+-- range” quantization rules.
 pattern VK_SAMPLER_YCBCR_RANGE_ITU_FULL :: VkSamplerYcbcrRange
 pattern VK_SAMPLER_YCBCR_RANGE_ITU_FULL = VkSamplerYcbcrRange 0
 
--- No documentation found for Nested "VkSamplerYcbcrRange" "VK_SAMPLER_YCBCR_RANGE_ITU_NARROW"
+-- | @VK_SAMPLER_YCBCR_RANGE_ITU_NARROW@ specifies that headroom and foot
+-- room are reserved in the numerical range of encoded values, and the
+-- remaining values are expanded according to the ITU “narrow range”
+-- quantization rules.
 pattern VK_SAMPLER_YCBCR_RANGE_ITU_NARROW :: VkSamplerYcbcrRange
 pattern VK_SAMPLER_YCBCR_RANGE_ITU_NARROW = VkSamplerYcbcrRange 1
 #if defined(EXPOSE_CORE11_COMMANDS)
--- No documentation found for TopLevel "vkCreateSamplerYcbcrConversion"
+-- | vkCreateSamplerYcbcrConversion - Create a new Ycbcr conversion
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that creates the sampler Y’CBCR
+--     conversion.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'VkSamplerYcbcrConversionCreateInfo' specifying the requested
+--     sampler Y’CBCR conversion.
+--
+-- -   @pAllocator@ controls host memory allocation as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     chapter.
+--
+-- -   @pYcbcrConversion@ points to a 'VkSamplerYcbcrConversion' handle in
+--     which the resulting sampler Y’CBCR conversion is returned.
+--
+-- = Description
+--
+-- The interpretation of the configured sampler Y’CBCR conversion is
+-- described in more detail in
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion the description of sampler Y’CBCR conversion>
+-- in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures Image Operations>
+-- chapter.
+--
+-- == Valid Usage
+--
+-- -   The
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-sampler-YCbCr-conversion sampler Y’CBCR conversion feature>
+--     /must/ be enabled
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     @VkSamplerYcbcrConversionCreateInfo@ structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   @pYcbcrConversion@ /must/ be a valid pointer to a
+--     @VkSamplerYcbcrConversion@ handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--
+--     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkSamplerYcbcrConversion', 'VkSamplerYcbcrConversionCreateInfo'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -457,7 +853,42 @@ foreign import ccall
 type FN_vkCreateSamplerYcbcrConversion = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSamplerYcbcrConversionCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pYcbcrConversion" ::: Ptr VkSamplerYcbcrConversion) -> IO VkResult
 type PFN_vkCreateSamplerYcbcrConversion = FunPtr FN_vkCreateSamplerYcbcrConversion
 #if defined(EXPOSE_CORE11_COMMANDS)
--- No documentation found for TopLevel "vkDestroySamplerYcbcrConversion"
+-- | vkDestroySamplerYcbcrConversion - Destroy a created Y’CbCr conversion
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that destroys the Y’CBCR conversion.
+--
+-- -   @ycbcrConversion@ is the conversion to destroy.
+--
+-- -   @pAllocator@ controls host memory allocation as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     chapter.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid @VkDevice@ handle
+--
+-- -   If @ycbcrConversion@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @ycbcrConversion@ /must/ be a valid @VkSamplerYcbcrConversion@
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid @VkAllocationCallbacks@ structure
+--
+-- -   If @ycbcrConversion@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @ycbcrConversion@ /must/ be externally synchronized
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkSamplerYcbcrConversion'
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -467,16 +898,67 @@ foreign import ccall
 #endif
 type FN_vkDestroySamplerYcbcrConversion = ("device" ::: VkDevice) -> ("ycbcrConversion" ::: VkSamplerYcbcrConversion) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroySamplerYcbcrConversion = FunPtr FN_vkDestroySamplerYcbcrConversion
--- No documentation found for Nested "VkFormat" "VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16"
+-- | @VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16@ specifies a
+-- four-component, 64-bit format containing a pair of G components, an R
+-- component, and a B component, collectively encoding a 2×1 rectangle of
+-- unsigned normalized RGB texel data. One G value is present at each /i/
+-- coordinate, with the B and R values shared across both G values and thus
+-- recorded at half the horizontal resolution of the image. This format has
+-- a 10-bit B component in the top 10 bits of the word in bytes 0..1, a
+-- 10-bit G component for the even /i/ coordinate in the top 10 bits of the
+-- word in bytes 2..3, a 10-bit R component in the top 10 bits of the word
+-- in bytes 4..5, and a 10-bit G component for the odd /i/ coordinate in
+-- the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of
+-- each word set to 0. Images in this format /must/ be defined with a width
+-- that is a multiple of two. For the purposes of the constraints on copy
+-- extents, this format is treated as a compressed format with a 2×1
+-- compressed texel block.
 pattern VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 = VkFormat 1000156011
--- No documentation found for Nested "VkFormat" "VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16"
+-- | @VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16@ specifies a
+-- four-component, 64-bit format containing a pair of G components, an R
+-- component, and a B component, collectively encoding a 2×1 rectangle of
+-- unsigned normalized RGB texel data. One G value is present at each /i/
+-- coordinate, with the B and R values shared across both G values and thus
+-- recorded at half the horizontal resolution of the image. This format has
+-- a 12-bit B component in the top 12 bits of the word in bytes 0..1, a
+-- 12-bit G component for the even /i/ coordinate in the top 12 bits of the
+-- word in bytes 2..3, a 12-bit R component in the top 12 bits of the word
+-- in bytes 4..5, and a 12-bit G component for the odd /i/ coordinate in
+-- the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of
+-- each word set to 0. Images in this format /must/ be defined with a width
+-- that is a multiple of two. For the purposes of the constraints on copy
+-- extents, this format is treated as a compressed format with a 2×1
+-- compressed texel block.
 pattern VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 = VkFormat 1000156021
--- No documentation found for Nested "VkFormat" "VK_FORMAT_B16G16R16G16_422_UNORM"
+-- | @VK_FORMAT_B16G16R16G16_422_UNORM@ specifies a four-component, 64-bit
+-- format containing a pair of G components, an R component, and a B
+-- component, collectively encoding a 2×1 rectangle of unsigned normalized
+-- RGB texel data. One G value is present at each /i/ coordinate, with the
+-- B and R values shared across both G values and thus recorded at half the
+-- horizontal resolution of the image. This format has a 16-bit B component
+-- in the word in bytes 0..1, a 16-bit G component for the even /i/
+-- coordinate in the word in bytes 2..3, a 16-bit R component in the word
+-- in bytes 4..5, and a 16-bit G component for the odd /i/ coordinate in
+-- the word in bytes 6..7. Images in this format /must/ be defined with a
+-- width that is a multiple of two. For the purposes of the constraints on
+-- copy extents, this format is treated as a compressed format with a 2×1
+-- compressed texel block.
 pattern VK_FORMAT_B16G16R16G16_422_UNORM :: VkFormat
 pattern VK_FORMAT_B16G16R16G16_422_UNORM = VkFormat 1000156028
--- No documentation found for Nested "VkFormat" "VK_FORMAT_B8G8R8G8_422_UNORM"
+-- | @VK_FORMAT_B8G8R8G8_422_UNORM@ specifies a four-component, 32-bit format
+-- containing a pair of G components, an R component, and a B component,
+-- collectively encoding a 2×1 rectangle of unsigned normalized RGB texel
+-- data. One G value is present at each /i/ coordinate, with the B and R
+-- values shared across both G values and thus recorded at half the
+-- horizontal resolution of the image. This format has an 8-bit B component
+-- in byte 0, an 8-bit G component for the even /i/ coordinate in byte 1,
+-- an 8-bit R component in byte 2, and an 8-bit G component for the odd /i/
+-- coordinate in byte 3. Images in this format /must/ be defined with a
+-- width that is a multiple of two. For the purposes of the constraints on
+-- copy extents, this format is treated as a compressed format with a 2×1
+-- compressed texel block.
 pattern VK_FORMAT_B8G8R8G8_422_UNORM :: VkFormat
 pattern VK_FORMAT_B8G8R8G8_422_UNORM = VkFormat 1000156001
 -- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT"
@@ -500,94 +982,428 @@ pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = VkF
 -- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = VkFormatFeatureFlagBits 0x00080000
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16"
+-- | @VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16@ specifies a
+-- four-component, 64-bit format containing a pair of G components, an R
+-- component, and a B component, collectively encoding a 2×1 rectangle of
+-- unsigned normalized RGB texel data. One G value is present at each /i/
+-- coordinate, with the B and R values shared across both G values and thus
+-- recorded at half the horizontal resolution of the image. This format has
+-- a 10-bit G component for the even /i/ coordinate in the top 10 bits of
+-- the word in bytes 0..1, a 10-bit B component in the top 10 bits of the
+-- word in bytes 2..3, a 10-bit G component for the odd /i/ coordinate in
+-- the top 10 bits of the word in bytes 4..5, and a 10-bit R component in
+-- the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of
+-- each word set to 0. Images in this format /must/ be defined with a width
+-- that is a multiple of two. For the purposes of the constraints on copy
+-- extents, this format is treated as a compressed format with a 2×1
+-- compressed texel block.
 pattern VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16 = VkFormat 1000156010
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16"
+-- | @VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 10-bit G component
+-- in the top 10 bits of each 16-bit word of plane 0, and a two-component,
+-- 32-bit BR plane 1 consisting of a 10-bit B component in the top 10 bits
+-- of the word in bytes 0..1, and a 10-bit R component in the top 10 bits
+-- of the word in bytes 2..3, the bottom 6 bits of each word set to 0. The
+-- horizontal and vertical dimensions of the BR plane is halved relative to
+-- the image dimensions, and each R and B value is shared with the G
+-- components for which \(\lfloor i_G \times 0.5 \rfloor =
+-- i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B = j_R\). The
+-- location of each plane when this image is in linear layout can be
+-- determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane, and
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the BR plane. Images in this format
+-- /must/ be defined with a width and height that is a multiple of two.
 pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 = VkFormat 1000156013
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16"
+-- | @VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 10-bit G component
+-- in the top 10 bits of each 16-bit word of plane 0, and a two-component,
+-- 32-bit BR plane 1 consisting of a 10-bit B component in the top 10 bits
+-- of the word in bytes 0..1, and a 10-bit R component in the top 10 bits
+-- of the word in bytes 2..3, the bottom 6 bits of each word set to 0. The
+-- horizontal dimensions of the BR plane is halved relative to the image
+-- dimensions, and each R and B value is shared with the G components for
+-- which \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of
+-- each plane when this image is in linear layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane, and
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the BR plane. Images in this format
+-- /must/ be defined with a width that is a multiple of two.
 pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 = VkFormat 1000156015
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16"
+-- | @VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 10-bit G component
+-- in the top 10 bits of each 16-bit word of plane 0, a 10-bit B component
+-- in the top 10 bits of each 16-bit word of plane 1, and a 10-bit R
+-- component in the top 10 bits of each 16-bit word of plane 2, with the
+-- bottom 6 bits of each word set to 0. The horizontal and vertical
+-- dimensions of the R and B planes are halved relative to the image
+-- dimensions, and each R and B component is shared with the G components
+-- for which \(\lfloor i_G \times 0.5
+-- \rfloor = i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B
+-- = j_R\). The location of each plane when this image is in linear layout
+-- can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane. Images in this format
+-- /must/ be defined with a width and height that is a multiple of two.
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 = VkFormat 1000156012
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16"
+-- | @VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 10-bit G component
+-- in the top 10 bits of each 16-bit word of plane 0, a 10-bit B component
+-- in the top 10 bits of each 16-bit word of plane 1, and a 10-bit R
+-- component in the top 10 bits of each 16-bit word of plane 2, with the
+-- bottom 6 bits of each word set to 0. The horizontal dimension of the R
+-- and B plane is halved relative to the image dimensions, and each R and B
+-- value is shared with the G components for which
+-- \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of each
+-- plane when this image is in linear layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane. Images in this format
+-- /must/ be defined with a width that is a multiple of two.
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 = VkFormat 1000156014
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16"
+-- | @VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 10-bit G component
+-- in the top 10 bits of each 16-bit word of plane 0, a 10-bit B component
+-- in the top 10 bits of each 16-bit word of plane 1, and a 10-bit R
+-- component in the top 10 bits of each 16-bit word of plane 2, with the
+-- bottom 6 bits of each word set to 0. Each plane has the same dimensions
+-- and each R, G and B component contributes to a single texel. The
+-- location of each plane when this image is in linear layout can be
+-- determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane.
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 = VkFormat 1000156016
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16"
+-- | @VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16@ specifies a
+-- four-component, 64-bit format containing a pair of G components, an R
+-- component, and a B component, collectively encoding a 2×1 rectangle of
+-- unsigned normalized RGB texel data. One G value is present at each /i/
+-- coordinate, with the B and R values shared across both G values and thus
+-- recorded at half the horizontal resolution of the image. This format has
+-- a 12-bit G component for the even /i/ coordinate in the top 12 bits of
+-- the word in bytes 0..1, a 12-bit B component in the top 12 bits of the
+-- word in bytes 2..3, a 12-bit G component for the odd /i/ coordinate in
+-- the top 12 bits of the word in bytes 4..5, and a 12-bit R component in
+-- the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of
+-- each word set to 0. Images in this format /must/ be defined with a width
+-- that is a multiple of two. For the purposes of the constraints on copy
+-- extents, this format is treated as a compressed format with a 2×1
+-- compressed texel block.
 pattern VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 = VkFormat 1000156020
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16"
+-- | @VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 12-bit G component
+-- in the top 12 bits of each 16-bit word of plane 0, and a two-component,
+-- 32-bit BR plane 1 consisting of a 12-bit B component in the top 12 bits
+-- of the word in bytes 0..1, and a 12-bit R component in the top 12 bits
+-- of the word in bytes 2..3, the bottom 4 bits of each word set to 0. The
+-- horizontal and vertical dimensions of the BR plane is halved relative to
+-- the image dimensions, and each R and B value is shared with the G
+-- components for which \(\lfloor i_G \times 0.5 \rfloor =
+-- i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B = j_R\). The
+-- location of each plane when this image is in linear layout can be
+-- determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane, and
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the BR plane. Images in this format
+-- /must/ be defined with a width and height that is a multiple of two.
 pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 = VkFormat 1000156023
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16"
+-- | @VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 12-bit G component
+-- in the top 12 bits of each 16-bit word of plane 0, and a two-component,
+-- 32-bit BR plane 1 consisting of a 12-bit B component in the top 12 bits
+-- of the word in bytes 0..1, and a 12-bit R component in the top 12 bits
+-- of the word in bytes 2..3, the bottom 4 bits of each word set to 0. The
+-- horizontal dimensions of the BR plane is halved relative to the image
+-- dimensions, and each R and B value is shared with the G components for
+-- which \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of
+-- each plane when this image is in linear layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane, and
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the BR plane. Images in this format
+-- /must/ be defined with a width that is a multiple of two.
 pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 = VkFormat 1000156025
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16"
+-- | @VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 12-bit G component
+-- in the top 12 bits of each 16-bit word of plane 0, a 12-bit B component
+-- in the top 12 bits of each 16-bit word of plane 1, and a 12-bit R
+-- component in the top 12 bits of each 16-bit word of plane 2, with the
+-- bottom 4 bits of each word set to 0. The horizontal and vertical
+-- dimensions of the R and B planes are halved relative to the image
+-- dimensions, and each R and B component is shared with the G components
+-- for which \(\lfloor i_G \times 0.5
+-- \rfloor = i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B
+-- = j_R\). The location of each plane when this image is in linear layout
+-- can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane. Images in this format
+-- /must/ be defined with a width and height that is a multiple of two.
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 = VkFormat 1000156022
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16"
+-- | @VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 12-bit G component
+-- in the top 12 bits of each 16-bit word of plane 0, a 12-bit B component
+-- in the top 12 bits of each 16-bit word of plane 1, and a 12-bit R
+-- component in the top 12 bits of each 16-bit word of plane 2, with the
+-- bottom 4 bits of each word set to 0. The horizontal dimension of the R
+-- and B plane is halved relative to the image dimensions, and each R and B
+-- value is shared with the G components for which
+-- \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of each
+-- plane when this image is in linear layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane. Images in this format
+-- /must/ be defined with a width that is a multiple of two.
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 = VkFormat 1000156024
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16"
+-- | @VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16@ specifies an
+-- unsigned normalized /multi-planar format/ that has a 12-bit G component
+-- in the top 12 bits of each 16-bit word of plane 0, a 12-bit B component
+-- in the top 12 bits of each 16-bit word of plane 1, and a 12-bit R
+-- component in the top 12 bits of each 16-bit word of plane 2, with the
+-- bottom 4 bits of each word set to 0. Each plane has the same dimensions
+-- and each R, G and B component contributes to a single texel. The
+-- location of each plane when this image is in linear layout can be
+-- determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane.
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 :: VkFormat
 pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 = VkFormat 1000156026
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G16B16G16R16_422_UNORM"
+-- | @VK_FORMAT_G16B16G16R16_422_UNORM@ specifies a four-component, 64-bit
+-- format containing a pair of G components, an R component, and a B
+-- component, collectively encoding a 2×1 rectangle of unsigned normalized
+-- RGB texel data. One G value is present at each /i/ coordinate, with the
+-- B and R values shared across both G values and thus recorded at half the
+-- horizontal resolution of the image. This format has a 16-bit G component
+-- for the even /i/ coordinate in the word in bytes 0..1, a 16-bit B
+-- component in the word in bytes 2..3, a 16-bit G component for the odd
+-- /i/ coordinate in the word in bytes 4..5, and a 16-bit R component in
+-- the word in bytes 6..7. Images in this format /must/ be defined with a
+-- width that is a multiple of two. For the purposes of the constraints on
+-- copy extents, this format is treated as a compressed format with a 2×1
+-- compressed texel block.
 pattern VK_FORMAT_G16B16G16R16_422_UNORM :: VkFormat
 pattern VK_FORMAT_G16B16G16R16_422_UNORM = VkFormat 1000156027
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16R16_2PLANE_420_UNORM"
+-- | @VK_FORMAT_G16_B16R16_2PLANE_420_UNORM@ specifies an unsigned normalized
+-- /multi-planar format/ that has a 16-bit G component in each 16-bit word
+-- of plane 0, and a two-component, 32-bit BR plane 1 consisting of a
+-- 16-bit B component in the word in bytes 0..1, and a 16-bit R component
+-- in the word in bytes 2..3. The horizontal and vertical dimensions of the
+-- BR plane is halved relative to the image dimensions, and each R and B
+-- value is shared with the G components for which
+-- \(\lfloor i_G \times 0.5 \rfloor =
+-- i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B = j_R\). The
+-- location of each plane when this image is in linear layout can be
+-- determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane, and
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the BR plane. Images in this format
+-- /must/ be defined with a width and height that is a multiple of two.
 pattern VK_FORMAT_G16_B16R16_2PLANE_420_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16R16_2PLANE_420_UNORM = VkFormat 1000156030
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16R16_2PLANE_422_UNORM"
+-- | @VK_FORMAT_G16_B16R16_2PLANE_422_UNORM@ specifies an unsigned normalized
+-- /multi-planar format/ that has a 16-bit G component in each 16-bit word
+-- of plane 0, and a two-component, 32-bit BR plane 1 consisting of a
+-- 16-bit B component in the word in bytes 0..1, and a 16-bit R component
+-- in the word in bytes 2..3. The horizontal dimensions of the BR plane is
+-- halved relative to the image dimensions, and each R and B value is
+-- shared with the G components for which
+-- \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of each
+-- plane when this image is in linear layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane, and
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the BR plane. Images in this format
+-- /must/ be defined with a width that is a multiple of two.
 pattern VK_FORMAT_G16_B16R16_2PLANE_422_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16R16_2PLANE_422_UNORM = VkFormat 1000156032
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM"
+-- | @VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM@ specifies an unsigned
+-- normalized /multi-planar format/ that has a 16-bit G component in each
+-- 16-bit word of plane 0, a 16-bit B component in each 16-bit word of
+-- plane 1, and a 16-bit R component in each 16-bit word of plane 2. The
+-- horizontal and vertical dimensions of the R and B planes are halved
+-- relative to the image dimensions, and each R and B component is shared
+-- with the G components for which \(\lfloor i_G \times 0.5
+-- \rfloor = i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B
+-- = j_R\). The location of each plane when this image is in linear layout
+-- can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane. Images in this format
+-- /must/ be defined with a width and height that is a multiple of two.
 pattern VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM = VkFormat 1000156029
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM"
+-- | @VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM@ specifies an unsigned
+-- normalized /multi-planar format/ that has a 16-bit G component in each
+-- 16-bit word of plane 0, a 16-bit B component in each 16-bit word of
+-- plane 1, and a 16-bit R component in each 16-bit word of plane 2. The
+-- horizontal dimension of the R and B plane is halved relative to the
+-- image dimensions, and each R and B value is shared with the G components
+-- for which \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location
+-- of each plane when this image is in linear layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane. Images in this format
+-- /must/ be defined with a width that is a multiple of two.
 pattern VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM = VkFormat 1000156031
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM"
+-- | @VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM@ specifies an unsigned
+-- normalized /multi-planar format/ that has a 16-bit G component in each
+-- 16-bit word of plane 0, a 16-bit B component in each 16-bit word of
+-- plane 1, and a 16-bit R component in each 16-bit word of plane 2. Each
+-- plane has the same dimensions and each R, G and B component contributes
+-- to a single texel. The location of each plane when this image is in
+-- linear layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane.
 pattern VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM :: VkFormat
 pattern VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM = VkFormat 1000156033
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G8B8G8R8_422_UNORM"
+-- | @VK_FORMAT_G8B8G8R8_422_UNORM@ specifies a four-component, 32-bit format
+-- containing a pair of G components, an R component, and a B component,
+-- collectively encoding a 2×1 rectangle of unsigned normalized RGB texel
+-- data. One G value is present at each /i/ coordinate, with the B and R
+-- values shared across both G values and thus recorded at half the
+-- horizontal resolution of the image. This format has an 8-bit G component
+-- for the even /i/ coordinate in byte 0, an 8-bit B component in byte 1,
+-- an 8-bit G component for the odd /i/ coordinate in byte 2, and an 8-bit
+-- R component in byte 3. Images in this format /must/ be defined with a
+-- width that is a multiple of two. For the purposes of the constraints on
+-- copy extents, this format is treated as a compressed format with a 2×1
+-- compressed texel block.
 pattern VK_FORMAT_G8B8G8R8_422_UNORM :: VkFormat
 pattern VK_FORMAT_G8B8G8R8_422_UNORM = VkFormat 1000156000
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8R8_2PLANE_420_UNORM"
+-- | @VK_FORMAT_G8_B8R8_2PLANE_420_UNORM@ specifies an unsigned normalized
+-- /multi-planar format/ that has an 8-bit G component in plane 0, and a
+-- two-component, 16-bit BR plane 1 consisting of an 8-bit B component in
+-- byte 0 and an 8-bit R component in byte 1. The horizontal and vertical
+-- dimensions of the BR plane is halved relative to the image dimensions,
+-- and each R and B value is shared with the G components for which
+-- \(\lfloor i_G \times 0.5 \rfloor =
+-- i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B = j_R\). The
+-- location of each plane when this image is in linear layout can be
+-- determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane, and
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the BR plane. Images in this format
+-- /must/ be defined with a width and height that is a multiple of two.
 pattern VK_FORMAT_G8_B8R8_2PLANE_420_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8R8_2PLANE_420_UNORM = VkFormat 1000156003
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8R8_2PLANE_422_UNORM"
+-- | @VK_FORMAT_G8_B8R8_2PLANE_422_UNORM@ specifies an unsigned normalized
+-- /multi-planar format/ that has an 8-bit G component in plane 0, and a
+-- two-component, 16-bit BR plane 1 consisting of an 8-bit B component in
+-- byte 0 and an 8-bit R component in byte 1. The horizontal dimensions of
+-- the BR plane is halved relative to the image dimensions, and each R and
+-- B value is shared with the G components for which
+-- \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location of each
+-- plane when this image is in linear layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane, and
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the BR plane. Images in this format
+-- /must/ be defined with a width that is a multiple of two.
 pattern VK_FORMAT_G8_B8R8_2PLANE_422_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8R8_2PLANE_422_UNORM = VkFormat 1000156005
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM"
+-- | @VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM@ specifies an unsigned normalized
+-- /multi-planar format/ that has an 8-bit G component in plane 0, an 8-bit
+-- B component in plane 1, and an 8-bit R component in plane 2. The
+-- horizontal and vertical dimensions of the R and B planes are halved
+-- relative to the image dimensions, and each R and B component is shared
+-- with the G components for which \(\lfloor i_G \times 0.5
+-- \rfloor = i_B = i_R\) and \(\lfloor j_G \times 0.5 \rfloor = j_B
+-- = j_R\). The location of each plane when this image is in linear layout
+-- can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane. Images in this format
+-- /must/ be defined with a width and height that is a multiple of two.
 pattern VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM = VkFormat 1000156002
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM"
+-- | @VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM@ specifies an unsigned normalized
+-- /multi-planar format/ that has an 8-bit G component in plane 0, an 8-bit
+-- B component in plane 1, and an 8-bit R component in plane 2. The
+-- horizontal dimension of the R and B plane is halved relative to the
+-- image dimensions, and each R and B value is shared with the G components
+-- for which \(\lfloor i_G \times 0.5 \rfloor = i_B = i_R\). The location
+-- of each plane when this image is in linear layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane. Images in this format
+-- /must/ be defined with a width that is a multiple of two.
 pattern VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM = VkFormat 1000156004
--- No documentation found for Nested "VkFormat" "VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM"
+-- | @VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM@ specifies an unsigned normalized
+-- /multi-planar format/ that has an 8-bit G component in plane 0, an 8-bit
+-- B component in plane 1, and an 8-bit R component in plane 2. Each plane
+-- has the same dimensions and each R, G and B component contributes to a
+-- single texel. The location of each plane when this image is in linear
+-- layout can be determined via
+-- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout', using
+-- @VK_IMAGE_ASPECT_PLANE_0_BIT@ for the G plane,
+-- @VK_IMAGE_ASPECT_PLANE_1_BIT@ for the B plane, and
+-- @VK_IMAGE_ASPECT_PLANE_2_BIT@ for the R plane.
 pattern VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM :: VkFormat
 pattern VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM = VkFormat 1000156006
--- No documentation found for Nested "VkFormat" "VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16"
+-- | @VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16@ specifies a
+-- four-component, 64-bit unsigned normalized format that has a 10-bit R
+-- component in the top 10 bits of the word in bytes 0..1, a 10-bit G
+-- component in the top 10 bits of the word in bytes 2..3, a 10-bit B
+-- component in the top 10 bits of the word in bytes 4..5, and a 10-bit A
+-- component in the top 10 bits of the word in bytes 6..7, with the bottom
+-- 6 bits of each word set to 0.
 pattern VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16 = VkFormat 1000156009
--- No documentation found for Nested "VkFormat" "VK_FORMAT_R10X6G10X6_UNORM_2PACK16"
+-- | @VK_FORMAT_R10X6G10X6_UNORM_2PACK16@ specifies a two-component, 32-bit
+-- unsigned normalized format that has a 10-bit R component in the top 10
+-- bits of the word in bytes 0..1, and a 10-bit G component in the top 10
+-- bits of the word in bytes 2..3, with the bottom 6 bits of each word set
+-- to 0.
 pattern VK_FORMAT_R10X6G10X6_UNORM_2PACK16 :: VkFormat
 pattern VK_FORMAT_R10X6G10X6_UNORM_2PACK16 = VkFormat 1000156008
--- No documentation found for Nested "VkFormat" "VK_FORMAT_R10X6_UNORM_PACK16"
+-- | @VK_FORMAT_R10X6_UNORM_PACK16@ specifies a one-component, 16-bit
+-- unsigned normalized format that has a single 10-bit R component in the
+-- top 10 bits of a 16-bit word, with the bottom 6 bits set to 0.
 pattern VK_FORMAT_R10X6_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_R10X6_UNORM_PACK16 = VkFormat 1000156007
--- No documentation found for Nested "VkFormat" "VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16"
+-- | @VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16@ specifies a
+-- four-component, 64-bit unsigned normalized format that has a 12-bit R
+-- component in the top 12 bits of the word in bytes 0..1, a 12-bit G
+-- component in the top 12 bits of the word in bytes 2..3, a 12-bit B
+-- component in the top 12 bits of the word in bytes 4..5, and a 12-bit A
+-- component in the top 12 bits of the word in bytes 6..7, with the bottom
+-- 4 bits of each word set to 0.
 pattern VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 :: VkFormat
 pattern VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 = VkFormat 1000156019
--- No documentation found for Nested "VkFormat" "VK_FORMAT_R12X4G12X4_UNORM_2PACK16"
+-- | @VK_FORMAT_R12X4G12X4_UNORM_2PACK16@ specifies a two-component, 32-bit
+-- unsigned normalized format that has a 12-bit R component in the top 12
+-- bits of the word in bytes 0..1, and a 12-bit G component in the top 12
+-- bits of the word in bytes 2..3, with the bottom 4 bits of each word set
+-- to 0.
 pattern VK_FORMAT_R12X4G12X4_UNORM_2PACK16 :: VkFormat
 pattern VK_FORMAT_R12X4G12X4_UNORM_2PACK16 = VkFormat 1000156018
--- No documentation found for Nested "VkFormat" "VK_FORMAT_R12X4_UNORM_PACK16"
+-- | @VK_FORMAT_R12X4_UNORM_PACK16@ specifies a one-component, 16-bit
+-- unsigned normalized format that has a single 12-bit R component in the
+-- top 12 bits of a 16-bit word, with the bottom 4 bits set to 0.
 pattern VK_FORMAT_R12X4_UNORM_PACK16 :: VkFormat
 pattern VK_FORMAT_R12X4_UNORM_PACK16 = VkFormat 1000156017
 -- No documentation found for Nested "VkImageAspectFlagBits" "VK_IMAGE_ASPECT_PLANE_0_BIT"

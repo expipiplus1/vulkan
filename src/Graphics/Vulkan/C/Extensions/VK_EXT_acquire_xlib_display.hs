@@ -54,7 +54,45 @@ import Graphics.Vulkan.NamedType
 type RROutput = Word64
   
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkAcquireXlibDisplayEXT"
+-- | vkAcquireXlibDisplayEXT - Acquire access to a VkDisplayKHR using Xlib
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ The physical device the display is on.
+--
+-- -   @dpy@ A connection to the X11 server that currently owns @display@.
+--
+-- -   @display@ The display the caller wishes to control in Vulkan.
+--
+-- = Description
+--
+-- All permissions necessary to control the display are granted to the
+-- Vulkan instance associated with @physicalDevice@ until the display is
+-- released or the X11 connection specified by @dpy@ is terminated.
+-- Permission to access the display /may/ be temporarily revoked during
+-- periods when the X11 server from which control was acquired itself
+-- looses access to @display@. During such periods, operations which
+-- require access to the display /must/ fail with an approriate error code.
+-- If the X11 server associated with @dpy@ does not own @display@, or if
+-- permission to access it has already been acquired by another entity, the
+-- call /must/ return the error code @VK_ERROR_INITIALIZATION_FAILED@.
+--
+-- __Note__
+--
+-- One example of when an X11 server loses access to a display is when it
+-- loses ownership of its virtual terminal.
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   @VK_ERROR_INITIALIZATION_FAILED@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -65,7 +103,38 @@ foreign import ccall
 type FN_vkAcquireXlibDisplayEXT = ("physicalDevice" ::: VkPhysicalDevice) -> ("dpy" ::: Ptr Display) -> ("display" ::: VkDisplayKHR) -> IO VkResult
 type PFN_vkAcquireXlibDisplayEXT = FunPtr FN_vkAcquireXlibDisplayEXT
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetRandROutputDisplayEXT"
+-- | vkGetRandROutputDisplayEXT - Query the VkDisplayKHR corresponding to an
+-- X11 RandR Output
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ The physical device to query the display handle on.
+--
+-- -   @dpy@ A connection to the X11 server from which @rrOutput@ was
+--     queried.
+--
+-- -   @rrOutput@ An X11 RandR output ID.
+--
+-- -   @pDisplay@ The corresponding
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayKHR' handle
+--     will be returned here.
+--
+-- = Description
+--
+-- If there is no
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayKHR' corresponding
+-- to @rrOutput@ on @physicalDevice@,
+-- 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' /must/ be returned
+-- in @pDisplay@.
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   @VK_SUCCESS@
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

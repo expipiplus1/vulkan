@@ -31,45 +31,118 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDeviceFloatControlsPropertiesKHR"
+-- | VkPhysicalDeviceFloatControlsPropertiesKHR - Structure describing
+-- properties supported by VK_KHR_shader_float_controls
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceFloatControlsPropertiesKHR@ structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in VkPhysicalDeviceFloatControlsPropertiesKHR.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceFloatControlsPropertiesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceFloatControlsPropertiesKHR = VkPhysicalDeviceFloatControlsPropertiesKHR
   { -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "separateDenormSettings"
+  , -- | @separateDenormSettings@ is a boolean value indicating whether the
+  -- implementation supports separate settings for 16-bit and 64-bit
+  -- denormals.
   vkSeparateDenormSettings :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "separateRoundingModeSettings"
+  , -- | @separateRoundingModeSettings@ is a boolean value indicating whether the
+  -- implementation supports separate rounding modes for 16-bit and 64-bit
+  -- floating point instructions.
   vkSeparateRoundingModeSettings :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderSignedZeroInfNanPreserveFloat16"
+  , -- | @shaderSignedZeroInfNanPreserveFloat16@ is a boolean value indicating
+  -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
+  -- 16-bit floating-point computations. It also indicates whether the
+  -- @SignedZeroInfNanPreserve@ execution mode /can/ be used for 16-bit
+  -- floating-point types.
   vkShaderSignedZeroInfNanPreserveFloat16 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderSignedZeroInfNanPreserveFloat32"
+  , -- | @shaderSignedZeroInfNanPreserveFloat32@ is a boolean value indicating
+  -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
+  -- 32-bit floating-point computations. It also indicates whether the
+  -- @SignedZeroInfNanPreserve@ execution mode /can/ be used for 32-bit
+  -- floating-point types.
   vkShaderSignedZeroInfNanPreserveFloat32 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderSignedZeroInfNanPreserveFloat64"
+  , -- | @shaderSignedZeroInfNanPreserveFloat64@ is a boolean value indicating
+  -- whether sign of a zero, Nans and \(\pm\infty\) /can/ be preserved in
+  -- 64-bit floating-point computations. It also indicates whether the
+  -- @SignedZeroInfNanPreserve@ execution mode /can/ be used for 64-bit
+  -- floating-point types.
   vkShaderSignedZeroInfNanPreserveFloat64 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormPreserveFloat16"
+  , -- | @shaderDenormPreserveFloat16@ is a boolean value indicating whether
+  -- denormals /can/ be preserved in 16-bit floating-point computations. It
+  -- also indicates whether the @DenormPreserve@ execution mode /can/ be used
+  -- for 16-bit floating-point types.
   vkShaderDenormPreserveFloat16 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormPreserveFloat32"
+  , -- | @shaderDenormPreserveFloat32@ is a boolean value indicating whether
+  -- denormals /can/ be preserved in 32-bit floating-point computations. It
+  -- also indicates whether the @DenormPreserve@ execution mode /can/ be used
+  -- for 32-bit floating-point types.
   vkShaderDenormPreserveFloat32 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormPreserveFloat64"
+  , -- | @shaderDenormPreserveFloat64@ is a boolean value indicating whether
+  -- denormals /can/ be preserved in 64-bit floating-point computations. It
+  -- also indicates whether the @DenormPreserve@ execution mode /can/ be used
+  -- for 64-bit floating-point types.
   vkShaderDenormPreserveFloat64 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormFlushToZeroFloat16"
+  , -- | @shaderDenormFlushToZeroFloat16@ is a boolean value indicating whether
+  -- denormals /can/ be flushed to zero in 16-bit floating-point
+  -- computations. It also indicates whether the @DenormFlushToZero@
+  -- execution mode /can/ be used for 16-bit floating-point types.
   vkShaderDenormFlushToZeroFloat16 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormFlushToZeroFloat32"
+  , -- | @shaderDenormFlushToZeroFloat32@ is a boolean value indicating whether
+  -- denormals /can/ be flushed to zero in 32-bit floating-point
+  -- computations. It also indicates whether the @DenormFlushToZero@
+  -- execution mode /can/ be used for 32-bit floating-point types.
   vkShaderDenormFlushToZeroFloat32 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormFlushToZeroFloat64"
+  , -- | @shaderDenormFlushToZeroFloat64@ is a boolean value indicating whether
+  -- denormals /can/ be flushed to zero in 64-bit floating-point
+  -- computations. It also indicates whether the @DenormFlushToZero@
+  -- execution mode /can/ be used for 64-bit floating-point types.
   vkShaderDenormFlushToZeroFloat64 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTEFloat16"
+  , -- | @shaderRoundingModeRTEFloat16@ is a boolean value indicating whether an
+  -- implementation supports the round-to-nearest-even rounding mode for
+  -- 16-bit floating-point arithmetic and conversion instructions. It also
+  -- indicates whether the @RoundingModeRTE@ execution mode /can/ be used for
+  -- 16-bit floating-point types.
   vkShaderRoundingModeRTEFloat16 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTEFloat32"
+  , -- | @shaderRoundingModeRTEFloat32@ is a boolean value indicating whether an
+  -- implementation supports the round-to-nearest-even rounding mode for
+  -- 32-bit floating-point arithmetic and conversion instructions. It also
+  -- indicates whether the @RoundingModeRTE@ execution mode /can/ be used for
+  -- 32-bit floating-point types.
   vkShaderRoundingModeRTEFloat32 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTEFloat64"
+  , -- | @shaderRoundingModeRTEFloat64@ is a boolean value indicating whether an
+  -- implementation supports the round-to-nearest-even rounding mode for
+  -- 64-bit floating-point arithmetic and conversion instructions. It also
+  -- indicates whether the @RoundingModeRTE@ execution mode /can/ be used for
+  -- 64-bit floating-point types.
   vkShaderRoundingModeRTEFloat64 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTZFloat16"
+  , -- | @shaderRoundingModeRTZFloat16@ is a boolean value indicating whether an
+  -- implementation supports the round-towards-zero rounding mode for 16-bit
+  -- floating-point arithmetic and conversion instructions. It also indicates
+  -- whether the @RoundingModeRTZ@ execution mode /can/ be used for 16-bit
+  -- floating-point types.
   vkShaderRoundingModeRTZFloat16 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTZFloat32"
+  , -- | @shaderRoundingModeRTZFloat32@ is a boolean value indicating whether an
+  -- implementation supports the round-towards-zero rounding mode for 32-bit
+  -- floating-point arithmetic and conversion instructions. It also indicates
+  -- whether the @RoundingModeRTZ@ execution mode /can/ be used for 32-bit
+  -- floating-point types.
   vkShaderRoundingModeRTZFloat32 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTZFloat64"
+  , -- | @shaderRoundingModeRTZFloat64@ is a boolean value indicating whether an
+  -- implementation supports the round-towards-zero rounding mode for 64-bit
+  -- floating-point arithmetic and conversion instructions. It also indicates
+  -- whether the @RoundingModeRTZ@ execution mode /can/ be used for 64-bit
+  -- floating-point types.
   vkShaderRoundingModeRTZFloat64 :: VkBool32
   }
   deriving (Eq, Show)

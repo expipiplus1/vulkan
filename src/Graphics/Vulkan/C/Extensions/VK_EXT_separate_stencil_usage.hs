@@ -33,13 +33,54 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   )
 
 
--- No documentation found for TopLevel "VkImageStencilUsageCreateInfoEXT"
+-- | VkImageStencilUsageCreateInfoEXT - Specify separate usage flags for the
+-- stencil aspect of a depth-stencil image
+--
+-- = Description
+--
+-- This structure specifies image usages which only apply to the stencil
+-- aspect of a depth\/stencil format image. When this structure is included
+-- in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', the stencil aspect
+-- of the image /must/ only be used as specified by @stencilUsage@. When
+-- this structure is not included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', the stencil aspect
+-- of an image /must/ only be used as specified
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@usage@. Use of
+-- other aspects of an image are unaffected by this structure.
+--
+-- This structure /can/ also be included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'
+-- to query additional capabilities specific to image creation parameter
+-- combinations including a separate set of usage flags for the stencil
+-- aspect of the image using
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'.
+-- When this structure is not present in the @pNext@ chain of
+-- @VkPhysicalDeviceImageFormatInfo2@ then the implicit value of
+-- @stencilUsage@ matches that of
+-- @VkPhysicalDeviceImageFormatInfo2@::@usage@.
+--
+-- == Valid Usage
+--
+-- -   If @stencilUsage@ includes
+--     @VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT@, then bits other than
+--     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@, and
+--     @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@ /must/ not be set
+--
+-- Unresolved directive in VkImageStencilUsageCreateInfoEXT.txt -
+-- include::..\/validity\/structs\/VkImageStencilUsageCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkImageStencilUsageCreateInfoEXT = VkImageStencilUsageCreateInfoEXT
-  { -- No documentation found for Nested "VkImageStencilUsageCreateInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkImageStencilUsageCreateInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkImageStencilUsageCreateInfoEXT" "stencilUsage"
+  , -- | @stencilUsage@ is a bitmask of
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits'
+  -- describing the intended usage of the stencil aspect of the image.
   vkStencilUsage :: VkImageUsageFlags
   }
   deriving (Eq, Show)

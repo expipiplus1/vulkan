@@ -25,6 +25,9 @@ pattern VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME = "VK_KHR_sampler_mir
 -- No documentation found for TopLevel "VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION"
 pattern VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION = 1
--- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE"
+-- | @VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE@ specifies that the mirror
+-- clamp to edge wrap mode will be used. This is only valid if the
+-- @{html_spec_relative}#VK_KHR_sampler_mirror_clamp_to_edge@ extension is
+-- enabled.
 pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE :: VkSamplerAddressMode
 pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = VkSamplerAddressMode 4

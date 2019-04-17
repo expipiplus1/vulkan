@@ -80,13 +80,24 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- No documentation found for TopLevel "VkCalibratedTimestampInfoEXT"
+-- | VkCalibratedTimestampInfoEXT - Structure specifying the input parameters
+-- of a calibrated timestamp query
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkCalibratedTimestampInfoEXT.txt -
+-- include::..\/validity\/structs\/VkCalibratedTimestampInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkCalibratedTimestampInfoEXT = VkCalibratedTimestampInfoEXT
-  { -- No documentation found for Nested "VkCalibratedTimestampInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCalibratedTimestampInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCalibratedTimestampInfoEXT" "timeDomain"
+  , -- | @timeDomain@ /must/ be one of the 'VkTimeDomainEXT' values returned by
+  -- 'vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
   vkTimeDomain :: VkTimeDomainEXT
   }
   deriving (Eq, Show)
@@ -107,7 +118,11 @@ instance Zero VkCalibratedTimestampInfoEXT where
                                       zero
 -- ** VkTimeDomainEXT
 
--- No documentation found for TopLevel "VkTimeDomainEXT"
+-- | VkTimeDomainEXT - Supported time domains
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkTimeDomainEXT = VkTimeDomainEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -131,23 +146,77 @@ instance Read VkTimeDomainEXT where
                         )
                     )
 
--- No documentation found for Nested "VkTimeDomainEXT" "VK_TIME_DOMAIN_DEVICE_EXT"
+-- | @VK_TIME_DOMAIN_DEVICE_EXT@ specifies the device time domain. Timestamp
+-- values in this time domain are comparable with device timestamp values
+-- captured using
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp' and
+-- are defined to be incrementing according to the
+-- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#limits-timestampPeriod timestampPeriod>
+-- of the device.
 pattern VK_TIME_DOMAIN_DEVICE_EXT :: VkTimeDomainEXT
 pattern VK_TIME_DOMAIN_DEVICE_EXT = VkTimeDomainEXT 0
 
--- No documentation found for Nested "VkTimeDomainEXT" "VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT"
+-- | @VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT@ specifies the CLOCK_MONOTONIC time
+-- domain available on POSIX platforms.
 pattern VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT :: VkTimeDomainEXT
 pattern VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT = VkTimeDomainEXT 1
 
--- No documentation found for Nested "VkTimeDomainEXT" "VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT"
+-- | @VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT@ specifies the
+-- CLOCK_MONOTONIC_RAW time domain available on POSIX platforms.
 pattern VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT :: VkTimeDomainEXT
 pattern VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT = VkTimeDomainEXT 2
 
--- No documentation found for Nested "VkTimeDomainEXT" "VK_TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT"
+-- | @VK_TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT@ specifies the performance
+-- counter (QPC) time domain available on Windows.
 pattern VK_TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT :: VkTimeDomainEXT
 pattern VK_TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT = VkTimeDomainEXT 3
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetCalibratedTimestampsEXT"
+-- | vkGetCalibratedTimestampsEXT - Query calibrated timestamps
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device used to perform the query.
+--
+-- -   @timestampCount@ is the number of timestamps to query.
+--
+-- -   @pTimestampInfos@ is a pointer to an array of @timestampCount@
+--     number of structures of type 'VkCalibratedTimestampInfoEXT',
+--     describing the time domains the calibrated timestamps should be
+--     captured from.
+--
+-- -   @pTimestamps@ is a pointer to an array of @timestampCount@ number of
+--     64-bit unsigned integer values in which the requested calibrated
+--     timestamp values are returned.
+--
+-- -   @pMaxDeviation@ is a pointer to a 64-bit unsigned integer value in
+--     which the strictly positive maximum deviation, in nanoseconds, of
+--     the calibrated timestamp values is returned.
+--
+-- = Description
+--
+-- __Note__
+--
+-- The maximum deviation /may/ vary between calls to
+-- @vkGetCalibratedTimestampsEXT@ even for the same set of time domains due
+-- to implementation and platform specific reasons. It is the application’s
+-- responsibility to assess whether the returned maximum deviation makes
+-- the timestamp values suitable for any particular purpose and /can/
+-- choose to re-issue the timestamp calibration call pursuing a lower
+-- devation value.
+--
+-- Calibrated timestamp values /can/ be extrapolated to estimate future
+-- coinciding timestamp values, however, depending on the nature of the
+-- time domains and other properties of the platform extrapolating values
+-- over a sufficiently long period of time /may/ no longer be accurate
+-- enough to fit any particular purpose so applications are expected to
+-- re-calibrate the timestamps on a regular basis.
+--
+-- Unresolved directive in vkGetCalibratedTimestampsEXT.txt -
+-- include::..\/validity\/protos\/vkGetCalibratedTimestampsEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
@@ -158,7 +227,44 @@ foreign import ccall
 type FN_vkGetCalibratedTimestampsEXT = ("device" ::: VkDevice) -> ("timestampCount" ::: Word32) -> ("pTimestampInfos" ::: Ptr VkCalibratedTimestampInfoEXT) -> ("pTimestamps" ::: Ptr Word64) -> ("pMaxDeviation" ::: Ptr Word64) -> IO VkResult
 type PFN_vkGetCalibratedTimestampsEXT = FunPtr FN_vkGetCalibratedTimestampsEXT
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
--- No documentation found for TopLevel "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT"
+-- | vkGetPhysicalDeviceCalibrateableTimeDomainsEXT - Query calibrateable
+-- time domains
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device from which to query the set
+--     of calibrateable time domains.
+--
+-- -   @pTimeDomainCount@ is a pointer to an integer related to the number
+--     of calibrateable time domains available or queried, as described
+--     below.
+--
+-- -   @pTimeDomains@ is either @NULL@ or a pointer to an array of
+--     'VkTimeDomainEXT' values, indicating the supported calibrateable
+--     time domains.
+--
+-- = Description
+--
+-- If @pTimeDomains@ is @NULL@, then the number of calibrateable time
+-- domains supported for the given @physicalDevice@ is returned in
+-- @pTimeDomainCount@. Otherwise, @pTimeDomainCount@ /must/ point to a
+-- variable set by the user to the number of elements in the @pTimeDomains@
+-- array, and on return the variable is overwritten with the number of
+-- values actually written to @pTimeDomains@. If the value of
+-- @pTimeDomainCount@ is less than the number of calibrateable time domains
+-- supported, at most @pTimeDomainCount@ values will be written to
+-- @pTimeDomains@. If @pTimeDomainCount@ is smaller than the number of
+-- calibrateable time domains supported for the given @physicalDevice@,
+-- @VK_INCOMPLETE@ will be returned instead of @VK_SUCCESS@ to indicate
+-- that not all the available values were returned.
+--
+-- Unresolved directive in
+-- vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.txt -
+-- include::..\/validity\/protos\/vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe

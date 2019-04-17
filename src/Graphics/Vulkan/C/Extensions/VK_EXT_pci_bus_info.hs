@@ -33,19 +33,29 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkPhysicalDevicePCIBusInfoPropertiesEXT"
+-- | VkPhysicalDevicePCIBusInfoPropertiesEXT - Structure containing PCI bus
+-- information of a physical device
+--
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDevicePCIBusInfoPropertiesEXT.txt -
+-- include::..\/validity\/structs\/VkPhysicalDevicePCIBusInfoPropertiesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDevicePCIBusInfoPropertiesEXT = VkPhysicalDevicePCIBusInfoPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDevicePCIBusInfoPropertiesEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDevicePCIBusInfoPropertiesEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDevicePCIBusInfoPropertiesEXT" "pciDomain"
+  , -- | @pciDomain@ is the PCI bus domain.
   vkPciDomain :: Word32
-  , -- No documentation found for Nested "VkPhysicalDevicePCIBusInfoPropertiesEXT" "pciBus"
+  , -- | @pciBus@ is the PCI bus identifier.
   vkPciBus :: Word32
-  , -- No documentation found for Nested "VkPhysicalDevicePCIBusInfoPropertiesEXT" "pciDevice"
+  , -- | @pciDevice@ is the PCI device identifier.
   vkPciDevice :: Word32
-  , -- No documentation found for Nested "VkPhysicalDevicePCIBusInfoPropertiesEXT" "pciFunction"
+  , -- | @pciFunction@ is the PCI device function identifier.
   vkPciFunction :: Word32
   }
   deriving (Eq, Show)

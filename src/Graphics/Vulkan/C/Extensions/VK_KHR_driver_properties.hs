@@ -77,15 +77,25 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkConformanceVersionKHR"
+-- | VkConformanceVersionKHR - Structure containing the conformance test
+-- suite version the implementation is compliant with
+--
+-- = Description
+--
+-- Unresolved directive in VkConformanceVersionKHR.txt -
+-- include::..\/validity\/structs\/VkConformanceVersionKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkConformanceVersionKHR = VkConformanceVersionKHR
-  { -- No documentation found for Nested "VkConformanceVersionKHR" "major"
+  { -- | @major@ is the major version number of the conformance test suite.
   vkMajor :: Word8
-  , -- No documentation found for Nested "VkConformanceVersionKHR" "minor"
+  , -- | @minor@ is the minor version number of the conformance test suite.
   vkMinor :: Word8
-  , -- No documentation found for Nested "VkConformanceVersionKHR" "subminor"
+  , -- | @subminor@ is the subminor version number of the conformance test suite.
   vkSubminor :: Word8
-  , -- No documentation found for Nested "VkConformanceVersionKHR" "patch"
+  , -- | @patch@ is the patch version number of the conformance test suite.
   vkPatch :: Word8
   }
   deriving (Eq, Show)
@@ -109,7 +119,26 @@ instance Zero VkConformanceVersionKHR where
                                  zero
 -- ** VkDriverIdKHR
 
--- No documentation found for TopLevel "VkDriverIdKHR"
+-- | VkDriverIdKHR - Khronos driver IDs
+--
+-- = Description
+--
+-- __Note__
+--
+-- Khronos driver IDs may be allocated by vendors at any time. There may be
+-- multiple driver IDs for the same vendor, representing different drivers
+-- (for e.g. different platforms, proprietary or open source, etc.). Only
+-- the latest canonical versions of this Specification, of the
+-- corresponding @vk.xml@ API Registry, and of the corresponding
+-- @vulkan_core.h@ header file /must/ contain all reserved Khronos driver
+-- IDs.
+--
+-- Only driver IDs registered with Khronos are given symbolic names. There
+-- /may/ be unregistered driver IDs returned.
+--
+-- = See Also
+--
+-- No cross-references are available
 newtype VkDriverIdKHR = VkDriverIdKHR Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -190,19 +219,35 @@ pattern VK_DRIVER_ID_GOOGLE_PASTEL_KHR = VkDriverIdKHR 10
 -- No documentation found for Nested "VkDriverIdKHR" "VK_DRIVER_ID_GGP_PROPRIETARY_KHR"
 pattern VK_DRIVER_ID_GGP_PROPRIETARY_KHR :: VkDriverIdKHR
 pattern VK_DRIVER_ID_GGP_PROPRIETARY_KHR = VkDriverIdKHR 11
--- No documentation found for TopLevel "VkPhysicalDeviceDriverPropertiesKHR"
+-- | VkPhysicalDeviceDriverPropertiesKHR - Structure containing driver
+-- identification information
+--
+-- = Description
+--
+-- @driverID@ /must/ be immutable for a given driver across instances,
+-- processes, driver versions, and system reboots.
+--
+-- Unresolved directive in VkPhysicalDeviceDriverPropertiesKHR.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceDriverPropertiesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceDriverPropertiesKHR = VkPhysicalDeviceDriverPropertiesKHR
-  { -- No documentation found for Nested "VkPhysicalDeviceDriverPropertiesKHR" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceDriverPropertiesKHR" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceDriverPropertiesKHR" "driverID"
+  , -- | @driverID@ is a unique identifier for the driver of the physical device.
   vkDriverID :: VkDriverIdKHR
-  , -- No documentation found for Nested "VkPhysicalDeviceDriverPropertiesKHR" "driverName"
+  , -- | @driverName@ is a null-terminated UTF-8 string containing the name of
+  -- the driver.
   vkDriverName :: Vector VK_MAX_DRIVER_NAME_SIZE_KHR CChar
-  , -- No documentation found for Nested "VkPhysicalDeviceDriverPropertiesKHR" "driverInfo"
+  , -- | @driverInfo@ is a null-terminated UTF-8 string containing additional
+  -- information about the driver.
   vkDriverInfo :: Vector VK_MAX_DRIVER_INFO_SIZE_KHR CChar
-  , -- No documentation found for Nested "VkPhysicalDeviceDriverPropertiesKHR" "conformanceVersion"
+  , -- | @conformanceVersion@ is the version of the Vulkan conformance test this
+  -- driver is conformant against (see 'VkConformanceVersionKHR').
   vkConformanceVersion :: VkConformanceVersionKHR
   }
   deriving (Eq, Show)

@@ -36,13 +36,30 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "VkMemoryPriorityAllocateInfoEXT"
+-- | VkMemoryPriorityAllocateInfoEXT - Specify a memory allocation priority
+--
+-- = Description
+--
+-- Memory allocations with higher priority /may/ be more likely to stay in
+-- device-local memory when the system is under memory pressure.
+--
+-- If this structure is not included, it is as if the @priority@ value were
+-- @0.5@.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkMemoryPriorityAllocateInfoEXT.txt -
+-- include::..\/validity\/structs\/VkMemoryPriorityAllocateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkMemoryPriorityAllocateInfoEXT = VkMemoryPriorityAllocateInfoEXT
-  { -- No documentation found for Nested "VkMemoryPriorityAllocateInfoEXT" "sType"
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkMemoryPriorityAllocateInfoEXT" "pNext"
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkMemoryPriorityAllocateInfoEXT" "priority"
+  , -- | @priority@ /must/ be between @0@ and @1@, inclusive
   vkPriority :: CFloat
   }
   deriving (Eq, Show)
@@ -61,13 +78,38 @@ instance Zero VkMemoryPriorityAllocateInfoEXT where
   zero = VkMemoryPriorityAllocateInfoEXT zero
                                          zero
                                          zero
--- No documentation found for TopLevel "VkPhysicalDeviceMemoryPriorityFeaturesEXT"
+-- | VkPhysicalDeviceMemoryPriorityFeaturesEXT - Structure describing memory
+-- priority features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the @VkPhysicalDeviceMemoryPriorityFeaturesEXT@ structure
+-- describe the following features:
+--
+-- = Description
+--
+-- If the @VkPhysicalDeviceMemoryPriorityFeaturesEXT@ structure is included
+-- in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether the feature is supported.
+-- @VkPhysicalDeviceMemoryPriorityFeaturesEXT@ /can/ also be used in the
+-- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
+-- enable features.
+--
+-- Unresolved directive in VkPhysicalDeviceMemoryPriorityFeaturesEXT.txt -
+-- include::..\/validity\/structs\/VkPhysicalDeviceMemoryPriorityFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data VkPhysicalDeviceMemoryPriorityFeaturesEXT = VkPhysicalDeviceMemoryPriorityFeaturesEXT
   { -- No documentation found for Nested "VkPhysicalDeviceMemoryPriorityFeaturesEXT" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceMemoryPriorityFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceMemoryPriorityFeaturesEXT" "memoryPriority"
+  , -- | @memoryPriority@ indicates that the implementation supports memory
+  -- priorities specified at memory allocation time via
+  -- 'VkMemoryPriorityAllocateInfoEXT'.
   vkMemoryPriority :: VkBool32
   }
   deriving (Eq, Show)

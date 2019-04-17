@@ -183,7 +183,7 @@ zero =
                   , Unguarded (Import "GHC.TypeNats" ["KnownNat"])
                   , Unguarded (Import "Foreign.Storable" ["Storable"])
                   ]
-      weExtensions = ["TypeSynonymInstances"]
+      weExtensions = ["FlexibleInstances", "TypeSynonymInstances"]
       weName = "Zero struct"
       weProvides = [Unguarded $ WithConstructors (TypeName "Zero")]
       weUndependableProvides = []
