@@ -301,7 +301,9 @@ writePair Bracket{..} =
         wrapperArguments = punctuate " ->" (argHsTypes ++ [cont, "IO a"])
     tellImport "Control.Exception" bracket
     pure $ \_ -> [qci|
-    -- | Wrapper for '{bCreate}' and '{bDestroy}' using '{bracket}'
+    -- | A safe wrapper for '{bCreate}' and '{bDestroy}' using '{bracket}'
+    --
+    -- The allocated value must not be returned from the provided computation
     {unHaskellName bWrapperName}
       :: {hsep wrapperArguments}
     {unHaskellName bWrapperName} {hsep argHsVars} = {bracket}

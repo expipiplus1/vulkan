@@ -39,19 +39,23 @@ writeCommand getEnumName fp@Command {..} = do
             tellExport (Unguarded (Term "vkGetInstanceProcAddr"))
             tellSourceDepend (Unguarded (TypeName "InstanceCmds"))
             pure $ vsep
-              [ [qci|vkGetInstanceProcAddr :: InstanceCmds -> (("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction)|]
+              [ [qci|
+                #if defined(EXPOSE_CORE10_COMMANDS)
+                vkGetInstanceProcAddr :: (("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction)
+                #else
+                vkGetInstanceProcAddr :: InstanceCmds -> (("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction)
+                #endif
+                |]
               , synonyms
               ]
           _ -> pure synonyms
         pure $ const d
 
   wrapMToWriteElements ("Command:" T.<+> cName) (Just bootElem) $ do
-    let staticGuard = if cName == "vkGetInstanceProcAddr"
-          then "EXPOSE_VKGETINSTANCEPROCADDR"
-          else case cAvailability of
-            CoreCommand major minor ->
-              "EXPOSE_CORE" <> T.tShow major <> T.tShow minor <> "_COMMANDS"
-            ExtensionCommand -> "EXPOSE_STATIC_EXTENSION_COMMANDS"
+    let staticGuard = case cAvailability of
+          CoreCommand major minor ->
+            "EXPOSE_CORE" <> T.tShow major <> T.tShow minor <> "_COMMANDS"
+          ExtensionCommand -> "EXPOSE_STATIC_EXTENSION_COMMANDS"
         protoDepends = typeDepends $ Proto
           cReturnType
           [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]

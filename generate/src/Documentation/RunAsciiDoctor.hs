@@ -51,7 +51,7 @@ asciidoctor extensions vkPath manTxt = do
       noteOpts        = []
       adocExts =
         [ "-r"
-        , vkPath </> "config/vulkan-macros.rb"
+        , vkPath </> "config/spec-macros.rb"
         , "-r"
         , vkPath </> "config/tilde_open_block.rb"
         ]

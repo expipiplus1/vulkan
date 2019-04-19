@@ -39,6 +39,7 @@ import           Spec.Savvy.Type
 import           Write.Element                     hiding ( TypeName )
 import qualified Write.Element                 as WE
 import           Write.Marshal.Monad
+import           Write.Util                               ( document, Documentee(..) )
 import           Write.Marshal.Util
 import           Write.Marshal.Wrap
 import           Write.Struct
@@ -84,7 +85,8 @@ commandWrapper getHandle isBitmask isStruct structDispatchableHandle resolveAlia
     ((weDoc, aliasWriteElements), (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
       either
         (throwError . fmap (WithContext (cName command)))
-        (pure . first (first (const . vcat)))
+        -- (pure . first (first (const . vcat)))
+        (pure . first (first (fmap vcat . sequence)))
         (runWrap $ wrapCommand getTypeHandle
                                isDefaultable
                                isTypeStruct
@@ -121,20 +123,20 @@ wrapCommand
   -> (Text -> Maybe HaskellName)
   -- ^ Get brackets for this command
   -> Command
-  -> WrapM ([Doc ()], [WriteElement])
+  -> WrapM ([DocMap -> Doc ()], [WriteElement])
 wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle resolveAlias getBrackets c@Command {..} = do
   let lengthPairs :: [(Parameter, Maybe Text, [Parameter])]
       lengthPairs = getLengthPointerPairs cParameters
       makeWts :: Maybe CommandUsage -> WrapM ([WrappingType], [Constraint])
       makeWts usage = listens getConstraints $
         parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle resolveAlias usage lengthPairs cParameters
-  let printWrapped ::  Text -> [WrappingType] -> [Constraint] -> WriterT WriteState (Except [SpecError]) (Doc ann)
+  let printWrapped ::  Text -> [WrappingType] -> [Constraint] -> WriterT WriteState (Except [SpecError]) (DocMap -> Doc ann)
       printWrapped n wts constraints = do
         wrapped <- wrap c wts
         t <- makeType wts constraints
         tellDepend (Unguarded (TermName cName))
-        pure $ line <> [qci|
-          -- | Wrapper for '{cName}'
+        pure $ \getDoc -> line <> [qci|
+          {document getDoc (TopLevel cName)}
           {n} :: {t :: Doc ()}
           {n} = {wrapped (pretty cName) :: Doc ()}|]
       makeType wts constraints = wtsToSig KeepVkResult c constraints wts
@@ -1251,7 +1253,7 @@ writeGetAllCommand
   -> [WrappingType]
   -- ^ The wrapping types for the GetValues command
   -> Command
-  -> WrapM (Doc ())
+  -> WrapM (DocMap -> Doc ())
 writeGetAllCommand getLengthTypes getValuesTypes c@Command {..} = do
   getAll <- maybe
     (throwError [Other $ "Failed to get 'getAll' function name for" T.<+> cName]
@@ -1291,9 +1293,8 @@ writeGetAllCommand getLengthTypes getValuesTypes c@Command {..} = do
     )
   let takeResult = if cReturnType == Void then "" else "snd <$> " :: Doc ()
   tellExport (Unguarded (Term getAll))
-  pure [qci|
-    -- | Call '{getLength}' to get the number of return values, then use that
-    -- number to call '{get}' to get all the values.
+  pure $ \_ -> [qci|
+    -- | Returns all the values available from '{get}'.
     {getAll} :: {type'}
     {getAll} {hsep args} =
       {takeResult}{getLength} {hsep args}

@@ -46,7 +46,7 @@ writeCommandAlias alias@Alias{..} = eitherToValidation $ do
   command@Command{..} <- aliasTarget alias
   let t = commandType command
   (tyDoc, (is, es)) <- toHsType t
-  let weImports    = is
+  let weImports    = [] -- is
       weDoc getDoc = [qci|
         {document getDoc (TopLevel aName)}
         -- {aName} :: {tyDoc}
@@ -55,7 +55,7 @@ writeCommandAlias alias@Alias{..} = eitherToValidation $ do
       weExtensions = es
       weName       = "Value Alias: " <> aName
       weProvides   = [Unguarded $ Term aName]
-      weDepends    = Unguarded <$> TermName aAliasName : typeDepends t
+      weDepends    = Unguarded <$> TermName aAliasName : [] -- typeDepends t
       weUndependableProvides = []
       weSourceDepends        = []
       weBootElement          = Nothing

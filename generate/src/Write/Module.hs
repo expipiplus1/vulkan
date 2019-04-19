@@ -58,16 +58,21 @@ writeModules findDoc ms =
       getDoc = getModuleDoc findDoc moduleMap
   in  ms
         <&> (\m ->
-              let sourceModule =
+              let stripConstructorExports we = we
+                    { weProvides = fmap (WithoutConstructors . unExport)
+                                     <$> weProvides we
+                    }
+                  bootModule =
                       case mapMaybe weBootElement (mWriteElements m) of
                         []  -> Nothing
-                        wes -> Just m { mWriteElements     = wes
-                                      , mSeedReexports     = []
-                                      , mReexportedModules = []
+                        wes -> Just m
+                          { mWriteElements     = stripConstructorExports <$> wes
+                          , mSeedReexports     = []
+                          , mReexportedModules = []
                                       --- ^ boot modules don't reexport things
-                                      }
+                          }
                   write = writeModule (getDoc (mName m)) moduleMapHN
-              in  (write m, write <$> sourceModule)
+              in  (write m, write <$> bootModule)
             )
 
 getModuleDoc

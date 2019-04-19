@@ -266,8 +266,7 @@ specCWriteElements s@Spec {..} = do
     let isAllowedBaseType bt = btName bt /= "VkBool32"
     in  eitherToValidation
           $ traverse writeBaseType (filter isAllowedBaseType sBaseTypes)
-  wLoader <- eitherToValidation
-    $ writeLoader getEnumAliasTarget sPlatforms sCommands
+  wLoader <- eitherToValidation $ writeLoader sPlatforms sCommands
   pure $ concat
     [ [wHeaderVersion]
     , bespokeWriteElements

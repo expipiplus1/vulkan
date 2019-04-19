@@ -25,8 +25,6 @@ runhaskell \
 
 ## TODO:
 
-- Document wrappers
-- Export dynamic functions from proper modules
 - totality for pattern synonyms
 - associate pattern synonyms
 

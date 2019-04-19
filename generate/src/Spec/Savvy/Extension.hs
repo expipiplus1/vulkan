@@ -1,4 +1,5 @@
 {-# LANGUAGE ApplicativeDo   #-}
+{-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module Spec.Savvy.Extension
@@ -27,7 +28,12 @@ specExtensions :: P.Spec -> Validation [SpecError] [Extension]
 specExtensions P.Spec {..} = for sExtensions $ \P.Extension {..} -> do
   let reqs = [ r | P.AnExtensionRequirement r <- extElements ]
   extRequirements <- traverse (extractRequirement (fromIntegral extNumber)) reqs
-  pure Extension {..}
+  pure $ if extName `elem` forcedUniversalExtensions
+    then let extPlatform = Nothing in Extension { .. }
+    else Extension { .. }
+
+forcedUniversalExtensions :: [Text]
+forcedUniversalExtensions = ["VK_EXT_full_screen_exclusive"]
 
 extractRequirement
   :: Int -> P.ExtensionRequirement -> Validation [SpecError] Requirement

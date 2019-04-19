@@ -97,6 +97,12 @@ fixLinks findDocs = topDown fixInlines
           attrs
           t
           (externalSpecHTML <> "#" <> T.unpack fragment, title)
+      i@(Code _ name) ->
+        case findDocs (T.pack name) of
+          Unknown    -> i
+          ThisModule -> RawInline "haddock" ("'" <> name <> "'")
+          OtherModule m ->
+            RawInline "haddock" ("'" <> T.unpack m <> "." <> name <> "'")
       i -> i
 
 externalSpecHTML :: String

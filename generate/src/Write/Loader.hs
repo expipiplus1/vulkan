@@ -34,14 +34,12 @@ import           Write.Marshal.Util
 import           Write.Util
 
 writeLoader
-  :: (Text -> Maybe Text)
-  -- ^ Enum name resolver
-  -> [Platform]
+  :: [Platform]
   -- ^ Platform guard info
   -> [Command]
   -- ^ Commands in the spec
   -> Either [SpecError] [WriteElement]
-writeLoader getEnumName platforms commands = do
+writeLoader platforms commands = do
   boot <- wrapMToWriteElements "Dynamic loader boot" Nothing $ do
     tellExport (Unguarded (TypeConstructor "InstanceCmds"))
     pure $ \_ -> "data InstanceCmds"
@@ -64,12 +62,11 @@ writeLoader getEnumName platforms commands = do
     writeCommands commands level = for commands $ \c -> wrapMToWriteElements
       ("Dynamic loader for" T.<+> cName c)
       Nothing
-      ((writeFunction getEnumName platformGuardMap level) c)
+      ((writeFunction platformGuardMap level) c)
   r <- wrapMToWriteElements
     weName
     weBootElement
-    (writeLoaderDoc getEnumName
-                    platformGuardMap
+    (writeLoaderDoc platformGuardMap
                     deviceLevelCommands
                     instanceLevelCommands
                     noLevelCommands
@@ -80,8 +77,6 @@ writeLoader getEnumName platforms commands = do
 
 writeLoaderDoc
   :: (Text -> Maybe Text)
-  -- ^ Enum name resolver
-  -> (Text -> Maybe Text)
   -- ^ Platform guard info
   -> [Command]
   -- ^ Device commands
@@ -90,9 +85,9 @@ writeLoaderDoc
   -> [Command]
   -- ^ No level commands
   -> WrapM (DocMap -> Doc ())
-writeLoaderDoc getEnumName platformGuardMap deviceLevelCommands instanceLevelCommands noLevelCommands = do
-  drs <- traverse (writeRecordMember getEnumName platformGuardMap) deviceLevelCommands
-  irs <- traverse (writeRecordMember getEnumName platformGuardMap) instanceLevelCommands
+writeLoaderDoc platformGuardMap deviceLevelCommands instanceLevelCommands noLevelCommands = do
+  drs <- traverse (writeRecordMember platformGuardMap) deviceLevelCommands
+  irs <- traverse (writeRecordMember platformGuardMap) instanceLevelCommands
   ifi <- initInstanceFunction platformGuardMap instanceLevelCommands
   ifd <- initDeviceFunction platformGuardMap deviceLevelCommands
   tellExport (Unguarded (TypeConstructor "DeviceCmds"))
@@ -179,18 +174,16 @@ initLine gm getProcAddr c@Command{..} = censorGuarded gm c $ do
 
 writeRecordMember
   :: (Text -> Maybe Text)
-  -- ^ Enum resolver
-  -> (Text -> Maybe Text)
   -- ^ platform to guard
   -> Command
   -> WrapM (Doc (), Maybe Text)
-writeRecordMember getEnumName gp c@Command {..} = do
+writeRecordMember gp c@Command {..} = do
   t <- censorSourceDepends [TypeName "(:::)"] $ censorGuarded gp c $ toHsType
     (commandType c)
   tellImport "Foreign.Ptr" "FunPtr"
   censorSourceDepends [TypeName "(:::)"]
     . traverse tellDepend
-    . commandDepends getEnumName gp
+    . commandDepends gp
     $ c
   let d = [qci|p{T.upperCaseFirst cName} :: FunPtr ({t})|]
   pure (d, gp =<< cPlatform)
@@ -219,17 +212,15 @@ censorGuarded gp Command {..}
 
 writeFunction
   :: (Text -> Maybe Text)
-  -- ^ Enum resolver
-  -> (Text -> Maybe Text)
   -- ^ platform to guard
   -> Text
   -> Command
   -> WrapM (DocMap -> Doc ())
-writeFunction getEnumName gm domain c@Command{..} = censorGuarded gm c $ do
+writeFunction gm domain c@Command{..} = censorGuarded gm c $ do
   -- This is taken care of in a better way with commandDepends (importing
   -- constructors)
   t <- censor (const mempty) $ toHsType (commandType c)
-  tellDepends . commandDepends getEnumName gm $ c
+  tellDepends . commandDepends gm $ c
   tellExtension "ForeignFunctionInterface"
   tellImport "Foreign.Ptr" "FunPtr"
   tellExport (Unguarded (Term (dropVk cName)))
@@ -252,12 +243,10 @@ traverseP f xs = validationToEither $ traverse (eitherToValidation . f) xs
 
 commandDepends
   :: (Text -> Maybe Text)
-  -- ^ Enum resolver
-  -> (Text -> Maybe Text)
   -- ^ platform map
   -> Command
   -> [Guarded HaskellName]
-commandDepends getEnumName platformGuardMap Command {..} =
+commandDepends platformGuardMap Command {..} =
   let protoDepends = typeDepends $ Proto
         cReturnType
         [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
@@ -268,14 +257,7 @@ commandDepends getEnumName platformGuardMap Command {..} =
         , not (isPtrType t)
         , not (isArrayType t)
         ]
-      names =
-        protoDepends
-          <> -- The constructors for an enum type need to be in scope
-           -- Unless they're just used as pointers
-             [ TypeName e
-             | TypeName n <- protoDependsNoPointers
-             , Just e <- [getEnumName n]
-             ]
+      names = protoDepends
   in  case platformGuardMap =<< cPlatform of
         Nothing -> Unguarded <$> names
         Just g  -> Guarded (Guard g) <$> names

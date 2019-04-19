@@ -115,7 +115,7 @@ wrapStruct
   -- ^ Does this struct contain a dispatchable Handle
   -> Struct
   -> WrapM (DocMap -> Doc (), [WriteElement])
-  -- ^ Returns the docs for this struct, and any aliases
+  -- ^ Returns the Docs for this struct, and any aliases
 wrapStruct isDefaultable isStruct getHandle containsUnion containsDispatchableHandle s = do
   marshalled     <- marshallStruct isStruct isDefaultable getHandle s
   toCStructDoc   <- writeToCStructInstance marshalled
@@ -126,7 +126,7 @@ wrapStruct isDefaultable isStruct getHandle containsUnion containsDispatchableHa
   tellExport (Unguarded (WithConstructors (WE.TypeName (dropVkType (sName s)))))
   tellExport (Unguarded (Term (dropVkType (sName s))))
   let weDoc docMap =
-        vsep [marshalledDoc docMap, toCStructDoc, fromCStructDoc, zeroDoc]
+        vcatPara [marshalledDoc docMap, toCStructDoc, fromCStructDoc, zeroDoc]
   aliases <- traverse (writeAlias (msMembers marshalled) s) (sAliases s)
   pure (weDoc, aliases)
 
@@ -762,6 +762,9 @@ writeToCStructInstance MarshalledStruct{..} = do
     AStruct -> do
       wrapped <- wrap "cont" ("Vk" <> msName) msName "from" msMembers
       pure [qci|
+        -- | A function to temporarily allocate memory for a 'Vk{msName}' and
+        -- marshal a '{msName}' into it. The 'Vk{msName}' is only valid inside
+        -- the provided computation and must not be returned out of it.
         withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
         withCStruct{msName} from cont = {wrapped :: Doc ()}
         |]
@@ -777,6 +780,9 @@ writeToCStructInstance MarshalledStruct{..} = do
         m -> throwError [Other ("Unhandled union member for wrapping:" T.<+> T.tShow m)]
 
       pure [qci|
+        -- | A function to temporarily allocate memory for a 'Vk{msName}' and
+        -- marshal a '{msName}' into it. The 'Vk{msName}' is only valid inside
+        -- the provided computation and must not be returned out of it.
         withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
         withCStruct{msName} from cont = case from of
         {indent 2 $ vcat wrappedAlts}
@@ -1001,6 +1007,8 @@ writeFromCStructInstance containsUnion containsDispatchableHandle MarshalledStru
                       pure "DeviceCmds"
                     Nothing             -> throwError [Other "Dispatchable handle with no level"]
                   pure [qci|
+                    -- | A function to read a 'Vk{msName}' and all additional
+                    -- structures in the pointer chain into a '{msName}'.
                     fromCStruct{msName} :: {cmdTableType} -> Vk{msName} -> IO {msName}
                     fromCStruct{msName} commandTable c = {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)}
                     |]
@@ -1008,6 +1016,8 @@ writeFromCStructInstance containsUnion containsDispatchableHandle MarshalledStru
                   members <- traverse (fromCStructMember "c" (pretty $ "Vk" <> msName)) msMembers
                   tellExport (Unguarded (Term ("fromCStruct" <> msName)))
                   pure [qci|
+                    -- | A function to read a 'Vk{msName}' and all additional
+                    -- structures in the pointer chain into a '{msName}'.
                     fromCStruct{msName} :: Vk{msName} -> IO {msName}
                     fromCStruct{msName} c = {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)}
                     |]

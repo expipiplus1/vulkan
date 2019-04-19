@@ -85,19 +85,11 @@ writeCabal modules platforms guardInfo =
               difficult.
             default: False
 
-        flag no-expose-vkGetInstanceProcAddr
-            description:
-              Disable exposing a statically linked vkGetInstanceProcAddr. This
-              is useful in developing the library without without having to
-              link to libvulkan. This replaces vkGetInstanceProcAddr with a
-              function which only returns nullPtr.
-            default: False
-
         library
           hs-source-dirs:      src
           -- We need to use cpphs, as regular cpp ruins latex math with lines
           -- ending in backslashes
-          ghc-options:         -Wall -pgmPcpphs -optP--cpp
+          ghc-options:         -Wall -pgmPcpphs -optP--cpp -Wno-missing-signatures
           build-depends:       cpphs
           exposed-modules:     {indent (-2) . vcat . intercalatePrepend "," $ pretty . mName <$> unguardedModules}
 
@@ -112,9 +104,6 @@ writeCabal modules platforms guardInfo =
 
           if flag(expose-core11-commands)
             cpp-options: -DEXPOSE_CORE11_COMMANDS
-
-          if !flag(no-expose-vkGetInstanceProcAddr)
-            cpp-options: -DEXPOSE_VKGETINSTANCEPROCADDR
 
           {indent 0 . vcat $ writeGuardedModules <$> guardGroups}
 

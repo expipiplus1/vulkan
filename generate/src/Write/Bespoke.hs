@@ -209,14 +209,14 @@ voidDataWriteElement n =
   let weDoc _ = [qci|
         -- | Opaque data
         data {n}
-|]
+      |]
       weImports = []
       weExtensions = []
       weName = n
       weProvides = [Unguarded $ WithoutConstructors (TypeName n)]
       weUndependableProvides = []
       weSourceDepends        = []
-      weBootElement          = Nothing
+      weBootElement          = Just WriteElement{..}
       weDepends = []
   in WriteElement{..}
 
@@ -284,9 +284,23 @@ newtypeOrTypeWriteElement decl n t is ds =
                      else [WithoutConstructors (TypeName n)]
       weUndependableProvides = []
       weSourceDepends        = []
-      weBootElement          = Nothing
+      weBootElement          = case decl of
+        "type" -> Just WriteElement
+          { weImports    = Unguarded <$> is
+          , weExtensions = []
+          , weProvides   = [Unguarded (WithoutConstructors (TypeName n))]
+          , ..
+          }
+        "newtype" -> Just WriteElement{..}
+          { weImports    = Unguarded <$> is
+          , weExtensions = []
+          , weProvides   = [Unguarded (WithoutConstructors (TypeName n))]
+          , weDoc        = \_ -> pretty $ "data" T.<+> n
+          }
+        _ -> Nothing
       weDepends              = Unguarded <$> ds
   in WriteElement{..}
+
 
 win32 :: [WriteElement]
 win32 =

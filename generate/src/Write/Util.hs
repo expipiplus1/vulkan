@@ -18,10 +18,11 @@ import           Data.Either
 import           Data.Function
 import           Data.Functor
 import           Data.List.NonEmpty
-import qualified Data.List.NonEmpty        as NE
+import qualified Data.List.NonEmpty            as NE
 import           Data.Maybe
-import           Data.Text                 (Text)
-import qualified Data.Text.Extra           as T
+import           Data.List                                ( intersperse )
+import           Data.Text                                ( Text )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
 
 import           Documentation
@@ -50,7 +51,7 @@ emptyLineSep = concatWith (\a b -> a <> line <> line <> b)
 vcatPara :: [Doc a] -> Doc a
 vcatPara = \case
   [] -> mempty
-  xs -> line <> vcat xs <> line
+  xs -> line <> vcat (Data.List.intersperse mempty xs) <> line
 
 separatedSections
   :: Text

@@ -26,7 +26,7 @@ main :: IO ()
 main = do
   [outDir, cabalPath, vkDir] <- getArgs
   let xmlPath = vkDir </> "xml" </> "vk.xml"
-      manPath = vkDir </> "man2"
+      manPath = vkDir </> "man"
   sayErr ("Reading spec from" <+> pack xmlPath)
   specString <- readFile xmlPath
   specMay    <- parseSpec specString
