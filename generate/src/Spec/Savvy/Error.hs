@@ -1,5 +1,6 @@
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
+-- {-# LANGUAGE QuasiQuotes #-}
 
 module Spec.Savvy.Error
   ( SpecError(..)
@@ -7,6 +8,10 @@ module Spec.Savvy.Error
   ) where
 
 import           Data.Text
+
+import Text.InterpolatedString.Perl6.Unindented
+
+foo = foo
 
 data SpecError
   = WithContext Text SpecError

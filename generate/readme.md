@@ -23,6 +23,13 @@ runhaskell \
   | pandoc --from docbook --to native`
 ```
 
+## TODO:
+
+- Document wrappers
+- Export dynamic functions from proper modules
+- totality for pattern synonyms
+- associate pattern synonyms
+
 ## Wrapper ideas
 
 Several classes of functions:

@@ -14,7 +14,8 @@ import           Control.Monad.Except
 import           Control.Monad.Writer.Class
 import           Data.Either.Validation
 import           Data.Foldable
-import           Data.List.Extra
+import           Data.Traversable
+import           Data.List.Extra hiding (for)
 import qualified Data.Map                                 as Map
 import           Data.Maybe
 import           Data.Text.Extra                          (Text)
@@ -39,17 +40,40 @@ writeLoader
   -- ^ Platform guard info
   -> [Command]
   -- ^ Commands in the spec
-  -> Either [SpecError] WriteElement
+  -> Either [SpecError] [WriteElement]
 writeLoader getEnumName platforms commands = do
-  let platformGuardMap :: Text -> Maybe Text
-      platformGuardMap =
-        (`Map.lookup` Map.fromList
-          ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
-        )
-      weName          = "Dynamic Function Pointer Loaders"
-      weBootElement          = Nothing
-  wrapMToWriteElements weName weBootElement
-        (writeLoaderDoc getEnumName platformGuardMap commands)
+  let
+    platformGuardMap :: Text -> Maybe Text
+    platformGuardMap =
+      (`Map.lookup` Map.fromList
+        ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
+      )
+    weName              = "Dynamic Function Pointer Loaders"
+    weBootElement       = Nothing
+    deviceLevelCommands = [ c | c <- commands, cCommandLevel c == Just Device ]
+    instanceLevelCommands =
+      [ c
+      | c <- commands
+      , cCommandLevel c `elem` [Just Instance, Just PhysicalDevice]
+      ]
+    noLevelCommands = [ c | c <- commands, cCommandLevel c == Nothing ]
+    writeCommands :: [Command] -> Text -> Either [SpecError] [WriteElement]
+    writeCommands commands level = for commands $ \c -> wrapMToWriteElements
+      ("Dynamic loader for" T.<+> cName c)
+      Nothing
+      ((writeFunction getEnumName platformGuardMap level) c)
+  r <- wrapMToWriteElements
+    weName
+    weBootElement
+    (writeLoaderDoc getEnumName
+                    platformGuardMap
+                    deviceLevelCommands
+                    instanceLevelCommands
+                    noLevelCommands
+    )
+  -- dfs <- writeCommands deviceLevelCommands "Device"
+  -- ifs <- writeCommands instanceLevelCommands "Instance"
+  pure $ [r] -- : dfs ++ ifs
 
 writeLoaderDoc
   :: (Text -> Maybe Text)
@@ -57,56 +81,39 @@ writeLoaderDoc
   -> (Text -> Maybe Text)
   -- ^ Platform guard info
   -> [Command]
+  -- ^ Device commands
+  -> [Command]
+  -- ^ Instance commands
+  -> [Command]
+  -- ^ No level commands
   -> WrapM (DocMap -> Doc ())
-writeLoaderDoc getEnumName platformGuardMap commands = do
-  let deviceLevelCommands =
-        [ c | c <- commands, cCommandLevel c == Just Device ]
-      instanceLevelCommands =
-        [ c
-        | c <- commands
-        , cCommandLevel c `elem` [Just Instance, Just PhysicalDevice]
-        ]
+writeLoaderDoc getEnumName platformGuardMap deviceLevelCommands instanceLevelCommands noLevelCommands = do
   drs <- traverse (writeRecordMember getEnumName platformGuardMap) deviceLevelCommands
-  dfs <- traverse (writeFunction platformGuardMap "Device") deviceLevelCommands
   irs <- traverse (writeRecordMember getEnumName platformGuardMap) instanceLevelCommands
-  ifs <- traverse (writeFunction platformGuardMap "Instance") instanceLevelCommands
   ifi <- initInstanceFunction platformGuardMap instanceLevelCommands
   ifd <- initDeviceFunction platformGuardMap deviceLevelCommands
-  initializationCommands <- writeInitializationCommands commands
+  initializationCommands <- writeInitializationCommands (noLevelCommands ++ instanceLevelCommands ++ deviceLevelCommands)
   tellExport (Unguarded (TypeConstructor "DeviceCmds"))
   tellExport (Unguarded (TypeConstructor "InstanceCmds"))
-  pure $
-    let d _ = [qci|
-      {initializationCommands}
+  pure $ \_ -> [qci|
+    {initializationCommands}
 
-      data DeviceCmds = DeviceCmds
-        \{ deviceCmdsHandle :: VkDevice
-        , {indent (-2) . separatedWithGuards "," $ drs}
-        }
-        deriving (Show)
+    data DeviceCmds = DeviceCmds
+      \{ deviceCmdsHandle :: VkDevice
+      , {indent (-2) . separatedWithGuards "," $ drs}
+      }
+      deriving (Show)
 
-      data InstanceCmds = InstanceCmds
-        \{ instanceCmdsHandle :: VkInstance
-        , {indent (-2) . separatedWithGuards "," $ irs}
-        }
-        deriving (Show)
+    data InstanceCmds = InstanceCmds
+      \{ instanceCmdsHandle :: VkInstance
+      , {indent (-2) . separatedWithGuards "," $ irs}
+      }
+      deriving (Show)
 
-      {ifd}
+    {ifd}
 
-      {ifi}
-
-      -- * Device commands
-      {separatedWithGuards "" $ dfs}
-
-      -- * Instance commands
-      {separatedWithGuards "" $ ifs}
-    |]
-    in d
-
-      -- {separatedWithGuards "" $ hasFunction platformGuardMap "Device" <$>
-      -- deviceLevelCommands}
-      -- {separatedWithGuards "" $ hasFunction platformGuardMap "Instance" <$>
-      -- instanceLevelCommands}
+    {ifi}
+  |]
 
 hasFunction :: (Text -> Maybe Text) -> Text -> Command -> (Doc (), Maybe Text)
 hasFunction gm domain Command{..} = ([qci|
@@ -194,29 +201,32 @@ censorGuarded gp Command {..}
 
 writeFunction
   :: (Text -> Maybe Text)
+  -- ^ Enum resolver
+  -> (Text -> Maybe Text)
   -- ^ platform to guard
   -> Text
   -> Command
-  -> WrapM (Doc (), Maybe Text)
-writeFunction gm domain c@Command{..} = censorGuarded gm c $ do
+  -> WrapM (DocMap -> Doc ())
+writeFunction getEnumName gm domain c@Command{..} = censorGuarded gm c $ do
   -- This is taken care of in a better way with commandDepends (importing
   -- constructors)
   t <- censor (const mempty) $ toHsType (commandType c)
+  tellDepends . commandDepends getEnumName gm $ c
   tellExtension "ForeignFunctionInterface"
   tellImport "Foreign.Ptr" "FunPtr"
-  tellUndependableExport (Unguarded (Term (dropVk cName)))
+  tellExport (Unguarded (Term (dropVk cName)))
   let upperCaseName = T.upperCaseFirst cName
-      d= [qci|
-        {dropVk cName} :: {domain}Cmds -> ({t})
-        {dropVk cName} deviceCmds = mk{upperCaseName} (p{upperCaseName} deviceCmds)
-        foreign import ccall
-        #if !defined(SAFE_FOREIGN_CALLS)
-          unsafe
-        #endif
-          "dynamic" mk{upperCaseName}
-          :: FunPtr ({t}) -> ({t})
-      |]
-  pure (d, gm =<< cPlatform)
+  pure $ \getDoc -> guarded (gm =<< cPlatform) [qci|
+    {document getDoc (TopLevel cName)}
+    {dropVk cName} :: {domain}Cmds -> ({t})
+    {dropVk cName} deviceCmds = mk{upperCaseName} (p{upperCaseName} deviceCmds)
+    foreign import ccall
+    #if !defined(SAFE_FOREIGN_CALLS)
+      unsafe
+    #endif
+      "dynamic" mk{upperCaseName}
+      :: FunPtr ({t}) -> ({t})
+  |]
 
 traverseP
   :: (Semigroup e, Traversable t) => (a -> Either e b) -> t a -> Either e (t b)

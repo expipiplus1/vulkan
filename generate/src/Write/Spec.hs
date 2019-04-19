@@ -282,5 +282,5 @@ specCWriteElements s@Spec {..} = do
     , wStructs
     , wAliases
     , wBaseTypes
-    , [wLoader]
+    , wLoader
     ]
