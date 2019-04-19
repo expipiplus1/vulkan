@@ -7,17 +7,18 @@ module Write.Marshal.Monad
 
 import           Control.Monad.Except
 import           Control.Monad.Writer.Strict
+import           Data.List                                ( partition )
 import           Data.Function
 import           Data.Functor
-import           Data.Text                   (Text)
+import           Data.Text                                ( Text )
 import           Data.Text.Prettyprint.Doc
-import           Prelude                     hiding (Enum)
+import           Prelude                           hiding ( Enum )
 
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
-import qualified Spec.Savvy.Type.Haskell     as H
+import qualified Spec.Savvy.Type.Haskell       as H
 
-import           Write.Element               hiding (TypeName)
+import           Write.Element                     hiding ( TypeName )
 
 ----------------------------------------------------------------
 -- Monad for wrapping
@@ -128,4 +129,22 @@ toHsType t = case H.toHsType t of
     -- TODO: This is a bit of a hack
     tellDepends (Unguarded <$> typeDepends t)
     pure d
+
+censorSourceDepends
+  :: [HaskellName]
+  -- ^ Exceptions
+  -> WrapM a
+  -> WrapM a
+censorSourceDepends exceptions =
+  let makeSourceDepends =
+          \(a, (exports, undependableExports), (depends, sourceDepends), d, e) ->
+            let (newDepends, newSourceDepends) =
+                    partition ((`elem` exceptions) . unGuarded) depends
+            in  ( a
+                , (exports   , undependableExports)
+                , (newDepends, sourceDepends ++ newSourceDepends)
+                , d
+                , e
+                )
+  in  censor makeSourceDepends
 

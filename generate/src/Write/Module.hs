@@ -59,9 +59,13 @@ writeModules findDoc ms =
   in  ms
         <&> (\m ->
               let sourceModule =
-                    case mapMaybe weBootElement (mWriteElements m) of
-                      []  -> Nothing
-                      wes -> Just m { mWriteElements = wes }
+                      case mapMaybe weBootElement (mWriteElements m) of
+                        []  -> Nothing
+                        wes -> Just m { mWriteElements     = wes
+                                      , mSeedReexports     = []
+                                      , mReexportedModules = []
+                                      --- ^ boot modules don't reexport things
+                                      }
                   write = writeModule (getDoc (mName m)) moduleMapHN
               in  (write m, write <$> sourceModule)
             )

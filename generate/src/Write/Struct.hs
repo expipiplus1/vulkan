@@ -34,28 +34,35 @@ writeStruct :: Struct -> Either [SpecError] WriteElement
 writeStruct s@Struct {..} = case sStructOrUnion of
   AStruct -> do
     (weDoc, imports, extensions) <- structDoc s
-    let
-      weName       = "Struct: " <> sName
-      weExtensions = extensions ++ ["DuplicateRecordFields"]
-      weImports =
-        imports
-          ++ (   Unguarded
-             <$> [ Import "Foreign.Ptr"      ["plusPtr"]
-                 , Import "Foreign.Storable" ["Storable(..)"]
-                 ]
-             )
-      weProvides = Unguarded <$> [TypeConstructor sName, Term sName]
-      termDepends = \case
-        Just vs -> PatternName <$> vs
-        Nothing -> []
-      weDepends =
-        Unguarded <$> nubOrd (WE.TypeName "Zero"
-                             : concatMap (typeDepends . smType) sMembers
-                             ++ concatMap (termDepends . smValues ) sMembers)
-      weUndependableProvides = []
-      weSourceDepends        = []
-      weBootElement          = Nothing
-    pure WriteElement {..}
+    let weName       = "Struct: " <> sName
+        weExtensions = extensions ++ ["DuplicateRecordFields"]
+        weImports =
+          imports
+            ++ (   Unguarded
+               <$> [ Import "Foreign.Ptr"      ["plusPtr"]
+                   , Import "Foreign.Storable" ["Storable(..)"]
+                   ]
+               )
+        weProvides  = Unguarded <$> [TypeConstructor sName, Term sName]
+        termDepends = \case
+          Just vs -> PatternName <$> vs
+          Nothing -> []
+        weDepends = Unguarded <$> nubOrd
+          (  WE.TypeName "Zero"
+          :  concatMap (typeDepends . smType)   sMembers
+          ++ concatMap (termDepends . smValues) sMembers
+          )
+        weUndependableProvides = []
+        weSourceDepends        = []
+        weBootElement          = Just $ WriteElement
+          { weImports    = []
+          , weExtensions = []
+          , weProvides   = Unguarded <$> [TypeConstructor sName]
+          , weDepends    = []
+          , weDoc        = \_ -> pretty $ "data" T.<+> sName
+          , ..
+          }
+    pure WriteElement { .. }
   AUnion -> do
     (weDoc, imports, extensions) <- unionDoc s
     let
@@ -74,8 +81,15 @@ writeStruct s@Struct {..} = case sStructOrUnion of
         Unguarded <$> nubOrd (concatMap (typeDepends . smType) sMembers)
       weUndependableProvides = []
       weSourceDepends        = []
-      weBootElement          = Nothing
-    pure WriteElement {..}
+      weBootElement          = Just $ WriteElement
+        { weImports    = []
+        , weExtensions = []
+        , weProvides   = Unguarded <$> [TypeConstructor sName]
+        , weDepends    = []
+        , weDoc        = \_ -> pretty $ "data" T.<+> sName
+        , ..
+        }
+    pure WriteElement { .. }
 
 ----------------------------------------------------------------
 -- Struct

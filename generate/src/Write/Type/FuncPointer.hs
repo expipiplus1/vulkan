@@ -14,30 +14,29 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Error
 import           Spec.Savvy.FuncPointer
 import           Spec.Savvy.Type
-import           Spec.Savvy.Type.Haskell
 
-import           Write.Element
+import           Write.Element                 as WE
 import           Write.Util
+import           Write.Marshal.Monad
 
 writeFuncPointer :: FuncPointer -> Either [SpecError] WriteElement
 writeFuncPointer fp@FuncPointer {..} = do
-  (weDoc, weImports, weExtensions) <- fpDoc fp
-  let weName     = "FuncPointer: " <> fpName
-      weProvides = Unguarded <$> [TypeAlias fpName]
-      weDepends  = Unguarded <$> typeDepends fpType
-      weUndependableProvides = []
-      weSourceDepends        = []
-      weBootElement          = Nothing
-  pure WriteElement {..}
+  let name = "FuncPointer boot: " <> fpName
+  bootElem <-
+    wrapMToWriteElements name Nothing
+    . censorSourceDepends [(WE.TypeName "(:::)")]
+    $ fpDoc fp
+
+  wrapMToWriteElements name (Just bootElem) (fpDoc fp)
 
 fpDoc
   :: FuncPointer
-  -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
+  -> WrapM (DocMap -> Doc ())
 fpDoc FuncPointer{..} = do
-  (t, (is, es)) <- toHsType fpType
-  let d getDoc = [qci|
-  {document getDoc (TopLevel fpName)}
-  type {fpName} = {t}
-|]
-  pure (d, is, es)
+  t <- toHsType fpType
+  tellExport (Unguarded (TypeAlias fpName))
+  pure $ \getDoc -> [qci|
+    {document getDoc (TopLevel fpName)}
+    type {fpName} = {t}
+  |]
 

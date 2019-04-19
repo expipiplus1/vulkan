@@ -42,6 +42,9 @@ writeLoader
   -- ^ Commands in the spec
   -> Either [SpecError] [WriteElement]
 writeLoader getEnumName platforms commands = do
+  boot <- wrapMToWriteElements "Dynamic loader boot" Nothing $ do
+    tellExport (Unguarded (TypeConstructor "InstanceCmds"))
+    pure $ \_ -> "data InstanceCmds"
   let
     platformGuardMap :: Text -> Maybe Text
     platformGuardMap =
@@ -49,7 +52,7 @@ writeLoader getEnumName platforms commands = do
         ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
       )
     weName              = "Dynamic Function Pointer Loaders"
-    weBootElement       = Nothing
+    weBootElement       = Just boot
     deviceLevelCommands = [ c | c <- commands, cCommandLevel c == Just Device ]
     instanceLevelCommands =
       [ c
@@ -92,12 +95,9 @@ writeLoaderDoc getEnumName platformGuardMap deviceLevelCommands instanceLevelCom
   irs <- traverse (writeRecordMember getEnumName platformGuardMap) instanceLevelCommands
   ifi <- initInstanceFunction platformGuardMap instanceLevelCommands
   ifd <- initDeviceFunction platformGuardMap deviceLevelCommands
-  initializationCommands <- writeInitializationCommands (noLevelCommands ++ instanceLevelCommands ++ deviceLevelCommands)
   tellExport (Unguarded (TypeConstructor "DeviceCmds"))
   tellExport (Unguarded (TypeConstructor "InstanceCmds"))
   pure $ \_ -> [qci|
-    {initializationCommands}
-
     data DeviceCmds = DeviceCmds
       \{ deviceCmdsHandle :: VkDevice
       , {indent (-2) . separatedWithGuards "," $ drs}
@@ -124,12 +124,19 @@ hasFunction gm domain Command{..} = ([qci|
 -- | The initialization function for a set of command pointers
 initInstanceFunction :: (Text -> Maybe Text) -> [Command] -> WrapM (Doc ())
 initInstanceFunction gm commands = do
-  initLines <- traverse (initLine gm "vkGetInstanceProcAddr") commands
-  tellDepend (Unguarded (TermName "vkGetInstanceProcAddr"))
-  tellDepend (Unguarded (TypeName "VkInstance"))
+  initLines <- traverse (initLine gm "vkGetInstanceProcAddr'") commands
+  tellSourceDepend (Unguarded (TypeName "VkInstance"))
   tellExport (Unguarded (Term "initInstanceCmds"))
   tellQualifiedImport "GHC.Ptr" "Ptr(..)"
   pure [qci|
+    -- | A version of 'vkGetInstanceProcAddr' which can be called with a
+    -- null pointer for the instance.
+    foreign import ccall
+    #if !defined(SAFE_FOREIGN_CALLS)
+      unsafe
+    #endif
+      "vkGetInstanceProcAddr" vkGetInstanceProcAddr' :: ("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+
     initInstanceCmds :: VkInstance -> IO InstanceCmds
     initInstanceCmds handle = InstanceCmds handle
       <$> {indent (-4) $ separatedWithGuards "<*>"
@@ -140,16 +147,22 @@ initInstanceFunction gm commands = do
 initDeviceFunction :: (Text -> Maybe Text) -> [Command] -> WrapM (Doc ())
 initDeviceFunction gm commands = do
   initLines <- traverse (initLine gm "getDeviceProcAddr'") commands
-  tellDepend (Unguarded (TypeName "VkDevice"))
+  tellSourceDepend (Unguarded (TypeName "VkDevice"))
+  tellSourceDepend (Unguarded (TermName "vkGetInstanceProcAddr"))
   tellExport (Unguarded (Term "initDeviceCmds"))
-  tellExtension "MagicHash"
-  tellExtension "TypeApplications"
   tellQualifiedImport "GHC.Ptr" "Ptr(..)"
   pure [qci|
+    foreign import ccall
+    #if !defined(SAFE_FOREIGN_CALLS)
+      unsafe
+    #endif
+      "dynamic" mkVkGetDeviceProcAddr
+      :: FunPtr (("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) -> (("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction)
+
     initDeviceCmds :: InstanceCmds -> VkDevice -> IO DeviceCmds
     initDeviceCmds instanceCmds handle = do
       pGetDeviceProcAddr <- castPtrToFunPtr @_ @FN_vkGetDeviceProcAddr
-        <$> getInstanceProcAddr instanceCmds (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr\NUL"#)
+        <$> vkGetInstanceProcAddr instanceCmds (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr\NUL"#)
       let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
       DeviceCmds handle
         <$> {indent (-4) $ separatedWithGuards "<*>"
@@ -158,7 +171,7 @@ initDeviceFunction gm commands = do
 
 initLine :: (Text -> Maybe Text) -> Text -> Command -> WrapM (Doc ())
 initLine gm getProcAddr c@Command{..} = censorGuarded gm c $ do
-  tellDepend (Unguarded (TypeName ("FN_" <> cName)))
+  tellSourceDepend (Unguarded (TypeName ("FN_" <> cName)))
   tellExtension "MagicHash"
   tellExtension "TypeApplications"
   tellImport "Foreign.Ptr" "castPtrToFunPtr"
@@ -172,8 +185,13 @@ writeRecordMember
   -> Command
   -> WrapM (Doc (), Maybe Text)
 writeRecordMember getEnumName gp c@Command {..} = do
-  t <- censorGuarded gp c $ toHsType (commandType c)
-  tellDepends . commandDepends getEnumName gp $ c
+  t <- censorSourceDepends [TypeName "(:::)"] $ censorGuarded gp c $ toHsType
+    (commandType c)
+  tellImport "Foreign.Ptr" "FunPtr"
+  censorSourceDepends [TypeName "(:::)"]
+    . traverse tellDepend
+    . commandDepends getEnumName gp
+    $ c
   let d = [qci|p{T.upperCaseFirst cName} :: FunPtr ({t})|]
   pure (d, gp =<< cPlatform)
 
@@ -281,7 +299,7 @@ writeInitializationCommands commands = do
   tellImport "Foreign.Ptr" "castPtrToFunPtr"
   tellImport "Foreign.Ptr" "nullPtr"
   tellImport "System.IO.Unsafe" "unsafeDupablePerformIO"
-  tellDepend (Unguarded (TermName "vkGetInstanceProcAddr"))
+  tellDepend (Unguarded (TermName "vkGetInstanceProcAddr'"))
   tellExtension "MagicHash"
 
   let go c = do
@@ -301,7 +319,7 @@ writeInitializationCommands commands = do
             where
               procAddr = castPtrToFunPtr @_ @FN_{cName c} $
                 unsafeDupablePerformIO
-                  $ vkGetInstanceProcAddr nullPtr (GHC.Ptr.Ptr "{cName c}\NUL"#)
+                  $ vkGetInstanceProcAddr' nullPtr (GHC.Ptr.Ptr "{cName c}\NUL"#)
         |]
 
   vcat <$> traverse go

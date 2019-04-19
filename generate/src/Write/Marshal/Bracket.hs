@@ -39,6 +39,7 @@ import           Debug.Trace
 
 brackets
   :: [Handle] -> Either [SpecError] [((HaskellName, HaskellName), WriteElement)]
+  -- ^ ((Creating command, Bracket command), WriteElement)
 brackets handles = do
   rs <- traverse
     writePair

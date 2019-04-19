@@ -28,7 +28,24 @@ writeCommand
   -> Command
   -> Either [SpecError] WriteElement
 writeCommand getEnumName fp@Command {..} = do
-  wrapMToWriteElements ("Command:" T.<+> cName) Nothing $ do
+  bootElem <-
+    wrapMToWriteElements ("Command boot:" T.<+> cName) Nothing
+    . censorSourceDepends [(TypeName "(:::)")]
+    $ do
+        tellImport "Foreign.Ptr" "FunPtr"
+        synonyms <- commandTypeSynonyms fp
+        d        <- case cName of
+          "vkGetInstanceProcAddr" -> do
+            tellExport (Unguarded (Term "vkGetInstanceProcAddr"))
+            tellSourceDepend (Unguarded (TypeName "InstanceCmds"))
+            pure $ vsep
+              [ [qci|vkGetInstanceProcAddr :: InstanceCmds -> (("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction)|]
+              , synonyms
+              ]
+          _ -> pure synonyms
+        pure $ const d
+
+  wrapMToWriteElements ("Command:" T.<+> cName) (Just bootElem) $ do
     let staticGuard = if cName == "vkGetInstanceProcAddr"
           then "EXPOSE_VKGETINSTANCEPROCADDR"
           else case cAvailability of
@@ -41,16 +58,10 @@ writeCommand getEnumName fp@Command {..} = do
     tellDepends
       $  (Unguarded <$> protoDepends)
       <> -- The constructors for an enum type need to be in scope
-         [ Guarded (Guard staticGuard) (TypeName e)
+         [ Unguarded (TypeName e)
          | TypeName n <- protoDepends
          , Just e <- [getEnumName n]
          ]
-    traverse
-      tellExport
-      [ Unguarded (Term cName)
-      , Unguarded (TypeAlias ("FN_" <> cName))
-      , Unguarded (TypeAlias ("PFN_" <> cName))
-      ]
     commandDoc staticGuard fp
 
 
@@ -63,13 +74,14 @@ commandDoc staticGuard c@Command {..} = do
   t <- toHsType (commandType c)
   dynDoc :: Doc () <- case cCommandLevel of
     Nothing -> do
+      tellExtension "MagicHash"
       tellExtension "TypeApplications"
       tellImport "Foreign.Ptr" "FunPtr"
       tellImport "Foreign.Ptr" "nullPtr"
       tellImport "Foreign.Ptr" "castPtrToFunPtr"
       tellImport "System.IO.Unsafe" "unsafeDupablePerformIO"
       tellQualifiedImport "GHC.Ptr" "Ptr(Ptr)"
-      tellDepend (Unguarded (TermName "vkGetInstanceProcAddr"))
+      tellDepend (Unguarded (TermName "vkGetInstanceProcAddr'"))
       pure [qci|
         foreign import ccall
         #if !defined(SAFE_FOREIGN_CALLS)
@@ -83,12 +95,13 @@ commandDoc staticGuard c@Command {..} = do
           where
             procAddr = castPtrToFunPtr @_ @FN_{cName} $
               unsafeDupablePerformIO
-                $ vkGetInstanceProcAddr nullPtr (GHC.Ptr.Ptr "{cName}\NUL"#)
+                $ vkGetInstanceProcAddr' nullPtr (GHC.Ptr.Ptr "{cName}\NUL"#)
       |]
     Just d -> do
       let domain = case d of
                      Instance -> "Instance"
-                     _ -> "Device"
+                     PhysicalDevice -> "Instance"
+                     Device -> "Device"
       tellImport "Foreign.Ptr" "FunPtr"
       tellDepend (Guarded (InvGuard staticGuard) (TypeName (domain <> "Cmds")))
       pure [qci|
@@ -101,10 +114,21 @@ commandDoc staticGuard c@Command {..} = do
           "dynamic" mk{upperCaseName}
           :: FunPtr ({t}) -> ({t})
       |]
-  -- tellImports
-  --       [ Guarded (InvGuard staticGuard) (Import "Foreign.Ptr" ["nullPtr"])
-  --       | cName == "vkGetInstanceProcAddr"
-  --       ] ++ (Unguarded (Import "Foreign.Ptr" ["FunPtr"]))
+  getInstanceProcAddrDoc :: Doc () <- case cName of
+    "vkGetInstanceProcAddr" -> do
+      tellExport (Unguarded (Term "vkGetInstanceProcAddr'"))
+      pure [qci|
+        -- | A version of 'vkGetInstanceProcAddr' which can be called with a
+        -- null pointer for the instance.
+        foreign import ccall
+        #if !defined(SAFE_FOREIGN_CALLS)
+          unsafe
+        #endif
+          "vkGetInstanceProcAddr" vkGetInstanceProcAddr' :: ("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+      |]
+    _ -> pure ""
+  synonyms <- commandTypeSynonyms c
+  tellExport (Unguarded (Term cName))
   pure $ \getDoc -> [qci|
     {document getDoc (TopLevel cName)}
     #if defined({staticGuard})
@@ -116,6 +140,19 @@ commandDoc staticGuard c@Command {..} = do
     #else
     {dynDoc}
     #endif
+    {getInstanceProcAddrDoc}
+    {synonyms}
+  |]
+
+commandTypeSynonyms :: Command -> WrapM (Doc ())
+commandTypeSynonyms c@Command{..} = do
+  t <- toHsType (commandType c)
+  traverse
+    tellExport
+    [ Unguarded (TypeAlias ("FN_" <> cName))
+    , Unguarded (TypeAlias ("PFN_" <> cName))
+    ]
+  pure [qci|
     type FN_{cName} = {t}
     type PFN_{cName} = FunPtr FN_{cName}
   |]

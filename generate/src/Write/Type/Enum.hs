@@ -11,11 +11,11 @@ module Write.Type.Enum
 import           Data.Int
 import           Data.List.Extra
 import           Data.Maybe
-import           Data.Text                                (Text)
-import qualified Data.Text                                as T
+import           Data.Text                                ( Text )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
 import           Data.Word
-import           Prelude                                  hiding (Enum)
+import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 import           Text.Printf
 
@@ -48,7 +48,14 @@ writeEnum e@Enum {..} =
           ++  [ Pattern eeName | EnumElement {..} <- eElements ]
       weUndependableProvides = []
       weSourceDepends        = []
-      weBootElement          = Nothing
+      weBootElement          = Just $ WriteElement
+          { weImports    = []
+          , weExtensions = []
+          , weProvides   = Unguarded <$> [TypeConstructor eName]
+          , weDepends    = []
+          , weDoc        = \_ -> pretty $ "data" T.<+> eName
+          , ..
+          }
       weDepends              = Unguarded <$> case eType of
         EnumTypeEnum    -> [TypeName "Zero"]
         EnumTypeBitmask -> [TypeName "VkFlags", TypeName "Zero"]

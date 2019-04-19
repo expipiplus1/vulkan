@@ -31,7 +31,7 @@ import           Write.Util
 writeAliases :: Aliases -> Validation [SpecError] [WriteElement]
 writeAliases Aliases{..} =
   sequenceA . concat $
-    [ writeValueAlias commandType <$> commandAliases
+    [ writeCommandAlias <$> commandAliases
     , pure . writeTypeAlias <$> enumAliases
     , pure . writeTypeAlias <$> handleAliases
     , liftA2 (liftA2 (<>)) (pure . writeTypeAlias) writeStructPatternAlias <$> structAliases
@@ -39,23 +39,23 @@ writeAliases Aliases{..} =
     , writePatternAlias (TypeName . eName . fst) <$> enumExtensionAliases
     ]
 
-writeValueAlias
-  :: (a -> Type)
-  -> Alias a
+writeCommandAlias
+  :: Alias Command
   -> Validation [SpecError] WriteElement
-writeValueAlias getType alias@Alias{..} = eitherToValidation $ do
-  target <- aliasTarget alias
-  (t, (is, es)) <- toHsType (getType target)
+writeCommandAlias alias@Alias{..} = eitherToValidation $ do
+  command@Command{..} <- aliasTarget alias
+  let t = commandType command
+  (tyDoc, (is, es)) <- toHsType t
   let weImports    = is
       weDoc getDoc = [qci|
         {document getDoc (TopLevel aName)}
-        {aName} :: {t}
+        -- {aName} :: {tyDoc}
         {aName} = {aAliasName}
       |]
       weExtensions = es
       weName       = "Value Alias: " <> aName
       weProvides   = [Unguarded $ Term aName]
-      weDepends    = Unguarded <$> TermName aAliasName : typeDepends (getType target)
+      weDepends    = Unguarded <$> TermName aAliasName : typeDepends t
       weUndependableProvides = []
       weSourceDepends        = []
       weBootElement          = Nothing
@@ -91,15 +91,16 @@ writeTypeAlias Alias{..} =
       weDoc getDoc = [qci|
         {document getDoc (TopLevel aName)}
         type {aName} = {aAliasName}
-|]
+      |]
       weExtensions = []
       weName       = "Type Alias: " <> aName
       weProvides   = [Unguarded $ TypeAlias aName]
       weDepends    = [Unguarded $ WE.TypeName aAliasName]
       weUndependableProvides = []
       weSourceDepends        = []
-      weBootElement          = Nothing
-  in WriteElement {..}
+      weBootElement = Just w { weDepends = [], weSourceDepends = weDepends }
+      w = WriteElement{..}
+  in w
 
 writeStructPatternAlias :: Alias Struct -> Validation [SpecError] WriteElement
 writeStructPatternAlias alias@Alias{..} = eitherToValidation $ do

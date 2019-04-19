@@ -26,9 +26,10 @@ writeBaseType bt@BaseType {..} = do
       weProvides = [Unguarded $ TypeAlias btName]
       weUndependableProvides = []
       weSourceDepends        = []
-      weBootElement          = Nothing
+      weBootElement          = Just w
       weDepends  = Unguarded <$> typeDepends btType
-  pure WriteElement {..}
+      w = WriteElement {..}
+  pure w
 
 hDoc :: BaseType -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
 hDoc BaseType{..} = do

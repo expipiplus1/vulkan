@@ -132,12 +132,11 @@ wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle re
       printWrapped n wts constraints = do
         wrapped <- wrap c wts
         t <- makeType wts constraints
-        tellQualifiedImport "Graphics.Vulkan.C.Dynamic" (dropVk cName)
-        let dynCommandName = [qci|Graphics.Vulkan.C.Dynamic.{dropVk cName}|]
+        tellDepend (Unguarded (TermName cName))
         pure $ line <> [qci|
           -- | Wrapper for '{cName}'
           {n} :: {t :: Doc ()}
-          {n} = {wrapped dynCommandName :: Doc ()}|]
+          {n} = {wrapped (pretty cName) :: Doc ()}|]
       makeType wts constraints = wtsToSig KeepVkResult c constraints wts
   (ds, aliases) <- if isDualUseCommand lengthPairs
     then do

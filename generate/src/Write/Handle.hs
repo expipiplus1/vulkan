@@ -27,8 +27,8 @@ writeHandle h@Handle {..} = do
       weDepends              = []
       weUndependableProvides = []
       weSourceDepends        = []
-      weBootElement          = Nothing
-  pure WriteElement {..}
+      weBootElement = Just $ WriteElement { weBootElement = Nothing, .. }
+  pure WriteElement { .. }
 
 hDoc :: Handle -> Either [SpecError] (DocMap -> Doc ())
 hDoc Handle{..} = do
