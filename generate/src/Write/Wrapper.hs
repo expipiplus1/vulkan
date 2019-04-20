@@ -632,7 +632,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                     Nothing ->
                       pure
                         $  "fromIntegral ("
-                        <> toRecordMemberName m
+                        <> m
                         <> " "
                         <> "("
                         <> dropPointer s
@@ -643,7 +643,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                       tellQualifiedImport "Data.Vector" "length"
                       pure
                         $  "Data.Vector.length ("
-                        <> toRecordMemberName vec
+                        <> vec
                         <> " ("
                         <> dropPointer s
                         <> " :: "

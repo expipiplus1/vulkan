@@ -758,15 +758,16 @@ writeToCStructInstance
 writeToCStructInstance MarshalledStruct{..} = do
   tellDepend $ Unguarded (WE.TypeName ("Vk" <> msName))
   tellExport (Unguarded (Term ("withCStruct" <> msName)))
+  let marshalledName = "marshalled"
   case msStructOrUnion of
     AStruct -> do
-      wrapped <- wrap "cont" ("Vk" <> msName) msName "from" msMembers
+      wrapped <- wrap "cont" ("Vk" <> msName) msName marshalledName msMembers
       pure [qci|
         -- | A function to temporarily allocate memory for a 'Vk{msName}' and
         -- marshal a '{msName}' into it. The 'Vk{msName}' is only valid inside
         -- the provided computation and must not be returned out of it.
         withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
-        withCStruct{msName} from cont = {wrapped :: Doc ()}
+        withCStruct{msName} {marshalledName} cont = {wrapped :: Doc ()}
         |]
     AUnion -> do
       wrappedAlts <- for msMembers $ \case
@@ -784,7 +785,7 @@ writeToCStructInstance MarshalledStruct{..} = do
         -- marshal a '{msName}' into it. The 'Vk{msName}' is only valid inside
         -- the provided computation and must not be returned out of it.
         withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
-        withCStruct{msName} from cont = case from of
+        withCStruct{msName} {marshalledName} cont = case {marshalledName} of
         {indent 2 $ vcat wrappedAlts}
       |]
 
@@ -858,7 +859,7 @@ memberWrapper fromType from =
     tellDepend (Unguarded (TermName "padSized"))
     -- This assumes that this is a vector of handles or pointers
     pure $ \cont e ->
-      let paramName = pretty (dropPointer memberName)
+      let paramName = pretty (ptrName memberName)
           with = [qci|withArray {alloc} {accessMember memberName} (\\{paramName} -> {e} (Data.Vector.Generic.Sized.convert (padSized {dummy} {paramName}))|]
       in [qci|{cont with})|]
   FixedArrayTuple memberName _ _ Nothing _ -> do
@@ -869,7 +870,7 @@ memberWrapper fromType from =
     tellImport "Data.Vector.Generic.Sized" "convert"
     tellDepend (Unguarded (TermName "withSizedArray"))
     pure $ \cont e ->
-      let paramName = pretty (dropPointer memberName)
+      let paramName = pretty memberName
           with = [qci|withSizedArray {alloc} (fromTuple {accessMember memberName}) (\\{paramName} -> {e} (Data.Vector.Generic.Sized.convert {paramName})|]
       in [qci|{cont with})|]
   FixedArrayNullTerminated memberName _ -> do
@@ -893,7 +894,7 @@ memberWrapper fromType from =
     | Just tyName <- simpleTypeName t
     -> do tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
           pure $ \cont e ->
-            let paramName = pretty (dropPointer memberName)
+            let paramName = pretty $ memberName <> "'"
                 with  = [qci|withCStruct{tyName} {accessMember memberName} (\\{paramName} -> {e} {paramName}|]
             in  [qci|{cont with})|]
     | otherwise
@@ -912,14 +913,14 @@ memberWrapper fromType from =
   ByteString memberName -> do
     tellImport "Data.ByteString" "useAsCString"
     pure $ \cont e ->
-      let paramPtr = pretty (unReservedWord $ ptrName (dropPointer memberName))
+      let paramPtr = pretty (unReservedWord $ ptrName memberName)
           withPtr  = [qci|useAsCString {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
   ByteStringData _ memberName -> do
     tellImport "Data.ByteString.Unsafe" "unsafeUseAsCString"
     tellImport "Foreign.Ptr" "castPtr"
     pure $ \cont e ->
-      let paramPtr = pretty (unReservedWord $ ptrName (dropPointer memberName))
+      let paramPtr = pretty (unReservedWord $ ptrName memberName)
           withPtr  = [qci|unsafeUseAsCString {accessMember memberName} (\\{paramPtr} -> {e} (castPtr {paramPtr})|]
       in  [qci|{cont withPtr})|]
   ByteStringLength bs       -> do
@@ -928,14 +929,14 @@ memberWrapper fromType from =
   MaybeByteString memberName -> do
     tellImport "Foreign.Marshal.Utils" "maybeWith"
     pure $ \cont e ->
-      let paramPtr = pretty (unReservedWord $ ptrName (dropPointer memberName))
+      let paramPtr = pretty (unReservedWord $ ptrName memberName)
           withPtr  = [qci|maybeWith useAsCString {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
   Vector _ _ memberName _elemType alloc _ -> do
     tellDepend (Unguarded (TermName "withVec"))
     a <- alloc
     pure $ \cont e ->
-      let paramPtr = pretty (ptrName (dropPointer memberName))
+      let paramPtr = pretty (ptrName memberName)
           withPtr  = [qci|withVec {a} {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
   BitMaskVector lengthMemberName lengthMemberType bitSize memberName _elemType alloc -> do
@@ -946,7 +947,7 @@ memberWrapper fromType from =
     tellDepend (Unguarded (TermName "padVector"))
     tellDepend (Unguarded (WE.TypeName lengthMemberType))
     pure $ \cont e ->
-      let paramPtr = pretty (ptrName (dropPointer memberName))
+      let paramPtr = pretty (ptrName memberName)
           withPtr  = [qci|withVec {alloc} (padVector zeroBits (fromIntegral ((coerce {accessMember lengthMemberName} :: VkFlags) + {pred bitSize}) `quot` {bitSize}) {accessMember memberName}) (\\{paramPtr} -> {e} {paramPtr}|]
       in [qci|{cont withPtr})|]
   OptionalVector _ memberName _elemType alloc _ -> do
@@ -954,20 +955,20 @@ memberWrapper fromType from =
     tellDepend (Unguarded (TermName "withVec"))
     a <- alloc
     pure $ \cont e ->
-      let paramPtr = pretty (ptrName (dropPointer memberName))
+      let paramPtr = pretty (ptrName memberName)
           withPtr  = [qci|maybeWith (withVec {a}) {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
   OptionalPtr memberName _elemType alloc _ -> do
     tellImport "Foreign.Marshal.Utils" "maybeWith"
     a <- alloc
     pure $ \cont e ->
-      let paramPtr = pretty (ptrName (dropPointer memberName))
+      let paramPtr = pretty (ptrName memberName)
           withPtr  = [qci|maybeWith {a} {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
   NonOptionalPtr memberName _elemType alloc _ -> do
     a <- alloc
     pure $ \cont e ->
-      let paramPtr = pretty (ptrName (dropPointer memberName))
+      let paramPtr = pretty (ptrName memberName)
           withPtr  = [qci|{a} {accessMember memberName} (\\{paramPtr} -> {e} {paramPtr}|]
       in  [qci|{cont withPtr})|]
   SiblingVectorMaster {} -> error "Sibling vectors unimplemented"
@@ -1371,7 +1372,8 @@ writeMarshalledUnionMember = \case
 ----------------------------------------------------------------
 
 toMemberName :: Text -> Text
-toMemberName = ("vk" <>) . T.upperCaseFirst
+-- toMemberName = ("vk" <>) . T.upperCaseFirst
+toMemberName = unReservedWord . T.lowerCaseFirst
 
 -- | drop the first word if it is just @p@s and @s@s
 upperCaseHungarian :: Text -> Text

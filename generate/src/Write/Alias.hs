@@ -24,9 +24,9 @@ import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
--- import           Write.Marshal.Monad
 import           Write.Struct
 import           Write.Util
+import           Write.Command
 
 writeAliases :: Aliases -> Validation [SpecError] [WriteElement]
 writeAliases Aliases{..} =
@@ -44,18 +44,18 @@ writeCommandAlias
   -> Validation [SpecError] WriteElement
 writeCommandAlias alias@Alias{..} = eitherToValidation $ do
   command@Command{..} <- aliasTarget alias
-  let t = commandType command
+  let t = commandDynamicType command
   (tyDoc, (is, es)) <- toHsType t
-  let weImports    = [] -- is
+  let weImports    = is
       weDoc getDoc = [qci|
         {document getDoc (TopLevel aName)}
-        -- {aName} :: {tyDoc}
+        {aName} :: {tyDoc}
         {aName} = {aAliasName}
       |]
       weExtensions = es
       weName       = "Value Alias: " <> aName
       weProvides   = [Unguarded $ Term aName]
-      weDepends    = Unguarded <$> TermName aAliasName : [] -- typeDepends t
+      weDepends    = Unguarded <$> TermName aAliasName : typeDepends t
       weUndependableProvides = []
       weSourceDepends        = []
       weBootElement          = Nothing

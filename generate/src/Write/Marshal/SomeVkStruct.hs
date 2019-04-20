@@ -214,7 +214,7 @@ writeSomeStructInstances guardMap containsUnion containsDispatchableHandle s@Str
               tellDepend (Unguarded (WE.TypeName marshalledName))
               pure [qci|
                 instance HasPNext {marshalledName} where
-                  getPNext a = vkPNext (a :: {marshalledName})
+                  getPNext a = pNext (a :: {marshalledName})
               |]
             else pure mempty
     pure $ vcat [toCStructDoc, fromCStructDoc, hasPNextDoc]

@@ -19,7 +19,7 @@ makeMarshalledAliases Spec {..} =
   let
     -- Command aliases require type info, so are handled by the command writer
       commandAliases = []
-      -- Anum aliases are not given marshalled names
+      -- Enum aliases are not given marshalled names
       enumAliases    = mapMaybe makeMarshalledEnumAlias sEnums
         ++ mapMaybe makeMarshalledAliasAlias (A.enumAliases sAliases)
       handleAliases = mapMaybe makeMarshalledHandleAlias sHandles

@@ -178,10 +178,12 @@ writeRecordMember
   -> Command
   -> WrapM (Doc (), Maybe Text)
 writeRecordMember gp c@Command {..} = do
-  t <- censorSourceDepends [TypeName "(:::)"] $ censorGuarded gp c $ toHsType
+  let excludedSourceDepends =
+        TypeName <$> ["(:::)", "VkBool32", "VkFormat", "VkResult"]
+  t <- censorSourceDepends excludedSourceDepends $ censorGuarded gp c $ toHsType
     (commandType c)
   tellImport "Foreign.Ptr" "FunPtr"
-  censorSourceDepends [TypeName "(:::)"]
+  censorSourceDepends excludedSourceDepends
     . traverse tellDepend
     . commandDepends gp
     $ c

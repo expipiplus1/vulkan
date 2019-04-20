@@ -71,9 +71,9 @@ brackets handles = do
     , simpleBracket True  "SwapchainKHR"              (Just "Device")
     , simpleBracket True  "DebugReportCallbackEXT"    (Just "Instance")
     , simpleBracket True  "DebugUtilsMessengerEXT"    (Just "Instance")
-    , allocateBracket True False  (Just "vkCommandPool") "CommandBuffer" Nothing
+    , allocateBracket True False  (Just "commandPool") "CommandBuffer" Nothing
     , allocateBracket False True Nothing "DeviceMemory" (Just "Memory")
-    , allocateBracket True False (Just "vkDescriptorPool") "DescriptorSet" Nothing
+    , allocateBracket True False (Just "descriptorPool") "DescriptorSet" Nothing
     , createPipeline "Compute"
     , createPipeline "Graphics"
     , mapMemory
@@ -291,7 +291,8 @@ writePair Bracket{..} =
         | otherwise
         -> throwError [Other "Can't find single argument for member"]
     innerHsType <- constructedTypeToHsType bInnerType
-    let noResource = bInnerType == Single Void && (Resource `notElem` bDestroyArguments)
+    let noDestructorResource = Resource `notElem` bDestroyArguments
+        noResource = bInnerType == Single Void && noDestructorResource
         bracket = if noResource
                     then "bracket_"
                     else "bracket"
@@ -299,6 +300,11 @@ writePair Bracket{..} =
                  then "IO a"
                  else "(" <> innerHsType <> " -> IO a)"
         wrapperArguments = punctuate " ->" (argHsTypes ++ [cont, "IO a"])
+        resourcePattern = if noDestructorResource
+                            then "_"
+                            else "o"
+        callDestructor = (if noResource then emptyDoc else "\\" <>
+          resourcePattern <+> "->") <+> pretty (unHaskellName bDestroy) <+> hsep destroyArgVars
     tellImport "Control.Exception" bracket
     pure $ \_ -> [qci|
     -- | A safe wrapper for '{bCreate}' and '{bDestroy}' using '{bracket}'
@@ -308,5 +314,5 @@ writePair Bracket{..} =
       :: {hsep wrapperArguments}
     {unHaskellName bWrapperName} {hsep argHsVars} = {bracket}
       ({bCreate} {hsep createArgVars})
-      {bool emptyDoc "(traverse " bDestroyIndividually }({if noResource then emptyDoc else "\\\\o -> "}{bDestroy} {hsep destroyArgVars}){bool emptyDoc ")" bDestroyIndividually}
+      {bool emptyDoc "(traverse " bDestroyIndividually }({callDestructor}){bool emptyDoc ")" bDestroyIndividually}
   |]

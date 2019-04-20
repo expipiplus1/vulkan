@@ -16,13 +16,15 @@ import           Control.Applicative
 import           Data.Char
 import           Data.Functor
 import           Data.List.Extra
-import qualified Data.Map                                 as Map
+import qualified Data.Map                      as Map
+import qualified Data.MultiMap                 as MultiMap
+import           Data.MultiMap                            ( MultiMap )
 import           Data.Maybe
-import qualified Data.Set                                 as Set
-import           Data.Text                                (Text)
-import qualified Data.Text.Extra                          as T
+import qualified Data.Set                      as Set
+import           Data.Text                                ( Text )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
-import           Prelude                                  hiding (Enum)
+import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Documentation
@@ -166,17 +168,17 @@ moduleImports Module {..} =
       guardMaybe = \case
         Guarded g _ -> Just (guardCPPGuard g)
         Unguarded _ -> Nothing
-      importMap :: Map.Map (Text, Bool, Maybe Text) [Text]
+      importMap :: Map.Map (Text, Bool, [Guard]) [Text]
+      --- ^ (Module, isQualified, guard disjunction) [imports]
       importMap = sort <$> Map.fromListWith
         union
-        [ ( (iModule import', isQualifiedImport import', guardMaybe guardedImport)
+        [ ( (iModule import', isQualifiedImport import', guards)
           , iImports import'
           )
-        | guardedImport <- simplifiedImports
-        , let import' = unGuarded guardedImport
+        | (import', guards) <- simplifiedImports
         ]
-      makeImport :: ((Text, Bool, Maybe Text), [Text]) -> Doc ()
-      makeImport ((moduleName, qualified, guard), is) = guarded guard [qci|
+      makeImport :: ((Text, Bool, [Guard]), [Text]) -> Doc ()
+      makeImport ((moduleName, qualified, guards), is) = guardedDisjunction (guardCPPGuard <$> guards) [qci|
          import{if qualified then " qualified " else (" " :: Text)}{pretty moduleName}
            ( {indent (-2) . vcat . intercalatePrepend "," $ pretty <$> is}
            )
@@ -213,22 +215,19 @@ moduleInternalImports nameModule Module {..} =
       sourceDeps = simplifyDependencies (weSourceDepends =<< mWriteElements)
       reexportedDeps = simplifyDependencies (fmap unExport <$> mSeedReexports)
                        \\ nonSourceDeps
-      -- A map between (ModuleName, Guard) and a list of exports
-      depends :: [Guarded HaskellName] -> Map.Map (Text, Maybe Text) [Guarded Export]
+      -- A map between (ModuleName, Guards) and a list of exports
+      depends :: [(HaskellName, [Guard])] -> Map.Map (Text, [Text]) [Guarded Export]
       depends deps = sort <$> Map.fromListWith
         (<>)
-        [ ((m, g), [e])
-        | d           <- deps
-        , Just (m, e) <- [nameModule (unGuarded d)]
-        , unGuarded d `notElem` (unExport . unGuarded <$> (weProvides =<< mWriteElements))
-        , let g = case d of
-                    Unguarded _  -> Nothing
-                    Guarded g' _ -> Just (guardCPPGuard g')
+        [ ((m, (guardCPPGuard <$> gs)), [e])
+        | (n, gs)           <- deps
+        , Just (m, e) <- [nameModule n]
+        , n `notElem` (unExport . unGuarded <$> (weProvides =<< mWriteElements))
         ]
-      writeDeps :: Bool -> Doc () -> [Guarded HaskellName] -> [Doc ()]
+      writeDeps :: Bool -> Doc () -> [(HaskellName, [Guard])] -> [Doc ()]
       writeDeps isSourceImport qualifier deps =
-        Map.assocs (depends deps) <&> \((moduleName, guard), is) ->
-          guarded guard [qci|
+        Map.assocs (depends deps) <&> \((moduleName, guards), is) ->
+          guardedDisjunction guards [qci|
             import {qualifier}{pretty moduleName}
               ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe (fmap fst . exportHaskellName isSourceImport) is}
               )
@@ -238,15 +237,12 @@ moduleInternalImports nameModule Module {..} =
             , writeDeps False "" reexportedDeps
             ]
 
-simplifyDependencies :: Ord a => [Guarded a] -> [Guarded a]
+simplifyDependencies :: Ord a => [Guarded a] -> [(a, [Guard])]
 simplifyDependencies deps =
-  let unguarded = Set.fromList [ Unguarded d | Unguarded d <- deps ]
-      guarded'  = Set.fromList
-        [ Guarded g d
-        | Guarded g d <- deps
-        , Unguarded d `Set.notMember` unguarded
-        ]
-  in  Set.toList unguarded ++ Set.toList guarded'
+  let unguarded = Set.fromList [ d | Unguarded d <- deps ]
+      guarded'  = MultiMap.fromList
+        [ (d, g) | Guarded g d <- deps, d `Set.notMember` unguarded ]
+  in  ((, []) <$> Set.toList unguarded) ++ MultiMap.assocs guarded'
 
 moduleExtensions :: Module -> [Doc ()]
 moduleExtensions Module {..} =

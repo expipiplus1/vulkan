@@ -9,6 +9,7 @@ module Write.Struct
   ( writeStruct
   , fixMemberName
   , toRecordMemberName
+  , toMarshalledRecordMemberName
   ) where
 
 import           Control.Bool
@@ -214,6 +215,13 @@ fixUnionMemberName StructMember {..} =
 -- | Prefix with "vk", make hungarian notation uppercase
 toRecordMemberName :: Text -> Text
 toRecordMemberName = ("vk" <>) . T.upperCaseFirst . uppercaseHungarian
+
+-- | Keep name, except for really short names
+toMarshalledRecordMemberName :: Text -> Text -> Text
+toMarshalledRecordMemberName structName n =
+  if T.length n == 1
+    then T.lowerCaseFirst $ structName <> T.upperCaseFirst n
+    else n
 
 -- | Prefix with "Vk", make hungarian notation uppercase
 toConstructorName :: Text -> Text

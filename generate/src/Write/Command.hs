@@ -4,6 +4,7 @@
 
 module Write.Command
   ( writeCommand
+  , commandDynamicType
   ) where
 
 import           Data.Maybe
@@ -16,6 +17,7 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Command
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type                   hiding ( TypeName )
+import qualified Spec.Savvy.Type               as Type
 import           Spec.Savvy.Type.Haskell           hiding ( toHsType )
 
 import           Write.Element
@@ -75,7 +77,8 @@ commandDoc
   -> WrapM (DocMap -> Doc ())
 commandDoc staticGuard c@Command {..} = do
   let upperCaseName = T.upperCaseFirst cName
-  t <- toHsType (commandType c)
+  dynType <- toHsType (commandDynamicType c)
+  staticType <- toHsType (commandType c)
   dynDoc :: Doc () <- case cCommandLevel of
     Nothing -> do
       tellExtension "MagicHash"
@@ -92,9 +95,9 @@ commandDoc staticGuard c@Command {..} = do
           unsafe
         #endif
           "dynamic" mk{T.upperCaseFirst (cName)}
-          :: FunPtr ({t}) -> ({t})
+          :: FunPtr ({staticType}) -> ({staticType})
 
-        {cName} :: {t}
+        {cName} :: {staticType}
         {cName} = mk{T.upperCaseFirst (cName)} procAddr
           where
             procAddr = castPtrToFunPtr @_ @FN_{cName} $
@@ -109,14 +112,14 @@ commandDoc staticGuard c@Command {..} = do
       tellImport "Foreign.Ptr" "FunPtr"
       tellDepend (Guarded (InvGuard staticGuard) (TypeName (domain <> "Cmds")))
       pure [qci|
-        {cName} :: {domain}Cmds -> ({t})
+        {cName} :: {dynType}
         {cName} deviceCmds = mk{upperCaseName} (p{upperCaseName} deviceCmds)
         foreign import ccall
         #if !defined(SAFE_FOREIGN_CALLS)
           unsafe
         #endif
           "dynamic" mk{upperCaseName}
-          :: FunPtr ({t}) -> ({t})
+          :: FunPtr ({staticType}) -> ({staticType})
       |]
   getInstanceProcAddrDoc :: Doc () <- case cName of
     "vkGetInstanceProcAddr" -> do
@@ -140,13 +143,24 @@ commandDoc staticGuard c@Command {..} = do
     #if !defined(SAFE_FOREIGN_CALLS)
       unsafe
     #endif
-      "{cName}" {cName} :: {t}
+      "{cName}" {cName} :: {staticType}
     #else
     {dynDoc}
     #endif
     {getInstanceProcAddrDoc}
     {synonyms}
   |]
+
+commandDynamicType :: Command -> Type
+commandDynamicType c@Command {..} = case cCommandLevel of
+  Just d | Proto ret args <- commandType c ->
+    let domain = case d of
+          Instance       -> "Instance"
+          PhysicalDevice -> "Instance"
+          Device         -> "Device"
+        commandTableType = Type.TypeName $ domain <> "Cmds"
+    in  Proto ret ((Nothing, commandTableType) : args)
+  _ -> commandType c
 
 commandTypeSynonyms :: Command -> WrapM (Doc ())
 commandTypeSynonyms c@Command{..} = do

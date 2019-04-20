@@ -11,12 +11,16 @@ module Write.Util
   , Documentee(..)
   , separatedWithGuards
   , guarded
+  , guardedDisjunction
   ) where
 
 import           Data.Bifunctor
 import           Data.Either
 import           Data.Function
 import           Data.Functor
+import           Data.List.Extra                          ( intersperse
+                                                          , nubOrd
+                                                          )
 import           Data.List.NonEmpty
 import qualified Data.List.NonEmpty            as NE
 import           Data.Maybe
@@ -144,6 +148,18 @@ guarded = \case
   Just g  -> \d ->
     indent minBound (line <> "#if " <> pretty g)
       <> line <> d
+      <> indent minBound (line <> "#endif")
+
+-- | No guard inserted if no guards are provided
+guardedDisjunction :: [Text] -> Doc () -> Doc ()
+guardedDisjunction = \case
+  [] -> id
+  gs -> \d ->
+    indent
+        minBound
+        (line <> "#if" <+> hsep (Data.List.intersperse "||" (pretty <$> nubOrd gs)))
+      <> line
+      <> d
       <> indent minBound (line <> "#endif")
 
 -- | Workaround for https://github.com/quchen/prettyprinter/issues/57
