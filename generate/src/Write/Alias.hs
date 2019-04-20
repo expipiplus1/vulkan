@@ -8,10 +8,15 @@ module Write.Alias
   ) where
 
 import           Control.Applicative
-import           Control.Arrow                            ((&&&))
+import           Data.Text                         hiding ( concat )
+import           Control.Arrow                            ( (&&&) )
+import           Data.Functor
+import           Data.Foldable
+import           Data.List.NonEmpty                       ( NonEmpty(..) )
+import           Data.Semigroup
 import           Data.Either.Validation
 import           Data.Text.Prettyprint.Doc
-import           Prelude                                  hiding (Enum)
+import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Alias
@@ -22,8 +27,8 @@ import           Spec.Savvy.Error
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
-import           Write.Element                            hiding (TypeName)
-import qualified Write.Element                            as WE
+import           Write.Element                     hiding ( TypeName )
+import qualified Write.Element                 as WE
 import           Write.Struct
 import           Write.Util
 import           Write.Command
@@ -32,7 +37,7 @@ writeAliases :: Aliases -> Validation [SpecError] [WriteElement]
 writeAliases Aliases{..} =
   sequenceA . concat $
     [ writeCommandAlias <$> commandAliases
-    , pure . writeTypeAlias <$> enumAliases
+    , writeEnumAlias <$> enumAliases
     , pure . writeTypeAlias <$> handleAliases
     , liftA2 (liftA2 (<>)) (pure . writeTypeAlias) writeStructPatternAlias <$> structAliases
     , writeConstantAlias <$> constantAliases
@@ -68,20 +73,47 @@ writePatternAlias
 writePatternAlias getType alias@Alias{..} = eitherToValidation $ do
   target <- aliasTarget alias
   (t, (is, es)) <- toHsType (getType target)
+  let ds = typeDepends (getType target)
+  writePatternAliasWithType (t, (is, ds, es)) (TopLevel aName) alias
+
+writePatternAliasWithType
+  :: (Doc (), ([Guarded Import], [HaskellName], [Text]))
+  -> Documentee
+  -- ^ Documentation name
+  -> Alias a
+  -> Either [SpecError] WriteElement
+writePatternAliasWithType (t, (is, ds, es)) docName alias@Alias{..} = do
   let weImports    = is
       weDoc getDoc = [qci|
-        {document getDoc (TopLevel aName)}
+        {document getDoc docName}
         pattern {aName} :: {t}
         pattern {aName} = {aAliasName}
       |]
       weExtensions = "PatternSynonyms" : es
       weName       = "Pattern Alias: " <> aName
       weProvides   = [Unguarded $ Pattern aName]
-      weDepends    = Unguarded <$> PatternName aAliasName : typeDepends (getType target)
+      weDepends    = Unguarded <$> PatternName aAliasName : ds
       weUndependableProvides = []
       weSourceDepends        = []
       weBootElement          = Nothing
   pure WriteElement {..}
+
+writeEnumAlias
+  :: (Alias Enum, [Alias EnumElement]) -> Validation [SpecError] WriteElement
+writeEnumAlias (eAlias, eeAliases) = sconcat <$> sequenceA
+  (  pure (writeTypeAlias eAlias)
+  :| (eeAliases <&> \eeAlias -> eitherToValidation $ do
+       target               <- aliasTarget eAlias
+       (enumType, (is, es)) <- toHsType (TypeName (aName eAlias))
+       let ds  = typeDepends (TypeName (aName eAlias))
+           t   = [qci|(a ~ {enumType}) => a|]
+           es' = "TypeFamilies" : es
+       writePatternAliasWithType
+         (t, (is, ds, es'))
+         (Nested (aName eAlias) (aName eeAlias))
+         eeAlias
+     )
+  )
 
 writeTypeAlias
   :: Alias a

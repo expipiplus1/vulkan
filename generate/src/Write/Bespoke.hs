@@ -377,7 +377,7 @@ bespokeMarshalledWriteElements =
                       []
                       [TypeName "VkDeviceAddress"]
   , aliasWriteElement "SampleMask" "VkSampleMask" [] [TypeName "VkSampleMask"]
-  , aliasWriteElement "VendorId" "VkVendorId" [] [TypeName "VkVendorId"]
+  -- , aliasWriteElement "VendorId" "VkVendorId" [] [TypeName "VkVendorId"]
   , boolConversion
   ]
 

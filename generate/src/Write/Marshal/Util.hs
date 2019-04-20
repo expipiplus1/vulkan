@@ -25,6 +25,7 @@ module Write.Marshal.Util
 
 import           Control.Category                         ( (>>>) )
 import           Data.Foldable
+import           Data.Bifunctor
 import           Data.Char
 import           Data.Function
 import           Data.Maybe
@@ -114,7 +115,11 @@ dropVkType :: Text -> Text
 dropVkType = T.dropPrefix' "Vk"
 
 dropPointer :: Text -> Text
-dropPointer = T.lowerCaseFirst . T.dropPrefix' "p"
+dropPointer =
+  T.lowerCaseFirst
+    . uncurry (<>)
+    . first (\p -> if T.all (== 'p') p then "" else p)
+    . T.span isLower
 
 appendWithVendor :: Text -> Text -> Text
 appendWithVendor a b =

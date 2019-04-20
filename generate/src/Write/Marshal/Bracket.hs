@@ -187,9 +187,9 @@ mapMemory =
         (TermName "unmapMemory")
         [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
         , Provided (Single (TypeName mem))              (T.lowerCaseFirst mem)
-        , Provided (Single (TypeName "DeviceSize"))     "offset"
-        , Provided (Single (TypeName "DeviceSize"))     "size"
-        , Provided (Single (TypeName "MemoryMapFlags")) "flags"
+        , Provided (Single (TypeName "DeviceSize"))     "offset'"
+        , Provided (Single (TypeName "DeviceSize"))     "size'"
+        , Provided (Single (TypeName "MemoryMapFlags")) "flags'"
         ]
         [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
         , Provided (Single (TypeName mem))    (T.lowerCaseFirst mem)

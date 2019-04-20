@@ -77,7 +77,7 @@ someVkStructWriteElement getHandle platforms structs
           <$> [ WithConstructors $ WE.TypeName "ToCStruct"
               , WithConstructors $ WE.TypeName "FromCStruct"
               , WithConstructors $ WE.TypeName "SomeVkStruct"
-              , WithConstructors $ WE.TypeName "HasPNext"
+              , WithConstructors $ WE.TypeName "HasNext"
               , Term "SomeVkStruct"
               , Term "fromSomeVkStruct"
               , Term "fromSomeVkStructChain"
@@ -124,27 +124,27 @@ someVkStructWriteElement getHandle platforms structs
           class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
             fromCStruct :: c -> IO marshalled
 
-          class HasPNext a where
-            getPNext :: a -> Maybe SomeVkStruct
+          class HasNext a where
+            getNext :: a -> Maybe SomeVkStruct
 
           data SomeVkStruct where
             SomeVkStruct
-              :: (ToCStruct a b, Storable b, Show a, Eq a, Typeable a, HasPNext a)
+              :: (ToCStruct a b, Storable b, Show a, Eq a, Typeable a, HasNext a)
               => a
               -> SomeVkStruct
 
-          instance HasPNext SomeVkStruct where
-            getPNext (SomeVkStruct a) = getPNext a
+          instance HasNext SomeVkStruct where
+            getNext (SomeVkStruct s) = getNext s
 
           deriving instance Show SomeVkStruct
 
           instance Eq SomeVkStruct where
-            SomeVkStruct (a :: a) == SomeVkStruct (b :: b) = case eqT @a @b of
+            SomeVkStruct (s1 :: s1) == SomeVkStruct (s2 :: s2) = case eqT @s1 @s2 of
               Nothing   -> False
-              Just Refl -> a == b
+              Just Refl -> s1 == s2
 
           withCStructPtr :: (Storable c, ToCStruct a c) => a -> (Ptr c -> IO b) -> IO b
-          withCStructPtr a f = withCStruct a (\c -> alloca (\p -> poke p c *> f p))
+          withCStructPtr s f = withCStruct s (\c -> alloca (\p -> poke p c *> f p))
 
           fromCStructPtr :: (Storable c, FromCStruct a c) => Ptr c -> IO a
           fromCStructPtr p = fromCStruct =<< peek p
@@ -153,14 +153,14 @@ someVkStructWriteElement getHandle platforms structs
           fromCStructPtrElem p o = fromCStruct =<< peekElemOff p o
 
           fromSomeVkStruct :: Typeable a => SomeVkStruct -> Maybe a
-          fromSomeVkStruct (SomeVkStruct a) = cast a
+          fromSomeVkStruct (SomeVkStruct s) = cast s
 
           fromSomeVkStructChain :: Typeable a => SomeVkStruct -> Maybe a
-          fromSomeVkStructChain a =
-            fromSomeVkStruct a <|> (getPNext a >>= fromSomeVkStructChain)
+          fromSomeVkStructChain s =
+            fromSomeVkStruct s <|> (getNext s >>= fromSomeVkStructChain)
 
           withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
-          withSomeVkStruct (SomeVkStruct a) f = withCStructPtr a (f . castPtr)
+          withSomeVkStruct (SomeVkStruct s) f = withCStructPtr s (f . castPtr)
 
           ----------------------------------------------------------------
           -- Instances
@@ -206,18 +206,18 @@ writeSomeStructInstances guardMap containsUnion containsDispatchableHandle s@Str
                 instance FromCStruct {marshalledName} {sName} where
                   fromCStruct = {fromC}
               |]
-    hasPNextDoc <-
+    hasNextDoc <-
           if any (\case
                      StructMember {smName = "pNext"} -> True
                      _ -> False) sMembers
             then do
               tellDepend (Unguarded (WE.TypeName marshalledName))
               pure [qci|
-                instance HasPNext {marshalledName} where
-                  getPNext a = pNext (a :: {marshalledName})
+                instance HasNext {marshalledName} where
+                  getNext s = next (s :: {marshalledName})
               |]
             else pure mempty
-    pure $ vcat [toCStructDoc, fromCStructDoc, hasPNextDoc]
+    pure $ vcat [toCStructDoc, fromCStructDoc, hasNextDoc]
 
 someVkStructBootElement :: WriteElement
 someVkStructBootElement =

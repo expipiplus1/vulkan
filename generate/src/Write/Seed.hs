@@ -73,6 +73,7 @@ bespokeSeedsHighPriority =
     , TypeName "ObjectType"
     , TermName "bool32ToBool"
     , TermName "boolToBool32"
+    , TypeName "VendorId"
     , TypeName "Zero"
     ]
     Nothing

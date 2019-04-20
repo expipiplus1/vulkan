@@ -119,19 +119,11 @@ flag expose-core11-commands
       difficult.
     default: False
 
-flag no-expose-vkGetInstanceProcAddr
-    description:
-      Disable exposing a statically linked vkGetInstanceProcAddr. This
-      is useful in developing the library without without having to
-      link to libvulkan. This replaces vkGetInstanceProcAddr with a
-      function which only returns nullPtr.
-    default: False
-
 library
   hs-source-dirs:      src
   -- We need to use cpphs, as regular cpp ruins latex math with lines
   -- ending in backslashes
-  ghc-options:         -Wall -pgmPcpphs -optP--cpp
+  ghc-options:         -Wall -pgmPcpphs -optP--cpp -Wno-missing-signatures
   build-depends:       cpphs
   exposed-modules:     Graphics.Vulkan.NamedType
                      , Graphics.Vulkan.Exception
@@ -335,6 +327,8 @@ library
                      , Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
                      , Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
                      , Graphics.Vulkan.C.Extensions.VK_EXT_ycbcr_image_arrays
+                     , Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
+                     , Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface
                      , Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
                      , Graphics.Vulkan.C.Dynamic
                      , Graphics.Vulkan.Core10.Constants
@@ -533,6 +527,8 @@ library
                      , Graphics.Vulkan.Extensions.VK_EXT_validation_features
                      , Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
                      , Graphics.Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
+                     , Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
+                     , Graphics.Vulkan.Extensions.VK_EXT_headless_surface
                      , Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
                      , Graphics.Vulkan.Marshal.Utils
                      , Graphics.Vulkan.Marshal.SomeVkStruct
@@ -558,9 +554,6 @@ library
 
   if flag(expose-core11-commands)
     cpp-options: -DEXPOSE_CORE11_COMMANDS
-
-  if !flag(no-expose-vkGetInstanceProcAddr)
-    cpp-options: -DEXPOSE_VKGETINSTANCEPROCADDR
 
   if flag(android)
     cpp-options: -DVK_USE_PLATFORM_ANDROID_KHR
@@ -615,7 +608,6 @@ library
                    , Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex
                    , Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32
                    , Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
-                   , Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
                    , Graphics.Vulkan.Extensions.VK_KHR_win32_surface
                    , Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
                    , Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
@@ -623,7 +615,6 @@ library
                    , Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex
                    , Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32
                    , Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32
-                   , Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
   
   if flag(xcb)
     cpp-options: -DVK_USE_PLATFORM_XCB_KHR

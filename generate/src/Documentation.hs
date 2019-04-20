@@ -89,10 +89,23 @@ splitDocumentation parent (Pandoc meta bs) = do
       xs@(Section sectionTag bs'' rem)
         | h : _ <- xs, sectionTag `elem` ["_description", "_members"]
         -> case memberDocs parent m bs'' of
-          Left  _        -> pure (Nothing, xs)
-          Right (ds, []) -> pure (Just ds, rem)
-          Right (ds, leftoverBlocks) ->
-            pure (Just ds, h : leftoverBlocks ++ rem)
+          Left  _                    -> pure (Nothing, xs)
+          Right (ds, []            ) -> pure (Just ds, rem)
+          Right (ds, leftoverBlocks) -> do
+            let includeSubdocumentation = any
+                  (\case
+                    Para ws ->
+                      [Str "The", Space, Str "following", Space, Str "bits"]
+                        `isPrefixOf` ws
+
+                    _ -> False
+                  )
+                  leftoverBlocks
+                --- ^ Include the member docs as well, some documentation makes
+                -- reference to them and makes no sense without the bullet
+                -- points, for instance 'VkFormatFeatureFlagBits'
+                ps = if includeSubdocumentation then bs'' else leftoverBlocks
+            pure (Just ds, h : ps ++ rem)
 
       -- Leave everything else alone
       xs -> pure (Nothing, xs)
@@ -120,10 +133,10 @@ memberDocs parent m blocks =
         BulletList bullets ->
           let enumDoc :: [Block] -> Either Text Documentation
               enumDoc = \case
-                [p@(Para (Code ("", [], []) memberName : _))] ->
-                  pure Documentation
+                p@(Para (Code ("", [], []) memberName : _)) : ps -> pure
+                  Documentation
                     { dDocumentee    = Nested parent (T.pack memberName)
-                    , dDocumentation = Pandoc m [p]
+                    , dDocumentation = Pandoc m (p : ps)
                     }
                 _ -> Left "Unhandled member documentation declaration"
           in  (, []) <$> traverse enumDoc bullets

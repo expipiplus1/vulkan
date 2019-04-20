@@ -12,6 +12,7 @@
 
 module Write.Marshal.Struct
   ( structWrapper
+  , toMemberName
   ) where
 
 import           Control.Arrow                            ((&&&))
@@ -773,11 +774,11 @@ writeToCStructInstance MarshalledStruct{..} = do
       wrappedAlts <- for msMembers $ \case
         -- These only work with single member sums
         FixedArrayTuple n _ _ Nothing _ ->
-          pure [qci|{T.upperCaseFirst n} x -> cont ({"Vk" <> T.upperCaseFirst n} (fromTuple x))|]
+          pure [qci|{T.upperCaseFirst n} t -> cont ({"Vk" <> T.upperCaseFirst n} (fromTuple t))|]
         PreservedMarshalled n t
           | Just tyName <- simpleTypeName t
           -> do tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
-                pure [qci|{T.upperCaseFirst n} x -> withCStruct{tyName} x (cont . {"Vk" <> T.upperCaseFirst n})|]
+                pure [qci|{T.upperCaseFirst n} s -> withCStruct{tyName} s (cont . {"Vk" <> T.upperCaseFirst n})|]
         m -> throwError [Other ("Unhandled union member for wrapping:" T.<+> T.tShow m)]
 
       pure [qci|
@@ -815,6 +816,7 @@ memberWrapper
 memberWrapper fromType from =
   let accessMember :: Text -> Doc ()
       accessMember memberName = [qci|({toMemberName memberName} ({from} :: {fromType}))|]
+      makeParam = pretty . (<> "'")
   in \case
   Univalued value  -> do
     tellExtension "PatternSynonyms"
@@ -859,7 +861,7 @@ memberWrapper fromType from =
     tellDepend (Unguarded (TermName "padSized"))
     -- This assumes that this is a vector of handles or pointers
     pure $ \cont e ->
-      let paramName = pretty (ptrName memberName)
+      let paramName = makeParam (ptrName memberName)
           with = [qci|withArray {alloc} {accessMember memberName} (\\{paramName} -> {e} (Data.Vector.Generic.Sized.convert (padSized {dummy} {paramName}))|]
       in [qci|{cont with})|]
   FixedArrayTuple memberName _ _ Nothing _ -> do
@@ -870,7 +872,7 @@ memberWrapper fromType from =
     tellImport "Data.Vector.Generic.Sized" "convert"
     tellDepend (Unguarded (TermName "withSizedArray"))
     pure $ \cont e ->
-      let paramName = pretty memberName
+      let paramName = makeParam memberName
           with = [qci|withSizedArray {alloc} (fromTuple {accessMember memberName}) (\\{paramName} -> {e} (Data.Vector.Generic.Sized.convert {paramName})|]
       in [qci|{cont with})|]
   FixedArrayNullTerminated memberName _ -> do
@@ -894,7 +896,7 @@ memberWrapper fromType from =
     | Just tyName <- simpleTypeName t
     -> do tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
           pure $ \cont e ->
-            let paramName = pretty $ memberName <> "'"
+            let paramName = makeParam $ memberName <> "'"
                 with  = [qci|withCStruct{tyName} {accessMember memberName} (\\{paramName} -> {e} {paramName}|]
             in  [qci|{cont with})|]
     | otherwise
@@ -1130,19 +1132,21 @@ fromCStructMember from fromType =
           pure $ Right [qci|pure (Data.Vector.Generic.convert (Data.Vector.Storable.Sized.fromSized {accessMember memberName}))|]
         FixedArrayTuple memberName length' _ _ Nothing -> do
           tellQualifiedImport "Data.Vector.Storable.Sized" "unsafeIndex"
-          let tuple = tupled ((\i -> [qci|Data.Vector.Storable.Sized.unsafeIndex x {i}|]) <$> [0 .. pred length'])
-          pure $ Right [qci|pure (let x = {accessMember memberName} in {tuple})|]
+          let tmp = "v" :: Doc ()
+              tuple = tupled ((\i -> [qci|Data.Vector.Storable.Sized.unsafeIndex {tmp} {i}|]) <$> [0 .. pred length'])
+          pure $ Right [qci|pure (let {tmp} = {accessMember memberName} in {tuple})|]
         FixedArrayTuple memberName length' _ _ (Just fromCStruct) -> do
           tellQualifiedImport "Data.Vector.Storable.Sized" "unsafeIndex"
-          let cs :: [Doc ()]
-              cs = (\i -> [qci|{fromCStruct} (Data.Vector.Storable.Sized.unsafeIndex x {i})|]) <$> [0 .. pred length']
+          let tmp = "v" :: Doc ()
+              cs :: [Doc ()]
+              cs = (\i -> [qci|{fromCStruct} (Data.Vector.Storable.Sized.unsafeIndex {tmp} {i})|]) <$> [0 .. pred length']
               tuple :: Doc ()
               tuple = [qci|{tupled (replicate (fromIntegral length') mempty)} <$> {
                             indent (-4) . vsep $ (intercalatePrepend "<*>" $ cs)}
               |]
-          pure $ Right [qci|(let x = {accessMember memberName} in {tuple})|]
+          pure $ Right [qci|(let {tmp} = {accessMember memberName} in {tuple})|]
         OptionalZero memberName _ ->
-          pure $ Right [qci|pure (let x = {accessMember memberName} in if x == 0 then Nothing else Just x)|]
+          pure $ Right [qci|pure (let nz = {accessMember memberName} in if nz == 0 then Nothing else Just nz)|]
         m -> throwError [Other (T.tShow m)]
 
 ----------------------------------------------------------------
@@ -1198,7 +1202,7 @@ writeMarshalled MarshalledStruct {..} =
         (writeMarshalledMember msName)
         msMembers
       pure $ \getDoc -> [qci|
-      {document getDoc (TopLevel msName)}
+      {document getDoc (TopLevel ("Vk" <> msName))}
       data {msName} = {msName}
         \{ {indent (-2) . vsep $
            intercalatePrependEither "," (($ getDoc) <$> memberDocs)
@@ -1223,7 +1227,7 @@ writeMarshalledMember
   -> MemberUsage MarshalledMember
   -> WrapM (DocMap -> Either (Doc ()) (Doc ()))
 writeMarshalledMember parentName = \case
-  Univalued            _ -> pure $ \_ -> Left "-- Univalued Member elided"
+  Univalued            _ -> pure $ \_ -> Left "-- Univalued member elided"
   Length               _ -> pure $ \_ -> Left "-- Length valued member elided"
   LengthMultiple     _ _ -> pure $ \_ -> Left "-- Length multiple valued member elided"
   MinLength          _ _ -> pure $ \_ -> Left "-- Length valued member elided"
@@ -1373,7 +1377,7 @@ writeMarshalledUnionMember = \case
 
 toMemberName :: Text -> Text
 -- toMemberName = ("vk" <>) . T.upperCaseFirst
-toMemberName = unReservedWord . T.lowerCaseFirst
+toMemberName = unReservedWord . T.lowerCaseFirst . dropPointer
 
 -- | drop the first word if it is just @p@s and @s@s
 upperCaseHungarian :: Text -> Text

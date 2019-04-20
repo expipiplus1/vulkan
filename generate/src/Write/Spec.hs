@@ -233,7 +233,7 @@ specCWriteElements s@Spec {..} = do
 
     getEnumAliasTarget :: Text -> Maybe Text
     getEnumAliasTarget n = do
-      a <- find ((== n) . aName) (enumAliases sAliases)
+      a <- find ((== n) . aName ) (fst <$> enumAliases sAliases)
       eitherToMaybe (eName <$> aliasTarget a)
 
     getEnumerantEnumName :: Text -> Maybe Text

@@ -1,4 +1,5 @@
 {-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE TupleSections     #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
 
@@ -34,7 +35,7 @@ import qualified Spec.Type               as P
 
 data Aliases = Aliases
   { commandAliases       :: [Alias Command]
-  , enumAliases          :: [Alias Enum]
+  , enumAliases          :: [(Alias Enum, [Alias EnumElement])]
   , handleAliases        :: [Alias Handle]
   , structAliases        :: [Alias Struct]
   , constantAliases      :: [Alias APIConstant]
@@ -75,8 +76,8 @@ specAliases
   -> [APIConstant]
   -> [Requirement]
   -> Validation [SpecError] Aliases
-specAliases P.Spec {..} commands enums handles structs constants requirements
-  = do
+specAliases P.Spec {..} commands enums handles structs constants requirements =
+  do
     let typeAliases  = [ ta | P.AnAlias ta <- sTypes ]
         bitmaskTypes = [ bmt | P.ABitmaskType bmt <- sTypes ]
     commandAliases <- makeAliases
@@ -84,8 +85,9 @@ specAliases P.Spec {..} commands enums handles structs constants requirements
       commands
       cName
     enumAliases <-
-      (<>)
-      <$> makeTypeAliases    typeAliases "enum"       enums eName
+      fmap (fmap (, []))
+      .   (<>)
+      <$> makeTypeAliases typeAliases "enum" enums eName
       <*> makeBitmaskAliases typeAliases bitmaskTypes enums eName
     handleAliases   <- makeTypeAliases typeAliases "handle" handles hName
     structAliases   <- makeTypeAliases typeAliases "struct" structs sName
@@ -108,7 +110,7 @@ specAliases P.Spec {..} commands enums handles structs constants requirements
         [ (eaAlias, eaName) | EnumAlias {..} <- enumExtensionAliases ]
         enumerantEnums
         snd
-    pure Aliases {..}
+    pure Aliases { .. }
 
 makeBitmaskAliases
   :: [P.TypeAlias]
